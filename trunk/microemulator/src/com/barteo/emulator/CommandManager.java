@@ -124,8 +124,13 @@ public class CommandManager {
         } else if (nSoftButtons >= commands.size()) {
             /* No menus or special menus need to be created */
 
-            for (int i=0; i<commands.size(); i++)
-                ((SoftButton)sbArray.elementAt(i)).setCommand((Command)commands.elementAt(i));
+            for (int i=0; i<commands.size(); i++) {
+              for (int j = 0; j < sbArray.size(); j++) {
+                if (((SoftButton)sbArray.elementAt(j)).setCommand((Command)commands.elementAt(i))) {
+                  break;
+                }
+              }
+            }
 
         } else {
             /* Menu needed */

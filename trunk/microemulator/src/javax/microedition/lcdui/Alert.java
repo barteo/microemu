@@ -54,9 +54,10 @@ public class Alert extends Screen
 	public Alert(String title, String alertText, Image alertImage, AlertType alertType)
 	{
 		super(title);
-		time = getDefaultTimeout();
+		setTimeout(getDefaultTimeout());
 		this.alertText = new StringItem(null, alertText);
 		setType(alertType);
+		super.setCommandListener(alertListener);
 	}
 
 
@@ -123,20 +124,17 @@ public class Alert extends Screen
       throw new IllegalArgumentException();
     }
 		this.time = time;
+    super.removeCommand(OK);
+ 		if (getTimeout() == Alert.FOREVER) {
+			super.addCommand(OK);
+		}
+
 	}
 
 
 	int getHeight()
 	{
 		return alertText.getHeight();
-	}
-
-
-	void hideNotify()
-	{
-		removeCommand(OK);
-		super.setCommandListener(null);
-		super.hideNotify();
 	}
 
 
@@ -149,11 +147,8 @@ public class Alert extends Screen
 	void showNotify()
 	{
 		super.showNotify();
-		if (getTimeout() == Alert.FOREVER) {
-			super.addCommand(OK);
-			super.setCommandListener(alertListener);
-		}
-		viewPortY = 0;
+
+    viewPortY = 0;
 	}
 
 

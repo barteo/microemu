@@ -19,6 +19,7 @@
 package com.siemens.mp.game;
 
 import javax.microedition.lcdui.*;
+import com.barteo.emulator.device.DeviceFactory;
 
 /**
  *
@@ -88,10 +89,10 @@ public class TiledBackground extends GraphicObject{
     protected void paint(Graphics g) {
         for (int y=posy/8;y<heightInTiles;y++) {
             for(int x=posx/8;x<widthInTiles;x++) {
-                if (-posx+x*8>com.inario.util.DeviceInfo.getWidth()) break;
+                if (-posx+x*8>DeviceFactory.getDevice().getDeviceDisplay().getWidth()) break;
                 g.drawImage(pixels[map[y*widthInTiles+x]], -posx+x*8,-posy+y*8,0);
             }
-            if (-posy+y*8>com.inario.util.DeviceInfo.getHeight()) break;
+            if (-posy+y*8>DeviceFactory.getDevice().getDeviceDisplay().getHeight()) break;
         }
     }
 }

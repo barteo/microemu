@@ -32,7 +32,7 @@ public class ExtendedImage extends com.siemens.mp.misc.NativeMem {
     }
     
     public void blitToScreen(int x, int y) {
-        System.out.println(" public void blitToScreen(int x"+x+", int y"+y+")");
+//        System.out.println(" public void blitToScreen(int x"+x+", int y"+y+")");
         DeviceDisplay dd = DeviceFactory.getDevice().getDeviceDisplay();
         Image image = dd.getDisplayImage();
         
@@ -40,7 +40,7 @@ public class ExtendedImage extends com.siemens.mp.misc.NativeMem {
         g.drawImage(this.image,x,y+10,Graphics.LEFT|Graphics.TOP);
         //I don't know why but the +10 seems to be neccessary, I'll look into it later
         
-        dd.repaint();
+//        dd.repaint();
     }
     
     public void clear(byte color) {

@@ -59,18 +59,6 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
   }
 
 
-  public int getGrayScale()
-  {
-    return (getRedComponent() + getGreenComponent() + getBlueComponent()) / 3;
-  }
-
-
-  public void setGrayScale(int grey) 
-  {
-    setColor(grey, grey, grey);
-  }
-
-
 	public javax.microedition.lcdui.Font getFont()
 	{
 		return currentFont;

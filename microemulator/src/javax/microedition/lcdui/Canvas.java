@@ -166,4 +166,9 @@ public abstract class Canvas extends Displayable
   {
   }
 
+  
+  protected void showNotify()
+  {
+  }
+  
 }

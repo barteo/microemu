@@ -32,6 +32,7 @@ public class SimpleDemo extends MIDlet implements CommandListener
   List menuList;
   ScreenPanel screenPanels[] = {
       new AlertPanel(),
+      new CanvasPanel(),
       new DateFieldPanel(),
       new GaugePanel(),
       new ImageItemPanel(),
@@ -52,7 +53,9 @@ public class SimpleDemo extends MIDlet implements CommandListener
       
     for (int i = 0; i < screenPanels.length; i++) {
       menuList.append(screenPanels[i].getName(), null);
-      ((Screen) screenPanels[i]).setTicker(ticker);
+      if (screenPanels[i] instanceof Screen) {
+        ((Screen) screenPanels[i]).setTicker(ticker);
+      }
     }
     menuList.addCommand(exitCommand);
     menuList.setCommandListener(this);

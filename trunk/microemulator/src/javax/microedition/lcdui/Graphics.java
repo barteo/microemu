@@ -15,6 +15,9 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Contributor(s):
+ *    3GLab
  */
  
 package javax.microedition.lcdui;
@@ -49,11 +52,16 @@ public class Graphics
 
   public void drawChar(char character, int x, int y, int anchor)
   {
+    char[] carr = new char[1];
+    carr[0] = character;
+
+    drawString(new String(carr), x, y, anchor);
   }
 
 
   public void drawChars(char[] data, int offset, int length, int x, int y, int anchor)
   {
+    drawString(new String(data, offset, length), x, y, anchor);
   }
 
 

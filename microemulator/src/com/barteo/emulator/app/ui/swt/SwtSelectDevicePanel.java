@@ -21,8 +21,6 @@ package com.barteo.emulator.app.ui.swt;
 
 import java.awt.BorderLayout;
 import java.awt.Button;
-import java.awt.FileDialog;
-import java.awt.Frame;
 import java.awt.List;
 import java.awt.Panel;
 import java.awt.ScrollPane;
@@ -40,9 +38,11 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.FileDialog;
+
 import com.barteo.emulator.app.Config;
 import com.barteo.emulator.app.util.DeviceEntry;
-import com.barteo.emulator.app.util.ExtensionFileFilter;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.device.swt.SwtDevice;
 
@@ -60,26 +60,26 @@ public class SwtSelectDevicePanel extends SwtDialogPanel
   
 	private ActionListener btAddListener = new ActionListener()
 	{
-		private FileChooser fileChooser = null;
+		private FileDialog fileDialog = null;
     
 		public void actionPerformed(ActionEvent ev)
 		{
-			if (fileChooser == null) {
-				ExtensionFileFilter fileFilter = new ExtensionFileFilter("Device profile (*.dev)");
-				fileFilter.addExtension("dev");
-				fileChooser = new FileChooser(new Frame(), "Open device profile file...", FileDialog.LOAD);
-				fileChooser.setFilenameFilter(fileFilter);
+			if (fileDialog == null) {
+				fileDialog = new FileDialog(null, SWT.OPEN);
+				fileDialog.setText("Open device profile file...");
+				fileDialog.setFilterNames(new String[] {"Device profile (*.dev)"});
+				fileDialog.setFilterExtensions(new String[] {"dev"});
 			}
       
 			ProgressJarClassLoader loader = new ProgressJarClassLoader();
       
-			fileChooser.show();
+			fileDialog.open();
 			
-			if (fileChooser.getFile() != null) {
+			if (fileDialog.getFileName() != null) {
 				String deviceClassName = null;
 				String deviceName = null;
 				try {
-					JarFile jar = new JarFile(fileChooser.getSelectedFile());
+					JarFile jar = new JarFile(fileDialog.getFileName());
 					Manifest manifest = jar.getManifest();
 					if (manifest == null) {
 						OptionPane.showMessageDialog(instance,
@@ -120,10 +120,10 @@ public class SwtSelectDevicePanel extends SwtDialogPanel
 						}
 					}
           
-					loader.addRepository(fileChooser.getSelectedFile().toURL());
+					loader.addRepository(new File(fileDialog.getFileName()).toURL());
 				} catch (IOException ex) {
 					OptionPane.showMessageDialog(instance, 
-							"Error reading " + fileChooser.getSelectedFile().getName() + " file.",
+							"Error reading " + fileDialog.getFileName() + " file.",
 							"Error", OptionPane.ERROR_MESSAGE);
 					return;
 				}
@@ -147,7 +147,7 @@ public class SwtSelectDevicePanel extends SwtDialogPanel
         
 				try {
 					File deviceFile = File.createTempFile("dev", ".dev", Config.getConfigPath());
-					FileInputStream fis  = new FileInputStream(fileChooser.getSelectedFile());
+					FileInputStream fis  = new FileInputStream(fileDialog.getFileName());
 					FileOutputStream fos = new FileOutputStream(deviceFile);
 					byte[] buf = new byte[1024];
 						int i = 0;

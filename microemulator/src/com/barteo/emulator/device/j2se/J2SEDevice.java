@@ -53,7 +53,6 @@ public class J2SEDevice implements Device
   private Vector buttons;
   private Vector softButtons;
   
-  private Rectangle deviceRectangle;
   private Image normalImage;
   private Image overImage;
   private Image pressedImage;
@@ -241,12 +240,6 @@ public class J2SEDevice implements Device
   }
 
   
-  public Rectangle getDeviceRectangle()
-  {
-    return deviceRectangle;
-  }
-
-  
   public Image getNormalImage()
   {
     return normalImage;
@@ -314,9 +307,7 @@ public class J2SEDevice implements Device
 
     for (Enumeration e = doc.enumerateChildren(); e.hasMoreElements(); ) {
       XMLElement tmp = (XMLElement) e.nextElement();
-      if (tmp.getName().equals("rectangle")) {
-        deviceRectangle = getRectangle(tmp);
-      } else if (tmp.getName().equals("img")) {
+      if (tmp.getName().equals("img")) {
         try {
           if (tmp.getStringAttribute("name").equals("normal")) {
             normalImage = getSystemImage(tmp.getStringAttribute("src"));

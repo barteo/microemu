@@ -215,7 +215,8 @@ public class Main extends Applet implements MicroEmulator, DisplayComponent
       return;
     }
 
-    resize(((AppletDevice) DeviceFactory.getDevice()).getDeviceRectangle().getSize());
+    Image tmpImg = ((AppletDevice) DeviceFactory.getDevice()).getNormalImage();
+    resize(tmpImg.getWidth(null), tmpImg.getHeight(null));
     
     return;
   }

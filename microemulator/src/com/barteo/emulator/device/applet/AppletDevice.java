@@ -50,7 +50,6 @@ public class AppletDevice implements Device
   Vector buttons;
   Vector softButtons;
 
-  Rectangle deviceRectangle;
   Image normalImage;
   Image overImage;
   Image pressedImage;
@@ -216,12 +215,6 @@ public class AppletDevice implements Device
   }
 
   
-  public Rectangle getDeviceRectangle()
-  {
-    return deviceRectangle;
-  }
-
-  
   public Image getNormalImage()
   {
     return normalImage;
@@ -289,9 +282,7 @@ public class AppletDevice implements Device
 
     for (Enumeration e = doc.enumerateChildren(); e.hasMoreElements(); ) {
       XMLElement tmp = (XMLElement) e.nextElement();
-      if (tmp.getName().equals("rectangle")) {
-        deviceRectangle = getRectangle(tmp);
-      } else if (tmp.getName().equals("img")) {
+      if (tmp.getName().equals("img")) {
         try {
           if (tmp.getStringAttribute("name").equals("normal")) {
             normalImage = getSystemImage(tmp.getStringAttribute("src"));

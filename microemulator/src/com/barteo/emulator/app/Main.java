@@ -21,6 +21,7 @@ package com.barteo.emulator.app;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -264,8 +265,8 @@ public class Main extends JFrame implements MicroEmulator
     getContentPane().add(devicePanel, "Center");
     getContentPane().add(statusBar, "South");    
 
-    Dimension size = new Dimension(
-        ((J2SEDevice) DeviceFactory.getDevice()).getDeviceRectangle().getSize());
+    Image tmpImg = ((J2SEDevice) DeviceFactory.getDevice()).getNormalImage();
+    Dimension size = new Dimension(tmpImg.getWidth(null), tmpImg.getHeight(null));
     size.width += 10;
     size.height += statusBar.getPreferredSize().height + 55;
     setSize(size);

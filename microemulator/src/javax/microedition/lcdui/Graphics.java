@@ -38,8 +38,8 @@ public class Graphics
 
   int strokeStyle = SOLID;
   
-	protected int translateX = 0;
-	protected int translateY = 0;
+	int translateX = 0;
+	int translateY = 0;
 
 
 	public void clipRect(int x, int y, int width, int height)

@@ -1,3 +1,5 @@
+* implement Display.callSerially()
+
 * extended web site with overview, api docs, faq section, instalation instructions, etc.
   (app requires Java 2, applet can be run in JVM 1.1)
 

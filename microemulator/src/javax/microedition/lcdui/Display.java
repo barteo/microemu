@@ -140,7 +140,7 @@ public class Display
 
 	public int numColors()
 	{
-		return 2;
+		return 256;
 	}
 
 

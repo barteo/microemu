@@ -59,7 +59,6 @@ public class SoftButton extends Button
     
     for (Enumeration e = commands.elements(); e.hasMoreElements(); ) {
       String tmp = (String) e.nextElement();
-System.out.println("<" + tmp + ">" + tmp.length());      
       try {
         addCommandType(Command.class.getField(tmp).getInt(null));
       } catch (Exception ex) {

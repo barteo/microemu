@@ -39,7 +39,6 @@ public class DisplayBridge
 
   public static void setAccess(DisplayAccess a_da) 
   {
-System.out.println(da);
     da = a_da;
   }
 

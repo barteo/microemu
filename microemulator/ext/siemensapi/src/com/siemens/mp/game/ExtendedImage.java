@@ -37,10 +37,9 @@ public class ExtendedImage extends com.siemens.mp.misc.NativeMem {
         Image image = dd.getDisplayImage();
         
         Graphics g=image.getGraphics();
-        g.drawImage(this.image,x,y+10,Graphics.LEFT|Graphics.TOP);
-        //I don't know why but the +10 seems to be neccessary, I'll look into it later
-        
-//        dd.repaint();
+        g.drawImage(this.image,x,y,Graphics.LEFT|Graphics.TOP);
+
+        dd.repaint();
     }
     
     public void clear(byte color) {

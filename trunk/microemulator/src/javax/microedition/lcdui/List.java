@@ -114,7 +114,8 @@ public class List extends Screen implements Choice
   void keyPressed(int keyCode)
   {
     if(Display.getGameAction(keyCode) == Canvas.FIRE 
-        && choiceGroup.select() && super.listener != null) {
+        && choiceGroup.select() && super.listener != null
+        && choiceGroup.choiceType == Choice.IMPLICIT) {
       super.listener.commandAction(SELECT_COMMAND, this);
     } else {
       super.keyPressed(keyCode);

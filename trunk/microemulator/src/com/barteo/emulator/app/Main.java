@@ -23,8 +23,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -91,7 +91,6 @@ public class Main extends JFrame implements MicroEmulator
     
     public void keyPressed(KeyEvent e)
     {
-System.out.println(e);      
       devicePanel.keyPressed(e);
     }
 
@@ -215,12 +214,13 @@ System.out.println(e);
     Font defaultFont = new Font("SansSerif", Font.PLAIN, 11);
     setFont(defaultFont);
     FontManager.getInstance().setDefaultFontMetrics(getFontMetrics(defaultFont));
-    addKeyListener(keyListener);
 
     if (!Device.getInstance().isInitialized()) {
       System.out.println("Cannot initialize device configuration");
       return;
     }
+
+    addKeyListener(keyListener);
 
     launcher = new Launcher();
     launcher.setCurrentMIDlet(launcher);
@@ -252,7 +252,7 @@ System.out.println(e);
         System.err.println(ex1);
       }
     }
-    loader.addRepository(url, jad.getJarSize());
+    loader.addRepository(url);
     launcher.removeMIDletEntries();
     
     Thread task = new Thread() 

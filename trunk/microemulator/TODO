@@ -2,8 +2,7 @@
   bug in IE not working HttpConnection - URLConnection used - check closing connetions
 
 2. rebuild InputMethod to extend functionality:
-  - respond to typing on computer keyboard
-  - switching between modes (123, abc, ABC, password, URL, etc.)
+  - switching between modes (numeric, password, URL, etc.)
   - solve problem with VK_BACKSPACE key on emulator device
 
 3. extended web site with overview, faq section, instalation instructions, etc.

@@ -19,6 +19,7 @@
  
 package com.barteo.midp.lcdui;
 
+import javax.microedition.lcdui.TextField;
 import com.barteo.emulator.DefaultInputMethod;
 
 
@@ -34,7 +35,8 @@ public abstract class InputMethod
 	int inputMode = INPUT_NONE;
 
 	protected InputMethodListener inputMethodListener = null;
-	protected String text;
+  protected int constraints = TextField.ANY;
+  protected String text;
 	protected int caret;
 	protected int maxSize;
 
@@ -70,6 +72,12 @@ public abstract class InputMethod
 		text = "";
 		caret = 0;
 	}
+  
+  
+  public void setConstraints(int aconstraints)
+  {
+    constraints = aconstraints;
+  }
 
 
 	public int getInputMode()

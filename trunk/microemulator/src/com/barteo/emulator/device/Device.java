@@ -160,7 +160,7 @@ public class Device {
                 for (Enumeration e_chars = tmp_button.enumerateChildren(); e_chars.hasMoreElements(); ) {
                   XMLElement tmp_chars = (XMLElement) e_chars.nextElement();
                   if (tmp_chars.getName().equals("char")) {                 
-                    stringArray.add(tmp_chars.getContent());                    
+                    stringArray.addElement(tmp_chars.getContent());                    
                   }
                 }
               } else if (tmp_button.getName().equals("rectangle")) {

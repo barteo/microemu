@@ -42,9 +42,9 @@ public class ProgressJarClassLoader extends ClassLoader
   ProgressListener listener;
   
 
-  public void addRepository(URL url, int size)
+  public void addRepository(URL url)
   {
-    notLoadedRepositories.add(new RepositoryEntry(url, size));
+    notLoadedRepositories.add(url);
   }
 
 
@@ -109,13 +109,14 @@ public class ProgressJarClassLoader extends ClassLoader
   private synchronized void loadRepositories()
   {
     for (Enumeration en = notLoadedRepositories.elements(); en.hasMoreElements(); ) {
-      RepositoryEntry repositoryEntry = (RepositoryEntry) en.nextElement();
+      URL repositoryEntry = (URL) en.nextElement();
       byte[] cache = new byte[1024];
       ProgressEvent event = new ProgressEvent();
       int progress = 0;
     
       try {
-        URLConnection conn = repositoryEntry.url.openConnection();
+        URLConnection conn = repositoryEntry.openConnection();
+        int size = conn.getContentLength();
         JarInputStream jis = new JarInputStream(conn.getInputStream());
         while (true) {
           JarEntry entry = jis.getNextJarEntry();          
@@ -137,7 +138,7 @@ public class ProgressJarClassLoader extends ClassLoader
               entries.put(entry.getName(), tmp);
               progress += entry.getCompressedSize();
               event.setCurrent(progress);
-              event.setMax(repositoryEntry.size);
+              event.setMax(size);
               fireProgressListener(event);
             }
           } else {
@@ -151,19 +152,4 @@ public class ProgressJarClassLoader extends ClassLoader
     }    
   }
   
-  
-  class RepositoryEntry
-  {
-    URL url;
-    int size;
-    
-    
-    RepositoryEntry(URL url, int size)
-    {
-      this.url = url;
-      this.size = size;
-    }
-    
-  }
-
 }

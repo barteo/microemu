@@ -56,6 +56,7 @@ public class Common implements MicroEmulator
 //  	private Capturer capturer = null;
   	
 	protected JadProperties jad = new JadProperties();
+	protected JadProperties manifest = new JadProperties();
 	
 	private StatusBarListener statusBarListener = null; 
 	private ResponseInterfaceListener responseInterfaceListener = null; 
@@ -89,7 +90,13 @@ public class Common implements MicroEmulator
 	
 	public String getAppProperty(String key)
 	{
-		return jad.getProperty(key);
+		String result = jad.getProperty(key);
+		
+		if (result == null) {
+			result = manifest.getProperty(key);
+		}
+		
+		return result; 
 	}
 
   
@@ -205,6 +212,14 @@ public class Common implements MicroEmulator
 		loader.addRepository(url);
 		launcher.removeMIDletEntries();
     
+
+		manifest.clear();
+		try {
+			manifest.load(loader.getResourceAsStream("/META-INF/MANIFEST.MF"));
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}					
+
 		Thread task = new Thread() 
 		{
       

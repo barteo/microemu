@@ -25,14 +25,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Enumeration;
 
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
@@ -49,25 +46,24 @@ import javax.swing.UIManager;
 import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletBridge;
-import com.barteo.emulator.MIDletEntry;
-import com.barteo.emulator.MicroEmulator;
-import com.barteo.emulator.app.launcher.Launcher;
-import com.barteo.emulator.app.ui.swing.*;
+import com.barteo.emulator.app.ui.ResponseInterfaceListener;
+import com.barteo.emulator.app.ui.StatusBarListener;
+import com.barteo.emulator.app.ui.swing.ExtensionFileFilter;
+import com.barteo.emulator.app.ui.swing.SwingDeviceComponent;
+import com.barteo.emulator.app.ui.swing.SwingDialogWindow;
+import com.barteo.emulator.app.ui.swing.SwingSelectDevicePanel;
 import com.barteo.emulator.app.util.DeviceEntry;
-import com.barteo.emulator.app.util.ProgressEvent;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
-import com.barteo.emulator.app.util.ProgressListener;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.j2se.J2SEDevice;
-import com.barteo.emulator.util.JadMidletEntry;
 import com.barteo.emulator.util.JadProperties;
 
 
-public class WebStart extends JFrame implements MicroEmulator
+public class WebStart extends JFrame
 {
-  static Launcher launcher;
-  
   WebStart instance = null;
+  
+	Common common;
   
   boolean initialized = false;
   
@@ -75,6 +71,7 @@ public class WebStart extends JFrame implements MicroEmulator
   JFileChooser fileChooser = null;
   JMenuItem menuOpenJADFile;
   JMenuItem menuOpenJADURL;
+	JMenuItem menuSelectDevice;
     
   SwingDeviceComponent devicePanel;
   DeviceEntry deviceEntry;
@@ -99,29 +96,24 @@ public class WebStart extends JFrame implements MicroEmulator
   };
   
   KeyListener keyListener = new KeyListener()
-  {
-    
+  {    
     public void keyTyped(KeyEvent e)
     {
     }
-
     
     public void keyPressed(KeyEvent e)
     {
       devicePanel.keyPressed(e);
     }
-
     
     public void keyReleased(KeyEvent e)
     {
       devicePanel.keyReleased(e);
-    }
-    
+    }    
   };
    
   ActionListener menuOpenJADFileListener = new ActionListener()
   {
-
     public void actionPerformed(ActionEvent ev)
     {
       if (fileChooser == null) {
@@ -134,66 +126,48 @@ public class WebStart extends JFrame implements MicroEmulator
       
       int returnVal = fileChooser.showOpenDialog(instance);
       if (returnVal == JFileChooser.APPROVE_OPTION) {
-        try {
-          FileInputStream fis = new FileInputStream(fileChooser.getSelectedFile());
-          statusBar.setText("Loading...");
-          jad.clear();
-          jad.load(fis);
-          loadFromJad();
-        } catch (FileNotFoundException ex) {
-          System.err.println("Cannot found file " + fileChooser.getSelectedFile().getName());
-        } catch (IOException ex) {
-          System.err.println("Cannot open file " + fileChooser.getSelectedFile().getName());
-        }
+				try {
+					common.openJadFile(fileChooser.getSelectedFile().toURL());
+				} catch (MalformedURLException ex) {
+					System.err.println("Bad URL format " + fileChooser.getSelectedFile().getName());
+				}
       }
-    }
-  
+    }  
   };
   
   ActionListener menuOpenJADURLListener = new ActionListener()
   {
-
     public void actionPerformed(ActionEvent ev)
     {
       String entered = JOptionPane.showInputDialog("Enter JAD URL:");
       if (entered != null) {
-        try {
-          URL url = new URL(entered);
-          statusBar.setText("Loading...");
-          jad.clear();
-          jad.load(url.openStream());
-          loadFromJad();
-        } catch (MalformedURLException ex) {
-          System.err.println("Bad URL format " + entered);
-        } catch (IOException ex) {
-          System.err.println("Cannot open URL " + entered);
-        }
+				try {
+					URL url = new URL(entered);
+					common.openJadFile(url);
+				} catch (MalformedURLException ex) {
+					System.err.println("Bad URL format " + entered);
+				}
       }
-    }
-    
+    }    
   };
   
   ActionListener menuExitListener = new ActionListener()
-  {
-    
+  {    
     public void actionPerformed(ActionEvent e)
     {
       System.exit(0);
-    }
-    
+    }    
   };
-  
   
   ActionListener menuSelectDeviceListener = new ActionListener()
   {
-    
     public void actionPerformed(ActionEvent e)
     {
       if (SwingDialogWindow.show(instance, "Select device...", selectDevicePanel)) {
         if (selectDevicePanel.getSelectedDeviceEntry().equals(getDevice())) {
           return;
         }
-        if (MIDletBridge.getCurrentMIDlet() != launcher) {
+        if (MIDletBridge.getCurrentMIDlet() != common.getLauncher()) {
           if (JOptionPane.showConfirmDialog(instance, 
               "Changing device needs MIDlet to be restarted. All MIDlet data will be lost. Are you sure?", 
               "Question?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != 0) {
@@ -202,39 +176,61 @@ public class WebStart extends JFrame implements MicroEmulator
         }
         setDevice(selectDevicePanel.getSelectedDeviceEntry());
 
-        if (MIDletBridge.getCurrentMIDlet() != launcher) {
+        if (MIDletBridge.getCurrentMIDlet() != common.getLauncher()) {
           try {
             MIDlet result = (MIDlet) MIDletBridge.getCurrentMIDlet().getClass().newInstance();
-            startMidlet(result);
+            common.startMidlet(result);
           } catch (Exception ex) {
             System.err.println(ex);
           }
         } else {
-          startMidlet(launcher);
+          common.startMidlet(common.getLauncher());
         }
       }
     }
-    
-  };
-
-  
-  ProgressListener progressListener = new ProgressListener()
-  {
-    int percent = -1;
-    
-
-    public void stateChanged(ProgressEvent event)
-    {
-      int newpercent = (int) ((float) event.getCurrent() / (float) event.getMax() * 100);
-      
-      if (newpercent != percent) {
-        statusBar.setText("Loading... (" + newpercent +" %)");
-        percent = newpercent;
-      }
-    }
-    
   };
   
+	StatusBarListener statusBarListener = new StatusBarListener()
+	{
+		public void statusBarChanged(String text) 
+		{
+			statusBar.setText(text);
+		}  
+	};
+  
+	ResponseInterfaceListener responseInterfaceListener = new ResponseInterfaceListener()
+	{
+		public void stateChanged(boolean state) 
+		{
+			menuOpenJADFile.setEnabled(state);
+			menuOpenJADURL.setEnabled(state);
+			menuSelectDevice.setEnabled(state);
+		}  
+	};
+  
+	WindowAdapter windowListener = new WindowAdapter()
+	{
+		public void windowClosing(WindowEvent ev) 
+		{
+			menuExitListener.actionPerformed(null);
+		}
+		
+
+		public void windowIconified(WindowEvent ev) 
+		{
+			MIDletBridge.getMIDletAccess(common.getLauncher().getCurrentMIDlet()).pauseApp();
+		}
+		
+		public void windowDeiconified(WindowEvent ev) 
+		{
+			try {
+				MIDletBridge.getMIDletAccess(common.getLauncher().getCurrentMIDlet()).startApp();
+			} catch (MIDletStateChangeException ex) {
+				System.err.println(ex);
+			}
+		}
+	};  
+
   
   WebStart()
   {
@@ -260,7 +256,7 @@ public class WebStart extends JFrame implements MicroEmulator
     
     JMenu menuOptions = new JMenu("Options");
     
-    JMenuItem menuSelectDevice = new JMenuItem("Select device...");
+    menuSelectDevice = new JMenuItem("Select device...");
     menuSelectDevice.addActionListener(menuSelectDeviceListener);
     menuOptions.add(menuSelectDevice);
 
@@ -269,6 +265,7 @@ public class WebStart extends JFrame implements MicroEmulator
     setJMenuBar(menuBar);
     
     setTitle("MicroEmulator");
+		addWindowListener(windowListener);
     
     Config.loadConfig();
     addKeyListener(keyListener);
@@ -277,79 +274,17 @@ public class WebStart extends JFrame implements MicroEmulator
     selectDevicePanel = new SwingSelectDevicePanel();
     setDevice(selectDevicePanel.getSelectedDeviceEntry());
     
-    launcher = new Launcher();
-    launcher.setCurrentMIDlet(launcher);
-     
+		common = new Common(emulatorContext);
+		common.setStatusBarListener(statusBarListener);
+		common.setResponseInterfaceListener(responseInterfaceListener);
+
     getContentPane().add(devicePanel, "Center");
     getContentPane().add(statusBar, "South");    
 
     initialized = true;
   }
   
-  
-  public void loadFromJad()
-  {
-    final ProgressJarClassLoader loader = (ProgressJarClassLoader) emulatorContext.getClassLoader();
-    URL url = null;
-    try {
-      url = new URL(jad.getJarURL());
-    } catch (MalformedURLException ex) {
-      // it can be just file      
-      File f = new File(fileChooser.getSelectedFile().getParent(), jad.getJarURL());
-      try {
-        url = f.toURL();
-      } catch (MalformedURLException ex1) {
-        System.err.println(ex1);
-      }
-    }
-    loader.addRepository(url);
-    launcher.removeMIDletEntries();
     
-    Thread task = new Thread() 
-    {
-      
-      public void run()
-      {
-        setResponseInterface(false);
-        loader.setProgressListener(progressListener);
-        try {
-          for (Enumeration e = jad.getMidletEntries().elements(); e.hasMoreElements(); ) {
-            JadMidletEntry jadEntry = (JadMidletEntry) e.nextElement();
-            Class midletClass = loader.loadClass(jadEntry.getClassName());
-            loadMidlet(jadEntry.getName(), midletClass);
-          }
-          notifyDestroyed();
-        } catch (ClassNotFoundException ex) {
-          System.err.println(ex);
-        }        
-        loader.setProgressListener(null);
-        statusBar.setText("");
-        setResponseInterface(true);
-      }
-      
-    };
-    
-    task.start();
-  }
-  
-  
-  public String getAppProperty(String key)
-  {
-    return jad.getProperty(key);
-  }
-
-  
-  public void notifyDestroyed()
-  {
-    startMidlet(launcher);
-  }
-  
-
-  public void notifySoftkeyLabelsChanged()
-  {
-  }
-  
-  
   public DeviceEntry getDevice()
   {
     return deviceEntry;
@@ -389,59 +324,7 @@ public class WebStart extends JFrame implements MicroEmulator
       System.err.println(ex);          
     }
   }
-  
-  
-  public void setResponseInterface(boolean state)
-  {
-    menuOpenJADFile.setEnabled(state);
-    menuOpenJADURL.setEnabled(state);
-  }
-  
-  
-  protected void processWindowEvent(WindowEvent e)
-  {
-    super.processWindowEvent(e);
-    if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-      menuExitListener.actionPerformed(null);
-    } else if (e.getID() == WindowEvent.WINDOW_ICONIFIED) {
-      MIDletBridge.getMIDletAccess(launcher.getCurrentMIDlet()).pauseApp();
-    } else if (e.getID() == WindowEvent.WINDOW_DEICONIFIED) {
-      try {
-        MIDletBridge.getMIDletAccess(launcher.getCurrentMIDlet()).startApp();
-  		} catch (MIDletStateChangeException ex) {
-        System.err.println(ex);
-  		}
-    }
-  }
-
-  
-  public void startMidlet(MIDlet m)
-  {
-    try {
-      MIDletBridge.getMIDletAccess(m).startApp();
-		} catch (MIDletStateChangeException ex) {
-      System.err.println(ex);
-		}
-  }
-  
-  public MIDlet loadMidlet(String name, Class midletClass)
-	{
-    MIDlet result;
     
-    try {
-      result = (MIDlet) midletClass.newInstance();
-      launcher.addMIDletEntry(new MIDletEntry(name, result));
-      launcher.setCurrentMIDlet(result);
-    } catch (Exception ex) {
-      System.out.println("Cannot initialize " + midletClass + " MIDlet class");
-      System.out.println(ex);
-      ex.printStackTrace();
-      return null;
-    }  
-    
-    return result;
-	}
-
   
   public static void main(String args[])
   {
@@ -507,24 +390,23 @@ public class WebStart extends JFrame implements MicroEmulator
     }
     
     WebStart app = new WebStart();
-    MIDletBridge.setMicroEmulator(app);
     MIDlet m = null;
 
     if (args.length > 0) {
       Class midletClass;
       try {
         midletClass = Class.forName(args[0]);
-        m = app.loadMidlet("MIDlet", midletClass);
+        m = app.common.loadMidlet("MIDlet", midletClass);
       } catch (ClassNotFoundException ex) {
         System.out.println("Cannot find " + args[0] + " MIDlet class");
       }
     } else {
-      m = launcher;
+      m = app.common.getLauncher();
     }
     
     if (app.initialized) {
       if (m != null) {
-        app.startMidlet(m);
+        app.common.startMidlet(m);
       }
       app.validate();
       app.setVisible(true);

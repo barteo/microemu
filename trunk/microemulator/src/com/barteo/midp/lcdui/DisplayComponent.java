@@ -145,4 +145,10 @@ public class DisplayComponent extends Canvas
 		g.drawImage(offi, 0, 0, null);
   }
 
+  
+	public void update(Graphics g)
+	{
+		paint(g);
+	}
+  
 }

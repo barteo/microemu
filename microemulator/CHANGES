@@ -1,5 +1,7 @@
 MicroEmulator
 
+- added socket connection in javax.microedition.io.*
+
 0.3.2 (alpha) - 24.03.2003
 - applet: obfuscator for applet reduces jar file at ~30% (thanks to Julian L. Hunter)
 - applet: fixed broken applet target

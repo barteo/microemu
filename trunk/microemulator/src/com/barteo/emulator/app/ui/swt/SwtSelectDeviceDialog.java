@@ -32,6 +32,8 @@ import java.util.jar.Manifest;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -77,29 +79,27 @@ public class SwtSelectDeviceDialog extends SwtDialog
 				String deviceClassName = null;
 				String deviceName = null;
 				try {
-					JarFile jar = new JarFile(fileDialog.getFileName());
+					JarFile jar = new JarFile(
+							new File(fileDialog.getFilterPath(), fileDialog.getFileName()));
 					Manifest manifest = jar.getManifest();
 					if (manifest == null) {
-/*						OptionPane.showMessageDialog(instance,
-								"Missing manifest in dev file.",
-								"Error", OptionPane.ERROR_MESSAGE);*/
+						SwtMessageDialog.openError(getShell(),
+								"Error", "Missing manifest in dev file.");
 						return;
 					}          
 					Attributes attrs = manifest.getMainAttributes();
           
 					deviceName = attrs.getValue("Device-Name");
 					if (deviceName == null) {
-/*						OptionPane.showMessageDialog(instance, 
-								"Missing Device-Name entry in jar manifest.",
-								"Error", OptionPane.ERROR_MESSAGE);*/
+						SwtMessageDialog.openError(getShell(),
+								"Error", "Missing Device-Name entry in jar manifest.");
 						return;
 					}
           
 					deviceClassName = attrs.getValue("Device-Class");
 					if (deviceClassName == null) {
-/*						OptionPane.showMessageDialog(instance, 
-								"Missing Device-Class entry in jar manifest.",
-								"Error", OptionPane.ERROR_MESSAGE);*/
+						SwtMessageDialog.openError(getShell(),
+								"Error", "Missing Device-Class entry in jar manifest.");
 						return;
 					}
           
@@ -111,18 +111,16 @@ public class SwtSelectDeviceDialog extends SwtDialog
 					for (Enumeration e = deviceModel.elements(); e.hasMoreElements(); ) {
 						DeviceEntry entry = (DeviceEntry) e.nextElement();
 						if (deviceClassName.equals(entry.getClassName())) {
-/*							OptionPane.showMessageDialog(instance, 
-									"Device is already added.",
-									"Info", OptionPane.INFORMATION_MESSAGE);*/
+							SwtMessageDialog.openInformation(getShell(),
+									"Info", "Device is already added.");
 							return;
 						}
 					}
           
-					loader.addRepository(new File(fileDialog.getFileName()).toURL());
+					loader.addRepository(new File(fileDialog.getFilterPath(), fileDialog.getFileName()).toURL());
 				} catch (IOException ex) {
-/*					OptionPane.showMessageDialog(instance, 
-							"Error reading " + fileDialog.getFileName() + " file.",
-							"Error", OptionPane.ERROR_MESSAGE);*/
+					SwtMessageDialog.openError(getShell(),
+							"Error", "Error reading " + fileDialog.getFileName() + " file.");
 					return;
 				}
         
@@ -130,22 +128,21 @@ public class SwtSelectDeviceDialog extends SwtDialog
 				try {
 					deviceClass = loader.findClass(deviceClassName);
 				} catch (ClassNotFoundException ex) {
-/*					OptionPane.showMessageDialog(instance, 
-							"Cannot find class defined in Device-Class entry in jar manifest.",
-							"Error", OptionPane.ERROR_MESSAGE);*/
+					SwtMessageDialog.openError(getShell(),
+							"Error", "Cannot find class defined in Device-Class entry in jar manifest.");
 					return;
 				}
           
 				if (!SwtDevice.class.isAssignableFrom(deviceClass)) {
-/*					OptionPane.showMessageDialog(instance, 
-							"Cannot find class defined in Device-Class entry in jar manifest.",
-							"Error", OptionPane.ERROR_MESSAGE);*/
+					SwtMessageDialog.openError(getShell(),
+							"Error", "Cannot find class defined in Device-Class entry in jar manifest.");
 					return;
 				}
         
 				try {
 					File deviceFile = File.createTempFile("dev", ".dev", Config.getConfigPath());
-					FileInputStream fis  = new FileInputStream(fileDialog.getFileName());
+					FileInputStream fis  = new FileInputStream(
+							new File(fileDialog.getFilterPath(), fileDialog.getFileName()));
 					FileOutputStream fos = new FileOutputStream(deviceFile);
 					byte[] buf = new byte[1024];
 						int i = 0;
@@ -273,20 +270,26 @@ public class SwtSelectDeviceDialog extends SwtDialog
 	}
 
 
-	protected Control createContents(Composite parent) 
+	protected Control createDialogArea(Composite parent) 
 	{
-		lsDevices = new List(parent, SWT.SINGLE);
+		Composite composite = new Composite(parent, SWT.NONE);
+		
+		composite.setLayout(new GridLayout());
+		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+		composite.setFont(parent.getFont());
+
+		lsDevices = new List(composite, SWT.SINGLE);
 		lsDevices.addSelectionListener(lsDevicesListener);
 //		spDevices = new ScrollPane();
     
-		Composite panel = new Composite(parent, SWT.NO_FOCUS);
-		btAdd = new Button(parent, SWT.PUSH);
+		Composite panel = new Composite(composite, SWT.NONE);
+		btAdd = new Button(panel, SWT.PUSH);
 		btAdd.setText("Add...");
 		btAdd.addListener(SWT.Selection, btAddListener);
-		btRemove = new Button(parent, SWT.PUSH);
+		btRemove = new Button(panel, SWT.PUSH);
 		btRemove.setText("Remove");
 		btRemove.addListener(SWT.Selection, btRemoveListener);
-		btDefault = new Button(parent, SWT.PUSH);
+		btDefault = new Button(panel, SWT.PUSH);
 		btDefault.setText("Set as default");
 		btDefault.addListener(SWT.Selection, btDefaultListener);
     
@@ -304,7 +307,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 		}
 		lsDevicesListener.widgetSelected(null);
 
-		return parent;
+		return composite;
 	}
   
   

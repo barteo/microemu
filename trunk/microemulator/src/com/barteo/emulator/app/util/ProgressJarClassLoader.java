@@ -51,9 +51,13 @@ public class ProgressJarClassLoader extends ClassLoader
   public Class findClass(String name)
       throws ClassNotFoundException
   {
-    byte[] b = loadClassData(name);
+    Class result = findLoadedClass(name);
+    if (result == null) {
+      byte[] b = loadClassData(name);    
+      result = defineClass(name, b, 0, b.length);
+    }
     
-    return defineClass(name, b, 0, b.length);
+    return result;
   }
 
   

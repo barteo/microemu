@@ -156,7 +156,8 @@ public class SwingDeviceComponent extends JPanel
   {
     remove(dc);
     add(dc, new XYConstraints(
-        ((J2SEDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle()));    
+        ((J2SEDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle()));
+    revalidate();
   }
   
   

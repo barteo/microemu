@@ -77,6 +77,7 @@ public class Main extends JFrame implements MicroEmulator
   JMenuItem menuOpenJADURL;
     
   SwingDeviceComponent devicePanel;
+  DeviceEntry deviceEntry;
 
   JLabel statusBar = new JLabel("Status");
   
@@ -175,6 +176,9 @@ public class Main extends JFrame implements MicroEmulator
     public void actionPerformed(ActionEvent e)
     {
       if (DialogWindow.show("Select device...", selectDevicePanel)) {
+        if (selectDevicePanel.getSelectedDeviceEntry().equals(getDevice())) {
+          return;
+        }
         if (MIDletBridge.getCurrentMIDlet() != launcher) {
           if (JOptionPane.showConfirmDialog(instance, 
               "Changing device needs MIDlet to be restarted. All MIDlet data will be lost. Are you sure?", 
@@ -256,8 +260,7 @@ public class Main extends JFrame implements MicroEmulator
     addKeyListener(keyListener);
 
     devicePanel = new SwingDeviceComponent();
-    selectDevicePanel = new SelectDevicePanel(
-        (ProgressJarClassLoader) devicePanel.getEmulatorContext().getClassLoader());
+    selectDevicePanel = new SelectDevicePanel();
     setDevice(selectDevicePanel.getSelectedDeviceEntry());
     
     launcher = new Launcher();
@@ -339,14 +342,32 @@ public class Main extends JFrame implements MicroEmulator
   }
   
   
+  public DeviceEntry getDevice()
+  {
+    return deviceEntry;
+  }
+  
+  
   public void setDevice(DeviceEntry entry)
   {
+    ProgressJarClassLoader loader = 
+        (ProgressJarClassLoader) devicePanel.getEmulatorContext().getClassLoader();
     try {
-      Class deviceClass = Class.forName(entry.getClassName());
+      Class deviceClass = null;
+      if (entry.getFileName() != null) {
+        loader.addRepository(
+            new File(Config.getConfigPath(), entry.getFileName()).toURL());
+        deviceClass = loader.findClass(entry.getClassName());
+      } else {
+        deviceClass = Class.forName(entry.getClassName());
+      }
       J2SEDevice device = (J2SEDevice) deviceClass.newInstance();
       DeviceFactory.setDevice(device);
       device.init(devicePanel.getEmulatorContext());
       devicePanel.init();
+      this.deviceEntry = entry;
+    } catch (MalformedURLException ex) {
+      System.err.println(ex);          
     } catch (ClassNotFoundException ex) {
       System.err.println(ex);          
     } catch (InstantiationException ex) {

@@ -81,6 +81,16 @@ public class DeviceEntry
   }
   
   
+  public boolean equals(DeviceEntry test)
+  {
+    if (test.getClassName().equals(getClassName())) {
+      return true;
+    }
+    
+    return false;
+  }
+  
+  
   public String toString()
   {
     if (defaultDevice) {

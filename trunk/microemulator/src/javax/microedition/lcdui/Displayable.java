@@ -19,7 +19,6 @@
  
 package javax.microedition.lcdui;
 
-import java.util.Enumeration;
 import java.util.Vector;
 
 

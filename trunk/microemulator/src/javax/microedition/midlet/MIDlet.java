@@ -21,7 +21,6 @@ package javax.microedition.midlet;
 
 import javax.microedition.lcdui.*;
 
-import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.MIDletAccess;
 import com.barteo.emulator.MIDletBridge;
 

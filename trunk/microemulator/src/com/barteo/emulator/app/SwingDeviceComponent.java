@@ -34,7 +34,6 @@ import javax.swing.UIManager;
 import javax.microedition.lcdui.Command;
 import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.CommandManager;
-import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.SoftButton;
 import com.barteo.emulator.device.j2se.J2SEButton;

@@ -20,7 +20,6 @@
  
 package com.barteo.emulator;
 
-import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Choice;

@@ -38,8 +38,9 @@ public class Device {
   public boolean init()
   {
     String xml = "";
+    // Here should be device.xml but Netscape security manager doesn't accept this extension
     DataInputStream dis = new DataInputStream(
-        instance.getClass().getResourceAsStream("/com/barteo/emulator/device/device.xml"));
+        instance.getClass().getResourceAsStream("/com/barteo/emulator/device/device.txt"));
     try {
       while (dis.available() > 0) {
         byte[] b = new byte[dis.available()];
@@ -47,7 +48,7 @@ public class Device {
         xml += new String(b);
       }
     } catch (Exception ex) {
-      System.out.println("Cannot find com.barteo.emulator.device.device.xml definition file");
+      System.out.println("Cannot find com.barteo.emulator.device.device.txt definition file");
       return false;
     }
 

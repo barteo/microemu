@@ -23,28 +23,11 @@
   </target>
   
   <target name="init-app" depends="init-base" if="target.app">  	
-    <patternset id="target.src.files">
-      <include name="javax/**"/>
-      <include name="com/barteo/emulator/app/**"/>
-      <include name="com/barteo/cldc/**"/>
-      <include name="com/barteo/midp/**"/>
-      <include name="com/sixlegs/image/png/**"/>
-    </patternset>
     <property name="target.device.prefix" value="j2se"/>
     <property name="target.device.extension" value="dev"/>
   </target>
 
   <target name="init-applet" depends="init-base" if="target.applet">
-    <property name="build.compiler" value="javac1.1"/>
-    
-    <patternset id="target.src.files">
-      <include name="java/util/**"/>
-      <include name="javax/**"/>
-      <include name="com/barteo/emulator/applet/**"/>
-      <include name="com/barteo/cldc/**"/>
-      <include name="com/barteo/midp/**"/>
-      <include name="com/sixlegs/image/png/**"/>
-    </patternset>
     <property name="target.device.prefix" value="applet"/>
     <property name="target.device.extension" value="jar"/>
   </target>
@@ -56,15 +39,33 @@
     <mkdir dir="./target"/>
   </target>
 
-  <target name="compile" depends="init">
+  <target name="compile-app" depends="init" if="target.app">
     <javac debug="true" deprecation="true" destdir="./build/microemulator/classes" srcdir="./src">
-      <patternset refid="target.src.files"/>
+      <include name="javax/**"/>
+      <include name="com/barteo/emulator/app/**"/>
+      <include name="com/barteo/cldc/**"/>
+      <include name="com/barteo/midp/**"/>
+      <include name="com/sixlegs/image/png/**"/>
       <classpath>
         <pathelement location="./lib/jnlp.jar"/>
       </classpath>      
     </javac>
   </target>
 
+  <target name="compile-applet" depends="init" if="target.applet">
+    <javac target="1.1" debug="true" deprecation="true" destdir="./build/microemulator/classes" srcdir="./src">
+      <include name="java/util/**"/>
+      <include name="javax/**"/>
+      <include name="com/barteo/emulator/applet/**"/>
+      <include name="com/barteo/cldc/**"/>
+      <include name="com/barteo/midp/**"/>
+      <include name="com/sixlegs/image/png/**"/>
+    </javac>
+  </target>
+  
+  <target name="compile" depends="init,compile-app,compile-applet">
+  </target>
+  
   <target name="jar-app" depends="init,compile" if="target.app">
     <jar compress="true" jarfile="./target/me-app.jar">
       <manifest>

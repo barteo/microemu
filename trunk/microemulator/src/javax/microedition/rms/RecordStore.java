@@ -35,7 +35,7 @@ public class RecordStore
   private boolean open = false;
   private int version = 0;
   private long lastModified = 0;
-  private int nextRecordID = 0;
+  private int nextRecordID = 1;
 
   /**
    * @associates RecordListener 

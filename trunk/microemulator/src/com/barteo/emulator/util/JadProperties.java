@@ -100,7 +100,7 @@ public class JadProperties extends Properties
             name = test.substring(0, pos).trim();
             icon = test.substring(pos + 1, test.indexOf(',', pos + 1)).trim();
             className = test.substring(test.indexOf(',', pos + 1) + 1).trim();
-            midletEntries.add(new JadMidletEntry(name, icon, className));
+            midletEntries.addElement(new JadMidletEntry(name, icon, className));
           } catch (NumberFormatException ex) {}
         }
       }

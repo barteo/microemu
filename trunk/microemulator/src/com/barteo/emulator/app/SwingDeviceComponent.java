@@ -34,7 +34,6 @@ import javax.swing.UIManager;
 import javax.microedition.lcdui.Command;
 import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.CommandManager;
-import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.SoftButton;
@@ -115,23 +114,6 @@ public class SwingDeviceComponent extends JPanel
   };
   
   
-  private EmulatorContext emulatorContext = new EmulatorContext()
-  {
-    ProgressJarClassLoader loader = new ProgressJarClassLoader();
-    
-    public ClassLoader getClassLoader()
-    {
-      return loader;
-    }
-    
-    public DisplayComponent getDisplayComponent()
-    {
-      return dc;
-    }
-    
-  };
-
-  
   public SwingDeviceComponent() 
   {
     instance = this;
@@ -146,9 +128,9 @@ public class SwingDeviceComponent extends JPanel
   }
   
   
-  public EmulatorContext getEmulatorContext()
+  public DisplayComponent getDisplayComponent()
   {
-    return emulatorContext;
+    return dc;
   }
   
   

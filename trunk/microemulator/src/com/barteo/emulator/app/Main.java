@@ -48,6 +48,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
+import com.barteo.emulator.DisplayComponent;
+import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.MIDletEntry;
@@ -83,6 +85,21 @@ public class Main extends JFrame implements MicroEmulator
   JLabel statusBar = new JLabel("Status");
   
   JadProperties jad = new JadProperties();
+  
+  private EmulatorContext emulatorContext = new EmulatorContext()
+  {
+    ProgressJarClassLoader loader = new ProgressJarClassLoader();
+    
+    public ClassLoader getClassLoader()
+    {
+      return loader;
+    }
+    
+    public DisplayComponent getDisplayComponent()
+    {
+      return devicePanel.getDisplayComponent();
+    }    
+  };
   
   KeyListener keyListener = new KeyListener()
   {
@@ -275,8 +292,7 @@ public class Main extends JFrame implements MicroEmulator
   
   public void loadFromJad()
   {
-    final ProgressJarClassLoader loader = 
-        (ProgressJarClassLoader) devicePanel.getEmulatorContext().getClassLoader();
+    final ProgressJarClassLoader loader = (ProgressJarClassLoader) emulatorContext.getClassLoader();
     URL url = null;
     try {
       url = new URL(jad.getJarURL());
@@ -345,8 +361,7 @@ public class Main extends JFrame implements MicroEmulator
   
   public void setDevice(DeviceEntry entry)
   {
-    ProgressJarClassLoader loader = 
-        (ProgressJarClassLoader) devicePanel.getEmulatorContext().getClassLoader();
+    ProgressJarClassLoader loader = (ProgressJarClassLoader) emulatorContext.getClassLoader();
     try {
       Class deviceClass = null;
       if (entry.getFileName() != null) {
@@ -358,7 +373,7 @@ public class Main extends JFrame implements MicroEmulator
       }
       J2SEDevice device = (J2SEDevice) deviceClass.newInstance();
       DeviceFactory.setDevice(device);
-      device.init(devicePanel.getEmulatorContext());
+      device.init(emulatorContext);
       devicePanel.init();
       this.deviceEntry = entry;
       Image tmpImg = device.getNormalImage();

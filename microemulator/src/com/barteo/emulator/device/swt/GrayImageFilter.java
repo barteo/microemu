@@ -56,7 +56,6 @@ public final class GrayImageFilter implements ImageFilter
 
   public RGB filterRGB (int x, int y, RGB rgb)
 	{
-    int a = 0;
     int Y = (int)(Yr * rgb.red + Yg * rgb.green + Yb * rgb.blue) % 256;
     if (Y > 255) {
       Y = 255;

@@ -387,7 +387,6 @@ public class ChoiceGroup extends Item implements Choice
 
 		g.translate(0, super.getHeight());
 		int translatedY = 0;
-    StringItem tmp;
 		for (int i = 0; i < numOfItems; i++) {
       items[i].invertPaint(i == highlightedItemIndex && focus);
 			items[i].paint(g);

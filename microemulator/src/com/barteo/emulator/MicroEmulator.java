@@ -31,7 +31,9 @@ import java.awt.event.WindowEvent;
 
 import javax.microedition.lcdui.Display;
 import javax.microedition.midlet.MIDlet;
+import javax.microedition.midlet.MIDletStateChangeException;
 
+import com.barteo.emulator.device.Device;
 import com.barteo.midp.lcdui.DisplayComponent;
 import com.barteo.midp.lcdui.FontManager;
 import com.barteo.midp.lcdui.KeyboardComponent;
@@ -41,6 +43,7 @@ import com.barteo.midp.lcdui.XYLayout;
 
 public class MicroEmulator extends Applet
 {
+  static MIDletAccess midletAccess;
 	Class midletClass;
 	MIDlet midlet = null;
 	Display disp;
@@ -74,6 +77,8 @@ public class MicroEmulator extends Applet
 		setFont(defaultFont);
 		FontManager.getInstance().setDefaultFontMetrics(getFontMetrics(defaultFont));
 
+    Device.init();
+
 		try {
 			midlet = (MIDlet) midletClass.newInstance();
 		} catch (Exception ex) {
@@ -88,7 +93,8 @@ public class MicroEmulator extends Applet
 		setLayout(xy);
 
 		dc = new DisplayComponent(this);
-		xy.addLayoutComponent(dc, new XYConstraints(10, 10, 96, 128));
+		xy.addLayoutComponent(dc, new XYConstraints(Device.screenRectangleX, Device.screenRectangleY,
+        Device.screenRectangleWidth, Device.screenRectangleHeight));
 		add(dc);
 
 		kc = new KeyboardComponent();
@@ -127,9 +133,9 @@ public class MicroEmulator extends Applet
   public void start()
 	{
 		if (midlet != null) {
-			try {
-				midletClass.getMethod("startApp", null).invoke(midlet, null);
-			} catch (Exception ex) {
+      try {
+        midletAccess.startApp();
+			} catch (MIDletStateChangeException ex) {
 				System.err.println(ex);
 			}
 		}
@@ -138,11 +144,7 @@ public class MicroEmulator extends Applet
 
 	public void stop() {
 		if (midlet != null) {
-			try {
-				midletClass.getMethod("pauseApp", null).invoke(midlet, null);
-			} catch (Exception ex) {
-				System.err.println(ex);
-			}
+			midletAccess.pauseApp();
 		}
   }
 
@@ -150,9 +152,9 @@ public class MicroEmulator extends Applet
 	public void destroy()
 	{
 		if (midlet != null) {
-			try {
-				midletClass.getMethod("destroyApp", null).invoke(midlet, null);
-			} catch (Exception ex) {
+      try {
+  			midletAccess.destroyApp(true);
+			} catch (MIDletStateChangeException ex) {
 				System.err.println(ex);
 			}
 		}
@@ -170,6 +172,12 @@ public class MicroEmulator extends Applet
 
 		return true;
 	}
+
+
+  public static void setMIDletAccess(MIDletAccess ma)
+  {
+    midletAccess = ma;
+  }
 
 
   public String getAppletInfo()

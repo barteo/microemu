@@ -21,6 +21,8 @@
 
 package javax.microedition.lcdui;
 
+import com.barteo.emulator.device.Device;
+
 
 class StringComponent
 {
@@ -30,12 +32,12 @@ class StringComponent
 	boolean invertPaint = false;
 	int numOfBreaks;
 	int width;
-  
-  
+
+
   StringComponent(String text)
   {
     this.text = text;
-		width = Display.width;
+		width = Device.screenPaintableWidth;
 		updateBreaks();
   }
 
@@ -51,8 +53,8 @@ class StringComponent
     this.text = text;
 		updateBreaks();
 	}
-	
-	
+
+
 	int getCharPositionX(int num)
 	{
 		int i, previndex = 0;
@@ -66,29 +68,29 @@ class StringComponent
 		}
 		return f.substringWidth(text, previndex, num - previndex);
 	}
-	
-	
+
+
 	int getCharPositionY(int num)
 	{
 		int y = 0;
 		Font f = Font.getDefaultFont();
-	
+
 		for (int i = 0; i < numOfBreaks; i++) {
 			if (num < breaks[i]) {
 				break;
 			}
 			y += f.getHeight();
 		}
-		
+
 		return y;
 	}
-	
+
 
 	int getHeight()
 	{
 		int height;
 		Font f = Font.getDefaultFont();
-	
+
 		if (text == null) {
 			return 0;
 		}
@@ -96,14 +98,14 @@ class StringComponent
 		if (numOfBreaks == 0) {
 			return f.getHeight();
 		}
-		
+
 		height = numOfBreaks * f.getHeight();
-		
+
 		if (breaks[numOfBreaks - 1] == text.length() - 1 && text.charAt(text.length() - 1) == '\n') {
 		} else {
 			height += f.getHeight();
 		}
-		
+
 		return height;
 	}
 
@@ -111,7 +113,7 @@ class StringComponent
 	void insertBreak(int pos)
 	{
 		int i;
-	
+
 		for (i = 0; i < numOfBreaks; i++) {
 			if (pos < breaks[i]) {
 				break;
@@ -145,10 +147,10 @@ class StringComponent
 		if (text == null) {
 			return 0;
 		}
-		
+
 		int i, prevIndex, y;
 		Font f = Font.getDefaultFont();
-	
+
     for (i = prevIndex = y = 0; i < numOfBreaks; i++) {
       if (invertPaint) {
         g.setGrayScale(0);
@@ -183,24 +185,24 @@ class StringComponent
 	    g.drawSubstring(text, prevIndex, text.length() - prevIndex, 0, y, 0);
 			y += f.getHeight();
 		}
-		
+
 		return y;
   }
-	
-	
+
+
 	void setWidth(int width)
 	{
 		this.width = width;
 		updateBreaks();
 	}
-	
-	
+
+
 	void updateBreaks()
 	{
 		if (text == null) {
 			return;
 		}
-	
+
 		int prevIndex = 0;
 		int canBreak = 0;
 		numOfBreaks = 0;

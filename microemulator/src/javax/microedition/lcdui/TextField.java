@@ -21,6 +21,8 @@
 
 package javax.microedition.lcdui;
 
+import com.barteo.emulator.device.Device;
+
 
 public class TextField extends Item
 {
@@ -30,34 +32,34 @@ public class TextField extends Item
 	public static final int NUMERIC = 2;
 	public static final int PHONENUMBER = 3;
 	public static final int URL = 4;
-	
+
 	public static final int PASSWORD = 0x10000;
 	public static final int CONSTRAINT_MASK = 0xffff;
-	
+
 	StringComponent stringComponent;
 	int caret;
 	boolean caretVisible;
 	int maxSize;
 	int constraints;
-	
+
 	TextBox tb = null;
 	static final Command saveCommand = new Command("Save", Command.OK, 0);
 	static final Command backCommand = new Command("Back", Command.BACK, 0);
 
 	CommandListener textBoxListener = new CommandListener()
 	{
-	
+
 		public void commandAction(Command cmd, Displayable d)
 		{
 			if (cmd == saveCommand) {
 				setString(tb.getString());
 			}
-			Display.getDisplay().setCurrent(owner);			
+			Display.getDisplay().setCurrent(owner);
 		}
 
 	};
-						
-	
+
+
 	public TextField(String label, String text, int maxSize, int constraints)
 	{
 		super(label);
@@ -75,28 +77,28 @@ public class TextField extends Item
 			stringComponent = new StringComponent(text);
 		}
 		this.maxSize = maxSize;
-		stringComponent.setWidth(Display.width - 8);
+		stringComponent.setWidth(Device.screenPaintableWidth - 8);
 		caret = 0;
 		caretVisible = false;
 	}
-								 
+
 
 	public String getString()
 	{
 		return stringComponent.getText();
 	}
-	
-							 	
+
+
 	public void setString(String text)
 	{
 		validate(text);
 		if (text.length() > maxSize) {
 			throw new IllegalArgumentException();
-		}		
+		}
 		stringComponent.setText(text);
 		repaint();
 	}
-	
+
 
 	public int getChars(char[] data)
 	{
@@ -104,14 +106,14 @@ public class TextField extends Item
 			throw new ArrayIndexOutOfBoundsException();
 		}
 		stringComponent.getText().getChars(0, stringComponent.length(), data, 0);
-		
+
 		return stringComponent.length();
 	}
-	
 
-	public void setChars(char[] data, int offset, int length)	
+
+	public void setChars(char[] data, int offset, int length)
 	{
-		if (data == null) {	
+		if (data == null) {
 			setString("");
 		} else {
 			if (length > maxSize) {
@@ -123,7 +125,7 @@ public class TextField extends Item
 		}
 		repaint();
 	}
-	
+
 
 	public void insert(String src, int position)
 	{
@@ -142,17 +144,17 @@ public class TextField extends Item
 		stringComponent.setText(newtext);
 		repaint();
 	}
-	
 
-	public void insert(char[] data, int offset, int length, int position)	
+
+	public void insert(char[] data, int offset, int length, int position)
 	{
 		if (offset + length > data.length) {
 			throw new ArrayIndexOutOfBoundsException();
 		}
 		insert(new String(data, offset, length), position);
 	}
-	
-	
+
+
 	public void delete(int offset, int length)
 	{
 		if (offset + length > stringComponent.length()) {
@@ -168,15 +170,15 @@ public class TextField extends Item
 		stringComponent.setText(newtext);
 		repaint();
 	}
-	
 
-	public int getMaxSize()									 
+
+	public int getMaxSize()
 	{
 		return maxSize;
 	}
-	
 
-	public int setMaxSize(int maxSize)	
+
+	public int setMaxSize(int maxSize)
 	{
 		if (maxSize <= 0) {
 			throw new IllegalArgumentException();
@@ -187,21 +189,21 @@ public class TextField extends Item
 		this.maxSize = maxSize;
 		return maxSize;
 	}
-	
 
-	public int size()	
+
+	public int size()
 	{
 		return stringComponent.length();
 	}
-	
 
-	public int getCaretPosition()	
+
+	public int getCaretPosition()
 	{
 		return caret;
 	}
-	
 
-	public void setConstraints(int constraints)	
+
+	public void setConstraints(int constraints)
 	{
 		if ((constraints & TextField.CONSTRAINT_MASK) < 0 ||
 				(constraints & TextField.CONSTRAINT_MASK) > 4) {
@@ -210,48 +212,48 @@ public class TextField extends Item
 		this.constraints = constraints;
 	}
 
-	
-	public int getConstraints()	
+
+	public int getConstraints()
 	{
 		return constraints;
 	}
-	
-	
-	public void setLabel(String label)	
+
+
+	public void setLabel(String label)
 	{
 		super.setLabel(label);
 	}
 
-	
+
 	boolean isFocusable()
 	{
 		return true;
 	}
 
-  
+
 	int getHeight()
 	{
 		return super.getHeight() + stringComponent.getHeight() + 8;
 	}
-	
-	
+
+
 	int paint(Graphics g)
 	{
 		super.paintContent(g);
-	
+
 		g.translate(0, super.getHeight());
 		if (isFocus()) {
-			g.drawRect(1, 1, Display.width - 3, stringComponent.getHeight() + 4);
+			g.drawRect(1, 1, Device.screenPaintableWidth - 3, stringComponent.getHeight() + 4);
 		}
 		g.translate(3, 3);
 		paintContent(g);
 		g.translate(-3, -3);
 		g.translate(0, -super.getHeight());
-		
+
 		return getHeight();
 	}
-	
-	
+
+
 	void paintContent(Graphics g)
 	{
 		stringComponent.paint(g);
@@ -286,10 +288,10 @@ public class TextField extends Item
 			tb.setString(getString());
 		}
 		Display.getDisplay().setCurrent(tb);
-		
+
 		return true;
 	}
-  
+
 
 	int traverse(int gameKeyCode, int top, int bottom, boolean action)
 	{
@@ -299,7 +301,7 @@ public class TextField extends Item
 			if (top > 0) {
 				return -top;
 			} else {
-				return Item.OUTOFITEM;				
+				return Item.OUTOFITEM;
 			}
 		}
 		if (gameKeyCode == 6) {
@@ -309,14 +311,14 @@ public class TextField extends Item
 				return Item.OUTOFITEM;
 			}
 		}
-		
+
 		return 0;
 	}
-	
+
 
 	void validate(String text)
 	{
-		// text is illegal for the specified constraints so IllegalArgumentException 
+		// text is illegal for the specified constraints so IllegalArgumentException
 	}
 
 }

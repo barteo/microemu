@@ -29,9 +29,6 @@ import com.barteo.midp.lcdui.*;
 public class Display
 {
 
-	static final int width = 96;
-	static final int height = 100;
-
 	Displayable current = null;
 	Displayable nextScreen = null;
 

@@ -1,5 +1,5 @@
 /*
- * @(#)BWImageFilter.java  07/07/2001
+ * @(#)MIDletAccess.java  09/04/2001
  *
  * Copyright (c) 2001 Bartek Teodorczyk <barteo@it.pl>. All Rights Reserved.
  *
@@ -21,45 +21,18 @@
 
 package com.barteo.emulator;
 
-import java.awt.image.RGBImageFilter;
-
-import com.barteo.emulator.device.Device;
+import javax.microedition.midlet.MIDletStateChangeException;
 
 
-public final class BWImageFilter extends RGBImageFilter
+public interface MIDletAccess
 {
 
-  private double Yr, Yg, Yb;
+	public void startApp()
+  		throws MIDletStateChangeException;
 
+	public void pauseApp();
 
-  public BWImageFilter ()
-	{
-    this(0.2126d, 0.7152d, 0.0722d);
-  }
-
-
-  public BWImageFilter (double Yr, double Yg, double Yb)
-	{
-    this.Yr = Yr;
-    this.Yg = Yg;
-    this.Yb = Yb;
-    canFilterIndexColorModel = true;
-  }
-
-
-  public int filterRGB (int x, int y, int rgb)
-	{
-    int a = (rgb & 0xFF000000);
-    int r = (rgb & 0x00FF0000) >>> 16;
-    int g = (rgb & 0x0000FF00) >>> 8;
-    int b = (rgb & 0x000000FF);
-    int Y = (int)(Yr * r + Yg * g + Yb * b);
-    if (Y > 127) {
-	    return a | Device.backgroundColor.getRGB();
-		} else {
-	    return a | Device.foregroundColor.getRGB();
-		}
-  }
+	public void destroyApp(boolean unconditional)
+  		throws MIDletStateChangeException;
 
 }
-

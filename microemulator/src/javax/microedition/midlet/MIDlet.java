@@ -23,28 +23,64 @@ package javax.microedition.midlet;
 
 import javax.microedition.lcdui.*;
 
+import com.barteo.emulator.MicroEmulator;
+import com.barteo.emulator.MIDletAccess;
 import com.barteo.midp.lcdui.DisplayBridge;
 
 
 public abstract class MIDlet
 {
 
+  MIDlet midlet;
+
+	class MIDletAccessor implements MIDletAccess
+	{
+
+	  public void startApp()
+  		  throws MIDletStateChangeException
+    {
+      midlet.startApp();
+    }
+
+
+  	public void pauseApp()
+    {
+      midlet.pauseApp();
+    }
+
+
+  	public void destroyApp(boolean unconditional)
+    		throws MIDletStateChangeException
+    {
+      midlet.destroyApp(unconditional);
+    }
+
+  }
+
 
 	protected MIDlet()
 	{
+    midlet = this;
+    MicroEmulator.setMIDletAccess(new MIDletAccessor());
 	}
 
 
 	protected abstract void startApp()
   		throws MIDletStateChangeException;
-	
-	
+
+
 	protected abstract void pauseApp();
-	
-	
+
+
 	protected abstract void destroyApp(boolean unconditional)
   		throws MIDletStateChangeException;
-													
+
+
+  public final String getAppProperty(String key)
+  {
+    return null;
+  }
+
 
 	public final void notifyDestroyed()
 	{

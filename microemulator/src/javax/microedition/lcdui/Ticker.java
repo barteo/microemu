@@ -24,14 +24,37 @@ package javax.microedition.lcdui;
 
 public class Ticker
 {
-  // Not implemented
+
+  static int PAINT_TIMEOUT = 500;
 
   String text;
 
 
+	class TickerPaint implements Runnable
+	{
+
+		public void run()
+		{
+      while (true) {
+        System.out.println("ticker move");
+  			try {
+  				Thread.sleep(PAINT_TIMEOUT);
+  			} catch (InterruptedException ex) {}
+      }
+		}
+
+	}
+
+
   public Ticker(String str)
   {
+    if (str == null) {
+      throw new NullPointerException();
+    }
     text = str;
+    TickerPaint tp = new TickerPaint();
+		Thread t = new Thread(tp);
+		t.start();
   }
 
 
@@ -43,6 +66,9 @@ public class Ticker
 
   public void setString(String str)
   {
+    if (str == null) {
+      throw new NullPointerException();
+    }
     text = str;
   }
 

@@ -23,6 +23,8 @@ package com.barteo.emulator;
 
 import java.awt.image.RGBImageFilter;
 
+import com.barteo.emulator.device.Device;
+
 
 public final class GrayImageFilter extends RGBImageFilter
 {

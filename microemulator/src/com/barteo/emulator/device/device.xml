@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<device>
+	<screen>
+    <foreground>000000</foreground>
+		<background>8f9f8f</background>
+		<rectangle>
+			<x>10</x>
+			<y>10</y>
+			<width>200</width>
+			<height>128</height>
+		</rectangle>
+    <paintable>
+			<x>0</x>
+			<y>10</y>
+			<width>200</width>
+			<height>100</height>
+    </paintable>
+	</screen>
+</device>

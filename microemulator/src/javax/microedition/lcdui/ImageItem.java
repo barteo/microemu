@@ -75,10 +75,11 @@ public class ImageItem extends Item
   }
 
 
-  public void setImage(Image img)
-  {
-    this.img = img;
-  }
+  	public void setImage(Image img)
+  	{
+  		this.img = img;
+  		repaint();
+  	}
 
 
   public void setLabel(String label)
@@ -87,10 +88,11 @@ public class ImageItem extends Item
   }
 
 
-  public void setLayout(int layout)
-  {
+  	public void setLayout(int layout)
+  	{
  		this.layout = layout;
-  }
+ 		repaint();
+ 	}
 
 
 	int getHeight()

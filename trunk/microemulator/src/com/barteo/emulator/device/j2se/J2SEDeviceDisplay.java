@@ -50,6 +50,12 @@ public class J2SEDeviceDisplay implements DeviceDisplay
   {
     context = acontext; 
   }
+  
+  
+  public EmulatorContext getEmulatorContext()
+  {
+    return context;
+  }
 
   
   public int getHeight()

@@ -51,6 +51,9 @@ import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.MIDletEntry;
 import com.barteo.emulator.app.launcher.Launcher;
+import com.barteo.emulator.app.ui.DeviceEntry;
+import com.barteo.emulator.app.ui.DialogWindow;
+import com.barteo.emulator.app.ui.SelectDevicePanel;
 import com.barteo.emulator.app.util.ProgressEvent;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.app.util.ProgressListener;
@@ -64,10 +67,10 @@ public class Main extends JFrame implements MicroEmulator
 {
   
   Main instance = null;
-  ProgressJarClassLoader loader = new ProgressJarClassLoader();
   
   boolean initialized = false;
   
+  SelectDevicePanel selectDevicePanel = null;
   JFileChooser fileChooser = null;
   JMenuItem menuOpenJADFile;
   JMenuItem menuOpenJADURL;
@@ -165,6 +168,37 @@ public class Main extends JFrame implements MicroEmulator
   };
   
   
+  ActionListener menuSelectDeviceListener = new ActionListener()
+  {
+    
+    public void actionPerformed(ActionEvent e)
+    {
+      if (DialogWindow.show("Select device...", selectDevicePanel)) {
+        if (MIDletBridge.getCurrentMIDlet() != launcher) {
+          if (JOptionPane.showConfirmDialog(instance, 
+              "Changing device needs MIDlet to be restarted. All MIDlet data will be lost. Are you sure?", 
+              "Question?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != 0) {
+            return;
+          }
+        }
+        setDevice(selectDevicePanel.getSelectedDeviceEntry());
+
+        if (MIDletBridge.getCurrentMIDlet() != launcher) {
+          try {
+            MIDlet result = (MIDlet) MIDletBridge.getCurrentMIDlet().getClass().newInstance();
+            startMidlet(result);
+          } catch (Exception ex) {
+            System.err.println(ex);
+          }
+        } else {
+          startMidlet(launcher);
+        }
+      }
+    }
+    
+  };
+
+  
   ProgressListener progressListener = new ProgressListener()
   {
     int percent = -1;
@@ -189,23 +223,30 @@ public class Main extends JFrame implements MicroEmulator
     
     JMenuBar menuBar = new JMenuBar();
     
-    JMenu menu = new JMenu("File");
+    JMenu menuFile = new JMenu("File");
     
     menuOpenJADFile = new JMenuItem("Open JAD File...");
     menuOpenJADFile.addActionListener(menuOpenJADFileListener);
-    menu.add(menuOpenJADFile);
+    menuFile.add(menuOpenJADFile);
 
     menuOpenJADURL = new JMenuItem("Open JAD URL...");
     menuOpenJADURL.addActionListener(menuOpenJADURLListener);
-    menu.add(menuOpenJADURL);
+    menuFile.add(menuOpenJADURL);
     
-    menu.addSeparator();
+    menuFile.addSeparator();
     
     JMenuItem menuItem = new JMenuItem("Exit");
     menuItem.addActionListener(menuExitListener);
-    menu.add(menuItem);
+    menuFile.add(menuItem);
+    
+    JMenu menuOptions = new JMenu("Options");
+    
+    JMenuItem menuSelectDevice = new JMenuItem("Select device...");
+    menuSelectDevice.addActionListener(menuSelectDeviceListener);
+    menuOptions.add(menuSelectDevice);
 
-    menuBar.add(menu);
+    menuBar.add(menuFile);
+    menuBar.add(menuOptions);
     setJMenuBar(menuBar);
     
     setTitle("MicroEmulator");
@@ -213,6 +254,9 @@ public class Main extends JFrame implements MicroEmulator
     addKeyListener(keyListener);
 
     devicePanel = new SwingDeviceComponent();
+    selectDevicePanel = new SelectDevicePanel(
+        (ProgressJarClassLoader) devicePanel.getEmulatorContext().getClassLoader());
+    setDevice(selectDevicePanel.getSelectedDeviceEntry());
     
     launcher = new Launcher();
     launcher.setCurrentMIDlet(launcher);
@@ -231,6 +275,8 @@ public class Main extends JFrame implements MicroEmulator
   
   public void loadFromJad()
   {
+    final ProgressJarClassLoader loader = 
+        (ProgressJarClassLoader) devicePanel.getEmulatorContext().getClassLoader();
     URL url = null;
     try {
       url = new URL(jad.getJarURL());
@@ -291,6 +337,21 @@ public class Main extends JFrame implements MicroEmulator
   }
   
   
+  public void setDevice(DeviceEntry entry)
+  {
+    try {
+      J2SEDevice device = (J2SEDevice) entry.getDeviceClass().newInstance();
+      DeviceFactory.setDevice(device);
+      device.init(devicePanel.getEmulatorContext());
+      devicePanel.init();
+    } catch (InstantiationException ex) {
+      System.err.println(ex);          
+    } catch (IllegalAccessException ex) {
+      System.err.println(ex);          
+    }
+  }
+  
+  
   public void setResponseInterface(boolean state)
   {
     menuOpenJADFile.setEnabled(state);
@@ -330,8 +391,8 @@ public class Main extends JFrame implements MicroEmulator
     
     try {
       result = (MIDlet) midletClass.newInstance();
+      launcher.addMIDletEntry(new MIDletEntry(name, result));
       launcher.setCurrentMIDlet(result);
-      launcher.addMIDletEntry(new MIDletEntry(name, launcher.getCurrentMIDlet()));
     } catch (Exception ex) {
       System.out.println("Cannot initialize " + midletClass + " MIDlet class");
       System.out.println(ex);

@@ -166,13 +166,16 @@ public class Main extends Applet implements MicroEmulator, DisplayComponent
 
     
   EmulatorContext emulatorContext = new EmulatorContext()
-  {
+  {    
+    public ClassLoader getClassLoader()
+    {
+      return getClass().getClassLoader();
+    }
     
     public DisplayComponent getDisplayComponent()
     {
       return instance;
-    }
-    
+    }    
   };
 
   

@@ -24,7 +24,10 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageFilter;
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.Enumeration;
@@ -56,14 +59,19 @@ public class J2SEDevice implements Device
   private Image pressedImage;
   
   
-  public J2SEDevice(EmulatorContext context)
+  public J2SEDevice()
   {
-    // Here should be device.xml but Netscape security manager doesn't accept this extension
-    this(context, "/com/barteo/emulator/device/device.txt");
   }
   
   
-  public J2SEDevice(EmulatorContext context, String config)
+  public void init(EmulatorContext context)
+  {
+    // Here should be device.xml but Netscape security manager doesn't accept this extension
+    init(context, "/com/barteo/emulator/device/device.txt");
+  }
+  
+  
+  public void init(EmulatorContext context, String config)
   {
     deviceDisplay = new J2SEDeviceDisplay(context);
     buttons = new Vector();
@@ -86,13 +94,30 @@ public class J2SEDevice implements Device
 	public javax.microedition.lcdui.Image createImage(String name)
   		throws IOException
 	{
-		return new ImmutableImage(name);
+		return new ImmutableImage(getImage(name));
 	}
   
   
 	public javax.microedition.lcdui.Image createImage(byte[] imageData, int imageOffset, int imageLength)
 	{
-		return new ImmutableImage(imageData, imageOffset, imageLength);
+		ImageFilter grayFilter;
+
+		ByteArrayInputStream is = new ByteArrayInputStream(imageData, imageOffset, imageLength);
+		PngImage png = new PngImage(is);
+   	double[][] chrom = null;
+    try {
+      chrom = (double[][])png.getProperty("chromaticity xyz");
+    } catch (IOException ex) {
+      System.err.println(ex);
+    }
+		if (chrom == null) {
+			grayFilter = new GrayImageFilter();
+		} else {
+			grayFilter = new GrayImageFilter(chrom[1][1], chrom[2][1], chrom[3][1]);
+		}
+		FilteredImageSource grayImageSource = new FilteredImageSource(png, grayFilter);
+
+		return new ImmutableImage(Toolkit.getDefaultToolkit().createImage(grayImageSource));
 	}
   
   
@@ -326,24 +351,24 @@ public class J2SEDevice implements Device
           if (tmp_display.getName().equals("img")) {
             if (tmp_display.getStringAttribute("name").equals("up")) {
               deviceDisplay.upImage = new PositionedImage(
-                  tmp_display.getStringAttribute("src"),
+                  getImage(tmp_display.getStringAttribute("src")),
                   getRectangle(getElement(tmp_display, "paintable")));
             } else if (tmp_display.getStringAttribute("name").equals("down")) {
               deviceDisplay.downImage = new PositionedImage(
-                  tmp_display.getStringAttribute("src"),
+                  getImage(tmp_display.getStringAttribute("src")),
                   getRectangle(getElement(tmp_display, "paintable")));
             } else if (tmp_display.getStringAttribute("name").equals("mode")) {
               if (tmp_display.getStringAttribute("type").equals("123")) {
                 deviceDisplay.mode123Image = new PositionedImage(
-                    tmp_display.getStringAttribute("src"),
+                    getImage(tmp_display.getStringAttribute("src")),
                     getRectangle(getElement(tmp_display, "paintable")));
               } else if (tmp_display.getStringAttribute("type").equals("abc")) {
                 deviceDisplay.modeAbcLowerImage = new PositionedImage(
-                    tmp_display.getStringAttribute("src"),
+                    getImage(tmp_display.getStringAttribute("src")),
                     getRectangle(getElement(tmp_display, "paintable")));
               } else if (tmp_display.getStringAttribute("type").equals("ABC")) {
                 deviceDisplay.modeAbcUpperImage = new PositionedImage(
-                    tmp_display.getStringAttribute("src"),
+                    getImage(tmp_display.getStringAttribute("src")),
                     getRectangle(getElement(tmp_display, "paintable")));
               }
             }
@@ -466,5 +491,25 @@ public class J2SEDevice implements Device
     
 		return Toolkit.getDefaultToolkit().createImage(png);
 	}
+  
+  
+  private Image getImage(String str)
+  {
+		ImageFilter grayFilter;
+    InputStream is;
+
+    is = deviceDisplay.getEmulatorContext().getClassLoader().getResourceAsStream(str);
+    PngImage png = new PngImage(is);
+    
+//   	double[][] chrom = (double[][])png.getProperty("chromaticity xyz");
+//		if (chrom == null) {
+			grayFilter = new GrayImageFilter();
+//		} else {
+//			bwFilter = new BWImageFilter(chrom[1][1], chrom[2][1], chrom[3][1]);
+//		}
+		FilteredImageSource grayImageSource = new FilteredImageSource(png, grayFilter);
+
+		return Toolkit.getDefaultToolkit().createImage(grayImageSource);
+  }
   
 }

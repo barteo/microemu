@@ -4,7 +4,7 @@
 <!-- If not, you may prefer to adjust the basedir, or move some directories around. -->
 <!-- The idea is that both Ant and NetBeans have to know what the package root is -->
 <!-- for the classes in your application. -->
-<project basedir="." default="jar" name="microemulator">
+<project basedir="." default="run" name="microemulator">
 
   <property name="build.compiler" value="javac1.1"/>
 
@@ -78,7 +78,7 @@
   <target name="all" depends="init,jar" description="Build everything.">
   </target>
 
-  <target name="test" depends="init,all" description="Try running it.">
+  <target name="run" depends="init,all" description="Try running it.">
     <java classname="com.barteo.emulator.app.Main" failonerror="true" fork="true">
       <classpath>
         <pathelement location="me-app.jar"/>

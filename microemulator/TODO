@@ -1,0 +1,20 @@
+1. javax.microedition.io.* supported (mostly done, extensive testing needed)
+
+2. rebuild InputMethod to extend functionality:
+  - respond to typing on computer keyboard
+  - switching between modes (123, abc, ABC, password, URL, etc.)
+  - solve problem with VK_BACKSPACE key on emulator device
+
+3. extended web site with overview, faq section, instalation instructions, etc.
+
+4. there is bug in NanoXML with parsing (locate details and send issue to author)
+
+5. two classes from java.util.* are from GNU Classpath which is GPL with exception
+(i'm not sure if can be used in LGPL MicroEmulator)
+
+6. (?) applet loader - during loading applet code progress bar should be visible
+
+7. obfuscator for applet: maybe LGPL Retroguard, applet jar should be 
+reduced to 175KB, i hope
+
+

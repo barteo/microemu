@@ -103,6 +103,7 @@ public class WebStart extends JFrame implements MicroEmulator
         try {
           FileContents fc = fos.openFileDialog(null, ext);
           if (fc != null) {
+System.out.println(fc.getName());            
             jad.clear();
             jad.load(fc.getInputStream());
             loadMIDlet();
@@ -215,8 +216,8 @@ public class WebStart extends JFrame implements MicroEmulator
     try {
       url = new URL(jad.getJarURL());
     } catch (MalformedURLException ex) {
-      // it can be just file      
-      File f = new File(fileChooser.getSelectedFile().getParent(), jad.getJarURL());
+      // it can be just file
+      File f = new File((String) null, jad.getJarURL());
       try {
         url = f.toURL();
       } catch (MalformedURLException ex1) {

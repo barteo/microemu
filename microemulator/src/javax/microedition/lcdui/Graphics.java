@@ -108,42 +108,38 @@ public class Graphics
 
   public int getBlueComponent()
   {
-    // Not implemented
+System.out.println("Graphics::getBlueComponent() not implemented");
     return 0;
   }
 
 
   public int getClipHeight()
   {
-    // Not implemented
-    return 0;
+    throw new IllegalStateException();
   }
 
 
   public int getClipWidth()
   {
-    // Not implemented
-    return 0;
+    throw new IllegalStateException();
   }
 
 
   public int getClipX()
   {
-    // Not implemented
-    return 0;
+    throw new IllegalStateException();
   }
 
 
   public int getClipY()
   {
-    // Not implemented
-    return 0;
+    throw new IllegalStateException();
   }
 
 
   public int getColor()
   {
-    // Not implemented
+System.out.println("Graphics::getColor() not implemented");
     return 0;
   }
 
@@ -156,28 +152,28 @@ public class Graphics
 
   public int getGrayScale()
   {
-    // Not implemented
+System.out.println("Graphics::getGrayScale() not implemented");
     return 0;
   }
 
 
   public int getGreenComponent()
   {
-    // Not implemented
+System.out.println("Graphics::getGreenComponent() not implemented");
     return 0;
   }
 
 
   public int getRedComponent()
   {
-    // Not implemented
+System.out.println("Graphics::getRedComponent() not implemented");
     return 0;
   }
 
 
   public int getStrokeStyle()
   {
-    // Not implemented
+System.out.println("Graphics::getStrokeStyle() not implemented");
     return 0;
   }
 
@@ -206,7 +202,10 @@ public class Graphics
 
 	public void setColor(int red, int green, int blue)
 	{
-System.out.println("Graphics::setColor(...) not implemented");
+    int rgb = red;
+    rgb += green << 8;
+    rgb += red << 16;
+    setColor(rgb);
 	}
 
 

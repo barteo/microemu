@@ -20,13 +20,13 @@ package com.siemens.mp.game;
 
 import javax.microedition.midlet.*;
 
-/**
- *
- * @author  markus
- * @version
- */
 public class MelodyComposer extends com.siemens.mp.misc.NativeMem{
     public MelodyComposer() {
+        
+    }
+    
+    public MelodyComposer(int[] notes, int bpm) 
+    {
         
     }
     

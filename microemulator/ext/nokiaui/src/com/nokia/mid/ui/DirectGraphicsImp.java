@@ -31,7 +31,7 @@ import com.barteo.emulator.device.DisplayGraphics;
 
 
 public class DirectGraphicsImp implements DirectGraphics{
- 
+    
     
     private Graphics graphics;
     private int alphaComponent;
@@ -222,8 +222,11 @@ public class DirectGraphicsImp implements DirectGraphics{
         
         for (int iy = 0; iy < height; iy++) {
             for (int ix = 0; ix < width; ix ++) {
-                g.setColor(pix[off + ix + iy * scanlen]);
-                g.drawLine(x + ix, y + iy,x + ix, y + iy);
+                int c=toARGB(pix[off + ix + iy * scanlen],TYPE_USHORT_4444_ARGB);
+                if (!isTransparent(c)) {
+                    g.setColor(c);
+                    g.drawLine(x + ix, y + iy,x + ix, y + iy);
+                }
             }
         }
         
@@ -275,22 +278,45 @@ public class DirectGraphicsImp implements DirectGraphics{
      */
     public void getPixels(short pix[], int offset, int scanlen, int x, int y, int width, int height, int format) {
         //        System.out.println("public void getPixels(short pix[], int offset, int scanlen, int x, int y, int width, int height, int format)");
-        if (format != TYPE_USHORT_4444_ARGB) {
-            throw new IllegalArgumentException("Illegal format: " + format);
-        }
-        //DeviceDisplay dd = DeviceFactory.getDevice().getDeviceDisplay();
-        //MutableImage img = (MutableImage)dd.getDisplayImage();
-        MutableImage img=(MutableImage)((DisplayGraphics)graphics).getImage();
-        
-        int [] data=img.getData();
-        
-        for (int iy = 0; iy < height; iy++) {
-            for (int ix = 0; ix < width; ix++) {
-                //pix[offset + ix + iy * scanlen] = (short) img.getPixel(x + ix, y + iy);
-                pix[offset + ix + iy * scanlen]=(short)(data[ix+iy*width]);
+        switch (format) {
+            case TYPE_USHORT_4444_ARGB: {
+                //DeviceDisplay dd = DeviceFactory.getDevice().getDeviceDisplay();
+                //MutableImage img = (MutableImage)dd.getDisplayImage();
+                MutableImage img=((DisplayGraphics)graphics).getImage();
+                
+                int [] data=img.getData();
+                
+                for (int iy = 0; iy < height; iy++) {
+                    for (int ix = 0; ix < width; ix++) {
+                        //pix[offset + ix + iy * scanlen] = (short) img.getPixel(x + ix, y + iy);
+                        //System.out.println(data[ix+iy*width]+" "+a+" "+r+" "+g+" "+b);
+                        pix[offset + ix + iy * scanlen]=(short)fromARGB(data[ix+iy*width],TYPE_USHORT_4444_ARGB);
+                    }
+                }
+                break;
             }
+            case TYPE_USHORT_444_RGB: {
+                //DeviceDisplay dd = DeviceFactory.getDevice().getDeviceDisplay();
+                //MutableImage img = (MutableImage)dd.getDisplayImage();
+                MutableImage img=((DisplayGraphics)graphics).getImage();
+                
+                int [] data=img.getData();
+                
+                for (int iy = 0; iy < height; iy++) {
+                    for (int ix = 0; ix < width; ix++) {
+                        //pix[offset + ix + iy * scanlen] = (short) img.getPixel(x + ix, y + iy);
+                        //System.out.println(data[ix+iy*width]+" "+a+" "+r+" "+g+" "+b);
+                        pix[offset + ix + iy * scanlen]=(short)fromARGB(data[ix+iy*width],TYPE_USHORT_444_RGB);
+                    }
+                }
+                break;
+            }            
+            default: throw new IllegalArgumentException("Illegal format: " + format);
         }
     }
+    
+    
+    
     
     /** Not supported
      * @param pix
@@ -327,4 +353,54 @@ public class DirectGraphicsImp implements DirectGraphics{
         return ((b & (byte)(1 << pos)) != 0);
     }
     
+    
+    private static int toARGB(int s, int type) {
+        switch (type) {
+            case TYPE_USHORT_4444_ARGB: {
+                int a=((s)&0xF000)>>>12;
+                int r=((s)&0x0F00)>>>8;
+                int g=((s)&0x00F0)>>>4;
+                int b=((s)&0x000F);
+                
+                //System.out.println("t"+a+" "+r+" "+g+" "+b);
+                s=((a*15)<<24)|((r*15)<<16)|((g*15)<<8)|(b*15);
+                break;
+            }
+            case TYPE_USHORT_444_RGB: {
+                int r=((s)&0x0F00)>>>8;
+                int g=((s)&0x00F0)>>>4;
+                int b=((s)&0x000F);
+                
+                //System.out.println("t"+a+" "+r+" "+g+" "+b);
+                s=((r*15)<<16)|((g*15)<<8)|(b*15);
+                break;
+            }
+        }
+        return s;
+    }
+    
+    private static int fromARGB(int s, int type) {
+        switch (type) {
+            case TYPE_USHORT_4444_ARGB: {
+                int a=((s)&0xFF000000)>>>24;
+                int r=((s)&0x00FF0000)>>>16;
+                int g=((s)&0x0000FF00)>>>8;
+                int b=((s)&0x000000FF);
+                s=((a/15)<<12)|((r/15)<<8)|((g/15)<<4)|(b/15);
+                break;
+            }
+            case TYPE_USHORT_444_RGB: {
+                int r=((s)&0x00FF0000)>>>16;
+                int g=((s)&0x0000FF00)>>>8;
+                int b=((s)&0x000000FF);
+                s=((r/15)<<8)|((g/15)<<4)|(b/15);
+                break;
+            }
+        }
+        return s;
+    }
+    
+    private static boolean isTransparent(int s) {
+        return (s&0xFF000000)==0;
+    }
 }

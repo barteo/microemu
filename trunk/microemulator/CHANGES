@@ -12,8 +12,13 @@ MicroEmulator
 - change from BW to 256-grayscale display
 - bug fixes
 
-(next release)
+0.1.2 (pre-alpha) - 23.11.2001
 - included NanoXML
 - moved device preference into XML file (device.xml)
-- fully implemented javax.microedition.lcdui.* and javax.microedition.rms.* (not complete)
+- implemented javax.microedition.rms.*
+- implemented javax.microedition.lcdui.* - synchronization is not done
 - written simple MIDP/CLDC demo showing functionality of emulator
+
+(next release)
+- framework for javax.microedition.io.*
+- rewritten repaint stuff

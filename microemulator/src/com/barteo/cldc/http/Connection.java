@@ -132,8 +132,9 @@ public class Connection implements HttpConnection, ClosedConnection
     if (cn == null) {
       return null;
     }
-    
-    return cn.getURL().getQuery();
+  
+//    return cn.getURL().getQuery();
+  	return null;
   }
   
 	

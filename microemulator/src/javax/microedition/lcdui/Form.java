@@ -50,6 +50,15 @@ public class Form extends Screen
 
 	public int append(Item item)
 	{
+    if (item == null) {
+      throw new NullPointerException();
+    }
+    for (int i = 0; i < numOfItems; i++) {
+      if (items[i] == item) {
+        throw new IllegalStateException();
+      }
+    }
+    
     if (numOfItems + 1 == items.length) {
       Item newitems[] = new Item[numOfItems + 4];
       System.arraycopy(items, 0, newitems, 0, numOfItems);
@@ -71,13 +80,23 @@ public class Form extends Screen
 
 	public int append(String str)
 	{
+    if (str == null) {
+      throw new NullPointerException();
+    }
+    
 		return append(new StringItem(null, str));
 	}
 
 
   public void delete(int itemNum)
   {
-    // Not implemented
+    if (itemNum < 0 || itemNum >= numOfItems) {
+      throw new IndexOutOfBoundsException();
+    }
+    
+		items[itemNum].setOwner(null);
+    System.arraycopy(items, itemNum + 1, items, itemNum, numOfItems - itemNum - 1);
+    numOfItems--;
   }
 
 
@@ -86,19 +105,53 @@ public class Form extends Screen
     if (itemNum < 0 || itemNum >= numOfItems) {
       throw new IndexOutOfBoundsException();
     }
+    
     return items[itemNum];
   }
 
 
   public void insert(int itemNum, Item item)
   {
-    // Not implemented
+    if (item == null) {
+      throw new NullPointerException();
+    }
+    if (itemNum < 0 || itemNum > numOfItems) {
+      throw new IndexOutOfBoundsException();
+    }
+    for (int i = 0; i < numOfItems; i++) {
+      if (items[i] == item) {
+        throw new IllegalStateException();
+      }
+    }
+
+    if (numOfItems + 1 == items.length) {
+      Item newitems[] = new Item[numOfItems + 4];
+      System.arraycopy(items, 0, newitems, 0, numOfItems);
+      items = newitems;
+    }
+    System.arraycopy(items, itemNum, items, itemNum + 1, numOfItems - itemNum);
+	  items[itemNum] = item;
+		items[itemNum].setOwner(this);
+    numOfItems++;
   }
 
 
   public void set(int itemNum, Item item)
   {
-    // Not implemented
+    if (item == null) {
+      throw new NullPointerException();
+    }
+    if (itemNum < 0 || itemNum >= numOfItems) {
+      throw new IndexOutOfBoundsException();
+    }
+    for (int i = 0; i < numOfItems; i++) {
+      if (items[i] == item) {
+        throw new IllegalStateException();
+      }
+    }
+
+    items[itemNum] = item;
+		items[itemNum].setOwner(this);
   }
 
 

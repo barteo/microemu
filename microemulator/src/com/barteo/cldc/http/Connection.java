@@ -24,6 +24,7 @@ import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -37,11 +38,19 @@ public class Connection implements HttpConnection, ClosedConnection
 {
   URLConnection cn;
   boolean connected = false;
+
+  // workaround for IE
+  boolean ie = false;
     
   
   public javax.microedition.io.Connection open(String name)
       throws IOException
   {
+    // workaround for IE
+    if (System.getProperty("java.vendor").equals("Microsoft Corp.")) {
+      ie = true;
+    }
+    
     URL url;
     try {
       url = new URL(name);
@@ -61,7 +70,13 @@ public class Connection implements HttpConnection, ClosedConnection
       return;
     }
     
-//    cn.disconnect();
+    // workaround for IE
+    if (ie) {
+      cn = null;
+      return;
+    }
+    
+    ((HttpURLConnection) cn).disconnect();
     cn = null;
   }
 
@@ -138,8 +153,12 @@ public class Connection implements HttpConnection, ClosedConnection
       return null;
     }
 
-//    return cn.getRequestMethod();
-    return null;
+    // workaround for IE
+    if (ie) {
+      return null;
+    }
+
+    return ((HttpURLConnection) cn).getRequestMethod();
   }
   
 	
@@ -154,7 +173,12 @@ public class Connection implements HttpConnection, ClosedConnection
       cn.setDoOutput(true);
     }
 
-//    cn.setRequestMethod(method);
+    // workaround for IE
+    if (ie) {
+      return;
+    }
+    
+    ((HttpURLConnection) cn).setRequestMethod(method);
   }
 
   
@@ -190,8 +214,12 @@ public class Connection implements HttpConnection, ClosedConnection
       connected = true;
     }
     
-//    return cn.getResponseCode();
-    return -1;
+    // workaround for IE
+    if (ie) {
+      return -1;
+    }
+    
+    return ((HttpURLConnection) cn).getResponseCode();
   }
       
       
@@ -206,8 +234,12 @@ public class Connection implements HttpConnection, ClosedConnection
       connected = true;
     }
     
-//    return cn.getResponseMessage();
-    return null;
+    // workaround for IE
+    if (ie) {
+      return null;
+    }
+    
+    return ((HttpURLConnection) cn).getResponseMessage();
   }
       
       

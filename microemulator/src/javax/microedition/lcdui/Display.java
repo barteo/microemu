@@ -130,11 +130,40 @@ public class Display
 			setCurrent(nextScreen);
 		}
 	}
+  
+  class TickerPaint implements Runnable
+  {
+
+    public void run()
+		{
+      while (true) {
+        if (current != null && current instanceof Screen) {
+          Ticker ticker = ((Screen) current).getTicker();
+          if (ticker != null) {
+            synchronized (ticker) {
+              if (ticker.resetTextPosTo != -1) {
+                ticker.textPos = ticker.resetTextPosTo;
+                ticker.resetTextPosTo = -1;
+              }
+              ticker.textPos -= Ticker.PAINT_MOVE;
+            }
+            repaint();        
+          }
+        }
+    		try {
+    			Thread.sleep(Ticker.PAINT_TIMEOUT);
+    		} catch (InterruptedException ex) {}
+      }
+		}
+  
+  }
 
 
 	Display()
 	{
 		accessor = new DisplayAccessor(this);
+    
+    new Thread(new TickerPaint()).start();
 	}
 
 

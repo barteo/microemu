@@ -88,10 +88,6 @@ public abstract class Screen extends Displayable
 	void hideNotify()
 	{
 		super.hideNotify();
-    
-    if (ticker != null) {
-      ticker.setRunning(false);
-    }
 	}
 
 
@@ -157,10 +153,6 @@ public abstract class Screen extends Displayable
 	void showNotify()
 	{
 		super.showNotify();
-
-    if (ticker != null) {
-      ticker.setRunning(true);
-    }
   }
 
 }

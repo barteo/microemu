@@ -326,10 +326,8 @@ public class Swt extends Common
 				deviceClass = Class.forName(entry.getClassName());
 			}
 			SwtDevice device = (SwtDevice) deviceClass.newInstance();
-			DeviceFactory.setDevice(device);
-			device.init(emulatorContext);
 			this.deviceEntry = entry;
-			shell.setSize(shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
+			setDevice(device);
 		} catch (MalformedURLException ex) {
 			System.err.println(ex);          
 		} catch (ClassNotFoundException ex) {
@@ -339,6 +337,14 @@ public class Swt extends Common
 		} catch (IllegalAccessException ex) {
 			System.err.println(ex);          
 		}
+	}
+	
+	
+	private void setDevice(SwtDevice device)
+	{
+		DeviceFactory.setDevice(device);
+		device.init(emulatorContext);
+		shell.setSize(shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
 	}
   
   
@@ -351,23 +357,38 @@ public class Swt extends Common
 		MIDlet m = null;
 
 		if (args.length > 0) {
-			if (args[0].endsWith(".jad")) {
-				try {
-					File file = new File(args[0]);
-				  URL url = file.exists() ? file.toURL() : new URL(args[0]);
-				  app.openJadFile(url);
-				} catch(MalformedURLException exception) {
-				  System.out.println("Cannot parse " + args[0] + " URL");
+			for (int i = 0; i < args.length; i++) {
+				if (args[i].equals("--deviceClass")) {
+					i++;
+					try {
+						Class deviceClass = Class.forName(args[i]);
+						app.setDevice((SwtDevice) deviceClass.newInstance());
+					} catch (ClassNotFoundException ex) {
+						System.err.println(ex);          
+					} catch (InstantiationException ex) {
+						System.err.println(ex);          
+					} catch (IllegalAccessException ex) {
+						System.err.println(ex);          
+					}
+					
+				} else if (args[i].endsWith(".jad")) {
+					try {
+						File file = new File(args[i]);
+						URL url = file.exists() ? file.toURL() : new URL(args[i]);
+						app.openJadFile(url);
+					} catch(MalformedURLException exception) {
+						System.out.println("Cannot parse " + args[0] + " URL");
+					}
+				} else {
+					Class midletClass;
+					try {
+						midletClass = Class.forName(args[i]);
+						m = app.loadMidlet("MIDlet", midletClass);
+					} catch (ClassNotFoundException ex) {
+						System.out.println("Cannot find " + args[i] + " MIDlet class");
+					}
 				}
-		  } else {
-				Class midletClass;
-				try {
-				  midletClass = Class.forName(args[0]);
-				m = app.loadMidlet("MIDlet", midletClass);
-				} catch (ClassNotFoundException ex) {
-				  System.out.println("Cannot find " + args[0] + " MIDlet class");
-				}
-		  }
+			}
 		} else {
 			m = app.getLauncher();
 		}

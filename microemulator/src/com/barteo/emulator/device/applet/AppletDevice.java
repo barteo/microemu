@@ -24,7 +24,10 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageFilter;
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.Enumeration;
@@ -85,13 +88,14 @@ public class AppletDevice implements Device
 	public javax.microedition.lcdui.Image createImage(String name)
   		throws IOException
 	{
-		return new ImmutableImage(name);
+		return new ImmutableImage(getImage(name));
 	}
   
   
 	public javax.microedition.lcdui.Image createImage(byte[] imageData, int imageOffset, int imageLength)
 	{
-		return new ImmutableImage(imageData, imageOffset, imageLength);
+		ByteArrayInputStream is = new ByteArrayInputStream(imageData, imageOffset, imageLength);
+		return new ImmutableImage(getImage(is));
 	}
   
   
@@ -313,24 +317,24 @@ public class AppletDevice implements Device
           } else if (tmp_display.getName().equals("img")) {
             if (tmp_display.getStringAttribute("name").equals("up")) {
               deviceDisplay.upImage = new PositionedImage(
-                  tmp_display.getStringAttribute("src"),
+                  getImage(tmp_display.getStringAttribute("src")),
                   getRectangle(getElement(tmp_display, "paintable")));
             } else if (tmp_display.getStringAttribute("name").equals("down")) {
               deviceDisplay.downImage = new PositionedImage(
-                  tmp_display.getStringAttribute("src"),
+                  getImage(tmp_display.getStringAttribute("src")),
                   getRectangle(getElement(tmp_display, "paintable")));
             } else if (tmp_display.getStringAttribute("name").equals("mode")) {
               if (tmp_display.getStringAttribute("type").equals("123")) {
                 deviceDisplay.mode123Image = new PositionedImage(
-                    tmp_display.getStringAttribute("src"),
+                    getImage(tmp_display.getStringAttribute("src")),
                     getRectangle(getElement(tmp_display, "paintable")));
               } else if (tmp_display.getStringAttribute("type").equals("abc")) {
                 deviceDisplay.modeAbcLowerImage = new PositionedImage(
-                    tmp_display.getStringAttribute("src"),
+                    getImage(tmp_display.getStringAttribute("src")),
                     getRectangle(getElement(tmp_display, "paintable")));
               } else if (tmp_display.getStringAttribute("type").equals("ABC")) {
                 deviceDisplay.modeAbcUpperImage = new PositionedImage(
-                    tmp_display.getStringAttribute("src"),
+                    getImage(tmp_display.getStringAttribute("src")),
                     getRectangle(getElement(tmp_display, "paintable")));
               }
             }
@@ -453,5 +457,32 @@ public class AppletDevice implements Device
     
 		return Toolkit.getDefaultToolkit().createImage(png);
 	}
+
+  
+  private Image getImage(String str)
+  {
+    InputStream is = AppletDevice.class.getResourceAsStream(str);
+    return getImage(is);
+  }
+  
+  
+  private Image getImage(InputStream is)
+  {
+		ImageFilter filter = null;
+    PngImage png = new PngImage(is);
+    
+    if (getDeviceDisplay().isColor()) {
+			filter = new RGBImageFilter();
+    } else {
+      if (getDeviceDisplay().numColors() == 2) {
+        filter = new BWImageFilter();
+      } else {
+        filter = new GrayImageFilter();
+      }
+    }
+    FilteredImageSource imageSource = new FilteredImageSource(png, filter);
+
+		return Toolkit.getDefaultToolkit().createImage(imageSource);
+  }
   
 }

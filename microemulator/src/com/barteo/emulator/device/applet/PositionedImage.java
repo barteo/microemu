@@ -26,28 +26,19 @@ import java.io.IOException;
 
 public class PositionedImage 
 {
-  private Image image = null;
-  private String location;
+  private Image image;
   private Rectangle rectangle;
   
   
-  public PositionedImage(String alocation, Rectangle arectangle) 
+  public PositionedImage(Image img, Rectangle arectangle) 
   {
-    location = alocation;
+    image = img;
     rectangle = arectangle;
   }
   
   
   public Image getImage()
   {
-    if (image == null) {
-      try {
-        image = ImmutableImage.getImage(location);
-      } catch (IOException ex) {
-        System.out.println("Cannot load " + location);
-      }
-    }
-    
     return image;
   }
   

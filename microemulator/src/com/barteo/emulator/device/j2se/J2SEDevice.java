@@ -99,24 +99,8 @@ public class J2SEDevice implements Device
   
 	public javax.microedition.lcdui.Image createImage(byte[] imageData, int imageOffset, int imageLength)
 	{
-		ImageFilter grayFilter;
-
 		ByteArrayInputStream is = new ByteArrayInputStream(imageData, imageOffset, imageLength);
-		PngImage png = new PngImage(is);
-   	double[][] chrom = null;
-    try {
-      chrom = (double[][])png.getProperty("chromaticity xyz");
-    } catch (IOException ex) {
-      System.err.println(ex);
-    }
-		if (chrom == null) {
-			grayFilter = new GrayImageFilter();
-		} else {
-			grayFilter = new GrayImageFilter(chrom[1][1], chrom[2][1], chrom[3][1]);
-		}
-		FilteredImageSource grayImageSource = new FilteredImageSource(png, grayFilter);
-
-		return new ImmutableImage(Toolkit.getDefaultToolkit().createImage(grayImageSource));
+		return new ImmutableImage(getImage(is));
 	}
   
   
@@ -483,24 +467,31 @@ public class J2SEDevice implements Device
 		return Toolkit.getDefaultToolkit().createImage(png);
 	}
   
-  
+
   private Image getImage(String str)
   {
-		ImageFilter grayFilter;
-    InputStream is;
-
-    is = deviceDisplay.getEmulatorContext().getClassLoader().getResourceAsStream(str);
+    InputStream is = deviceDisplay.getEmulatorContext().getClassLoader().getResourceAsStream(str);
+    return getImage(is);
+  }
+  
+  
+  private Image getImage(InputStream is)
+  {
+		ImageFilter filter = null;
     PngImage png = new PngImage(is);
     
-//   	double[][] chrom = (double[][])png.getProperty("chromaticity xyz");
-//		if (chrom == null) {
-			grayFilter = new GrayImageFilter();
-//		} else {
-//			bwFilter = new BWImageFilter(chrom[1][1], chrom[2][1], chrom[3][1]);
-//		}
-		FilteredImageSource grayImageSource = new FilteredImageSource(png, grayFilter);
+    if (getDeviceDisplay().isColor()) {
+			filter = new RGBImageFilter();
+    } else {
+      if (getDeviceDisplay().numColors() == 2) {
+        filter = new BWImageFilter();
+      } else {
+        filter = new GrayImageFilter();
+      }
+    }
+    FilteredImageSource imageSource = new FilteredImageSource(png, filter);
 
-		return Toolkit.getDefaultToolkit().createImage(grayImageSource);
+		return Toolkit.getDefaultToolkit().createImage(imageSource);
   }
   
 }

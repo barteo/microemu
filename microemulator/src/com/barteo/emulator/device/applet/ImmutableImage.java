@@ -19,51 +19,18 @@
  
 package com.barteo.emulator.device.applet;
 
-import java.awt.Toolkit;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.ImageFilter;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.IOException;
-
-import com.sixlegs.image.png.PngImage;
-
 
 public class ImmutableImage extends javax.microedition.lcdui.Image
 {
 	java.awt.Image img;
 
   
-	public ImmutableImage(String name)
-      throws IOException
+	public ImmutableImage(java.awt.Image image)
 	{
-  	img = getImage(name);
+  	img = image;
 	}
 
 
-	public ImmutableImage(byte[] imageData, int imageOffset, int imageLength)
-	{
-		ImageFilter grayFilter;
-
-		ByteArrayInputStream is = new ByteArrayInputStream(imageData, imageOffset, imageLength);
-		PngImage png = new PngImage(is);
-   	double[][] chrom = null;
-    try {
-      chrom = (double[][])png.getProperty("chromaticity xyz");
-    } catch (IOException ex) {
-      System.err.println(ex);
-    }
-		if (chrom == null) {
-			grayFilter = new GrayImageFilter();
-		} else {
-			grayFilter = new GrayImageFilter(chrom[1][1], chrom[2][1], chrom[3][1]);
-		}
-		FilteredImageSource grayImageSource = new FilteredImageSource(png, grayFilter);
-
-		img = Toolkit.getDefaultToolkit().createImage(grayImageSource);
-	}
-
-  
 	public int getHeight()
 	{
 		return img.getHeight(null);
@@ -79,30 +46,7 @@ public class ImmutableImage extends javax.microedition.lcdui.Image
 	public int getWidth()
 	{
 		return img.getWidth(null);
-	}
-
-  
-  static java.awt.Image getImage(String str)
-			throws IOException
-	{
-		ImageFilter grayFilter;
-    InputStream is;
-
-    is = ImmutableImage.class.getResourceAsStream(str);
-    if (is == null) {
-      throw new IOException();
-    }
-    PngImage png = new PngImage(is);
-    
-//   	double[][] chrom = (double[][])png.getProperty("chromaticity xyz");
-//		if (chrom == null) {
-			grayFilter = new GrayImageFilter();
-//		} else {
-//			bwFilter = new BWImageFilter(chrom[1][1], chrom[2][1], chrom[3][1]);
-//		}
-		FilteredImageSource grayImageSource = new FilteredImageSource(png, grayFilter);
-
-		return Toolkit.getDefaultToolkit().createImage(grayImageSource);
-	}
+	}  
   
 }
+

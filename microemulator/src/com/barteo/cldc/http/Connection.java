@@ -39,18 +39,9 @@ public class Connection implements HttpConnection, ClosedConnection
   URLConnection cn;
   boolean connected = false;
 
-  // workaround for IE
-  boolean ie = false;
-    
-  
   public javax.microedition.io.Connection open(String name)
       throws IOException
   {
-    // workaround for IE
-    if (System.getProperty("java.vendor").equals("Microsoft Corp.")) {
-      ie = true;
-    }
-    
     URL url;
     try {
       url = new URL(name);
@@ -66,18 +57,15 @@ public class Connection implements HttpConnection, ClosedConnection
   public void close()
 			throws IOException
   {
-    if (cn == null) {
-      return;
-    }
-    
-    // workaround for IE
-    if (ie) {
-      cn = null;
-      return;
-    }
-    
-    ((HttpURLConnection) cn).disconnect();
-    cn = null;
+  	if (cn == null) {
+  		return;
+  	}
+
+  	if (cn instanceof HttpURLConnection) {
+  		((HttpURLConnection) cn).disconnect();
+  	}
+
+  	cn = null;
   }
 
       
@@ -154,12 +142,11 @@ public class Connection implements HttpConnection, ClosedConnection
       return null;
     }
 
-    // workaround for IE
-    if (ie) {
+    if (cn instanceof HttpURLConnection) {
+      return ((HttpURLConnection) cn).getRequestMethod();
+    } else {
       return null;
     }
-
-    return ((HttpURLConnection) cn).getRequestMethod();
   }
   
 	
@@ -174,12 +161,9 @@ public class Connection implements HttpConnection, ClosedConnection
       cn.setDoOutput(true);
     }
 
-    // workaround for IE
-    if (ie) {
-      return;
+    if (cn instanceof HttpURLConnection) {
+      ((HttpURLConnection) cn).setRequestMethod(method);
     }
-    
-    ((HttpURLConnection) cn).setRequestMethod(method);
   }
 
   
@@ -215,12 +199,11 @@ public class Connection implements HttpConnection, ClosedConnection
       connected = true;
     }
     
-    // workaround for IE
-    if (ie) {
+    if (cn instanceof HttpURLConnection) {
+      return ((HttpURLConnection) cn).getResponseCode();
+    } else {
       return -1;
     }
-    
-    return ((HttpURLConnection) cn).getResponseCode();
   }
       
       
@@ -235,12 +218,11 @@ public class Connection implements HttpConnection, ClosedConnection
       connected = true;
     }
     
-    // workaround for IE
-    if (ie) {
+    if (cn instanceof HttpURLConnection) {
+      return ((HttpURLConnection) cn).getResponseMessage();
+    } else {
       return null;
     }
-    
-    return ((HttpURLConnection) cn).getResponseMessage();
   }
       
       

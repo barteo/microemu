@@ -63,8 +63,6 @@ public class SwtDeviceComponent extends Canvas
   {
 		public void keyPressed(KeyEvent ev)
 		{
-System.out.println(ev.keyCode);			
-System.out.println(ev.character);			
 			((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).keyboardKeyPressed(ev);
 			pressedButton = getButton(ev);
 			redraw();

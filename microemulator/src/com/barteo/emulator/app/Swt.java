@@ -29,7 +29,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -329,7 +329,9 @@ public class Swt
 	{
 		Display display = new Display();
 		Shell shell = new Shell(display);
-		shell.setLayout(new RowLayout(SWT.VERTICAL));
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 1;
+		shell.setLayout(layout);
 		    
 		Swt app = new Swt(shell);
 		MIDlet m = null;

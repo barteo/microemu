@@ -126,16 +126,14 @@ public class SwtDeviceDisplay implements DeviceDisplay
 
     Rectangle oldclip = g.getClipping();
     g.setClipping(displayPaintable);
-		// TODO poprawic translate	
-//    g.translate(displayPaintable.x, displayPaintable.y);
+    g.translate(displayPaintable.x, displayPaintable.y);
     Font f = g.getFont();
     
     DisplayGraphics dg = new DisplayGraphics(g);
     MIDletBridge.getMIDletAccess().getDisplayAccess().paint(dg);
     
     g.setFont(f);
-		// TODO poprawic translate	
-//    g.translate(-displayPaintable.x, -displayPaintable.y);
+    g.translate(-displayPaintable.x, -displayPaintable.y);
     g.setClipping(oldclip);
 
     if (scrollUp) {

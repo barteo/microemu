@@ -23,34 +23,33 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Shape;
 import java.io.IOException;
 import java.util.Enumeration;
 
 import javax.swing.JPanel;
 
-import com.barteo.emulator.Button;
-import com.barteo.emulator.Resource;
-import com.barteo.emulator.SoftButton;
+import com.barteo.emulator.DisplayComponent;
+import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.device.Device;
-import com.barteo.midp.lcdui.DisplayBridge;
-import com.barteo.midp.lcdui.InputMethod;
+import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.InputMethod;
+import com.barteo.emulator.device.j2se.DisplayGraphics;
+import com.barteo.emulator.device.j2se.J2SEButton;
+import com.barteo.emulator.device.j2se.J2SEDevice;
+import com.barteo.emulator.device.j2se.J2SEDeviceDisplay;
+import com.barteo.emulator.device.j2se.J2SESoftButton;
+import com.barteo.emulator.device.j2se.PositionedImage;
 
 
-public class SwingDisplayComponent extends JPanel implements com.barteo.midp.lcdui.DisplayComponent
+public class SwingDisplayComponent extends JPanel implements DisplayComponent
 {
   boolean scrollUp = false;
   boolean scrollDown = false;
 
 	Image offi;
 	Graphics offg;
-
-
-  public SwingDisplayComponent() 
-  {
-    DisplayBridge.setComponent(this);
-    setBackground(Device.backgroundColor);
-  }
 
 
   public void setScrollDown(boolean state) 
@@ -67,45 +66,61 @@ public class SwingDisplayComponent extends JPanel implements com.barteo.midp.lcd
 
   public void paint(Graphics g) 
   {
+    Device device = DeviceFactory.getDevice();
+    Rectangle displayRectangle = 
+        ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
+
     if (offg == null) {
-			offi = createImage(Device.screenRectangle.width, Device.screenRectangle.height);
+			offi = createImage(displayRectangle.width, displayRectangle.height);
 			offg = offi.getGraphics();
     }
     
-    offg.setColor(Device.backgroundColor);    
-    offg.fillRect(0, 0, Device.screenRectangle.width, Device.screenRectangle.height);
+    offg.setColor(((J2SEDeviceDisplay) device.getDeviceDisplay()).getBackgroundColor());    
+    offg.fillRect(0, 0, displayRectangle.width, displayRectangle.height);
 
-    offg.setColor(Device.foregroundColor);
-    for (Enumeration s = Device.getDeviceButtons().elements(); s.hasMoreElements(); ) {
-      Button button = (Button) s.nextElement();
-      if (button instanceof SoftButton) {
-        ((SoftButton) button).paint(offg);
+    offg.setColor(((J2SEDeviceDisplay) device.getDeviceDisplay()).getForegroundColor());
+    for (Enumeration s = ((J2SEDevice) DeviceFactory.getDevice()).getButtons().elements(); s.hasMoreElements(); ) {
+      J2SEButton button = (J2SEButton) s.nextElement();
+      if (button instanceof J2SESoftButton) {
+        ((J2SESoftButton) button).paint(offg);
       }
     }
+
+    PositionedImage tmpImage;
     
-    int inputMode = InputMethod.getInputMethod().getInputMode();
+    int inputMode = device.getInputMethod().getInputMode();
     if (inputMode == InputMethod.INPUT_123) {
-      offg.drawImage(Device.mode123Image, Device.mode123ImagePaintable.x, Device.mode123ImagePaintable.y, this);
+      tmpImage = ((J2SEDeviceDisplay) device.getDeviceDisplay()).getMode123Image();
+      offg.drawImage(tmpImage.getImage(), tmpImage.getRectangle().x, tmpImage.getRectangle().y, this);
     } else if (inputMode == InputMethod.INPUT_ABC_UPPER) {
-      offg.drawImage(Device.modeAbcUpperImage, Device.modeAbcUpperImagePaintable.x, Device.modeAbcUpperImagePaintable.y, this);
+      tmpImage = ((J2SEDeviceDisplay) device.getDeviceDisplay()).getModeAbcUpperImage();
+      offg.drawImage(tmpImage.getImage(), tmpImage.getRectangle().x, tmpImage.getRectangle().y, this);
     } else if (inputMode == InputMethod.INPUT_ABC_LOWER) {
-      offg.drawImage(Device.modeAbcLowerImage, Device.modeAbcLowerImagePaintable.x, Device.modeAbcLowerImagePaintable.y, this);
+      tmpImage = ((J2SEDeviceDisplay) device.getDeviceDisplay()).getModeAbcLowerImage();
+      offg.drawImage(tmpImage.getImage(), tmpImage.getRectangle().x, tmpImage.getRectangle().y, this);
     }
 
+    Rectangle displayPaintable = 
+        ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayPaintable();
     Shape oldclip = offg.getClip();
-    offg.setClip(Device.screenPaintable);
-    offg.translate(Device.screenPaintable.x, Device.screenPaintable.y);
+    offg.setClip(displayPaintable);
+    offg.translate(displayPaintable.x, displayPaintable.y);
     Font f = offg.getFont();
-    DisplayBridge.paint(offg);
+    
+    DisplayGraphics dg = new DisplayGraphics(offg);
+    MIDletBridge.getMIDletAccess().getDisplayAccess().paint(dg);
+    
     offg.setFont(f);
-    offg.translate(-Device.screenPaintable.x, -Device.screenPaintable.y);
+    offg.translate(-displayPaintable.x, -displayPaintable.y);
     offg.setClip(oldclip);
 
     if (scrollUp) {
-      offg.drawImage(Device.upImage, Device.upImagePaintable.x, Device.upImagePaintable.y, this);
+      tmpImage = ((J2SEDeviceDisplay) device.getDeviceDisplay()).getUpImage();
+      offg.drawImage(tmpImage.getImage(), tmpImage.getRectangle().x, tmpImage.getRectangle().y, this);
     }
     if (scrollDown) {
-      offg.drawImage(Device.downImage, Device.downImagePaintable.x, Device.downImagePaintable.y, this);
+      tmpImage = ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDownImage();
+      offg.drawImage(tmpImage.getImage(), tmpImage.getRectangle().x, tmpImage.getRectangle().y, this);
     }
     
 		g.drawImage(offi, 0, 0, null);

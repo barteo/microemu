@@ -21,8 +21,7 @@ package javax.microedition.lcdui;
 
 import java.io.IOException;
 
-import com.barteo.midp.lcdui.ImmutableImage;
-import com.barteo.midp.lcdui.MutableImage;
+import com.barteo.emulator.device.DeviceFactory;
 
 
 public class Image
@@ -35,14 +34,14 @@ public class Image
 			throw new IllegalArgumentException();
 		}
 	
-		return new MutableImage(width, height);
+		return DeviceFactory.getDevice().createImage(width, height);
 	}
 	
 																
 	public static Image createImage(String name)
   		throws IOException
 	{
-		return new ImmutableImage(name);
+		return DeviceFactory.getDevice().createImage(name);
 	}												 
 												   
 
@@ -54,7 +53,7 @@ public class Image
 
 	public static Image createImage(byte[] imageData, int imageOffset, int imageLength)
 	{
-		return new ImmutableImage(imageData, imageOffset, imageLength);
+		return DeviceFactory.getDevice().createImage(imageData, imageOffset, imageLength);
 	}
 																
 

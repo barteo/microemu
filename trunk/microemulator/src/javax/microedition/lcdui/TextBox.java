@@ -19,10 +19,10 @@
  
 package javax.microedition.lcdui;
 
-import com.barteo.emulator.device.Device;
-import com.barteo.midp.lcdui.InputMethod;
-import com.barteo.midp.lcdui.InputMethodEvent;
-import com.barteo.midp.lcdui.InputMethodListener;
+import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.InputMethod;
+import com.barteo.emulator.device.InputMethodEvent;
+import com.barteo.emulator.device.InputMethodListener;
 
 
 public class TextBox extends Screen
@@ -136,15 +136,17 @@ public class TextBox extends Screen
 
 	void hideNotify()
 	{
-		InputMethod.getInputMethod().removeInputMethodListener(inputMethodListener);
+		DeviceFactory.getDevice().getInputMethod().removeInputMethodListener(inputMethodListener);
 		super.hideNotify();
 	}
 
 
 	int paintContent(Graphics g)
 	{
-		g.drawRect(1, 1, Device.screenPaintable.width - 3, viewPortHeight - 3);
-		g.setClip(3, 3, Device.screenPaintable.width - 6, viewPortHeight - 6);
+		g.drawRect(1, 1, 
+        DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 3, viewPortHeight - 3);
+		g.setClip(3, 3, 
+        DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 6, viewPortHeight - 6);
 		g.translate(3, 3);
 		tf.paintContent(g);
 
@@ -172,10 +174,11 @@ public class TextBox extends Screen
 	void showNotify()
 	{
 		super.showNotify();
-		InputMethod.getInputMethod().setInputMethodListener(inputMethodListener);
-    InputMethod.getInputMethod().setConstraints(getConstraints());
-		InputMethod.getInputMethod().setText(getString());
-		InputMethod.getInputMethod().setMaxSize(getMaxSize());
+    InputMethod inputMethod = DeviceFactory.getDevice().getInputMethod();
+		inputMethod.setInputMethodListener(inputMethodListener);
+    inputMethod.setConstraints(getConstraints());
+		inputMethod.setText(getString());
+		inputMethod.setMaxSize(getMaxSize());
 		setCaretPosition(getString().length());
 		tf.setCaretVisible(true);
 	}

@@ -55,13 +55,11 @@ import javax.swing.UIManager;
 import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.MIDletEntry;
-import com.barteo.emulator.Resource;
 import com.barteo.emulator.app.launcher.Launcher;
-import com.barteo.emulator.device.Device;
+import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.j2se.J2SEDevice;
 import com.barteo.emulator.util.JadMidletEntry;
 import com.barteo.emulator.util.JadProperties;
-import com.barteo.midp.lcdui.DisplayBridge;
-import com.barteo.midp.lcdui.FontManager;
 
 
 public class WebStart extends JFrame implements MicroEmulator
@@ -178,13 +176,6 @@ System.out.println(fc.getName());
     
     setTitle("MicroEmulator");
     
-    FontManager.getInstance().setComponent(this);
-
-    if (!Device.getInstance().isInitialized()) {
-      System.out.println("Cannot initialize device configuration");
-      return;
-    }
-
     launcher = new Launcher();
     launcher.setCurrentMIDlet(launcher);
     
@@ -193,7 +184,8 @@ System.out.println(fc.getName());
     getContentPane().add(devicePanel, "Center");
     getContentPane().add(statusBar, "South");    
 
-    Dimension size = new Dimension(Device.deviceRectangle.getSize());
+    Dimension size = new Dimension(
+        ((J2SEDevice) DeviceFactory.getDevice()).getDeviceRectangle().getSize());
     size.width += 10;
     size.height += statusBar.getPreferredSize().height + 55;
     setSize(size);
@@ -291,10 +283,10 @@ System.out.println(fc.getName());
     if (e.getID() == WindowEvent.WINDOW_CLOSING) {
       menuExitListener.actionPerformed(null);
     } else if (e.getID() == WindowEvent.WINDOW_ICONIFIED) {
-      MIDletBridge.getAccess(launcher.getCurrentMIDlet()).pauseApp();
+      MIDletBridge.getMIDletAccess(launcher.getCurrentMIDlet()).pauseApp();
     } else if (e.getID() == WindowEvent.WINDOW_DEICONIFIED) {
       try {
-        MIDletBridge.getAccess(launcher.getCurrentMIDlet()).startApp();
+        MIDletBridge.getMIDletAccess(launcher.getCurrentMIDlet()).startApp();
   		} catch (MIDletStateChangeException ex) {
         System.err.println(ex);
   		}
@@ -305,7 +297,7 @@ System.out.println(fc.getName());
   public void start()
   {
     try {
-      MIDletBridge.getAccess(launcher.getCurrentMIDlet()).startApp();
+      MIDletBridge.getMIDletAccess(launcher.getCurrentMIDlet()).startApp();
 		} catch (MIDletStateChangeException ex) {
       System.err.println(ex);
 		}

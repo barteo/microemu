@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2002 Bartek Teodorczyk <barteo@it.pl>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -17,16 +17,22 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
  
-package com.barteo.midp.lcdui;
+package com.barteo.emulator.device;
+
+import javax.microedition.lcdui.Font;
 
 
-public interface DisplayComponent
+public interface FontManager 
 {
-
-  public void setScrollDown(boolean state);
-
-  public void setScrollUp(boolean state);
-
-  public void repaint();
-
+  
+  int charWidth(Font f, char ch);
+  
+  int charsWidth(Font f, char[] ch, int offset, int length);
+  
+  int getBaselinePosition(Font f);
+  
+  int getHeight(Font f);
+  
+  int stringWidth(Font f, String str);
+  
 }

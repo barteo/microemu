@@ -34,6 +34,8 @@ public class MIDletBridge
   
   static MicroEmulator emulator = null;
   
+  static MIDlet currentMIDlet = null;
+  
   
   public static void setMicroEmulator(MicroEmulator a_emulator) 
   {
@@ -44,12 +46,24 @@ public class MIDletBridge
   public static void setAccess(MIDlet a_midlet, MIDletAccess a_midletAccess) 
   {
     midletAccess.put(a_midlet, a_midletAccess);
-  }  
+  }
+  
+  
+  public static void setCurrentMIDlet(MIDlet a_midlet)
+  {
+    currentMIDlet = a_midlet;    
+  }
 
   
-  public static MIDletAccess getAccess(MIDlet a_midlet) 
+  public static MIDletAccess getMIDletAccess(MIDlet a_midlet) 
   {
     return (MIDletAccess) midletAccess.get(a_midlet);
+  }
+  
+  
+  public static MIDletAccess getMIDletAccess()
+  {
+    return getMIDletAccess(currentMIDlet);
   }
   
   

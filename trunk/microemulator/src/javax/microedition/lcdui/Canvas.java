@@ -22,7 +22,7 @@
  
 package javax.microedition.lcdui;
 
-import com.barteo.emulator.device.Device;
+import com.barteo.emulator.device.DeviceFactory;
 
 
 public abstract class Canvas extends Displayable
@@ -79,31 +79,31 @@ public abstract class Canvas extends Displayable
 
   public boolean hasPointerEvents()
   {
-    return Device.hasPointerEvents;
+    return DeviceFactory.getDevice().hasPointerEvents();
   }
 
 
   public boolean hasPointerMotionEvents()
   {
-    return Device.hasPointerMotionEvents;
+    return DeviceFactory.getDevice().hasPointerMotionEvents();
   }
 
 
   public boolean hasRepeatEvents()
   {
-    return Device.hasRepeatEvents;
+    return DeviceFactory.getDevice().hasRepeatEvents();
   }
 
 
 	public int getWidth()
 	{
-		return Device.screenPaintable.width;
+		return DeviceFactory.getDevice().getDeviceDisplay().getWidth();
 	}
 
 
 	public int getHeight()
 	{
-		return  Device.screenPaintable.height;
+		return DeviceFactory.getDevice().getDeviceDisplay().getHeight();
 	}
 
 

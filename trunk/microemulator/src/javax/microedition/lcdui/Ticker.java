@@ -22,7 +22,7 @@
  
 package javax.microedition.lcdui;
 
-import com.barteo.emulator.device.Device;
+import com.barteo.emulator.device.DeviceFactory;
 
 
 public class Ticker
@@ -79,7 +79,7 @@ public class Ticker
       int stringWidth = f.stringWidth(text) + PAINT_GAP;
       g.drawString(text, textPos, 0, Graphics.LEFT | Graphics.TOP);
       int xPos = textPos + stringWidth;
-      while (xPos < Device.screenPaintable.width) {
+      while (xPos < DeviceFactory.getDevice().getDeviceDisplay().getWidth()) {
         g.drawString(text, xPos, 0, Graphics.LEFT | Graphics.TOP);
         xPos += stringWidth;
       }

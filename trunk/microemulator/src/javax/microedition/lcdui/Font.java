@@ -20,7 +20,7 @@
  
 package javax.microedition.lcdui;
 
-import com.barteo.midp.lcdui.FontManager;
+import com.barteo.emulator.device.DeviceFactory;
 
 
 public final class Font
@@ -78,7 +78,7 @@ public final class Font
 
   public int getHeight()
   {
-    return FontManager.getInstance().getHeight(this);
+    return DeviceFactory.getDevice().getFontManager().getHeight(this);
   }
 
 
@@ -96,19 +96,19 @@ public final class Font
 
   public int charWidth(char ch)
   {
-    return FontManager.getInstance().charWidth(this, ch);
+    return DeviceFactory.getDevice().getFontManager().charWidth(this, ch);
   }
 
 
   public int charsWidth(char[] ch, int offset, int length)
   {
-    return FontManager.getInstance().charsWidth(this, ch, offset, length);
+    return DeviceFactory.getDevice().getFontManager().charsWidth(this, ch, offset, length);
   }
 
 
   public int getBaselinePosition()
   {
-    return FontManager.getInstance().getBaselinePosition(this);
+    return DeviceFactory.getDevice().getFontManager().getBaselinePosition(this);
   }
 
 
@@ -154,7 +154,7 @@ public final class Font
 
 	public int stringWidth(String str)
 	{
-		return FontManager.getInstance().stringWidth(this, str);
+		return DeviceFactory.getDevice().getFontManager().stringWidth(this, str);
 	}
 
 

@@ -17,19 +17,20 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
  
-package com.barteo.midp.lcdui;
+package com.barteo.emulator.device.j2se;
 
 import java.awt.Component;
+import java.awt.Label;
 import java.awt.FontMetrics;
 import java.util.Hashtable;
 
 import javax.microedition.lcdui.Font;
 
+import com.barteo.emulator.device.FontManager;
 
-public class FontManager
+
+public class J2SEFontManager implements FontManager
 {
-
-  static FontManager instance = new FontManager();
   
   static String FACE_SYSTEM_NAME = "SansSerif";
   static String FACE_MONOSPACE_NAME = "Monospaced";
@@ -39,9 +40,10 @@ public class FontManager
   static int SIZE_MEDIUM = 11;
   static int SIZE_LARGE = 13;
   
-  Component component;
+  Component tmpComponent = new Label();
   Hashtable fontsMetrics = new Hashtable();
   
+
   java.awt.FontMetrics getFontMetrics(javax.microedition.lcdui.Font meFont)
   {
     java.awt.FontMetrics tmp = (java.awt.FontMetrics) fontsMetrics.get(meFont);
@@ -73,25 +75,13 @@ public class FontManager
       } else if (meFont.getSize() == javax.microedition.lcdui.Font.SIZE_LARGE) {
         size = SIZE_LARGE;
       }
-      tmp = component.getFontMetrics(new java.awt.Font(name, style, size));
+      tmp = tmpComponent.getFontMetrics(new java.awt.Font(name, style, size));
       fontsMetrics.put(meFont, tmp);
     }
     
     return tmp;
   }
   
-
-  public static FontManager getInstance()
-  {
-    return instance;
-  }
-  
-  
-  public void setComponent(Component acomponent)
-  {
-    component = acomponent;
-  }
-
 
 	public int charWidth(javax.microedition.lcdui.Font f, char ch)
 	{

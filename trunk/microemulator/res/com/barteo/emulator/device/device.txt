@@ -8,7 +8,7 @@
 		<width>170</width>
 		<height>445</height>
 	</rectangle>
-	<screen>
+	<display>
     <numcolors>256</numcolors>
     <iscolor>false</iscolor>
 		<foreground>000000</foreground>
@@ -65,7 +65,7 @@
 			  <height>7</height>
 		  </paintable>
     </img>
-	</screen>
+	</display>
 	<keyboard>
 		<softbutton name="" key="VK_F1" alignment="LEFT">
 			<rectangle>

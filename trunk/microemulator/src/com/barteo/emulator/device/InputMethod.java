@@ -17,10 +17,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
  
-package com.barteo.midp.lcdui;
+package com.barteo.emulator.device;
 
 import javax.microedition.lcdui.TextField;
-import com.barteo.emulator.DefaultInputMethod;
 
 
 public abstract class InputMethod
@@ -39,16 +38,6 @@ public abstract class InputMethod
   protected String text;
 	protected int caret;
 	protected int maxSize;
-
-
-	public static InputMethod getInputMethod()
-	{
-		if (inputMethod == null) {
-			inputMethod = new DefaultInputMethod();
-		}
-
-		return inputMethod;
-	}
 
 
 	public abstract void keyPressed(int keyCode);

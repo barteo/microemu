@@ -17,7 +17,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
  
-package com.barteo.emulator;
+package com.barteo.emulator.device.applet;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
@@ -25,10 +25,12 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Command;
-import com.barteo.emulator.device.Device;
+
+import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.SoftButton;
 
 
-public class SoftButton extends Button
+public class AppletSoftButton extends AppletButton implements SoftButton
 {
 
   public static int LEFT = 1;
@@ -43,8 +45,7 @@ public class SoftButton extends Button
   int alignment;
 
 
-  public SoftButton(String name, Rectangle rectangle, String keyName, 
-      Rectangle paintable, String alignmentName, Vector commands, boolean menuActivate)
+  public AppletSoftButton(String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands, boolean menuActivate)
   {
     super(name, rectangle, keyName, null);
       
@@ -52,7 +53,7 @@ public class SoftButton extends Button
     this.menuActivate = menuActivate;
     
     try {
-      alignment = SoftButton.class.getField(alignmentName).getInt(null);
+      alignment = AppletSoftButton.class.getField(alignmentName).getInt(null);
     } catch (Exception ex) {
       System.err.println(ex);
     }
@@ -126,21 +127,19 @@ public class SoftButton extends Button
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     *@param  g  Description of Parameter
-     */
-    public void paint(Graphics g) {
+    public void paint(Graphics g) 
+    {
         int xoffset = 0;
 
-        g.setColor(Device.backgroundColor);
+        AppletDeviceDisplay deviceDisplay =
+            (AppletDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
+        g.setColor(deviceDisplay.getBackgroundColor());
         g.fillRect(paintable.x, paintable.y, paintable.width, paintable.height);
         if (command != null) {
             if (alignment == RIGHT) {
                 xoffset = paintable.width - g.getFontMetrics().stringWidth(command.getLabel());
             }
-            g.setColor(Device.foregroundColor);
+            g.setColor(deviceDisplay.getForegroundColor());
             g.drawString(command.getLabel(), paintable.x + xoffset, paintable.y + paintable.height);
         }
     }

@@ -22,7 +22,7 @@
  
 package javax.microedition.lcdui;
 
-import com.barteo.emulator.device.Device;
+import com.barteo.emulator.device.DeviceFactory;
 
 
 public class Gauge extends Item
@@ -125,10 +125,11 @@ public class Gauge extends Item
 		g.translate(0, super.getHeight());
     
  		if (isFocus()) {
-      g.drawRect(2, 2, Device.screenPaintable.width - 5, HEIGHT - 5);
+      g.drawRect(2, 2, 
+          DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 5, HEIGHT - 5);
     }
     
-    int width = (Device.screenPaintable.width - 8) * value / maxValue;
+    int width = (DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 8) * value / maxValue;
     g.fillRect(4, 4, width, HEIGHT - 8);
 		g.translate(0, -super.getHeight());
     

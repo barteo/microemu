@@ -18,7 +18,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
  
-package com.barteo.midp.lcdui;
+package com.barteo.emulator;
 
 import java.util.Enumeration;
 import java.util.Vector;
@@ -28,9 +28,8 @@ import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.List;
-import com.barteo.emulator.Button;
-import com.barteo.emulator.SoftButton;
-import com.barteo.emulator.device.Device;
+import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.SoftButton;
 
 
 public class CommandManager {
@@ -54,10 +53,10 @@ public class CommandManager {
 
     public void commandAction(Command cmd) {
         if (cmd == MENU_COMMAND) {
-            previous = DisplayBridge.getCurrent();
-            DisplayBridge.setCurrent(commandList);
+            previous = MIDletBridge.getMIDletAccess().getDisplayAccess().getCurrent();
+            MIDletBridge.getMIDletAccess().getDisplayAccess().setCurrent(commandList);
         } else {
-            DisplayBridge.commandAction(cmd);
+            MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(cmd);
         }
     }
 
@@ -83,7 +82,7 @@ public class CommandManager {
      * Requires that the command vector passed in
      * is in priority order.
      */
-    void updateCommands(Vector commands) 
+    public void updateCommands(Vector commands) 
     {
         // Verify that the list is ordered
         // Really an assert condition leave till all working
@@ -99,15 +98,15 @@ public class CommandManager {
 
         // Count how many soft buttons we have and remove the
         // old commands while we are there
-        Vector devButtons = Device.getDeviceButtons();
+        Vector devButtons = DeviceFactory.getDevice().getSoftButtons();
         Vector sbArray = new Vector(3);
 
         for (int i=0; i<devButtons.size(); i++) {
-            Button button = (Button)devButtons.elementAt(i);
+          SoftButton button = (SoftButton) devButtons.elementAt(i);
           if (button instanceof SoftButton) {
-                sbArray.addElement(button);
-            ((SoftButton) button).removeCommand();
-                ((SoftButton)button).setMenuActivate(false);
+            sbArray.addElement(button);
+            button.removeCommand();
+            button.setMenuActivate(false);
           }
         }
 
@@ -164,9 +163,10 @@ public class CommandManager {
          *@param  d    Description of Parameter
          */
         public void commandAction(Command cmd, Displayable d) {
-            DisplayBridge.setCurrent(previous);
+            MIDletBridge.getMIDletAccess().getDisplayAccess().setCurrent(previous);
             if ((cmd == SELECT_COMMAND) || cmd == List.SELECT_COMMAND) {
-                DisplayBridge.commandAction((Command) menuCommands.elementAt(commandList.getSelectedIndex()));
+                MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(
+                        (Command) menuCommands.elementAt(commandList.getSelectedIndex()));
             }
         }
 

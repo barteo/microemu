@@ -19,7 +19,7 @@
  
 package javax.microedition.lcdui;
 
-import com.barteo.emulator.device.Device;
+import com.barteo.emulator.device.DeviceFactory;
 
 
 class StringComponent
@@ -41,7 +41,7 @@ class StringComponent
   StringComponent(String text)
   {
     this.text = text;
-		width = Device.screenPaintable.width;
+		width = DeviceFactory.getDevice().getDeviceDisplay().getWidth();
 		updateBreaks();
   }
 

@@ -22,7 +22,7 @@
  
 package javax.microedition.lcdui;
 
-import com.barteo.emulator.device.Device;
+import com.barteo.emulator.device.DeviceFactory;
 
 
 public class TextField extends Item
@@ -78,7 +78,7 @@ public class TextField extends Item
 		} else {
       setString("");
     }
-		stringComponent.setWidth(Device.screenPaintable.width - 8);
+		stringComponent.setWidth(DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 8);
 		caret = 0;
 		caretVisible = false;
 	}
@@ -258,7 +258,8 @@ public class TextField extends Item
 
 		g.translate(0, super.getHeight());
 		if (isFocus()) {
-			g.drawRect(1, 1, Device.screenPaintable.width - 3, stringComponent.getHeight() + 4);
+			g.drawRect(1, 1, 
+          DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 3, stringComponent.getHeight() + 4);
 		}
 		g.translate(3, 3);
 		paintContent(g);

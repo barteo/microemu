@@ -106,7 +106,7 @@ public class Launcher extends MIDlet implements CommandListener
         if (!menuList.getString(menuList.getSelectedIndex()).equals(nomidlets)) {
           currentMIDlet = ((MIDletEntry) midletEntries.elementAt(menuList.getSelectedIndex())).getMIDlet();
           try {
-            MIDletBridge.getAccess(currentMIDlet).startApp();
+            MIDletBridge.getMIDletAccess(currentMIDlet).startApp();
       		} catch (MIDletStateChangeException ex) {
             System.err.println(ex);
       		}

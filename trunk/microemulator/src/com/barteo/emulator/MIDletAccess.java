@@ -19,7 +19,7 @@
  
 package com.barteo.emulator;
 
-import com.barteo.midp.lcdui.DisplayAccess;
+import com.barteo.emulator.DisplayAccess;
 import javax.microedition.lcdui.Display;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;

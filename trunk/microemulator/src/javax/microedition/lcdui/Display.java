@@ -22,11 +22,12 @@
  
 package javax.microedition.lcdui;
 
-import javax.microedition.midlet.*;
+import javax.microedition.midlet.MIDlet;
 
+import com.barteo.emulator.CommandManager;
+import com.barteo.emulator.DisplayAccess;
 import com.barteo.emulator.MIDletBridge;
-import com.barteo.emulator.device.Device;
-import com.barteo.midp.lcdui.*;
+import com.barteo.emulator.device.DeviceFactory;
 
 
 public class Display
@@ -88,7 +89,7 @@ public class Display
 		public void paint(Graphics g)
 		{
 			if (current != null) {
-				current.paint(g);
+        current.paint(g);
 				g.translate(-g.getTranslateX(), -g.getTranslateY());
 			}
 		}
@@ -179,7 +180,7 @@ public class Display
 
 	public int numColors()
 	{
-		return Device.numColors;
+		return DeviceFactory.getDevice().getDeviceDisplay().numColors();
 	}
 
 
@@ -187,11 +188,11 @@ public class Display
 	{
     Display result;
     
-    if (MIDletBridge.getAccess(m).getDisplayAccess() == null) {
+    if (MIDletBridge.getMIDletAccess(m).getDisplayAccess() == null) {
       result = new Display();
-      MIDletBridge.getAccess(m).setDisplayAccess(result.accessor);
+      MIDletBridge.getMIDletAccess(m).setDisplayAccess(result.accessor);
     } else {
-      result = MIDletBridge.getAccess(m).getDisplayAccess().getDisplay();
+      result = MIDletBridge.getMIDletAccess(m).getDisplayAccess().getDisplay();
     }
 
     return result;
@@ -206,7 +207,7 @@ public class Display
 
 	public boolean isColor()
 	{
-		return Device.isColor;
+		return DeviceFactory.getDevice().getDeviceDisplay().isColor();
 	}
 
 
@@ -241,7 +242,7 @@ public class Display
 		current = alert;
 
 		current.showNotify(this);
-		DisplayBridge.updateCommands(current.getCommands());
+		updateCommands();
 		current.repaint();
 
 		if (alert.getTimeout() != Alert.FOREVER) {
@@ -260,13 +261,13 @@ public class Display
 
 	static int getGameAction(int keyCode)
 	{
-		return DisplayBridge.getGameAction(keyCode);
+		return DeviceFactory.getDevice().getGameAction(keyCode);
 	}
 
 
 	static int getKeyCode(int gameAction)
 	{
-		return DisplayBridge.getKeyCode(gameAction);
+		return DeviceFactory.getDevice().getKeyCode(gameAction);
 	}
 
 
@@ -283,7 +284,7 @@ public class Display
 	void repaint()
 	{
     if (current != null) {
-			DisplayBridge.repaint();
+      repaint(current);
     }
   }
     
@@ -291,30 +292,36 @@ public class Display
   void repaint(Displayable d)
 	{
 		if (current == d) {
-			DisplayBridge.repaint();
+			DeviceFactory.getDevice().getDeviceDisplay().repaint();
 		}
 	}
   
   
   void setScrollDown(boolean state)
   {
-    DisplayBridge.setScrollDown(state);
+    DeviceFactory.getDevice().getDeviceDisplay().setScrollDown(state);
   }
 
 
   void setScrollUp(boolean state)
   {
-    DisplayBridge.setScrollUp(state);
+    DeviceFactory.getDevice().getDeviceDisplay().setScrollUp(state);
   }
 
 
 	void updateCommands()
 	{
     if (current == null) {
-      DisplayBridge.updateCommands(null);
+      CommandManager.getInstance().updateCommands(null);
     } else {
-      DisplayBridge.updateCommands(current.getCommands());
+      CommandManager.getInstance().updateCommands(current.getCommands());
     }
+    /**
+     * updateCommands has changed the softkey labels
+     * tell the outside world it has happened.
+     */
+    MIDletBridge.notifySoftkeyLabelsChanged();
+    repaint();
 	}
 
 }

@@ -25,7 +25,6 @@ import java.awt.Font;
 import java.awt.Image;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Enumeration;
 
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
@@ -132,14 +131,9 @@ System.out.println("Applet::init()");
     
 	manifest.clear();
 	try {
-		Enumeration en = 
-				emulatorContext.getClassLoader().getResources("META-INF/MANIFEST.MF");
-		while (en.hasMoreElements()) {
-			URL url = (URL) en.nextElement();
-			manifest.load(url.openStream());
-			if (manifest.getProperty("MIDlet-Name") != null) {
-				break;
-			}
+		URL url = emulatorContext.getClassLoader().getResource("META-INF/MANIFEST.MF");
+		manifest.load(url.openStream());
+		if (manifest.getProperty("MIDlet-Name") == null) {
 			manifest.clear();
 		}
 	} catch (IOException e) {

@@ -151,15 +151,15 @@ public class Alert extends Screen
 	}
 
 
-	public int getHeight()
+	int getContentHeight()
 	{
 		return alertContent.getHeight();
 	}
 
 
-	int paintContent(Graphics g)
+	void paint(Graphics g)
 	{
-		return alertContent.paint(g);
+		alertContent.paint(g);
 	}
 
 

@@ -164,9 +164,15 @@ public class List extends Screen implements Choice
   }
 
   
-  int paintContent(Graphics g)
+	int getContentHeight()
+	{
+		return choiceGroup.getHeight();
+	}
+
+
+  void paint(Graphics g)
   {
-    return choiceGroup.paint(g);
+    choiceGroup.paint(g);
   }
   
   

@@ -26,9 +26,8 @@ import com.barteo.emulator.device.DeviceFactory;
 
 public abstract class Displayable
 {
-// Move more code from Screen (eg. paint)		
-	StringComponent title;
-	Ticker ticker;
+	private StringComponent title;
+	private Ticker ticker;
 	int viewPortY;
 	int viewPortHeight;
 
@@ -184,6 +183,58 @@ public abstract class Displayable
 
 
 	abstract void paint(Graphics g);
+	
+	abstract int getContentHeight();
+	
+	
+	void paintContent(Graphics g)
+	{
+		int contentHeight = 0;
+		int translatedY;
+
+		if (viewPortY == 0) {
+			currentDisplay.setScrollUp(false);
+		} else {
+			currentDisplay.setScrollUp(true);
+		}
+
+		g.setGrayScale(255);
+		g.fillRect(0, 0,
+				DeviceFactory.getDevice().getDeviceDisplay().getWidth(),
+				DeviceFactory.getDevice().getDeviceDisplay().getHeight());
+
+		g.setGrayScale(0);
+
+		if (ticker != null) {
+			contentHeight += ticker.paintContent(g);
+			g.translate(0, contentHeight);
+		}
+		translatedY = contentHeight;
+		
+		if (title.getText() != null) {
+			contentHeight += title.paint(g);
+			g.drawLine(0, title.getHeight(),
+					DeviceFactory.getDevice().getDeviceDisplay().getWidth(), title.getHeight());
+			contentHeight += 1;
+			g.translate(0, contentHeight - translatedY);
+		}
+		translatedY = contentHeight;
+
+		g.clipRect(0, 0,
+				DeviceFactory.getDevice().getDeviceDisplay().getWidth(),
+				DeviceFactory.getDevice().getDeviceDisplay().getHeight() - contentHeight);
+		g.translate(0, -viewPortY);
+		paint(g);
+		contentHeight += getContentHeight();
+		g.translate(0, viewPortY);
+
+		if (contentHeight - viewPortY > DeviceFactory.getDevice().getDeviceDisplay().getHeight()) {
+			currentDisplay.setScrollDown(true);
+		} else {
+			currentDisplay.setScrollDown(false);
+		}
+		g.translate(0, -translatedY);		
+	}
 
 
 	void repaint()

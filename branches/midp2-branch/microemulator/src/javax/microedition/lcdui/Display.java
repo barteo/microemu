@@ -99,7 +99,7 @@ public class Display
 		public void paint(Graphics g)
 		{
 			if (current != null) {
-        current.paint(g);
+        current.paintContent(g);
 				g.translate(-g.getTranslateX(), -g.getTranslateY());
 			}
 		}

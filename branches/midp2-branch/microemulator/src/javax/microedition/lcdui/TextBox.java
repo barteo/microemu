@@ -145,9 +145,15 @@ public class TextBox extends Screen
 		DeviceFactory.getDevice().getInputMethod().removeInputMethodListener(inputMethodListener);
 		super.hideNotify();
 	}
+	
+	
+	int getContentHeight()
+	{
+		return tf.getHeight();
+	}
 
 
-	int paintContent(Graphics g)
+	void paint(Graphics g)
 	{
 		g.drawRect(1, 1, 
         DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 3, viewPortHeight - 3);
@@ -155,8 +161,6 @@ public class TextBox extends Screen
         DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 6, viewPortHeight - 6);
 		g.translate(3, 3);
 		tf.paintContent(g);
-
-		return tf.getHeight() + 6;
 	}
 
 

@@ -19,8 +19,6 @@
  
 package javax.microedition.lcdui;
 
-import com.barteo.emulator.device.DeviceFactory;
-
 
 public abstract class Screen extends Displayable
 {
@@ -45,79 +43,9 @@ public abstract class Screen extends Displayable
 	}
 
 
-	void hideNotify()
-	{
-		super.hideNotify();
-	}
-
-
 	void keyRepeated(int keyCode)
 	{
     keyPressed(keyCode);
 	}
-
-
-	final void paint(Graphics g)
-	{
-    int contentHeight = 0;
-		int translatedY;
-
-		if (viewPortY == 0) {
-			currentDisplay.setScrollUp(false);
-		} else {
-			currentDisplay.setScrollUp(true);
-		}
-
-		g.setGrayScale(255);
-		g.fillRect(0, 0, 
-        DeviceFactory.getDevice().getDeviceDisplay().getWidth(), 
-        DeviceFactory.getDevice().getDeviceDisplay().getHeight());
-
-		g.setGrayScale(0);
-
-    if (ticker != null) {
-      contentHeight += ticker.paintContent(g);
-    }
-
-    g.translate(0, contentHeight);
-		translatedY = contentHeight;
-
-		contentHeight += title.paint(g);
-    g.drawLine(0, title.getHeight(), 
-        DeviceFactory.getDevice().getDeviceDisplay().getWidth(), title.getHeight());
-		contentHeight += 1;
-
-    g.translate(0, contentHeight - translatedY);
-		translatedY = contentHeight;
-
-		g.clipRect(0, 0, 
-        DeviceFactory.getDevice().getDeviceDisplay().getWidth(), 
-        DeviceFactory.getDevice().getDeviceDisplay().getHeight() - contentHeight);
-    g.translate(0, -viewPortY);
-    contentHeight += paintContent(g);
-    g.translate(0, viewPortY);
-
-		if (contentHeight - viewPortY > DeviceFactory.getDevice().getDeviceDisplay().getHeight()) {
-			currentDisplay.setScrollDown(true);
-		} else {
-			currentDisplay.setScrollDown(false);
-		}
-		g.translate(0, -translatedY);
-	}
-
-
-  abstract int paintContent(Graphics g);
-
-
-  void repaint()
-  {
-    super.repaint();
-  }
-
-
-	void showNotify()
-	{
-		super.showNotify();
-  }
 
 }

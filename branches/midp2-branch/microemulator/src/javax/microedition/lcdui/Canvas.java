@@ -134,8 +134,8 @@ public abstract class Canvas extends Displayable
 
 
 	protected abstract void paint(Graphics g);
-
-
+	
+	
   protected void pointerPressed(int x, int y)
   {
   }
@@ -182,6 +182,13 @@ public abstract class Canvas extends Displayable
 	protected void sizeChanged(int w, int h)
 	{
 		throw new RuntimeException("TODO");
+	}
+	
+	
+	int getContentHeight()
+	{
+		return getHeight();
+//		throw new RuntimeException("TODO");
 	}
   
 }

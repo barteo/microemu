@@ -145,7 +145,19 @@ public class Form extends Screen
   }
 
 
-  int paintContent(Graphics g)
+	public int getWidth()
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public int getHeight()
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+  void paint(Graphics g)
   {
 		int contentHeight = 0;
 		int translateY;
@@ -155,12 +167,10 @@ public class Form extends Screen
 			contentHeight += translateY;
 		}
 		g.translate(0, -contentHeight);
-
-		return contentHeight;
   }
 
 
-	public int getHeight()
+	int getContentHeight()
 	{
 		int height = 0;
 
@@ -172,12 +182,6 @@ public class Form extends Screen
 	}
 	
 	
-	public int getWidth()
-	{
-		throw new RuntimeException("TODO");
-	}
-
-
 	void hideNotify()
 	{
 		super.hideNotify();

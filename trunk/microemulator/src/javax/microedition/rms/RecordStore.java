@@ -74,9 +74,9 @@ public class RecordStore
         throw new RecordStoreNotFoundException();
       }
       recordStore = new RecordStore(recordStoreName);
-      recordStore.open = true;
       recordStores.put(recordStoreName, recordStore);
     }
+    recordStore.open = true;
     
 		return recordStore;
 	}
@@ -210,7 +210,7 @@ public class RecordStore
 
     fireAddedRecordListener(curRecordID);
     
-    return nextRecordID;  
+    return curRecordID;  
   }
 	
 	

@@ -42,6 +42,9 @@ public class Form extends Screen
 
     this.items = items;
     numOfItems = items.length;
+    for (int i = 0; i < numOfItems; i++) {
+      items[i].setOwner(this);
+    }
   }
 
 

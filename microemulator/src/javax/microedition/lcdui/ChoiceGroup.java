@@ -416,7 +416,7 @@ public class ChoiceGroup extends Item implements Choice
 
   int traverse(int gameKeyCode, int top, int bottom, boolean action)
   {
-    if (gameKeyCode == 1) {
+    if (gameKeyCode == Canvas.UP) {
       if (highlightedItemIndex > 0) {
 				if (action) {
         	highlightedItemIndex--;
@@ -438,7 +438,7 @@ public class ChoiceGroup extends Item implements Choice
 				}
 			}
     }
-    if (gameKeyCode == 6) {
+    if (gameKeyCode == Canvas.DOWN) {
       if ((!action && highlightedItemIndex < numOfItems)
       		|| (action && highlightedItemIndex < (numOfItems - 1))) {
 				if (action) {

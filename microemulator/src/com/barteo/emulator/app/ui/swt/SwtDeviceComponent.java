@@ -139,7 +139,7 @@ System.out.println(ev.character);
 		super(parent, 0);
 		instance = this;
     
-		dc = new SwtDisplayComponent(parent);    
+		dc = new SwtDisplayComponent(parent, this);    
     
 		addKeyListener(keyListener);
 		addMouseListener(mouseListener);
@@ -219,17 +219,15 @@ System.out.println(ev.character);
   
 	private SwtButton getButton(KeyEvent ev)
 	{
-		// TODO poprawic KeyEvent	
-
-/*		for (Enumeration e = ((SwtDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
+		for (Enumeration e = ((SwtDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
 			SwtButton button = (SwtButton) e.nextElement();
-			if (ev.getKeyCode() == button.getKey()) {
+			if (ev.keyCode == button.getKey()) {
 				return button;
 			}
-			if (button.isChar(ev.getKeyChar())) {
+			if (button.isChar(ev.character)) {
 				return button;
 			}
-		}*/
+		}
 		        
 		return null;
 	}

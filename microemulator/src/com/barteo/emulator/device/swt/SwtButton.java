@@ -19,6 +19,7 @@
  
 package com.barteo.emulator.device.swt;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
 
 
@@ -82,18 +83,20 @@ public class SwtButton
   
   private int getKeyCode(String keyName)
   {
-System.out.println(keyName);  	
-    int key = -1;
-
-	// TODO poprawic KeyEvent	
-    
-/*    try {
-      key = KeyEvent.class.getField(keyName).getInt(null);
-    } catch (Exception ex) {
-      System.err.println(ex);
-    }*/
-    
-    return key;
+		// TODO poprawic KeyEvent	
+		if (keyName.equals("VK_LEFT")) {
+			return SWT.ARROW_LEFT;
+		} else if (keyName.equals("VK_RIGHT")) {
+			return SWT.ARROW_RIGHT;
+		} else if (keyName.equals("VK_UP")) {
+			return SWT.ARROW_UP;
+		} else if (keyName.equals("VK_DOWN")) {
+			return SWT.ARROW_DOWN;
+		} else if (keyName.equals("VK_ENTER")) {
+			return SWT.CR;
+		} else {
+			return -1;
+		}
   }
 
 }

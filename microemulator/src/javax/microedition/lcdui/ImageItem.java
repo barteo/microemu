@@ -119,7 +119,7 @@ public class ImageItem extends Item
 	{
 		Font f = Font.getDefaultFont();
 
-		if (gameKeyCode == 1) {
+		if (gameKeyCode == Canvas.UP) {
 			if (top > 0) {
 				if ((top % f.getHeight()) == 0) {
 					return -f.getHeight();
@@ -130,7 +130,7 @@ public class ImageItem extends Item
 				return Item.OUTOFITEM;
 			}
 		}
-		if (gameKeyCode == 6) {
+		if (gameKeyCode == Canvas.DOWN) {
 			if (bottom < getHeight()) {
 				if (getHeight() - bottom < f.getHeight()) {
 					return getHeight() - bottom;

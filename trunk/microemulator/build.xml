@@ -6,6 +6,8 @@
 <!-- for the classes in your application. -->
 <project basedir="." default="jar" name="microemulator">
 
+  <property name="build.compiler" value="javac1.1"/>
+
   <!-- Don't worry if you don't know the Ant syntax completely or need help on some tasks! -->
   <!-- The standard Ant documentation is bundled. See Help | Shortcuts | Ant 1.3 Documentation. -->
 

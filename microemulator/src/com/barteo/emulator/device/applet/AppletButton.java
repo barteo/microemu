@@ -17,13 +17,13 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
  
-package com.barteo.emulator;
+package com.barteo.emulator.device.applet;
 
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
 
-public class Button 
+public class AppletButton 
 {
  
   String name;
@@ -32,7 +32,7 @@ public class Button
   char[] chars;
 
 
-  public Button(String name, Rectangle rectangle, String keyName, char[] chars)
+  public AppletButton(String name, Rectangle rectangle, String keyName, char[] chars)
   {
     this.name = name;
     this.rectangle = rectangle;

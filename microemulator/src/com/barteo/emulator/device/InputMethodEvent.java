@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2002 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -19,29 +19,35 @@
  
 package com.barteo.emulator.device;
 
-import java.io.IOException;
-import java.util.Vector;
 
-import javax.microedition.lcdui.Image;
-
-
-public interface Device 
+public class InputMethodEvent
 {
 
-  Image createImage(int width, int height);
-  Image createImage(String name) throws IOException;
-  Image createImage(byte[] imageData, int imageOffset, int imageLength);
-  
-  DeviceDisplay getDeviceDisplay();
-  FontManager getFontManager();
-  InputMethod getInputMethod();
-  Vector getSoftButtons();
-  
-  int getGameAction(int keyCode);
-  int getKeyCode(int gameAction);
+	public static final int CARET_POSITION_CHANGED = 1;
+	public static final int INPUT_METHOD_TEXT_CHANGED = 2;
+	
+	int type;
+	int caret;
+	String text;
 
-  boolean hasPointerMotionEvents();
-  boolean hasPointerEvents();
-  boolean hasRepeatEvents();
+
+	public InputMethodEvent(int type, int caret, String text)
+	{
+		this.type = type;
+		this.caret = caret;
+		this.text = text;
+	}
+
+
+	public int getCaret()
+	{
+		return caret;
+	}
+
+
+	public String getText()
+	{
+		return text;
+	}
 
 }

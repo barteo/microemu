@@ -20,15 +20,16 @@
  *    3GLab
  */
  
-package com.barteo.midp.lcdui;
+package com.barteo.emulator.device.j2se;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-import javax.microedition.lcdui.*;
-import com.barteo.emulator.GrayImageFilter;
-import com.barteo.emulator.device.Device;
+import javax.microedition.lcdui.Image;
+import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.j2se.GrayImageFilter;
+
 
 public class DisplayGraphics extends javax.microedition.lcdui.Graphics 
 {
@@ -37,10 +38,12 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
   javax.microedition.lcdui.Font currentFont = javax.microedition.lcdui.Font.getDefaultFont();
   
 
-  protected DisplayGraphics(java.awt.Graphics a_g) 
+// to zostanie zmienione na protected jak zostanie zrobiony DisplayBridge
+  public DisplayGraphics(java.awt.Graphics a_g) 
   {
     g = a_g;
-    g.setFont(FontManager.getInstance().getFontMetrics(currentFont).getFont());
+    g.setFont(
+        ((J2SEFontManager) DeviceFactory.getDevice().getFontManager()).getFontMetrics(currentFont).getFont());
   }
 
 
@@ -68,7 +71,8 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 	public void setFont(javax.microedition.lcdui.Font font)
 	{
 		currentFont = font;
-    g.setFont(FontManager.getInstance().getFontMetrics(currentFont).getFont());
+    g.setFont(
+        ((J2SEFontManager) DeviceFactory.getDevice().getFontManager()).getFontMetrics(currentFont).getFont());
 	}
 
 
@@ -110,7 +114,7 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
   {
     Rectangle rect = g.getClipBounds();
     if (rect == null) {
-      return Device.screenPaintable.height;
+      return DeviceFactory.getDevice().getDeviceDisplay().getHeight();
     } else {
       return rect.height;
     }
@@ -121,7 +125,7 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
   {
     Rectangle rect = g.getClipBounds();
     if (rect == null) {
-      return Device.screenPaintable.width;
+      return DeviceFactory.getDevice().getDeviceDisplay().getWidth();
     } else {
       return rect.width;
     }
@@ -154,7 +158,11 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
       newy -= img.getHeight() / 2;
     }
 
-    g.drawImage(((ImageImpl) img).getImage(), newx, newy, null);
+    if (img.isMutable()) {
+      g.drawImage(((MutableImage) img).getImage(), newx, newy, null);
+    } else {
+      g.drawImage(((ImmutableImage) img).getImage(), newx, newy, null);
+    }
   }
 
 

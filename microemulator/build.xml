@@ -51,6 +51,7 @@
       <fileset dir="./classes">
         <exclude name="com/barteo/midp/examples/**"/>
         <exclude name="com/barteo/emulator/app/**"/>
+        <exclude name="com/barteo/emulator/device/j2se/**"/>
         <exclude name="**/.*"/>
       </fileset>
       <fileset dir="./res">
@@ -61,10 +62,12 @@
     <copy file="me-applet.jar" todir="doc/www"/>
   </target>
 
-  <target depends="init,compile,jar-applet,jar-simpledemo" name="jar">
+  <target depends="init,compile,jar-applet,jar-simpledemo" name="jar-app">
     <jar compress="true" jarfile="me-app.jar">
       <fileset dir="./classes">
         <exclude name="com/barteo/midp/examples/**"/>
+        <exclude name="com/barteo/emulator/applet/**"/>
+        <exclude name="com/barteo/emulator/device/applet/**"/>
         <exclude name="**/.*"/>
       </fileset>
       <fileset dir="./res">
@@ -74,7 +77,7 @@
     </jar>
   </target>
 
-  <target depends="init,jar" description="Build everything." name="all">
+  <target depends="init,jar-app" description="Build everything." name="all">
   </target>
 
   <target depends="init,all" description="Try running it." name="run">
@@ -92,7 +95,7 @@
     <javadoc destdir="apidoc" packagenames="javax.microedition.*" sourcepath="src"/>
   </target>
 
-  <target depends="init,jar" description="Create distribution package" name="dist">
+  <target depends="init,jar-app" description="Create distribution package" name="dist">
     <mkdir dir="dist"/>
 
     <tar basedir="../." tarfile="dist/microemulator-src.tar">

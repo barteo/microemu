@@ -19,7 +19,7 @@
  
 package javax.microedition.lcdui;
 
-import com.barteo.emulator.device.Device;
+import com.barteo.emulator.device.DeviceFactory;
 
 
 class ImageStringItem extends Item
@@ -33,10 +33,7 @@ class ImageStringItem extends Item
   {
     super(label);
 		stringComponent = new StringComponent(text);
-		this.img = img;
-		if (this.img != null) {
-			stringComponent.setWidth(Device.screenPaintable.width - img.getWidth() - 2);
-		}
+    setImage(img);
   }
 
 
@@ -44,7 +41,8 @@ class ImageStringItem extends Item
 	{
     this.img = img;
 		if (this.img != null) {
-			stringComponent.setWidth(Device.screenPaintable.width - img.getWidth() - 2);
+			stringComponent.setWidth(
+          DeviceFactory.getDevice().getDeviceDisplay().getWidth() - img.getWidth() - 2);
 		}
 	}
 

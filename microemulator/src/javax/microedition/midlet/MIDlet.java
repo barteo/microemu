@@ -24,7 +24,6 @@ import javax.microedition.lcdui.*;
 import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.MIDletAccess;
 import com.barteo.emulator.MIDletBridge;
-import com.barteo.midp.lcdui.DisplayBridge;
 
 
 public abstract class MIDlet
@@ -42,7 +41,7 @@ public abstract class MIDlet
 	  public void startApp()
   		  throws MIDletStateChangeException
     {
-      DisplayBridge.setAccess(getDisplayAccess());
+      MIDletBridge.setCurrentMIDlet(midlet);
       getDisplayAccess().updateCommands();
       midlet.startApp();
     }

@@ -17,28 +17,28 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
  
-package com.barteo.emulator;
+package com.barteo.emulator.device.j2se;
 
 import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 
 import javax.microedition.lcdui.TextField;
-import com.barteo.emulator.device.Device;
-import com.barteo.midp.lcdui.DisplayBridge;
-import com.barteo.midp.lcdui.InputMethod;
-import com.barteo.midp.lcdui.InputMethodEvent;
+import com.barteo.emulator.MIDletBridge;
+import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.InputMethod;
+import com.barteo.emulator.device.InputMethodEvent;
 
 
-public class DefaultInputMethod extends InputMethod implements Runnable
+public class J2SEInputMethod extends InputMethod implements Runnable
 {
 	int lastButtonCharIndex = -1;
-  Button lastButton = null;
+  J2SEButton lastButton = null;
 	boolean resetKey;
 
 	Thread t;
 
 
-	public DefaultInputMethod()
+	public J2SEInputMethod()
 	{
 		t = new Thread(this);
 		t.start();
@@ -50,7 +50,7 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 		String tmp;
 
     if (inputMethodListener == null) {
-			DisplayBridge.keyPressed(keyCode);
+			MIDletBridge.getMIDletAccess().getDisplayAccess().keyPressed(keyCode);
 			return true;
 		}
 
@@ -166,8 +166,8 @@ public class DefaultInputMethod extends InputMethod implements Runnable
     }
 
 		if (text.length() < maxSize) {
-      for (Enumeration e = Device.getDeviceButtons().elements(); e.hasMoreElements(); ) {
-        Button button = (Button) e.nextElement();
+      for (Enumeration e = ((J2SEDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
+        J2SEButton button = (J2SEButton) e.nextElement();
         if (keyCode == button.getKey()) {
           synchronized (this) {
 						lastButtonCharIndex++;
@@ -229,13 +229,13 @@ public class DefaultInputMethod extends InputMethod implements Runnable
   
   public void keyboardKeyReleased(KeyEvent ev)
   {
-		DisplayBridge.keyReleased(ev.getKeyCode());
+		MIDletBridge.getMIDletAccess().getDisplayAccess().keyReleased(ev.getKeyCode());
   }
 
 
 	public void keyReleased(int keyCode)
 	{
-		DisplayBridge.keyReleased(keyCode);
+		MIDletBridge.getMIDletAccess().getDisplayAccess().keyReleased(keyCode);
   }
 
 

@@ -19,45 +19,29 @@
  
 package com.barteo.emulator;
 
-import java.awt.image.RGBImageFilter;
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.Display;
+import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Graphics;
 
-import com.barteo.emulator.device.Device;
 
-
-public final class BWImageFilter extends RGBImageFilter
+public interface DisplayAccess
 {
 
-  private double Yr, Yg, Yb;
+	void commandAction(Command cmd);
 
+	Display getDisplay();
 
-  public BWImageFilter ()
-	{
-    this(0.2126d, 0.7152d, 0.0722d);
-  }
+	void keyPressed(int keyCode);
 
+	void keyReleased(int keyCode);
 
-  public BWImageFilter (double Yr, double Yg, double Yb)
-	{
-    this.Yr = Yr;
-    this.Yg = Yg;
-    this.Yb = Yb;
-    canFilterIndexColorModel = true;
-  }
+	void paint(Graphics g);
+  
+  Displayable getCurrent();
 
-
-  public int filterRGB (int x, int y, int rgb)
-	{
-    int a = (rgb & 0xFF000000);
-    int r = (rgb & 0x00FF0000) >>> 16;
-    int g = (rgb & 0x0000FF00) >>> 8;
-    int b = (rgb & 0x000000FF);
-    int Y = (int)(Yr * r + Yg * g + Yb * b);
-    if (Y > 127) {
-	    return a | Device.backgroundColor.getRGB();
-		} else {
-	    return a | Device.foregroundColor.getRGB();
-		}
-  }
+  void setCurrent(Displayable d);
+  
+  void updateCommands();
 
 }
-

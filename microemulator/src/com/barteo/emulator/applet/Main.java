@@ -41,28 +41,34 @@ import javax.microedition.lcdui.Display;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
-import com.barteo.emulator.Button;
-import com.barteo.emulator.DefaultInputMethod;
+import com.barteo.emulator.CommandManager;
+import com.barteo.emulator.EmulatorContext;
+import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.MIDletBridge;
-import com.barteo.emulator.SoftButton;
 import com.barteo.emulator.device.Device;
-import com.barteo.midp.lcdui.CommandManager;
-import com.barteo.midp.lcdui.DisplayBridge;
-import com.barteo.midp.lcdui.FontManager;
-import com.barteo.midp.lcdui.InputMethod;
+import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.InputMethod;
+import com.barteo.emulator.device.SoftButton;
+import com.barteo.emulator.device.applet.AppletButton;
+import com.barteo.emulator.device.applet.AppletDevice;
+import com.barteo.emulator.device.applet.AppletDeviceDisplay;
+import com.barteo.emulator.device.applet.AppletInputMethod;
+import com.barteo.emulator.device.applet.AppletSoftButton;
+import com.barteo.emulator.device.applet.DisplayGraphics;
+import com.barteo.emulator.device.applet.PositionedImage;
 
 
-public class Main extends Applet implements MicroEmulator, com.barteo.midp.lcdui.DisplayComponent
+public class Main extends Applet implements MicroEmulator, DisplayComponent
 {
   Main instance;
   MIDlet midlet;
 
   Font defaultFont;
   
-  Button prevOverButton;
-  Button overButton;
-  Button pressedButton;
+  AppletButton prevOverButton;
+  AppletButton overButton;
+  AppletButton pressedButton;
 
 	Image offi;
 
@@ -84,7 +90,7 @@ public class Main extends Applet implements MicroEmulator, com.barteo.midp.lcdui
         } else {
           int key = pressedButton.getKey();
           KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key);
-          InputMethod.getInputMethod().keyPressed(ev.getKeyCode());
+          DeviceFactory.getDevice().getInputMethod().keyPressed(ev.getKeyCode());
         }
         repaint();
       }
@@ -93,12 +99,12 @@ public class Main extends Applet implements MicroEmulator, com.barteo.midp.lcdui
 
     public void mouseReleased(MouseEvent e) 
     {
-      Button prevOverButton = getButton(e.getX(), e.getY());
+      AppletButton prevOverButton = getButton(e.getX(), e.getY());
       if (prevOverButton != null) {
         int key = prevOverButton.getKey();
         KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key);
 
-        InputMethod.getInputMethod().keyReleased(ev.getKeyCode());
+        DeviceFactory.getDevice().getInputMethod().keyReleased(ev.getKeyCode());
       }
       pressedButton = null;
       repaint();      
@@ -136,7 +142,7 @@ public class Main extends Applet implements MicroEmulator, com.barteo.midp.lcdui
     
     public void keyPressed(KeyEvent ev)
     {
-      ((DefaultInputMethod) InputMethod.getInputMethod()).keyboardKeyPressed(ev);
+      ((AppletInputMethod) DeviceFactory.getDevice().getInputMethod()).keyboardKeyPressed(ev);
       pressedButton = getButton(ev);
       repaint();
       if (pressedButton instanceof SoftButton) {
@@ -150,7 +156,7 @@ public class Main extends Applet implements MicroEmulator, com.barteo.midp.lcdui
     
     public void keyReleased(KeyEvent ev)
     {
-      ((DefaultInputMethod) InputMethod.getInputMethod()).keyboardKeyReleased(ev);
+      ((AppletInputMethod) DeviceFactory.getDevice().getInputMethod()).keyboardKeyReleased(ev);
       prevOverButton = pressedButton;
       pressedButton = null;
       repaint();      
@@ -159,24 +165,29 @@ public class Main extends Applet implements MicroEmulator, com.barteo.midp.lcdui
   };
 
     
+  EmulatorContext emulatorContext = new EmulatorContext()
+  {
+    
+    public DisplayComponent getDisplayComponent()
+    {
+      return instance;
+    }
+    
+  };
+
+  
   public void init()
   {
     instance = this;
 
-    FontManager.getInstance().setComponent(this);
-    
     MIDletBridge.setMicroEmulator(this);
-
-    if (!Device.getInstance().isInitialized()) {
-      return;
-    }
       
     addKeyListener(keyListener);
 
     addMouseListener(mouseListener);
     addMouseMotionListener(mouseMotionListener);
     
-    DisplayBridge.setComponent(this);
+    DeviceFactory.setDevice(new AppletDevice(emulatorContext));
 
     String midletName = getParameter("midlet");
 		if (midletName == null) {
@@ -197,10 +208,11 @@ public class Main extends Applet implements MicroEmulator, com.barteo.midp.lcdui
     } catch (Exception ex) {
       System.out.println("Cannot initialize " + midletClass + " MIDlet class");
       System.out.println(ex);        
+      ex.printStackTrace();
       return;
     }
 
-    resize(Device.deviceRectangle.getSize());
+    resize(((AppletDevice) DeviceFactory.getDevice()).getDeviceRectangle().getSize());
     
     return;
   }
@@ -209,7 +221,7 @@ public class Main extends Applet implements MicroEmulator, com.barteo.midp.lcdui
   public void start()
 	{
     try {
-      MIDletBridge.getAccess(midlet).startApp();
+      MIDletBridge.getMIDletAccess(midlet).startApp();
 		} catch (MIDletStateChangeException ex) {
       System.err.println(ex);
 		}
@@ -219,14 +231,14 @@ public class Main extends Applet implements MicroEmulator, com.barteo.midp.lcdui
 
 	public void stop() 
   {
-    MIDletBridge.getAccess(midlet).pauseApp();
+    MIDletBridge.getMIDletAccess(midlet).pauseApp();
   }
 
 
 	public void destroy()
 	{
     try {
-			MIDletBridge.getAccess(midlet).destroyApp(true);
+			MIDletBridge.getMIDletAccess(midlet).destroyApp(true);
 		} catch (MIDletStateChangeException ex) {
   		System.err.println(ex);
 		}
@@ -267,63 +279,79 @@ public class Main extends Applet implements MicroEmulator, com.barteo.midp.lcdui
                        
   public void paint(Graphics g) 
   {
-    g.drawImage(Device.normalImage, 0, 0, this);
+    Device device = DeviceFactory.getDevice();
+    Rectangle displayRectangle = 
+        ((AppletDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
+
+    g.drawImage(((AppletDevice) DeviceFactory.getDevice()).getNormalImage(), 0, 0, this);
     
-    g.translate(Device.screenRectangle.x, Device.screenRectangle.y);
+    g.translate(displayRectangle.x, displayRectangle.y);
     
-    g.setColor(Device.backgroundColor);
-    g.fillRect(0, 0, Device.screenRectangle.width, Device.screenRectangle.height);
+    g.setColor(((AppletDeviceDisplay) device.getDeviceDisplay()).getBackgroundColor());
+    g.fillRect(0, 0, displayRectangle.width, displayRectangle.height);
     
-    g.setColor(Device.foregroundColor);
-    for (Enumeration s = Device.getDeviceButtons().elements(); s.hasMoreElements(); ) {
-      Button button = (Button) s.nextElement();
-      if (button instanceof SoftButton) {
-        ((SoftButton) button).paint(g);
+    g.setColor(((AppletDeviceDisplay) device.getDeviceDisplay()).getForegroundColor());
+    for (Enumeration s = ((AppletDevice) DeviceFactory.getDevice()).getButtons().elements(); s.hasMoreElements(); ) {
+      AppletButton button = (AppletButton) s.nextElement();
+      if (button instanceof AppletSoftButton) {
+        ((AppletSoftButton) button).paint(g);
       }
     }
 
-    int inputMode = InputMethod.getInputMethod().getInputMode();
+    PositionedImage tmpImage;
+    
+    int inputMode = device.getInputMethod().getInputMode();
     if (inputMode == InputMethod.INPUT_123) {
-      g.drawImage(Device.mode123Image, Device.mode123ImagePaintable.x, Device.mode123ImagePaintable.y, this);
+      tmpImage = ((AppletDeviceDisplay) device.getDeviceDisplay()).getMode123Image();
+      g.drawImage(tmpImage.getImage(), tmpImage.getRectangle().x, tmpImage.getRectangle().y, this);
     } else if (inputMode == InputMethod.INPUT_ABC_UPPER) {
-      g.drawImage(Device.modeAbcUpperImage, Device.modeAbcUpperImagePaintable.x, Device.modeAbcUpperImagePaintable.y, this);
+      tmpImage = ((AppletDeviceDisplay) device.getDeviceDisplay()).getModeAbcUpperImage();
+      g.drawImage(tmpImage.getImage(), tmpImage.getRectangle().x, tmpImage.getRectangle().y, this);
     } else if (inputMode == InputMethod.INPUT_ABC_LOWER) {
-      g.drawImage(Device.modeAbcLowerImage, Device.modeAbcLowerImagePaintable.x, Device.modeAbcLowerImagePaintable.y, this);
+      tmpImage = ((AppletDeviceDisplay) device.getDeviceDisplay()).getModeAbcLowerImage();
+      g.drawImage(tmpImage.getImage(), tmpImage.getRectangle().x, tmpImage.getRectangle().y, this);
     }
 
+    Rectangle displayPaintable = 
+        ((AppletDeviceDisplay) device.getDeviceDisplay()).getDisplayPaintable();
     Shape oldclip = g.getClip();
-    g.setClip(Device.screenPaintable);
-    g.translate(Device.screenPaintable.x, Device.screenPaintable.y);
-    DisplayBridge.paint(g);
-    g.translate(-Device.screenPaintable.x, -Device.screenPaintable.y);
+    g.setClip(displayPaintable);
+    g.translate(displayPaintable.x, displayPaintable.y);
+
+    DisplayGraphics dg = new DisplayGraphics(g);
+    MIDletBridge.getMIDletAccess().getDisplayAccess().paint(dg);
+
+    g.translate(-displayPaintable.x, -displayPaintable.y);
     g.setClip(oldclip);
 
     if (scrollUp) {
-      g.drawImage(Device.upImage, Device.upImagePaintable.x, Device.upImagePaintable.y, this);
+      tmpImage = ((AppletDeviceDisplay) device.getDeviceDisplay()).getUpImage();
+      g.drawImage(tmpImage.getImage(), tmpImage.getRectangle().x, tmpImage.getRectangle().y, this);
     }
     if (scrollDown) {
-      g.drawImage(Device.downImage, Device.downImagePaintable.x, Device.downImagePaintable.y, this);
+      tmpImage = ((AppletDeviceDisplay) device.getDeviceDisplay()).getDownImage();
+      g.drawImage(tmpImage.getImage(), tmpImage.getRectangle().x, tmpImage.getRectangle().y, this);
     }
     
-    g.translate(-Device.screenRectangle.x, -Device.screenRectangle.y);
+    g.translate(-displayRectangle.x, -displayRectangle.y);
 
     Rectangle rect;
     if (prevOverButton != null ) {
       rect = prevOverButton.getRectangle();    
-      g.drawImage(Device.normalImage, 
+      g.drawImage(((AppletDevice) DeviceFactory.getDevice()).getNormalImage(), 
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
       prevOverButton = null;
     }
     if (overButton != null) {
       rect = overButton.getRectangle();    
-      g.drawImage(Device.overImage, 
+      g.drawImage(((AppletDevice) DeviceFactory.getDevice()).getOverImage(), 
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
     }
     if (pressedButton != null) {
       rect = pressedButton.getRectangle();    
-      g.drawImage(Device.pressedImage, 
+      g.drawImage(((AppletDevice) DeviceFactory.getDevice()).getPressedImage(), 
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
     }    
@@ -344,10 +372,10 @@ public class Main extends Applet implements MicroEmulator, com.barteo.midp.lcdui
   }
 
   
-  Button getButton(int x, int y)
+  AppletButton getButton(int x, int y)
   {
-    for (Enumeration e = Device.getDeviceButtons().elements(); e.hasMoreElements(); ) {
-      Button button = (Button) e.nextElement();
+    for (Enumeration e = ((AppletDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
+      AppletButton button = (AppletButton) e.nextElement();
       Rectangle tmp = new Rectangle(button.getRectangle());
       if (x >= tmp.x && x < tmp.x + tmp.width && y >= tmp.y && y < tmp.y + tmp.height) {
         return button;
@@ -357,10 +385,10 @@ public class Main extends Applet implements MicroEmulator, com.barteo.midp.lcdui
   }  
 
   
-  private Button getButton(KeyEvent ev)
+  private AppletButton getButton(KeyEvent ev)
   {
-    for (Enumeration e = Device.getDeviceButtons().elements(); e.hasMoreElements(); ) {
-      Button button = (Button) e.nextElement();
+    for (Enumeration e = ((AppletDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
+      AppletButton button = (AppletButton) e.nextElement();
       if (ev.getKeyCode() == button.getKey()) {
         return button;
       }

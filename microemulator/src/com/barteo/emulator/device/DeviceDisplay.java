@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2002 Bartek Teodorczyk <barteo@it.pl>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -17,32 +17,24 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
  
-package com.barteo.midp.lcdui;
-
-import java.awt.Image;
+package com.barteo.emulator.device;
 
 
-public class ImageImpl extends javax.microedition.lcdui.Image
+public interface DeviceDisplay 
 {
 
-	java.awt.Image img;
+  int getWidth();
+  
+  int getHeight();
+  
+  boolean isColor();
+  
+  int numColors();
+  
+  void repaint();
+  
+  void setScrollDown(boolean state);
 
-
-	public int getHeight()
-	{
-		return img.getHeight(null);
-	}
-
-
-	public java.awt.Image getImage()
-	{
-		return img;
-	}
-
-
-	public int getWidth()
-	{
-		return img.getWidth(null);
-	}
-
+  void setScrollUp(boolean state);
+  
 }

@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2002 Bartek Teodorczyk <barteo@it.pl>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -16,35 +16,21 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
-package com.barteo.midp.lcdui;
 
-import java.awt.Image;
-import java.io.IOException;
+package com.barteo.emulator.device;
 
-import javax.microedition.lcdui.*;
-
-import com.barteo.emulator.Resource;
+import javax.microedition.lcdui.Command;
 
 
-public class ImmutableImage extends ImageImpl
+public interface SoftButton 
 {
-
-
-	public ImmutableImage(String name)
-      throws IOException
-	{
-  	img = Resource.getInstance().getImage(name);
-	}
-
-
-	public ImmutableImage(byte[] imageData, int imageOffset, int imageLength)
-	{
-		try {
-			img = Resource.getInstance().getImage(imageData, imageOffset, imageLength);	
-		} catch (IOException ex) {
-			System.err.println(ex);
-		}
-	}
-
+  
+  Command getCommand();
+  
+  boolean setCommand(Command cmd);
+  
+  void removeCommand();
+  
+  void setMenuActivate(boolean state);
+  
 }

@@ -17,11 +17,12 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
  
-package com.barteo.emulator;
+package com.barteo.emulator.device.j2se;
 
+import java.awt.Color;
 import java.awt.image.RGBImageFilter;
 
-import com.barteo.emulator.device.Device;
+import com.barteo.emulator.device.DeviceFactory;
 
 
 public final class GrayImageFilter extends RGBImageFilter
@@ -43,9 +44,13 @@ public final class GrayImageFilter extends RGBImageFilter
     this.Yg = Yg;
     this.Yb = Yb;
     canFilterIndexColorModel = true;
-    Rr = (Device.backgroundColor.getRed() - Device.foregroundColor.getRed()) / 256d;
-    Rg = (Device.backgroundColor.getGreen() - Device.foregroundColor.getGreen()) / 256d;
-    Rb = (Device.backgroundColor.getBlue() - Device.foregroundColor.getBlue()) / 256d;
+    Color backgroundColor = 
+        ((J2SEDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor();    
+    Color foregroundColor = 
+        ((J2SEDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor();    
+    Rr = (backgroundColor.getRed() - foregroundColor.getRed()) / 256d;
+    Rg = (backgroundColor.getGreen() - foregroundColor.getGreen()) / 256d;
+    Rb = (backgroundColor.getBlue() - foregroundColor.getBlue()) / 256d;
   }
 
 
@@ -59,9 +64,11 @@ public final class GrayImageFilter extends RGBImageFilter
     if (Y > 255) {
       Y = 255;
     }
-    r = (int) (Rr * Y) + Device.foregroundColor.getRed();
-    g = (int) (Rg * Y) + Device.foregroundColor.getGreen();
-    b = (int) (Rb * Y) + Device.foregroundColor.getBlue();
+    Color foregroundColor = 
+        ((J2SEDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor();    
+    r = (int) (Rr * Y) + foregroundColor.getRed();
+    g = (int) (Rg * Y) + foregroundColor.getGreen();
+    b = (int) (Rb * Y) + foregroundColor.getBlue();
 
     return a | (r << 16) | (g << 8) | b;
   }

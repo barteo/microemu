@@ -50,15 +50,14 @@ import javax.swing.UIManager;
 import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.MIDletEntry;
-import com.barteo.emulator.Resource;
 import com.barteo.emulator.app.launcher.Launcher;
 import com.barteo.emulator.app.util.ProgressEvent;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.app.util.ProgressListener;
-import com.barteo.emulator.device.Device;
+import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.j2se.J2SEDevice;
 import com.barteo.emulator.util.JadMidletEntry;
 import com.barteo.emulator.util.JadProperties;
-import com.barteo.midp.lcdui.FontManager;
 
 
 public class Main extends JFrame implements MicroEmulator
@@ -187,7 +186,6 @@ public class Main extends JFrame implements MicroEmulator
   Main()
   {
     instance = this;
-    Resource.setClassLoader(loader);
     
     JMenuBar menuBar = new JMenuBar();
     
@@ -212,24 +210,18 @@ public class Main extends JFrame implements MicroEmulator
     
     setTitle("MicroEmulator");
     
-    FontManager.getInstance().setComponent(this);
-
-    if (!Device.getInstance().isInitialized()) {
-      System.out.println("Cannot initialize device configuration");
-      return;
-    }
-
     addKeyListener(keyListener);
 
+    devicePanel = new SwingDeviceComponent();
+    
     launcher = new Launcher();
     launcher.setCurrentMIDlet(launcher);
      
-    devicePanel = new SwingDeviceComponent();
-    
     getContentPane().add(devicePanel, "Center");
     getContentPane().add(statusBar, "South");    
 
-    Dimension size = new Dimension(Device.deviceRectangle.getSize());
+    Dimension size = new Dimension(
+        ((J2SEDevice) DeviceFactory.getDevice()).getDeviceRectangle().getSize());
     size.width += 10;
     size.height += statusBar.getPreferredSize().height + 55;
     setSize(size);
@@ -312,10 +304,10 @@ public class Main extends JFrame implements MicroEmulator
     if (e.getID() == WindowEvent.WINDOW_CLOSING) {
       menuExitListener.actionPerformed(null);
     } else if (e.getID() == WindowEvent.WINDOW_ICONIFIED) {
-      MIDletBridge.getAccess(launcher.getCurrentMIDlet()).pauseApp();
+      MIDletBridge.getMIDletAccess(launcher.getCurrentMIDlet()).pauseApp();
     } else if (e.getID() == WindowEvent.WINDOW_DEICONIFIED) {
       try {
-        MIDletBridge.getAccess(launcher.getCurrentMIDlet()).startApp();
+        MIDletBridge.getMIDletAccess(launcher.getCurrentMIDlet()).startApp();
   		} catch (MIDletStateChangeException ex) {
         System.err.println(ex);
   		}
@@ -326,7 +318,7 @@ public class Main extends JFrame implements MicroEmulator
   public void startMidlet(MIDlet m)
   {
     try {
-      MIDletBridge.getAccess(m).startApp();
+      MIDletBridge.getMIDletAccess(m).startApp();
 		} catch (MIDletStateChangeException ex) {
       System.err.println(ex);
 		}

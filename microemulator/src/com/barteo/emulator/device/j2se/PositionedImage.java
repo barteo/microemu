@@ -16,32 +16,45 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
-package com.barteo.emulator.device;
 
+package com.barteo.emulator.device.j2se;
+
+import java.awt.Image;
+import java.awt.Rectangle;
 import java.io.IOException;
-import java.util.Vector;
-
-import javax.microedition.lcdui.Image;
 
 
-public interface Device 
+public class PositionedImage 
 {
-
-  Image createImage(int width, int height);
-  Image createImage(String name) throws IOException;
-  Image createImage(byte[] imageData, int imageOffset, int imageLength);
+  private Image image = null;
+  private String location;
+  private Rectangle rectangle;
   
-  DeviceDisplay getDeviceDisplay();
-  FontManager getFontManager();
-  InputMethod getInputMethod();
-  Vector getSoftButtons();
   
-  int getGameAction(int keyCode);
-  int getKeyCode(int gameAction);
-
-  boolean hasPointerMotionEvents();
-  boolean hasPointerEvents();
-  boolean hasRepeatEvents();
-
+  public PositionedImage(String alocation, Rectangle arectangle) 
+  {
+    location = alocation;
+    rectangle = arectangle;
+  }
+  
+  
+  public Image getImage()
+  {
+    if (image == null) {
+      try {
+        image = ImmutableImage.getImage(location);
+      } catch (IOException ex) {
+        System.out.println("Cannot load " + location);
+      }
+    }
+    
+    return image;
+  }
+  
+  
+  public Rectangle getRectangle()
+  {
+    return rectangle;
+  }
+  
 }

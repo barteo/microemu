@@ -1,5 +1,7 @@
 * in javax.microedition.io.* only http supported - there is tcp, udp and https needed
 
+* move device display painting from Applet/SwingDisplayComponent to Applet/J2SEDeviceDisplay
+
 * rebuild InputMethod to extend functionality:
   - switching between modes (numeric, password, URL, etc.)
   - solve problem with VK_BACKSPACE key on emulator device

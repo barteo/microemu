@@ -170,6 +170,14 @@ public class Form extends Screen
 	void hideNotify()
 	{
 		super.hideNotify();
+
+		for (int i = 0; i < numOfItems; i++) {
+			if (items[i].isFocusable()) {
+				items[i].setFocus(false);
+				focusItemIndex = i;
+				break;
+			}
+		}
 	}
 
 

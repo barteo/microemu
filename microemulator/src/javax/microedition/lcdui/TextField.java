@@ -1,33 +1,35 @@
 /*
- *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
- *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- *  Contributor(s):
- *    3GLab
+ * MicroEmulator 
+ * Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
+ * 
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation; either version 2.1 of the License, or (at your
+ * option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
+ * Contributor(s): 
+ *   3GLab
+ *   Robert Helmer
  */
- 
+
 package javax.microedition.lcdui;
 
 import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.InputMethod;
+import com.barteo.emulator.device.InputMethodListener;
+import com.barteo.emulator.device.InputMethodEvent;
 
-
-public class TextField extends Item
+public class TextField extends Item 
 {
-
 	public static final int ANY = 0;
 	public static final int EMAILADDR = 1;
 	public static final int NUMERIC = 2;
@@ -38,7 +40,7 @@ public class TextField extends Item
 	public static final int CONSTRAINT_MASK = 0xffff;
 
 	StringComponent stringComponent;
-  String field;
+	String field;
 	int caret;
 	boolean caretVisible;
 	int maxSize;
@@ -48,23 +50,37 @@ public class TextField extends Item
 	static final Command doneCommand = new Command("Done", Command.OK, 0);
 	static final Command cancelCommand = new Command("Cancel", Command.CANCEL, 0);
 
-	CommandListener textBoxListener = new CommandListener()
+	CommandListener textBoxListener = new CommandListener() 
 	{
-
-		public void commandAction(Command cmd, Displayable d)
+		public void commandAction(Command cmd, Displayable d) 
 		{
 			if (cmd == doneCommand) {
 				setString(tb.getString());
-        getOwner().currentDisplay.setCurrent(owner);
+				getOwner().currentDisplay.setCurrent(owner);
 			} else if (cmd == cancelCommand) {
-        getOwner().currentDisplay.setCurrent(owner);
-			} 
+				getOwner().currentDisplay.setCurrent(owner);
+			}
 		}
 
 	};
 
+	InputMethodListener inputMethodListener = new InputMethodListener() 
+	{
+		public void caretPositionChanged(InputMethodEvent event) 
+		{
+			setCaretPosition(event.getCaret());
+			setCaretVisible(true);
+		}
 
-	public TextField(String label, String text, int maxSize, int constraints)
+		public void inputMethodTextChanged(InputMethodEvent event) 
+		{
+			setCaretVisible(false);
+			setString(event.getText());
+		}
+	};
+
+	
+	public TextField(String label, String text, int maxSize, int constraints) 
 	{
 		super(label);
 		if (maxSize <= 0) {
@@ -72,50 +88,50 @@ public class TextField extends Item
 		}
 		setConstraints(constraints);
 		this.maxSize = maxSize;
-    stringComponent = new StringComponent();
+		stringComponent = new StringComponent();
 		if (text != null) {
-      setString(text);
+			setString(text);
 		} else {
-      setString("");
-    }
+			setString("");
+		}
 		stringComponent.setWidth(DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 8);
 		caret = 0;
 		caretVisible = false;
 	}
 
-
-	public String getString()
+	
+	public String getString() 
 	{
 		return field;
 	}
 
-
-	public void setString(String text)
+	
+	public void setString(String text) 
 	{
 		validate(text);
-    if (text == null) {
-      field = "";
-      stringComponent.setText("");
-    } else {
-  		if (text.length() > maxSize) {
-  			throw new IllegalArgumentException();
-  		}
-      field = text;
-      if ((constraints & PASSWORD) == 0) {
-        stringComponent.setText(text);
-      } else {
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < text.length(); i++) {
-          sb.append('*');
-        }
-        stringComponent.setText(sb.toString());
-      }
-    }
+		if (text == null) {
+			field = "";
+			stringComponent.setText("");
+		} else {
+			if (text.length() > maxSize) {
+				throw new IllegalArgumentException();
+			}
+			field = text;
+			if ((constraints & PASSWORD) == 0) {
+				stringComponent.setText(text);
+			} else {
+				StringBuffer sb = new StringBuffer();
+				for (int i = 0; i < text.length(); i++) {
+					sb.append('*');
+				}
+				stringComponent.setText(sb.toString());
+			}
+		}
 		repaint();
 	}
 
-
-	public int getChars(char[] data)
+	
+	public int getChars(char[] data) 
 	{
 		if (data.length < field.length()) {
 			throw new ArrayIndexOutOfBoundsException();
@@ -125,8 +141,8 @@ public class TextField extends Item
 		return field.length();
 	}
 
-
-	public void setChars(char[] data, int offset, int length)
+	
+	public void setChars(char[] data, int offset, int length) 
 	{
 		if (data == null) {
 			setString("");
@@ -141,8 +157,8 @@ public class TextField extends Item
 		repaint();
 	}
 
-
-	public void insert(String src, int position)
+	
+	public void insert(String src, int position) 
 	{
 		validate(src);
 		if (field.length() + src.length() > maxSize) {
@@ -160,8 +176,8 @@ public class TextField extends Item
 		repaint();
 	}
 
-
-	public void insert(char[] data, int offset, int length, int position)
+	
+	public void insert(char[] data, int offset, int length, int position) 
 	{
 		if (offset + length > data.length) {
 			throw new ArrayIndexOutOfBoundsException();
@@ -169,8 +185,8 @@ public class TextField extends Item
 		insert(new String(data, offset, length), position);
 	}
 
-
-	public void delete(int offset, int length)
+	
+	public void delete(int offset, int length) 
 	{
 		if (offset + length > field.length()) {
 			throw new StringIndexOutOfBoundsException();
@@ -186,14 +202,14 @@ public class TextField extends Item
 		repaint();
 	}
 
-
-	public int getMaxSize()
+	
+	public int getMaxSize() 
 	{
 		return maxSize;
 	}
 
-
-	public int setMaxSize(int maxSize)
+	
+	public int setMaxSize(int maxSize) 
 	{
 		if (maxSize <= 0) {
 			throw new IllegalArgumentException();
@@ -205,61 +221,62 @@ public class TextField extends Item
 		return maxSize;
 	}
 
-
-	public int size()
+	
+	public int size() 
 	{
 		return field.length();
 	}
 
-
-	public int getCaretPosition()
+	
+	public int getCaretPosition() 
 	{
 		return caret;
 	}
 
-
-	public void setConstraints(int constraints)
+	
+	public void setConstraints(int constraints) 
 	{
-    if ((constraints & TextField.CONSTRAINT_MASK) < ANY ||
-        (constraints & TextField.CONSTRAINT_MASK) > URL) {
-      throw new IllegalArgumentException("constraints is an illegal value");
+		if ((constraints & TextField.CONSTRAINT_MASK) < ANY
+			|| (constraints & TextField.CONSTRAINT_MASK) > URL) {
+			throw new IllegalArgumentException("constraints is an illegal value");
 		}
 		this.constraints = constraints;
 	}
 
-
-	public int getConstraints()
+	
+	public int getConstraints() 
 	{
 		return constraints;
 	}
 
-
-	public void setLabel(String label)
+	
+	public void setLabel(String label) 
 	{
 		super.setLabel(label);
 	}
 
-
-	boolean isFocusable()
+	
+	boolean isFocusable() 
 	{
 		return true;
 	}
 
-
-	int getHeight()
+	
+	int getHeight() 
 	{
 		return super.getHeight() + stringComponent.getHeight() + 8;
 	}
 
-
-	int paint(Graphics g)
+	
+	int paint(Graphics g) 
 	{
 		super.paintContent(g);
 
 		g.translate(0, super.getHeight());
 		if (hasFocus()) {
-			g.drawRect(1, 1, 
-          DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 3, stringComponent.getHeight() + 4);
+			g.drawRect(
+					1, 1, 
+					DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 3, stringComponent.getHeight() + 4);
 		}
 		g.translate(3, 3);
 		paintContent(g);
@@ -269,8 +286,8 @@ public class TextField extends Item
 		return getHeight();
 	}
 
-
-	void paintContent(Graphics g)
+	
+	void paintContent(Graphics g) 
 	{
 		stringComponent.paint(g);
 		if (caretVisible) {
@@ -280,20 +297,20 @@ public class TextField extends Item
 		}
 	}
 
-
-	void setCaretPosition(int position)
+	
+	void setCaretPosition(int position) 
 	{
 		caret = position;
 	}
 
-
-	void setCaretVisible(boolean state)
+	
+	void setCaretVisible(boolean state) 
 	{
 		caretVisible = state;
 	}
 
-
-	boolean select()
+	
+	boolean select() 
 	{
 		if (tb == null) {
 			tb = new TextBox(getLabel(), getString(), maxSize, constraints);
@@ -303,13 +320,13 @@ public class TextField extends Item
 		} else {
 			tb.setString(getString());
 		}
-    getOwner().currentDisplay.setCurrent(tb);
+		getOwner().currentDisplay.setCurrent(tb);
 
 		return true;
 	}
 
-
-	int traverse(int gameKeyCode, int top, int bottom, boolean action)
+	
+	int traverse(int gameKeyCode, int top, int bottom, boolean action) 
 	{
 		if (gameKeyCode == Canvas.UP) {
 			if (top > 0) {
@@ -329,25 +346,44 @@ public class TextField extends Item
 		return 0;
 	}
 
+	
+	void setFocus(boolean hasFocus) 
+	{
+		super.setFocus(hasFocus);
+		if (hasFocus) {
+			// register input listener
+			InputMethod inputMethod = DeviceFactory.getDevice().getInputMethod();
+			inputMethod.setInputMethodListener(inputMethodListener);
+			inputMethod.setConstraints(getConstraints());
+			inputMethod.setText(getString());
+			inputMethod.setMaxSize(getMaxSize());
+			setCaretPosition(getString().length());
+			setCaretVisible(true);
+		} else {
+			// unregister input listener
+			DeviceFactory.getDevice().getInputMethod().removeInputMethodListener(inputMethodListener);
+		}
+	}
 
-	void validate(String text)
+	
+	void validate(String text) 
 	{
 		// text is illegal for the specified constraints so IllegalArgumentException
-    if ((constraints & CONSTRAINT_MASK) == ANY) {
-      return;
-    }
-    /*
-    if ((constraints & CONSTRAINT_MASK) == NUMERIC) {
-      try {
-        int tmp = Integer.parseInt(text);
-      } catch (NumberFormatException e) {
-        throw new IllegalArgumentException(
-            "TextField limited to numeric values: text = " + text);
-      }
-    }
-    */
+		if ((constraints & CONSTRAINT_MASK) == ANY) {
+			return;
+		}
+		/*
+		 * if ((constraints & CONSTRAINT_MASK) == NUMERIC) { 
+		 *   try { 
+		 *     int tmp = Integer.parseInt(text); 
+		 *   } catch (NumberFormatException e) { 
+		 *     throw new IllegalArgumentException(
+		 *         "TextField limited to numeric values: text = " + text); 
+		 *   } 
+		 * }
+		 */
 
-    /* @todo add more constraints checking */
+		/* @todo add more constraints checking */
 	}
 
 }

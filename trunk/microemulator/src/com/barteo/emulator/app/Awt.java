@@ -29,8 +29,6 @@ import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -91,23 +89,6 @@ public class Awt extends Frame
 		}    
 	};
   
-	KeyListener keyListener = new KeyListener()
-	{    
-		public void keyTyped(KeyEvent e)
-		{
-		}
-    
-		public void keyPressed(KeyEvent e)
-		{
-			devicePanel.keyPressed(e);
-		}
-    
-		public void keyReleased(KeyEvent e)
-		{
-			devicePanel.keyReleased(e);
-		}    
-	};
-   
 	ActionListener menuOpenJADFileListener = new ActionListener()
 	{
 		public void actionPerformed(ActionEvent ev)
@@ -266,7 +247,6 @@ public class Awt extends Frame
 		
     
 		Config.loadConfig("config-awt.xml");
-		addKeyListener(keyListener);
 
 		devicePanel = new AwtDeviceComponent();
 		selectDevicePanel = new AwtSelectDevicePanel();

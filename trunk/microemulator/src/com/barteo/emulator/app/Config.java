@@ -29,7 +29,8 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import com.barteo.emulator.app.ui.DeviceEntry;
+import com.barteo.emulator.app.util.DeviceEntry;
+
 import nanoxml.XMLElement;
 import nanoxml.XMLParseException;
 

@@ -17,7 +17,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package com.barteo.emulator.app.ui;
+package com.barteo.emulator.app.ui.swing;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -47,13 +47,15 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 
 import com.barteo.emulator.app.Config;
+import com.barteo.emulator.app.ui.swing.*;
+import com.barteo.emulator.app.util.*;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.device.j2se.J2SEDevice;
 
 
-public class SelectDevicePanel extends DialogPanel
+public class SwingSelectDevicePanel extends SwingDialogPanel
 {
-  private SelectDevicePanel instance;
+  private SwingSelectDevicePanel instance;
   
   private JScrollPane spDevices;
   private JButton btAdd;
@@ -262,7 +264,7 @@ public class SelectDevicePanel extends DialogPanel
   };
   
   
-  public SelectDevicePanel() 
+  public SwingSelectDevicePanel() 
   {
     instance = this;
     

@@ -24,11 +24,6 @@ import javax.microedition.lcdui.Image;
 import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
 
-/**
- *
- * @author  markus
- * @version
- */
 public class ExtendedImage extends com.siemens.mp.misc.NativeMem {
     Image image;
     
@@ -37,13 +32,15 @@ public class ExtendedImage extends com.siemens.mp.misc.NativeMem {
     }
     
     public void blitToScreen(int x, int y) {
-/*		DeviceDisplay dd = DeviceFactory.getDevice().getDeviceDisplay();
-    	Image image = dd.getDisplayImage();
-    	
-    	draw ExtendedImage to image 
-    	
-    	dd.repaint();*/
-        System.out.println(" public void blitToScreen(int x, int y)");
+        System.out.println(" public void blitToScreen(int x"+x+", int y"+y+")");
+        DeviceDisplay dd = DeviceFactory.getDevice().getDeviceDisplay();
+        Image image = dd.getDisplayImage();
+        
+        Graphics g=image.getGraphics();
+        g.drawImage(this.image,x,y+10,Graphics.LEFT|Graphics.TOP);
+        //I don't know why but the +10 seems to be neccessary, I'll look into it later
+        
+        dd.repaint();
     }
     
     public void clear(byte color) {

@@ -36,7 +36,6 @@ public class J2SESoftButton extends J2SEButton implements SoftButton
   public static int LEFT = 1;
   public static int RIGHT = 2;
 
-  boolean menuActivate;
   Vector commandTypes = new Vector();
 
   Command command = null;
@@ -45,12 +44,11 @@ public class J2SESoftButton extends J2SEButton implements SoftButton
   int alignment;
 
 
-  public J2SESoftButton(String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands, boolean menuActivate)
+  public J2SESoftButton(String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands)
   {
     super(name, rectangle, keyName, null);
       
     this.paintable = paintable;
-    this.menuActivate = menuActivate;
     
     try {
       alignment = J2SESoftButton.class.getField(alignmentName).getInt(null);
@@ -86,16 +84,6 @@ public class J2SESoftButton extends J2SEButton implements SoftButton
      */
     public Command getCommand() {
         return command;
-    }
-
-
-    public void setMenuActivate(boolean state) {
-      menuActivate = state;
-    }
-
-
-    public boolean getMenuActivate() {
-      return menuActivate;
     }
 
 

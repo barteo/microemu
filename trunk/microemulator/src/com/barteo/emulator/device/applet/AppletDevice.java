@@ -398,14 +398,9 @@ public class AppletDevice implements Device
                 commands.addElement(tmp_button.getContent());
               }
             }
-            String tmp_str = tmp_keyboard.getStringAttribute("menuactivate");
-            boolean menuactivate = false;
-            if (tmp_str != null && tmp_str.equals("true")) {
-              menuactivate = true;
-            }
             AppletSoftButton button = new AppletSoftButton(tmp_keyboard.getStringAttribute("name"),
                 rectangle, tmp_keyboard.getStringAttribute("key"), paintable, 
-                tmp_keyboard.getStringAttribute("alignment"), commands, menuactivate);
+                tmp_keyboard.getStringAttribute("alignment"), commands);
             buttons.addElement(button);
             softButtons.addElement(button);
           }

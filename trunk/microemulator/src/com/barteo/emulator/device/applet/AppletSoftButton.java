@@ -36,7 +36,6 @@ public class AppletSoftButton extends AppletButton implements SoftButton
   public static int LEFT = 1;
   public static int RIGHT = 2;
 
-  boolean menuActivate;
   Vector commandTypes = new Vector();
 
   Command command = null;
@@ -45,12 +44,11 @@ public class AppletSoftButton extends AppletButton implements SoftButton
   int alignment;
 
 
-  public AppletSoftButton(String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands, boolean menuActivate)
+  public AppletSoftButton(String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands)
   {
     super(name, rectangle, keyName, null);
       
     this.paintable = paintable;
-    this.menuActivate = menuActivate;
     
     try {
       alignment = AppletSoftButton.class.getField(alignmentName).getInt(null);
@@ -86,16 +84,6 @@ public class AppletSoftButton extends AppletButton implements SoftButton
      */
     public Command getCommand() {
         return command;
-    }
-
-
-    public void setMenuActivate(boolean state) {
-      menuActivate = state;
-    }
-
-
-    public boolean getMenuActivate() {
-      return menuActivate;
     }
 
 

@@ -14,7 +14,7 @@ import nanoxml.XMLElement;
 
 public class Device {
 
-  static Device device = new Device();
+  static Device instance = new Device();
 
   Vector softButtons = new Vector();
 
@@ -30,6 +30,14 @@ public class Device {
   public static int screenPaintableY;
   public static int screenPaintableWidth;
   public static int screenPaintableHeight;
+  
+  class Rectangle
+  {
+    int x;
+    int y;
+    int width;
+    int height;
+  }
 
 
   Device()
@@ -51,13 +59,19 @@ public class Device {
     soft.addCommandType(Command.HELP);
     softButtons.addElement(soft);
   }
+  
+  
+  public static Device getInstance()
+  {
+    return instance;
+  }
 
 
-  public static boolean init()
+  public boolean init()
   {
     String xml = "";
     DataInputStream dis = new DataInputStream(
-        device.getClass().getResourceAsStream("/com/barteo/emulator/device/device.xml"));
+        instance.getClass().getResourceAsStream("/com/barteo/emulator/device/device.xml"));
     try {
       while (dis.available() > 0) {
         byte[] b = new byte[dis.available()];
@@ -74,53 +88,38 @@ public class Device {
 
     for (Enumeration e = doc.enumerateChildren(); e.hasMoreElements(); ) {
       XMLElement tmp = (XMLElement) e.nextElement();
-      if (tmp.getTagName().equals("screen")) {
+      if (tmp.getName().equals("screen")) {
         for (Enumeration e_screen = tmp.enumerateChildren(); e_screen.hasMoreElements(); ) {
           XMLElement tmp_screen = (XMLElement) e_screen.nextElement();
-          if (tmp_screen.getTagName().equals("background")) {
+          if (tmp_screen.getName().equals("background")) {
             backgroundColor = new Color(Integer.parseInt(tmp_screen.getContents(), 16));
           }
-          if (tmp_screen.getTagName().equals("foreground")) {
+          if (tmp_screen.getName().equals("foreground")) {
             foregroundColor = new Color(Integer.parseInt(tmp_screen.getContents(), 16));
           }
-          if (tmp_screen.getTagName().equals("rectangle")) {
-            for (Enumeration e_rectangle = tmp_screen.enumerateChildren(); e_rectangle.hasMoreElements(); ) {
-              XMLElement tmp_rectangle = (XMLElement) e_rectangle.nextElement();
-              if (tmp_rectangle.getTagName().equals("x")) {
-                screenRectangleX = Integer.parseInt(tmp_rectangle.getContents());
-              }
-              if (tmp_rectangle.getTagName().equals("y")) {
-                screenRectangleY = Integer.parseInt(tmp_rectangle.getContents());
-              }
-              if (tmp_rectangle.getTagName().equals("width")) {
-                screenRectangleWidth = Integer.parseInt(tmp_rectangle.getContents());
-              }
-              if (tmp_rectangle.getTagName().equals("height")) {
-                screenRectangleHeight = Integer.parseInt(tmp_rectangle.getContents());
-              }
-            }
+          if (tmp_screen.getName().equals("rectangle")) {
+            Rectangle tmpRect = getRectangle(tmp_screen);
+            screenRectangleX = tmpRect.x;
+            screenRectangleY = tmpRect.y;
+            screenRectangleWidth = tmpRect.width;
+            screenRectangleHeight = tmpRect.height;
           }
-          if (tmp_screen.getTagName().equals("paintable")) {
-            for (Enumeration e_paintable = tmp_screen.enumerateChildren(); e_paintable.hasMoreElements(); ) {
-              XMLElement tmp_paintable = (XMLElement) e_paintable.nextElement();
-              if (tmp_paintable.getTagName().equals("x")) {
-                screenPaintableX = Integer.parseInt(tmp_paintable.getContents());
-              }
-              if (tmp_paintable.getTagName().equals("y")) {
-                screenPaintableY = Integer.parseInt(tmp_paintable.getContents());
-              }
-              if (tmp_paintable.getTagName().equals("width")) {
-                screenPaintableWidth = Integer.parseInt(tmp_paintable.getContents());
-              }
-              if (tmp_paintable.getTagName().equals("height")) {
-                screenPaintableHeight = Integer.parseInt(tmp_paintable.getContents());
-              }
-            }
+          if (tmp_screen.getName().equals("paintable")) {
+            Rectangle tmpRect = getRectangle(tmp_screen);
+            screenPaintableX = tmpRect.x;
+            screenPaintableY = tmpRect.y;
+            screenPaintableWidth = tmpRect.width;
+            screenPaintableHeight = tmpRect.height;
           }
         }
-        break;
       }
-      if (tmp.getTagName().equals("keyboard")) {
+      if (tmp.getName().equals("keyboard")) {
+        for (Enumeration e_keyboard = tmp.enumerateChildren(); e_keyboard.hasMoreElements(); ) {
+          XMLElement tmp_keyboard = (XMLElement) e_keyboard.nextElement();
+          if (tmp_keyboard.getName().equals("button")) {
+//            System.out.println(getRectangle(tmp_keyboard));
+          }
+        }
       }
     }
     
@@ -129,7 +128,31 @@ public class Device {
 
 
   public static Vector getSoftButtons() {
-   return device.softButtons;
+   return instance.softButtons;
+  }
+  
+  
+  Rectangle getRectangle(XMLElement source)
+  {
+    Rectangle rect = new Rectangle();
+    
+    for (Enumeration e_rectangle = source.enumerateChildren(); e_rectangle.hasMoreElements(); ) {
+      XMLElement tmp_rectangle = (XMLElement) e_rectangle.nextElement();
+      if (tmp_rectangle.getName().equals("x")) {
+        rect.x = Integer.parseInt(tmp_rectangle.getContents());
+      }
+      if (tmp_rectangle.getName().equals("y")) {
+        rect.y = Integer.parseInt(tmp_rectangle.getContents());
+      }
+      if (tmp_rectangle.getName().equals("width")) {
+        rect.width = Integer.parseInt(tmp_rectangle.getContents());
+      }
+      if (tmp_rectangle.getName().equals("height")) {
+        rect.height = Integer.parseInt(tmp_rectangle.getContents());
+      }
+    }
+    
+    return rect;
   }
 
 }

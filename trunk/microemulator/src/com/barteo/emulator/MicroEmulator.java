@@ -77,15 +77,15 @@ public class MicroEmulator extends Applet
     setFont(defaultFont);
     FontManager.getInstance().setDefaultFontMetrics(getFontMetrics(defaultFont));
 
-    if (!Device.init()) {
+    if (!Device.getInstance().init()) {
       return false;
     }
 
     try {
       midlet = (MIDlet) midletClass.newInstance();
     } catch (Exception ex) {
-System.out.println(ex);        
       System.out.println("Cannot initialize " + midletClass + " MIDlet class");
+      System.out.println(ex);        
       return false;
     }
 

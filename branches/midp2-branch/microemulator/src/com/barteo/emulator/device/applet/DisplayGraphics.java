@@ -195,7 +195,16 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 	public void drawRegion(Image src, int x_src, int y_src, int width, int height,
 			int transform, int x_dest, int y_dest, int anchor)
 	{
-		throw new RuntimeException("TODO");
+//		throw new RuntimeException("TODO");
+		if (src.isMutable()) {
+			g.drawImage(((MutableImage) src).getImage(),
+					x_dest, y_dest, x_dest + width, y_dest + height, 
+					x_src, y_src, x_src + width, y_src + height, null);
+		} else {
+			g.drawImage(((ImmutableImage) src).getImage(),
+					x_dest, y_dest, x_dest + width, y_dest + height,
+					x_src, y_src, x_src + width, y_src + height, null);
+		}
 	}
 
 

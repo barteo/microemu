@@ -91,7 +91,6 @@ public class Display
 			if (current != null) {
         current.paint(g);
 				g.translate(-g.getTranslateX(), -g.getTranslateY());
-				Vector jobs = null;
 				synchronized (paintLock) {
 					repaintPending = false;
 					paintLock.notify();

@@ -47,7 +47,6 @@ public final class BWImageFilter implements ImageFilter
 
   public RGB filterRGB (int x, int y, RGB rgb)
 	{
-    int a = 0;
     int Y = (int)(Yr * rgb.red + Yg * rgb.green + Yb * rgb.blue);
     if (Y > 127) {
     	return ((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getRGB();

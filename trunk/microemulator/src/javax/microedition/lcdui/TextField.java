@@ -311,8 +311,6 @@ public class TextField extends Item
 
 	int traverse(int gameKeyCode, int top, int bottom, boolean action)
 	{
-		Font f = Font.getDefaultFont();
-
 		if (gameKeyCode == Canvas.UP) {
 			if (top > 0) {
 				return -top;

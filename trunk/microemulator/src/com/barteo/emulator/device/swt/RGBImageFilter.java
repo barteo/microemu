@@ -48,7 +48,6 @@ public final class RGBImageFilter implements ImageFilter
 
   public RGB filterRGB (int x, int y, RGB rgb)
 	{
-    int a = 0;
     int r, g, b;
 
     if (Rr > 0) {

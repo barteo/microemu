@@ -37,6 +37,12 @@ class ImageStringItem extends Item
   }
 
 
+	public Image getImage()
+	{
+    return img;
+  }
+    
+    
 	public void setImage(Image img)
 	{
     this.img = img;

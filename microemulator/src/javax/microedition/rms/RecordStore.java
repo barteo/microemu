@@ -247,7 +247,7 @@ public class RecordStore
 	}
 	
 
-	public int getRecord(int recordId, byte[] buffer, int offset)
+  public int getRecord(int recordId, byte[] buffer, int offset)
       throws RecordStoreNotOpenException, InvalidRecordIDException, RecordStoreException
 	{
     int recordSize;
@@ -345,21 +345,40 @@ public class RecordStore
     int currentRecord;
     
     
+    RecordListener recordListener = new RecordListener()
+    {
+      
+      public void recordAdded(RecordStore recordStore, int recordId)
+      {
+        rebuild();
+      }
+
+      
+      public void recordChanged(RecordStore recordStore, int recordId)
+      {
+        rebuild();
+      }
+  
+      
+      public void recordDeleted(RecordStore recordStore, int recordId)
+      {
+        rebuild();
+      }
+    
+    };
+    
+    
     RecordEnumerationImpl(RecordFilter filter, RecordComparator comparator, boolean keepUpdated)
     {
       this.filter = filter;
       this.comparator = comparator;
       this.keepUpdated = keepUpdated;
+
+      rebuild();
       
-      for (Enumeration e = records.keys(); e.hasMoreElements(); ) {
-        Object key = e.nextElement();
-        if (filter != null && !filter.matches((byte[]) records.get(key))) {
-          continue;
-        }
-        enumerationRecords.addElement(
-            new EnumerationRecord(((Integer) key).intValue(), (byte[]) records.get(key)));
+      if (keepUpdated) {
+        addRecordListener(recordListener);
       }
-      currentRecord = 0;
     }    
     
   
@@ -375,11 +394,11 @@ public class RecordStore
       if (!open) {
         throw new RecordStoreNotOpenException();
       }      
-      if (currentRecord == numRecords()) {
+
+      currentRecord++;      
+      if (currentRecord >= numRecords()) {
         throw new InvalidRecordIDException();
       }
-
-      currentRecord++;
       
       return ((EnumerationRecord) enumerationRecords.elementAt(currentRecord)).value;
     }
@@ -388,11 +407,10 @@ public class RecordStore
     public int nextRecordId()
         throws InvalidRecordIDException
     {
-      if (currentRecord == numRecords()) {
+      currentRecord++;
+      if (currentRecord >= numRecords()) {
         throw new InvalidRecordIDException();
       }
-
-      currentRecord++;
 
       return ((EnumerationRecord) enumerationRecords.elementAt(currentRecord)).recordId;
     }
@@ -456,11 +474,44 @@ public class RecordStore
     
     public void rebuild()
     {
+      enumerationRecords.removeAllElements();
+      
+      int position;
+      for (Enumeration e = records.keys(); e.hasMoreElements(); ) {
+        Object key = e.nextElement();
+        if (filter != null && !filter.matches((byte[]) records.get(key))) {
+          continue;
+        }
+        byte[] tmp_data = (byte[]) records.get(key);
+        // here should be better sorting
+        if (comparator != null) {
+          for (position = 0; position < enumerationRecords.size(); position++) {
+            if (comparator.compare(tmp_data, (byte[]) enumerationRecords.elementAt(position)) 
+                == RecordComparator.FOLLOWS) {
+              break;
+            }
+          }
+        } else {
+          position = enumerationRecords.size();
+        }
+        enumerationRecords.insertElementAt(
+            new EnumerationRecord(((Integer) key).intValue(), tmp_data), position);
+      }
+      currentRecord = 0;
     }
   
     
     public void keepUpdated(boolean keepUpdated)
     {
+      if (keepUpdated) {
+        if (!this.keepUpdated) {
+          rebuild();
+          addRecordListener(recordListener);
+        }
+      } else {
+        removeRecordListener(recordListener);
+      }
+      
       this.keepUpdated = keepUpdated;
     }
   

@@ -26,10 +26,11 @@ import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
-import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -292,17 +293,17 @@ public class AppletDevice implements Device
   public void loadConfig(String config)
   		throws IOException
   {
-    String xml = "";
-    InputStream dis = new BufferedInputStream(getClass().getResourceAsStream(config));
-    while (dis.available() > 0) {
-      byte[] b = new byte[dis.available()];
-      dis.read(b);
-      xml += new String(b);
-    }
+	String readLine;
+	StringBuffer xmlBuffer = new StringBuffer();
+	BufferedReader dis = new BufferedReader(
+			new InputStreamReader(getClass().getResourceAsStream(config)));
+	while ((readLine = dis.readLine()) != null) {
+		xmlBuffer.append(readLine);
+	}
 
     XMLElement doc = new XMLElement();
     try {
-      doc.parseString(xml);
+      doc.parseString(xmlBuffer.toString());
     } catch (XMLParseException ex) {
     	throw new IOException(ex.toString());
     }

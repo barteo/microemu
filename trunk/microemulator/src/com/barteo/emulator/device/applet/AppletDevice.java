@@ -277,7 +277,7 @@ public class AppletDevice implements Device
         xml += new String(b);
       }
     } catch (Exception ex) {
-      System.out.println("Cannot find com.barteo.emulator.device.device.txt definition file");
+      System.out.println("Cannot load " + config + " definition file");
       return;
     }
 

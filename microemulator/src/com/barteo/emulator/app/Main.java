@@ -25,6 +25,10 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Vector;
 
 import javax.microedition.midlet.MIDlet;
@@ -37,11 +41,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.UIManager;
 
-import com.barteo.emulator.device.Device;
 import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.MIDletEntry;
 import com.barteo.emulator.app.launcher.Launcher;
+import com.barteo.emulator.device.Device;
+import com.barteo.emulator.util.JadProperties;
+import com.barteo.emulator.util.jar.JarInputStream;
+import com.barteo.emulator.util.jar.JarEntry;
 import com.barteo.midp.lcdui.DisplayBridge;
 import com.barteo.midp.lcdui.FontManager;
 import com.barteo.midp.lcdui.KeyboardComponent;
@@ -68,7 +75,7 @@ public class Main extends JFrame implements MicroEmulator
   ActionListener menuOpenJADFileListener = new ActionListener()
   {
 
-    public void actionPerformed(ActionEvent e)
+    public void actionPerformed(ActionEvent ev)
     {
       if (fileChooser == null) {
         ExtensionFileFilter fileFilter = new ExtensionFileFilter("JAD files");
@@ -80,8 +87,36 @@ public class Main extends JFrame implements MicroEmulator
       
       int returnVal = fileChooser.showOpenDialog(instance);
       if (returnVal == JFileChooser.APPROVE_OPTION) {
-        System.out.println("You chose to open this file: " + 
-            fileChooser.getSelectedFile().getName());       
+        JadProperties jad = new JadProperties();
+        try {
+          FileInputStream fis = new FileInputStream(fileChooser.getSelectedFile());
+          jad.load(fis);
+        } catch (FileNotFoundException ex) {
+          System.err.println("Cannot found file " + fileChooser.getSelectedFile().getName());
+          return;
+        } catch (IOException ex) {
+          System.err.println("Cannot open file " + fileChooser.getSelectedFile().getName());
+          return;
+        }
+        try {
+          System.out.println(jad.getJarURL());
+          
+          File f = new File(fileChooser.getSelectedFile().getParent(), jad.getJarURL());
+          
+          JarInputStream jis = new JarInputStream(new FileInputStream(f));
+          
+          JarEntry jarEntry;
+          do {
+            jarEntry = jis.getNextJarEntry();
+            System.out.println(jarEntry);
+          } while (jarEntry != null);
+        } catch (IOException ex) {
+          System.err.println(ex);
+          return;
+//        } catch (FileNotFoundException ex) {
+//          System.err.println(ex);
+//          return;
+        }
       }
     }
   
@@ -108,11 +143,11 @@ public class Main extends JFrame implements MicroEmulator
     JMenu menu = new JMenu("File");
     
     JMenuItem menuItem;
-/*    menuItem = new JMenuItem("Open JAD File...");
+    menuItem = new JMenuItem("Open JAD File...");
     menuItem.addActionListener(menuOpenJADFileListener);
     menu.add(menuItem);
     
-    menu.addSeparator();*/
+    menu.addSeparator();
     
     menuItem = new JMenuItem("Exit");
     menuItem.addActionListener(menuExitListener);

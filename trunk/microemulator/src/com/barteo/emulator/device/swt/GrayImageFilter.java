@@ -23,6 +23,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
 import com.barteo.emulator.app.ui.swt.ImageFilter;
+import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
 import com.barteo.emulator.device.DeviceFactory;
 
 
@@ -31,7 +32,7 @@ public final class GrayImageFilter implements ImageFilter
 
   private double Yr, Yg, Yb;
   private double Rr, Rg, Rb;
-
+  private Color foregroundColor;
 
   public GrayImageFilter ()
 	{
@@ -44,10 +45,14 @@ public final class GrayImageFilter implements ImageFilter
     this.Yr = Yr;
     this.Yg = Yg;
     this.Yb = Yb;
-    Color backgroundColor = 
-        ((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor();    
-    Color foregroundColor = 
-        ((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor();    
+    Color backgroundColor = SwtDeviceComponent.createColor(new RGB(
+    		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getRed(),
+    		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getGreen(),
+    		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getBlue()));
+    foregroundColor = SwtDeviceComponent.createColor(new RGB(
+    		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor().getRed(),
+    		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor().getGreen(),
+    		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor().getBlue()));
     Rr = (backgroundColor.getRed() - foregroundColor.getRed()) / 256d;
     Rg = (backgroundColor.getGreen() - foregroundColor.getGreen()) / 256d;
     Rb = (backgroundColor.getBlue() - foregroundColor.getBlue()) / 256d;
@@ -60,8 +65,6 @@ public final class GrayImageFilter implements ImageFilter
     if (Y > 255) {
       Y = 255;
     }
-    Color foregroundColor = 
-        ((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor();
     
     return new RGB(    
     		(int) (Rr * Y) + foregroundColor.getRed(),

@@ -178,6 +178,10 @@ public class Form extends Screen
 	{
 		int height, testItemIndex, traverse, i;
 		int topItemIndex, bottomItemIndex;
+    
+    if (numOfItems == 0) {
+      return 0;
+    }
 
 		if (gameKeyCode == 1) {
 			topItemIndex = getTopVisibleIndex(top);

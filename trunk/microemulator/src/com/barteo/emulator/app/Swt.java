@@ -305,6 +305,10 @@ public class Swt
   
 	public void setDevice(DeviceEntry entry)
 	{
+		if (DeviceFactory.getDevice() != null) {
+			((SwtDevice) DeviceFactory.getDevice()).dispose();
+		}
+		
 		ProgressJarClassLoader loader = (ProgressJarClassLoader) emulatorContext.getClassLoader();
 		try {
 			Class deviceClass = null;

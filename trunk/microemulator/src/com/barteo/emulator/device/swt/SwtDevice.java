@@ -47,7 +47,7 @@ public class SwtDevice implements Device
 {
   private SwtDeviceDisplay deviceDisplay;
   private FontManager fontManager = null;
-  private InputMethod inputMethod = null;
+  private SwtInputMethod inputMethod = null;
   private Vector buttons;
   private Vector softButtons;
   
@@ -265,6 +265,13 @@ public class SwtDevice implements Device
     return false;
   }
 
+  
+  public void dispose()
+  {
+		inputMethod.dispose();
+		inputMethod = null;
+  }
+  
   
   public Vector getButtons()
   {

@@ -49,7 +49,7 @@ public class J2SEDevice implements Device
 {
   private J2SEDeviceDisplay deviceDisplay;
   private FontManager fontManager = null;
-  private InputMethod inputMethod = null;
+  private J2SEInputMethod inputMethod = null;
   private Vector buttons;
   private Vector softButtons;
   
@@ -265,6 +265,13 @@ public class J2SEDevice implements Device
     return false;
   }
 
+  
+  public void dispose()
+  {
+		inputMethod.dispose();
+		inputMethod = null;
+  }
+  
   
   public Vector getButtons()
   {

@@ -49,7 +49,7 @@ public class AppletDevice implements Device
 {
   AppletDeviceDisplay deviceDisplay;
   FontManager fontManager = null;
-  InputMethod inputMethod = null;
+  AppletInputMethod inputMethod = null;
   Vector buttons;
   Vector softButtons;
 
@@ -266,6 +266,13 @@ public class AppletDevice implements Device
   }
   
 
+  public void dispose()
+  {
+		inputMethod.dispose();
+		inputMethod = null;
+  }
+  
+  
   public Vector getButtons()
   {
     return buttons;

@@ -20,6 +20,7 @@
 package com.barteo.emulator.device.j2se;
 
 import java.awt.Frame;
+import java.awt.Graphics2D;
 
 
 public class MutableImage extends javax.microedition.lcdui.Image 
@@ -40,7 +41,7 @@ public class MutableImage extends javax.microedition.lcdui.Image
   public javax.microedition.lcdui.Graphics getGraphics() 
   {
     if (displayGraphics == null) {
-      displayGraphics = new DisplayGraphics(img.getGraphics());
+      displayGraphics = new DisplayGraphics((Graphics2D) img.getGraphics());
       displayGraphics.setGrayScale(255);
       displayGraphics.fillRect(0, 0, getWidth(), getHeight());
       displayGraphics.setGrayScale(0);

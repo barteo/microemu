@@ -24,8 +24,11 @@ package com.barteo.emulator.device.j2se;
 
 import java.awt.Color;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 
 import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.game.Sprite;
 
 import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
@@ -33,13 +36,13 @@ import com.barteo.emulator.device.DeviceFactory;
 
 public class DisplayGraphics extends javax.microedition.lcdui.Graphics 
 {
-  java.awt.Graphics g;
+  java.awt.Graphics2D g;
   int color = 0;
   javax.microedition.lcdui.Font currentFont = javax.microedition.lcdui.Font.getDefaultFont();
   
 
 // to zostanie zmienione na protected jak zostanie zrobiony DisplayBridge
-  public DisplayGraphics(java.awt.Graphics a_g) 
+  public DisplayGraphics(java.awt.Graphics2D a_g) 
   {
     g = a_g;
     g.setFont(
@@ -196,14 +199,51 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 			int transform, int x_dest, int y_dest, int anchor)
 	{
 //		throw new RuntimeException("TODO");
+		java.awt.Image img;
 		if (src.isMutable()) {
-			g.drawImage(((MutableImage) src).getImage(),
-					x_dest, y_dest, x_dest + width, y_dest + height, 
-					x_src, y_src, x_src + width, y_src + height, null);
+			img = ((MutableImage) src).getImage();
 		} else {
-			g.drawImage(((ImmutableImage) src).getImage(),
+			img = ((ImmutableImage) src).getImage();
+		}
+		if (transform == Sprite.TRANS_NONE) {
+			g.drawImage(img,
 					x_dest, y_dest, x_dest + width, y_dest + height,
 					x_src, y_src, x_src + width, y_src + height, null);
+		} else {
+			BufferedImage bi = new BufferedImage(src.getWidth(), src.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			java.awt.Graphics big = bi.getGraphics();
+			big.drawImage(img, 0, 0, null);
+			
+			bi = bi.getSubimage(x_src, y_src, width, height); 
+			
+			AffineTransform af = new AffineTransform();
+			switch (transform) {
+				case Sprite.TRANS_MIRROR:
+					af.setTransform(-1, 0, 0, 1, width, 0);
+					break;
+
+				case Sprite.TRANS_MIRROR_ROT90:
+					af.setTransform(1, 0, 0, -1, 0, height);
+				case Sprite.TRANS_ROT90:
+					af.rotate(90 * Math.PI/180, width / 2, height / 2);
+					break;
+
+				case Sprite.TRANS_MIRROR_ROT180:
+					af.setTransform(-1, 0, 0, 1, width, 0);
+				case Sprite.TRANS_ROT180:
+					af.rotate(180 * Math.PI/180, width / 2, height / 2);
+					break;
+
+				case Sprite.TRANS_MIRROR_ROT270:
+					af.setTransform(1, 0, 0, -1, 0, height);
+				case Sprite.TRANS_ROT270:
+					af.rotate(270 * Math.PI/180, width / 2, height / 2);
+					break;
+			}
+
+			g.translate(x_dest, y_dest);
+			g.drawImage(bi, af, null);
+			g.translate(-x_dest, -y_dest);
 		}
 	}
 

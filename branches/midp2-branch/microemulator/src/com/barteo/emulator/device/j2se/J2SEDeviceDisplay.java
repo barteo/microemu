@@ -22,6 +22,7 @@ package com.barteo.emulator.device.j2se;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.Enumeration;
@@ -112,7 +113,7 @@ public class J2SEDeviceDisplay implements DeviceDisplay
     g.translate(displayPaintable.x, displayPaintable.y);
     Font f = g.getFont();
     
-    DisplayGraphics dg = new DisplayGraphics(g);
+    DisplayGraphics dg = new DisplayGraphics((Graphics2D) g);
     MIDletBridge.getMIDletAccess().getDisplayAccess().paint(dg);
     
     g.setFont(f);

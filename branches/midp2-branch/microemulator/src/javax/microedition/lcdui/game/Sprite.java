@@ -41,6 +41,8 @@ public class Sprite extends Layer
 	private int[] frameSequence;
 	private int currentFrameIndex;
 	private int currentTransform;
+	private int referencePixelX;
+	private int referencePixelY;
 	
 	
 	public Sprite(Image image)
@@ -65,6 +67,7 @@ public class Sprite extends Layer
 		numGridX = image.getWidth() / frameWidth;
 		numGridY = image.getHeight() / frameHeight;
 		setFrameSequence(null);
+		defineReferencePixel(0, 0);
 		setTransform(TRANS_NONE);
 		
 //		throw new RuntimeException("TODO");
@@ -108,7 +111,8 @@ public class Sprite extends Layer
 	
 	public void defineReferencePixel(int x, int y)		
 	{
-//		throw new RuntimeException("TODO");
+		referencePixelX = x;
+		referencePixelY = y;
 	}
 
 

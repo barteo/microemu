@@ -471,8 +471,7 @@ public class AppletDevice implements Device
 	private Image getImage(String str)
 					throws IOException
 	{
-//		InputStream is = EmulatorContext.class.getResourceAsStream(str);
-		InputStream is = deviceDisplay.getEmulatorContext().getClassLoader().getResourceAsStream(str);
+		InputStream is = EmulatorContext.class.getResourceAsStream(str);
 
 		if (is == null) {
 				throw new IOException(str + " could not be found.");

@@ -100,6 +100,12 @@ public class Display
 		{
       getDisplay().setCurrent(d);
     }
+    
+    
+    public void updateCommands()
+    {
+      getDisplay().updateCommands();
+    }
 
 	}
 
@@ -271,7 +277,11 @@ public class Display
 
 	void updateCommands()
 	{
-		DisplayBridge.updateCommands(current.getCommands());
+    if (current == null) {
+      DisplayBridge.updateCommands(null);
+    } else {
+      DisplayBridge.updateCommands(current.getCommands());
+    }
 	}
 
 }

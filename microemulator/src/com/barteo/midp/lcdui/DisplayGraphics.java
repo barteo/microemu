@@ -58,8 +58,7 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 
   public int getGrayScale()
   {
-System.out.println("Graphics::getGrayScale() not implemented");
-    return 0;
+    return (getRedComponent() + getGreenComponent() + getBlueComponent()) / 3;
   }
 
 

@@ -43,6 +43,8 @@ public abstract class MIDlet
   		  throws MIDletStateChangeException
     {
       DisplayBridge.setAccess(getDisplayAccess());
+System.out.println("update");    
+      getDisplayAccess().updateCommands();
       midlet.startApp();
     }
 

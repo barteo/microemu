@@ -20,7 +20,7 @@
     <!-- <property name="mylib" value="../lib/mylib.jar"/> -->
   </target>
 
-  <target name="compile" depends="init">
+  <target depends="init" name="compile">
     <mkdir dir="./classes"/>
     <!-- Both srcdir and destdir should be package roots. -->
     <!-- They could be different of course; in that case NetBeans can also be set -->
@@ -32,7 +32,7 @@
     </javac>
   </target>
 
-  <target name="jar-simpledemo" depends="init,compile">
+  <target depends="init,compile" name="jar-simpledemo">
     <jar compress="true" jarfile="simpledemo.jar">
       <fileset dir="./classes">
         <include name="com/barteo/midp/examples/simpledemo/**"/>
@@ -46,7 +46,7 @@
     <copy file="simpledemo.jar" todir="doc/www"/>
   </target>
 
-  <target name="jar-applet" depends="init,compile">
+  <target depends="init,compile" name="jar-applet">
     <jar compress="true" jarfile="me-applet.jar">
       <fileset dir="./classes">
         <exclude name="com/barteo/midp/examples/**"/>
@@ -62,7 +62,7 @@
     <copy file="me-applet.jar" todir="doc/www"/>
   </target>
 
-  <target name="jar" depends="init,compile,jar-applet,jar-simpledemo">
+  <target depends="init,compile,jar-applet,jar-simpledemo" name="jar">
     <jar compress="true" jarfile="me-app.jar">
       <fileset dir="./classes">
         <exclude name="com/barteo/midp/examples/**"/>
@@ -75,10 +75,10 @@
     </jar>
   </target>
 
-  <target name="all" depends="init,jar" description="Build everything.">
+  <target depends="init,jar" description="Build everything." name="all">
   </target>
 
-  <target name="run" depends="init,all" description="Try running it.">
+  <target depends="init,all" description="Try running it." name="run">
     <java classname="com.barteo.emulator.app.Main" failonerror="true" fork="true">
       <classpath>
         <pathelement location="me-app.jar"/>
@@ -88,12 +88,12 @@
     </java>
   </target>
 
-  <target name="javadoc" depends="init" description="Javadoc for my API.">
+  <target depends="init" description="Javadoc for my API." name="javadoc">
     <mkdir dir="apidoc"/>
     <javadoc destdir="apidoc" packagenames="javax.microedition.*" sourcepath="src"/>
   </target>
 
-  <target name="dist" depends="init,jar" description="Create distribution package">
+  <target depends="init,jar" description="Create distribution package" name="dist">
     <mkdir dir="dist"/>
 
     <tar basedir="../." tarfile="dist/microemulator-src.tar">
@@ -134,7 +134,7 @@
     <delete file="dist/microemulator-app.tar"/>
   </target>
 
-  <target name="clean" depends="init" description="Clean all build products.">
+  <target depends="init" description="Clean all build products." name="clean">
     <delete dir="class">
       <fileset dir=".">
         <include name="**/*.class"/>

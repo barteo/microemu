@@ -26,6 +26,7 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -45,20 +46,17 @@ import com.barteo.emulator.DefaultInputMethod;
 import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.SoftButton;
-import com.barteo.emulator.XYConstraints;
-import com.barteo.emulator.XYLayout;
 import com.barteo.emulator.device.Device;
 import com.barteo.midp.lcdui.CommandManager;
+import com.barteo.midp.lcdui.DisplayBridge;
 import com.barteo.midp.lcdui.FontManager;
 import com.barteo.midp.lcdui.InputMethod;
 
 
-public class Main extends Applet implements MicroEmulator
+public class Main extends Applet implements MicroEmulator, com.barteo.midp.lcdui.DisplayComponent
 {
   Main instance;
   MIDlet midlet;
-
-	AWTDisplayComponent dc;
 
   Font defaultFont;
   
@@ -67,7 +65,9 @@ public class Main extends Applet implements MicroEmulator
   Button pressedButton;
 
 	Image offi;
-	Graphics offg;
+
+  boolean scrollUp = false;
+  boolean scrollDown = false;
 
   MouseAdapter mouseListener = new MouseAdapter() 
   {
@@ -173,17 +173,12 @@ public class Main extends Applet implements MicroEmulator
       
     addKeyListener(keyListener);
 
-    XYLayout xy = new XYLayout();
-    setLayout(xy);
-
-    dc = new AWTDisplayComponent(this);
-    add(dc, new XYConstraints(Device.screenRectangle));
-
-
     addMouseListener(mouseListener);
     addMouseMotionListener(mouseMotionListener);
     
-		String midletName = getParameter("midlet");
+    DisplayBridge.setComponent(this);
+
+    String midletName = getParameter("midlet");
 		if (midletName == null) {
 			System.out.println("There is no midlet parameter");
 			return;
@@ -264,50 +259,84 @@ public class Main extends Applet implements MicroEmulator
 		return info;
   }
 
-
+                       
   public void paint(Graphics g) 
   {
-    if (offg == null || 
-        offi.getWidth(null) != getSize().width || offi.getHeight(null) != getSize().height) {
-			offi = createImage(getSize().width, getSize().height);
-			offg = offi.getGraphics();
+    g.drawImage(Device.normalImage, 0, 0, this);
+    
+    g.translate(Device.screenRectangle.x, Device.screenRectangle.y);
+    
+    g.setColor(Device.backgroundColor);
+    g.fillRect(0, 0, Device.screenRectangle.width, Device.screenRectangle.height);
+    
+    g.setColor(Device.foregroundColor);
+    for (Enumeration s = Device.getDeviceButtons().elements(); s.hasMoreElements(); ) {
+      Button button = (Button) s.nextElement();
+      if (button instanceof SoftButton) {
+        ((SoftButton) button).paint(g);
+      }
     }
 
-    offg.drawImage(Device.normalImage, 0, 0, this);
+    int inputMode = InputMethod.getInputMethod().getInputMode();
+    if (inputMode == InputMethod.INPUT_123) {
+      g.drawImage(Device.mode123Image, Device.mode123ImagePaintable.x, Device.mode123ImagePaintable.y, this);
+    } else if (inputMode == InputMethod.INPUT_ABC_UPPER) {
+      g.drawImage(Device.modeAbcUpperImage, Device.modeAbcUpperImagePaintable.x, Device.modeAbcUpperImagePaintable.y, this);
+    } else if (inputMode == InputMethod.INPUT_ABC_LOWER) {
+      g.drawImage(Device.modeAbcLowerImage, Device.modeAbcLowerImagePaintable.x, Device.modeAbcLowerImagePaintable.y, this);
+    }
+
+    Shape oldclip = g.getClip();
+    g.setClip(Device.screenPaintable);
+    g.translate(Device.screenPaintable.x, Device.screenPaintable.y);
+    DisplayBridge.paint(g);
+    g.translate(-Device.screenPaintable.x, -Device.screenPaintable.y);
+    g.setClip(oldclip);
+
+    if (scrollUp) {
+      g.drawImage(Device.upImage, Device.upImagePaintable.x, Device.upImagePaintable.y, this);
+    }
+    if (scrollDown) {
+      g.drawImage(Device.downImage, Device.downImagePaintable.x, Device.downImagePaintable.y, this);
+    }
     
-    offg.translate(Device.screenRectangle.x, Device.screenRectangle.y);
-    dc.paint(offg);
-    offg.translate(-Device.screenRectangle.x, -Device.screenRectangle.y);
+    g.translate(-Device.screenRectangle.x, -Device.screenRectangle.y);
 
     Rectangle rect;
     if (prevOverButton != null ) {
       rect = prevOverButton.getRectangle();    
-      offg.drawImage(Device.normalImage, 
+      g.drawImage(Device.normalImage, 
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
       prevOverButton = null;
     }
     if (overButton != null) {
       rect = overButton.getRectangle();    
-      offg.drawImage(Device.overImage, 
+      g.drawImage(Device.overImage, 
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
     }
     if (pressedButton != null) {
       rect = pressedButton.getRectangle();    
-      offg.drawImage(Device.pressedImage, 
+      g.drawImage(Device.pressedImage, 
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
-    }
-    
- 		g.drawImage(offi, 0, 0, null);
+    }    
   }
 
 
 	public void update(Graphics g)
 	{
-		paint(g);
-	}
+    if (offi == null || 
+        offi.getWidth(null) != getSize().width || offi.getHeight(null) != getSize().height) {
+			offi = createImage(getSize().width, getSize().height);
+    }
+
+		Graphics offg = offi.getGraphics();
+		paint(offg);
+
+    g.drawImage(offi, 0, 0, null);
+  }
 
   
   Button getButton(int x, int y)
@@ -335,6 +364,18 @@ public class Main extends Applet implements MicroEmulator
       }
     }        
     return null;
+  }
+
+  
+  public void setScrollDown(boolean state) 
+  {
+    scrollDown = state;
+  }
+
+
+  public void setScrollUp(boolean state) 
+  {
+    scrollUp = state;
   }
   
 }

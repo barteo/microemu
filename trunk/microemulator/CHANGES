@@ -1,8 +1,9 @@
 MicroEmulator
 
-0.2 (alpha)
-- MIDP/CLDC API finished (with javax.microedition.io.*)
+0.2 (alpha) - 3.04.2002
+- MIDP/CLDC API finished (with javax.microedition.io.* currently http only)
 - handled computer keyboard input
+- many invisible fixes
 
 0.1.3 (pre-alpha) - 1.02.2002
 - framework for javax.microedition.io.* (implementation to be written)

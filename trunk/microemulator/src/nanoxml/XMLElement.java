@@ -890,15 +890,7 @@ public class XMLElement
     */
    public String getContent()
    {
-     char[] tmp = this.contents.toCharArray();
-     String newString = "";
-     for (int i = 0; i < tmp.length; i++) {
-       if (((int) tmp[i]) != 0) {
-         newString += tmp[i];
-       }
-     }
-     
-     return newString;
+     return this.contents;
    }
 
 
@@ -2660,7 +2652,7 @@ public class XMLElement
    protected char readChar()
       throws IOException
    {
-      if (this.charReadTooMuch != '\0') {
+     if (this.charReadTooMuch != '\0') {
          char ch = this.charReadTooMuch;
          this.charReadTooMuch = '\0';
          return ch;
@@ -2692,7 +2684,7 @@ public class XMLElement
    protected void scanElement(XMLElement elt)
       throws IOException
    {
-      StringBuffer buf = new StringBuffer();
+     StringBuffer buf = new StringBuffer();
       this.scanIdentifier(buf);
       String name = buf.toString();
       elt.setName(name);

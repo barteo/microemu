@@ -404,14 +404,9 @@ public class J2SEDevice implements Device
                 commands.addElement(tmp_button.getContent());
               }
             }
-            String tmp_str = tmp_keyboard.getStringAttribute("menuactivate");
-            boolean menuactivate = false;
-            if (tmp_str != null && tmp_str.equals("true")) {
-              menuactivate = true;
-            }
             J2SESoftButton button = new J2SESoftButton(tmp_keyboard.getStringAttribute("name"),
                 rectangle, tmp_keyboard.getStringAttribute("key"), paintable, 
-                tmp_keyboard.getStringAttribute("alignment"), commands, menuactivate);
+                tmp_keyboard.getStringAttribute("alignment"), commands);
             buttons.addElement(button);
             softButtons.addElement(button);
           }

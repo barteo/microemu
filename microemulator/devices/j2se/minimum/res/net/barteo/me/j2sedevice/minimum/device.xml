@@ -81,7 +81,7 @@
 			<command>CANCEL</command>
 			<command>STOP</command>
 		</softbutton>
-		<softbutton name="" key="VK_F2" alignment="RIGHT" menuactivate="true">
+		<softbutton name="" key="VK_F2" alignment="RIGHT">
 			<rectangle>
 				<x>94</x>
 				<y>162</y>

@@ -77,7 +77,7 @@ public abstract class Screen extends Displayable
 	{
     int gameKeyCode = Display.getGameAction(keyCode);
 
-    if (gameKeyCode == 1 || gameKeyCode == 6) {
+    if (gameKeyCode == Canvas.UP || gameKeyCode == Canvas.DOWN) {
 			viewPortY += traverse(gameKeyCode, viewPortY, viewPortY + viewPortHeight);
 			repaint();
     }

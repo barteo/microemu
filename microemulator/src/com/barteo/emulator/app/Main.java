@@ -25,6 +25,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.util.Vector;
 
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
@@ -39,6 +40,8 @@ import javax.swing.UIManager;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.MIDletBridge;
+import com.barteo.emulator.MIDletEntry;
+import com.barteo.emulator.app.launcher.Launcher;
 import com.barteo.midp.lcdui.DisplayBridge;
 import com.barteo.midp.lcdui.FontManager;
 import com.barteo.midp.lcdui.KeyboardComponent;
@@ -57,6 +60,8 @@ public class Main extends JFrame implements MicroEmulator
   
 	SwingDisplayComponent dc;
 	KeyboardComponent kc;
+
+  Launcher launcher;
   
   MIDlet midlet;
 
@@ -66,11 +71,18 @@ public class Main extends JFrame implements MicroEmulator
     public void actionPerformed(ActionEvent e)
     {
       if (fileChooser == null) {
+        ExtensionFileFilter fileFilter = new ExtensionFileFilter("JAD files");
+        fileFilter.addExtension("jad");
         fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(fileFilter);
         fileChooser.setDialogTitle("Open JAD File...");
       }
       
       int returnVal = fileChooser.showOpenDialog(instance);
+      if (returnVal == JFileChooser.APPROVE_OPTION) {
+        System.out.println("You chose to open this file: " + 
+            fileChooser.getSelectedFile().getName());       
+      }
     }
   
   };
@@ -95,13 +107,14 @@ public class Main extends JFrame implements MicroEmulator
     
     JMenu menu = new JMenu("File");
     
-/*    JMenuItem menuItem = new JMenuItem("Open JAD File...");
+    JMenuItem menuItem;
+/*    menuItem = new JMenuItem("Open JAD File...");
     menuItem.addActionListener(menuOpenJADFileListener);
     menu.add(menuItem);
     
     menu.addSeparator();*/
     
-    JMenuItem menuItem = new JMenuItem("Exit");
+    menuItem = new JMenuItem("Exit");
     menuItem.addActionListener(menuExitListener);
     menu.add(menuItem);
 
@@ -114,6 +127,9 @@ public class Main extends JFrame implements MicroEmulator
     setFont(defaultFont);
     FontManager.getInstance().setDefaultFontMetrics(getFontMetrics(defaultFont));
 
+    launcher = new Launcher();
+    midlet = launcher;
+ 
     if (!Device.getInstance().isInitialized()) {
       System.out.println("Cannot initialize device configuration");
       return;
@@ -137,8 +153,7 @@ public class Main extends JFrame implements MicroEmulator
   
   public void notifyDestroyed()
   {
-		DisplayBridge.updateCommands(null);
-		DisplayBridge.setAccess(null);
+    launcher.startApp();
   }
   
   
@@ -187,7 +202,9 @@ public class Main extends JFrame implements MicroEmulator
       ex.printStackTrace();
       return false;
     }
-
+    
+    launcher.addMIDletEntry(new MIDletEntry("MIDlet", midlet));
+    
     return true;
 	}
 
@@ -258,8 +275,9 @@ public class Main extends JFrame implements MicroEmulator
     Main app = new Main();
     MIDletBridge.setMicroEmulator(app);
 
-    if (!app.setMidletClass(args[0])) {
-System.out.println("No midlet to run");
+
+    if (args.length > 0) {
+      app.setMidletClass(args[0]);
     }
     
     app.start();

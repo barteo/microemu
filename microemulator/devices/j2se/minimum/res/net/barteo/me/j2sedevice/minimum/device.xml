@@ -5,7 +5,7 @@
   <img name="over" src="/net/barteo/me/j2sedevice/minimum/over.png"/>
   <img name="pressed" src="/net/barteo/me/j2sedevice/minimum/pressed.png"/>
 	<display>
-    <numcolors>2</numcolors>
+    <numcolors>4</numcolors>
     <iscolor>false</iscolor>
 		<foreground>000000</foreground>
 		<background>c3cbb6</background>

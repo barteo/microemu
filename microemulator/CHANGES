@@ -1,5 +1,6 @@
 MicroEmulator
 
+0.4 (alpha) - soon
 - partially implemented Nokia UI API (thanks to Markus Heberling)
 - partially implemented Siemens API (thanks to Markus Heberling)
 - app: SWT port

@@ -34,15 +34,15 @@ public class Display
 
 	Displayable current = null;
 	Displayable nextScreen = null;
-	
+
 	static DisplayBridge dispBridge = new DisplayBridge();
-	
+
 	DisplayAccessor accessor = null;
-	
+
 
 	class DisplayAccessor implements DisplayAccess
 	{
-	
+
 		Display display;
 
 
@@ -68,58 +68,58 @@ public class Display
 		public Display getDisplay()
 		{
 			return display;
-		}		
+		}
 
 
 		public void keyPressed(int keyCode)
 		{
 			if (current != null) {
 				current.keyPressed(keyCode);
-			}			
+			}
 		}
 
 
 		public void paint(Graphics g)
 		{
-			if (current != null) {			
+			if (current != null) {
 				current.paint(g);
 				g.translate(-g.getTranslateX(), -g.getTranslateY());
 			}
 		}
-	
-		
+
+
     public Displayable getCurrent()
 		{
       return getDisplay().getCurrent();
-    }  
-      
+    }
+
 
     public void setCurrent(Displayable d)
 		{
       getDisplay().setCurrent(d);
-    }  
-      
+    }
+
 	}
 
 
 	class AlertTimeout implements Runnable
 	{
-	
+
 		int time;
-		
-		
+
+
 		AlertTimeout(int time)
 		{
 			this.time = time;
 		}
-		
-	
+
+
 		public void run()
 		{
 			try {
 				Thread.sleep(time);
 			} catch (InterruptedException ex) {}
-			setCurrent(nextScreen);			
+			setCurrent(nextScreen);
 		}
 	}
 
@@ -130,11 +130,17 @@ public class Display
 	}
 
 
+  public void callSerially(Runnable r)
+  {
+    // Not implemented
+  }
+
+
 	public int numColors()
 	{
 		return 2;
 	}
-	
+
 
 	public static Display getDisplay(MIDlet m)
 	{
@@ -143,7 +149,7 @@ public class Display
 
 
 	public Displayable getCurrent()
-	{	
+	{
 		return current;
 	}
 
@@ -159,7 +165,7 @@ public class Display
 		if (current != null) {
 			current.hideNotify(this);
 		}
-		
+
 		if (nextDisplayable instanceof Alert)
 		{
 			setCurrent((Alert) nextDisplayable, current);
@@ -167,7 +173,7 @@ public class Display
 		}
 
 		current = nextDisplayable;
-		
+
 		current.showNotify(this);
 		dispBridge.setScrollUp(false);
 		dispBridge.setScrollDown(false);
@@ -175,25 +181,25 @@ public class Display
 
 		current.repaint();
 	}
-	
+
 
 	public void setCurrent(Alert alert, Displayable nextDisplayable)
 	{
 		nextScreen = nextDisplayable;
 
 		current = alert;
-		
+
 		current.showNotify(this);
 		dispBridge.updateCommands(current.getCommands());
 		current.repaint();
-		
+
 		if (alert.getTimeout() != Alert.FOREVER) {
 			AlertTimeout at = new AlertTimeout(alert.getTimeout());
 			Thread t = new Thread(at);
 			t.start();
 		}
 	}
-	
+
 
 	void clearAlert()
 	{
@@ -208,8 +214,8 @@ public class Display
 			Display d = new Display();
 			a = d.accessor;
 			DisplayBridge.setAccess(a);
-		}		
-	
+		}
+
 		return a.getDisplay();
 	}
 
@@ -217,7 +223,13 @@ public class Display
 	static int getGameAction(int keyCode)
 	{
 		return DisplayBridge.getGameAction(keyCode);
-	}	
+	}
+
+
+	static int getKeyCode(int gameAction)
+	{
+		return DisplayBridge.getKeyCode(gameAction);
+	}
 
 
 	boolean isShown(Displayable d)
@@ -236,7 +248,7 @@ public class Display
 			dispBridge.repaint();
 		}
 	}
-		
+
 
 	void updateCommands()
 	{

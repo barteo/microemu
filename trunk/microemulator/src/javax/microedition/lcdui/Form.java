@@ -28,13 +28,23 @@ public class Form extends Screen
 	Item items[] = new Item[4];
 	int numOfItems = 0;
 	int focusItemIndex;
-    
-    
+  ItemStateListener itemStateListener;
+
+
   public Form(String title)
 	{
 		super(title);
 		focusItemIndex = -2;
 	}
+
+
+  public Form(String title, Item[] items)
+  {
+    this(title);
+
+    this.items = items;
+    numOfItems = items.length;
+  }
 
 
 	public int append(Item item)
@@ -52,12 +62,57 @@ public class Form extends Screen
 	}
 
 
+  public int append(Image img)
+  {
+    return append(new ImageItem(null, img, ImageItem.LAYOUT_DEFAULT, null));
+  }
+
+
 	public int append(String str)
 	{
 		return append(new StringItem(null, str));
 	}
-  
-  
+
+
+  public void delete(int itemNum)
+  {
+    // Not implemented
+  }
+
+
+  public Item get(int itemNum)
+  {
+    if (itemNum < 0 || itemNum >= numOfItems) {
+      throw new IndexOutOfBoundsException();
+    }
+    return items[itemNum];
+  }
+
+
+  public void insert(int itemNum, Item item)
+  {
+    // Not implemented
+  }
+
+
+  public void set(int itemNum, Item item)
+  {
+    // Not implemented
+  }
+
+
+  public void setItemStateListener(ItemStateListener iListener)
+  {
+    itemStateListener = iListener;
+  }
+
+
+  public int size()
+  {
+    return numOfItems;
+  }
+
+
   int paintContent(Graphics g)
   {
 		int contentHeight = 0;
@@ -71,12 +126,12 @@ public class Form extends Screen
 
 		return contentHeight;
   }
-	
-	
+
+
 	int getHeight()
 	{
 		int height = 0;
-	
+
 		for (int i = 0; i < numOfItems; i++) {
 			height += items[i].getHeight();
 		}
@@ -100,7 +155,7 @@ public class Form extends Screen
     }
   }
 
-  
+
 	void showNotify()
 	{
 		super.showNotify();
@@ -138,7 +193,7 @@ public class Form extends Screen
 			if (traverse != Item.OUTOFITEM) {
 				if (focusItemIndex == -1 && items[testItemIndex].isFocusable()) {
 					items[testItemIndex].setFocus(true);
-					focusItemIndex = testItemIndex;					
+					focusItemIndex = testItemIndex;
 				}
 				return traverse;
 			} else {
@@ -174,7 +229,7 @@ public class Form extends Screen
 							focusItemIndex = -1;
 						}
 						return traverse;
-					}					
+					}
 				}
 			}
 		}
@@ -192,7 +247,7 @@ public class Form extends Screen
 			if (traverse != Item.OUTOFITEM) {
 				if (focusItemIndex == -1 && items[testItemIndex].isFocusable()) {
 					items[testItemIndex].setFocus(true);
-					focusItemIndex = testItemIndex;					
+					focusItemIndex = testItemIndex;
 				}
 				return traverse;
 			} else {
@@ -228,11 +283,11 @@ public class Form extends Screen
 							focusItemIndex = -1;
 						}
 						return traverse;
-					}					
+					}
 				}
 			}
 		}
-		
+
 		return 0;
 	}
 
@@ -240,41 +295,41 @@ public class Form extends Screen
 	int getTopVisibleIndex(int top)
 	{
 		int height = 0;
-	
+
 		for (int i = 0; i < numOfItems; i++) {
 			height += items[i].getHeight();
 			if (height >= top) {
 				return i;
 			}
 		}
-		
+
 		return numOfItems - 1;
 	}
-	
-	
+
+
 	int getBottomVisibleIndex(int bottom)
 	{
 		int height = 0;
-	
+
 		for (int i = 0; i < numOfItems; i++) {
 			height += items[i].getHeight();
 			if (height > bottom) {
 				return i;
 			}
 		}
-		
+
 		return numOfItems - 1;
 	}
-	
-	
+
+
 	int getHeightToItem(int itemIndex)
 	{
 		int height = 0;
-	
+
 		for (int i = 0; i < itemIndex; i++) {
 			height += items[i].getHeight();
 		}
-		
+
 		return height;
 	}
 

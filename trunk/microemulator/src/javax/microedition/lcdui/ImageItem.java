@@ -41,7 +41,7 @@ public class ImageItem extends Item
 		super(label);
 		this.img = img;
 		this.layout = layout;
-	}						 
+	}
 
 
 
@@ -49,12 +49,12 @@ public class ImageItem extends Item
 	{
 		return super.getHeight() + img.getHeight();
 	}
-	
+
 
   int paint(Graphics g)
   {
 		super.paintContent(g);
-		
+
 		g.translate(0, super.getHeight());
 		if (layout == LAYOUT_DEFAULT || layout == LAYOUT_LEFT) {
 			g.drawImage(img, 0, 0, Graphics.LEFT | Graphics.TOP);
@@ -65,10 +65,10 @@ public class ImageItem extends Item
 		} else
 			g.drawImage(img, 0, 0, Graphics.LEFT | Graphics.TOP);
 		g.translate(0, -super.getHeight());
-	
+
 		return getHeight();
 	}
-	
+
 
 	int traverse(int gameKeyCode, int top, int bottom, boolean action)
 	{
@@ -82,7 +82,7 @@ public class ImageItem extends Item
 					return -(top % f.getHeight());
 				}
 			} else {
-				return Item.OUTOFITEM;				
+				return Item.OUTOFITEM;
 			}
 		}
 		if (gameKeyCode == 6) {
@@ -96,7 +96,7 @@ public class ImageItem extends Item
 				return Item.OUTOFITEM;
 			}
 		}
-		
+
 		return 0;
 	}
 

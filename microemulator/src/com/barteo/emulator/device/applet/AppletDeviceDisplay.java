@@ -63,6 +63,12 @@ public class AppletDeviceDisplay implements DeviceDisplay
   }
 
   
+	public EmulatorContext getEmulatorContext()
+	{
+		return context;
+	}
+
+
   public int getHeight()
   {
     return displayPaintable.height;

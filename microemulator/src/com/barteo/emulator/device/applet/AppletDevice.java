@@ -76,7 +76,11 @@ public class AppletDevice implements Device
     buttons = new Vector();
     softButtons = new Vector();
     
-    loadConfig(config);
+    try {
+    	loadConfig(config);
+  	} catch (IOException ex) {
+  		System.out.println("Cannot load config: " + ex);
+  	}
   }
   
   
@@ -277,26 +281,21 @@ public class AppletDevice implements Device
 
   
   public void loadConfig(String config)
+  		throws IOException
   {
     String xml = "";
     InputStream dis = new BufferedInputStream(getClass().getResourceAsStream(config));
-    try {
-      while (dis.available() > 0) {
-        byte[] b = new byte[dis.available()];
-        dis.read(b);
-        xml += new String(b);
-      }
-    } catch (Exception ex) {
-      System.out.println("Cannot load " + config + " definition file");
-      return;
+    while (dis.available() > 0) {
+      byte[] b = new byte[dis.available()];
+      dis.read(b);
+      xml += new String(b);
     }
 
     XMLElement doc = new XMLElement();
     try {
       doc.parseString(xml);
     } catch (XMLParseException ex) {
-      System.err.println(ex);
-      return;
+    	throw new IOException(ex.toString());
     }
 
     for (Enumeration e = doc.enumerateChildren(); e.hasMoreElements(); ) {
@@ -469,12 +468,19 @@ public class AppletDevice implements Device
 	}
 
   
-  private Image getImage(String str)
-  {
-    InputStream is = EmulatorContext.class.getResourceAsStream(str);
-    return getImage(is);
-  }
-  
+	private Image getImage(String str)
+					throws IOException
+	{
+//		InputStream is = EmulatorContext.class.getResourceAsStream(str);
+		InputStream is = deviceDisplay.getEmulatorContext().getClassLoader().getResourceAsStream(str);
+
+		if (is == null) {
+				throw new IOException(str + " could not be found.");
+		}
+
+		return getImage(is);
+	}
+
   
   private Image getImage(InputStream is)
   {

@@ -76,7 +76,11 @@ public class J2SEDevice implements Device
     buttons = new Vector();
     softButtons = new Vector();
     
-    loadConfig(config);
+    try {
+    	loadConfig(config);
+    } catch (IOException ex) {
+    	System.out.println("Cannot load config: " + ex);
+    }
   }
   
   
@@ -277,28 +281,23 @@ public class J2SEDevice implements Device
 
   
   public void loadConfig(String config)
+  		throws IOException
   {
     String xml = "";
     InputStream dis = new BufferedInputStream(getClass().getResourceAsStream(config));
-    try {
-      while (dis.available() > 0) {
-        byte[] b = new byte[dis.available()];
-        if (dis.read(b) == -1) {
-          break;
-        }
-        xml += new String(b);
+    while (dis.available() > 0) {
+      byte[] b = new byte[dis.available()];
+      if (dis.read(b) == -1) {
+        break;
       }
-    } catch (Exception ex) {
-      System.out.println("Cannot find com.barteo.emulator.device.device.txt definition file");
-      return;
+      xml += new String(b);
     }
 
     XMLElement doc = new XMLElement();
     try {
       doc.parseString(xml);
     } catch (XMLParseException ex) {
-      System.err.println(ex);
-      return;
+    	throw new IOException(ex.toString());
     }
 
     for (Enumeration e = doc.enumerateChildren(); e.hasMoreElements(); ) {
@@ -475,12 +474,18 @@ public class J2SEDevice implements Device
 	}
   
 
-  private Image getImage(String str)
-  {
-    InputStream is = deviceDisplay.getEmulatorContext().getClassLoader().getResourceAsStream(str);
-    return getImage(is);
-  }
-  
+	private Image getImage(String str)
+					throws IOException
+	{
+		InputStream is = deviceDisplay.getEmulatorContext().getClassLoader().getResourceAsStream(str);
+
+		if (is == null) {
+				throw new IOException(str + " could not be found.");
+		}
+
+		return getImage(is);
+	}
+
   
   private Image getImage(InputStream is)
   {

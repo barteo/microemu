@@ -22,7 +22,6 @@ package javax.microedition.lcdui;
 
 public class Graphics
 {
-
 	public static final int SOLID = 0;
 	public static final int DOTTED = 1;
 
@@ -33,8 +32,6 @@ public class Graphics
 	public static final int BOTTOM = 32;
   public static final int HCENTER = 1;
   public static final int VCENTER = 2;
-
-	Font currentFont = Font.getDefaultFont();
 
 	int translateX = 0;
 	int translateY = 0;
@@ -108,8 +105,7 @@ public class Graphics
 
   public int getBlueComponent()
   {
-System.out.println("Graphics::getBlueComponent() not implemented");
-    return 0;
+    return (getColor() >> 16) & 255;
   }
 
 
@@ -139,41 +135,37 @@ System.out.println("Graphics::getBlueComponent() not implemented");
 
   public int getColor()
   {
-System.out.println("Graphics::getColor() not implemented");
-    return 0;
+    throw new IllegalStateException();
   }
 
 
 	public Font getFont()
 	{
-		return currentFont;
+    throw new IllegalStateException();
 	}
 
 
   public int getGrayScale()
   {
-System.out.println("Graphics::getGrayScale() not implemented");
-    return 0;
+    throw new IllegalStateException();
   }
 
 
   public int getGreenComponent()
   {
-System.out.println("Graphics::getGreenComponent() not implemented");
-    return 0;
+    return (getColor() >> 8) & 255;
   }
 
 
   public int getRedComponent()
   {
-System.out.println("Graphics::getRedComponent() not implemented");
-    return 0;
+    return getColor() & 255;
   }
 
 
   public int getStrokeStyle()
   {
-System.out.println("Graphics::getStrokeStyle() not implemented");
+//System.out.println("Graphics::getStrokeStyle() not implemented");
     return 0;
   }
 
@@ -211,7 +203,6 @@ System.out.println("Graphics::getStrokeStyle() not implemented");
 
 	public void setFont(Font font)
 	{
-		currentFont = font;
 	}
 
 
@@ -222,7 +213,7 @@ System.out.println("Graphics::getStrokeStyle() not implemented");
 
 	public void setStrokeStyle(int style)
 	{
-System.out.println("Graphics::setStrokeStyle(...) not implemented");
+//System.out.println("Graphics::setStrokeStyle(...) not implemented");
 	}
 
 

@@ -19,8 +19,8 @@
  
 package com.barteo.emulator.app;
 
-import javax.swing.DebugGraphics;
 import java.awt.Container;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Shape;
@@ -95,7 +95,9 @@ public class SwingDisplayComponent extends JPanel implements com.barteo.midp.lcd
     Shape oldclip = offg.getClip();
     offg.setClip(Device.screenPaintable);
     offg.translate(Device.screenPaintable.x, Device.screenPaintable.y);
+    Font f = offg.getFont();
     DisplayBridge.paint(offg);
+    offg.setFont(f);
     offg.translate(-Device.screenPaintable.x, -Device.screenPaintable.y);
     offg.setClip(oldclip);
 

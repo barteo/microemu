@@ -178,9 +178,7 @@ System.out.println(fc.getName());
     
     setTitle("MicroEmulator");
     
-    Font defaultFont = new Font("SansSerif", Font.PLAIN, 11);
-    setFont(defaultFont);
-    FontManager.getInstance().setDefaultFontMetrics(getFontMetrics(defaultFont));
+    FontManager.getInstance().setComponent(this);
 
     if (!Device.getInstance().isInitialized()) {
       System.out.println("Cannot initialize device configuration");

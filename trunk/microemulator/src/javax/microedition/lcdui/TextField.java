@@ -65,13 +65,13 @@ public class TextField extends Item
 			throw new IllegalArgumentException();
 		}
 		setConstraints(constraints);
+		this.maxSize = maxSize;
     stringComponent = new StringComponent();
 		if (text != null) {
       setString(text);
 		} else {
       setString("");
     }
-		this.maxSize = maxSize;
 		stringComponent.setWidth(Device.screenPaintable.width - 8);
 		caret = 0;
 		caretVisible = false;
@@ -88,7 +88,7 @@ public class TextField extends Item
 	{
 		validate(text);
 		if (text.length() > maxSize) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("text.length(): " + text.length() + " > maxsize: " + maxSize);
 		}
     field = text;
     if ((constraints & PASSWORD) == 0) {

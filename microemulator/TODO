@@ -1,7 +1,3 @@
-* alert is hasn't return button
-
--- Release 0.3 --
-
 * move device display painting from Applet/SwingDisplayComponent to Applet/J2SEDeviceDisplay
 
 * (?) try to run application in WebStart environment

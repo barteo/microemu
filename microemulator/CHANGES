@@ -3,8 +3,8 @@ MicroEmulator
 0.3 - not yet released
 - created custom device framework (currently applet and j2se)
 - default device has color display
-- app: changing device profiles on-the-fly
 - added minimum device profile sample
+- app: changing device profiles on-the-fly
 
 0.2 (alpha) - 3.04.2002
 - MIDP/CLDC API finished (with javax.microedition.io.* currently http only)

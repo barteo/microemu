@@ -21,7 +21,6 @@ package com.barteo.emulator.device.applet;
 
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.io.IOException;
 
 
 public class PositionedImage 

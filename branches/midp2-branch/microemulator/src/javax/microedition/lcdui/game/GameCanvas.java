@@ -39,8 +39,8 @@ public class GameCanvas extends Canvas
 	public static final int GAME_C_PRESSED = 1 << Canvas.GAME_C;
 	public static final int GAME_D_PRESSED = 1 << Canvas.GAME_D;
 	
-
 	private Image bufferImage;
+	private int keyStates;
 	
 	
 	protected GameCanvas(boolean suppressKeyEvents)
@@ -74,7 +74,14 @@ public class GameCanvas extends Canvas
 	
 	public int getKeyStates()
 	{
-		throw new RuntimeException("TODO");
+		if (!isShown()) {
+			return 0;
+		}
+	
+		int result = keyStates;
+		keyStates = 0;
+	
+		return result;	
 	}
 
 	
@@ -82,5 +89,17 @@ public class GameCanvas extends Canvas
 	{
 		throw new RuntimeException("TODO");
 	}
+
+
+	protected void keyPressed(int keyCode)
+	{
+		keyStates |= 1 << getGameAction(keyCode); 
+	}
+
+
+	protected void showNotify()
+	{
+		keyStates = 0;
+	}  
 
 }

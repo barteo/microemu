@@ -156,7 +156,7 @@ public class SelectDevicePanel extends DialogPanel
           return;
         }
         
-        DeviceEntry entry = new DeviceEntry(deviceName, deviceClass, false);
+        DeviceEntry entry = new DeviceEntry(deviceName, null, deviceClass, false);
         lsDevicesModel.addElement(entry);
         lsDevices.setSelectedValue(entry, true);
       }
@@ -255,7 +255,7 @@ public class SelectDevicePanel extends DialogPanel
     
     try {
       Class device = loader.loadClass("com.barteo.emulator.device.j2se.J2SEDevice");
-      DeviceEntry entry = new DeviceEntry("Default device", device, true, false);
+      DeviceEntry entry = new DeviceEntry("Default device", null, device, true, false);
       lsDevicesModel.addElement(entry);
       lsDevices.setSelectedValue(entry, true);
     } catch (ClassNotFoundException ex) {

@@ -65,7 +65,19 @@ public class Sprite extends Layer
 
 	public Sprite(Sprite s)
 	{
-		throw new RuntimeException("TODO");
+		super(s);
+		
+		this.image = s.image;
+		this.numGridX = s.numGridX;
+		this.numGridY = s.numGridY;
+		
+		this.currentFrameIndex = s.currentFrameIndex;
+		this.currentTransform = s.currentTransform;
+		this.referencePixelX = s.referencePixelX;
+		this.referencePixelY = s.referencePixelY;
+		defineCollisionRectangle(s.collisionRectangle.x, s.collisionRectangle.y, 
+				s.collisionRectangle.width, s.collisionRectangle.height);
+		setFrameSequence(s.frameSequence);
 	}
 	
 

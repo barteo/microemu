@@ -263,14 +263,14 @@ public class Display
 	{
 		accessor = new DisplayAccessor(this);
     
-		if (eventDispatcher == null) {
-			eventDispatcher = new EventDispatcher();
-			new Thread(eventDispatcher).start();
-		}
-		if (tickerPaint == null) {
-			tickerPaint = new TickerPaint();
-				new Thread(tickerPaint).start();    	
-		}    	
+    if (eventDispatcher == null) {
+    	eventDispatcher = new EventDispatcher();
+    	new Thread(eventDispatcher, "EventDispatcher").start();
+    }
+    if (tickerPaint == null) {
+    	tickerPaint = new TickerPaint();
+			new Thread(tickerPaint, "TickerPaint").start();    	
+    }    	
 	}
 
 

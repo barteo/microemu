@@ -92,7 +92,7 @@ class ImageStringItem extends Item
 			g.translate(img.getWidth() + 2, 0);
 		}
 
-		int y = stringComponent.paint(g);
+		stringComponent.paint(g);
 
 		if (img != null) {
 			g.translate(-img.getWidth() - 2, 0);

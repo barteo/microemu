@@ -26,6 +26,7 @@ public abstract class Layer
 {
 	private int x;
 	private int y;
+	private boolean visible;
 	
 	protected int height;
 	protected int width;
@@ -35,6 +36,17 @@ public abstract class Layer
 	{
 		this.x = 0;
 		this.y = 0;
+		this.visible = true;
+	}
+	
+	
+	Layer(Layer l)
+	{
+		this.x = l.x;
+		this.y = l.y;
+		this.visible = l.visible;
+		this.width = l.width;
+		this.height = l.height;
 	}
 	
 
@@ -64,8 +76,7 @@ public abstract class Layer
 
 	public final boolean isVisible()
 	{
-//		throw new RuntimeException("TODO");
-		return true;
+		return visible;
 	}
 
 
@@ -87,7 +98,7 @@ public abstract class Layer
 
 	public void setVisible(boolean visible)				
 	{
-		throw new RuntimeException("TODO");
+		visible = true;
 	}
 
 }

@@ -39,8 +39,6 @@ import com.barteo.midp.lcdui.InputMethod;
 
 public class SwingDisplayComponent extends JPanel implements com.barteo.midp.lcdui.DisplayComponent
 {
-  Image up_arrow, down_arrow;
-  Image input_123, input_abc_upper, input_abc_lower;
   boolean scrollUp = false;
   boolean scrollDown = false;
 
@@ -52,17 +50,6 @@ public class SwingDisplayComponent extends JPanel implements com.barteo.midp.lcd
   {
     DisplayBridge.setComponent(this);
     setBackground(Device.backgroundColor);
-
-    try {
-      up_arrow = Resource.getInstance().getImage("/com/barteo/emulator/resources/up.png");
-      down_arrow = Resource.getInstance().getImage("/com/barteo/emulator/resources/down.png");
-      input_123 = Resource.getInstance().getImage("/com/barteo/emulator/resources/123.png");
-      input_abc_upper = Resource.getInstance().getImage("/com/barteo/emulator/resources/abc_upper.png");
-      input_abc_lower = Resource.getInstance().getImage("/com/barteo/emulator/resources/abc_lower.png");
-    } catch (IOException ex) {
-      System.err.println(ex);
-      ex.printStackTrace();
-    }
   }
 
 
@@ -98,11 +85,11 @@ public class SwingDisplayComponent extends JPanel implements com.barteo.midp.lcd
     
     int inputMode = InputMethod.getInputMethod().getInputMode();
     if (inputMode == InputMethod.INPUT_123) {
-      offg.drawImage(input_123, 0, 0, this);
+      offg.drawImage(Device.mode123Image, Device.mode123ImagePaintable.x, Device.mode123ImagePaintable.y, this);
     } else if (inputMode == InputMethod.INPUT_ABC_UPPER) {
-      offg.drawImage(input_abc_upper, 0, 0, this);
+      offg.drawImage(Device.modeAbcUpperImage, Device.modeAbcUpperImagePaintable.x, Device.modeAbcUpperImagePaintable.y, this);
     } else if (inputMode == InputMethod.INPUT_ABC_LOWER) {
-      offg.drawImage(input_abc_lower, 0, 0, this);
+      offg.drawImage(Device.modeAbcLowerImage, Device.modeAbcLowerImagePaintable.x, Device.modeAbcLowerImagePaintable.y, this);
     }
 
     Shape oldclip = offg.getClip();
@@ -113,10 +100,10 @@ public class SwingDisplayComponent extends JPanel implements com.barteo.midp.lcd
     offg.setClip(oldclip);
 
     if (scrollUp) {
-      offg.drawImage(up_arrow, 40, 115, this);
+      offg.drawImage(Device.upImage, Device.upImagePaintable.x, Device.upImagePaintable.y, this);
     }
     if (scrollDown) {
-      offg.drawImage(down_arrow, 48, 115, this);
+      offg.drawImage(Device.downImage, Device.downImagePaintable.x, Device.downImagePaintable.y, this);
     }
     
 		g.drawImage(offi, 0, 0, null);

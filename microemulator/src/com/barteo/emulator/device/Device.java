@@ -48,6 +48,18 @@ public class Device {
   public static Image overImage;
   public static Image pressedImage;
 
+  public static Image upImage;
+  public static Rectangle upImagePaintable;
+  public static Image downImage;
+  public static Rectangle downImagePaintable;
+  
+  public static Image mode123Image;  
+  public static Rectangle mode123ImagePaintable;
+  public static Image modeAbcUpperImage;  
+  public static Rectangle modeAbcUpperImagePaintable;
+  public static Image modeAbcLowerImage;  
+  public static Rectangle modeAbcLowerImagePaintable;
+
   public static Color backgroundColor;
   public static Color foregroundColor;
 
@@ -88,11 +100,11 @@ public class Device {
         deviceRectangle = getRectangle(tmp);
       } else if (tmp.getName().equals("img")) {
         try {
-          if (tmp.getStringAttribute("type").equals("normal")) {
+          if (tmp.getStringAttribute("name").equals("normal")) {
             normalImage = Resource.getInstance().getSystemImage(tmp.getStringAttribute("src"));
-          } else if (tmp.getStringAttribute("type").equals("over")) {
+          } else if (tmp.getStringAttribute("name").equals("over")) {
             overImage = Resource.getInstance().getSystemImage(tmp.getStringAttribute("src"));
-          } else if (tmp.getStringAttribute("type").equals("pressed")) {
+          } else if (tmp.getStringAttribute("name").equals("pressed")) {
             pressedImage = Resource.getInstance().getSystemImage(tmp.getStringAttribute("src"));
           }
         } catch (IOException ex) {
@@ -110,6 +122,30 @@ public class Device {
             screenRectangle = getRectangle(tmp_screen);
           } else if (tmp_screen.getName().equals("paintable")) {
             screenPaintable = getRectangle(tmp_screen);
+          } else if (tmp_screen.getName().equals("img")) {
+            try {
+              if (tmp_screen.getStringAttribute("name").equals("up")) {
+                upImage = Resource.getInstance().getImage(tmp_screen.getStringAttribute("src"));
+                upImagePaintable = getRectangle(getElement(tmp_screen, "paintable"));
+              } else if (tmp_screen.getStringAttribute("name").equals("down")) {
+                downImage = Resource.getInstance().getImage(tmp_screen.getStringAttribute("src"));
+                downImagePaintable = getRectangle(getElement(tmp_screen, "paintable"));
+              } else if (tmp_screen.getStringAttribute("name").equals("mode")) {
+                if (tmp_screen.getStringAttribute("type").equals("123")) {
+                  mode123Image = Resource.getInstance().getImage(tmp_screen.getStringAttribute("src"));
+                  mode123ImagePaintable = getRectangle(getElement(tmp_screen, "paintable"));
+                } else if (tmp_screen.getStringAttribute("type").equals("abc")) {
+                  modeAbcLowerImage = Resource.getInstance().getImage(tmp_screen.getStringAttribute("src"));
+                  modeAbcLowerImagePaintable = getRectangle(getElement(tmp_screen, "paintable"));
+                } else if (tmp_screen.getStringAttribute("type").equals("ABC")) {
+                  modeAbcUpperImage = Resource.getInstance().getImage(tmp_screen.getStringAttribute("src"));
+                  modeAbcUpperImagePaintable = getRectangle(getElement(tmp_screen, "paintable"));
+                }
+              }
+            } catch (IOException ex) {
+              System.out.println("Cannot load " + tmp_screen.getStringAttribute("src"));
+              return;
+            }
           }
         }
       } else if (tmp.getName().equals("keyboard")) {
@@ -168,6 +204,19 @@ public class Device {
   public static Vector getDeviceButtons() 
   {
     return instance.deviceButtons;
+  }
+  
+  
+  XMLElement getElement(XMLElement source, String name)
+  {
+    for (Enumeration e_content = source.enumerateChildren(); e_content.hasMoreElements(); ) {
+      XMLElement tmp_content = (XMLElement) e_content.nextElement();
+      if (tmp_content.getName().equals(name)) {
+        return tmp_content;
+      }
+    }
+
+    return null;
   }
   
   

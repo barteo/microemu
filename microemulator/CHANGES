@@ -1,6 +1,6 @@
 MicroEmulator
 
-(next release)
+0.1.3 (pre-alpha) - (next release)
 - framework for javax.microedition.io.* (implementation to be written)
 - better look of phone device
 - application can load MIDlet based on definition in JAD file
@@ -8,7 +8,7 @@ MicroEmulator
 
 0.1.2 (pre-alpha) - 23.11.2001
 - included NanoXML
-- moved device preference into XML file (device.xml)
+- moved device preference into XML file (device.txt)
 - implemented javax.microedition.rms.*
 - implemented javax.microedition.lcdui.* - synchronization is not done
 - written simple MIDP/CLDC demo showing functionality of emulator

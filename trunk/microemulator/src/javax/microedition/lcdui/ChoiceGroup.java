@@ -275,7 +275,9 @@ public class ChoiceGroup extends Item implements Choice
 				setSelectedIndex(0, true);
 			}
 		} else if (choiceType == Choice.MULTIPLE) {
-      System.arraycopy(selectedArray, 0, selectedItems, 0, numOfItems);
+      for (int i = 0; i < numOfItems; i++) {
+        setSelectedIndex(i, selectedArray[i]);
+      }
 		}
   }
 

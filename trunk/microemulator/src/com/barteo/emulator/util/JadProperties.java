@@ -19,11 +19,18 @@
  
 package com.barteo.emulator.util;
 
+import java.util.Enumeration;
 import java.util.Properties;
+import java.util.Vector;
 
 
 public class JadProperties extends Properties
 {
+  
+  static String MIDLET_PREFIX = "MIDlet-";
+  
+  Vector midletEntries = null;
+  
 
   public String getName()
   {
@@ -58,6 +65,34 @@ public class JadProperties extends Properties
   public String getJarURL()
   {
     return getProperty("MIDlet-Jar-URL");
+  }
+  
+  
+  public Vector getMidletEntries()
+  {
+    String name, icon, className, test;
+    int pos;
+    
+    if (midletEntries == null) {
+      midletEntries = new Vector();
+    
+      for (Enumeration e = propertyNames(); e.hasMoreElements(); ) {
+        test = (String) e.nextElement();
+        if (test.startsWith(MIDLET_PREFIX)) {
+          try {
+            Integer.parseInt(test.substring(MIDLET_PREFIX.length()));
+            test = getProperty(test);
+            pos = test.indexOf(',');
+            name = test.substring(0, pos).trim();
+            icon = test.substring(pos + 1, test.indexOf(',', pos + 1)).trim();
+            className = test.substring(test.indexOf(',', pos + 1) + 1).trim();
+            midletEntries.add(new JadMidletEntry(name, icon, className));
+          } catch (NumberFormatException ex) {}
+        }
+      }
+    }
+    
+    return midletEntries;
   }
     
 }

@@ -23,13 +23,15 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Vector;
-import java.util.jar.JarEntry;
-import java.util.jar.JarInputStream;
 
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
@@ -46,6 +48,7 @@ import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.MIDletEntry;
 import com.barteo.emulator.app.launcher.Launcher;
 import com.barteo.emulator.device.Device;
+import com.barteo.emulator.util.JadMidletEntry;
 import com.barteo.emulator.util.JadProperties;
 import com.barteo.midp.lcdui.DisplayBridge;
 import com.barteo.midp.lcdui.FontManager;
@@ -96,25 +99,27 @@ public class Main extends JFrame implements MicroEmulator
           System.err.println("Cannot open file " + fileChooser.getSelectedFile().getName());
           return;
         }
+        
+        URL[] urls = new URL[1];
         try {
-          System.out.println(jad.getJarURL());
-          
-          File f = new File(fileChooser.getSelectedFile().getParent(), jad.getJarURL());
-          
-          JarInputStream jis = new JarInputStream(new FileInputStream(f));
-          
-          JarEntry jarEntry;
-          do {
-            jarEntry = jis.getNextJarEntry();
-            System.out.println(jarEntry);
-          } while (jarEntry != null);
-        } catch (IOException ex) {
+          urls[0] = new URL(jad.getJarURL());
+        } catch (MalformedURLException ex) {
           System.err.println(ex);
-          return;
-//        } catch (FileNotFoundException ex) {
-//          System.err.println(ex);
-//          return;
         }
+        URLClassLoader classLoader = new URLClassLoader(urls);
+
+        try {
+          for (Enumeration e = jad.getMidletEntries().elements(); e.hasMoreElements(); ) {
+            Class midlet = classLoader.loadClass(((JadMidletEntry) e.nextElement()).getClassName());
+            midlet.newInstance();
+          }
+        } catch (ClassNotFoundException ex) {
+          System.err.println(ex);
+        } catch (IllegalAccessException ex) {
+          System.err.println(ex);
+        } catch (InstantiationException ex) {
+          System.err.println(ex);
+        }        
       }
     }
   

@@ -20,22 +20,40 @@
  */
 package com.barteo.emulator;
 
+import java.util.Hashtable;
+
+import javax.microedition.midlet.MIDlet;
+
 
 public class MIDletBridge 
 {
 
-  static MIDletAccess midletAccess = null;
+  static Hashtable midletAccess = new Hashtable();
+  
+  static MicroEmulator emulator = null;
   
   
-  public static void setAccess(MIDletAccess a_midletAccess) 
+  public static void setMicroEmulator(MicroEmulator a_emulator) 
   {
-    midletAccess = a_midletAccess;
+    emulator = a_emulator;
   }  
 
   
-  public static MIDletAccess getAccess() 
+  public static void setAccess(MIDlet a_midlet, MIDletAccess a_midletAccess) 
   {
-    return midletAccess;
+    midletAccess.put(a_midlet, a_midletAccess);
   }  
+
+  
+  public static MIDletAccess getAccess(MIDlet a_midlet) 
+  {
+    return (MIDletAccess) midletAccess.get(a_midlet);
+  }  
+
+  
+  public static void notifyDestroyed()
+  {
+    emulator.notifyDestroyed();
+  }
   
 }

@@ -62,7 +62,7 @@ public abstract class MIDlet
 	protected MIDlet()
 	{
     midlet = this;
-    MIDletBridge.setAccess(new MIDletAccessor());
+    MIDletBridge.setAccess(this, new MIDletAccessor());
 	}
 
 
@@ -85,8 +85,7 @@ public abstract class MIDlet
 
 	public final void notifyDestroyed()
 	{
-		DisplayBridge.updateCommands(null);
-		DisplayBridge.setAccess(null);
+    MIDletBridge.notifyDestroyed();
 	}
 
 }

@@ -28,7 +28,7 @@ public class Alert extends Screen
 
 	public static final int FOREVER = -2;
 
-	StringItem alertText;
+	ImageStringItem alertContent;
 	AlertType type;
 	static final Command OK = new Command("OK", Command.OK, 0);
 	int time;
@@ -55,7 +55,7 @@ public class Alert extends Screen
 	{
 		super(title);
 		setTimeout(getDefaultTimeout());
-		this.alertText = new StringItem(null, alertText);
+		this.alertContent = new ImageStringItem(null, alertImage, alertText);
 		setType(alertType);
 		super.setCommandListener(alertListener);
 	}
@@ -75,7 +75,7 @@ public class Alert extends Screen
 
 	public String getString()
 	{
-		return alertText.getText();
+		return alertContent.getText();
 	}
 
 
@@ -103,17 +103,25 @@ public class Alert extends Screen
 	}
 
 
+	public Image getImage()
+	{
+    return alertContent.getImage();
+	}
+
+
 	public void setImage(Image img)
 	{
     if (img.isMutable()) {
       throw new IllegalArgumentException("Image cannot be mutable");
     }
+    alertContent.setImage(img);
+    repaint();
 	}
 
 
 	public void setString(String str)
 	{
-		alertText.setText(str);
+		alertContent.setText(str);
 		repaint();
 	}
 
@@ -134,13 +142,13 @@ public class Alert extends Screen
 
 	int getHeight()
 	{
-		return alertText.getHeight();
+		return alertContent.getHeight();
 	}
 
 
 	int paintContent(Graphics g)
 	{
-		return alertText.paint(g);
+		return alertContent.paint(g);
 	}
 
 

@@ -41,7 +41,7 @@ public class Config
   private static Vector devices = new Vector();
   
   
-  static void loadConfig(String configFileName)
+  public static void loadConfig(String configFileName)
   {
 		File configFile = new File(configPath, configFileName);
 		

@@ -95,12 +95,11 @@ public class MicroEmulator extends Applet
     setLayout(xy);
 
     dc = new DisplayComponent(this);
-    xy.addLayoutComponent(dc, new XYConstraints(Device.screenRectangleX, Device.screenRectangleY,
-    Device.screenRectangleWidth, Device.screenRectangleHeight));
+    xy.addLayoutComponent(dc, new XYConstraints(Device.screenRectangle));
     add(dc);
 
     kc = new KeyboardComponent();
-    xy.addLayoutComponent(kc, new XYConstraints(13, 140, 90, 200));
+    xy.addLayoutComponent(kc, new XYConstraints(Device.keyboardRectangle));
     add(kc);
 
     resize(400,500);

@@ -28,6 +28,7 @@ import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.List;
+import com.barteo.emulator.Button;
 import com.barteo.emulator.SoftButton;
 import com.barteo.emulator.device.Device;
 
@@ -85,8 +86,11 @@ public class CommandManager {
         SoftButton sb;
         boolean menu_needed = false;
 
-        for (Enumeration s = Device.getSoftButtons().elements(); s.hasMoreElements(); ) {
-            ((SoftButton) s.nextElement()).removeCommand();
+        for (Enumeration s = Device.getDeviceButtons().elements(); s.hasMoreElements(); ) {
+          Button button = (Button) s.nextElement();
+          if (button instanceof SoftButton) {
+            ((SoftButton) button).removeCommand();
+          }
         }
 
         if (commands == null) {
@@ -97,12 +101,14 @@ public class CommandManager {
         menuCommands.removeAllElements();
         for (Enumeration e = commands.elements(); e.hasMoreElements(); ) {
             cmd = (Command) e.nextElement();
-            for (Enumeration s = Device.getSoftButtons().elements(); s.hasMoreElements(); ) {
-                sb = (SoftButton) s.nextElement();
-                if (!sb.setCommand(cmd)) {
-                    if (sb.testCommandType(cmd)) {
+            for (Enumeration s = Device.getDeviceButtons().elements(); s.hasMoreElements(); ) {
+                Button button = (Button) s.nextElement();
+                if (button instanceof SoftButton) {
+                  if (!((SoftButton) button).setCommand(cmd)) {
+                    if (((SoftButton) button).testCommandType(cmd)) {
                         menu_needed = true;
                     }
+                  }
                 }
             }
             boolean inserted = false;
@@ -122,22 +128,27 @@ public class CommandManager {
             while (commandList.size() > 0) {
                 commandList.delete(0);
             }
-            for (Enumeration s = Device.getSoftButtons().elements(); s.hasMoreElements(); ) {
-                sb = (SoftButton) s.nextElement();
-                if (sb.getMenuActivate()) {
-                    sb.removeCommand();
-                    sb.setCommand(MENU_COMMAND);
+            for (Enumeration s = Device.getDeviceButtons().elements(); s.hasMoreElements(); ) {
+              Button button = (Button) s.nextElement();
+              if (button instanceof SoftButton) {
+                if (((SoftButton) button).getMenuActivate()) {
+                    ((SoftButton) button).removeCommand();
+                    ((SoftButton) button).setCommand(MENU_COMMAND);
                 }
+              }
             }
         }
 
         for (int i = 0; i < menuCommands.size(); i++) {
             boolean alreadyInserted = false;
             cmd = (Command) menuCommands.elementAt(i);
-            for (Enumeration s = Device.getSoftButtons().elements(); s.hasMoreElements(); ) {
-                if (((SoftButton) s.nextElement()).getCommand() == cmd) {
+            for (Enumeration s = Device.getDeviceButtons().elements(); s.hasMoreElements(); ) {
+              Button button = (Button) s.nextElement();
+              if (button instanceof SoftButton) {
+                if (((SoftButton) button).getCommand() == cmd) {
                     alreadyInserted = true;
                 }
+              }
             }
             if (!alreadyInserted) {
                 commandList.append(cmd.getLabel(), null);

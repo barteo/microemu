@@ -123,10 +123,10 @@ public class Gauge extends Item
 		g.translate(0, super.getHeight());
     
  		if (isFocus()) {
-      g.drawRect(2, 2, Device.screenPaintableWidth - 5, HEIGHT - 5);
+      g.drawRect(2, 2, Device.screenPaintable.width - 5, HEIGHT - 5);
     }
     
-    int width = (Device.screenPaintableWidth - 8) * value / maxValue;
+    int width = (Device.screenPaintable.width - 8) * value / maxValue;
     g.fillRect(4, 4, width, HEIGHT - 8);
 		g.translate(0, -super.getHeight());
     

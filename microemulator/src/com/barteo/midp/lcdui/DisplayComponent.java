@@ -23,6 +23,7 @@ package com.barteo.midp.lcdui;
 import java.awt.*;
 import java.io.IOException;
 import java.util.Enumeration;
+import com.barteo.emulator.Button;
 import com.barteo.emulator.Resource;
 import com.barteo.emulator.SoftButton;
 import com.barteo.emulator.device.Device;
@@ -98,12 +99,15 @@ public class DisplayComponent extends Canvas
   public void paint(Graphics g) 
   {
     if (offg == null) {
-			offi = createImage(Device.screenRectangleWidth, Device.screenRectangleHeight);
+			offi = createImage(Device.screenRectangle.width, Device.screenRectangle.height);
 			offg = offi.getGraphics();
     }
     
-    for (Enumeration s = Device.getSoftButtons().elements(); s.hasMoreElements(); ) {
-      ((SoftButton) s.nextElement()).paint(offg);
+    for (Enumeration s = Device.getDeviceButtons().elements(); s.hasMoreElements(); ) {
+      Button button = (Button) s.nextElement();
+      if (button instanceof SoftButton) {
+        ((SoftButton) button).paint(offg);
+      }
     }
 
     offg.setColor(Device.backgroundColor);
@@ -119,10 +123,10 @@ public class DisplayComponent extends Canvas
     }
 
     Shape oldclip = offg.getClip();
-    offg.setClip(Device.screenPaintableX, Device.screenPaintableY, Device.screenPaintableWidth, Device.screenPaintableHeight);
-    offg.translate(Device.screenPaintableX, Device.screenPaintableY);
+    offg.setClip(Device.screenPaintable);
+    offg.translate(Device.screenPaintable.x, Device.screenPaintable.y);
     DisplayBridge.paint(offg);
-    offg.translate(-Device.screenPaintableX, -Device.screenPaintableY);
+    offg.translate(-Device.screenPaintable.x, -Device.screenPaintable.y);
     offg.setClip(oldclip);
 
     offg.setColor(Device.backgroundColor);

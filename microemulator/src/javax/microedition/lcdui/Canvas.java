@@ -96,13 +96,13 @@ public abstract class Canvas extends Displayable
 
 	public int getWidth()
 	{
-		return Device.screenPaintableWidth;
+		return Device.screenPaintable.width;
 	}
 
 
 	public int getHeight()
 	{
-		return  Device.screenPaintableHeight;
+		return  Device.screenPaintable.height;
 	}
 
 

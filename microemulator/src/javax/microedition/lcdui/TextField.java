@@ -77,7 +77,7 @@ public class TextField extends Item
 			stringComponent = new StringComponent(text);
 		}
 		this.maxSize = maxSize;
-		stringComponent.setWidth(Device.screenPaintableWidth - 8);
+		stringComponent.setWidth(Device.screenPaintable.width - 8);
 		caret = 0;
 		caretVisible = false;
 	}
@@ -243,7 +243,7 @@ public class TextField extends Item
 
 		g.translate(0, super.getHeight());
 		if (isFocus()) {
-			g.drawRect(1, 1, Device.screenPaintableWidth - 3, stringComponent.getHeight() + 4);
+			g.drawRect(1, 1, Device.screenPaintable.width - 3, stringComponent.getHeight() + 4);
 		}
 		g.translate(3, 3);
 		paintContent(g);

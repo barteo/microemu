@@ -1,6 +1,7 @@
 package com.barteo.emulator.device;
 
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Enumeration;
@@ -8,6 +9,7 @@ import java.util.Vector;
 
 import javax.microedition.lcdui.Command;
 
+import com.barteo.emulator.Button;
 import com.barteo.emulator.SoftButton;
 import nanoxml.XMLElement;
 
@@ -16,51 +18,16 @@ public class Device {
 
   static Device instance = new Device();
 
-  Vector softButtons = new Vector();
   Vector deviceButtons = new Vector();
 
   public static Color backgroundColor;
   public static Color foregroundColor;
 
-  public static int screenRectangleX;
-  public static int screenRectangleY;
-  public static int screenRectangleWidth;
-  public static int screenRectangleHeight;
+  public static Rectangle screenRectangle;
+  public static Rectangle screenPaintable;
 
-  public static int screenPaintableX;
-  public static int screenPaintableY;
-  public static int screenPaintableWidth;
-  public static int screenPaintableHeight;
-  
-  class Rectangle
-  {
-    int x;
-    int y;
-    int width;
-    int height;
-  }
-
-
-  Device()
-  {
-    SoftButton soft;
-
-    soft = new SoftButton(1, 112, 38, 16, SoftButton.LEFT);
-    soft.addCommandType(Command.BACK);
-    soft.addCommandType(Command.EXIT);
-    soft.addCommandType(Command.CANCEL);
-    soft.addCommandType(Command.STOP);
-    softButtons.addElement(soft);
-
-    soft = new SoftButton(58, 112, 38, 16, SoftButton.RIGHT);
-    soft.setMenuActivate(true);
-    soft.addCommandType(Command.OK);
-    soft.addCommandType(Command.SCREEN);
-    soft.addCommandType(Command.ITEM);
-    soft.addCommandType(Command.HELP);
-    softButtons.addElement(soft);
-  }
-  
+  public static Rectangle keyboardRectangle;
+    
   
   public static Device getInstance()
   {
@@ -93,37 +60,52 @@ public class Device {
         for (Enumeration e_screen = tmp.enumerateChildren(); e_screen.hasMoreElements(); ) {
           XMLElement tmp_screen = (XMLElement) e_screen.nextElement();
           if (tmp_screen.getName().equals("background")) {
-            backgroundColor = new Color(Integer.parseInt(tmp_screen.getContents(), 16));
+            backgroundColor = new Color(Integer.parseInt(tmp_screen.getContent(), 16));
           }
           if (tmp_screen.getName().equals("foreground")) {
-            foregroundColor = new Color(Integer.parseInt(tmp_screen.getContents(), 16));
+            foregroundColor = new Color(Integer.parseInt(tmp_screen.getContent(), 16));
           }
           if (tmp_screen.getName().equals("rectangle")) {
-            Rectangle tmpRect = getRectangle(tmp_screen);
-            screenRectangleX = tmpRect.x;
-            screenRectangleY = tmpRect.y;
-            screenRectangleWidth = tmpRect.width;
-            screenRectangleHeight = tmpRect.height;
+            screenRectangle = getRectangle(tmp_screen);
           }
           if (tmp_screen.getName().equals("paintable")) {
-            Rectangle tmpRect = getRectangle(tmp_screen);
-            screenPaintableX = tmpRect.x;
-            screenPaintableY = tmpRect.y;
-            screenPaintableWidth = tmpRect.width;
-            screenPaintableHeight = tmpRect.height;
+            screenPaintable = getRectangle(tmp_screen);
           }
         }
       }
       if (tmp.getName().equals("keyboard")) {
         for (Enumeration e_keyboard = tmp.enumerateChildren(); e_keyboard.hasMoreElements(); ) {
           XMLElement tmp_keyboard = (XMLElement) e_keyboard.nextElement();
+          if (tmp_keyboard.getName().equals("rectangle")) {
+            keyboardRectangle = getRectangle(tmp_keyboard);
+          }
           if (tmp_keyboard.getName().equals("button")) {
             for (Enumeration e_button = tmp_keyboard.enumerateChildren(); e_button.hasMoreElements(); ) {
               XMLElement tmp_button = (XMLElement) e_button.nextElement();
               if (tmp_button.getName().equals("rectangle")) {
-//                System.out.println(getRectangle(tmp_button));                
+                deviceButtons.add(new Button(tmp_keyboard.getProperty("name"), 
+                    getRectangle(tmp_button), tmp_keyboard.getProperty("key")));
               }
             }
+          }
+          if (tmp_keyboard.getName().equals("softbutton")) {
+            Vector commands = new Vector();
+            Rectangle rectangle = null, paintable = null;
+            for (Enumeration e_button = tmp_keyboard.enumerateChildren(); e_button.hasMoreElements(); ) {
+              XMLElement tmp_button = (XMLElement) e_button.nextElement();
+              if (tmp_button.getName().equals("rectangle")) {
+                rectangle = getRectangle(tmp_button);
+              }
+              if (tmp_button.getName().equals("paintable")) {
+                paintable = getRectangle(tmp_button);
+              }
+              if (tmp_button.getName().equals("command")) {
+                commands.add(tmp_button.getContent());
+              }
+            }
+            deviceButtons.add(new SoftButton(tmp_keyboard.getProperty("name"),
+                rectangle, tmp_keyboard.getProperty("key"), paintable, 
+                tmp_keyboard.getProperty("alignment"), commands));
           }
         }
       }
@@ -133,8 +115,9 @@ public class Device {
   }
 
 
-  public static Vector getSoftButtons() {
-   return instance.softButtons;
+  public static Vector getDeviceButtons() 
+  {
+    return instance.deviceButtons;
   }
   
   
@@ -145,16 +128,16 @@ public class Device {
     for (Enumeration e_rectangle = source.enumerateChildren(); e_rectangle.hasMoreElements(); ) {
       XMLElement tmp_rectangle = (XMLElement) e_rectangle.nextElement();
       if (tmp_rectangle.getName().equals("x")) {
-        rect.x = Integer.parseInt(tmp_rectangle.getContents());
+        rect.x = Integer.parseInt(tmp_rectangle.getContent());
       }
       if (tmp_rectangle.getName().equals("y")) {
-        rect.y = Integer.parseInt(tmp_rectangle.getContents());
+        rect.y = Integer.parseInt(tmp_rectangle.getContent());
       }
       if (tmp_rectangle.getName().equals("width")) {
-        rect.width = Integer.parseInt(tmp_rectangle.getContents());
+        rect.width = Integer.parseInt(tmp_rectangle.getContent());
       }
       if (tmp_rectangle.getName().equals("height")) {
-        rect.height = Integer.parseInt(tmp_rectangle.getContents());
+        rect.height = Integer.parseInt(tmp_rectangle.getContent());
       }
     }
     

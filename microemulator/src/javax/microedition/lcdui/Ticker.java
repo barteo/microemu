@@ -105,7 +105,7 @@ public class Ticker
       int stringWidth = f.stringWidth(text) + PAINT_GAP;
       g.drawString(text, textPos, 0, 0);
       int xPos = textPos + stringWidth;
-      while (xPos < Device.screenPaintableWidth) {
+      while (xPos < Device.screenPaintable.width) {
         g.drawString(text, xPos, 0, 0);
         xPos += stringWidth;
       }

@@ -38,7 +38,7 @@ public abstract class Screen extends Displayable
 	{
 		this.title = new StringComponent(title);
 		viewPortY = 0;
-		viewPortHeight = Device.screenPaintableHeight - this.title.getHeight() - 1;
+		viewPortHeight = Device.screenPaintable.height - this.title.getHeight() - 1;
 	}
 
 
@@ -115,7 +115,7 @@ public abstract class Screen extends Displayable
 		}
 
 		g.setGrayScale(255);
-		g.fillRect(0, 0, Device.screenPaintableWidth, Device.screenPaintableHeight);
+		g.fillRect(0, 0, Device.screenPaintable.width, Device.screenPaintable.height);
 
 		g.setGrayScale(0);
 
@@ -127,18 +127,18 @@ public abstract class Screen extends Displayable
 		translatedY = contentHeight;
 
 		contentHeight += title.paint(g);
-    g.drawLine(0, title.getHeight(), Device.screenPaintableWidth, title.getHeight());
+    g.drawLine(0, title.getHeight(), Device.screenPaintable.width, title.getHeight());
 		contentHeight += 1;
 
     g.translate(0, contentHeight - translatedY);
 		translatedY = contentHeight;
 
-		g.clipRect(0, 0, Device.screenPaintableWidth, Device.screenPaintableHeight - contentHeight);
+		g.clipRect(0, 0, Device.screenPaintable.width, Device.screenPaintable.height - contentHeight);
     g.translate(0, -viewPortY);
     contentHeight += paintContent(g);
     g.translate(0, viewPortY);
 
-		if (contentHeight - viewPortY > Device.screenPaintableHeight) {
+		if (contentHeight - viewPortY > Device.screenPaintable.height) {
 			currentDisplay.dispBridge.setScrollDown(true);
 		} else {
 			currentDisplay.dispBridge.setScrollDown(false);

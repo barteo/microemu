@@ -28,39 +28,43 @@ import java.util.Vector;
 import javax.microedition.lcdui.Command;
 import com.barteo.emulator.device.Device;
 
-/**
- *  Description of the Class
- *
- *@author     barteo
- *@created    3 wrzesieñ 2001
- */
-public class SoftButton {
 
-    public static int LEFT = 1;
-    public static int RIGHT = 2;
+public class SoftButton extends Button
+{
 
-    boolean menuActivate = false;
-    Vector commandTypes = new Vector();
+  public static int LEFT = 1;
+  public static int RIGHT = 2;
 
-    Command command = null;
+  boolean menuActivate = false;
+  Vector commandTypes = new Vector();
 
-    Rectangle bounds;
-    int alignment;
+  Command command = null;
+
+  Rectangle paintable;
+  int alignment;
 
 
-    /**
-     *  Constructor for the SoftButton object
-     *
-     *@param  x          Description of Parameter
-     *@param  y          Description of Parameter
-     *@param  width      Description of Parameter
-     *@param  height     Description of Parameter
-     *@param  alignment  Description of Parameter
-     */
-    public SoftButton(int x, int y, int width, int height, int alignment) {
-        bounds = new Rectangle(x, y, width, height);
-        setAlignment(alignment);
+  public SoftButton(String name, Rectangle rectangle, String keyName, 
+      Rectangle paintable, String alignmentName, Vector commands)
+  {
+    super(name, rectangle, keyName);
+      
+    this.paintable = paintable;
+    
+    try {
+      alignment = SoftButton.class.getField(alignmentName).getInt(null);
+    } catch (Exception ex) {
+      System.err.println(ex);
     }
+    
+    for (Enumeration e = commands.elements(); e.hasMoreElements(); ) {
+      try {
+        addCommandType(Command.class.getField((String) e.nextElement()).getInt(null));
+      } catch (Exception ex) {
+        System.err.println(ex);
+      }
+    }
+  }
 
 
     /**
@@ -130,13 +134,13 @@ public class SoftButton {
         int xoffset = 0;
 
         g.setColor(Device.backgroundColor);
-        g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+        g.fillRect(paintable.x, paintable.y, paintable.width, paintable.height);
         if (command != null) {
             if (alignment == RIGHT) {
-                xoffset = bounds.width - g.getFontMetrics().stringWidth(command.getLabel());
+                xoffset = paintable.width - g.getFontMetrics().stringWidth(command.getLabel());
             }
             g.setColor(Device.foregroundColor);
-            g.drawString(command.getLabel(), bounds.x + xoffset, bounds.y + bounds.height);
+            g.drawString(command.getLabel(), paintable.x + xoffset, paintable.y + paintable.height);
         }
     }
 
@@ -162,16 +166,6 @@ public class SoftButton {
             }
         }
         return false;
-    }
-
-
-    /**
-     *  Sets the alignment attribute of the SoftButton object
-     *
-     *@param  alignment  The new alignment value
-     */
-    void setAlignment(int alignment) {
-        this.alignment = alignment;
     }
 
 

@@ -145,8 +145,8 @@ public class TextBox extends Screen
 
 	int paintContent(Graphics g)
 	{
-		g.drawRect(1, 1, Device.screenPaintableWidth - 3, viewPortHeight - 3);
-		g.setClip(3, 3, Device.screenPaintableWidth - 6, viewPortHeight - 6);
+		g.drawRect(1, 1, Device.screenPaintable.width - 3, viewPortHeight - 3);
+		g.setClip(3, 3, Device.screenPaintable.width - 6, viewPortHeight - 6);
 		g.translate(3, 3);
 		tf.paintContent(g);
 

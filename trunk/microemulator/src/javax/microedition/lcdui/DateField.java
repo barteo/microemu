@@ -55,7 +55,7 @@ public class DateField extends Item
     public void commandAction(Command c, Displayable d)
     {
       if (c == backCommand) {
-        Display.getDisplay().setCurrent(owner);
+        getOwner().currentDisplay.setCurrent(owner);
       } else if (c == saveCommand && d == dateBox) {
         try {
           Date tmp = dateFormat.parse(dateBox.getString());
@@ -72,10 +72,10 @@ public class DateField extends Item
             date = to.getTime();
           }
           updateDateTimeString();
-          Display.getDisplay().setCurrent(owner);
+          getOwner().currentDisplay.setCurrent(owner);
         } catch (ParseException ex) {
           alert.setString("Date: " + ex.getMessage());
-          Display.getDisplay().setCurrent(alert);
+          getOwner().currentDisplay.setCurrent(alert);
         }
       } else if (c == saveCommand && d == timeBox) {
         try {
@@ -92,10 +92,10 @@ public class DateField extends Item
             date = to.getTime();
           }
           updateDateTimeString();
-          Display.getDisplay().setCurrent(owner);
+          getOwner().currentDisplay.setCurrent(owner);
         } catch (ParseException ex) {
           alert.setString("Time: " + ex.getMessage());
-          Display.getDisplay().setCurrent(alert);
+          getOwner().currentDisplay.setCurrent(alert);
         }
       }
     }
@@ -215,14 +215,14 @@ public class DateField extends Item
       } else {
         dateBox.setString("");
       }
-      Display.getDisplay().setCurrent(dateBox);
+      getOwner().currentDisplay.setCurrent(dateBox);
     } else {
       if (date != null) {
         timeBox.setString(timeFormat.format(date));
       } else {
         timeBox.setString("");
       }
-      Display.getDisplay().setCurrent(timeBox);
+      getOwner().currentDisplay.setCurrent(timeBox);
     }
       
     return true;

@@ -58,7 +58,6 @@ import com.barteo.emulator.app.util.ProgressListener;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.util.JadMidletEntry;
 import com.barteo.emulator.util.JadProperties;
-import com.barteo.midp.lcdui.DisplayBridge;
 import com.barteo.midp.lcdui.FontManager;
 
 
@@ -425,7 +424,6 @@ public class Main extends JFrame implements MicroEmulator
     
     Main app = new Main();
     MIDletBridge.setMicroEmulator(app);
-
 
     if (args.length > 0) {
       app.setMidletClass(args[0]);

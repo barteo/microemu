@@ -130,6 +130,7 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics {
     public void drawImage(Image img, int x, int y, int anchor) 
     {
         int newx = x;
+        int newy = y;
 
         if (anchor == 0) {
             anchor = javax.microedition.lcdui.Graphics.TOP | javax.microedition.lcdui.Graphics.LEFT;
@@ -140,8 +141,13 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics {
         } else if ((anchor & javax.microedition.lcdui.Graphics.HCENTER) != 0) {
             newx -= img.getWidth() / 2;
         }
+        if ((anchor & javax.microedition.lcdui.Graphics.BOTTOM) != 0) {
+            newy -= img.getHeight();
+        } else if ((anchor & javax.microedition.lcdui.Graphics.VCENTER) != 0) {
+            newy -= img.getHeight() / 2;
+        }
 
-        g.drawImage(((ImageImpl) img).getImage(), newx, y, null);
+        g.drawImage(((ImageImpl) img).getImage(), newx, newy, null);
     }
 
 

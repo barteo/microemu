@@ -30,14 +30,19 @@ import com.barteo.midp.lcdui.DisplayBridge;
 public abstract class MIDlet
 {
 
-  MIDlet midlet;
-
-	class MIDletAccessor implements MIDletAccess
+	class MIDletAccessor extends MIDletAccess
 	{
+
+    public MIDletAccessor(MIDlet amidlet)
+    {
+      super(amidlet);
+    }
+    
 
 	  public void startApp()
   		  throws MIDletStateChangeException
     {
+      DisplayBridge.setAccess(getDisplayAccess());
       midlet.startApp();
     }
 
@@ -59,8 +64,10 @@ public abstract class MIDlet
 
 	protected MIDlet()
 	{
-    midlet = this;
-    MIDletBridge.setAccess(this, new MIDletAccessor());
+    MIDletBridge.setAccess(this, new MIDletAccessor(this));
+        
+    // initialize display
+    Display.getDisplay(this);
 	}
 
 

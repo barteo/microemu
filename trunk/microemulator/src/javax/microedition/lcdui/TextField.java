@@ -50,7 +50,7 @@ public class TextField extends Item
 		{
 			if (cmd == backCommand) {
 				setString(tb.getString());
-  			Display.getDisplay().setCurrent(owner);
+        getOwner().currentDisplay.setCurrent(owner);
 			} 
 		}
 
@@ -283,7 +283,7 @@ public class TextField extends Item
 		} else {
 			tb.setString(getString());
 		}
-		Display.getDisplay().setCurrent(tb);
+    getOwner().currentDisplay.setCurrent(tb);
 
 		return true;
 	}

@@ -39,6 +39,7 @@ public class DisplayBridge
 
   public static void setAccess(DisplayAccess a_da) 
   {
+System.out.println(da);
     da = a_da;
   }
 
@@ -151,7 +152,7 @@ public class DisplayBridge
   }
 
 
-  public void setScrollDown(boolean state) 
+  public static void setScrollDown(boolean state) 
   {
     if (dc != null) {
       dc.setScrollDown(state);
@@ -159,7 +160,7 @@ public class DisplayBridge
   }
 
 
-  public void setScrollUp(boolean state) 
+  public static void setScrollUp(boolean state) 
   {
     if (dc != null) {
       dc.setScrollUp(state);

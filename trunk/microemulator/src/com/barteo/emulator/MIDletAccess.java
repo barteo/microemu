@@ -19,18 +19,42 @@
  
 package com.barteo.emulator;
 
+import com.barteo.midp.lcdui.DisplayAccess;
+import javax.microedition.lcdui.Display;
+import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
 
-public interface MIDletAccess
+public abstract class MIDletAccess
 {
+  public MIDlet midlet;
+  DisplayAccess displayAccess;
+    
+    
+  public MIDletAccess(MIDlet amidlet)
+  {
+    midlet = amidlet;
+  }
+  
+  
+  public DisplayAccess getDisplayAccess()
+  {
+    return displayAccess;
+  }
+  
+  
+  public void setDisplayAccess(DisplayAccess adisplayAccess)
+  {
+    displayAccess = adisplayAccess;
+  }
+    
 
-	public void startApp()
+	public abstract void startApp()
   		throws MIDletStateChangeException;
 
-	public void pauseApp();
+	public abstract void pauseApp();
 
-	public void destroyApp(boolean unconditional)
+	public abstract void destroyApp(boolean unconditional)
   		throws MIDletStateChangeException;
 
 }

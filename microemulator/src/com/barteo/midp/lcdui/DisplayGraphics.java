@@ -27,6 +27,7 @@ import java.awt.Graphics;
 import javax.microedition.lcdui.*;
 
 import com.barteo.emulator.Device;
+import com.barteo.emulator.BWImageFilter;
 
 
 public class DisplayGraphics extends javax.microedition.lcdui.Graphics
@@ -155,17 +156,15 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 
 	public void setColor(int RGB)
 	{
-		if (RGB == 0xffffff) {
-			g.setColor(Device.getBackgroundColor());
-		} else {
-			g.setColor(Device.getForegroundColor());
-		}
+    BWImageFilter filter = new BWImageFilter();
+
+    g.setColor(new Color(filter.filterRGB(0, 0, RGB)));
 	}
 
 
 	public void setGrayScale(int grey)
 	{
-		if (grey == 255) {
+		if (grey > 127) {
 			g.setColor(Device.getBackgroundColor());
 		} else {
 			g.setColor(Device.getForegroundColor());

@@ -71,8 +71,6 @@ public class Main extends JFrame implements MicroEmulator
 
   Launcher launcher;
   
-  MIDlet midlet;
-
   ActionListener menuOpenJADFileListener = new ActionListener()
   {
 
@@ -107,12 +105,16 @@ public class Main extends JFrame implements MicroEmulator
           System.err.println(ex);
         }
         URLClassLoader classLoader = new URLClassLoader(urls);
-
+        launcher.removeMIDletEntries();
         try {
           for (Enumeration e = jad.getMidletEntries().elements(); e.hasMoreElements(); ) {
-            Class midlet = classLoader.loadClass(((JadMidletEntry) e.nextElement()).getClassName());
-            midlet.newInstance();
+            JadMidletEntry jadEntry = (JadMidletEntry) e.nextElement();
+            Class midletClass = classLoader.loadClass(jadEntry.getClassName());
+            MIDlet midlet = (MIDlet) midletClass.newInstance();
+            
+            launcher.addMIDletEntry(new MIDletEntry(jadEntry.getName(), midlet));
           }
+          notifyDestroyed();
         } catch (ClassNotFoundException ex) {
           System.err.println(ex);
         } catch (IllegalAccessException ex) {
@@ -166,7 +168,7 @@ public class Main extends JFrame implements MicroEmulator
     FontManager.getInstance().setDefaultFontMetrics(getFontMetrics(defaultFont));
 
     launcher = new Launcher();
-    midlet = launcher;
+    launcher.setCurrentMIDlet(launcher);
  
     if (!Device.getInstance().isInitialized()) {
       System.out.println("Cannot initialize device configuration");
@@ -201,10 +203,10 @@ public class Main extends JFrame implements MicroEmulator
     if (e.getID() == WindowEvent.WINDOW_CLOSING) {
       menuExitListener.actionPerformed(null);
     } else if (e.getID() == WindowEvent.WINDOW_ICONIFIED) {
-      MIDletBridge.getAccess(midlet).pauseApp();
+      MIDletBridge.getAccess(launcher.getCurrentMIDlet()).pauseApp();
     } else if (e.getID() == WindowEvent.WINDOW_DEICONIFIED) {
       try {
-        MIDletBridge.getAccess(midlet).startApp();
+        MIDletBridge.getAccess(launcher.getCurrentMIDlet()).startApp();
   		} catch (MIDletStateChangeException ex) {
         System.err.println(ex);
   		}
@@ -215,7 +217,7 @@ public class Main extends JFrame implements MicroEmulator
   public void start()
   {
     try {
-      MIDletBridge.getAccess(midlet).startApp();
+      MIDletBridge.getAccess(launcher.getCurrentMIDlet()).startApp();
 		} catch (MIDletStateChangeException ex) {
       System.err.println(ex);
 		}
@@ -233,15 +235,14 @@ public class Main extends JFrame implements MicroEmulator
 		}
 
     try {
-      midlet = (MIDlet) midletClass.newInstance();
+      launcher.setCurrentMIDlet((MIDlet) midletClass.newInstance());
+      launcher.addMIDletEntry(new MIDletEntry("MIDlet", launcher.getCurrentMIDlet()));
     } catch (Exception ex) {
       System.out.println("Cannot initialize " + midletClass + " MIDlet class");
       System.out.println(ex);
       ex.printStackTrace();
       return false;
-    }
-    
-    launcher.addMIDletEntry(new MIDletEntry("MIDlet", midlet));
+    }  
     
     return true;
 	}

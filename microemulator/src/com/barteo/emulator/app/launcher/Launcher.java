@@ -37,13 +37,12 @@ public class Launcher extends MIDlet implements CommandListener
   
   Vector midletEntries = new Vector();
   
+  MIDlet currentMIDlet = null;
+  
   
   public Launcher()
   {
     menuList = new List("Launcher", List.IMPLICIT);
-
-    menuList.append("Test1", null);
-    menuList.append("Test2", null);
 
     menuList.setCommandListener(this);
   }
@@ -52,6 +51,24 @@ public class Launcher extends MIDlet implements CommandListener
   public void addMIDletEntry(MIDletEntry entry)
   {
     midletEntries.addElement(entry);
+  }
+  
+  
+  public void removeMIDletEntries()
+  {
+    midletEntries.removeAllElements();
+  }
+  
+  
+  public MIDlet getCurrentMIDlet()
+  {
+    return currentMIDlet;
+  }
+  
+  
+  public void setCurrentMIDlet(MIDlet midlet)
+  {
+    currentMIDlet = midlet;
   }
   
   
@@ -87,9 +104,9 @@ public class Launcher extends MIDlet implements CommandListener
     if (d == menuList) {
       if (c == List.SELECT_COMMAND) {
         if (!menuList.getString(menuList.getSelectedIndex()).equals(nomidlets)) {
-          MIDlet midlet = ((MIDletEntry) midletEntries.elementAt(menuList.getSelectedIndex())).getMIDlet();
+          currentMIDlet = ((MIDletEntry) midletEntries.elementAt(menuList.getSelectedIndex())).getMIDlet();
           try {
-            MIDletBridge.getAccess(midlet).startApp();
+            MIDletBridge.getAccess(currentMIDlet).startApp();
       		} catch (MIDletStateChangeException ex) {
             System.err.println(ex);
       		}

@@ -22,7 +22,7 @@ package javax.microedition.io;
 import java.io.IOException;
 
 
-public interface HttpConnection extends Connection
+public interface HttpConnection extends ContentConnection
 {
 
 	static final String HEAD = "HEAD";

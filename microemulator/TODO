@@ -1,8 +1,11 @@
+* define a Main-Class in the MANIFEST.MF file - running by java -jar
+
 * move device display painting from Applet/SwingDisplayComponent to Applet/J2SEDeviceDisplay
 
 * (?) try to run application in WebStart environment
 
 * extended web site with overview, api docs, faq section, instalation instructions, etc.
+  (app requires Java 2, applet can be run in JVM 1.1)
 
 * in javax.microedition.io.* only http supported - there is tcp, udp and https needed
 

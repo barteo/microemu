@@ -1,5 +1,8 @@
 MicroEmulator
 
+0.3.1
+- app: fixed NullPointerException when run ME without initial MIDlet
+
 0.3 (alpha) - 29.08.2002
 - created custom device framework (currently applet and j2se)
 - default device has color display

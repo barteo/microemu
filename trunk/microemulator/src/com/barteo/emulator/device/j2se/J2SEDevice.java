@@ -273,7 +273,9 @@ public class J2SEDevice implements Device
     try {
       while (dis.available() > 0) {
         byte[] b = new byte[dis.available()];
-        dis.read(b);
+        if (dis.read(b) == -1) {
+          break;
+        }
         xml += new String(b);
       }
     } catch (Exception ex) {

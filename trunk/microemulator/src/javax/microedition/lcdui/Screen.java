@@ -156,6 +156,8 @@ public abstract class Screen extends Displayable
 
 	void showNotify()
 	{
+		viewPortY = 0;
+		
 		super.showNotify();
   }
 

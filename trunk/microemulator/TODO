@@ -1,5 +1,3 @@
-* define a Main-Class in the MANIFEST.MF file - running by java -jar
-
 * try to run application in WebStart environment
 
 * rebuild InputMethod to extend functionality:

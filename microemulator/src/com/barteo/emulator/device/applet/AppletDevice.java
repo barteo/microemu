@@ -114,7 +114,11 @@ public class AppletDevice implements Device
 	public javax.microedition.lcdui.Image createImage(byte[] imageData, int imageOffset, int imageLength)
 	{
 		ByteArrayInputStream is = new ByteArrayInputStream(imageData, imageOffset, imageLength);
-		return new ImmutableImage(getImage(is));
+		try {
+			return new ImmutableImage(getImage(is));
+		} catch (IOException ex) {
+			throw new IllegalArgumentException(ex.toString());
+		}
 	}
   
   
@@ -469,7 +473,7 @@ public class AppletDevice implements Device
 
   
 	private Image getImage(String str)
-					throws IOException
+			throws IOException
 	{
 		InputStream is = EmulatorContext.class.getResourceAsStream(str);
 
@@ -482,10 +486,17 @@ public class AppletDevice implements Device
 
   
   private Image getImage(InputStream is)
+			throws IOException
   {
 		ImageFilter filter = null;
     PngImage png = new PngImage(is);
     
+		try {
+			png.getWidth();
+		} catch (IOException ex) {
+			throw new IOException("Error decoding PNG image");    	
+		}
+        
     if (getDeviceDisplay().isColor()) {
 			filter = new RGBImageFilter();
     } else {

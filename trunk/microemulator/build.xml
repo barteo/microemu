@@ -191,6 +191,7 @@
         <arg line="-keep 'class javax.** { *; }'"/>
         <arg line="-keep 'public class * extends javax.** { *;}'"/>
         <arg line="-keep 'public class * extends java.applet.Applet { *; }'"/>
+        <arg line="-keep 'public class com.barteo.emulator.EmulatorContext { *; }'"/>
         <arg line="-keep 'public class com.barteo.emulator.device.** { *; }'"/>
         <arg line="-keep 'public class * extends com.barteo.emulator.device.** { *; }'"/>
         <!--<arg line="-keep 'public class com.barteo.emulator.device.applet.** { *; }'"/>-->

@@ -36,10 +36,10 @@ public class Graphics
   public static final int HCENTER = 1;
   public static final int VCENTER = 2;
 
-  int strokeStyle = SOLID;
+  private int strokeStyle = SOLID;
   
-	int translateX = 0;
-	int translateY = 0;
+	private int translateX = 0;
+	private int translateY = 0;
 
 
 	public void clipRect(int x, int y, int width, int height)
@@ -48,6 +48,13 @@ public class Graphics
 	}
 
 
+	public void copyArea(int x_src, int y_src, int width, int height, 
+			int x_dest, int y_dest, int anchor)
+	{
+System.out.println("TODO");
+	}
+	
+	
 	public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle)
 	{
     // Implemented in DisplayGraphics
@@ -87,6 +94,20 @@ public class Graphics
 	}
 
 
+	public void drawRegion(Image src, int x_src, int y_src, int width, int height, 
+			int transform, int x_dest, int y_dest, int anchor)
+	{
+System.out.println("TODO");
+	}
+	
+
+	public void drawRGB(int[] rgbData, int offset, int scanlength, 
+			int x, int y, int width, int height, boolean processAlpha)
+	{
+System.out.println("TODO");
+	}
+	
+		
 	public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight)
 	{
     // Implemented in DisplayGraphics
@@ -123,6 +144,12 @@ public class Graphics
 	}
 
 
+	public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3)
+	{
+System.out.println("TODO");
+	}
+	
+	
   public int getBlueComponent()
   {
     return (getColor() >> 16) & 255;
@@ -164,6 +191,13 @@ public class Graphics
   }
 
 
+	public int getDisplayColor(int color)
+	{
+System.out.println("TODO");
+		return 0;
+	}
+	
+	
 	public Font getFont()
 	{
     // Implemented in DisplayGraphics

@@ -20,6 +20,7 @@
 package javax.microedition.lcdui;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import com.barteo.emulator.device.DeviceFactory;
 
@@ -57,6 +58,28 @@ public class Image
 	}
 																
 
+	public static Image	createImage(Image image, int x, int y, int width, int height, int transform)
+	{
+System.out.println("TODO");
+		return null;
+	}
+	
+
+	public static Image createImage(InputStream stream)
+			throws IOException
+	{
+System.out.println("TODO");
+		return null;
+	}
+
+
+	public static Image createRGBImage(int[] rgb, int width, int height, boolean processAlpha)
+	{
+System.out.println("TODO");
+		return null;
+	}	
+	
+		
 	public Graphics getGraphics()
 	{
 		throw new IllegalStateException("Image is immutable");
@@ -74,7 +97,13 @@ public class Image
 		return 0;
 	}
 	
+
+	public void getRGB(int[] rgbData, int offset, int scanlength, int x, int y, int width, int height)
+	{
+System.out.println("TODO");
+	}
 	
+		
 	public boolean isMutable()
 	{
 		return false;

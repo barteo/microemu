@@ -25,15 +25,14 @@ package javax.microedition.lcdui;
 
 public class ChoiceGroup extends Item implements Choice
 {
+	private ChoiceItem items[] = new ChoiceItem[4];
+  private int numOfItems = 0;
 
-	ChoiceItem items[] = new ChoiceItem[4];
-  int numOfItems = 0;
+  private int choiceType;
 
-  int choiceType;
+  private int highlightedItemIndex = -1;
 
-  int highlightedItemIndex = -1;
-
-	static byte multiOff[] = {
+	private static byte multiOff[] = {
   		-119, 80, 78, 71, 13, 10, 26, 10, 0, 0,
       0, 13, 73, 72, 68, 82, 0, 0, 0, 10,
       0, 0, 0, 11, 2, 3, 0, 0, 0, 59,
@@ -46,7 +45,7 @@ public class ChoiceGroup extends Item implements Choice
       -108, 39, -26, 0, 0, 0, 0, 73, 69, 78,
       68, -82, 66, 96, -126 };
 
-	static byte multiOn[] = {
+	private static byte multiOn[] = {
 	    -119, 80, 78, 71, 13, 10, 26, 10, 0, 0,
       0, 13, 73, 72, 68, 82, 0, 0, 0, 10,
       0, 0, 0, 11, 2, 3, 0, 0, 0, 59,
@@ -62,7 +61,7 @@ public class ChoiceGroup extends Item implements Choice
       -83, 100, 0, 0, 0, 0, 73, 69, 78, 68,
       -82, 66, 96, -126 };
 
-	static byte radioOff[] = {
+	private static byte radioOff[] = {
 	    -119, 80, 78, 71, 13, 10, 26, 10, 0, 0,
       0, 13, 73, 72, 68, 82, 0, 0, 0, 11,
       0, 0, 0, 11, 2, 3, 0, 0, 0, -44,
@@ -76,7 +75,7 @@ public class ChoiceGroup extends Item implements Choice
       113, 24, 5, 61, 73, -68, -100, 98, 0, 0,
       0, 0, 73, 69, 78, 68, -82, 66, 96, -126 };
 
-	static byte radioOn[] = {
+	private static byte radioOn[] = {
       -119, 80, 78, 71, 13, 10, 26, 10, 0, 0,
       0, 13, 73, 72, 68, 82, 0, 0, 0, 11,
       0, 0, 0, 11, 2, 3, 0, 0, 0, -44,
@@ -155,6 +154,38 @@ public class ChoiceGroup extends Item implements Choice
       highlightedItemIndex = numOfItems-1;
     }
   }
+  
+  
+  public void deleteAll()
+  {
+System.out.println("TODO");  	
+  }
+
+
+	public int getFitPolicy() 
+	{
+System.out.println("TODO");
+		return 0;
+	}
+		
+		
+	public void setFitPolicy(int fitPolicy) 
+	{
+System.out.println("TODO");
+	}
+
+
+	public Font getFont(int elementNum) 
+	{
+System.out.println("TODO");
+		return null;
+	}
+	
+	
+	public void setFont(int elementNum, Font font)
+	{
+System.out.println("TODO");
+	}
 
 
   public Image getImage(int elementNum)
@@ -476,5 +507,5 @@ public class ChoiceGroup extends Item implements Choice
                : null);
     }
   }
-  
+
 }

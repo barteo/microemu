@@ -134,6 +134,12 @@ public class TextBox extends Screen
 	}
 
 
+	public void setInitialInputMode(String characterSubset)
+	{
+		tf.setInitialInputMode(characterSubset);
+	}
+	
+	
 	void hideNotify()
 	{
 		DeviceFactory.getDevice().getInputMethod().removeInputMethodListener(inputMethodListener);

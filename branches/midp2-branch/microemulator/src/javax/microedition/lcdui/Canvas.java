@@ -27,7 +27,6 @@ import com.barteo.emulator.device.DeviceFactory;
 
 public abstract class Canvas extends Displayable
 {
-
 	public static final int UP = 1;
 	public static final int DOWN = 6;
 	public static final int LEFT = 2;
@@ -56,6 +55,7 @@ public abstract class Canvas extends Displayable
 
 	protected Canvas()
 	{
+		super(null);
 	}
 
 
@@ -167,9 +167,21 @@ public abstract class Canvas extends Displayable
   {
   }
 
+
+	public void setFullScreenMode(boolean mode)
+	{
+System.out.println("TODO");		
+	}
+	
   
   protected void showNotify()
   {
   }
+  
+  
+	protected void sizeChanged(int w, int h)
+	{
+		System.out.println("TODO");
+	}
   
 }

@@ -25,49 +25,10 @@ import com.barteo.emulator.device.DeviceFactory;
 public abstract class Screen extends Displayable
 {
 
-	StringComponent title;
-  Ticker ticker;
-	int viewPortY;
-	int viewPortHeight;
-
-
 	Screen(String title)
 	{
-		this.title = new StringComponent(title);
-		viewPortY = 0;
-		viewPortHeight = DeviceFactory.getDevice().getDeviceDisplay().getHeight() - this.title.getHeight() - 1;
+		super(title);
 	}
-
-
-  public Ticker getTicker()
-  {
-    return ticker;
-  }
-
-
-  public String getTitle()
-  {
-    return title.getText();
-  }
-
-
-  public void setTitle(String s)
-  {
-    title.setText(s);
-  }
-
-
-  public void setTicker(Ticker ticker)
-  {
-    if (this.ticker != null) {
-      viewPortHeight += this.ticker.getHeight();
-    }
-    this.ticker = ticker;
-    if (this.ticker != null) {
-      viewPortHeight -= this.ticker.getHeight();
-    }
-    repaint();
-  }
 
 
 	abstract int traverse(int gameKeyCode, int top, int bottom);

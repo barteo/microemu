@@ -25,11 +25,10 @@ package javax.microedition.lcdui;
 
 public class Form extends Screen
 {
-
-	Item items[] = new Item[4];
-	int numOfItems = 0;
-	int focusItemIndex;
-  ItemStateListener itemStateListener = null;
+	private Item items[] = new Item[4];
+	private int numOfItems = 0;
+	private int focusItemIndex;
+  private ItemStateListener itemStateListener = null;
 
 
   public Form(String title)
@@ -93,6 +92,12 @@ public class Form extends Screen
   }
 
 
+	public void deleteAll()
+	{
+System.out.println("TODO");
+	}
+	
+	
   public Item get(int itemNum)
   {
     verifyItemNum(itemNum);
@@ -155,7 +160,7 @@ public class Form extends Screen
   }
 
 
-	int getHeight()
+	public int getHeight()
 	{
 		int height = 0;
 
@@ -164,6 +169,13 @@ public class Form extends Screen
 		}
 
 		return height;
+	}
+	
+	
+	public int getWidth()
+	{
+System.out.println("TODO");
+		return 0;
 	}
 
 

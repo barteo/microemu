@@ -25,13 +25,13 @@ package javax.microedition.lcdui;
 
 public class Alert extends Screen
 {
-
+	public static final Command DISMISS_COMMAND = new Command("", Command.OK, 0);
 	public static final int FOREVER = -2;
 
-	ImageStringItem alertContent;
-	AlertType type;
-	static final Command OK = new Command("OK", Command.OK, 0);
-	int time;
+	private static final Command OK = new Command("OK", Command.OK, 0);
+	private ImageStringItem alertContent;
+	private AlertType type;
+	private int time;
 
 
 	CommandListener alertListener = new CommandListener()
@@ -121,68 +121,69 @@ public class Alert extends Screen
 
   public Gauge getIndicator()
   {
+System.out.println("TODO");  	
     return null;
   }
   
   
   public void setIndicator(Gauge indicator)
   {
+System.out.println("TODO");
   }
 
 
-		public void setString(String str)
-		{
-			alertContent.setText(str);
-			repaint();
-		}
-
-
-		public void setTimeout(int time)
-		{
-			if (time != FOREVER && time <= 0) {
-				throw new IllegalArgumentException();
-			}
-			this.time = time;
-			super.removeCommand(OK);
-			if (getTimeout() == Alert.FOREVER) {
-				super.addCommand(OK);
-			}
-
-		}
-
-
-		int getHeight()
-		{
-			return alertContent.getHeight();
-		}
-
-
-		int paintContent(Graphics g)
-		{
-			return alertContent.paint(g);
-		}
-
-
-		void showNotify()
-		{
-			super.showNotify();
-
-			viewPortY = 0;
-		}
-
-
-		int traverse(int gameKeyCode, int top, int bottom)
-		{
-			Font f = Font.getDefaultFont();
-
-			if (gameKeyCode == 1 && top != 0) {
-				return -f.getHeight();
-			}
-			if (gameKeyCode == 6 && bottom < getHeight()) {
-				return f.getHeight();
-			}
-
-			return 0;
-		}
-
+	public void setString(String str)
+	{
+		alertContent.setText(str);
+		repaint();
 	}
+
+
+	public void setTimeout(int time)
+	{
+		if (time != FOREVER && time <= 0) {
+			throw new IllegalArgumentException();
+		}
+		this.time = time;
+		super.removeCommand(OK);
+		if (getTimeout() == Alert.FOREVER) {
+			super.addCommand(OK);
+		}
+	}
+
+
+	public int getHeight()
+	{
+		return alertContent.getHeight();
+	}
+
+
+	int paintContent(Graphics g)
+	{
+		return alertContent.paint(g);
+	}
+
+
+	void showNotify()
+	{
+		super.showNotify();
+
+		viewPortY = 0;
+	}
+
+
+	int traverse(int gameKeyCode, int top, int bottom)
+	{
+		Font f = Font.getDefaultFont();
+
+		if (gameKeyCode == 1 && top != 0) {
+			return -f.getHeight();
+		}
+		if (gameKeyCode == 6 && bottom < getHeight()) {
+			return f.getHeight();
+		}
+
+		return 0;
+	}
+
+}

@@ -27,11 +27,17 @@ import com.barteo.emulator.device.DeviceFactory;
 
 public class Gauge extends Item
 {
-  static int HEIGHT = 15;
+	public static final int CONTINUOUS_IDLE = 0;
+	public static final int INCREMENTAL_IDLE = 1;
+	public static final int CONTINUOUS_RUNNING = 2;
+	public static final int INCREMENTAL_UPDATING = 3;
+	public static final int INDEFINITE = -1;
+	
+  private static int HEIGHT = 15;
   
-  int value;
-  int maxValue;
-  boolean interactive;
+  private int value;
+  private int maxValue;
+  private boolean interactive;
 
 
   public Gauge(String label, boolean interactive, int maxValue, int initialValue)

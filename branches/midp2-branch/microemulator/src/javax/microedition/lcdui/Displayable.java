@@ -21,24 +21,36 @@ package javax.microedition.lcdui;
 
 import java.util.Vector;
 
+import com.barteo.emulator.device.DeviceFactory;
+
 
 public abstract class Displayable
 {
+// Move more code from Screen (eg. paint)		
+	StringComponent title;
+	Ticker ticker;
+	int viewPortY;
+	int viewPortHeight;
 
 	Display currentDisplay = null;
 
-    /**
-     * @associates Command 
-     */
-	Vector commands = new Vector();
+	private Vector commands = new Vector();
 	CommandListener listener = null;
 
+
+	Displayable(String title)
+	{
+		this.title = new StringComponent(title);
+		viewPortY = 0;
+		viewPortHeight = DeviceFactory.getDevice().getDeviceDisplay().getHeight() - this.title.getHeight() - 1;
+	}
+	
 
 	public void addCommand(Command cmd)
 	{
     // Check that its not the same command
-    for (int i=0; i<commands.size(); i++) {
-      if (cmd == (Command)commands.elementAt(i)) {
+    for (int i = 0; i < commands.size(); i++) {
+      if (cmd == (Command) commands.elementAt(i)) {
         // Its the same just return
 				return;
 			}
@@ -46,8 +58,8 @@ public abstract class Displayable
 
     // Now insert it in order
     boolean inserted = false;
-    for (int i=0; i<commands.size(); i++) {
-      if (cmd.getPriority() < ((Command)commands.elementAt(i)).getPriority()) {
+    for (int i = 0; i < commands.size(); i++) {
+      if (cmd.getPriority() < ((Command) commands.elementAt(i)).getPriority()) {
         commands.insertElementAt(cmd, i);
         inserted = true;
         break;
@@ -61,6 +73,51 @@ public abstract class Displayable
 		if (isShown()) {
 			currentDisplay.updateCommands();
 		}
+	}
+
+
+	public int getHeight()
+	{
+System.out.println("TODO");
+		return 0;
+	}
+	
+
+	public int getWidth()
+	{
+System.out.println("TODO");
+		return 0;
+	}
+	
+		
+	public Ticker getTicker()
+	{
+		return ticker;
+	}
+
+
+	public void setTicker(Ticker ticker)
+	{
+		if (this.ticker != null) {
+			viewPortHeight += this.ticker.getHeight();
+		}
+		this.ticker = ticker;
+		if (this.ticker != null) {
+			viewPortHeight -= this.ticker.getHeight();
+		}
+		repaint();
+	}
+
+
+	public String getTitle()
+	{
+		return title.getText();
+	}
+
+
+	public void setTitle(String s)
+	{
+		title.setText(s);
 	}
 
 
@@ -89,6 +146,12 @@ public abstract class Displayable
 	}
 
 
+	protected void sizeChanged(int w, int h)
+	{
+System.out.println("TODO");
+	}
+	
+	
 	CommandListener getCommandListener()
 	{
 		return listener;

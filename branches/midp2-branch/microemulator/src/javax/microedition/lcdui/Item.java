@@ -25,10 +25,28 @@ package javax.microedition.lcdui;
 
 public abstract class Item
 {
+	public static final int PLAIN = 0;
+	public static final int HYPERLINK = 1;
+	public static final int BUTTON = 2;
+	
+	public static final int LAYOUT_DEFAULT = 0;
+	public static final int LAYOUT_LEFT = 1;
+	public static final int LAYOUT_RIGHT = 2;
+	public static final int LAYOUT_CENTER = 3;
+	public static final int LAYOUT_TOP = 0x10;
+	public static final int LAYOUT_BOTTOM = 0x20;
+	public static final int LAYOUT_VCENTER = 0x30;
+	public static final int LAYOUT_NEWLINE_BEFORE = 0x100;
+	public static final int LAYOUT_NEWLINE_AFTER = 0x200;
+	public static final int LAYOUT_SHRINK = 0x400;
+	public static final int LAYOUT_EXPAND = 0x800;
+	public static final int LAYOUT_VSHRINK = 0x1000;
+	public static final int LAYOUT_VEXPAND = 0x2000;
+	public static final int LAYOUT_2 = 0x4000;
 
 	static final int OUTOFITEM = Integer.MAX_VALUE;
 
-  StringComponent labelComponent;
+  private StringComponent labelComponent;
   Screen owner = null;
 	boolean focus = false;
   
@@ -39,6 +57,18 @@ public abstract class Item
   }
   
   
+	public void addCommand(Command cmd)
+	{
+System.out.println("TODO");
+	}
+	
+	
+	public void removeCommand(Command cmd)
+	{
+System.out.println("TODO");
+	}
+	
+	
 	public String getLabel()
 	{
 		return labelComponent.getText();
@@ -51,7 +81,70 @@ public abstract class Item
 	}
 
 	
-  int getHeight()
+	public int getLayout()
+	{
+System.out.println("TODO");
+		return 0;
+	}
+	
+
+	public int getMinimumHeight()
+	{
+System.out.println("TODO");
+		return 0;
+	}
+
+
+	public int getMinimumWidth()
+	{
+System.out.println("TODO");
+		return 0;
+	}
+
+
+	public int getPreferredHeight()
+	{
+System.out.println("TODO");
+		return 0;
+	}
+
+
+	public int getPreferredWidth()
+	{
+System.out.println("TODO");
+		return 0;
+	}
+	public void notifyStateChanged()
+	{
+System.out.println("TODO");
+	}
+
+
+	public void setDefaultCommand(Command cmd)
+	{
+System.out.println("TODO");
+	}
+
+
+	public void setItemCommandListener(ItemCommandListener l)	
+	{
+System.out.println("TODO");
+	}
+
+
+	public void setLayout(int layout)
+	{
+System.out.println("TODO");
+	}
+
+
+	public void setPreferredSize(int width, int height)
+	{
+System.out.println("TODO");
+	}
+
+		
+	int getHeight()
 	{
 		return labelComponent.getHeight();
 	}

@@ -32,11 +32,21 @@ import com.barteo.emulator.device.DeviceFactory;
 
 public class Display
 {
+	static final int LIST_ELEMENT = 1;
+	static final int CHOICE_GROUP_ELEMENT = 2;
+	static final int ALERT = 3;
+	
+	static final int COLOR_BACKGROUND = 0;
+	static final int COLOR_FOREGROUND = 1;
+	static final int COLOR_HIGHLIGHTED_BACKGROUND = 2;
+	static final int COLOR_HIGHLIGHTED_FOREGROUND = 3;
+	static final int COLOR_BORDER = 4;
+	static final int COLOR_HIGHLIGHTED_BORDER = 5;
+		
+	private Displayable current = null;
+	private Displayable nextScreen = null;
 
-	Displayable current = null;
-	Displayable nextScreen = null;
-
-	DisplayAccessor accessor = null;
+	private DisplayAccessor accessor = null;
 
 
 	class DisplayAccessor implements DisplayAccess
@@ -178,12 +188,6 @@ public class Display
   }
 
 
-	public int numColors()
-	{
-		return DeviceFactory.getDevice().getDeviceDisplay().numColors();
-	}
-
-
 	public static Display getDisplay(MIDlet m)
 	{
     Display result;
@@ -199,6 +203,41 @@ public class Display
 	}
 
 
+	public boolean flashBacklight(int duration)
+	{
+System.out.println("TODO");
+		return false;
+	}
+	
+
+	public int getBestImageHeight(int imageType)
+	{
+System.out.println("TODO");
+		return 0;
+	}
+	
+
+	public int getBestImageWidth(int imageType)
+	{
+System.out.println("TODO");
+		return 0;
+	}
+	
+
+	public int getBorderStyle(boolean highlighted)
+	{
+System.out.println("TODO");
+		return 0;
+	}
+	
+
+	public int getColor(int colorSpecifier)
+	{
+System.out.println("TODO");
+		return 0;
+	}
+	
+					
 	public Displayable getCurrent()
 	{
 		return current;
@@ -208,6 +247,19 @@ public class Display
 	public boolean isColor()
 	{
 		return DeviceFactory.getDevice().getDeviceDisplay().isColor();
+	}
+
+
+	public int numAlphaLevels()
+	{
+System.out.println("TODO");
+		return 0;
+	}
+	
+	
+	public int numColors()
+	{
+		return DeviceFactory.getDevice().getDeviceDisplay().numColors();
 	}
 
 
@@ -253,6 +305,18 @@ public class Display
 	}
 
 
+	public void setCurrentItem(Item item)
+	{
+System.out.println("TODO");
+	}
+	
+	
+	public boolean vibrate(int duration)
+	{
+System.out.println("TODO");
+		return false;
+	}
+	
 	void clearAlert()
 	{
 		setCurrent(nextScreen);

@@ -38,6 +38,9 @@ public final class Font
 	public static final int FACE_SYSTEM = 0;
 	public static final int FACE_MONOSPACE = 32;
 	public static final int FACE_PROPORTIONAL = 64;
+	
+	public static final int FONT_INPUT_TEXT = 1;
+	public static final int FONT_STATIC_TEXT = 0;
 
 	private static final Font DEFAULT_FONT = new Font(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_MEDIUM);
 	private int face;
@@ -57,8 +60,14 @@ public final class Font
 	}
 
 
+	public static Font getFont(int fontSpecifier)
+	{
+System.out.println("TODO");
+		return null;
+	}
+	
+	
 	public static Font getFont(int face, int style, int size)
-      throws IllegalArgumentException
 	{
 		return new Font(face, style, size);
 	}

@@ -58,6 +58,36 @@ public class List extends Screen implements Choice
   }
     
 
+	public void deleteAll()
+	{
+		choiceGroup.deleteAll();
+	}
+
+
+	public int getFitPolicy()
+	{
+		return choiceGroup.getFitPolicy();
+	}
+
+
+	public void setFitPolicy(int fitPolicy)
+	{
+		choiceGroup.setFitPolicy(fitPolicy);
+	}
+
+
+	public Font getFont(int elementNum)
+	{
+		return choiceGroup.getFont(elementNum);
+	}
+
+
+	public void setFont(int elementNum, Font font)
+	{
+		choiceGroup.setFont(elementNum, font);
+	}
+
+
   public Image getImage(int elementNum) 
   {
     return choiceGroup.getImage(elementNum);
@@ -94,7 +124,19 @@ public class List extends Screen implements Choice
   }
     
   
-  public void set(int elementNum, String stringPart, Image imagePart) {
+	public void removeCommand(Command cmd)
+	{
+System.out.println("TODO");
+	}
+	
+	
+	public void setSelectCommand(Command command)
+	{
+System.out.println("TODO");
+	}
+
+	
+	public void set(int elementNum, String stringPart, Image imagePart) {
     choiceGroup.set(elementNum, stringPart, imagePart);    
   }
     

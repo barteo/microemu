@@ -23,7 +23,7 @@ package javax.microedition.lcdui;
 public class StringItem extends Item
 {
 
-  StringComponent stringComponent;
+  private StringComponent stringComponent;
 
 
   public StringItem(String label, String text)
@@ -33,6 +33,33 @@ public class StringItem extends Item
   }
 
 
+	public StringItem(String label, String text, int appearanceMode)
+	{
+		this(label, text);
+System.out.println("TODO");
+	}
+	
+
+	public int getAppearanceMode()	
+	{
+System.out.println("TODO");
+		return 0;
+	}
+
+
+	public Font getFont()
+	{
+System.out.println("TODO");
+		return null;
+	}
+
+
+	public void setFont(Font font)
+	{
+System.out.println("TODO");
+	}
+		
+	
 	public String getText()
 	{
 		return stringComponent.getText();

@@ -32,9 +32,9 @@ public class ImageItem extends Item
 	public static final int LAYOUT_NEWLINE_BEFORE = 0x100;
 	public static final int LAYOUT_NEWLINE_AFTER = 0x200;
 
-	Image img;
-	int layout;
-  String altText;
+	private Image img;
+	private int layout;
+  private String altText;
 
 
 	public ImageItem(String label, Image img, int layout, String altText)
@@ -46,13 +46,27 @@ public class ImageItem extends Item
 	}
 
 
+	public ImageItem(String label, Image image, int layout, String altText, int appearanceMode)
+	{
+		this(label, image, layout, altText);
+System.out.println("TODO");
+	}
+	
+	
   public String getAltText()
   {
     return altText;
   }
 
 
-  public Image getImage()
+	public int getAppearanceMode()
+	{
+System.out.println("TODO");
+		return 0;
+	}
+	
+	
+	public Image getImage()
   {
     return img;
   }

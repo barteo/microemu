@@ -30,6 +30,13 @@ and remember to include new device jar into applet archive tag
     eg. minimum phone included in distribution has
         minimum.jar
 
+Example for SimpleDemo MIDlet and Minimum device:
+<applet code="com.barteo.emulator.applet.Main" 
+		width=170 height=445 archive="me-applet.jar,minimum.jar,simpledemo.jar">
+	<param name="midlet" value="com.barteo.midp.examples.simpledemo.SimpleDemo">
+  <param name="device" value="net.barteo.me.appletdevice.minimum.MinimumDevice">
+</applet>
+
 
 
 

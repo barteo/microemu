@@ -24,6 +24,8 @@ public class Device {
   public static Color backgroundColor;
   public static Color foregroundColor;
 
+  public static Rectangle deviceRectangle;
+
   public static Rectangle screenRectangle;
   public static Rectangle screenPaintable;
 
@@ -51,6 +53,9 @@ public class Device {
 
     for (Enumeration e = doc.enumerateChildren(); e.hasMoreElements(); ) {
       XMLElement tmp = (XMLElement) e.nextElement();
+      if (tmp.getName().equals("rectangle")) {
+        deviceRectangle = getRectangle(tmp);
+      }
       if (tmp.getName().equals("screen")) {
         for (Enumeration e_screen = tmp.enumerateChildren(); e_screen.hasMoreElements(); ) {
           XMLElement tmp_screen = (XMLElement) e_screen.nextElement();

@@ -34,7 +34,7 @@ import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
 import com.barteo.emulator.device.Device;
-import com.barteo.midp.lcdui.DisplayComponent;
+import com.barteo.emulator.applet.AWTDisplayComponent;
 import com.barteo.midp.lcdui.FontManager;
 import com.barteo.midp.lcdui.KeyboardComponent;
 import com.barteo.midp.lcdui.XYConstraints;
@@ -48,10 +48,8 @@ public class MicroEmulator extends Applet
 	MIDlet midlet = null;
 	Display disp = null;
 
-	DisplayComponent dc;
+	AWTDisplayComponent dc;
 	KeyboardComponent kc;
-
-	Image offscreen = null;
 
   Font defaultFont;
   
@@ -84,7 +82,7 @@ public class MicroEmulator extends Applet
     XYLayout xy = new XYLayout();
     setLayout(xy);
 
-    dc = new DisplayComponent(this);
+    dc = new AWTDisplayComponent(this);
     xy.addLayoutComponent(dc, new XYConstraints(Device.screenRectangle));
     add(dc);
 
@@ -102,7 +100,7 @@ public class MicroEmulator extends Applet
 
     disp = Display.getDisplay(midlet);
 
-    resize(400,500);
+    resize(Device.deviceRectangle.getSize());
     
     return true;
   }

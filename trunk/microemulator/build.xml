@@ -213,7 +213,11 @@
   </target>
 -->  
 
-  <target name="simpledemo" depends="init,compile">
+  <target name="simpledemo-applet" depends="init,compile" if="target.applet"> 
+    <copy file="./misc/simpledemo.html" todir="./target"/>
+  </target> 
+
+  <target name="simpledemo" depends="init,compile,simpledemo-applet">
     <jar compress="true" jarfile="./target/simpledemo.jar">
       <fileset dir="./build/microemulator/classes">
         <include name="com/barteo/midp/examples/simpledemo/**"/>
@@ -334,7 +338,7 @@
     <gzip src="dist/microemulator-src.tar" zipfile="dist/microemulator-src.tar.gz"/>
     <delete file="dist/microemulator-src.tar"/>
 
-    <tar basedir="../." tarfile="dist/microemulator-${target}${target.app.type}.tar" defaultexcludes="yes">
+    <tar basedir="../." tarfile="dist/microemulator-${target}-${target.app.type}.tar" defaultexcludes="yes">
       <include name="microemulator/AUTHORS"/>
       <include name="microemulator/CHANGES"/>
       <include name="microemulator/LICENSE"/>
@@ -342,8 +346,8 @@
       <include name="microemulator/TODO"/>
       <include name="microemulator/target/**"/>
     </tar>
-    <gzip src="dist/microemulator-${target}${target.app.type}.tar" zipfile="dist/microemulator-${target}${target.app.type}.tar.gz"/>
-    <delete file="dist/microemulator-${target}${target.app.type}.tar"/>
+    <gzip src="dist/microemulator-${target}-${target.app.type}.tar" zipfile="dist/microemulator-${target}-${target.app.type}.tar.gz"/>
+    <delete file="dist/microemulator-${target}-${target.app.type}.tar"/>
   </target>
 
   <target description="Clean all build products." name="clean">

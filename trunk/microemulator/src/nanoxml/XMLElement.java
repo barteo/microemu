@@ -422,8 +422,20 @@ public class XMLElement
     /**
      * Returns the #PCDATA content of the object. If there is no such content,
      * <CODE>null</CODE> is returned.
+     *
+     * @deprecated Use getContent instead.
      */
     public String getContents()
+    {
+        return this.getContent();
+    }
+
+
+    /**
+     * Returns the #PCDATA content of the object. If there is no such content,
+     * <CODE>null</CODE> is returned.
+     */
+    public String getContent()
     {
         return this.contents;
     }
@@ -917,13 +929,24 @@ public class XMLElement
     /**
      * Removes an attribute.
      */
-    public void removeChild(String key)
+    public void removeProperty(String name)
     {
         if (this.ignoreCase) {
-            key = key.toUpperCase();
+            name = name.toUpperCase();
         }
         
-        this.attributes.remove(key);
+        this.attributes.remove(name);
+    }
+
+
+    /**
+     * Removes an attribute.
+     *
+     * @deprecated Use removeProperty instead.
+     */
+    public void removeChild(String name)
+    {
+        this.removeProperty(name);
     }
 
 
@@ -1226,7 +1249,9 @@ public class XMLElement
     protected boolean checkCDATA(StringBuffer buf)
         throws IOException
     {
-        if (! this.checkLiteral("[")) {
+        char ch = this.readChar();
+        if (ch != '[') {
+            this.unreadChar(ch);
             this.skipSpecialTag(0);
             return false;
         } else if (! this.checkLiteral("CDATA[")) {
@@ -1234,10 +1259,8 @@ public class XMLElement
             return false;
         } else {
             int delimiterCharsSkipped = 0;
-            
             while (delimiterCharsSkipped < 3) {
-                char ch = this.readChar();
-                
+                ch = this.readChar();
                 switch (ch) {
                     case ']':
                         if (delimiterCharsSkipped < 2) {
@@ -1454,6 +1477,13 @@ public class XMLElement
                     if (this.checkCDATA(buf)) {
                         this.scanPCData(buf);
                         break;
+                    } else {
+                        ch = this.scanWhitespace(buf);
+                        if (ch != '<') {
+                            this.unreadChar(ch);
+                            this.scanPCData(buf);
+                            break;
+                        }
                     }
                 } else {
                     buf.setLength(0);
@@ -1471,12 +1501,26 @@ public class XMLElement
                 this.scanElement(child);
                 elt.addChild(child);
                 ch = this.scanWhitespace();
-                
                 if (ch != '<') {
                     throw this.expectedInput("<");
                 }
-                
                 ch = this.readChar();
+                while (ch == '!') {
+                    ch = this.readChar();
+                    if (ch != '-') {
+                        throw this.expectedInput("Comment or Element");
+                    }
+                    ch = this.readChar();
+                    if (ch != '-') {
+                        throw this.expectedInput("Comment or Element");
+                    }
+                    this.skipComment();
+                    ch = this.scanWhitespace();
+                    if (ch != '<') {
+                        throw this.expectedInput("<");
+                    }
+                    ch = this.readChar();
+                }
             }
             
             this.unreadChar(ch);

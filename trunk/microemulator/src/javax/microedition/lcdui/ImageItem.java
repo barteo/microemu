@@ -104,9 +104,9 @@ public class ImageItem extends Item
 		if (layout == LAYOUT_DEFAULT || layout == LAYOUT_LEFT) {
 			g.drawImage(img, 0, 0, Graphics.LEFT | Graphics.TOP);
 		} else if (layout == LAYOUT_RIGHT) {
-			g.drawImage(img, Device.screenPaintableWidth, 0, Graphics.RIGHT | Graphics.TOP);
+			g.drawImage(img, Device.screenPaintable.width, 0, Graphics.RIGHT | Graphics.TOP);
 		} else if (layout == LAYOUT_CENTER) {
-			g.drawImage(img, Device.screenPaintableWidth / 2, 0, Graphics.HCENTER | Graphics.TOP);
+			g.drawImage(img, Device.screenPaintable.width / 2, 0, Graphics.HCENTER | Graphics.TOP);
 		} else
 			g.drawImage(img, 0, 0, Graphics.LEFT | Graphics.TOP);
 		g.translate(0, -super.getHeight());

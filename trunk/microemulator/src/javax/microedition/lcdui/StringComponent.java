@@ -37,7 +37,7 @@ class StringComponent
   StringComponent(String text)
   {
     this.text = text;
-		width = Device.screenPaintableWidth;
+		width = Device.screenPaintable.width;
 		updateBreaks();
   }
 

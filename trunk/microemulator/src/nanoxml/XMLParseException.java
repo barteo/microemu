@@ -40,9 +40,7 @@ package nanoxml;
  * @see nanoxml.XMLElement
  *
  * @author Marc De Scheemaecker
- *         &lt;<A HREF="mailto:Marc.DeScheemaecker@advalvas.be"
- *         >Marc.DeScheemaecker@advalvas.be</A>&gt;
- * @version 2.0/Lite
+ * @version $Name$, $Revision$
  */
 public class XMLParseException
     extends RuntimeException

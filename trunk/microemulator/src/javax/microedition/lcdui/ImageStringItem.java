@@ -37,7 +37,7 @@ class ImageStringItem extends Item
 		stringComponent = new StringComponent(text);
 		this.img = img;
 		if (this.img != null) {
-			stringComponent.setWidth(Device.screenPaintableWidth - img.getWidth() - 2);
+			stringComponent.setWidth(Device.screenPaintable.width - img.getWidth() - 2);
 		}
   }
 
@@ -46,7 +46,7 @@ class ImageStringItem extends Item
 	{
     this.img = img;
 		if (this.img != null) {
-			stringComponent.setWidth(Device.screenPaintableWidth - img.getWidth() - 2);
+			stringComponent.setWidth(Device.screenPaintable.width - img.getWidth() - 2);
 		}
 	}
 

@@ -21,6 +21,8 @@
 
 package com.barteo.midp.lcdui;
 
+import java.awt.Rectangle;
+
 
 public class XYConstraints implements Cloneable
 {
@@ -39,6 +41,14 @@ public class XYConstraints implements Cloneable
     this.width = width;
     this.height = height;
   }
+  
+  public XYConstraints(Rectangle rect) {
+    this.x = rect.x;
+    this.y = rect.y;
+    this.width = rect.width;
+    this.height = rect.height;
+  }
+
 
   public int  getX() { return x; }
   public void setX(int x) { this.x = x; }

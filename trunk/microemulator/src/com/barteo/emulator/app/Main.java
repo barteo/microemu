@@ -293,6 +293,11 @@ public class Main extends JFrame implements MicroEmulator
     startMidlet(launcher);
   }
   
+
+  public void notifySoftkeyLabelsChanged()
+  {
+  }
+  
   
   public void setResponseInterface(boolean state)
   {

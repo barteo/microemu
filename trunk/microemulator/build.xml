@@ -184,6 +184,7 @@
   </target>
     
   <target name="jar-applet-obfuscate" depends="init,jar-applet" if="target.applet.obfuscate.true">  
+    <fail message="Property JAVA_HOME not set! Cannot proceed, please set JAVA_HOME in your system environment" unless="env.JAVA_HOME"/>
     <java fork="yes" classname="proguard.ProGuard" classpath="./lib/proguard.jar">
         <arg line="-libraryjars ${env.JAVA_HOME}/jre/lib/rt.jar"/>
         <arg line="-injars ./target/me-applet.jar"/>

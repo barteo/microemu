@@ -29,6 +29,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Enumeration;
 
 import javax.microedition.lcdui.Command;
@@ -49,12 +51,15 @@ import com.barteo.emulator.device.applet.AppletButton;
 import com.barteo.emulator.device.applet.AppletDevice;
 import com.barteo.emulator.device.applet.AppletDeviceDisplay;
 import com.barteo.emulator.device.applet.AppletInputMethod;
+import com.barteo.emulator.util.JadProperties;
 
 
 public class Main extends Applet implements MicroEmulator, DisplayComponent
 {
   Main instance;
   MIDlet midlet = null;
+  
+  private JadProperties manifest = new JadProperties();
 
   Font defaultFont;
   
@@ -229,6 +234,22 @@ System.out.println("Applet::init()");
       ex.printStackTrace();
       return;
     }
+    
+	manifest.clear();
+	try {
+		Enumeration en = 
+				emulatorContext.getClassLoader().getResources("META-INF/MANIFEST.MF");
+		while (en.hasMoreElements()) {
+			URL url = (URL) en.nextElement();
+			manifest.load(url.openStream());
+			if (manifest.getProperty("MIDlet-Name") != null) {
+				break;
+			}
+			manifest.clear();
+		}
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
 
     Image tmpImg = ((AppletDevice) DeviceFactory.getDevice()).getNormalImage();
     resize(tmpImg.getWidth(null), tmpImg.getHeight(null));
@@ -269,7 +290,7 @@ System.out.println("Applet::destroy()");
 
   public String getAppProperty(String key)
   {
-    return null;
+    return manifest.getProperty(key);
   }
 
   

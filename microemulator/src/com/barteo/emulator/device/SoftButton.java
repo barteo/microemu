@@ -22,15 +22,18 @@ package com.barteo.emulator.device;
 import javax.microedition.lcdui.Command;
 
 
+/**
+ * A SoftButton can have an associated Command.
+ */
 public interface SoftButton 
 {
-  
   Command getCommand();
   
-  boolean setCommand(Command cmd);
+  void setCommand(Command cmd);
   
-  void removeCommand();
-  
-  void setMenuActivate(boolean state);
-  
+  /**
+   * Check if the command is of a type usually associated with this SoftButton.
+   * E.g. "BACK" commands are normally placed only on a particular button.
+   */
+  boolean preferredCommandType(Command cmd);
 }

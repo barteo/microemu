@@ -23,6 +23,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -32,6 +33,7 @@ import javax.swing.UIManager;
 
 import javax.microedition.lcdui.Command;
 import com.barteo.emulator.Button;
+import com.barteo.emulator.DefaultInputMethod;
 import com.barteo.emulator.SoftButton;
 import com.barteo.emulator.XYConstraints;
 import com.barteo.emulator.XYLayout;
@@ -42,6 +44,7 @@ import com.barteo.midp.lcdui.InputMethod;
 
 public class SwingDeviceComponent extends JPanel
 {
+  SwingDeviceComponent instance;
 	SwingDisplayComponent dc;
 
   Button prevOverButton;
@@ -56,19 +59,14 @@ public class SwingDeviceComponent extends JPanel
     
     public void mousePressed(MouseEvent e) 
     {
-      pressedButton = getButton(e.getX(), e.getY());
-      repaint();
-      
       int key = getKey(e);
-      
-      if (key != 0) {
-        InputMethod.getInputMethod().keyPressed(key);
-        return;
-      }
+      KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key);
 
-      Button tmp = getButton(e.getX(), e.getY());      
-      if (tmp instanceof SoftButton) {
-        Command cmd = ((SoftButton) tmp).getCommand();
+      InputMethod.getInputMethod().keyPressed(ev.getKeyCode());
+      pressedButton = getButton(ev);
+      repaint();
+      if (pressedButton instanceof SoftButton) {
+        Command cmd = ((SoftButton) pressedButton).getCommand();
         if (cmd != null) {
           CommandManager.getInstance().commandAction(cmd);
         }
@@ -78,16 +76,13 @@ public class SwingDeviceComponent extends JPanel
 
     public void mouseReleased(MouseEvent e) 
     {
+      int key = getKey(e);
+      KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key);
+
+      InputMethod.getInputMethod().keyReleased(ev.getKeyCode());
       prevOverButton = pressedButton;
       pressedButton = null;
-      repaint();
-      
-      int key = getKey(e);
-
-      if (key != 0) {
-        InputMethod.getInputMethod().keyReleased(key);
-        return;
-      }
+      repaint();      
     }
 
 
@@ -96,7 +91,7 @@ public class SwingDeviceComponent extends JPanel
       int key = 0;
       
       Button button = getButton(e.getX(), e.getY());
-      if (button != null && !(button instanceof SoftButton)) {
+      if (button != null) {
         key = button.getKey();
       }
 
@@ -129,6 +124,8 @@ public class SwingDeviceComponent extends JPanel
   
   public SwingDeviceComponent() 
   {
+    instance = this;
+    
     XYLayout xy = new XYLayout();
     setLayout(xy);
 
@@ -139,7 +136,30 @@ public class SwingDeviceComponent extends JPanel
     addMouseMotionListener(mouseMotionListener);
   }
   
-
+  
+  public void keyPressed(KeyEvent ev)
+  {
+    ((DefaultInputMethod) InputMethod.getInputMethod()).keyboardKeyPressed(ev);
+    pressedButton = getButton(ev);
+    repaint();
+    if (pressedButton instanceof SoftButton) {
+      Command cmd = ((SoftButton) pressedButton).getCommand();
+      if (cmd != null) {
+        CommandManager.getInstance().commandAction(cmd);
+      }
+    }      
+  }
+   
+  
+  public void keyReleased(KeyEvent ev)
+  {
+    ((DefaultInputMethod) InputMethod.getInputMethod()).keyboardKeyReleased(ev);
+    prevOverButton = pressedButton;
+    pressedButton = null;
+    repaint();      
+  }
+   
+  
   public void paint(Graphics g) 
   {
     if (offg == null || 
@@ -199,5 +219,20 @@ public class SwingDeviceComponent extends JPanel
     }        
     return null;
   }  
+
+  
+  Button getButton(KeyEvent ev)
+  {
+    for (Enumeration e = Device.getDeviceButtons().elements(); e.hasMoreElements(); ) {
+      Button button = (Button) e.nextElement();
+      if (ev.getKeyCode() == button.getKey()) {
+        return button;
+      }
+      if (button.isChars(ev.getKeyChar())) {
+        return button;
+      }
+    }        
+    return null;
+  }
   
 }

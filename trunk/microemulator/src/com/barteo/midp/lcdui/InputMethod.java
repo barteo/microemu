@@ -19,6 +19,8 @@
  
 package com.barteo.midp.lcdui;
 
+import com.barteo.emulator.DefaultInputMethod;
+
 
 public abstract class InputMethod
 {
@@ -31,10 +33,10 @@ public abstract class InputMethod
 	static InputMethod inputMethod = null;
 	int inputMode = INPUT_NONE;
 
-	InputMethodListener inputMethodListener = null;
-	String text;
-	int caret;
-	int maxSize;
+	protected InputMethodListener inputMethodListener = null;
+	protected String text;
+	protected int caret;
+	protected int maxSize;
 
 
 	public static InputMethod getInputMethod()

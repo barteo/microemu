@@ -29,24 +29,37 @@ public class Button
   String name;
   Rectangle rectangle;
   int key;
+  char[] chars;
 
 
-  public Button(String name, Rectangle rectangle, String keyName)
+  public Button(String name, Rectangle rectangle, String keyName, char[] chars)
   {
     this.name = name;
     this.rectangle = rectangle;
 
-    try {
-      key = KeyEvent.class.getField(keyName).getInt(null);
-    } catch (Exception ex) {
-      System.err.println(ex);
-    }
+    this.key = getKeyCode(keyName);
+    this.chars = chars;
   }
   
   
   public int getKey()
   {
     return key;
+  }
+  
+  
+  public boolean isChars(char c)
+  {
+    c = Character.toLowerCase(c);
+    if (chars != null) {
+      for (int i = 0; i < chars.length; i++) {
+        if (c == Character.toLowerCase(chars[i])) {
+          return true;
+        } 
+      }
+    }
+    
+    return false;
   }
   
   
@@ -59,6 +72,20 @@ public class Button
   public Rectangle getRectangle()
   {
     return rectangle;
+  }
+  
+  
+  private int getKeyCode(String keyName)
+  {
+    int key = -1;
+    
+    try {
+      key = KeyEvent.class.getField(keyName).getInt(null);
+    } catch (Exception ex) {
+      System.err.println(ex);
+    }
+    
+    return key;
   }
 
 }

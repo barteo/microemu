@@ -23,6 +23,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -72,11 +74,35 @@ public class Main extends JFrame implements MicroEmulator
   JMenuItem menuOpenJADFile;
   JMenuItem menuOpenJADURL;
     
+  SwingDeviceComponent devicePanel;
+
   JLabel statusBar = new JLabel("Status");
   
   JadProperties jad = new JadProperties();
   Launcher launcher;
   
+  KeyListener keyListener = new KeyListener()
+  {
+    
+    public void keyTyped(KeyEvent e)
+    {
+    }
+
+    
+    public void keyPressed(KeyEvent e)
+    {
+System.out.println(e);      
+      devicePanel.keyPressed(e);
+    }
+
+    
+    public void keyReleased(KeyEvent e)
+    {
+      devicePanel.keyReleased(e);
+    }
+    
+  };
+   
   ActionListener menuOpenJADFileListener = new ActionListener()
   {
 
@@ -189,6 +215,7 @@ public class Main extends JFrame implements MicroEmulator
     Font defaultFont = new Font("SansSerif", Font.PLAIN, 11);
     setFont(defaultFont);
     FontManager.getInstance().setDefaultFontMetrics(getFontMetrics(defaultFont));
+    addKeyListener(keyListener);
 
     if (!Device.getInstance().isInitialized()) {
       System.out.println("Cannot initialize device configuration");
@@ -198,7 +225,7 @@ public class Main extends JFrame implements MicroEmulator
     launcher = new Launcher();
     launcher.setCurrentMIDlet(launcher);
      
-    SwingDeviceComponent devicePanel = new SwingDeviceComponent();
+    devicePanel = new SwingDeviceComponent();
     
     getContentPane().add(devicePanel, "Center");
     getContentPane().add(statusBar, "South");    

@@ -1,5 +1,6 @@
 MicroEmulator
 
+- app: SWT port
 - app: opening initial MIDlet using jad file: java -jar me-app.jar mymidlet.jad
 - added socket connection in javax.microedition.io.*
 

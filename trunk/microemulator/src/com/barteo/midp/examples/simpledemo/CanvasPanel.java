@@ -19,31 +19,36 @@
  
 package com.barteo.midp.examples.simpledemo;
 
-import javax.microedition.lcdui.*;
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.CommandListener;
+import javax.microedition.lcdui.Display;
+import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Graphics;
 
 
 public class CanvasPanel extends Canvas implements ScreenPanel, CommandListener
-{
+{ 
+  private static final String NAME = "Canvas";
+  private static final int POSNUMBER = 20;
   
-  static String NAME = "Canvas";
-  
-  Command backCommand = new Command("Back", Command.BACK, 1);
-  
-  Command neCommand = new Command("NE Move", Command.ITEM, 1);
-  Command nwCommand = new Command("NW Move", Command.ITEM, 2);
-  Command seCommand = new Command("SE Move", Command.ITEM, 3);
-  Command swCommand = new Command("SW Move", Command.ITEM, 4);
+  private static final Command backCommand = new Command("Back", Command.BACK, 1);
+  private static final Command neCommand = new Command("NE Move", Command.ITEM, 1);
+  private static final Command nwCommand = new Command("NW Move", Command.ITEM, 2);
+  private static final Command seCommand = new Command("SE Move", Command.ITEM, 3);
+  private static final Command swCommand = new Command("SW Move", Command.ITEM, 4);
 
-  int moveX = 1, moveY = 1;
-  int posX = 0, posY = 0;
-  static int POSNUMBER = 20;
+	boolean cancel = false;
+	
+  private int moveX = 1, moveY = 1;
+  private int posX = 0, posY = 0;
 
-  Runnable timerTask = new Runnable()
+  private Runnable timerTask = new Runnable()
   {
     
     public void run()
     {
-      while (true) {
+      while (!cancel) {
         if (isShown()) {
           synchronized (this) {
             if (moveX > 0) {

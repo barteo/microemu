@@ -25,15 +25,17 @@ import javax.microedition.midlet.*;
 
 public class SimpleDemo extends MIDlet implements CommandListener
 {
-  
   static SimpleDemo instance;
+  
+  CanvasPanel canvasPanel = new CanvasPanel();
+  GaugePanel gaugePanel = new GaugePanel();
 
   List menuList;
   ScreenPanel screenPanels[] = {
       new AlertPanel(),
-      new CanvasPanel(),
+      canvasPanel,
       new DateFieldPanel(),
-      new GaugePanel(),
+      gaugePanel,
       new ImageItemPanel(),
       new ListPanel(),
       new TextBoxPanel()
@@ -63,6 +65,8 @@ public class SimpleDemo extends MIDlet implements CommandListener
 
   public void destroyApp(boolean unconditional) 
   {
+  	canvasPanel.cancel = true;
+  	gaugePanel.cancel = true;
   }
 
 

@@ -10,7 +10,7 @@
 	</rectangle>
 	<screen>
 		<foreground>000000</foreground>
-		<background>abb4a0</background>
+		<background>c3cbb6</background>
 		<rectangle>
 			<x>28</x>
 			<y>33</y>

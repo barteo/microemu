@@ -20,7 +20,7 @@ or, java -jar me-app.jar (MIDlet jad file)
 
 
 2. In applet:
-Inluding html code:
+Including html code:
 <applet code="com.barteo.emulator.applet.Main" 
 		width=170 height=445 archive="me-applet.jar,(MIDlet application jar)">
 	<param name="midlet" value="(MIDlet application main class)">

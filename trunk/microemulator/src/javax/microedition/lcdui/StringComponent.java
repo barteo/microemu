@@ -38,9 +38,8 @@ class StringComponent
 	
 	StringComponent(String text) 
 	{
+		this.width = -1;
 		this.text = text;
-		width = DeviceFactory.getDevice().getDeviceDisplay().getWidth();
-		updateBreaks();
 	}
 
 	
@@ -53,12 +52,16 @@ class StringComponent
 	void setText(String text) 
 	{
 		this.text = text;
-		updateBreaks();
+		this.numOfBreaks = -1;
 	}
 
 	
 	int getCharPositionX(int num) 
 	{
+		if (numOfBreaks == -1) {
+			updateBreaks();
+		}
+		
 		int i, prevIndex = 0;
 		Font f = Font.getDefaultFont();
 
@@ -74,6 +77,10 @@ class StringComponent
 	
 	int getCharPositionY(int num) 
 	{
+		if (numOfBreaks == -1) {
+			updateBreaks();
+		}
+		
 		int y = 0;
 		Font f = Font.getDefaultFont();
 
@@ -96,6 +103,10 @@ class StringComponent
 	
 	int getHeight() 
 	{
+		if (numOfBreaks == -1) {
+			updateBreaks();
+		}
+		
 		int height;
 		Font f = Font.getDefaultFont();
 
@@ -119,7 +130,7 @@ class StringComponent
 	}
 
 	
-	void insertBreak(int pos) 
+	private void insertBreak(int pos) 
 	{
 		int i;
 
@@ -157,6 +168,10 @@ class StringComponent
 			return 0;
 		}
 
+		if (numOfBreaks == -1) {
+			updateBreaks();
+		}
+		
 		int i, prevIndex, y;
 		Font f = Font.getDefaultFont();
 
@@ -213,6 +228,9 @@ class StringComponent
 	{
 		if (text == null) {
 			return;
+		}		
+		if (width == -1) {
+			width = DeviceFactory.getDevice().getDeviceDisplay().getWidth();
 		}
 
 		int prevIndex = 0;

@@ -21,6 +21,7 @@
 
 package javax.microedition.lcdui;
 
+import com.barteo.emulator.device.Device;
 import com.barteo.midp.lcdui.InputMethod;
 import com.barteo.midp.lcdui.InputMethodEvent;
 import com.barteo.midp.lcdui.InputMethodListener;
@@ -33,7 +34,7 @@ public class TextBox extends Screen
 
 	InputMethodListener inputMethodListener = new InputMethodListener()
 	{
-	
+
 		public void caretPositionChanged(InputMethodEvent event)
 		{
 			tf.setCaretPosition(event.getCaret());
@@ -55,86 +56,86 @@ public class TextBox extends Screen
 		super(title);
 		tf = new TextField(null, text, maxSize, constraints);
 	}
-	
-	
+
+
 	public String getString()
 	{
 		return tf.getString();
 	}
-	
-							 	
+
+
 	public void setString(String text)
 	{
 		tf.setString(text);
 	}
-	
+
 
 	public int getChars(char[] data)
 	{
 		return tf.getChars(data);
 	}
-	
 
-	public void setChars(char[] data, int offset, int length)	
+
+	public void setChars(char[] data, int offset, int length)
 	{
 		tf.setChars(data, offset, length);
 	}
-	
+
 
 	public void insert(String src, int position)
 	{
 		tf.insert(src, position);
 	}
-	
 
-	public void insert(char[] data, int offset, int length, int position)	
+
+	public void insert(char[] data, int offset, int length, int position)
 	{
 		tf.insert(data, offset, length, position);
 	}
-	
-	
+
+
 	public void delete(int offset, int length)
 	{
 		tf.delete(offset, length);
 	}
-	
 
-	public int getMaxSize()									 
+
+	public int getMaxSize()
 	{
 		return tf.getMaxSize();
 	}
-	
 
-	public int setMaxSize(int maxSize)	
+
+	public int setMaxSize(int maxSize)
 	{
 		return tf.setMaxSize(maxSize);
 	}
-	
 
-	public int size()	
+
+	public int size()
 	{
 		return tf.size();
 	}
-	
 
-	public int getCaretPosition()	
+
+	public int getCaretPosition()
 	{
 		return tf.getCaretPosition();
 	}
-	
 
-	public void setConstraints(int constraints)	
+
+	public void setConstraints(int constraints)
 	{
 		tf.setConstraints(constraints);
 	}
 
-	
-	public int getConstraints()	
+
+	public int getConstraints()
 	{
 		return tf.getConstraints();
 	}
-	
-	
+
+
 	void hideNotify()
 	{
 		InputMethod.getInputMethod().removeInputMethodListener(inputMethodListener);
@@ -144,20 +145,20 @@ public class TextBox extends Screen
 
 	int paintContent(Graphics g)
 	{
-		g.drawRect(1, 1, Display.width - 3, viewPortHeight - 3);
-		g.setClip(3, 3, Display.width - 6, viewPortHeight - 6);
+		g.drawRect(1, 1, Device.screenPaintableWidth - 3, viewPortHeight - 3);
+		g.setClip(3, 3, Device.screenPaintableWidth - 6, viewPortHeight - 6);
 		g.translate(3, 3);
 		tf.paintContent(g);
-		
+
 		return tf.getHeight() + 6;
 	}
-	
 
-	void setCaretPosition(int position)	
+
+	void setCaretPosition(int position)
 	{
 		tf.setCaretPosition(position);
 	}
-	
+
 
 	int traverse(int gameKeyCode, int top, int bottom)
 	{

@@ -21,6 +21,7 @@
 
 package javax.microedition.lcdui;
 
+import com.barteo.emulator.device.Device;
 import com.barteo.midp.lcdui.DisplayBridge;
 
 
@@ -37,7 +38,7 @@ public abstract class Screen extends Displayable
 	{
 		this.title = new StringComponent(title);
 		viewPortY = 0;
-		viewPortHeight = Display.height - this.title.getHeight() - 1;
+		viewPortHeight = Device.screenPaintableHeight - this.title.getHeight() - 1;
 	}
 
 
@@ -93,6 +94,7 @@ public abstract class Screen extends Displayable
 
 	final void paint(Graphics g)
 	{
+    int contentHeight = 0;
 		int translatedY;
 
 		if (viewPortY == 0) {
@@ -102,23 +104,31 @@ public abstract class Screen extends Displayable
 		}
 
 		g.setGrayScale(255);
-		g.fillRect(0, 0, Display.width, Display.height);
+		g.fillRect(0, 0, Device.screenPaintableWidth, Device.screenPaintableHeight);
 
 		g.setGrayScale(0);
-		int contentHeight = title.paint(g);
 
-    g.drawLine(0, contentHeight, Display.width, contentHeight);
-		contentHeight += 1;
+    if (ticker != null) {
+      contentHeight += 20; // ticker height
+    }
 
     g.translate(0, contentHeight);
 		translatedY = contentHeight;
 
-		g.clipRect(0, 0, Display.width, Display.height - contentHeight);
+		contentHeight += title.paint(g);
+
+    g.drawLine(0, contentHeight, Device.screenPaintableWidth, contentHeight);
+		contentHeight += 1;
+
+    g.translate(0, contentHeight - translatedY);
+		translatedY = contentHeight;
+
+		g.clipRect(0, 0, Device.screenPaintableWidth, Device.screenPaintableHeight - contentHeight);
     g.translate(0, -viewPortY);
     contentHeight += paintContent(g);
     g.translate(0, viewPortY);
 
-		if (contentHeight - viewPortY > Display.height) {
+		if (contentHeight - viewPortY > Device.screenPaintableHeight) {
 			currentDisplay.dispBridge.setScrollDown(true);
 		} else {
 			currentDisplay.dispBridge.setScrollDown(false);

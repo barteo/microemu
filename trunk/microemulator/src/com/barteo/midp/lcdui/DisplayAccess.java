@@ -21,8 +21,10 @@
 
 package com.barteo.midp.lcdui;
 
-
-import javax.microedition.lcdui.*;
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.Display;
+import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Graphics;
 
 
 public interface DisplayAccess

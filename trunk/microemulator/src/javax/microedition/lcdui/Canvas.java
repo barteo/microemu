@@ -21,6 +21,8 @@
 
 package javax.microedition.lcdui;
 
+import com.barteo.emulator.device.Device;
+
 
 public abstract class Canvas extends Displayable
 {
@@ -94,13 +96,13 @@ public abstract class Canvas extends Displayable
 
 	public int getWidth()
 	{
-		return Display.width;
+		return Device.screenPaintableWidth;
 	}
 
 
 	public int getHeight()
 	{
-		return Display.height;
+		return  Device.screenPaintableHeight;
 	}
 
 

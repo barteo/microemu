@@ -44,22 +44,17 @@
      <copy file="me-applet.jar" todir="doc/www"/>
   </target>
 
-  <target name="jar-app" depends="init,compile">
+  <target name="jar" depends="init,compile,jar-applet">
     <jar compress="true" jarfile="me-app.jar">
       <fileset dir="./classes">
         <exclude name="com/barteo/midp/examples/**"/>
-        <exclude name="com/barteo/emulator/applet/**"/>
         <exclude name="**/.*"/>
-        <exclude name="javax/microedition/io/**"/>
       </fileset>
       <fileset dir="./res">
         <exclude name="com/barteo/midp/examples/**"/>
         <exclude name="**/.*"/>
       </fileset>
     </jar>
-  </target>
-
-  <target name="jar" depends="init,compile,jar-applet,jar-app">
     <jar compress="true" jarfile="simpledemo.jar">
       <fileset dir="./classes">
         <include name="com/barteo/midp/examples/simpledemo/**"/>

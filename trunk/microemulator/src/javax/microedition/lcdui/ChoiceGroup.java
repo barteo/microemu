@@ -136,7 +136,7 @@ public class ChoiceGroup extends Item implements Choice
 		}
 
     if(itemNum != numOfItems - 1) {
-      System.arraycopy(items, itemNum + 2, items, itemNum + 1, numOfItems - itemNum - 1);
+      System.arraycopy(items, itemNum + 1, items, itemNum, numOfItems - itemNum - 1);
     }
     numOfItems--;
   }

@@ -19,62 +19,59 @@
  
 package com.barteo.emulator.app;
 
-import java.awt.Dimension;
-import java.awt.FileDialog;
-import java.awt.Frame;
-import java.awt.Image;
-import java.awt.Label;
-import java.awt.Menu;
-import java.awt.MenuBar;
-import java.awt.MenuItem;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.microedition.midlet.MIDlet;
-import javax.microedition.midlet.MIDletStateChangeException;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 
 import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.app.ui.ResponseInterfaceListener;
 import com.barteo.emulator.app.ui.StatusBarListener;
-import com.barteo.emulator.app.ui.awt.AwtDeviceComponent;
-import com.barteo.emulator.app.ui.awt.AwtDialogWindow;
-import com.barteo.emulator.app.ui.awt.AwtSelectDevicePanel;
 import com.barteo.emulator.app.ui.awt.FileChooser;
-import com.barteo.emulator.app.ui.awt.OptionPane;
+import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
+import com.barteo.emulator.app.ui.swt.SwtDialogWindow;
+import com.barteo.emulator.app.ui.swt.SwtSelectDevicePanel;
 import com.barteo.emulator.app.util.DeviceEntry;
 import com.barteo.emulator.app.util.ExtensionFileFilter;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.device.DeviceFactory;
-import com.barteo.emulator.device.j2se.J2SEDevice;
+import com.barteo.emulator.device.swt.SwtDevice;
 
 
-public class Awt extends Frame
+public class Swt
 {
-	Awt instance = null;
+	Swt instance = null;
   
 	Common common;
   
 	boolean initialized = false;
   
-	AwtSelectDevicePanel selectDevicePanel = null;
+	SwtSelectDevicePanel selectDevicePanel = null;
 	FileChooser fileChooser = null;
 	MenuItem menuOpenJADFile;
 	MenuItem menuOpenJADURL;
 	MenuItem menuSelectDevice;
 	    
-	AwtDeviceComponent devicePanel;
+	SwtDeviceComponent devicePanel;
 	DeviceEntry deviceEntry;
 
-	Label statusBar = new Label("Status");
+	Label statusBar;
   
 	private EmulatorContext emulatorContext = new EmulatorContext()
 	{
@@ -99,23 +96,23 @@ public class Awt extends Frame
     
 		public void keyPressed(KeyEvent e)
 		{
-			devicePanel.keyPressed(e);
+//			devicePanel.keyPressed(e);
 		}
     
 		public void keyReleased(KeyEvent e)
 		{
-			devicePanel.keyReleased(e);
+//			devicePanel.keyReleased(e);
 		}    
 	};
    
-	ActionListener menuOpenJADFileListener = new ActionListener()
+	Listener menuOpenJADFileListener = new Listener()
 	{
-		public void actionPerformed(ActionEvent ev)
+		public void handleEvent(Event ev)
 		{
 			if (fileChooser == null) {
 				ExtensionFileFilter fileFilter = new ExtensionFileFilter("JAD files");
 				fileFilter.addExtension("jad");
-				fileChooser = new FileChooser(instance, "Open JAD File...", FileDialog.LOAD);
+//				fileChooser = new FileChooser(instance, "Open JAD File...", FileDialog.LOAD);
 				fileChooser.setFilenameFilter(fileFilter);
 			}
       
@@ -131,11 +128,11 @@ public class Awt extends Frame
 		} 
 	};
   
-	ActionListener menuOpenJADURLListener = new ActionListener()
+	Listener menuOpenJADURLListener = new Listener()
 	{
-		public void actionPerformed(ActionEvent ev)
+		public void handleEvent(Event ev)
 		{
-			String entered = OptionPane.showInputDialog(instance, "Enter JAD URL:");
+/*			String entered = OptionPane.showInputDialog(instance, "Enter JAD URL:");
 			if (entered != null) {
 				try {
 					URL url = new URL(entered);
@@ -143,24 +140,24 @@ public class Awt extends Frame
 				} catch (MalformedURLException ex) {
 					System.err.println("Bad URL format " + entered);
 				}
-			}
+			}*/
 		}    
 	};
   
-	ActionListener menuExitListener = new ActionListener()
+	Listener menuExitListener = new Listener()
 	{    
-		public void actionPerformed(ActionEvent e)
+		public void handleEvent(Event e)
 		{
 			System.exit(0);
 		}    
 	};
   
   
-	ActionListener menuSelectDeviceListener = new ActionListener()
+	Listener menuSelectDeviceListener = new Listener()
 	{    
-		public void actionPerformed(ActionEvent e)
+		public void handleEvent(Event e)
 		{
-			if (AwtDialogWindow.show("Select device...", selectDevicePanel)) {
+			if (SwtDialogWindow.show("Select device...", selectDevicePanel)) {
 				if (selectDevicePanel.getSelectedDeviceEntry().equals(getDevice())) {
 					return;
 				}
@@ -205,7 +202,7 @@ public class Awt extends Frame
 		}  
 	};
   
-	WindowAdapter windowListener = new WindowAdapter()
+/*	WindowAdapter windowListener = new WindowAdapter()
 	{
 		public void windowClosing(WindowEvent ev) 
 		{
@@ -226,59 +223,64 @@ public class Awt extends Frame
 				System.err.println(ex);
 			}
 		}
-	};  
+	};*/  
  
   
-	Awt()
+	Swt(Shell shell)
 	{
 		instance = this;
     
-		MenuBar menuBar = new MenuBar();
+		Menu bar = new Menu(shell, SWT.BAR);
+		shell.setMenuBar(bar);
     
-		Menu menuFile = new Menu("File");
+		MenuItem menuFile = new MenuItem(bar, SWT.CASCADE);
+		menuFile.setText("File");
     
-		menuOpenJADFile = new MenuItem("Open JAD File...");
-		menuOpenJADFile.addActionListener(menuOpenJADFileListener);
-		menuFile.add(menuOpenJADFile);
+		Menu fileSubmenu = new Menu(shell, SWT.DROP_DOWN);
+		menuFile.setMenu(fileSubmenu);
 
-		menuOpenJADURL = new MenuItem("Open JAD URL...");
-		menuOpenJADURL.addActionListener(menuOpenJADURLListener);
-		menuFile.add(menuOpenJADURL);
-    
-		menuFile.addSeparator();
-    
-		MenuItem menuItem = new MenuItem("Exit");
-		menuItem.addActionListener(menuExitListener);
-		menuFile.add(menuItem);
-    
-		Menu menuOptions = new Menu("Options");
-    
-		menuSelectDevice = new MenuItem("Select device...");
-		menuSelectDevice.addActionListener(menuSelectDeviceListener);
-		menuOptions.add(menuSelectDevice);
+		menuOpenJADFile = new MenuItem(fileSubmenu, SWT.PUSH);
+		menuOpenJADFile.setText("Open JAD File...");
+		menuOpenJADFile.addListener(SWT.Selection, menuOpenJADFileListener);
 
-		menuBar.add(menuFile);
-		menuBar.add(menuOptions);
-		setMenuBar(menuBar);
-    
-		setTitle("MicroEmulator");
-		addWindowListener(windowListener);
-		
-    
-		Config.loadConfig("config.xml");
-		addKeyListener(keyListener);
+		menuOpenJADURL = new MenuItem(fileSubmenu, 0);
+		menuOpenJADURL.setText("Open JAD URL...");
+		menuOpenJADURL.addListener(SWT.Selection, menuOpenJADURLListener);
 
-		devicePanel = new AwtDeviceComponent();
-		selectDevicePanel = new AwtSelectDevicePanel();
+		new MenuItem(fileSubmenu, SWT.SEPARATOR);
+    
+		MenuItem menuExit = new MenuItem(fileSubmenu, SWT.PUSH);
+		menuExit.setText("Exit");
+		menuExit.addListener(SWT.Selection, menuExitListener);
+    
+		MenuItem menuOptions = new MenuItem(bar, SWT.CASCADE);
+		menuOptions.setText("Options");
+    
+		Menu optionsSubmenu = new Menu(shell, SWT.DROP_DOWN);
+		menuOptions.setMenu(optionsSubmenu);
+
+		menuSelectDevice = new MenuItem(optionsSubmenu, SWT.PUSH);
+		menuSelectDevice.setText("Select device...");
+		menuSelectDevice.addListener(SWT.Selection, menuSelectDeviceListener);
+
+		shell.setText("MicroEmulator");
+//		addWindowListener(windowListener);
+		    
+		Config.loadConfig("config-swt.xml");
+		shell.addKeyListener(keyListener);
+
+		devicePanel = new SwtDeviceComponent(shell);
+
+		statusBar = new Label(shell, SWT.HORIZONTAL);
+		statusBar.setText("Status");
+
+		selectDevicePanel = new SwtSelectDevicePanel();
 		setDevice(selectDevicePanel.getSelectedDeviceEntry());
     
 		common = new Common(emulatorContext);
 		common.setStatusBarListener(statusBarListener);
 		common.setResponseInterfaceListener(responseInterfaceListener);
-
-		add(devicePanel, "Center");
-		add(statusBar, "South");    
-
+    
 		initialized = true;
 	}
       
@@ -301,17 +303,16 @@ public class Awt extends Frame
 			} else {
 				deviceClass = Class.forName(entry.getClassName());
 			}
-			J2SEDevice device = (J2SEDevice) deviceClass.newInstance();
+			SwtDevice device = (SwtDevice) deviceClass.newInstance();
 			DeviceFactory.setDevice(device);
 			device.init(emulatorContext);
-			devicePanel.init();
 			this.deviceEntry = entry;
 			Image tmpImg = device.getNormalImage();
-			Dimension size = new Dimension(tmpImg.getWidth(null), tmpImg.getHeight(null));
-			size.width += 10;
-			size.height += statusBar.getPreferredSize().height + 55;
-			setSize(size);
-			doLayout();
+			Point size = new Point(tmpImg.getBounds().width, tmpImg.getBounds().height);
+			size.x += 10;
+			size.y += statusBar.computeSize(SWT.DEFAULT, SWT.DEFAULT).y + 55;
+//			setSize(size);
+//			doLayout();
 		} catch (MalformedURLException ex) {
 			System.err.println(ex);          
 		} catch (ClassNotFoundException ex) {
@@ -325,8 +326,12 @@ public class Awt extends Frame
   
   
 	public static void main(String args[])
-	{    
-		Awt app = new Awt();
+	{
+		Display display = new Display();
+		Shell shell = new Shell(display);
+		shell.setLayout(new RowLayout(SWT.VERTICAL));
+		    
+		Swt app = new Swt(shell);
 		MIDlet m = null;
 
 		if (args.length > 0) {
@@ -345,8 +350,14 @@ public class Awt extends Frame
 			if (m != null) {
 				app.common.startMidlet(m);
 			}
-			app.validate();
-			app.setVisible(true);
+			
+			shell.pack ();
+			shell.open ();
+			while (!shell.isDisposed ()) {
+				if (!display.readAndDispatch ())
+					display.sleep ();
+			}
+			display.dispose ();			
 		} else {
 			System.exit(0);
 		}

@@ -17,7 +17,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
  
-package com.barteo.emulator.app.ui.awt;
+package com.barteo.emulator.app.util;
 
 import java.io.File;
 import java.io.FilenameFilter;

@@ -88,8 +88,8 @@ public class Display
 				g.translate(-g.getTranslateX(), -g.getTranslateY());
 			}
 		}
-
-
+    
+    
     public Displayable getCurrent()
 		{
       return getDisplay().getCurrent();

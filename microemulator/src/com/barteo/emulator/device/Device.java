@@ -23,7 +23,8 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-import java.io.DataInputStream;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -73,7 +74,7 @@ public class Device {
   {
     String xml = "";
     // Here should be device.xml but Netscape security manager doesn't accept this extension
-    DataInputStream dis = new DataInputStream(
+    InputStream dis = new BufferedInputStream(
         getClass().getResourceAsStream("/com/barteo/emulator/device/device.txt"));
     try {
       while (dis.available() > 0) {

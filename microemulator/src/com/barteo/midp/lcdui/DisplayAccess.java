@@ -28,20 +28,20 @@ import javax.microedition.lcdui.Graphics;
 public interface DisplayAccess
 {
 
-	public void commandAction(Command cmd);
+	void commandAction(Command cmd);
 
-	public Display getDisplay();
+	Display getDisplay();
 
-	public void keyPressed(int keyCode);
+	void keyPressed(int keyCode);
 
-	public void keyReleased(int keyCode);
+	void keyReleased(int keyCode);
 
-	public void paint(Graphics g);
-
-  public Displayable getCurrent();
-
-  public void setCurrent(Displayable d);
+	void paint(Graphics g);
   
-  public void updateCommands();
+  Displayable getCurrent();
+
+  void setCurrent(Displayable d);
+  
+  void updateCommands();
 
 }

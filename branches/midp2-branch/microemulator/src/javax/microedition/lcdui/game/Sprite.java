@@ -40,6 +40,7 @@ public class Sprite extends Layer
 	private int numGridY;
 	private int[] frameSequence;
 	private int currentFrameIndex;
+	private int currentTransform;
 	
 	
 	public Sprite(Image image)
@@ -64,6 +65,7 @@ public class Sprite extends Layer
 		numGridX = image.getWidth() / frameWidth;
 		numGridY = image.getHeight() / frameHeight;
 		setFrameSequence(null);
+		setTransform(TRANS_NONE);
 		
 //		throw new RuntimeException("TODO");
 	}
@@ -89,7 +91,12 @@ public class Sprite extends Layer
 					
 	public final boolean collidesWith(TiledLayer t, boolean pixelLevel)
 	{
-		throw new RuntimeException("TODO");
+		if (pixelLevel) {
+			return false;
+//			throw new RuntimeException("TODO");
+		} else {
+			throw new RuntimeException("TODO");
+		}
 	}
 	
 
@@ -107,7 +114,7 @@ public class Sprite extends Layer
 
 	public final int getFrame()
 	{
-		throw new RuntimeException("TODO");
+		return currentFrameIndex;
 	}
 
 
@@ -148,7 +155,7 @@ public class Sprite extends Layer
 			int frameGridY = frameSequence[currentFrameIndex] / numGridX;
 			g.drawRegion(image, 
 					frameGridX * getWidth(), frameGridY * getHeight(), getWidth(), getHeight(), 
-					Sprite.TRANS_NONE, getX(), getY(), Graphics.LEFT | Graphics.TOP);
+					currentTransform, getX(), getY(), Graphics.LEFT | Graphics.TOP);
 		}
 //		throw new RuntimeException("TODO");
 	}
@@ -162,7 +169,11 @@ public class Sprite extends Layer
 
 	public void setFrame(int sequenceIndex)
 	{
-		throw new RuntimeException("TODO");
+		if (sequenceIndex < 0 || sequenceIndex >= frameSequence.length) {
+			throw new ArrayIndexOutOfBoundsException();
+		}
+		
+		currentFrameIndex = sequenceIndex;
 	}
 
 
@@ -205,6 +216,24 @@ public class Sprite extends Layer
 
 	public void setTransform(int transform)
 	{
+		if (transform < TRANS_NONE || transform > TRANS_MIRROR_ROT90) {
+			throw new IllegalArgumentException();
+		}
+		
+		if (currentTransform == TRANS_ROT90 || currentTransform == TRANS_ROT270 || 
+				currentTransform == TRANS_MIRROR_ROT90 || currentTransform == TRANS_MIRROR_ROT270) {
+			int tmp = width;
+			width = height;
+			height = tmp;
+		}
+		currentTransform = transform;
+		if (transform == TRANS_ROT90 || transform == TRANS_ROT270 || 
+				transform == TRANS_MIRROR_ROT90 || transform == TRANS_MIRROR_ROT270) {
+			int tmp = width;
+			width = height;
+			height = tmp;
+		}
+		
 //		throw new RuntimeException("TODO");
 	}
 	

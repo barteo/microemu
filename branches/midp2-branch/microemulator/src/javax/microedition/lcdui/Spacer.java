@@ -54,7 +54,7 @@ public class Spacer extends Item
 	}
 	
 	
-	int paint(Graphics g) 
+	void paint(Graphics g, int w, int h) 
 	{
 		throw new RuntimeException("TODO");
 	}

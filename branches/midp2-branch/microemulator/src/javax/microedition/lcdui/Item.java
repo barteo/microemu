@@ -131,7 +131,8 @@ public abstract class Item
 
 	public void setLayout(int layout)
 	{
-		throw new RuntimeException("TODO");
+
+//		throw new RuntimeException("TODO");
 	}
 
 
@@ -158,7 +159,7 @@ public abstract class Item
   }
   
     
-  abstract int paint(Graphics g);
+  abstract void paint(Graphics g, int w, int h);
 	
 	
 	void paintContent(Graphics g)

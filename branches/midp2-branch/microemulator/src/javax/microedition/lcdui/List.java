@@ -172,7 +172,7 @@ public class List extends Screen implements Choice
 
   void paint(Graphics g)
   {
-    choiceGroup.paint(g);
+    choiceGroup.paint(g, 0, 0);
   }
   
   

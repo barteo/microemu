@@ -162,7 +162,8 @@ public class Form extends Screen
 		int contentHeight = 0;
 		int translateY;
 		for (int i = 0; i < numOfItems; i++) {
-			translateY = items[i].paint(g);
+			items[i].paint(g, 0, 0);
+			translateY = items[i].getHeight();
 			g.translate(0, translateY);
 			contentHeight += translateY;
 		}

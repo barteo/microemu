@@ -159,7 +159,7 @@ public class Alert extends Screen
 
 	void paint(Graphics g)
 	{
-		alertContent.paint(g);
+		alertContent.paint(g, 0, 0);
 	}
 
 

@@ -401,7 +401,7 @@ public class ChoiceGroup extends Item implements Choice
 	}
 
 
-  int paint(Graphics g)
+  void paint(Graphics g, int w, int h)
   {
 		super.paintContent(g);
 
@@ -410,14 +410,12 @@ public class ChoiceGroup extends Item implements Choice
     StringItem tmp;
 		for (int i = 0; i < numOfItems; i++) {
       items[i].invertPaint(i == highlightedItemIndex && focus);
-			items[i].paint(g);
+			items[i].paint(g, 0, 0);
       g.translate(0, items[i].getHeight());
 			translatedY += items[i].getHeight();
 		}
 		g.translate(0, -translatedY);
 		g.translate(0, -super.getHeight());
-
-		return getHeight();
   }
 
 

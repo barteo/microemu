@@ -124,7 +124,7 @@ public class Gauge extends Item
   }
 
   
-  int paint(Graphics g)
+  void paint(Graphics g, int w, int h)
   {    
     super.paintContent(g);
     
@@ -138,8 +138,6 @@ public class Gauge extends Item
     int width = (DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 8) * value / maxValue;
     g.fillRect(4, 4, width, HEIGHT - 8);
 		g.translate(0, -super.getHeight());
-    
-    return getHeight();
   }
 
 

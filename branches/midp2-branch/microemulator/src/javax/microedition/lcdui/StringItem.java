@@ -83,15 +83,13 @@ public class StringItem extends Item
 	}
 
 
-  int paint(Graphics g)
+  void paint(Graphics g, int w, int h)
   {
 		super.paintContent(g);
 
 		g.translate(0, super.getHeight());
 		stringComponent.paint(g);
 		g.translate(0, -super.getHeight());
-
-		return getHeight();
   }
 
 

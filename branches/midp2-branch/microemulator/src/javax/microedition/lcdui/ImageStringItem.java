@@ -81,10 +81,10 @@ class ImageStringItem extends Item
   }
 
 
-  int paint(Graphics g)
+  void paint(Graphics g, int w, int h)
   {
 		if (stringComponent == null) {
-			return 0;
+			return;
 		}
 
 		if (img != null) {
@@ -97,8 +97,6 @@ class ImageStringItem extends Item
 		if (img != null) {
 			g.translate(-img.getWidth() - 2, 0);
 		}
-
-		return y;
   }
 
 }

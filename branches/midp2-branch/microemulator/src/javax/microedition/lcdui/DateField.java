@@ -184,16 +184,13 @@ public class DateField extends Item
 	}
 
 
-  int paint(Graphics g)
+  void paint(Graphics g, int w, int h)
   {
     super.paintContent(g);
     
     g.translate(0, super.getHeight());
-		dateTime.paint(g);
+		dateTime.paint(g, 0, 0);
 		g.translate(0, -super.getHeight());
-
-    
-    return getHeight();
   }
 
   

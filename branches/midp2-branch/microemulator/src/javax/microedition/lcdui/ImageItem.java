@@ -107,7 +107,7 @@ public class ImageItem extends Item
 	}
 
 
-  int paint(Graphics g)
+  void paint(Graphics g, int w, int h)
   {
 		super.paintContent(g);
 
@@ -120,11 +120,10 @@ public class ImageItem extends Item
 		} else if (layout == LAYOUT_CENTER) {
 			g.drawImage(img, DeviceFactory.getDevice().getDeviceDisplay().getWidth() / 2, 0, 
           Graphics.HCENTER | Graphics.TOP);
-		} else
+		} else {
 			g.drawImage(img, 0, 0, Graphics.LEFT | Graphics.TOP);
+		}
 		g.translate(0, -super.getHeight());
-
-		return getHeight();
 	}
 
 

@@ -38,7 +38,8 @@ public abstract class CustomItem extends Item
 	protected CustomItem(String label)
 	{
 		super(label);
-		throw new RuntimeException("TODO");
+
+//		throw new RuntimeException("TODO");
 	}
 	
 
@@ -145,12 +146,6 @@ public abstract class CustomItem extends Item
 	
 	
 	protected void traverseOut()
-	{
-		throw new RuntimeException("TODO");
-	}
-		
-
-	int paint(Graphics g) 
 	{
 		throw new RuntimeException("TODO");
 	}

@@ -265,7 +265,7 @@ public class TextField extends Item
 	}
 
 
-	int paint(Graphics g)
+	void paint(Graphics g, int w, int h)
 	{
 		super.paintContent(g);
 
@@ -278,8 +278,6 @@ public class TextField extends Item
 		paintContent(g);
 		g.translate(-3, -3);
 		g.translate(0, -super.getHeight());
-
-		return getHeight();
 	}
 
 

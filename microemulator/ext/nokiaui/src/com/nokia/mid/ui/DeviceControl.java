@@ -23,11 +23,7 @@ package com.nokia.mid.ui;
 
 public class DeviceControl 
 {
-    
-    public DeviceControl() 
-    {
-    }
-    
+   
     static void setLightOn(int val) 
     {
     }
@@ -36,11 +32,7 @@ public class DeviceControl
     {
         return 0;
     }
-    
-    private static void INTstartVibra() 
-    {
-    }
-    
+        
     public static void startVibra(int frequency, long duration) 
     {
     }
@@ -48,21 +40,12 @@ public class DeviceControl
     public static void stopVibra() 
     {
     }
-    
-    static void INTsetLights(int i) 
-    {
-    }
-    
+        
     public static void setLights(int num, int level) 
     {
     }
-    
-    private static void INTflashLights() 
-    {
-    }
-    
+        
     public static void flashLights(long duration) 
     {
     }
-    
 }

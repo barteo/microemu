@@ -36,6 +36,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 
 import com.barteo.emulator.EmulatorContext;
+import com.barteo.emulator.app.ui.swt.ImageFilter;
 import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceDisplay;
@@ -490,16 +491,7 @@ public class SwtDevice implements Device
   private Image getImage(InputStream is)
   		throws IOException
   {
-		// TODO poprawic getImage	
-/*		ImageFilter filter = null;
-    PngImage png = new PngImage(is);
-    
-    try {
-			png.getWidth();
-		} catch (IOException ex) {
-			throw new IOException("Error decoding PNG image");    	
-		}
-        
+		ImageFilter filter = null;
     if (getDeviceDisplay().isColor()) {
 			filter = new RGBImageFilter();
     } else {
@@ -509,9 +501,8 @@ public class SwtDevice implements Device
         filter = new GrayImageFilter();
       }
     }
-    FilteredImageSource imageSource = new FilteredImageSource(png, filter);*/
 
-		return SwtDeviceComponent.createImage(is);
+		return SwtDeviceComponent.createImage(is, filter);
   }
   
 }

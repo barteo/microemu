@@ -48,7 +48,10 @@ public class SwtDisplayGraphics extends javax.microedition.lcdui.Graphics implem
 	{
 		g = a_g;
 		image = a_image;
-		g.setBackground(((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor());
+		g.setBackground(g.getColor(new RGB(
+				((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getRed(), 
+				((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getGreen(), 
+				((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getBlue())));
 		g.setFont(((SwtFontManager) DeviceFactory.getDevice().getFontManager()).getFont(currentFont));
 	}
 

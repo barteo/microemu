@@ -23,6 +23,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 
 import com.barteo.emulator.app.ui.swt.ImageFilter;
+import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
 import com.barteo.emulator.device.DeviceFactory;
 
 
@@ -36,10 +37,14 @@ public final class RGBImageFilter implements ImageFilter
 
   public RGBImageFilter()
 	{
-    backgroundColor = 
-        ((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor();    
-    foregroundColor = 
-        ((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor();    
+    backgroundColor = SwtDeviceComponent.createColor(new RGB(
+    		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getRed(),
+    		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getGreen(),
+    		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getBlue()));
+    foregroundColor = SwtDeviceComponent.createColor(new RGB(
+    		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor().getRed(),
+    		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor().getGreen(),
+    		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor().getBlue()));
     Rr = foregroundColor.getRed() - backgroundColor.getRed();
     Rg = foregroundColor.getGreen() - backgroundColor.getGreen();
     Rb = foregroundColor.getBlue() - backgroundColor.getBlue();

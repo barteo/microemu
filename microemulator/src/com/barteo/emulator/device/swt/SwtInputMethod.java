@@ -96,8 +96,6 @@ public class SwtInputMethod extends InputMethod implements Runnable
 			return true;
 		}
 
-System.out.println("IM::commonKeyPressed:" + keyCode);
-
 		if (keyCode == SWT.BS) {
 			synchronized (this) {
 				if (lastButton != null) {
@@ -123,6 +121,12 @@ System.out.println("IM::commonKeyPressed:" + keyCode);
 			inputMethodListener.caretPositionChanged(event);
 			return true;
 		}
+		
+		if (keyCode == SWT.SHIFT || keyCode == SWT.CTRL || keyCode == SWT.ALT) {
+			return true;
+		}
+
+System.out.println("IM::commonKeyPressed:" + keyCode);
 
 		return false;
 	}

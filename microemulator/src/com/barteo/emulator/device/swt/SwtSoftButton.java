@@ -24,6 +24,7 @@ import java.util.Vector;
 
 import javax.microedition.lcdui.Command;
 
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 
 import com.barteo.emulator.app.ui.swt.SwtGraphics;
@@ -94,16 +95,22 @@ public class SwtSoftButton extends SwtButton implements SoftButton
 
         SwtDeviceDisplay deviceDisplay =
             (SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
-        g.setBackground(deviceDisplay.getBackgroundColor());
+		g.setBackground(g.getColor(new RGB(
+				deviceDisplay.getBackgroundColor().getRed(), 
+				deviceDisplay.getBackgroundColor().getGreen(), 
+				deviceDisplay.getBackgroundColor().getBlue())));
         g.fillRectangle(paintable.x, paintable.y, paintable.width, paintable.height);
         if (command != null) {
             if (alignment == RIGHT) {
                 xoffset = paintable.width - g.stringWidth(command.getLabel());
             }
-            g.setForeground(deviceDisplay.getForegroundColor());
+    		g.setForeground(g.getColor(new RGB(
+    				deviceDisplay.getForegroundColor().getRed(), 
+					deviceDisplay.getForegroundColor().getGreen(), 
+					deviceDisplay.getForegroundColor().getBlue())));
             g.drawString(command.getLabel(), 
             		paintable.x + xoffset, paintable.y + (paintable.height - g.getFontMetrics().getHeight()), true);
-			  }
+        }
     }
 
 

@@ -19,13 +19,14 @@
 
 package com.barteo.emulator.device.swt;
 
+import java.awt.Color;
 import java.util.Enumeration;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Displayable;
 
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 
 import com.barteo.emulator.MIDletAccess;
@@ -111,8 +112,11 @@ public class SwtDeviceDisplay implements DeviceDisplay
 	public void paint(SwtGraphics g) 
 	{
 		Device device = DeviceFactory.getDevice();
-
-		g.setBackground(backgroundColor);
+		
+		g.setBackground(g.getColor(new RGB(
+				backgroundColor.getRed(), 
+				backgroundColor.getGreen(), 
+				backgroundColor.getBlue())));
 		g.fillRectangle(0, 0, displayRectangle.width, displayPaintable.y);
 		g.fillRectangle(0, displayPaintable.y,
 				displayPaintable.x, displayPaintable.height);
@@ -121,7 +125,10 @@ public class SwtDeviceDisplay implements DeviceDisplay
 		g.fillRectangle(0, displayPaintable.y + displayPaintable.height,
 				displayRectangle.width, displayRectangle.height - displayPaintable.y - displayPaintable.height);
 
-		g.setForeground(foregroundColor);
+		g.setForeground(g.getColor(new RGB(
+				foregroundColor.getRed(), 
+				foregroundColor.getGreen(), 
+				foregroundColor.getBlue())));
 		for (Enumeration s = device.getSoftButtons().elements(); s.hasMoreElements();) {
 			((SwtSoftButton) s.nextElement()).paint(g);
 		}

@@ -1,12 +1,10 @@
 * alert is hasn't return button
 
+-- Release 0.3 --
+
 * move device display painting from Applet/SwingDisplayComponent to Applet/J2SEDeviceDisplay
 
-* create new another device (J2SE) (minimal phone) included into distro
-
 * (?) try to run application in WebStart environment
-
--- Release 0.3 --
 
 * extended web site with overview, api docs, faq section, instalation instructions, etc.
 

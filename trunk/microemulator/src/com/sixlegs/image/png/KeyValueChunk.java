@@ -47,7 +47,7 @@ extends Chunk
     {
         int L = bytesRemaining();
         byte[] buf = new byte[L];
-        in_data.readBytes(buf);
+        in_data.readFully(buf);
 
         if (isCompressed()) {
             byte method = buf[0];

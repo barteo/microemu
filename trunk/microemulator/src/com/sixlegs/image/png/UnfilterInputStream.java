@@ -128,8 +128,7 @@ extends InputStream
     public int read()
     throws IOException
     {
-        read(_b, 0, 1);
-        return _b[0] & 0xff;
+        return read(_b, 0, 1) > 0 ? _b[0] & 0xff : -1;
     }
 
     public int read(byte[] b, int off, int len)
@@ -154,6 +153,6 @@ extends InputStream
     public void close()
     throws IOException
     {
-        super.close();
+        infstr.close();
     }
 }

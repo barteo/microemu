@@ -75,23 +75,23 @@ extends DataInputStream
         return parseFloatingPoint(readString());
     }
 
-    public int readBytes(byte[] b)
-    throws IOException
-    {
-        return readBytes(b, 0, b.length);
-    }
+//     public int readBytes(byte[] b)
+//     throws IOException
+//     {
+//         return readBytes(b, 0, b.length);
+//     }
 
-    public int readBytes(byte[] b, int off, int len)
-    throws IOException
-    {
-        int total = 0;
-        while (total < len) {
-            int result = in.read(b, off + total, len - total);
-            if (result == -1) {
-                throw new EOFException();
-            }
-            total += result;
-        }
-        return total;
-    }
+//     public int readBytes(byte[] b, int off, int len)
+//     throws IOException
+//     {
+//         int total = 0;
+//         while (total < len) {
+//             int result = in.read(b, off + total, len - total);
+//             if (result == -1) {
+//                 throw new EOFException();
+//             }
+//             total += result;
+//         }
+//         return total;
+//     }
 }

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 final class PixelInputStream
-extends InputStream
 {
     final private BitMover mover;
     final private InputStream str;
@@ -24,16 +23,7 @@ extends InputStream
         mover = BitMover.getBitMover(img);
     }
 
-    private int[] _i = new int[1];
-
-    public int read ()
-    throws IOException
-    {
-        read(_i, 0, 1);
-        return _i[0];
-    }
-
-    public int read(int b[], int off, int len)
+    int read(int b[], int off, int len)
     throws IOException
     {
         int needed = len;
@@ -54,12 +44,5 @@ extends InputStream
             }
         }
         return total;
-    }
-
-    public void close()
-    throws IOException
-    {
-        super.close();
-        str.close();
     }
 }

@@ -24,10 +24,10 @@ implements GifExtension
         in_data.skip(8 - identifier.length());
 
         auth_code = new byte[3];
-        in_data.readBytes(auth_code);
+        in_data.readFully(auth_code);
         
         data = new byte[bytesRemaining()];
-        in_data.readBytes(data);
+        in_data.readFully(data);
 
         img.data.gifExtensions.addElement(this);
     }

@@ -38,32 +38,32 @@ public class Resource
 {
 
 	private static Resource resource = new Resource();
-	
-	
+
+
 	public static Resource getInstance()
 	{
 		return resource;
 	}
 
 
-	public Image getImage(String str) 
+	public Image getImage(String str)
 			throws IOException
 	{
 		ImageFilter bwFilter;
-	
+
 		PngImage png = new PngImage(getClass().getResourceAsStream(str));
-   	double[][] chrom = (double[][])png.getProperty("chromaticity xyz");
-		if (chrom == null) {
+//   	double[][] chrom = (double[][])png.getProperty("chromaticity xyz");
+//		if (chrom == null) {
 			bwFilter = new BWImageFilter();
-		} else {
-			bwFilter = new BWImageFilter(chrom[1][1], chrom[2][1], chrom[3][1]);
-		}
+//		} else {
+//			bwFilter = new BWImageFilter(chrom[1][1], chrom[2][1], chrom[3][1]);
+//		}
 		FilteredImageSource bwImageSource = new FilteredImageSource(png, bwFilter);
 
 		return Toolkit.getDefaultToolkit().createImage(bwImageSource);
 	}
-	
-	
+
+
 	public Image getImage(byte[] imageData, int imageOffset, int imageLength)
 			throws IOException
 	{
@@ -81,5 +81,5 @@ public class Resource
 
 		return Toolkit.getDefaultToolkit().createImage(bwImageSource);
 	}
-	
+
 }

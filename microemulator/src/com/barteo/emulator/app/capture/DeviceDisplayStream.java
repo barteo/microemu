@@ -131,7 +131,7 @@ public class DeviceDisplayStream implements PushBufferStream, DisplayRepaintList
 			BufferedImage bi =
 				new BufferedImage(deviceDisplay.getWidth(), deviceDisplay.getHeight(), BufferedImage.TYPE_INT_RGB);
 			Graphics g = bi.getGraphics();
-			deviceDisplay.paint(g);
+//			deviceDisplay.paint(g);
 			g.drawString("Frame no " + seqNo, 5, 25);
 
 			int data[] = null;

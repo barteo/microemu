@@ -75,7 +75,7 @@ implements ImageProducer
         /* package */ final Hashtable palettes = new Hashtable(1);
         /* package */ final Vector gifExtensions = new Vector();
 
-        private Data() {}
+        public Data() {}
     }
 
     /////////////////// start public ////////////////////////

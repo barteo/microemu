@@ -1,10 +1,11 @@
-/* This file is part of NanoXML.
+/* XMLParseException.java                                          NanoXML/Lite
  *
  * $Revision$
  * $Date$
  * $Name$
  *
- * Copyright (C) 2000 Marc De Scheemaecker, All Rights Reserved.
+ * This file is part of NanoXML 2 Lite.
+ * Copyright (C) 2001 Marc De Scheemaecker, All Rights Reserved.
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the
@@ -41,7 +42,7 @@ package nanoxml;
  * @author Marc De Scheemaecker
  *         &lt;<A HREF="mailto:Marc.DeScheemaecker@advalvas.be"
  *         >Marc.DeScheemaecker@advalvas.be</A>&gt;
- * @version 1.6
+ * @version 2.0/Lite
  */
 public class XMLParseException
     extends RuntimeException

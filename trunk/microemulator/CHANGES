@@ -16,3 +16,4 @@ MicroEmulator
 - included NanoXML (done)
 - moved device preference into XML file (device.xml) (not complete)
 - fully implemented javax.microedition.lcdui.* and javax.microedition.rms.* (not complete)
+- written simple MIDP/CLDC demo showing functionality of emulator (not complete)

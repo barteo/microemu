@@ -25,8 +25,8 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -173,14 +173,15 @@ public class SelectDevicePanel extends DialogPanel
         
         try {
           File deviceFile = File.createTempFile("dev", ".dev", Config.getConfigPath());
-          BufferedReader fr = new BufferedReader(new FileReader(fileChooser.getSelectedFile()));
-          BufferedWriter fw = new BufferedWriter(new FileWriter(deviceFile));
-          int c;
-          while ((c = fr.read()) != -1) {
-            fw.write(c);
-          }
-          fr.close();
-          fw.close();        
+          FileInputStream fis  = new FileInputStream(fileChooser.getSelectedFile());
+          FileOutputStream fos = new FileOutputStream(deviceFile);
+          byte[] buf = new byte[1024];
+            int i = 0;
+            while((i=fis.read(buf))!=-1) {
+              fos.write(buf, 0, i);
+            }
+          fis.close();
+          fos.close();
         
           DeviceEntry entry = 
               new DeviceEntry(deviceName, deviceFile.getName(), deviceClassName, false);

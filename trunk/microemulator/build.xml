@@ -137,46 +137,43 @@
   <target depends="init,jar-app,jar-device" description="Create distribution package" name="dist">
     <mkdir dir="dist"/>
 
-    <tar basedir="../." tarfile="dist/microemulator-src.tar">
-      <exclude name="microemulator/**/.*"/>
-      <exclude name="microemulator/*.jar"/>
-      <exclude name="microemulator/build/**"/>
-      <exclude name="microemulator/dist/**"/>
-      <exclude name="microemulator/doc/**"/>
-      <exclude name="microemulator/target/**"/>
+    <tar basedir="../." tarfile="dist/microemulator-src.tar" defaultexcludes="yes">
+      <include name="microemulator/build.xml"/>
+      <include name="microemulator/CHANGES"/>
+      <include name="microemulator/LICENSE"/>
+      <include name="microemulator/README"/>
+      <include name="microemulator/TODO"/>
+      <include name="microemulator/devices/**"/>
+      <include name="microemulator/lib/**"/>
+      <include name="microemulator/misc/**"/>
+      <include name="microemulator/res/**"/>
+      <include name="microemulator/src/**"/>
     </tar>
     <gzip src="dist/microemulator-src.tar" zipfile="dist/microemulator-src.tar.gz"/>
     <delete file="dist/microemulator-src.tar"/>
 
-    <tar basedir="../." tarfile="dist/microemulator-applet.tar">
-      <exclude name="microemulator/**/.*"/>
-      <exclude name="microemulator/build.xml"/>
-      <exclude name="microemulator/build/**"/>
-      <exclude name="microemulator/devices/**"/>
-      <exclude name="microemulator/dist/**"/>
-      <exclude name="microemulator/doc/**"/>
-      <exclude name="microemulator/lib/**"/>
-      <exclude name="microemulator/misc/**"/>
-      <exclude name="microemulator/res/**"/>
-      <exclude name="microemulator/src/**"/>
-      <exclude name="microemulator/target/me-app.jar"/>
-      <exclude name="microemulator/target/devices/j2se/**"/>
+    <tar basedir="../." tarfile="dist/microemulator-applet.tar" defaultexcludes="yes">
+      <include name="microemulator/CHANGES"/>
+      <include name="microemulator/LICENSE"/>
+      <include name="microemulator/README"/>
+      <include name="microemulator/TODO"/>
+      <include name="microemulator/target/me-applet.jar"/>
+      <include name="microemulator/target/simpledemo.jad"/>
+      <include name="microemulator/target/simpledemo.jar"/>
+      <include name="microemulator/target/devices/applet/**"/>
     </tar>
     <gzip src="dist/microemulator-applet.tar" zipfile="dist/microemulator-applet.tar.gz"/>
     <delete file="dist/microemulator-applet.tar"/>
 
-    <tar basedir="../." tarfile="dist/microemulator-app.tar">
-      <exclude name="microemulator/**/.*"/>
-      <exclude name="microemulator/build.xml"/>
-      <exclude name="microemulator/build/**"/>
-      <exclude name="microemulator/devices/**"/>
-      <exclude name="microemulator/dist/**"/>
-      <exclude name="microemulator/doc/**"/>
-      <exclude name="microemulator/lib/**"/>
-      <exclude name="microemulator/res/**"/>
-      <exclude name="microemulator/src/**"/>
-      <exclude name="microemulator/target/me-applet.jar"/>
-      <exclude name="microemulator/target/devices/applet/**"/>
+    <tar basedir="../." tarfile="dist/microemulator-app.tar" defaultexcludes="yes">
+      <include name="microemulator/CHANGES"/>
+      <include name="microemulator/LICENSE"/>
+      <include name="microemulator/README"/>
+      <include name="microemulator/TODO"/>
+      <include name="microemulator/target/me-app.jar"/>
+      <include name="microemulator/target/simpledemo.jad"/>
+      <include name="microemulator/target/simpledemo.jar"/>
+      <include name="microemulator/target/devices/j2se/**"/>
     </tar>
     <gzip src="dist/microemulator-app.tar" zipfile="dist/microemulator-app.tar.gz"/>
     <delete file="dist/microemulator-app.tar"/>

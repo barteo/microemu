@@ -36,17 +36,21 @@ public class Graphics
   public static final int HCENTER = 1;
   public static final int VCENTER = 2;
 
+  int strokeStyle = SOLID;
+  
 	int translateX = 0;
 	int translateY = 0;
 
 
 	public void clipRect(int x, int y, int width, int height)
 	{
+    // Implemented in DisplayGraphics
 	}
 
 
 	public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle)
 	{
+    // Implemented in DisplayGraphics
 	}
 
 
@@ -67,26 +71,31 @@ public class Graphics
 
 	public void drawImage(Image img, int x, int y, int anchor)
 	{
+    // Implemented in DisplayGraphics
 	}
 
 
 	public void drawLine(int x1, int y1, int x2, int y2)
 	{
+    // Implemented in DisplayGraphics
 	}
 
 
 	public void drawRect(int x, int y, int width, int height)
 	{
+    // Implemented in DisplayGraphics
 	}
 
 
 	public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight)
 	{
+    // Implemented in DisplayGraphics
 	}
 
 
 	public void drawString(String str, int x, int y, int anchor)
 	{
+    // Implemented in DisplayGraphics
 	}
 
 
@@ -98,16 +107,19 @@ public class Graphics
 
 	public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle)
 	{
+    // Implemented in DisplayGraphics
 	}
 
 
 	public void fillRect(int x, int y, int width, int height)
 	{
+    // Implemented in DisplayGraphics
 	}
 
 
 	public void fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight)
 	{
+    // Implemented in DisplayGraphics
 	}
 
 
@@ -119,43 +131,49 @@ public class Graphics
 
   public int getClipHeight()
   {
+    // Implemented in DisplayGraphics
     throw new IllegalStateException();
   }
 
 
   public int getClipWidth()
   {
+    // Implemented in DisplayGraphics
     throw new IllegalStateException();
   }
 
 
   public int getClipX()
   {
+    // Implemented in DisplayGraphics
     throw new IllegalStateException();
   }
 
 
   public int getClipY()
   {
+    // Implemented in DisplayGraphics
     throw new IllegalStateException();
   }
 
 
   public int getColor()
   {
+    // Implemented in DisplayGraphics
     throw new IllegalStateException();
   }
 
 
 	public Font getFont()
 	{
+    // Implemented in DisplayGraphics
     throw new IllegalStateException();
 	}
 
 
   public int getGrayScale()
   {
-    throw new IllegalStateException();
+    return (getRedComponent() + getGreenComponent() + getBlueComponent()) / 3;
   }
 
 
@@ -173,8 +191,7 @@ public class Graphics
 
   public int getStrokeStyle()
   {
-//System.out.println("Graphics::getStrokeStyle() not implemented");
-    return 0;
+    return strokeStyle;
   }
 
 
@@ -192,11 +209,13 @@ public class Graphics
 
 	public void setClip(int x, int y, int width, int height)
 	{
-	}
+    // Implemented in DisplayGraphics
+  }
 
 
 	public void setColor(int RGB)
 	{
+    // Implemented in DisplayGraphics
 	}
 
 
@@ -211,17 +230,22 @@ public class Graphics
 
 	public void setFont(Font font)
 	{
+    // Implemented in DisplayGraphics
 	}
 
 
 	public void setGrayScale(int grey)
 	{
+    setColor(grey, grey, grey);
 	}
 
 
 	public void setStrokeStyle(int style)
 	{
-//System.out.println("Graphics::setStrokeStyle(...) not implemented");
+    if (style != SOLID && style != DOTTED) {
+      throw new IllegalArgumentException();
+    }
+    strokeStyle = style;
 	}
 
 

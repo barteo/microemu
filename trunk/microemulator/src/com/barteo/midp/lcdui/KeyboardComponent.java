@@ -70,29 +70,11 @@ public class KeyboardComponent extends Panel
         return;
       }
 
-      java.awt.Button tmp = (java.awt.Button) e.getSource();      
-      if (compToButton.get(tmp) instanceof SoftButton) {
-        Command cmd;
-        int i = 0;
-        for (Enumeration s = Device.getDeviceButtons().elements(); s.hasMoreElements(); ) {
-          com.barteo.emulator.Button button = (com.barteo.emulator.Button) s.nextElement();
-          if (button instanceof SoftButton) {
-            cmd = ((SoftButton) button).getCommand();
-            /* previous code                        
-            if (cmd != null && i == 0 && tmp == soft1) {
-              CommandManager.getInstance().commandAction(cmd);
-            }
-            if (cmd != null && i == 1 && tmp == soft2) {
-              CommandManager.getInstance().commandAction(cmd);
-            }*/            
-            if (cmd != null && i == 0) {
-              CommandManager.getInstance().commandAction(cmd);
-            }
-            if (cmd != null && i == 1) {
-              CommandManager.getInstance().commandAction(cmd);
-            }
-            i++;
-          }
+      com.barteo.emulator.Button tmp = (com.barteo.emulator.Button) compToButton.get(e.getSource());      
+      if (tmp instanceof SoftButton) {
+        Command cmd = ((SoftButton) tmp).getCommand();
+        if (cmd != null) {
+          CommandManager.getInstance().commandAction(cmd);
         }
       }
     }

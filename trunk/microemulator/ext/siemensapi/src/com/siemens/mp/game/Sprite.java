@@ -30,6 +30,7 @@ public class Sprite extends GraphicObject{
     int x;
     int y;
     int frame;
+    int collx,colly,collw,collh;
     
     public Sprite(byte[] pixels, int pixel_offset, int width, int height, byte[] mask, int mask_offset, int numFrames) {
         this(
@@ -64,6 +65,10 @@ public class Sprite extends GraphicObject{
         }
         //this.pixels=pixels;
         //this.mask=mask;
+        collx=0;
+        colly=0;
+        collw=this.pixels[0].getWidth();
+        collh=this.pixels[0].getHeight();
     }
     
     public int getFrame() {
@@ -82,17 +87,22 @@ public class Sprite extends GraphicObject{
     }
     
     public boolean isCollidingWith(Sprite other) {
-        System.out.println("public boolean isCollidingWith(Sprite other)");
+        //System.out.println("public boolean isCollidingWith(Sprite other)");
         return false;
     }
     
     public boolean isCollidingWithPos(int xpos, int ypos) {
-        System.out.println("public boolean isCollidingWithPos(int xpos, int ypos)");
-        return false;
+        //System.out.println("public boolean isCollidingWithPos(int xpos, int ypos)");
+        return  (xpos>=x+collx)&&(xpos<x+collw)&&
+                (ypos>=y+colly)&&(ypos<y+collh);
     }
     
     public void setCollisionRectangle(int x, int y, int width, int height) {
-        System.out.println("public void setCollisionRectangle(int x, int y, int width, int height)");
+        //System.out.println("public void setCollisionRectangle(int x, int y, int width, int height)");
+    collx=x;
+    colly=y;
+    collw=width;
+    collh=height;
     }
     
     public void setFrame(int framenumber) {

@@ -38,6 +38,7 @@ public class SimpleDemo extends MIDlet implements CommandListener
       gaugePanel,
       new ImageItemPanel(),
       new ListPanel(),
+      new TextFieldPanel(),
       new TextBoxPanel()
   };
   

@@ -354,6 +354,10 @@ public class ChoiceGroup extends Item implements Choice
 		} else if (choiceType == Choice.MULTIPLE) {
       items[elementNum].setSelectedState(selected);
 			repaint();
+		} else if (choiceType == Choice.IMPLICIT) {
+		    if (selected) {
+		        highlightedItemIndex = elementNum;
+		    }
 		}
   }
 

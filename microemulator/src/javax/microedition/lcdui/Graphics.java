@@ -125,7 +125,7 @@ public class Graphics
 
   public int getBlueComponent()
   {
-    return (getColor() >> 16) & 255;
+    return getColor() & 255;
   }
 
 
@@ -185,7 +185,7 @@ public class Graphics
 
   public int getRedComponent()
   {
-    return getColor() & 255;
+    return (getColor() >> 16) & 255;
   }
 
 

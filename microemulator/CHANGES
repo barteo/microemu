@@ -2,7 +2,7 @@ MicroEmulator
 
 - target build depends on build.properties configuration: 
     target = app | applet
-- obfuscator for applet reduces jar file at ~35% (Julian L. Hunter)
+- obfuscator for applet reduces jar file at ~30% (Julian L. Hunter)
 
 0.3.1 (alpha) - 21.11.2002
 - device display is better customizable

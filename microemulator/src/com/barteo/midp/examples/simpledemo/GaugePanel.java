@@ -19,24 +19,30 @@
  
 package com.barteo.midp.examples.simpledemo;
 
-import javax.microedition.lcdui.*;
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.CommandListener;
+import javax.microedition.lcdui.Display;
+import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Form;
+import javax.microedition.lcdui.Gauge;
 
 
 public class GaugePanel extends Form implements ScreenPanel, CommandListener
-{
+{  
+  private static final String NAME = "Gauge";
   
-  static String NAME = "Gauge";
+  private static final Command backCommand = new Command("Back", Command.BACK, 1);
   
-  Command backCommand = new Command("Back", Command.BACK, 1);
+  boolean cancel = false;
+
+  private Gauge noninteractive = new Gauge("Noninteractive", false, 25, 0);
   
-  Gauge noninteractive = new Gauge("Noninteractive", false, 25, 0);
-  
-  Runnable timerTask = new Runnable()
+  private Runnable timerTask = new Runnable()
   {
     
     public void run()
     {
-      while (true) {
+      while (!cancel) {
         if (isShown()) {
           int value = noninteractive.getValue();
       

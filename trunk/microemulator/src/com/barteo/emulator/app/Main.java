@@ -19,6 +19,7 @@
  
 package com.barteo.emulator.app;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,10 +38,12 @@ import javax.microedition.midlet.MIDletStateChangeException;
 import javax.swing.LookAndFeel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 import com.barteo.emulator.MicroEmulator;
@@ -49,6 +52,7 @@ import com.barteo.emulator.MIDletEntry;
 import com.barteo.emulator.Resource;
 import com.barteo.emulator.app.launcher.Launcher;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
+import com.barteo.emulator.app.util.ProgressListener;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.util.JadMidletEntry;
 import com.barteo.emulator.util.JadProperties;
@@ -68,6 +72,10 @@ public class Main extends JFrame implements MicroEmulator
   boolean initialized = false;
   
   JFileChooser fileChooser = null;
+  JMenuItem menuOpenJADFile;
+  JMenuItem menuOpenJADURL;
+    
+  JLabel statusBar = new JLabel("Status");
   
 	SwingDisplayComponent dc;
 	KeyboardComponent kc;
@@ -137,6 +145,36 @@ public class Main extends JFrame implements MicroEmulator
   };
   
   
+  ProgressListener progressListener = new ProgressListener()
+  {
+    int dots = 0;
+    
+    
+    public void reset()
+    {
+      dots = 0;
+    }
+    
+    
+    public void stateChanged()
+    {
+      dots++;
+      if (dots > 20) {
+        dots = 0;
+      }
+
+      StringBuffer tmp = new StringBuffer();
+      tmp.append("Loading");
+      for (int i = 0; i < dots; i++) {
+        tmp.append('.');
+      }
+      
+      statusBar.setText(tmp.toString());
+    }
+    
+  };
+  
+  
   Main()
   {
     instance = this;
@@ -146,18 +184,17 @@ public class Main extends JFrame implements MicroEmulator
     
     JMenu menu = new JMenu("File");
     
-    JMenuItem menuItem;
-    menuItem = new JMenuItem("Open JAD File...");
-    menuItem.addActionListener(menuOpenJADFileListener);
-    menu.add(menuItem);
+    menuOpenJADFile = new JMenuItem("Open JAD File...");
+    menuOpenJADFile.addActionListener(menuOpenJADFileListener);
+    menu.add(menuOpenJADFile);
 
-    menuItem = new JMenuItem("Open JAD URL...");
-    menuItem.addActionListener(menuOpenJADURLListener);
-    menu.add(menuItem);
+    menuOpenJADURL = new JMenuItem("Open JAD URL...");
+    menuOpenJADURL.addActionListener(menuOpenJADURLListener);
+    menu.add(menuOpenJADURL);
     
     menu.addSeparator();
     
-    menuItem = new JMenuItem("Exit");
+    JMenuItem menuItem = new JMenuItem("Exit");
     menuItem.addActionListener(menuExitListener);
     menu.add(menuItem);
 
@@ -178,29 +215,35 @@ public class Main extends JFrame implements MicroEmulator
       return;
     }
     
+    JPanel devicePanel = new JPanel();
     XYLayout xy = new XYLayout();
-    getContentPane().setLayout(xy);
+    devicePanel.setLayout(xy);
 
     dc = new SwingDisplayComponent(this);
     xy.addLayoutComponent(dc, new XYConstraints(Device.screenRectangle));
-    getContentPane().add(dc);
+    devicePanel.add(dc);
 
     kc = new KeyboardComponent();
     xy.addLayoutComponent(kc, new XYConstraints(Device.keyboardRectangle));
-    getContentPane().add(kc);      
+    devicePanel.add(kc);
+    
+    getContentPane().add(devicePanel, "Center");
+    getContentPane().add(statusBar, "South");    
 
-    setSize(Device.deviceRectangle.getSize());
+    Dimension size = new Dimension(Device.deviceRectangle.getSize());
+    size.height += statusBar.getPreferredSize().height + 10;
+    setSize(size);
     initialized = true;
   }
   
   
-  public void loadMIDlet(JadProperties jad)
+  public void loadMIDlet(final JadProperties jad)
   {
     URL url = null;
     try {
       url = new URL(jad.getJarURL());
     } catch (MalformedURLException ex) {
-      // it can be just file 
+      // it can be just file      
       File f = new File(fileChooser.getSelectedFile().getParent(), jad.getJarURL());
       try {
         url = f.toURL();
@@ -210,27 +253,50 @@ public class Main extends JFrame implements MicroEmulator
     }
     loader.addRepository(url);
     launcher.removeMIDletEntries();
-    try {
-      for (Enumeration e = jad.getMidletEntries().elements(); e.hasMoreElements(); ) {
-        JadMidletEntry jadEntry = (JadMidletEntry) e.nextElement();
-        Class midletClass = loader.loadClass(jadEntry.getClassName());
-        MIDlet midlet = (MIDlet) midletClass.newInstance();
-        launcher.addMIDletEntry(new MIDletEntry(jadEntry.getName(), midlet));
+    
+    Thread task = new Thread() 
+    {
+      
+      public void run()
+      {
+        setResponseInterface(false);
+        loader.setProgressListener(progressListener);
+        try {
+          for (Enumeration e = jad.getMidletEntries().elements(); e.hasMoreElements(); ) {
+            JadMidletEntry jadEntry = (JadMidletEntry) e.nextElement();
+            Class midletClass = loader.loadClass(jadEntry.getClassName());
+            MIDlet midlet = (MIDlet) midletClass.newInstance();
+            launcher.addMIDletEntry(new MIDletEntry(jadEntry.getName(), midlet));
+          }
+          notifyDestroyed();
+        } catch (ClassNotFoundException ex) {
+          System.err.println(ex);
+        } catch (IllegalAccessException ex) {
+          System.err.println(ex);
+        } catch (InstantiationException ex) {
+          System.err.println(ex);
+        }        
+        loader.setProgressListener(null);
+        statusBar.setText("");
+        setResponseInterface(true);
       }
-      notifyDestroyed();
-    } catch (ClassNotFoundException ex) {
-      System.err.println(ex);
-    } catch (IllegalAccessException ex) {
-      System.err.println(ex);
-    } catch (InstantiationException ex) {
-      System.err.println(ex);
-    }        
+      
+    };
+    
+    task.start();
   }
   
   
   public void notifyDestroyed()
   {
     launcher.startApp();
+  }
+  
+  
+  public void setResponseInterface(boolean state)
+  {
+    menuOpenJADFile.setEnabled(state);
+    menuOpenJADURL.setEnabled(state);
   }
   
   

@@ -39,6 +39,7 @@ public class ProgressJarClassLoader extends URLClassLoader
 
   Vector notLoadedRepositories = new Vector();
   
+  ProgressListener listener;
   
   public ProgressJarClassLoader()
   {
@@ -53,7 +54,8 @@ public class ProgressJarClassLoader extends URLClassLoader
   }
 
 
-  public Class findClass(String name) 
+  public Class findClass(String name)
+      throws ClassNotFoundException
   {
     byte[] b = loadClassData(name);
     
@@ -73,9 +75,7 @@ public class ProgressJarClassLoader extends URLClassLoader
     }
     byte[] tmp = (byte[]) entries.get(newname);
     if (tmp != null) {
-System.out.println("getResourceAsStream:" + newname + "+" + tmp);
       InputStream is = new ByteArrayInputStream(tmp);
-System.out.println(is);      
       return is;
     }
 
@@ -83,16 +83,32 @@ System.out.println(is);
   }
     
   
-  private byte[] loadClassData(String name) 
+  private byte[] loadClassData(String name)
+      throws ClassNotFoundException
   {
     loadRepositories();
     
     name = name.replace('.', '/') + ".class";
     byte[] result = (byte[]) entries.get(name);
+    if (result == null) {
+      throw new ClassNotFoundException(name);
+    }
     
-System.out.println(name + "+" + result);
-
     return result;
+  }
+  
+  
+  public void setProgressListener(ProgressListener listener)
+  {
+    this.listener = listener;
+  }
+  
+  
+  private void fireProgressListener()
+  {
+    if (listener != null) {
+      listener.stateChanged();
+    }
   }
   
   
@@ -100,7 +116,6 @@ System.out.println(name + "+" + result);
   {
     for (Enumeration en = notLoadedRepositories.elements(); en.hasMoreElements(); ) {
       URL url = (URL) en.nextElement();
-System.out.print(url);
       byte[] cache = new byte[1024];
     
       try {
@@ -124,10 +139,9 @@ System.out.print(url);
               byte[] tmp = new byte[i];
               System.arraycopy(cache, 0, tmp, 0, i);
               entries.put(entry.getName(), tmp);
-System.out.println("."+entry.getName());
+              fireProgressListener();
             }
           } else {
-System.out.println();
             break;
           }
         }

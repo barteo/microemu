@@ -1,9 +1,11 @@
 MicroEmulator
 
-- applet: obfuscator for applet reduces jar file at ~30% (Julian L. Hunter)
+0.3.2 (alpha) - 24.03.2003
+- applet: obfuscator for applet reduces jar file at ~30% (thanks to Julian L. Hunter)
 - applet: fixed broken applet target
 - target build depends on build.properties configuration: 
     target = app | applet
+- a lot of small fixes
 
 0.3.1 (alpha) - 21.11.2002
 - device display is better customizable

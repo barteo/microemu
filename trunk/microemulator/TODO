@@ -12,7 +12,6 @@
 release 0.4 (alpha)
 
 * ConnectionFramework - currently only http connection is supported, implement other:
-  - tcp
   - udp
   - https
   - file

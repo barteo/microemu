@@ -85,6 +85,12 @@ public class MIDletBridge
   }
   
   
+  public static RecordStoreManager getRecordStoreManager()
+  {
+  	return emulator.getRecordStoreManager();
+  }
+  
+  
   public static String getAppProperty(String key)
   {
     return emulator.getAppProperty(key);

@@ -40,7 +40,7 @@ public class JadProperties extends Properties
   }
 
   
-  public String getName()
+  public String getSuiteName()
   {
     return getProperty("MIDlet-Name");
   }

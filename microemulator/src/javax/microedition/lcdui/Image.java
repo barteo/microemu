@@ -47,7 +47,7 @@ public class Image
 
 	public static Image createImage(Image source)
 	{
-		return source;
+		return DeviceFactory.getDevice().createImage(source);
 	}
 	
 

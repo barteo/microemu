@@ -19,6 +19,8 @@
  
 package com.barteo.emulator.device.applet;
 
+import java.awt.Toolkit;
+
 
 public class ImmutableImage extends javax.microedition.lcdui.Image
 {
@@ -29,6 +31,12 @@ public class ImmutableImage extends javax.microedition.lcdui.Image
 	{
   	img = image;
 	}
+
+
+  public ImmutableImage(MutableImage image)
+  {
+    img = Toolkit.getDefaultToolkit().createImage(image.getImage().getSource());
+  }
 
 
 	public int getHeight()

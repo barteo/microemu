@@ -39,8 +39,10 @@ extends FilterInputStream
     throws IOException
     {
         int x = in.read();
-        crc.update(x);
-        byteCount++;
+        if (x != -1) {
+            crc.update(x);
+            byteCount++;
+        }
         return x;
     }
 
@@ -48,8 +50,10 @@ extends FilterInputStream
     throws IOException
     {
         int x = in.read(b, off, len);
-        crc.update(b, off, x);
-        byteCount += x;
+        if (x != -1) {
+            crc.update(b, off, x);
+            byteCount += x;
+        }
         return x;
     }
 

@@ -129,10 +129,13 @@ extends InputStream
     public int read(byte b[], int off, int len)
     throws IOException
     {
-        if (cur == null) readToData();
-        if (chunk_left == 0) return -1;
-        int result = in_data.read(b, off, chunk_left < len ? chunk_left : len);
-        chunk_left -= result;
+        if (cur == null)
+            readToData();
+        if (chunk_left == 0)
+            return -1;
+        int need = chunk_left < len ? chunk_left : len;
+        in_data.readFully(b, off, need);
+        chunk_left -= need;
         if (chunk_left == 0 && getNextChunk().type != Chunk.IDAT) {
             Chunk chunk;
             while ((chunk = getNextChunk()) != null) {
@@ -140,9 +143,9 @@ extends InputStream
                     throw new PngException(Chunk.typeToString(chunk.type) + " chunk must precede first IDAT chunk");
                 }
             }
-            in_data.close();
+            close();
         }
-        return result;
+        return need;
     }
 
     private byte[] _b = new byte[1];
@@ -150,7 +153,12 @@ extends InputStream
     public int read()
     throws IOException
     {
-        read(_b, 0, 1);
-        return _b[0] & 0xff;
+        return read(_b, 0, 1) > 0 ? _b[0] & 0xff : -1;
+    }
+
+    public void close()
+    throws IOException
+    {
+        in_data.close();
     }
 }

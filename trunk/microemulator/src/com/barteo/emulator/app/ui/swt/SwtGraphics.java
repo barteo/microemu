@@ -172,7 +172,8 @@ public class SwtGraphics
 
 	public void setClipping(Rectangle rect) 
 	{
-		gc.setClipping(rect);
+		Rectangle tmp = new Rectangle(rect.x + transX, rect.y + transY, rect.width, rect.height);
+		gc.setClipping(tmp);
 	}
 
 }

@@ -40,6 +40,7 @@ import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.MicroEmulator;
+import com.barteo.emulator.app.ui.DisplayRepaintListener;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.SoftButton;
@@ -366,5 +367,17 @@ public class Main extends Applet implements MicroEmulator, DisplayComponent
     }        
     return null;
   }
+
+
+	public void addDisplayRepaintListener(DisplayRepaintListener l) 
+	{
+		// TODO Auto-generated method stub	
+	}
+
+
+	public void removeDisplayRepaintListener(DisplayRepaintListener l) 
+	{
+		// TODO Auto-generated method stub
+	}
   
 }

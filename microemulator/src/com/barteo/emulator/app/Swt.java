@@ -340,9 +340,10 @@ public class Swt extends Common
 	}
 	
 	
-	private void setDevice(SwtDevice device)
+	protected void setDevice(SwtDevice device)
 	{
-		DeviceFactory.setDevice(device);
+		super.setDevice(device);
+		
 		device.init(emulatorContext);
 		shell.setSize(shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
 	}

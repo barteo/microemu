@@ -306,16 +306,8 @@ public class Awt extends Frame
 				deviceClass = Class.forName(entry.getClassName());
 			}
 			AppletDevice device = (AppletDevice) deviceClass.newInstance();
-			DeviceFactory.setDevice(device);
-			device.init(emulatorContext);
-			devicePanel.init();
 			this.deviceEntry = entry;
-			Image tmpImg = device.getNormalImage();
-			Dimension size = new Dimension(tmpImg.getWidth(null), tmpImg.getHeight(null));
-			size.width += 10;
-			size.height += statusBar.getPreferredSize().height + 55;
-			setSize(size);
-			doLayout();
+			setDevice(device);
 		} catch (MalformedURLException ex) {
 			System.err.println(ex);          
 		} catch (ClassNotFoundException ex) {
@@ -328,6 +320,21 @@ public class Awt extends Frame
 	}
   
   
+	protected void setDevice(AppletDevice device) 
+	{
+		common.setDevice(device);
+		
+		device.init(emulatorContext);
+		devicePanel.init();
+		Image tmpImg = device.getNormalImage();
+		Dimension size = new Dimension(tmpImg.getWidth(null), tmpImg.getHeight(null));
+		size.width += 10;
+		size.height += statusBar.getPreferredSize().height + 55;
+		setSize(size);
+		doLayout();
+	}
+
+
 	public static void main(String args[])
 	{    
 		Awt app = new Awt();

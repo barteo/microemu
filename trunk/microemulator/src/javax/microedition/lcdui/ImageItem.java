@@ -40,6 +40,11 @@ public class ImageItem extends Item
 	public ImageItem(String label, Image img, int layout, String altText)
 	{
 		super(label);
+		
+		if (img != null && img.isMutable()) {
+			new IllegalArgumentException();
+		}
+		
 		this.img = img;
 		this.layout = layout;
     this.altText = altText;
@@ -90,7 +95,11 @@ public class ImageItem extends Item
 
 	int getHeight()
 	{
-		return super.getHeight() + img.getHeight();
+		if (img == null) {
+			return super.getHeight();
+		} else { 
+			return super.getHeight() + img.getHeight();
+		}
 	}
 
 
@@ -98,18 +107,21 @@ public class ImageItem extends Item
   {
 		super.paintContent(g);
 
-		g.translate(0, super.getHeight());
-		if (layout == LAYOUT_DEFAULT || layout == LAYOUT_LEFT) {
-			g.drawImage(img, 0, 0, Graphics.LEFT | Graphics.TOP);
-		} else if (layout == LAYOUT_RIGHT) {
-			g.drawImage(img, DeviceFactory.getDevice().getDeviceDisplay().getWidth(), 0, 
-          Graphics.RIGHT | Graphics.TOP);
-		} else if (layout == LAYOUT_CENTER) {
-			g.drawImage(img, DeviceFactory.getDevice().getDeviceDisplay().getWidth() / 2, 0, 
-          Graphics.HCENTER | Graphics.TOP);
-		} else
-			g.drawImage(img, 0, 0, Graphics.LEFT | Graphics.TOP);
-		g.translate(0, -super.getHeight());
+		if (img != null) {
+			g.translate(0, super.getHeight());
+			if (layout == LAYOUT_DEFAULT || layout == LAYOUT_LEFT) {
+				g.drawImage(img, 0, 0, Graphics.LEFT | Graphics.TOP);
+			} else if (layout == LAYOUT_RIGHT) {
+				g.drawImage(img, DeviceFactory.getDevice().getDeviceDisplay().getWidth(), 0, 
+        	  Graphics.RIGHT | Graphics.TOP);
+			} else if (layout == LAYOUT_CENTER) {
+				g.drawImage(img, DeviceFactory.getDevice().getDeviceDisplay().getWidth() / 2, 0, 
+        	  Graphics.HCENTER | Graphics.TOP);
+			} else {
+				g.drawImage(img, 0, 0, Graphics.LEFT | Graphics.TOP);
+			}
+			g.translate(0, -super.getHeight());
+		}
 
 		return getHeight();
 	}

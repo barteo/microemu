@@ -107,23 +107,6 @@ public class AppletDeviceDisplay implements DeviceDisplay
 				0, displayPaintable.y + displayPaintable.height, 
 				displayRectangle.width, displayRectangle.height - displayPaintable.y - displayPaintable.height);		
 
-    g.setColor(foregroundColor);
-    for (Enumeration s = device.getSoftButtons().elements(); s.hasMoreElements(); ) {
-      ((AppletSoftButton) s.nextElement()).paint(g);
-    }
-
-    int inputMode = device.getInputMethod().getInputMode();
-    if (inputMode == InputMethod.INPUT_123) {
-      g.drawImage(mode123Image.getImage(), 
-          mode123Image.getRectangle().x, mode123Image.getRectangle().y, null);
-    } else if (inputMode == InputMethod.INPUT_ABC_UPPER) {
-      g.drawImage(modeAbcUpperImage.getImage(), 
-          modeAbcUpperImage.getRectangle().x, modeAbcUpperImage.getRectangle().y, null);
-    } else if (inputMode == InputMethod.INPUT_ABC_LOWER) {
-      g.drawImage(modeAbcLowerImage.getImage(), 
-          modeAbcLowerImage.getRectangle().x, modeAbcLowerImage.getRectangle().y, null);
-    }
-
     Shape oldclip = g.getClip();
     g.setClip(displayPaintable);
     g.translate(displayPaintable.x, displayPaintable.y);
@@ -135,6 +118,23 @@ public class AppletDeviceDisplay implements DeviceDisplay
     g.setFont(f);
     g.translate(-displayPaintable.x, -displayPaintable.y);
     g.setClip(oldclip);
+
+		g.setColor(foregroundColor);
+		for (Enumeration s = device.getSoftButtons().elements(); s.hasMoreElements(); ) {
+	  	((AppletSoftButton) s.nextElement()).paint(g);
+		}
+
+		int inputMode = device.getInputMethod().getInputMode();
+		if (inputMode == InputMethod.INPUT_123) {
+		  g.drawImage(mode123Image.getImage(), 
+		  		mode123Image.getRectangle().x, mode123Image.getRectangle().y, null);
+		} else if (inputMode == InputMethod.INPUT_ABC_UPPER) {
+		  g.drawImage(modeAbcUpperImage.getImage(), 
+				  modeAbcUpperImage.getRectangle().x, modeAbcUpperImage.getRectangle().y, null);
+		} else if (inputMode == InputMethod.INPUT_ABC_LOWER) {
+	  	g.drawImage(modeAbcLowerImage.getImage(), 
+				  modeAbcLowerImage.getRectangle().x, modeAbcLowerImage.getRectangle().y, null);
+		}
 
     if (scrollUp) {
       g.drawImage(upImage.getImage(), upImage.getRectangle().x, upImage.getRectangle().y, null);

@@ -32,7 +32,6 @@ import com.barteo.emulator.device.SoftButton;
 
 public class AppletSoftButton extends AppletButton implements SoftButton
 {
-
   public static int LEFT = 1;
   public static int RIGHT = 2;
 
@@ -66,57 +65,58 @@ public class AppletSoftButton extends AppletButton implements SoftButton
     }
   }
 
-
-    /**
-     *  Sets the command attribute of the SoftButton object
-     *
-     *@param  cmd  The new command value
-     */
-    public void setCommand(Command cmd) {
-        command = cmd;
-    }
-
-
-    /**
-     *  Gets the command attribute of the SoftButton object
-     *
-     *@return    The command value
-     */
-    public Command getCommand() {
-        return command;
-    }
-
-
-    public void paint(Graphics g) 
-    {
-        int xoffset = 0;
-
-        AppletDeviceDisplay deviceDisplay =
-            (AppletDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
-        g.setColor(deviceDisplay.getBackgroundColor());
-        g.fillRect(paintable.x, paintable.y, paintable.width, paintable.height);
-        if (command != null) {
-            if (alignment == RIGHT) {
-                xoffset = paintable.width - g.getFontMetrics().stringWidth(command.getLabel());
-            }
-            g.setColor(deviceDisplay.getForegroundColor());
-            g.drawString(command.getLabel(), paintable.x + xoffset, paintable.y + paintable.height);
-        }
-    }
-
-
-    public boolean preferredCommandType(Command cmd) {
-        for (Enumeration ct = commandTypes.elements(); ct.hasMoreElements(); ) {
-            if (cmd.getCommandType() == ((Integer) ct.nextElement()).intValue()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    public void addCommandType(int commandType) {
-        commandTypes.addElement(new Integer(commandType));
-    }
+	/**
+	 *  Sets the command attribute of the SoftButton object
+	 *
+	 *@param  cmd  The new command value
+	 */
+	public void setCommand(Command cmd) 
+	{
+	  command = cmd;
+	}
+	
+	/**
+	 *  Gets the command attribute of the SoftButton object
+	 *
+	 *@return    The command value
+	 */
+	public Command getCommand() 
+	{
+	  return command;
+	}
+	
+	
+	public void paint(Graphics g) 
+	{
+	  int xoffset = 0;
+	
+	  AppletDeviceDisplay deviceDisplay =
+	      (AppletDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
+	  if (command != null) {
+	    if (alignment == RIGHT) {
+	      xoffset = paintable.width - g.getFontMetrics().stringWidth(command.getLabel());
+	    }
+	    g.setColor(deviceDisplay.getForegroundColor());
+	    g.drawString(command.getLabel(), paintable.x + xoffset, paintable.y + paintable.height);
+	  }
+	}
+	
+	
+	public boolean preferredCommandType(Command cmd) 
+	{
+	  for (Enumeration ct = commandTypes.elements(); ct.hasMoreElements(); ) {
+	    if (cmd.getCommandType() == ((Integer) ct.nextElement()).intValue()) {
+	      return true;
+	    }
+	  }
+	
+	  return false;
+	}
+	
+	
+	public void addCommandType(int commandType) 
+	{
+	  commandTypes.addElement(new Integer(commandType));
+	}
 
 }

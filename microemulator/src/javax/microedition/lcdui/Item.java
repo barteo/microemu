@@ -30,7 +30,7 @@ public abstract class Item
 
   StringComponent labelComponent;
   Screen owner = null;
-	boolean focus = false;
+	private boolean focus = false;
   
   
   Item(String label)
@@ -85,7 +85,7 @@ public abstract class Item
 	}
 	
   
-	boolean isFocus()
+	boolean hasFocus()
 	{
 		return focus;
 	}

@@ -236,7 +236,7 @@
     </java>
   </target>
 
-  <target name="compile-device" depends="jar" description="Create minimum device">
+  <target name="compile-device-app" depends="init,jar"  if="target.app" description="Create minimum device">
     <mkdir dir="./build/devices/${target.device.prefix}/minimum/classes"/>
     <javac debug="true" deprecation="true" 
         srcdir="./devices/${target.device.prefix}/minimum/java"
@@ -245,6 +245,20 @@
         <pathelement location="./target/me-${target}.jar"/>
       </classpath>      
     </javac>
+  </target>
+
+  <target name="compile-device-applet" depends="init,jar"  if="target.applet" description="Create minimum device">
+    <mkdir dir="./build/devices/${target.device.prefix}/minimum/classes"/>
+    <javac target="1.1" debug="true" deprecation="true" 
+        srcdir="./devices/${target.device.prefix}/minimum/java"
+        destdir="./build/devices/${target.device.prefix}/minimum/classes">
+      <classpath>
+        <pathelement location="./target/me-${target}.jar"/>
+      </classpath>      
+    </javac>
+  </target>
+
+  <target name="compile-device" depends="init,compile-device-app,compile-device-applet">
   </target>
 
   <target name="jar-device" depends="compile-device" description="Package minimum device">

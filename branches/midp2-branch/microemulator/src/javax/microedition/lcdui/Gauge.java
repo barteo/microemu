@@ -145,14 +145,14 @@ public class Gauge extends Item
 	{
 		Font f = Font.getDefaultFont();
 
-		if (gameKeyCode == 1) {
+		if (gameKeyCode == Canvas.UP) {
 			if (top > 0) {
 				return -top;
 			} else {
 				return Item.OUTOFITEM;
 			}
 		}
-		if (gameKeyCode == 6) {
+		if (gameKeyCode == Canvas.DOWN) {
 			if (getHeight() > bottom) {
 				return getHeight() - bottom;
 			} else {

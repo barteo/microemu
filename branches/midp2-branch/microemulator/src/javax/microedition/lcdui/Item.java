@@ -206,9 +206,6 @@ public abstract class Item
 	}
   
 
-	int traverse(int gameKeyCode, int top, int bottom, boolean action)
-	{
-		return 0;
-	}
+	abstract int traverse(int gameKeyCode, int top, int bottom, boolean action);
 	
 }

@@ -99,4 +99,10 @@ class ImageStringItem extends Item
 		}
   }
 
+
+	int traverse(int gameKeyCode, int top, int bottom, boolean action) 
+	{
+		return 0;
+	}
+
 }

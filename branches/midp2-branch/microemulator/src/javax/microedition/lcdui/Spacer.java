@@ -59,4 +59,10 @@ public class Spacer extends Item
 		throw new RuntimeException("TODO");
 	}
 
+
+	int traverse(int gameKeyCode, int top, int bottom, boolean action) 
+	{
+		return 0;
+	}
+
 }

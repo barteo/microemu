@@ -1,22 +1,22 @@
 /*
- *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
- *
- *  This library is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public
- *  License as published by the Free Software Foundation; either
- *  version 2.1 of the License, or (at your option) any later version.
- *
- *  This library is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *  Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public
- *  License along with this library; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * MicroEmulator 
+ * Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
+ * 
+ * This library is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by the
+ * Free Software Foundation; either version 2.1 of the License, or (at your
+ * option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ * for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
- 
+
 package com.barteo.emulator.device.j2se;
 
 import java.awt.event.KeyEvent;
@@ -28,40 +28,44 @@ import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.InputMethod;
 import com.barteo.emulator.device.InputMethodEvent;
 
-
-public class J2SEInputMethod extends InputMethod implements Runnable
+public class J2SEInputMethod extends InputMethod implements Runnable 
 {
 	private int lastButtonCharIndex = -1;
-  private J2SEButton lastButton = null;
+	private J2SEButton lastButton = null;
 	private boolean resetKey;
 
 	private Thread t;
 	private boolean cancel = false;
 
 
-	public J2SEInputMethod()
+	public J2SEInputMethod() 
 	{
 		t = new Thread(this, "InputMethodThread");
 		t.start();
 	}
-  
-  
-	void dispose()
+
+	
+	void dispose() 
 	{
-		  cancel = true;
+		cancel = true;
 	}
 
-
-  private boolean commonKeyPressed(int keyCode)
-  {
+	
+	private boolean commonKeyPressed(int keyCode) 
+	{
 		String tmp;
 
-    if (inputMethodListener == null) {
+		if (inputMethodListener == null) {
 			MIDletBridge.getMIDletAccess().getDisplayAccess().keyPressed(keyCode);
 			return true;
 		}
 
-    if (keyCode == KeyEvent.VK_MODECHANGE) {
+		if (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_DOWN) {
+			MIDletBridge.getMIDletAccess().getDisplayAccess().keyPressed(keyCode);
+			return true;
+		}
+
+		if (keyCode == KeyEvent.VK_MODECHANGE) {
 			if (getInputMode() == InputMethod.INPUT_123) {
 				setInputMode(InputMethod.INPUT_ABC_UPPER);
 			} else if (getInputMode() == InputMethod.INPUT_ABC_UPPER) {
@@ -122,58 +126,58 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 			inputMethodListener.caretPositionChanged(event);
 			return true;
 		}
-    
-    return false;
-  }
 
+		return false;
+	}
 
-  public void keyboardKeyPressed(KeyEvent ev)
-  {
-    if (commonKeyPressed(ev.getKeyCode())) {
-      return; 
-    }
-    
-    if (text.length() < maxSize && ev.getKeyChar() != KeyEvent.CHAR_UNDEFINED) {
-      char[] test = new char[1];
-      test[0] = ev.getKeyChar();
-      test = filterConstraints(test);
-      if (test.length > 0) {
-  			synchronized (this) {
-  				if (lastButton != null) {
-  					caret++;
-  					lastButton = null;
-  					lastButtonCharIndex = -1;
-  				}
-  				String tmp = "";
-  				if (caret > 0) {
-  					tmp += text.substring(0, caret);
-  				}
-  				tmp += ev.getKeyChar();
-  				if (caret < text.length()) {
-  					tmp += text.substring(caret);
-  				}
-  				text = tmp;
-    			caret++;
-        }
-  			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, text);
-  			inputMethodListener.inputMethodTextChanged(event);
-  			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
-  			inputMethodListener.caretPositionChanged(event);
-      }
-    }
-  }
+	
+	public void keyboardKeyPressed(KeyEvent ev) 
+	{
+		if (commonKeyPressed(ev.getKeyCode())) {
+			return;
+		}
 
+		if (text.length() < maxSize && ev.getKeyChar() != KeyEvent.CHAR_UNDEFINED) {
+			char[] test = new char[1];
+			test[0] = ev.getKeyChar();
+			test = filterConstraints(test);
+			if (test.length > 0) {
+				synchronized (this) {
+					if (lastButton != null) {
+						caret++;
+						lastButton = null;
+						lastButtonCharIndex = -1;
+					}
+					String tmp = "";
+					if (caret > 0) {
+						tmp += text.substring(0, caret);
+					}
+					tmp += ev.getKeyChar();
+					if (caret < text.length()) {
+						tmp += text.substring(caret);
+					}
+					text = tmp;
+					caret++;
+				}
+				InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, text);
+				inputMethodListener.inputMethodTextChanged(event);
+				event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
+				inputMethodListener.caretPositionChanged(event);
+			}
+		}
+	}
 
-	public void keyPressed(int keyCode)
+	
+	public void keyPressed(int keyCode) 
 	{
 		String tmp;
-    
+
 		if (commonKeyPressed(keyCode)) {
 			return;
 		}
 
 		if (text.length() < maxSize) {
-			for (Enumeration e = ((J2SEDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
+			for (Enumeration e = ((J2SEDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements();) {
 				J2SEButton button = (J2SEButton) e.nextElement();
 				if (keyCode == button.getKey()) {
 					synchronized (this) {
@@ -210,7 +214,7 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 								if (caret > 0) {
 									tmp += text.substring(0, caret);
 								}
-								tmp += buttonChars[lastButtonCharIndex];								
+								tmp += buttonChars[lastButtonCharIndex];
 								if (caret < text.length() - 1) {
 									tmp += text.substring(caret + 1);
 								}
@@ -231,21 +235,21 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 			}
 		}
 	}
-  
-  
-  public void keyboardKeyReleased(KeyEvent ev)
-  {
+
+	
+	public void keyboardKeyReleased(KeyEvent ev) 
+	{
 		MIDletBridge.getMIDletAccess().getDisplayAccess().keyReleased(ev.getKeyCode());
-  }
+	}
 
-
-	public void keyReleased(int keyCode)
+	
+	public void keyReleased(int keyCode) 
 	{
 		MIDletBridge.getMIDletAccess().getDisplayAccess().keyReleased(keyCode);
-  }
+	}
 
-
-	public void run()
+	
+	public void run() 
 	{
 		while (!cancel) {
 			try {
@@ -253,7 +257,8 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 				synchronized (this) {
 					wait(1500);
 				}
-			} catch (InterruptedException ex) {}
+			} catch (InterruptedException ex) {
+			}
 			synchronized (this) {
 				if (resetKey && lastButton != null) {
 					caret++;
@@ -267,61 +272,61 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 			}
 		}
 	}
-  
-  
-  private char[] filterConstraints(char[] chars)
-  {
-    char[] result = new char[chars.length];
-    int i, j;
 
-    for (i = 0, j = 0; i < chars.length; i++) {
-      if (constraints == TextField.NUMERIC) {
-        if (Character.isDigit(chars[i]) || chars[i] == '.') {
-          result[j] = chars[i];
-          j++;
-        }
-      } else {
-        result[j] = chars[i];
-        j++;
-      }
-    }
-    if (i != j) {
-      char[] newresult = new char[j];
-      System.arraycopy(result, 0, newresult, 0, j);
-      result = newresult;
-    }
+	
+	private char[] filterConstraints(char[] chars) 
+	{
+		char[] result = new char[chars.length];
+		int i, j;
 
-    return result;
-  }
-  
-  
-  private char[] filterInputMode(char[] chars)
-  {
-    int inputMode = getInputMode();
-    char[] result = new char[chars.length];
-    int i, j;
-    
-    for (i = 0, j = 0; i < chars.length; i++) {
-      if (inputMode == InputMethod.INPUT_ABC_UPPER) {
-        result[j] = Character.toUpperCase(chars[i]);
-        j++;
-      } else if (inputMode == InputMethod.INPUT_ABC_LOWER) {
-        result[j] = Character.toLowerCase(chars[i]);
-        j++;
-      } else if (inputMode == InputMethod.INPUT_123) {
-        if (Character.isDigit(chars[i])) {
-          result[j] = chars[i];
-          j++;
-        }
-      }
-    }
-    if (i != j) {
-      char[] newresult = new char[j];
-      System.arraycopy(result, 0, newresult, 0, j);
-      result = newresult;
-    }
+		for (i = 0, j = 0; i < chars.length; i++) {
+			if (constraints == TextField.NUMERIC) {
+				if (Character.isDigit(chars[i]) || chars[i] == '.') {
+					result[j] = chars[i];
+					j++;
+				}
+			} else {
+				result[j] = chars[i];
+				j++;
+			}
+		}
+		if (i != j) {
+			char[] newresult = new char[j];
+			System.arraycopy(result, 0, newresult, 0, j);
+			result = newresult;
+		}
 
-    return result;
-  }
+		return result;
+	}
+
+	
+	private char[] filterInputMode(char[] chars) 
+	{
+		int inputMode = getInputMode();
+		char[] result = new char[chars.length];
+		int i, j;
+
+		for (i = 0, j = 0; i < chars.length; i++) {
+			if (inputMode == InputMethod.INPUT_ABC_UPPER) {
+				result[j] = Character.toUpperCase(chars[i]);
+				j++;
+			} else if (inputMode == InputMethod.INPUT_ABC_LOWER) {
+				result[j] = Character.toLowerCase(chars[i]);
+				j++;
+			} else if (inputMode == InputMethod.INPUT_123) {
+				if (Character.isDigit(chars[i])) {
+					result[j] = chars[i];
+					j++;
+				}
+			}
+		}
+		if (i != j) {
+			char[] newresult = new char[j];
+			System.arraycopy(result, 0, newresult, 0, j);
+			result = newresult;
+		}
+
+		return result;
+	}
 
 }

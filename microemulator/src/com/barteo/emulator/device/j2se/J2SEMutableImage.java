@@ -26,10 +26,9 @@ import com.barteo.emulator.device.MutableImage;
 
 public class J2SEMutableImage extends MutableImage 
 {
-
-  java.awt.Image img;
-  Frame f = new Frame();
-  DisplayGraphics displayGraphics = null;
+	private java.awt.Image img;
+	private Frame f = new Frame();
+	private DisplayGraphics displayGraphics = null;
 
 
   public J2SEMutableImage(int width, int height) 
@@ -81,4 +80,10 @@ public class J2SEMutableImage extends MutableImage
 		return 0;
 	}
 	
+	
+	public byte[] getData()
+	{
+		return null;
+	}
+
 }

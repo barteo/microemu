@@ -26,6 +26,7 @@ import java.awt.Rectangle;
 import javax.swing.JPanel;
 
 import com.barteo.emulator.DisplayComponent;
+import com.barteo.emulator.app.ui.DisplayRepaintListener;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.j2se.J2SEDeviceDisplay;
@@ -36,6 +37,16 @@ public class SwingDisplayComponent extends JPanel implements DisplayComponent
   Device prevDevice = null;
 	Image offi;
 	Graphics offg;
+
+
+	public void addDisplayRepaintListener(DisplayRepaintListener l)
+	{
+	}
+
+
+	public void removeDisplayRepaintListener(DisplayRepaintListener l)
+	{
+	}
 
 
   public void paint(Graphics g) 

@@ -19,10 +19,7 @@
 
 package com.barteo.emulator.app.capture;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.media.Buffer;
@@ -35,13 +32,11 @@ import javax.media.protocol.PushBufferStream;
 
 import com.barteo.emulator.app.ui.DisplayRepaintListener;
 import com.barteo.emulator.device.MutableImage;
-import com.barteo.emulator.device.swt.SwtDeviceDisplay;
 
 public class DeviceDisplayStream implements PushBufferStream, DisplayRepaintListener
 {
 	protected ContentDescriptor cd = new ContentDescriptor(ContentDescriptor.RAW);
 	protected int maxDataLength;
-	protected byte[] data;
 	protected Dimension size;
 	protected RGBFormat format;
 	protected boolean started;
@@ -49,13 +44,11 @@ public class DeviceDisplayStream implements PushBufferStream, DisplayRepaintList
 	protected BufferTransferHandler transferHandler;
 	protected Control[] controls = new Control[0];
 	
-	protected SwtDeviceDisplay deviceDisplay;
+	protected MutableImage image;
 
 
 	public DeviceDisplayStream() 
 	{
-		int x, y, pos, revpos;
-
 		size = new Dimension(320, 240);
 		maxDataLength = size.width * size.height * 3;
 
@@ -63,29 +56,13 @@ public class DeviceDisplayStream implements PushBufferStream, DisplayRepaintList
 			new RGBFormat(
 				new Dimension(size.width, size.height),
 				Format.NOT_SPECIFIED,
-				Format.intArray,
+				Format.byteArray,
 				(float) frameRate,
-				24,
-				0xff0000,
-				0x00ff00,
-				0x0000ff);
+				32,
+				0xff000000,
+				0x00ff0000,
+				0x0000ff00);
 
-		// generate the data
-		data = new byte[maxDataLength];
-		pos = 0;
-		revpos = (size.height - 1) * size.width * 3;
-		for (y = 0; y < size.height / 2; y++) {
-			for (x = 0; x < size.width; x++) {
-				byte value = (byte) ((y * 2) & 0xFF);
-				data[pos++] = value;
-				data[pos++] = 0;
-				data[pos++] = 0;
-				data[revpos++] = value;
-				data[revpos++] = 0;
-				data[revpos++] = 0;
-			}
-			revpos -= size.width * 6;
-		}
 	}
 
 	/***************************************************************************
@@ -128,26 +105,8 @@ public class DeviceDisplayStream implements PushBufferStream, DisplayRepaintList
 		synchronized (this) {
 			System.err.println("  - creating image: " + seqNo);
 
-			BufferedImage bi =
-				new BufferedImage(deviceDisplay.getWidth(), deviceDisplay.getHeight(), BufferedImage.TYPE_INT_RGB);
-			Graphics g = bi.getGraphics();
-//			deviceDisplay.paint(g);
-			g.drawString("Frame no " + seqNo, 5, 25);
-
-			int data[] = null;
-
-			// Check the input buffer type & size.	 
-			if (buf.getData() instanceof int[]) {
-				data = (int[]) buf.getData();
-			}
-
-			// Check to see the given buffer is big enough for the frame.
-			if (data == null || data.length < (size.width * size.height * 3)) {
-				data = new int[size.width * size.height * 3];
-				buf.setData(data);
-			}
-
-			bi.getRGB(0, 0, size.width, size.height, data, 0, size.width);
+			byte data[] = image.getData();
+			buf.setData(data);
 
 			System.err.println("    read " + data.length + " bytes.");
 
@@ -218,9 +177,9 @@ public class DeviceDisplayStream implements PushBufferStream, DisplayRepaintList
 		}
 	}
 
-	public void repaintInvoked(SwtDeviceDisplay dd) 
+	public void repaintInvoked(MutableImage image) 
 	{
-		deviceDisplay = dd;
+		this.image = image;
 		transferHandler.transferData(this);
 	}
 

@@ -265,7 +265,7 @@ public class Display
   
   void setScrollDown(boolean state)
   {
-    DisplayBridge.setScrollUp(state);
+    DisplayBridge.setScrollDown(state);
   }
 
 

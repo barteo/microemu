@@ -267,10 +267,10 @@ public class DefaultInputMethod extends InputMethod implements Runnable
   {
     char[] result = new char[chars.length];
     int i, j;
-    
+
     for (i = 0, j = 0; i < chars.length; i++) {
       if (constraints == TextField.NUMERIC) {
-        if (Character.isDigit(chars[i])) {
+        if (Character.isDigit(chars[i]) || chars[i] == '.') {
           result[j] = chars[i];
           j++;
         }

@@ -35,7 +35,7 @@ public class TextBox extends Screen
 
 		public void caretPositionChanged(InputMethodEvent event)
 		{
-			tf.setCaretPosition(event.getCaret());
+			setCaretPosition(event.getCaret());
 			tf.setCaretVisible(true);
 			repaint();
 		}
@@ -143,20 +143,29 @@ public class TextBox extends Screen
 
 	int paintContent(Graphics g)
 	{
+		g.translate(0, viewPortY);
 		g.drawRect(1, 1, 
         DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 3, viewPortHeight - 3);
 		g.setClip(3, 3, 
         DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 6, viewPortHeight - 6);
 		g.translate(3, 3);
+		g.translate(0, -viewPortY);
 		tf.paintContent(g);
 
-		return tf.getHeight() + 6;
+		return tf.stringComponent.getHeight() + 6;
 	}
 
 
 	void setCaretPosition(int position)
 	{
 		tf.setCaretPosition(position);
+		
+		StringComponent tmp = tf.stringComponent;
+		if (tmp.getCharPositionY(position) < viewPortY) {
+			viewPortY = tmp.getCharPositionY(position);
+		} else if (tmp.getCharPositionY(position) + tmp.getCharHeight() > viewPortY + viewPortHeight - 6) {
+			viewPortY = tmp.getCharPositionY(position) + tmp.getCharHeight() - (viewPortHeight - 6);
+		}
 	}
 
 

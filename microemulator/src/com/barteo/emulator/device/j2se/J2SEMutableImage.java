@@ -74,13 +74,6 @@ public class J2SEMutableImage extends MutableImage
 	}
 	
 	
-	public int getPixel(int x, int y)
-	{
-		// TODO poprawic zwracanie koloru
-		return 0;
-	}
-	
-	
 	public byte[] getData()
 	{
 		return null;

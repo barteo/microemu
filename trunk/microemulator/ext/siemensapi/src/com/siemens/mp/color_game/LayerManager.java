@@ -64,7 +64,7 @@ public class LayerManager {
         // draw last to first
         
         for (int i = layers.size(); --i >= 0; ) {
-            Layer comp = (Layer)layers.elementAt(1);
+            Layer comp = (Layer)layers.elementAt(i);
             if (comp.visible
             &&comp.x+comp.width>=viewX
             &&comp.x<=viewX+clipW

@@ -48,6 +48,7 @@ public class StringItem extends Item
 	public void setText(String text)
 	{
 		stringComponent.setText(text);
+		repaint();
 	}
 
 

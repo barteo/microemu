@@ -102,6 +102,10 @@ public class AWTDisplayComponent extends Canvas implements com.barteo.midp.lcdui
 			offg = offi.getGraphics();
     }
     
+    offg.setColor(Device.backgroundColor);
+    offg.fillRect(0, 0, Device.screenRectangle.width, Device.screenRectangle.height);
+    
+    offg.setColor(Device.foregroundColor);
     for (Enumeration s = Device.getDeviceButtons().elements(); s.hasMoreElements(); ) {
       Button button = (Button) s.nextElement();
       if (button instanceof SoftButton) {
@@ -109,9 +113,6 @@ public class AWTDisplayComponent extends Canvas implements com.barteo.midp.lcdui
       }
     }
 
-    offg.setColor(Device.backgroundColor);
-    offg.fillRect(0, 0, input_abc_upper.getWidth(this), input_abc_upper.getHeight(this));
-    offg.setColor(Device.foregroundColor);
     int inputMode = InputMethod.getInputMethod().getInputMode();
     if (inputMode == InputMethod.INPUT_123) {
       offg.drawImage(input_123, 0, 0, this);
@@ -128,15 +129,10 @@ public class AWTDisplayComponent extends Canvas implements com.barteo.midp.lcdui
     offg.translate(-Device.screenPaintable.x, -Device.screenPaintable.y);
     offg.setClip(oldclip);
 
-    offg.setColor(Device.backgroundColor);
-    offg.fillRect(40, 115, up_arrow.getWidth(this), up_arrow.getHeight(this));
-    offg.fillRect(48, 115, down_arrow.getWidth(this), down_arrow.getHeight(this));
     if (scrollUp) {
-      offg.setColor(Device.foregroundColor);
       offg.drawImage(up_arrow, 40, 115, this);
     }
     if (scrollDown) {
-      offg.setColor(Device.foregroundColor);
       offg.drawImage(down_arrow, 48, 115, this);
     }
     

@@ -25,6 +25,7 @@ import javax.microedition.lcdui.*;
 
 import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.MIDletAccess;
+import com.barteo.emulator.MIDletBridge;
 import com.barteo.midp.lcdui.DisplayBridge;
 
 
@@ -61,7 +62,7 @@ public abstract class MIDlet
 	protected MIDlet()
 	{
     midlet = this;
-    MicroEmulator.setMIDletAccess(new MIDletAccessor());
+    MIDletBridge.setAccess(new MIDletAccessor());
 	}
 
 

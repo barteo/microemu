@@ -26,6 +26,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
+import javax.microedition.midlet.MIDlet;
+import javax.microedition.midlet.MIDletStateChangeException;
 import javax.swing.LookAndFeel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -35,6 +37,8 @@ import javax.swing.JMenuItem;
 import javax.swing.UIManager;
 
 import com.barteo.emulator.device.Device;
+import com.barteo.emulator.MIDletBridge;
+import com.barteo.midp.lcdui.FontManager;
 import com.barteo.midp.lcdui.KeyboardComponent;
 import com.barteo.midp.lcdui.XYConstraints;
 import com.barteo.midp.lcdui.XYLayout;
@@ -51,6 +55,9 @@ public class Main extends JFrame
   
 	SwingDisplayComponent dc;
 	KeyboardComponent kc;
+  
+  Class midletClass;
+	MIDlet midlet = null;
 
   ActionListener menuOpenJADFileListener = new ActionListener()
   {
@@ -87,13 +94,13 @@ public class Main extends JFrame
     
     JMenu menu = new JMenu("File");
     
-    JMenuItem menuItem = new JMenuItem("Open JAD File...");
+/*    JMenuItem menuItem = new JMenuItem("Open JAD File...");
     menuItem.addActionListener(menuOpenJADFileListener);
     menu.add(menuItem);
     
-    menu.addSeparator();
+    menu.addSeparator();*/
     
-    menuItem = new JMenuItem("Exit");
+    JMenuItem menuItem = new JMenuItem("Exit");
     menuItem.addActionListener(menuExitListener);
     menu.add(menuItem);
 
@@ -102,6 +109,10 @@ public class Main extends JFrame
     
     setTitle("MicroEmulator");
     
+    Font defaultFont = new Font("SansSerif", Font.PLAIN, 11);
+    setFont(defaultFont);
+    FontManager.getInstance().setDefaultFontMetrics(getFontMetrics(defaultFont));
+
     if (!Device.getInstance().isInitialized()) {
       System.out.println("Cannot initialize device configuration");
       return;
@@ -130,6 +141,28 @@ public class Main extends JFrame
       menuExitListener.actionPerformed(null);
     }
   }
+
+  
+	public boolean setMidletClass(String name)
+	{
+		try {
+			midletClass = Class.forName(name);
+		} catch (ClassNotFoundException ex) {
+			System.out.println("Cannot find " + name + " MIDlet class");
+			return false;
+		}
+
+    try {
+      midlet = (MIDlet) midletClass.newInstance();
+    } catch (Exception ex) {
+      System.out.println("Cannot initialize " + midletClass + " MIDlet class");
+      System.out.println(ex);
+      ex.printStackTrace();
+      return false;
+    }
+
+    return true;
+	}
 
   
   public static void main(String args[])
@@ -196,6 +229,16 @@ public class Main extends JFrame
     }
     
     Main app = new Main();
+
+    if (!app.setMidletClass(args[0])) {
+System.out.println("No midlet to run");
+    }
+    
+    try {
+      MIDletBridge.getAccess().startApp();
+		} catch (MIDletStateChangeException ex) {
+      System.err.println(ex);
+		}
 
     if (app.initialized) {
       app.validate();

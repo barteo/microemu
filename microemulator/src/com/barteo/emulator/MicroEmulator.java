@@ -43,10 +43,7 @@ import com.barteo.midp.lcdui.XYLayout;
 
 public class MicroEmulator extends Applet
 {
-  static MIDletAccess midletAccess;
 	Class midletClass;
-	MIDlet midlet = null;
-	Display disp = null;
 
 	AWTDisplayComponent dc;
 	KeyboardComponent kc;
@@ -91,14 +88,12 @@ public class MicroEmulator extends Applet
     add(kc);      
     
     try {
-      midlet = (MIDlet) midletClass.newInstance();
+      midletClass.newInstance();
     } catch (Exception ex) {
       System.out.println("Cannot initialize " + midletClass + " MIDlet class");
       System.out.println(ex);        
       return false;
     }
-
-    disp = Display.getDisplay(midlet);
 
     resize(Device.deviceRectangle.getSize());
     
@@ -108,9 +103,10 @@ public class MicroEmulator extends Applet
 
   public void start()
 	{
-		if (midlet != null) {
+    MIDletAccess access = MIDletBridge.getAccess();
+		if (access != null) {
       try {
-        midletAccess.startApp();
+        access.startApp();
 			} catch (MIDletStateChangeException ex) {
 				System.err.println(ex);
 			}
@@ -120,8 +116,9 @@ public class MicroEmulator extends Applet
 
 	public void stop() 
   {
-		if (midlet != null) {
-			midletAccess.pauseApp();
+    MIDletAccess access = MIDletBridge.getAccess();
+		if (access != null) {
+			access.pauseApp();
 		}
     
     removeAll();
@@ -130,9 +127,10 @@ public class MicroEmulator extends Applet
 
 	public void destroy()
 	{
-		if (midlet != null) {
+    MIDletAccess access = MIDletBridge.getAccess();
+		if (access != null) {
       try {
-  			midletAccess.destroyApp(true);
+  			access.destroyApp(true);
 			} catch (MIDletStateChangeException ex) {
 				System.err.println(ex);
 			}
@@ -151,12 +149,6 @@ public class MicroEmulator extends Applet
 
 		return true;
 	}
-
-
-  public static void setMIDletAccess(MIDletAccess ma)
-  {
-    midletAccess = ma;
-  }
 
 
   public String getAppletInfo()

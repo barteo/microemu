@@ -24,10 +24,12 @@ package com.barteo.emulator.device.swt;
 
 import javax.microedition.lcdui.Image;
 
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
 import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
+import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
 
 
@@ -57,11 +59,10 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
   
   public void setColor(int RGB) 
   {
-		// TODO poprawic setColor	
-//		java.awt.image.RGBImageFilter filter = null;
+		java.awt.image.RGBImageFilter filter = null;
     color = RGB;
     
-/*    DeviceDisplay deviceDisplay = DeviceFactory.getDevice().getDeviceDisplay();
+    DeviceDisplay deviceDisplay = DeviceFactory.getDevice().getDeviceDisplay();
     if (deviceDisplay.isColor()) {
 			filter = new RGBImageFilter();
     } else {
@@ -72,9 +73,7 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
       }
     }
 
-    g.setColor(new Color(filter.filterRGB(0, 0, RGB)));*/
-
-    g.setForeground(SwtDeviceComponent.createColor(RGB));
+    g.setForeground(SwtDeviceComponent.createColor(filter.filterRGB(0, 0, RGB)));
   }
 
 
@@ -241,8 +240,10 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 
   public void fillRect(int x, int y, int width, int height) 
   {
-		// TODO poprawic ustawienia kolorow  	
+		Color tmp = g.getBackground();
+		g.setBackground(g.getForeground());
     g.fillRectangle(x + translateX, y + translateY, width, height);
+    g.setBackground(tmp);
   }
 
 

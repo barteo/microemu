@@ -110,9 +110,6 @@ public class ChoiceGroup extends Item implements Choice
     this.choiceType = choiceType;
     selectedIndex = 0;
 
-    if (choiceType != Choice.EXCLUSIVE && choiceType != Choice.MULTIPLE) {
-      throw new IllegalArgumentException("choiceType is neither EXCLUSIVE nor MULTIPLE");
-    }
 		if (stringElements != null) {
 			for (int i = 0; i < stringElements.length; i++) {
 				append(stringElements[i], null);

@@ -21,53 +21,139 @@
 
 package javax.microedition.lcdui;
 
+import com.barteo.emulator.device.Device;
+
 
 public class Gauge extends Item
 {
+  static int HEIGHT = 15;
+  
+  int value;
+  int maxValue;
+  boolean interactive;
 
 
   public Gauge(String label, boolean interactive, int maxValue, int initialValue)
   {
     super(label);
+    
+    this.interactive = interactive;
+    this.maxValue = maxValue;
+    this.value = initialValue;
   }
 
 
   public void setValue(int value)
   {
+    if (value < 0) {
+      value = 0;
+    }
+    if (value > maxValue) {
+      value = maxValue;
+    }
+    
+    this.value = value;
+    repaint();
   }
 
 
   public int getValue()
   {
-    return -1;
+    return value;
   }
 
 
-  public void setMaxValue(int maxValue)
+  public void setMaxValue(int maxValue) throws IllegalArgumentException
   {
+    if (maxValue <= 0) {
+      throw new IllegalArgumentException();
+    }
+    
+    this.maxValue = maxValue;
+    setValue(getValue());
   }
 
 
   public int getMaxValue()
   {
-    return -1;
+    return maxValue;
   }
 
 
   public boolean isInteractive()
   {
-    return false;
+    return interactive;
   }
 
 
   public void setLabel(String label)
   {
+    super.setLabel(label);
   }
 
 
-  int paint(Graphics g)
+	int getHeight()
+	{
+		return super.getHeight() + HEIGHT;
+	}
+
+  
+	boolean isFocusable()
+	{
+		return interactive;
+	}
+
+  
+  void keyPressed(int keyCode)
   {
-    return 0;
+    if (Display.getGameAction(keyCode) == 2 && value > 0) {
+      value--;
+      repaint();
+    } else if (Display.getGameAction(keyCode) == 5 && value < maxValue) {
+      value++;
+      repaint();
+    }
   }
 
+  
+  int paint(Graphics g)
+  {    
+    super.paintContent(g);
+    
+		g.translate(0, super.getHeight());
+    
+ 		if (isFocus()) {
+      g.drawRect(2, 2, Device.screenPaintableWidth - 5, HEIGHT - 5);
+    }
+    
+    int width = (Device.screenPaintableWidth - 8) * value / maxValue;
+    g.fillRect(4, 4, width, HEIGHT - 8);
+		g.translate(0, -super.getHeight());
+    
+    return getHeight();
+  }
+
+
+	int traverse(int gameKeyCode, int top, int bottom, boolean action)
+	{
+		Font f = Font.getDefaultFont();
+
+		if (gameKeyCode == 1) {
+			if (top > 0) {
+				return -top;
+			} else {
+				return Item.OUTOFITEM;
+			}
+		}
+		if (gameKeyCode == 6) {
+			if (getHeight() > bottom) {
+				return getHeight() - bottom;
+			} else {
+				return Item.OUTOFITEM;
+			}
+		}
+
+		return 0;
+	}
+  
 }

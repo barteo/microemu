@@ -32,6 +32,7 @@ public class SimpleDemo extends MIDlet implements CommandListener
   List menuList;
   ScreenPanel screenPanels[] = {
       new AlertPanel(),
+      new GaugePanel(),
       new ImageItemPanel(),
       new ListPanel(),
       new TextBoxPanel()
@@ -77,7 +78,7 @@ public class SimpleDemo extends MIDlet implements CommandListener
   {
     return instance;
   }
-
+  
   
   public void commandAction(Command c, Displayable d)
   {

@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2002 Bartek Teodorczyk <barteo@barteo.net>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -17,44 +17,56 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package javax.microedition.lcdui;
+package javax.microedition.lcdui.game;
+
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Graphics;
 
 
-public class Spacer extends Item 
+public class GameCanvas extends Canvas 
 {
-
-	public Spacer(int minWidth, int minHeight)
-	{
-		super(null);
-		throw new RuntimeException("TODO");
-	}
+	public static final int DOWN_PRESSED = 1 << Canvas.DOWN;
+	public static final int LEFT_PRESSED = 1 << Canvas.LEFT;
+	public static final int RIGHT_PRESSED = 1 << Canvas.RIGHT;
+	public static final int UP_PRESSED = 1 << Canvas.UP;
+	public static final int FIRE_PRESSED = 1 << Canvas.FIRE;
+	public static final int GAME_A_PRESSED = 1 << Canvas.GAME_A;
+	public static final int GAME_B_PRESSED = 1 << Canvas.GAME_B;
+	public static final int GAME_C_PRESSED = 1 << Canvas.GAME_C;
+	public static final int GAME_D_PRESSED = 1 << Canvas.GAME_D;
 	
 
-	public void addCommand(Command cmd)
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-
-	public void setDefaultCommand(Command cmd)
+	protected GameCanvas(boolean suppressKeyEvents)
 	{
 		throw new RuntimeException("TODO");
 	}
 
 
-	public void setLabel(String label)
+	public void flushGraphics()
 	{
 		throw new RuntimeException("TODO");
 	}
 	
 	
-	public void setMinimumSize(int minWidth, int minHeight)
+	public void flushGraphics(int x, int y, int width, int height)
 	{
 		throw new RuntimeException("TODO");
 	}
 	
 	
-	int paint(Graphics g) 
+	protected Graphics getGraphics()
+	{
+		throw new RuntimeException("TODO");
+	}
+	
+	
+	public int getKeyStates()
+	{
+		throw new RuntimeException("TODO");
+	}
+
+	
+	public void paint(Graphics g) 
 	{
 		throw new RuntimeException("TODO");
 	}

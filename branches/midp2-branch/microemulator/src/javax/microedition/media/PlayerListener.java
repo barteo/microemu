@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2002 Bartek Teodorczyk <barteo@barteo.net>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -17,46 +17,22 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package javax.microedition.lcdui;
+package javax.microedition.media;
 
 
-public class Spacer extends Item 
+public interface PlayerListener 
 {
-
-	public Spacer(int minWidth, int minHeight)
-	{
-		super(null);
-		throw new RuntimeException("TODO");
-	}
-	
-
-	public void addCommand(Command cmd)
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-
-	public void setDefaultCommand(Command cmd)
-	{
-		throw new RuntimeException("TODO");
-	}
-
-
-	public void setLabel(String label)
-	{
-		throw new RuntimeException("TODO");
-	}
+	public static final String CLOSED = "CLOSED";
+	public static final String DEVICE_AVAILABLE = "DEVICE_AVAILABLE";
+	public static final String DEVICE_UNAVAILABLE = "DEVICE_UNAVAILABLE";
+	public static final String DURATION_UPDATED = "DURATION_UPDATED";
+	public static final String END_OF_MEDIA = "END_OF_MEDIA";
+	public static final String ERROR = "ERROR";
+	public static final String STARTED = "STARTED";
+	public static final String STOPPED = "STOPPED";
+	public static final String VOLUME_CHANGED = "VOLUME_CHANGED";
 	
 	
-	public void setMinimumSize(int minWidth, int minHeight)
-	{
-		throw new RuntimeException("TODO");
-	}
+	public void playerUpdate(Player player, String event, Object eventData);
 	
-	
-	int paint(Graphics g) 
-	{
-		throw new RuntimeException("TODO");
-	}
-
 }

@@ -94,7 +94,7 @@ public class Form extends Screen
 
 	public void deleteAll()
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 	
 	
@@ -174,8 +174,7 @@ System.out.println("TODO");
 	
 	public int getWidth()
 	{
-System.out.println("TODO");
-		return 0;
+		throw new RuntimeException("TODO");
 	}
 
 

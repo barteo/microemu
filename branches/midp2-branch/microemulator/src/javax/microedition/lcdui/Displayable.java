@@ -78,15 +78,13 @@ public abstract class Displayable
 
 	public int getHeight()
 	{
-System.out.println("TODO");
-		return 0;
+		throw new RuntimeException("TODO");
 	}
 	
 
 	public int getWidth()
 	{
-System.out.println("TODO");
-		return 0;
+		throw new RuntimeException("TODO");
 	}
 	
 		
@@ -148,7 +146,7 @@ System.out.println("TODO");
 
 	protected void sizeChanged(int w, int h)
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 	
 	

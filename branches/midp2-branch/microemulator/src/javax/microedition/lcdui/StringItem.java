@@ -36,27 +36,26 @@ public class StringItem extends Item
 	public StringItem(String label, String text, int appearanceMode)
 	{
 		this(label, text);
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
+
 	}
 	
 
 	public int getAppearanceMode()	
 	{
-System.out.println("TODO");
-		return 0;
+		throw new RuntimeException("TODO");
 	}
 
 
 	public Font getFont()
 	{
-System.out.println("TODO");
-		return null;
+		throw new RuntimeException("TODO");
 	}
 
 
 	public void setFont(Font font)
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 		
 	

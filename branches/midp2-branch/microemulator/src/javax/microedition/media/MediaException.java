@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2002 Bartek Teodorczyk <barteo@barteo.net>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -17,44 +17,19 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package javax.microedition.lcdui;
+package javax.microedition.media;
 
 
-public class Spacer extends Item 
+public class MediaException extends Exception 
 {
 
-	public Spacer(int minWidth, int minHeight)
-	{
-		super(null);
-		throw new RuntimeException("TODO");
-	}
-	
-
-	public void addCommand(Command cmd)
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-
-	public void setDefaultCommand(Command cmd)
+	public MediaException()
 	{
 		throw new RuntimeException("TODO");
 	}
 
 
-	public void setLabel(String label)
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-	
-	public void setMinimumSize(int minWidth, int minHeight)
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-	
-	int paint(Graphics g) 
+	public MediaException(String reason)
 	{
 		throw new RuntimeException("TODO");
 	}

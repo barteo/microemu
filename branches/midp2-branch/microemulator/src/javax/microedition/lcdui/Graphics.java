@@ -51,7 +51,7 @@ public class Graphics
 	public void copyArea(int x_src, int y_src, int width, int height, 
 			int x_dest, int y_dest, int anchor)
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 	
 	
@@ -97,14 +97,14 @@ System.out.println("TODO");
 	public void drawRegion(Image src, int x_src, int y_src, int width, int height, 
 			int transform, int x_dest, int y_dest, int anchor)
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 	
 
 	public void drawRGB(int[] rgbData, int offset, int scanlength, 
 			int x, int y, int width, int height, boolean processAlpha)
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 	
 		
@@ -146,7 +146,7 @@ System.out.println("TODO");
 
 	public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3)
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 	
 	
@@ -193,8 +193,7 @@ System.out.println("TODO");
 
 	public int getDisplayColor(int color)
 	{
-System.out.println("TODO");
-		return 0;
+		throw new RuntimeException("TODO");
 	}
 	
 	

@@ -170,7 +170,7 @@ public abstract class Canvas extends Displayable
 
 	public void setFullScreenMode(boolean mode)
 	{
-System.out.println("TODO");		
+		throw new RuntimeException("TODO");
 	}
 	
   
@@ -181,7 +181,7 @@ System.out.println("TODO");
   
 	protected void sizeChanged(int w, int h)
 	{
-		System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
   
 }

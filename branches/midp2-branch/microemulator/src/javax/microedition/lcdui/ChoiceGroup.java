@@ -158,33 +158,31 @@ public class ChoiceGroup extends Item implements Choice
   
   public void deleteAll()
   {
-System.out.println("TODO");  	
+  	throw new RuntimeException("TODO");
   }
 
 
 	public int getFitPolicy() 
 	{
-System.out.println("TODO");
-		return 0;
+		throw new RuntimeException("TODO");
 	}
 		
 		
 	public void setFitPolicy(int fitPolicy) 
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 
 
 	public Font getFont(int elementNum) 
 	{
-System.out.println("TODO");
-		return null;
+		throw new RuntimeException("TODO");
 	}
 	
 	
 	public void setFont(int elementNum, Font font)
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 
 

@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2002 Bartek Teodorczyk <barteo@barteo.net>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -16,63 +16,60 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
-package javax.microedition.lcdui;
+
+package javax.microedition.lcdui.game;
+
+import javax.microedition.lcdui.Graphics;
 
 
-public class Command
+public class LayerManager 
 {
 
-	public static final int SCREEN = 1;
-	public static final int BACK = 2;
-	public static final int CANCEL = 3;
-	public static final int OK = 4;
-	public static final int HELP = 5;
-	public static final int STOP = 6;
-	public static final int EXIT = 7;
-	public static final int ITEM = 8;
-	
-	String label;
-	int commandType;
-	int priority;
-
-
-	public Command(String label, int commandType, int priority)
-	{
-		this.label = label;
-		this.commandType = commandType;
-		this.priority = priority;
-	}
-
-
-	public Command(String shortLabel, String longLabel, int commandType, int priority)
+	public LayerManager()
 	{
 		throw new RuntimeException("TODO");
-		
 	}
-	
-	
-	public int getCommandType()
+
+
+	public void append(Layer l)
 	{
-		return commandType;
+		throw new RuntimeException("TODO");
 	}
 
 
-	public String getLabel()
+	public Layer getLayerAt(int index)		
 	{
-		return label;
+		throw new RuntimeException("TODO");
 	}
 
 
-	public String getLongLabel()
+	public int getSize()
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public void insert(Layer l, int index)
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public void paint(Graphics g, int x, int y)
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public void remove(Layer l)
 	{
 		throw new RuntimeException("TODO");
 	}
 	
 	
-	public int getPriority()
+	public void setViewWindow(int x, int y, int width, int height)	
 	{
-		return priority;
+		throw new RuntimeException("TODO");
 	}
-
+	
 }

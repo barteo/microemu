@@ -19,7 +19,8 @@
  
 package javax.microedition.midlet;
 
-import javax.microedition.lcdui.*;
+import javax.microedition.io.ConnectionNotFoundException;
+import javax.microedition.lcdui.Display;
 
 import com.barteo.emulator.MIDletAccess;
 import com.barteo.emulator.MIDletBridge;
@@ -70,6 +71,12 @@ public abstract class MIDlet
 	}
 
 
+	public final int checkPermission(String permission)
+	{
+		throw new RuntimeException("TODO");
+	}
+	
+	
 	protected abstract void startApp()
   		throws MIDletStateChangeException;
 
@@ -81,7 +88,20 @@ public abstract class MIDlet
   		throws MIDletStateChangeException;
 
 
-  public final String getAppProperty(String key)
+	public final boolean platformRequest(String URL)
+			throws ConnectionNotFoundException
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public final void resumeRequest()
+	{
+		throw new RuntimeException("TODO");
+	}
+	
+	
+	public final String getAppProperty(String key)
   {
     return MIDletBridge.getAppProperty(key);
   }

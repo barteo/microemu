@@ -49,7 +49,7 @@ public class ImageItem extends Item
 	public ImageItem(String label, Image image, int layout, String altText, int appearanceMode)
 	{
 		this(label, image, layout, altText);
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 	
 	
@@ -61,8 +61,7 @@ System.out.println("TODO");
 
 	public int getAppearanceMode()
 	{
-System.out.println("TODO");
-		return 0;
+		throw new RuntimeException("TODO");
 	}
 	
 	

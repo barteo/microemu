@@ -59,13 +59,13 @@ public abstract class Item
   
 	public void addCommand(Command cmd)
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 	
 	
 	public void removeCommand(Command cmd)
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 	
 	
@@ -83,64 +83,61 @@ System.out.println("TODO");
 	
 	public int getLayout()
 	{
-System.out.println("TODO");
-		return 0;
+		throw new RuntimeException("TODO");
 	}
 	
 
 	public int getMinimumHeight()
 	{
-System.out.println("TODO");
-		return 0;
+		throw new RuntimeException("TODO");
 	}
 
 
 	public int getMinimumWidth()
 	{
-System.out.println("TODO");
-		return 0;
+		throw new RuntimeException("TODO");
 	}
 
 
 	public int getPreferredHeight()
 	{
-System.out.println("TODO");
-		return 0;
+		throw new RuntimeException("TODO");
 	}
 
 
 	public int getPreferredWidth()
 	{
-System.out.println("TODO");
-		return 0;
+		throw new RuntimeException("TODO");
 	}
+	
+	
 	public void notifyStateChanged()
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 
 
 	public void setDefaultCommand(Command cmd)
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 
 
 	public void setItemCommandListener(ItemCommandListener l)	
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 
 
 	public void setLayout(int layout)
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 
 
 	public void setPreferredSize(int width, int height)
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 
 		

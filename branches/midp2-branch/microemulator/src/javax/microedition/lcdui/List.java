@@ -126,13 +126,13 @@ public class List extends Screen implements Choice
   
 	public void removeCommand(Command cmd)
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 	
 	
 	public void setSelectCommand(Command command)
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 
 	

@@ -60,23 +60,20 @@ public class Image
 
 	public static Image	createImage(Image image, int x, int y, int width, int height, int transform)
 	{
-System.out.println("TODO");
-		return null;
+		throw new RuntimeException("TODO");
 	}
 	
 
 	public static Image createImage(InputStream stream)
 			throws IOException
 	{
-System.out.println("TODO");
-		return null;
+		throw new RuntimeException("TODO");
 	}
 
 
 	public static Image createRGBImage(int[] rgb, int width, int height, boolean processAlpha)
 	{
-System.out.println("TODO");
-		return null;
+		throw new RuntimeException("TODO");
 	}	
 	
 		
@@ -100,7 +97,7 @@ System.out.println("TODO");
 
 	public void getRGB(int[] rgbData, int offset, int scanlength, int x, int y, int width, int height)
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 	
 		

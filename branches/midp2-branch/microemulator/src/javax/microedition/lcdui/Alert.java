@@ -121,14 +121,13 @@ public class Alert extends Screen
 
   public Gauge getIndicator()
   {
-System.out.println("TODO");  	
-    return null;
+  	throw new RuntimeException("TODO");
   }
   
   
   public void setIndicator(Gauge indicator)
   {
-System.out.println("TODO");
+  	throw new RuntimeException("TODO");
   }
 
 

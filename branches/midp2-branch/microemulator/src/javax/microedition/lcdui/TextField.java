@@ -249,7 +249,7 @@ public class TextField extends Item
 
 	public void setInitialInputMode(String characterSubset)
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 	
 	

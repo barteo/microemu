@@ -26,9 +26,9 @@ import java.util.Vector;
 
 public class RecordStore 
 {
-  /**
-   * @associates RecordStore 
-   */
+	public static final int AUTHMODE_ANY = 1;
+	public static final int AUTHMODE_PRIVATE = 0;
+
   private static Hashtable recordStores = new Hashtable();
   
   private String name;
@@ -37,9 +37,6 @@ public class RecordStore
   private long lastModified = 0;
   private int nextRecordID = 0;
 
-  /**
-   * @associates RecordListener 
-   */
   private Vector recordListeners = new Vector();
   private Hashtable records = new Hashtable();
   
@@ -81,7 +78,21 @@ public class RecordStore
 		return recordStore;
 	}
 	
+
+	public static RecordStore openRecordStore(String recordStoreName, boolean createIfNecessary, int authmode, boolean writable)
+			throws RecordStoreException, RecordStoreFullException, RecordStoreNotFoundException
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public static RecordStore openRecordStore(String recordStoreName, String vendorName, String suiteName)
+			throws RecordStoreException, RecordStoreNotFoundException
+	{
+		throw new RuntimeException("TODO");
+	}
 	
+					
 	public void closeRecordStore()
       throws RecordStoreNotOpenException, RecordStoreException
 	{
@@ -107,6 +118,13 @@ public class RecordStore
 		return result;
 	}
 	
+	
+	public void setMode(int authmode, boolean writable)
+			throws RecordStoreException
+	{
+		throw new RuntimeException("TODO");
+	}
+
 	
 	public String getName()
 	{

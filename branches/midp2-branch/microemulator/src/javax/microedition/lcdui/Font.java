@@ -62,8 +62,7 @@ public final class Font
 
 	public static Font getFont(int fontSpecifier)
 	{
-System.out.println("TODO");
-		return null;
+		throw new RuntimeException("TODO");
 	}
 	
 	

@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2002 Bartek Teodorczyk <barteo@barteo.net>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -16,63 +16,63 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
-package javax.microedition.lcdui;
+
+package javax.microedition.lcdui.game;
+
+import javax.microedition.lcdui.Graphics;
 
 
-public class Command
+public abstract class Layer 
 {
 
-	public static final int SCREEN = 1;
-	public static final int BACK = 2;
-	public static final int CANCEL = 3;
-	public static final int OK = 4;
-	public static final int HELP = 5;
-	public static final int STOP = 6;
-	public static final int EXIT = 7;
-	public static final int ITEM = 8;
-	
-	String label;
-	int commandType;
-	int priority;
-
-
-	public Command(String label, int commandType, int priority)
-	{
-		this.label = label;
-		this.commandType = commandType;
-		this.priority = priority;
-	}
-
-
-	public Command(String shortLabel, String longLabel, int commandType, int priority)
-	{
-		throw new RuntimeException("TODO");
-		
-	}
-	
-	
-	public int getCommandType()
-	{
-		return commandType;
-	}
-
-
-	public String getLabel()
-	{
-		return label;
-	}
-
-
-	public String getLongLabel()
+	public final int getHeight()
 	{
 		throw new RuntimeException("TODO");
 	}
 	
 	
-	public int getPriority()
+	public final int getWidth()
 	{
-		return priority;
+		throw new RuntimeException("TODO");
+	}
+
+
+	public final int getX()
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public final int getY()
+	{
+		throw new RuntimeException("TODO");
+	}	
+
+
+	public final boolean isVisible()
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public void move(int dx, int dy)
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public abstract void paint(Graphics g);
+
+
+	public void setPosition(int x, int y)
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public void setVisible(boolean visible)				
+	{
+		throw new RuntimeException("TODO");
 	}
 
 }

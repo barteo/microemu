@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2002 Bartek Teodorczyk <barteo@barteo.net>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -17,46 +17,26 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package javax.microedition.lcdui;
+package javax.microedition.media.control;
+
+import javax.microedition.media.Control;
 
 
-public class Spacer extends Item 
+public interface ToneControl extends Control 
 {
+	public static final byte SILENCE = -1;
+	public static final byte VERSION = -2;
+	public static final byte TEMPO = -3;
+	public static final byte RESOLUTION = -4;
+	public static final byte BLOCK_START = -5;
+	public static final byte BLOCK_END = -6;
+	public static final byte PLAY_BLOCK = -7;
+	public static final byte SET_VOLUME = -8;
+	public static final byte REPEAT = -9;
 
-	public Spacer(int minWidth, int minHeight)
-	{
-		super(null);
-		throw new RuntimeException("TODO");
-	}
+	public static final byte C4 = 60;
 	
 
-	public void addCommand(Command cmd)
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-
-	public void setDefaultCommand(Command cmd)
-	{
-		throw new RuntimeException("TODO");
-	}
-
-
-	public void setLabel(String label)
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-	
-	public void setMinimumSize(int minWidth, int minHeight)
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-	
-	int paint(Graphics g) 
-	{
-		throw new RuntimeException("TODO");
-	}
-
+	public void setSequence(byte[] sequence);
+		
 }

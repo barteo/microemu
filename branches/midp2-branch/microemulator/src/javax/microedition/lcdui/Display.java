@@ -205,36 +205,31 @@ public class Display
 
 	public boolean flashBacklight(int duration)
 	{
-System.out.println("TODO");
-		return false;
+		throw new RuntimeException("TODO");
 	}
 	
 
 	public int getBestImageHeight(int imageType)
 	{
-System.out.println("TODO");
-		return 0;
+		throw new RuntimeException("TODO");
 	}
 	
 
 	public int getBestImageWidth(int imageType)
 	{
-System.out.println("TODO");
-		return 0;
+		throw new RuntimeException("TODO");
 	}
 	
 
 	public int getBorderStyle(boolean highlighted)
 	{
-System.out.println("TODO");
-		return 0;
+		throw new RuntimeException("TODO");
 	}
 	
 
 	public int getColor(int colorSpecifier)
 	{
-System.out.println("TODO");
-		return 0;
+		throw new RuntimeException("TODO");
 	}
 	
 					
@@ -252,8 +247,7 @@ System.out.println("TODO");
 
 	public int numAlphaLevels()
 	{
-System.out.println("TODO");
-		return 0;
+		throw new RuntimeException("TODO");
 	}
 	
 	
@@ -307,14 +301,13 @@ System.out.println("TODO");
 
 	public void setCurrentItem(Item item)
 	{
-System.out.println("TODO");
+		throw new RuntimeException("TODO");
 	}
 	
 	
 	public boolean vibrate(int duration)
 	{
-System.out.println("TODO");
-		return false;
+		throw new RuntimeException("TODO");
 	}
 	
 	void clearAlert()

@@ -17,142 +17,146 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package javax.microedition.lcdui;
+package javax.microedition.lcdui.game;
+
+import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
 
 
-public abstract class CustomItem extends Item 
+public class Sprite extends Layer 
 {
-	protected static int KEY_PRESS = 4;
-	protected static int KEY_RELEASE = 8;
-	protected static int KEY_REPEAT = 0x10;
+	public static final int TRANS_MIRROR = 2;
+	public static final int TRANS_MIRROR_ROT180 = 1;
+	public static final int TRANS_MIRROR_ROT270 = 4;
+	public static final int TRANS_MIRROR_ROT90 = 7;
+	public static final int TRANS_NONE = 0;
+	public static final int TRANS_ROT180 = 3;
+	public static final int TRANS_ROT270 = 6;
+	public static final int TRANS_ROT90 = 5;
 
-	protected static int POINTER_DRAG = 0x80;
-	protected static int POINTER_PRESS = 0x20;
-	protected static int POINTER_RELEASE = 0x40;
 
-	protected static int NONE = 0;
-	protected static int TRAVERSE_HORIZONTAL = 1;
-	protected static int TRAVERSE_VERTICAL = 2;
-	
-	
-	protected CustomItem(String label)
+	public Sprite(Image image)
 	{
-		super(label);
 		throw new RuntimeException("TODO");
 	}
 	
 
-	public int getGameAction(int keyCode)
+	public Sprite(Image image, int frameWidth, int frameHeight)
 	{
 		throw new RuntimeException("TODO");
 	}
 	
-	
-	protected int getInteractionModes()
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-	
-	protected abstract int getMinContentHeight();
 
-	protected abstract int getMinContentWidth();
-			
-	protected abstract int getPrefContentHeight(int width);
-		
-	protected abstract int getPrefContentWidth(int height);
-	
-	
-	protected void hideNotify()
+	public Sprite(Sprite s)
 	{
 		throw new RuntimeException("TODO");
 	}
 	
-	
-	protected void invalidate()
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-	
-	protected void keyPressed(int keyCode)
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-	
-	protected void keyReleased(int keyCode)
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-		
-	protected void keyRepeated(int keyCode)
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-	
-	protected abstract void paint(Graphics g, int w, int h);
-	
-	
-	protected void pointerDragged(int x, int y)
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-	
-	protected void pointerPressed(int x, int y)
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-	
-	protected void pointerReleased(int x, int y)
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-	
-	protected void repaint()
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-	
-	protected void repaint(int x, int y, int w, int h)
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-	
-	protected void showNotify()
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-	
-	protected void sizeChanged(int w, int h)
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-	
-	protected boolean traverse(int dir, int viewportWidth, int viewportHeight, int[] visRect_inout)
-	{
-		throw new RuntimeException("TODO");
-	}
-	
-	
-	protected void traverseOut()
-	{
-		throw new RuntimeException("TODO");
-	}
-		
 
-	int paint(Graphics g) 
+	public final boolean collidesWith(Image image, int x, int y, boolean pixelLevel)
+	{
+		throw new RuntimeException("TODO");
+	}
+	
+	
+	public final boolean collidesWith(Sprite s, boolean pixelLevel)
 	{
 		throw new RuntimeException("TODO");
 	}
 
+					
+	public final boolean collidesWith(TiledLayer t, boolean pixelLevel)
+	{
+		throw new RuntimeException("TODO");
+	}
+	
+
+	public void defineCollisionRectangle(int x, int y, int width, int height)
+	{
+		throw new RuntimeException("TODO");
+	}
+	
+	
+	public void defineReferencePixel(int x, int y)		
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public final int getFrame()
+	{
+		throw new RuntimeException("TODO");
+	}
+
+	public int getFrameSequenceLength()
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public int getRawFrameCount()
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public int getRefPixelX()
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public int getRefPixelY()
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public void nextFrame()
+	{
+		throw new RuntimeException("TODO");
+	}
+
+	
+	public final void paint(Graphics g) 
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public void prevFrame()
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public void setFrame(int sequenceIndex)
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public void setFrameSequence(int[] sequence)
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public void setImage(Image img, int frameWidth, int frameHeight)
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public void setRefPixelPosition(int x, int y)
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
+	public void setTransform(int transform)
+	{
+		throw new RuntimeException("TODO");
+	}
+	
 }

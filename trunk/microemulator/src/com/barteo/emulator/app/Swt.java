@@ -55,14 +55,14 @@ import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.swt.SwtDevice;
 
 
-public class Swt
+public class Swt extends Common
 {
 	public static Shell shell;
 
+	private static SwtDeviceComponent devicePanel;
+
 	Swt instance = null;
-  
-	Common common;
-  
+    
 	boolean initialized = false;
   
 	SwtSelectDeviceDialog selectDeviceDialog;
@@ -71,25 +71,9 @@ public class Swt
 	MenuItem menuOpenJADURL;
 	MenuItem menuSelectDevice;
 	    
-	SwtDeviceComponent devicePanel;
 	DeviceEntry deviceEntry;
 
 	Label statusBar;
-  
-	private EmulatorContext emulatorContext = new EmulatorContext()
-	{
-		ProgressJarClassLoader loader = new ProgressJarClassLoader();
-    
-		public ClassLoader getClassLoader()
-		{
-			return loader;
-		}
-    
-		public DisplayComponent getDisplayComponent()
-		{
-			return devicePanel.getDisplayComponent();
-		}    
-	};
   
 	KeyListener keyListener = new KeyListener()
 	{    
@@ -123,7 +107,7 @@ public class Swt
 
 			if (fileDialog.getFileName().length() > 0) {
 				try {
-					common.openJadFile(new File(fileDialog.getFilterPath(), fileDialog.getFileName()).toURL());
+					openJadFile(new File(fileDialog.getFilterPath(), fileDialog.getFileName()).toURL());
 				} catch (MalformedURLException ex) {
 					System.err.println("Bad URL format " + fileDialog.getFileName());
 				}
@@ -139,7 +123,7 @@ public class Swt
 			if (inputDialog.open() == SwtDialog.OK) {
 				try {
 					URL url = new URL(inputDialog.getValue());
-					common.openJadFile(url);
+					openJadFile(url);
 				} catch (MalformedURLException ex) {
 					System.err.println("Bad URL format " + inputDialog.getValue());
 				}
@@ -164,7 +148,7 @@ public class Swt
 				if (selectDeviceDialog.getSelectedDeviceEntry().equals(getDevice())) {
 					return;
 				}
-				if (MIDletBridge.getCurrentMIDlet() != common.getLauncher()) {
+				if (MIDletBridge.getCurrentMIDlet() != getLauncher()) {
 					if (!SwtMessageDialog.openQuestion(shell,
 							"Question?", "Changing device needs MIDlet to be restarted. All MIDlet data will be lost. Are you sure?")) { 
 						return;
@@ -172,15 +156,15 @@ public class Swt
 				}
 				setDevice(selectDeviceDialog.getSelectedDeviceEntry());
 
-				if (MIDletBridge.getCurrentMIDlet() != common.getLauncher()) {
+				if (MIDletBridge.getCurrentMIDlet() != getLauncher()) {
 					try {
 						MIDlet result = (MIDlet) MIDletBridge.getCurrentMIDlet().getClass().newInstance();
-						common.startMidlet(result);
+						startMidlet(result);
 					} catch (Exception ex) {
 						System.err.println(ex);
 					}
 				} else {
-					common.startMidlet(common.getLauncher());
+					startMidlet(getLauncher());
 				}
 			}
 		}    
@@ -242,6 +226,21 @@ public class Swt
   
 	Swt(Shell shell)
 	{
+		super(new EmulatorContext()
+		{
+			ProgressJarClassLoader loader = new ProgressJarClassLoader();
+    
+			public ClassLoader getClassLoader()
+			{
+				return loader;
+			}
+    
+			public DisplayComponent getDisplayComponent()
+			{
+				return devicePanel.getDisplayComponent();
+			}    
+		});
+
 		instance = this;
     
 		GridLayout layout = new GridLayout(1, false);
@@ -297,9 +296,8 @@ public class Swt
 		selectDeviceDialog = new SwtSelectDeviceDialog(shell);
 		setDevice(selectDeviceDialog.getSelectedDeviceEntry());
     
-		common = new Common(emulatorContext);
-		common.setStatusBarListener(statusBarListener);
-		common.setResponseInterfaceListener(responseInterfaceListener);
+		setStatusBarListener(statusBarListener);
+		setResponseInterfaceListener(responseInterfaceListener);
     
 		initialized = true;
 	}
@@ -357,7 +355,7 @@ public class Swt
 				try {
 					File file = new File(args[0]);
 				  URL url = file.exists() ? file.toURL() : new URL(args[0]);
-				  app.common.openJadFile(url);
+				  app.openJadFile(url);
 				} catch(MalformedURLException exception) {
 				  System.out.println("Cannot parse " + args[0] + " URL");
 				}
@@ -365,18 +363,18 @@ public class Swt
 				Class midletClass;
 				try {
 				  midletClass = Class.forName(args[0]);
-				m = app.common.loadMidlet("MIDlet", midletClass);
+				m = app.loadMidlet("MIDlet", midletClass);
 				} catch (ClassNotFoundException ex) {
 				  System.out.println("Cannot find " + args[0] + " MIDlet class");
 				}
 		  }
 		} else {
-			m = app.common.getLauncher();
+			m = app.getLauncher();
 		}
     
 		if (app.initialized) {
 			if (m != null) {
-				app.common.startMidlet(m);
+				app.startMidlet(m);
 			}
 			
 			shell.pack ();

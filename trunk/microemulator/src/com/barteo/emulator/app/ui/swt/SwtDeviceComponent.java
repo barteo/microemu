@@ -276,6 +276,12 @@ public class SwtDeviceComponent extends Canvas
 			image = new Image(instance.getParent().getDisplay(), data);
 		}		
 	}
+	
+	
+	public static Image createImage(int width, int height)
+	{
+		return new Image(instance.getDisplay(), width, height);
+	}
 
 
 	public static Image createImage(InputStream is) 

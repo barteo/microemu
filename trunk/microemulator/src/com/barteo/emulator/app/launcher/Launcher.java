@@ -47,9 +47,6 @@ public class Launcher extends MIDlet implements CommandListener
   
   public Launcher()
   {
-    menuList = new List("Launcher", List.IMPLICIT);
-
-    menuList.setCommandListener(this);
   }
 
 
@@ -89,9 +86,9 @@ public class Launcher extends MIDlet implements CommandListener
   
   public void startApp() 
   {
-    for (int i = menuList.size() - 1; i >= 0; i--) {
-      menuList.delete(i);
-    }
+		menuList = new List("Launcher", List.IMPLICIT);
+		menuList.setCommandListener(this);
+
     if (midletEntries.size() == 0) {
       menuList.append(nomidlets, null);
     } else {

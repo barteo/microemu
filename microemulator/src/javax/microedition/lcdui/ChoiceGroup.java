@@ -112,7 +112,7 @@ public class ChoiceGroup extends Item implements Choice
 
 		if (stringElements != null) {
 			for (int i = 0; i < stringElements.length; i++) {
-				append(stringElements[i], null);
+				append(stringElements[i], imageElements[i]);
 			}
 		}
 	}
@@ -154,6 +154,8 @@ public class ChoiceGroup extends Item implements Choice
     if (highlightedItemIndex >= numOfItems) {
       highlightedItemIndex = numOfItems-1;
     }
+    
+    repaint();
   }
 
 
@@ -257,7 +259,7 @@ public class ChoiceGroup extends Item implements Choice
     System.arraycopy(items, elementNum, items, elementNum + 1,
                      numOfItems - elementNum);
   
-	  items[elementNum] = new ChoiceItem(null, null, stringPart);
+	  items[elementNum] = new ChoiceItem(null, imagePart, stringPart);
 
     ++numOfItems;
 
@@ -267,6 +269,8 @@ public class ChoiceGroup extends Item implements Choice
         setSelectedIndex(0, true);
       }
     }
+    
+    repaint();
   }
 
 
@@ -293,6 +297,9 @@ public class ChoiceGroup extends Item implements Choice
 		}
 
 		items[elementNum].setText(stringPart);
+		items[elementNum].setImage(imagePart);
+		
+		repaint();
   }
 
 
@@ -457,9 +464,9 @@ public class ChoiceGroup extends Item implements Choice
   {
     private boolean selected;
 
-    ChoiceItem(String label, Image image /*XXX*/, String text)
+    ChoiceItem(String label, Image image, String text)
     {
-      super(label, null, text);
+      super(label, image, text);
       setSelectedState(false);
     }
 
@@ -471,9 +478,11 @@ public class ChoiceGroup extends Item implements Choice
     void setSelectedState(boolean state)
     {
       selected = state;
-      setImage(Choice.EXCLUSIVE  == choiceType ? (state? imgRadioOn:imgRadioOff)
-               : Choice.MULTIPLE == choiceType ? (state? imgMultiOn:imgMultiOff)
-               : null);
+      
+      if (choiceType != Choice.IMPLICIT) {
+				setImage(Choice.EXCLUSIVE  == choiceType ? 
+						(state? imgRadioOn:imgRadioOff) : (state? imgMultiOn:imgMultiOff));
+      }
     }
   }
   

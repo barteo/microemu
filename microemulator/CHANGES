@@ -1,6 +1,6 @@
 MicroEmulator
 
-0.3 - not yet released
+0.3 (alpha) - 29.08.2002
 - created custom device framework (currently applet and j2se)
 - default device has color display
 - added minimum device profile sample

@@ -20,7 +20,6 @@
 package javax.microedition.lcdui;
 
 import com.barteo.emulator.device.Device;
-import com.barteo.midp.lcdui.DisplayBridge;
 
 
 public abstract class Screen extends Displayable

@@ -173,6 +173,7 @@ public class TextBox extends Screen
 	{
 		super.showNotify();
 		InputMethod.getInputMethod().setInputMethodListener(inputMethodListener);
+    InputMethod.getInputMethod().setConstraints(getConstraints());
 		InputMethod.getInputMethod().setText(getString());
 		InputMethod.getInputMethod().setMaxSize(getMaxSize());
 		setCaretPosition(getString().length());

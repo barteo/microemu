@@ -143,8 +143,8 @@
 		</button>
 		<button name="0" key="VK_0">
       <chars>
-        <char>0</char>
         <char> </char>
+        <char>0</char>
       </chars>
 			<rectangle>
 				<x>68</x>
@@ -155,7 +155,6 @@
 		</button>
 		<button name="1" key="VK_1">
       <chars>
-        <char>1</char>
         <char>.</char>
         <char>,</char>
         <char>?</char>
@@ -179,6 +178,7 @@
         <char>&lt;</char>
         <char>&gt;</char>
         <char>=</char>
+        <char>1</char>
       </chars>
 			<rectangle>
 				<x>30</x>
@@ -189,10 +189,10 @@
 		</button>
 		<button name="2" key="VK_2">
       <chars>
-        <char>2</char>
         <char>a</char>
         <char>b</char>
         <char>c</char>
+        <char>2</char>
       </chars>
 			<rectangle>
 				<x>68</x>
@@ -203,10 +203,10 @@
 		</button>
 		<button name="3" key="VK_3">
       <chars>
-        <char>3</char>
         <char>d</char>
         <char>e</char>
         <char>f</char>
+        <char>3</char>
       </chars>
 			<rectangle>
 				<x>103</x>
@@ -217,10 +217,10 @@
 		</button>
 		<button name="4" key="VK_4">
       <chars>
-        <char>4</char>
         <char>g</char>
         <char>h</char>
         <char>i</char>
+        <char>4</char>
       </chars>
 			<rectangle>
 				<x>30</x>
@@ -231,10 +231,10 @@
 		</button>
 		<button name="5" key="VK_5">
       <chars>
-        <char>5</char>
         <char>j</char>
         <char>k</char>
         <char>l</char>
+        <char>5</char>
       </chars>
 			<rectangle>
 				<x>68</x>
@@ -245,10 +245,10 @@
 		</button>
 		<button name="6" key="VK_6">
       <chars>
-        <char>6</char>
         <char>m</char>
         <char>n</char>
         <char>o</char>
+        <char>6</char>
       </chars>
 			<rectangle>
 				<x>103</x>
@@ -259,11 +259,11 @@
 		</button>
 		<button name="7" key="VK_7">
       <chars>
-        <char>7</char>
         <char>p</char>
         <char>q</char>
         <char>r</char>
         <char>s</char>
+        <char>7</char>
       </chars>
 			<rectangle>
 				<x>30</x>
@@ -274,10 +274,10 @@
 		</button>
 		<button name="8" key="VK_8">
       <chars>
-        <char>8</char>
         <char>t</char>
         <char>u</char>
         <char>v</char>
+        <char>8</char>
       </chars>
 			<rectangle>
 				<x>68</x>
@@ -288,11 +288,11 @@
 		</button>
 		<button name="9" key="VK_9">
       <chars>
-        <char>9</char>
         <char>w</char>
         <char>x</char>
         <char>y</char>
         <char>z</char>
+        <char>9</char>
       </chars>
 			<rectangle>
 				<x>103</x>

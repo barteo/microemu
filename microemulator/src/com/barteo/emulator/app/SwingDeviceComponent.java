@@ -59,43 +59,34 @@ public class SwingDeviceComponent extends JPanel
     
     public void mousePressed(MouseEvent e) 
     {
-      int key = getKey(e);
-      KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key);
-
-      InputMethod.getInputMethod().keyPressed(ev.getKeyCode());
-      pressedButton = getButton(ev);
-      repaint();
-      if (pressedButton instanceof SoftButton) {
-        Command cmd = ((SoftButton) pressedButton).getCommand();
-        if (cmd != null) {
-          CommandManager.getInstance().commandAction(cmd);
+      pressedButton = getButton(e.getX(), e.getY());
+      if (pressedButton != null) {
+        if (pressedButton instanceof SoftButton) {
+          Command cmd = ((SoftButton) pressedButton).getCommand();
+          if (cmd != null) {
+            CommandManager.getInstance().commandAction(cmd);
+          }
+        } else {
+          int key = pressedButton.getKey();
+          KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key);
+          InputMethod.getInputMethod().keyPressed(ev.getKeyCode());
         }
-      }      
+        repaint();
+      }
     }
 
 
     public void mouseReleased(MouseEvent e) 
     {
-      int key = getKey(e);
-      KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key);
+      Button prevOverButton = getButton(e.getX(), e.getY());
+      if (prevOverButton != null) {
+        int key = prevOverButton.getKey();
+        KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key);
 
-      InputMethod.getInputMethod().keyReleased(ev.getKeyCode());
-      prevOverButton = pressedButton;
+        InputMethod.getInputMethod().keyReleased(ev.getKeyCode());
+      }
       pressedButton = null;
       repaint();      
-    }
-
-
-    int getKey(MouseEvent e) 
-    {
-      int key = 0;
-      
-      Button button = getButton(e.getX(), e.getY());
-      if (button != null) {
-        key = button.getKey();
-      }
-
-      return key;
     }
 
   };
@@ -208,7 +199,7 @@ public class SwingDeviceComponent extends JPanel
 	}
  
   
-  Button getButton(int x, int y)
+  private Button getButton(int x, int y)
   {
     for (Enumeration e = Device.getDeviceButtons().elements(); e.hasMoreElements(); ) {
       Button button = (Button) e.nextElement();
@@ -218,17 +209,17 @@ public class SwingDeviceComponent extends JPanel
       }
     }        
     return null;
-  }  
+  }
 
   
-  Button getButton(KeyEvent ev)
+  private Button getButton(KeyEvent ev)
   {
     for (Enumeration e = Device.getDeviceButtons().elements(); e.hasMoreElements(); ) {
       Button button = (Button) e.nextElement();
       if (ev.getKeyCode() == button.getKey()) {
         return button;
       }
-      if (button.isChars(ev.getKeyChar())) {
+      if (button.isChar(ev.getKeyChar())) {
         return button;
       }
     }        

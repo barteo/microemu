@@ -48,7 +48,13 @@ public class Button
   }
   
   
-  public boolean isChars(char c)
+  public char[] getChars()
+  {
+    return chars;
+  }
+  
+  
+  public boolean isChar(char c)
   {
     c = Character.toLowerCase(c);
     if (chars != null) {

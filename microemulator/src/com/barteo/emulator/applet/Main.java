@@ -26,6 +26,8 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -39,6 +41,7 @@ import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
 import com.barteo.emulator.Button;
+import com.barteo.emulator.DefaultInputMethod;
 import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.SoftButton;
@@ -52,6 +55,7 @@ import com.barteo.midp.lcdui.InputMethod;
 
 public class Main extends Applet implements MicroEmulator
 {
+  Main instance;
   MIDlet midlet;
 
 	AWTDisplayComponent dc;
@@ -71,55 +75,37 @@ public class Main extends Applet implements MicroEmulator
     public void mousePressed(MouseEvent e) 
     {
       pressedButton = getButton(e.getX(), e.getY());
-      repaint();
-      
-      int key = getKey(e);
-
-      if (key != 0) {
-        InputMethod.getInputMethod().keyPressed(key);
-        return;
-      }
-
-      Button tmp = getButton(e.getX(), e.getY());      
-      if (tmp instanceof SoftButton) {
-        Command cmd = ((SoftButton) tmp).getCommand();
-        if (cmd != null) {
-          CommandManager.getInstance().commandAction(cmd);
+      if (pressedButton != null) {
+        if (pressedButton instanceof SoftButton) {
+          Command cmd = ((SoftButton) pressedButton).getCommand();
+          if (cmd != null) {
+            CommandManager.getInstance().commandAction(cmd);
+          }
+        } else {
+          int key = pressedButton.getKey();
+          KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key);
+          InputMethod.getInputMethod().keyPressed(ev.getKeyCode());
         }
-      }      
+        repaint();
+      }
     }
 
 
     public void mouseReleased(MouseEvent e) 
     {
-      prevOverButton = pressedButton;
+      Button prevOverButton = getButton(e.getX(), e.getY());
+      if (prevOverButton != null) {
+        int key = prevOverButton.getKey();
+        KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key);
+
+        InputMethod.getInputMethod().keyReleased(ev.getKeyCode());
+      }
       pressedButton = null;
-      repaint();
-      
-      int key = getKey(e);
-
-      if (key != 0) {
-        InputMethod.getInputMethod().keyReleased(key);
-        return;
-      }
-    }
-
-
-    int getKey(MouseEvent e) 
-    {
-      int key = 0;
-      
-      Button button = getButton(e.getX(), e.getY());
-      if (button != null && !(button instanceof SoftButton)) {
-        key = button.getKey();
-      }
-
-      return key;
+      repaint();      
     }
 
   };
   
-
   MouseMotionListener mouseMotionListener = new MouseMotionListener() 
   {
 
@@ -140,9 +126,42 @@ public class Main extends Applet implements MicroEmulator
     
   };
 
-  
+  KeyListener keyListener = new KeyListener()
+  {
+    
+    public void keyTyped(KeyEvent ev)
+    {
+    }
+
+    
+    public void keyPressed(KeyEvent ev)
+    {
+      ((DefaultInputMethod) InputMethod.getInputMethod()).keyboardKeyPressed(ev);
+      pressedButton = getButton(ev);
+      repaint();
+      if (pressedButton instanceof SoftButton) {
+        Command cmd = ((SoftButton) pressedButton).getCommand();
+        if (cmd != null) {
+          CommandManager.getInstance().commandAction(cmd);
+        }
+      }      
+    }
+
+    
+    public void keyReleased(KeyEvent ev)
+    {
+      ((DefaultInputMethod) InputMethod.getInputMethod()).keyboardKeyReleased(ev);
+      prevOverButton = pressedButton;
+      pressedButton = null;
+      repaint();      
+    }
+    
+  };
+
+    
   public void init()
   {
+    instance = this;
     defaultFont = new Font("SansSerif", Font.PLAIN, 11);
     setFont(defaultFont);
     FontManager.getInstance().setDefaultFontMetrics(getFontMetrics(defaultFont));
@@ -153,6 +172,8 @@ public class Main extends Applet implements MicroEmulator
       return;
     }
       
+    addKeyListener(keyListener);
+
     XYLayout xy = new XYLayout();
     setLayout(xy);
 
@@ -198,6 +219,7 @@ public class Main extends Applet implements MicroEmulator
 		} catch (MIDletStateChangeException ex) {
       System.err.println(ex);
 		}
+    requestFocus();
   }
 
 
@@ -300,5 +322,20 @@ public class Main extends Applet implements MicroEmulator
     }        
     return null;
   }  
+
+  
+  private Button getButton(KeyEvent ev)
+  {
+    for (Enumeration e = Device.getDeviceButtons().elements(); e.hasMoreElements(); ) {
+      Button button = (Button) e.nextElement();
+      if (ev.getKeyCode() == button.getKey()) {
+        return button;
+      }
+      if (button.isChar(ev.getKeyChar())) {
+        return button;
+      }
+    }        
+    return null;
+  }
   
 }

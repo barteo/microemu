@@ -20,7 +20,10 @@
 package com.barteo.emulator;
 
 import java.awt.event.KeyEvent;
+import java.util.Enumeration;
 
+import javax.microedition.lcdui.TextField;
+import com.barteo.emulator.device.Device;
 import com.barteo.midp.lcdui.DisplayBridge;
 import com.barteo.midp.lcdui.InputMethod;
 import com.barteo.midp.lcdui.InputMethodEvent;
@@ -28,65 +31,8 @@ import com.barteo.midp.lcdui.InputMethodEvent;
 
 public class DefaultInputMethod extends InputMethod implements Runnable
 {
-
-	int[] deviceKeys = {
-			KeyEvent.VK_0,
-			KeyEvent.VK_1,
-			KeyEvent.VK_2,
-			KeyEvent.VK_3,
-			KeyEvent.VK_4,
-			KeyEvent.VK_5,
-			KeyEvent.VK_6,
-			KeyEvent.VK_7,
-			KeyEvent.VK_8,
-			KeyEvent.VK_9,
-      KeyEvent.VK_MULTIPLY
-	};
-
-	char[][] abcUpperKeys = {
-			{ ' ', '0' },
-			{ '.', ',', '?', '!', ':', ';', '-', '+', '#', '*', '1' },
-			{ 'A', 'B', 'C', '2' },
-			{ 'D', 'E', 'F', '3' },
-			{ 'G', 'H', 'I', '4' },
-			{ 'J', 'K', 'L', '5' },
-			{ 'M', 'N', 'O', '6' },
-			{ 'P', 'Q', 'R', 'S', '7' },
-			{ 'T', 'U', 'V', '8' },
-			{ 'W', 'X', 'Y', 'Z', '9' },
-      { '*' }
-	};
-
-	char[][] abcLowerKeys = {
-			{ ' ', '0' },
-			{ '.', ',', '?', '!', ':', ';', '-', '+', '#', '*', '1' },
-			{ 'a', 'b', 'c', '2' },
-			{ 'd', 'e', 'f', '3' },
-			{ 'g', 'h', 'i', '4' },
-			{ 'j', 'k', 'k', '5' },
-			{ 'm', 'n', 'o', '6' },
-			{ 'p', 'q', 'r', 's', '7' },
-			{ 't', 'u', 'v', '8' },
-			{ 'w', 'x', 'y', 'z', '9' },
-      { '*' }      
-	};
-
-	char[][] numericKeys = {
-			{ '0' },
-			{ '1' },
-			{ '2' },
-			{ '3' },
-			{ '4' },
-			{ '5' },
-			{ '6' },
-			{ '7' },
-			{ '8' },
-			{ '9' },
-			{ '.' }
-	};
-
-	int lastKeyIndex = -1;
-	int lastKeyCountIndex = -1;
+	int lastButtonCharIndex = -1;
+  Button lastButton = null;
 	boolean resetKey;
 
 	Thread t;
@@ -117,10 +63,10 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 				setInputMode(InputMethod.INPUT_123);
 			}
 			synchronized (this) {
-				if (lastKeyIndex != -1) {
+				if (lastButton != null) {
 					caret++;
-					lastKeyIndex = -1;
-					lastKeyCountIndex = -1;
+					lastButton = null;
+					lastButtonCharIndex = -1;
 				}
 			}
 			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
@@ -136,8 +82,8 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 				if (keyCode == KeyEvent.VK_RIGHT && caret < text.length()) {
 					caret++;
 				}
-				lastKeyIndex = -1;
-				lastKeyCountIndex = -1;
+				lastButton = null;
+				lastButtonCharIndex = -1;
 			}
 			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
 			inputMethodListener.caretPositionChanged(event);
@@ -146,10 +92,10 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 
 		if (keyCode == KeyEvent.VK_BACK_SPACE) {
 			synchronized (this) {
-				if (lastKeyIndex != -1) {
+				if (lastButton != null) {
 					caret++;
-					lastKeyIndex = -1;
-					lastKeyCountIndex = -1;
+					lastButton = null;
+					lastButtonCharIndex = -1;
 				}
 				if (caret > 0) {
 					caret--;
@@ -181,27 +127,32 @@ public class DefaultInputMethod extends InputMethod implements Runnable
     }
     
     if (text.length() < maxSize && ev.getKeyChar() != KeyEvent.CHAR_UNDEFINED) {
-			synchronized (this) {
-				if (lastKeyIndex != -1) {
-					caret++;
-					lastKeyIndex = -1;
-					lastKeyCountIndex = -1;
-				}
-				String tmp = "";
-				if (caret > 0) {
-					tmp += text.substring(0, caret);
-				}
-				tmp += ev.getKeyChar();
-				if (caret < text.length() - 1) {
-					tmp += text.substring(caret + 1);
-				}
-				text = tmp;
-  			caret++;
+      char[] test = new char[1];
+      test[0] = ev.getKeyChar();
+      test = filterConstraints(test);
+      if (test.length > 0) {
+  			synchronized (this) {
+  				if (lastButton != null) {
+  					caret++;
+  					lastButton = null;
+  					lastButtonCharIndex = -1;
+  				}
+  				String tmp = "";
+  				if (caret > 0) {
+  					tmp += text.substring(0, caret);
+  				}
+  				tmp += ev.getKeyChar();
+  				if (caret < text.length() - 1) {
+  					tmp += text.substring(caret + 1);
+  				}
+  				text = tmp;
+    			caret++;
+        }
+  			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, text);
+  			inputMethodListener.inputMethodTextChanged(event);
+  			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
+  			inputMethodListener.caretPositionChanged(event);
       }
-			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, text);
-			inputMethodListener.inputMethodTextChanged(event);
-			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
-			inputMethodListener.caretPositionChanged(event);
     }
   }
 
@@ -215,57 +166,57 @@ public class DefaultInputMethod extends InputMethod implements Runnable
     }
 
 		if (text.length() < maxSize) {
-			char[][] transformKeys = null;
-			if (getInputMode() == InputMethod.INPUT_123) {
-				transformKeys = numericKeys;
-			} else if (getInputMode() == InputMethod.INPUT_ABC_UPPER) {
-				transformKeys = abcUpperKeys;
-			} else if (getInputMode() == InputMethod.INPUT_ABC_LOWER) {
-				transformKeys = abcLowerKeys;
-			}
-			for (int i = 0; i < deviceKeys.length; i++) {
-				if (keyCode == deviceKeys[i]) {
-					synchronized (this) {
-						lastKeyCountIndex++;
-						if (lastKeyCountIndex == transformKeys[i].length) {
-							if (transformKeys[i].length == 1) {
-								if (lastKeyIndex != -1) {
-									caret++;
-								}
-								lastKeyIndex = -1;
-							} else {
-								lastKeyCountIndex = 0;
-							}
-						}
-						if (lastKeyIndex != i) {
-							if (lastKeyIndex != -1) {
-								caret++;
-							}
-							tmp = "";
-							if (caret > 0) {
-								tmp += text.substring(0, caret);
-							}
-							tmp += transformKeys[i][0];
-							if (caret < text.length()) {
-								tmp += text.substring(caret);
-							}
-							text = tmp;
-							lastKeyCountIndex = 0;
-						} else {
-							tmp = "";
-							if (caret > 0) {
-								tmp += text.substring(0, caret);
-							}
-							tmp += transformKeys[i][lastKeyCountIndex];
-							if (caret < text.length() - 1) {
-								tmp += text.substring(caret + 1);
-							}
-							text = tmp;
-						}
-						lastKeyIndex = i;
+      for (Enumeration e = Device.getDeviceButtons().elements(); e.hasMoreElements(); ) {
+        Button button = (Button) e.nextElement();
+        if (keyCode == button.getKey()) {
+          synchronized (this) {
+						lastButtonCharIndex++;
+            char[] buttonChars = filterConstraints(filterInputMode(button.getChars()));
+            if (buttonChars.length > 0) {
+              if (lastButtonCharIndex == buttonChars.length) {
+  							if (buttonChars.length == 1) {
+  								if (lastButton != null) {
+  									caret++;
+  								}
+  								lastButton = null;
+  							} else {
+  								lastButtonCharIndex = 0;
+  							}
+  						}
+  						if (lastButton != button) {
+  							if (lastButton != null) {
+  								caret++;
+  							}
+  							tmp = "";
+  							if (caret > 0) {
+  								tmp += text.substring(0, caret);
+  							}
+  							tmp += buttonChars[0];
+  							if (caret < text.length()) {
+  								tmp += text.substring(caret);
+  							}
+  							text = tmp;
+     						lastButton = button;
+  							lastButtonCharIndex = 0;
+  						} else {
+  							tmp = "";
+  							if (caret > 0) {
+  								tmp += text.substring(0, caret);
+  							}
+  							tmp += filterInputMode(lastButton.getChars())[lastButtonCharIndex];
+  							if (caret < text.length() - 1) {
+  								tmp += text.substring(caret + 1);
+  							}
+  							text = tmp;
+     						lastButton = button;
+  						}
+            } else {
+  						lastButton = null;
+              lastButtonCharIndex = -1;
+            }
 						resetKey = false;
 						notify();
-					}
+          }
 
 					InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, text);
 					inputMethodListener.inputMethodTextChanged(event);
@@ -298,10 +249,10 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 				}
 			} catch (InterruptedException ex) {}
 			synchronized (this) {
-				if (resetKey && lastKeyIndex != -1) {
+				if (resetKey && lastButton != null) {
 					caret++;
-					lastKeyIndex = -1;
-					lastKeyCountIndex = -1;
+					lastButton = null;
+					lastButtonCharIndex = -1;
 					if (inputMethodListener != null) {
 						InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
 						inputMethodListener.caretPositionChanged(event);
@@ -310,5 +261,61 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 			}
 		}
 	}
+  
+  
+  private char[] filterConstraints(char[] chars)
+  {
+    char[] result = new char[chars.length];
+    int i, j;
+    
+    for (i = 0, j = 0; i < chars.length; i++) {
+      if (constraints == TextField.NUMERIC) {
+        if (Character.isDigit(chars[i])) {
+          result[j] = chars[i];
+          j++;
+        }
+      } else {
+        result[j] = chars[i];
+        j++;
+      }
+    }
+    if (i != j) {
+      char[] newresult = new char[j];
+      System.arraycopy(result, 0, newresult, 0, j);
+      result = newresult;
+    }
+
+    return result;
+  }
+  
+  
+  private char[] filterInputMode(char[] chars)
+  {
+    int inputMode = getInputMode();
+    char[] result = new char[chars.length];
+    int i, j;
+    
+    for (i = 0, j = 0; i < chars.length; i++) {
+      if (inputMode == InputMethod.INPUT_ABC_UPPER) {
+        result[j] = Character.toUpperCase(chars[i]);
+        j++;
+      } else if (inputMode == InputMethod.INPUT_ABC_LOWER) {
+        result[j] = Character.toLowerCase(chars[i]);
+        j++;
+      } else if (inputMode == InputMethod.INPUT_123) {
+        if (Character.isDigit(chars[i])) {
+          result[j] = chars[i];
+          j++;
+        }
+      }
+    }
+    if (i != j) {
+      char[] newresult = new char[j];
+      System.arraycopy(result, 0, newresult, 0, j);
+      result = newresult;
+    }
+
+    return result;
+  }
 
 }

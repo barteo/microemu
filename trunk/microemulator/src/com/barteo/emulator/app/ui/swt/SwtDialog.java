@@ -20,10 +20,16 @@
 package com.barteo.emulator.app.ui.swt;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -42,6 +48,9 @@ public abstract class SwtDialog
 	
 	protected Control dialogArea;
 	protected Control buttonBar;
+	
+	protected Button btOk;
+	protected Button btCancel;
 
 	private boolean resizeHasOccurred = false;
 	private Listener resizeListener;
@@ -131,6 +140,8 @@ public abstract class SwtDialog
 		newShell.addListener(SWT.Resize,resizeListener);
 		newShell.setData(this);
 
+		newShell.addShellListener(getShellListener());
+
 		configureShell(newShell);
 		
 		return newShell;
@@ -180,6 +191,30 @@ public abstract class SwtDialog
 	{
 		Composite composite = new Composite(parent, SWT.NONE);
 		
+		composite.setLayout(new GridLayout(2, false));
+		composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_CENTER));
+		composite.setFont(parent.getFont());
+
+		btOk = new Button(composite, SWT.PUSH);
+		btOk.setText("OK");		
+		btOk.addSelectionListener(new SelectionAdapter() 
+		{
+			public void widgetSelected(SelectionEvent event) 
+			{
+				okPressed();
+			}
+		});
+		
+		btCancel = new Button(composite, SWT.PUSH);
+		btCancel.setText("Cancel");		
+		btCancel.addSelectionListener(new SelectionAdapter() 
+		{
+			public void widgetSelected(SelectionEvent event) 
+			{
+				cancelPressed();
+			}
+		});
+
 		return composite;
 	}
 	
@@ -217,6 +252,60 @@ public abstract class SwtDialog
 	}
 	
 	
+	protected void okPressed() 
+	{
+		setReturnCode(OK);
+		close();
+	}
+	
+	
+	protected void cancelPressed() {
+		setReturnCode(CANCEL);
+		close();
+	}
+	
+	
+	protected int getReturnCode() 
+	{
+		return returnCode;
+	}
+	
+	
+	protected void setReturnCode(int code) 
+	{
+		returnCode = code;
+	}
+	
+	
+	protected ShellListener getShellListener() 
+	{
+		return new ShellAdapter() 
+		{
+			public void shellClosed(ShellEvent event) 
+			{
+				event.doit= false;	// don't close now
+				setReturnCode(CANCEL);
+				close();
+			}
+		};
+	}
+
+
+	public boolean close() 
+	{
+		if (shell != null || !shell.isDisposed()) {
+			shell.dispose();
+			shell = null;
+			contents = null;
+		}
+
+		buttonBar = null;
+		dialogArea = null;
+
+		return true;
+	}
+
+
 	public Shell getShell() 
 	{
 		return shell;

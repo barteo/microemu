@@ -19,12 +19,14 @@
 
 package com.barteo.emulator.app.ui.swt;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 
 import javax.microedition.lcdui.Command;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
@@ -295,32 +297,37 @@ public class SwtDeviceComponent extends Canvas
 	}
 	
 	
-	public static Image createImage(InputStream is, ImageFilter filter) 
+	public static Image createImage(InputStream is, ImageFilter filter)
+			throws IOException
 	{
-		ImageData data = new ImageData(is);
+		try {
+			ImageData data = new ImageData(is);
 		
-		RGB[] rgbs = data.getRGBs();
-		if (rgbs != null) {	
-			for (int i = 0; i < rgbs.length; i++) {
-				rgbs[i] = filter.filterRGB(0, 0, rgbs[i]);
-			}
-		} else {
-			RGB rgb;
-			int pixel;
-			for (int y = 0; y < data.height; y++) {
-				for (int x = 0; x < data.width; x++) {
-					pixel = data.getPixel(x, y);
-					rgb = new RGB((pixel >> 16) & 255, (pixel >> 8) & 255, pixel & 255);
-					rgb = filter.filterRGB(x, y, rgb);					
-					data.setPixel(x, y, (rgb.red << 16) + (rgb.green << 8) + rgb.blue);
+			RGB[] rgbs = data.getRGBs();
+			if (rgbs != null) {	
+				for (int i = 0; i < rgbs.length; i++) {
+					rgbs[i] = filter.filterRGB(0, 0, rgbs[i]);
 				}
-			}
-		}		
+			} else {
+				RGB rgb;
+				int pixel;
+				for (int y = 0; y < data.height; y++) {
+					for (int x = 0; x < data.width; x++) {
+						pixel = data.getPixel(x, y);
+						rgb = new RGB((pixel >> 16) & 255, (pixel >> 8) & 255, pixel & 255);
+						rgb = filter.filterRGB(x, y, rgb);					
+						data.setPixel(x, y, (rgb.red << 16) + (rgb.green << 8) + rgb.blue);
+					}
+				}
+			}		
+				
+			CreateImageRunnable createImageRunnable = instance.new CreateImageRunnable(data);		
+			instance.getDisplay().syncExec(createImageRunnable); 
 			
-		CreateImageRunnable createImageRunnable = instance.new CreateImageRunnable(data);		
-		instance.getDisplay().syncExec(createImageRunnable); 
-		
-		return createImageRunnable.getImage(); 
+			return createImageRunnable.getImage(); 
+		} catch (SWTException ex) {
+			throw new IOException(ex.toString());
+		}
 	}
 	
 	

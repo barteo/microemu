@@ -24,17 +24,32 @@ import javax.microedition.lcdui.*;
 import javax.microedition.midlet.*;
 
 
-public class SimpleDemo extends MIDlet
+public class SimpleDemo extends MIDlet implements CommandListener
 {
-    
+  
+  static SimpleDemo instance;
+
   List menuList;
+  ScreenPanel screenPanels[] = {
+      new AlertPanel(),
+      new ImageItemPanel(),
+      new ListPanel()
+  };
+  
+  Command exitCommand = new Command("Exit", Command.EXIT, 1);
 
   
   public SimpleDemo()
   {
-    String names[] = {"First", "Second", "Third"};  
+    instance = this;
+    
+    menuList = new List("SimpleDemo", List.IMPLICIT);
       
-    menuList = new List("UI Demo", List.IMPLICIT, names, null);
+    for (int i = 0; i < screenPanels.length; i++) {
+      menuList.append(screenPanels[i].getName(), null);
+    }
+    menuList.addCommand(exitCommand);
+    menuList.setCommandListener(this);
   }
     
 
@@ -51,6 +66,25 @@ public class SimpleDemo extends MIDlet
   public void startApp() 
   {
     Display.getDisplay(this).setCurrent(menuList);
+  }
+  
+ 
+  public static SimpleDemo getInstance()
+  {
+    return instance;
+  }
+
+  
+  public void commandAction(Command c, Displayable d)
+  {
+    if (d == menuList) {
+      if (c == List.SELECT_COMMAND) {
+        Display.getDisplay(this).setCurrent((Displayable) screenPanels[menuList.getSelectedIndex()]);
+      } else if (c == exitCommand) {
+        destroyApp(true);
+        notifyDestroyed();
+      }
+    }
   }
 
 }

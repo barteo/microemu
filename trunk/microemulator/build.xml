@@ -4,7 +4,7 @@
 <!-- If not, you may prefer to adjust the basedir, or move some directories around. -->
 <!-- The idea is that both Ant and NetBeans have to know what the package root is -->
 <!-- for the classes in your application. -->
-<project basedir="." default="compile" name="microemulator">
+<project basedir="." default="test" name="microemulator">
 
   <!-- Don't worry if you don't know the Ant syntax completely or need help on some tasks! -->
   <!-- The standard Ant documentation is bundled. See Help | Shortcuts | Ant 1.3 Documentation. -->

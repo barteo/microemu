@@ -33,7 +33,7 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 {
 
 	java.awt.Graphics g;
-		
+
 
 	protected DisplayGraphics(java.awt.Graphics a_g)
 	{
@@ -45,14 +45,26 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 	{
 		g.clipRect(x, y, width, height);
 	}
-										 
+
 
 	public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle)
 	{
 		g.drawArc(x, y, width, height, startAngle, arcAngle);
 	}
-										
-										
+
+
+  public void drawChar(char character, int x, int y, int anchor)
+  {
+    // Not implemented
+  }
+
+
+  public void drawChars(char[] data, int offset, int length, int x, int y, int anchor)
+  {
+    // Not implemented
+  }
+
+
 	public void drawImage(Image img, int x, int y, int anchor)
 	{
 		int newx = x;
@@ -66,11 +78,11 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 		} else if ((anchor & javax.microedition.lcdui.Graphics.HCENTER) != 0) {
 			newx -= img.getWidth() / 2;
 		}
-		
+
 		g.drawImage(((ImageImpl) img).getImage(), newx, y, null);
 	}
-											
-											
+
+
 	public void drawLine(int x1, int y1, int x2, int y2)
 	{
 		g.drawLine(x1, y1, x2, y2);
@@ -84,23 +96,23 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 		drawLine(x + width, y + height, x, y + height);
 		drawLine(x, y + height, x, y);
 	}
-	
-	
+
+
 	public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight)
 	{
 		g.drawRoundRect(x, y, width, height, arcWidth, arcHeight);
 	}
-													
-													
+
+
 	public void drawString(String str, int x, int y, int anchor)
 	{
 		int newx = x;
 		int newy = y;
-	
+
 		if (anchor == 0) {
 			anchor = javax.microedition.lcdui.Graphics.TOP | javax.microedition.lcdui.Graphics.LEFT;
 		}
-		
+
 		if ((anchor & javax.microedition.lcdui.Graphics.TOP) != 0) {
 			newy += g.getFontMetrics().getAscent();
 		} else if ((anchor & javax.microedition.lcdui.Graphics.BOTTOM) != 0) {
@@ -113,34 +125,34 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 		}
 		g.drawString(str, newx, newy);
 	}
-											 
-											 											 	
+
+
 	public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle)
 	{
 		g.fillArc(x, y, width, height, startAngle, arcAngle);
 	}
-	
-	
+
+
 	public void fillRect(int x, int y, int width, int height)
 	{
 		for (int i = y; i <= (y + height); i++) {
 			drawLine(x, i, x + width, i);
 		}
-	}	
+	}
 
 
 	public void fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight)
 	{
 		g.fillRoundRect(x, y, width, height, arcWidth, arcHeight);
 	}
-													
-													
+
+
 	public void setClip(int x, int y, int width, int height)
 	{
 		g.setClip(x, y, width, height);
 	}
-										
-										
+
+
 	public void setColor(int RGB)
 	{
 		if (RGB == 0xffffff) {
@@ -149,8 +161,8 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 			g.setColor(Device.getForegroundColor());
 		}
 	}
-	
-	
+
+
 	public void setGrayScale(int grey)
 	{
 		if (grey == 255) {

@@ -34,6 +34,7 @@ public class ImageItem extends Item
 
 	Image img;
 	int layout;
+  String altText;
 
 
 	public ImageItem(String label, Image img, int layout, String altText)
@@ -41,8 +42,50 @@ public class ImageItem extends Item
 		super(label);
 		this.img = img;
 		this.layout = layout;
+    this.altText = altText;
 	}
 
+
+  public String getAltText()
+  {
+    return altText;
+  }
+
+
+  public Image getImage()
+  {
+    return img;
+  }
+
+
+  public int getLayout()
+  {
+    return layout;
+  }
+
+
+  public void setAltText(String text)
+  {
+    altText = text;
+  }
+
+
+  public void setImage(Image img)
+  {
+    this.img = img;
+  }
+
+
+  public void setLabel(String label)
+  {
+    super.setLabel(label);
+  }
+
+
+  public void setLayout(int layout)
+  {
+ 		this.layout = layout;
+  }
 
 
 	int getHeight()

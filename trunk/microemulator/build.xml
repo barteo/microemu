@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+
+<!-- Written to assume that classpath is rooted in the current directory. -->
+<!-- So this should be OK if you make this script in the root of a filesystem. -->
+<!-- If not, you may prefer to adjust the basedir, or move some directories around. -->
+<!-- The idea is that both Ant and NetBeans have to know what the package root is -->
+<!-- for the classes in your application. -->
+<project name="microemulator" basedir="." default="all">
+
+    <!-- Don't worry if you don't know the Ant syntax completely or need help on some tasks! -->
+    <!-- The standard Ant documentation is bundled. See Help | Shortcuts | Ant 1.3 Documentation. -->
+
+    <target name="init">
+        <!-- You can set up any variables you want used throughout the script here. -->
+        <property name="hello" value="world"/>
+        <!-- To use e.g. Jikes, uncomment this line. -->
+        <!-- (Or make the same change in Tools | Options | Ant Settings | Properties.) -->
+        <!-- <property name="build.compiler" value="jikes"/> -->
+        <!-- You might like to set up some overridable paths, etc.: -->
+        <!-- <property name="mylib" value="../lib/mylib.jar"/> -->
+    </target>
+
+    <target name="compile" depends="init">
+        <mkdir dir="./classes"/>
+        <!-- Both srcdir and destdir should be package roots. -->
+        <!-- They could be different of course; in that case NetBeans can also be set -->
+        <!-- up to compile to a different filesystem in the same way; see Compiler Types: -->
+        <javac srcdir="./src" destdir="./classes" debug="true" deprecation="true">
+            <!-- To add something to the classpath: -->
+            <!--
+            <classpath>
+                <pathelement location="${mylib}"/>
+            </classpath>
+            -->
+            <!-- To exclude some files: -->
+            <!--
+            <exclude name="com/foo/SomeFile.java"/>
+            <exclude name="com/foo/somepackage/"/>
+            -->
+        </javac>
+    </target>
+
+    <target name="jar" depends="init,compile">
+        <!-- To make a standalone app: -->
+        <!-- 1. Create a myapp.mf manifest somewhere. -->
+        <!-- 2. Put in it: -->
+        <!--    Manifest-Version: 1.0 -->
+        <!--    Main-Class: com.foo.Main -->
+        <!-- 3. Pass to <jar>: manifest="myapp.mf" -->
+        <jar jarfile="microemulator.jar" compress="true" basedir=".">
+            <exclude name="**/*.java"/>
+            <exclude name="**/*.form"/>
+            <exclude name="microemulator.mf"/>
+            <exclude name="microemulator.jar"/>
+            <exclude name="apidoc"/>
+        </jar>
+    </target>
+
+    <target name="all" depends="init,jar" description="Build everything.">
+        <echo message="Application built. Hello ${hello}!"/>
+    </target>
+
+    <target name="test" depends="init,all" description="Try running it.">
+        <java classname="com.barteo.emulator.MicroEmulator" fork="true" failonerror="true">
+            <classpath>
+                <pathelement location="."/>
+            </classpath>
+            <!-- Pass some args, perhaps: -->
+            <arg value="-myfile"/>
+            <!-- Will be given as an absolute path: -->
+            <arg file="myfile.txt"/>
+        </java>
+    </target>
+
+    <target name="javadoc" depends="init" description="Javadoc for my API.">
+        <mkdir dir="apidoc"/>
+        <javadoc packagenames="com.foo.mylib.*,com.foo.myapi.*" destdir="apidoc">
+            <sourcepath>
+                <pathelement location="."/>
+            </sourcepath>
+        </javadoc>
+    </target>
+
+    <target name="clean" depends="init" description="Clean all build products.">
+        <delete>
+            <fileset dir=".">
+                <include name="**/*.class"/>
+            </fileset>
+        </delete>
+        <delete file="microemulator.jar"/>
+        <delete dir="apidoc"/>
+    </target>
+
+</project>

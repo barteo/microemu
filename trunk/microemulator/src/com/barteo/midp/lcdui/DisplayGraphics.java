@@ -21,6 +21,7 @@ package com.barteo.midp.lcdui;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 import javax.microedition.lcdui.*;
 import com.barteo.emulator.GrayImageFilter;
@@ -33,12 +34,6 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics {
 
     protected DisplayGraphics(java.awt.Graphics a_g) {
         g = a_g;
-    }
-
-
-    public void setClip(int x, int y, int width, int height) 
-    {
-        g.setClip(x, y, width, height);
     }
 
 
@@ -63,6 +58,56 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics {
     public void clipRect(int x, int y, int width, int height) 
     {
         g.clipRect(x, y, width, height);
+    }
+
+
+    public void setClip(int x, int y, int width, int height) 
+    {
+        g.setClip(x, y, width, height);
+    }
+
+
+    public int getClipX()
+    {
+      Rectangle rect = g.getClipBounds();
+      if (rect == null) {
+        return 0;
+      } else {
+        return rect.x;
+      }
+    }
+
+
+    public int getClipY()
+    {
+      Rectangle rect = g.getClipBounds();
+      if (rect == null) {
+        return 0;
+      } else {
+        return rect.y;
+      }
+    }
+
+
+    public int getClipHeight()
+    {
+      Rectangle rect = g.getClipBounds();
+      if (rect == null) {
+        return Device.screenPaintable.height;
+      } else {
+        return rect.height;
+      }
+    }
+
+
+    public int getClipWidth()
+    {
+      Rectangle rect = g.getClipBounds();
+      if (rect == null) {
+        return Device.screenPaintable.width;
+      } else {
+        return rect.width;
+      }
     }
 
 

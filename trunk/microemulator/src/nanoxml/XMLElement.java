@@ -890,7 +890,15 @@ public class XMLElement
     */
    public String getContent()
    {
-      return this.contents;
+     char[] tmp = this.contents.toCharArray();
+     String newString = "";
+     for (int i = 0; i < tmp.length; i++) {
+       if (((int) tmp[i]) != 0) {
+         newString += tmp[i];
+       }
+     }
+     
+     return newString;
    }
 
 

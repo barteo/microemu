@@ -180,7 +180,7 @@ public class TextField extends Item
 		if (maxSize <= 0) {
 			throw new IllegalArgumentException();
 		}
-		if (stringComponent.length() < maxSize) {
+		if (stringComponent.length() > maxSize) {
 			stringComponent.setText(stringComponent.getText().substring(0, maxSize));
 		}
 		this.maxSize = maxSize;

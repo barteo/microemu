@@ -119,6 +119,7 @@ public class Main extends JFrame implements MicroEmulator
       if (returnVal == JFileChooser.APPROVE_OPTION) {
         try {
           FileInputStream fis = new FileInputStream(fileChooser.getSelectedFile());
+          statusBar.setText("Loading...");
           jad.clear();
           jad.load(fis);
           loadMIDlet();
@@ -141,6 +142,7 @@ public class Main extends JFrame implements MicroEmulator
       if (entered != null) {
         try {
           URL url = new URL(entered);
+          statusBar.setText("Loading...");
           jad.clear();
           jad.load(url.openStream());
           loadMIDlet();

@@ -37,14 +37,16 @@ import javax.swing.JMenuItem;
 import javax.swing.UIManager;
 
 import com.barteo.emulator.device.Device;
+import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.MIDletBridge;
+import com.barteo.midp.lcdui.DisplayBridge;
 import com.barteo.midp.lcdui.FontManager;
 import com.barteo.midp.lcdui.KeyboardComponent;
 import com.barteo.midp.lcdui.XYConstraints;
 import com.barteo.midp.lcdui.XYLayout;
 
 
-public class Main extends JFrame 
+public class Main extends JFrame implements MicroEmulator
 {
   
   Main instance = null;
@@ -56,8 +58,7 @@ public class Main extends JFrame
 	SwingDisplayComponent dc;
 	KeyboardComponent kc;
   
-  Class midletClass;
-	MIDlet midlet = null;
+  MIDlet midlet;
 
   ActionListener menuOpenJADFileListener = new ActionListener()
   {
@@ -134,17 +135,43 @@ public class Main extends JFrame
   }
   
   
+  public void notifyDestroyed()
+  {
+		DisplayBridge.updateCommands(null);
+		DisplayBridge.setAccess(null);
+  }
+  
+  
   protected void processWindowEvent(WindowEvent e)
   {
     super.processWindowEvent(e);
     if (e.getID() == WindowEvent.WINDOW_CLOSING) {
       menuExitListener.actionPerformed(null);
+    } else if (e.getID() == WindowEvent.WINDOW_ICONIFIED) {
+      MIDletBridge.getAccess(midlet).pauseApp();
+    } else if (e.getID() == WindowEvent.WINDOW_DEICONIFIED) {
+      try {
+        MIDletBridge.getAccess(midlet).startApp();
+  		} catch (MIDletStateChangeException ex) {
+        System.err.println(ex);
+  		}
     }
   }
 
   
-	public boolean setMidletClass(String name)
+  public void start()
+  {
+    try {
+      MIDletBridge.getAccess(midlet).startApp();
+		} catch (MIDletStateChangeException ex) {
+      System.err.println(ex);
+		}
+  }
+  
+  
+  public boolean setMidletClass(String name)
 	{
+    Class midletClass;
 		try {
 			midletClass = Class.forName(name);
 		} catch (ClassNotFoundException ex) {
@@ -229,16 +256,13 @@ public class Main extends JFrame
     }
     
     Main app = new Main();
+    MIDletBridge.setMicroEmulator(app);
 
     if (!app.setMidletClass(args[0])) {
 System.out.println("No midlet to run");
     }
     
-    try {
-      MIDletBridge.getAccess().startApp();
-		} catch (MIDletStateChangeException ex) {
-      System.err.println(ex);
-		}
+    app.start();
 
     if (app.initialized) {
       app.validate();

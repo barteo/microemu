@@ -58,6 +58,9 @@
 
   <target depends="init,compile,jar-applet,jar-simpledemo" name="jar-app">
     <jar compress="true" jarfile="./target/me-app.jar">
+      <manifest>
+        <attribute name="Main-Class" value="com.barteo.emulator.app.Main"/>
+      </manifest>
       <fileset dir="./build/microemulator/classes">
         <exclude name="com/barteo/midp/examples/**"/>
         <exclude name="com/barteo/emulator/applet/**"/>

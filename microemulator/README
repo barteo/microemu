@@ -6,9 +6,13 @@ MIDlet (MIDP/CLDC) based applications in browser applet.
 There are two methods of running apps in emulator:
 
 1. As an application:
-java com.barteo.emulator.app.Main (MIDlet application main class)
+a) java com.barteo.emulator.app.Main (MIDlet application main class)
 
  - me-app.jar must be in CLASSPATH
+
+or,
+b) java -jar me-app.jar (MIDlet application main class)
+
  - (MIDlet application main class) parameter is optional, if used MIDlet
    application jar file must be in CLASSPATH
 

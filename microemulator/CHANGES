@@ -3,6 +3,7 @@ MicroEmulator
 0.3.1
 - device display is better customizable
 - app: fixed NullPointerException when run ME without initial MIDlet
+- app: defined Main-Class in the MANIFEST.MF file - running also by java -jar
 
 0.3 (alpha) - 29.08.2002
 - created custom device framework (currently applet and j2se)

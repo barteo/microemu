@@ -1,5 +1,8 @@
 MicroEmulator
 
+0.2 (alpha)
+- MIDP/CLDC API finished (with javax.microedition.io.*) - extensive testing needed
+
 0.1.3 (pre-alpha) - 1.02.2002
 - framework for javax.microedition.io.* (implementation to be written)
 - better look of phone device

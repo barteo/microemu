@@ -130,7 +130,7 @@
   </target>
 
   <target name="clean" depends="init" description="Clean all build products.">
-    <delete>
+    <delete dir="class">
       <fileset dir=".">
         <include name="**/*.class"/>
       </fileset>

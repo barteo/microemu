@@ -176,8 +176,8 @@ public class AppletDevice implements Device
             return rval;
         case KeyEvent.VK_MULTIPLY:
             return Canvas.KEY_STAR;
-        case KeyEvent.VK_NUMBER_SIGN:
-            return Canvas.KEY_POUND;
+//        case KeyEvent.VK_NUMBER_SIGN:
+//            return Canvas.KEY_POUND;
         default:
       return 0;
     }
@@ -219,8 +219,8 @@ public class AppletDevice implements Device
             int rval = KeyEvent.VK_0 + (gameAction-Canvas.KEY_NUM0);
             return rval;
         case Canvas.KEY_POUND:
-            return KeyEvent.VK_NUMBER_SIGN;
-        case Canvas.KEY_STAR:
+//            return KeyEvent.VK_NUMBER_SIGN;
+//        case Canvas.KEY_STAR:
             return KeyEvent.VK_MULTIPLY;
         default:
             return 0;

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Written to assume that classpath is rooted in the current directory. -->
+<!-- So this should be OK if you make this script in the root of a filesystem. -->
+<!-- If not, you may prefer to adjust the basedir, or move some directories around. -->
+<!-- The idea is that both Ant and NetBeans have to know what the package root is -->
+<!-- for the classes in your application. -->
+<project basedir="." default="run" name="microemulator">
+
+  <property name="build.compiler" value="javac1.1"/>
+
+  <!-- Don't worry if you don't know the Ant syntax completely or need help on some tasks! -->
+  <!-- The standard Ant documentation is bundled. See Help | Shortcuts | Ant 1.3 Documentation. -->
+
+  <target name="init">
+    <!-- You can set up any variables you want used throughout the script here. -->
+    <!-- To use e.g. Jikes, uncomment this line. -->
+    <!-- (Or make the same change in Tools | Options | Ant Settings | Properties.) -->
+    <!-- <property name="build.compiler" value="jikes"/> -->
+    <!-- You might like to set up some overridable paths, etc.: -->
+    <!-- <property name="mylib" value="../lib/mylib.jar"/> -->
+  </target>
+
+  <target depends="init" name="compile">
+    <mkdir dir="./classes"/>
+    <!-- Both srcdir and destdir should be package roots. -->
+    <!-- They could be different of course; in that case NetBeans can also be set -->
+    <!-- up to compile to a different filesystem in the same way; see Compiler Types: -->
+    <javac debug="true" deprecation="true" destdir="./classes" srcdir="./src">
+      <classpath>
+        <pathelement location="./lib/jnlp.jar"/>
+      </classpath>      
+    </javac>
+  </target>
+
+  <target depends="init,compile" name="jar-simpledemo">
+    <jar compress="true" jarfile="simpledemo.jar">
+      <fileset dir="./classes">
+        <include name="com/barteo/midp/examples/simpledemo/**"/>
+        <exclude name="**/.*"/>
+      </fileset>
+      <fileset dir="./res">
+        <include name="com/barteo/midp/examples/simpledemo/**"/>
+        <exclude name="**/.*"/>
+      </fileset>
+    </jar>
+    <copy file="simpledemo.jar" todir="doc/www"/>
+  </target>
+
+  <target depends="init,compile" name="jar-applet">
+    <jar compress="true" jarfile="me-applet.jar">
+      <fileset dir="./classes">
+        <exclude name="com/barteo/midp/examples/**"/>
+        <exclude name="com/barteo/emulator/app/**"/>
+        <exclude name="**/.*"/>
+        <exclude name="javax/microedition/io/**"/>
+      </fileset>
+      <fileset dir="./res">
+        <exclude name="com/barteo/midp/examples/**"/>
+        <exclude name="**/.*"/>
+      </fileset>
+    </jar>
+    <copy file="me-applet.jar" todir="doc/www"/>
+  </target>
+
+  <target depends="init,compile,jar-applet,jar-simpledemo" name="jar">
+    <jar compress="true" jarfile="me-app.jar">
+      <fileset dir="./classes">
+        <exclude name="com/barteo/midp/examples/**"/>
+        <exclude name="**/.*"/>
+      </fileset>
+      <fileset dir="./res">
+        <exclude name="com/barteo/midp/examples/**"/>
+        <exclude name="**/.*"/>
+      </fileset>
+    </jar>
+  </target>
+
+  <target depends="init,jar" description="Build everything." name="all">
+  </target>
+
+  <target depends="init,all" description="Try running it." name="run">
+    <java classname="com.barteo.emulator.app.Main" failonerror="true" fork="true">
+      <classpath>
+        <pathelement location="me-app.jar"/>
+        <pathelement location="simpledemo.jar"/>
+      </classpath>
+      <arg value="com.barteo.midp.examples.simpledemo.SimpleDemo"/>
+    </java>
+  </target>
+
+  <target depends="init" description="Javadoc for my API." name="javadoc">
+    <mkdir dir="apidoc"/>
+    <javadoc destdir="apidoc" packagenames="javax.microedition.*" sourcepath="src"/>
+  </target>
+
+  <target depends="init,jar" description="Create distribution package" name="dist">
+    <mkdir dir="dist"/>
+
+    <tar basedir="../." tarfile="dist/microemulator-src.tar">
+      <exclude name="microemulator/**/.*"/>
+      <exclude name="microemulator/*.jar"/>
+      <exclude name="microemulator/classes/**"/>
+      <exclude name="microemulator/dist/*"/>
+      <exclude name="microemulator/doc/**"/>
+    </tar>
+    <gzip src="dist/microemulator-src.tar" zipfile="dist/microemulator-src.tar.gz"/>
+    <delete file="dist/microemulator-src.tar"/>
+
+    <tar basedir="../." tarfile="dist/microemulator-applet.tar">
+      <exclude name="microemulator/**/.*"/>
+      <exclude name="microemulator/build.xml"/>
+      <exclude name="microemulator/me-app.jar"/>
+      <exclude name="microemulator/classes/**"/>
+      <exclude name="microemulator/dist/*"/>
+      <exclude name="microemulator/doc/**"/>
+      <exclude name="microemulator/lib/**"/>
+      <exclude name="microemulator/res/**"/>
+      <exclude name="microemulator/src/**"/>
+    </tar>
+    <gzip src="dist/microemulator-applet.tar" zipfile="dist/microemulator-applet.tar.gz"/>
+    <delete file="dist/microemulator-applet.tar"/>
+
+    <tar basedir="../." tarfile="dist/microemulator-app.tar">
+      <exclude name="microemulator/**/.*"/>
+      <exclude name="microemulator/build.xml"/>
+      <exclude name="microemulator/me-applet.jar"/>
+      <exclude name="microemulator/classes/**"/>
+      <exclude name="microemulator/dist/*"/>
+      <exclude name="microemulator/doc/**"/>
+      <exclude name="microemulator/res/**"/>
+      <exclude name="microemulator/src/**"/>
+    </tar>
+    <gzip src="dist/microemulator-app.tar" zipfile="dist/microemulator-app.tar.gz"/>
+    <delete file="dist/microemulator-app.tar"/>
+  </target>
+
+  <target depends="init" description="Clean all build products." name="clean">
+    <delete dir="class">
+      <fileset dir=".">
+        <include name="**/*.class"/>
+      </fileset>
+    </delete>
+    <delete file="me-app.jar"/>
+    <delete file="me-applet.jar"/>
+    <delete file="simpledemo.jar"/>
+    <delete dir="apidoc"/>
+    <delete dir="dist"/>
+  </target>
+
+</project>

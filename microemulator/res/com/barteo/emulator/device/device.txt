@@ -142,6 +142,10 @@
 			</rectangle>
 		</button>
 		<button name="0" key="VK_0">
+      <chars>
+        <char>0</char>
+        <char> </char>
+      </chars>
 			<rectangle>
 				<x>68</x>
 				<y>391</y>
@@ -150,6 +154,32 @@
 			</rectangle>
 		</button>
 		<button name="1" key="VK_1">
+      <chars>
+        <char>1</char>
+        <char>.</char>
+        <char>,</char>
+        <char>?</char>
+        <char>!</char>
+        <char>:</char>
+        <char>;</char>
+        <char>-</char>
+        <char>+</char>
+        <char>#</char>
+        <char>*</char>
+        <char>(</char>
+        <char>)</char>
+        <char>'</char>
+        <char>"</char>
+        <char>_</char>
+        <char>@</char>
+        <char>&amp;</char>
+        <char>$</char>
+        <char>%</char>
+        <char>/</char>
+        <char>&lt;</char>
+        <char>&gt;</char>
+        <char>=</char>
+      </chars>
 			<rectangle>
 				<x>30</x>
 				<y>309</y>
@@ -158,6 +188,12 @@
 			</rectangle>
 		</button>
 		<button name="2" key="VK_2">
+      <chars>
+        <char>2</char>
+        <char>a</char>
+        <char>b</char>
+        <char>c</char>
+      </chars>
 			<rectangle>
 				<x>68</x>
 				<y>309</y>
@@ -166,6 +202,12 @@
 			</rectangle>
 		</button>
 		<button name="3" key="VK_3">
+      <chars>
+        <char>3</char>
+        <char>d</char>
+        <char>e</char>
+        <char>f</char>
+      </chars>
 			<rectangle>
 				<x>103</x>
 				<y>309</y>
@@ -174,6 +216,12 @@
 			</rectangle>
 		</button>
 		<button name="4" key="VK_4">
+      <chars>
+        <char>4</char>
+        <char>g</char>
+        <char>h</char>
+        <char>i</char>
+      </chars>
 			<rectangle>
 				<x>30</x>
 				<y>337</y>
@@ -182,6 +230,12 @@
 			</rectangle>
 		</button>
 		<button name="5" key="VK_5">
+      <chars>
+        <char>5</char>
+        <char>j</char>
+        <char>k</char>
+        <char>l</char>
+      </chars>
 			<rectangle>
 				<x>68</x>
 				<y>337</y>
@@ -190,6 +244,12 @@
 			</rectangle>
 		</button>
 		<button name="6" key="VK_6">
+      <chars>
+        <char>6</char>
+        <char>m</char>
+        <char>n</char>
+        <char>o</char>
+      </chars>
 			<rectangle>
 				<x>103</x>
 				<y>337</y>
@@ -198,6 +258,13 @@
 			</rectangle>
 		</button>
 		<button name="7" key="VK_7">
+      <chars>
+        <char>7</char>
+        <char>p</char>
+        <char>q</char>
+        <char>r</char>
+        <char>s</char>
+      </chars>
 			<rectangle>
 				<x>30</x>
 				<y>364</y>
@@ -206,6 +273,12 @@
 			</rectangle>
 		</button>
 		<button name="8" key="VK_8">
+      <chars>
+        <char>8</char>
+        <char>t</char>
+        <char>u</char>
+        <char>v</char>
+      </chars>
 			<rectangle>
 				<x>68</x>
 				<y>364</y>
@@ -214,6 +287,13 @@
 			</rectangle>
 		</button>
 		<button name="9" key="VK_9">
+      <chars>
+        <char>9</char>
+        <char>w</char>
+        <char>x</char>
+        <char>y</char>
+        <char>z</char>
+      </chars>
 			<rectangle>
 				<x>103</x>
 				<y>364</y>
@@ -222,6 +302,10 @@
 			</rectangle>
 		</button>
 		<button name="*" key="VK_MULTIPLY">
+      <chars>
+        <char>*</char>
+        <char>+</char>
+      </chars>
 			<rectangle>
 				<x>30</x>
 				<y>391</y>

@@ -152,13 +152,32 @@ public class Device {
         for (Enumeration e_keyboard = tmp.enumerateChildren(); e_keyboard.hasMoreElements(); ) {
           XMLElement tmp_keyboard = (XMLElement) e_keyboard.nextElement();
           if (tmp_keyboard.getName().equals("button")) {
+            Rectangle rectangle = null;
+            Vector stringArray = new Vector();
             for (Enumeration e_button = tmp_keyboard.enumerateChildren(); e_button.hasMoreElements(); ) {
               XMLElement tmp_button = (XMLElement) e_button.nextElement();
-              if (tmp_button.getName().equals("rectangle")) {
-                deviceButtons.addElement(new Button(tmp_keyboard.getStringAttribute("name"), 
-                    getRectangle(tmp_button), tmp_keyboard.getStringAttribute("key")));
+              if (tmp_button.getName().equals("chars")) {
+                for (Enumeration e_chars = tmp_button.enumerateChildren(); e_chars.hasMoreElements(); ) {
+                  XMLElement tmp_chars = (XMLElement) e_chars.nextElement();
+                  if (tmp_chars.getName().equals("char")) {                 
+                    stringArray.add(tmp_chars.getContent());                    
+                  }
+                }
+              } else if (tmp_button.getName().equals("rectangle")) {
+                rectangle = getRectangle(tmp_button);
               }
             }
+            char[] charArray = new char[stringArray.size()];
+            for (int i = 0; i < stringArray.size(); i++) {
+              String str = (String) stringArray.elementAt(i);
+              if (str.length() > 0) {
+                charArray[i] = str.charAt(0);
+              } else {
+                charArray[i] = ' ';
+              }
+            }
+            deviceButtons.addElement(new Button(tmp_keyboard.getStringAttribute("name"), 
+                rectangle, tmp_keyboard.getStringAttribute("key"), charArray));
           } else if (tmp_keyboard.getName().equals("softbutton")) {
             Vector commands = new Vector();
             Rectangle rectangle = null, paintable = null;
@@ -229,14 +248,7 @@ public class Device {
       if (tmp_rectangle.getName().equals("x")) {
         rect.x = Integer.parseInt(tmp_rectangle.getContent());
       } else if (tmp_rectangle.getName().equals("y")) {
-        char[] tmp = tmp_rectangle.getContent().toCharArray();
-        String newString = "";
-        for (int i = 0; i < tmp.length; i++) {
-          if (((int) tmp[i]) != 0) {
-            newString += tmp[i];
-          }
-        }
-        rect.y = Integer.parseInt(newString);
+        rect.y = Integer.parseInt(tmp_rectangle.getContent());
       } else if (tmp_rectangle.getName().equals("width")) {
         rect.width = Integer.parseInt(tmp_rectangle.getContent());
       } else if (tmp_rectangle.getName().equals("height")) {

@@ -46,7 +46,7 @@ public class SoftButton extends Button
   public SoftButton(String name, Rectangle rectangle, String keyName, 
       Rectangle paintable, String alignmentName, Vector commands, boolean menuActivate)
   {
-    super(name, rectangle, keyName);
+    super(name, rectangle, keyName, null);
       
     this.paintable = paintable;
     this.menuActivate = menuActivate;
@@ -58,10 +58,12 @@ public class SoftButton extends Button
     }
     
     for (Enumeration e = commands.elements(); e.hasMoreElements(); ) {
+      String tmp = (String) e.nextElement();
+System.out.println("<" + tmp + ">" + tmp.length());      
       try {
-        addCommandType(Command.class.getField((String) e.nextElement()).getInt(null));
+        addCommandType(Command.class.getField(tmp).getInt(null));
       } catch (Exception ex) {
-        System.err.println(ex);
+        System.err.println("a3" + ex);
       }
     }
   }

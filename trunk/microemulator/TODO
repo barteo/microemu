@@ -1,25 +1,20 @@
-1. javax.microedition.io.* supported (mostly done, extensive testing needed)
+* javax.microedition.io.* supported (mostly done, extensive testing needed)
   bug in IE not working HttpConnection - URLConnection used - check closing connetions
 
-2. rebuild InputMethod to extend functionality:
+* rebuild InputMethod to extend functionality:
   - switching between modes (numeric, password, URL, etc.)
   - solve problem with VK_BACKSPACE key on emulator device
 
-3. redesign Display.getDisplay(MIDlet) - now returns only one display per many midlets
-  and then check with:
-  http://midlet.org/repository/joergtuttas/brick/BrickCC.jad
-  http://midlet.org/repository/holycowboy/holymoley/HolyMoley.jad
+* extended web site with overview, faq section, instalation instructions, etc.
 
-4. extended web site with overview, faq section, instalation instructions, etc.
+* there is bug in NanoXML with parsing (locate details and send issue to author)
 
-5. there is bug in NanoXML with parsing (locate details and send issue to author)
-
-6. two classes from java.util.* are from GNU Classpath which is GPL with exception
+* two classes from java.util.* are from GNU Classpath which is GPL with exception
 (i'm not sure if can be used in LGPL MicroEmulator)
 
-7. (?) applet loader - during loading applet code progress bar should be visible
+* (?) applet loader - during loading applet code progress bar should be visible
 
-8. obfuscator for applet: maybe LGPL Retroguard, applet jar should be 
+* obfuscator for applet: maybe LGPL Retroguard, applet jar should be 
 reduced to 175KB, i hope
 
 

@@ -246,9 +246,9 @@ public class Main extends Applet implements MicroEmulator
 
   
   public void notifyDestroyed()
-  {
+	{
   }
-
+  
   
   public String getAppletInfo()
 	{

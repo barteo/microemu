@@ -121,7 +121,7 @@ public class Main extends JFrame implements MicroEmulator
           statusBar.setText("Loading...");
           jad.clear();
           jad.load(fis);
-          loadMIDlet();
+          loadFromJad();
         } catch (FileNotFoundException ex) {
           System.err.println("Cannot found file " + fileChooser.getSelectedFile().getName());
         } catch (IOException ex) {
@@ -144,7 +144,7 @@ public class Main extends JFrame implements MicroEmulator
           statusBar.setText("Loading...");
           jad.clear();
           jad.load(url.openStream());
-          loadMIDlet();
+          loadFromJad();
         } catch (MalformedURLException ex) {
           System.err.println("Bad URL format " + entered);
         } catch (IOException ex) {
@@ -239,7 +239,7 @@ public class Main extends JFrame implements MicroEmulator
   }
   
   
-  public void loadMIDlet()
+  public void loadFromJad()
   {
     URL url = null;
     try {
@@ -267,15 +267,10 @@ public class Main extends JFrame implements MicroEmulator
           for (Enumeration e = jad.getMidletEntries().elements(); e.hasMoreElements(); ) {
             JadMidletEntry jadEntry = (JadMidletEntry) e.nextElement();
             Class midletClass = loader.loadClass(jadEntry.getClassName());
-            MIDlet midlet = (MIDlet) midletClass.newInstance();
-            launcher.addMIDletEntry(new MIDletEntry(jadEntry.getName(), midlet));
+            loadMidlet(jadEntry.getName(), midletClass);
           }
           notifyDestroyed();
         } catch (ClassNotFoundException ex) {
-          System.err.println(ex);
-        } catch (IllegalAccessException ex) {
-          System.err.println(ex);
-        } catch (InstantiationException ex) {
           System.err.println(ex);
         }        
         loader.setProgressListener(null);
@@ -297,7 +292,7 @@ public class Main extends JFrame implements MicroEmulator
   
   public void notifyDestroyed()
   {
-    launcher.startApp();
+    startMidlet(launcher);
   }
   
   
@@ -325,37 +320,31 @@ public class Main extends JFrame implements MicroEmulator
   }
 
   
-  public void start()
+  public void startMidlet(MIDlet m)
   {
     try {
-      MIDletBridge.getAccess(launcher.getCurrentMIDlet()).startApp();
+      MIDletBridge.getAccess(m).startApp();
 		} catch (MIDletStateChangeException ex) {
       System.err.println(ex);
 		}
   }
   
-  
-  public boolean setMidletClass(String name)
+  public MIDlet loadMidlet(String name, Class midletClass)
 	{
-    Class midletClass;
-		try {
-			midletClass = Class.forName(name);
-		} catch (ClassNotFoundException ex) {
-			System.out.println("Cannot find " + name + " MIDlet class");
-			return false;
-		}
-
+    MIDlet result;
+    
     try {
-      launcher.setCurrentMIDlet((MIDlet) midletClass.newInstance());
-      launcher.addMIDletEntry(new MIDletEntry("MIDlet", launcher.getCurrentMIDlet()));
+      result = (MIDlet) midletClass.newInstance();
+      launcher.setCurrentMIDlet(result);
+      launcher.addMIDletEntry(new MIDletEntry(name, launcher.getCurrentMIDlet()));
     } catch (Exception ex) {
       System.out.println("Cannot initialize " + midletClass + " MIDlet class");
       System.out.println(ex);
       ex.printStackTrace();
-      return false;
+      return null;
     }  
     
-    return true;
+    return result;
 	}
 
   
@@ -424,13 +413,22 @@ public class Main extends JFrame implements MicroEmulator
     
     Main app = new Main();
     MIDletBridge.setMicroEmulator(app);
+    MIDlet m = null;
 
     if (args.length > 0) {
-      app.setMidletClass(args[0]);
+      Class midletClass;
+      try {
+        midletClass = Class.forName(args[0]);
+        m = app.loadMidlet("MIDlet", midletClass);
+      } catch (ClassNotFoundException ex) {
+        System.out.println("Cannot find " + args[0] + " MIDlet class");
+      }
     }
     
     if (app.initialized) {
-      app.start();
+      if (m != null) {
+        app.startMidlet(m);
+      }
       app.validate();
       app.setVisible(true);
     } else {

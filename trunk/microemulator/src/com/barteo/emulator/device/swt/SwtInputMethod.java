@@ -42,7 +42,7 @@ public class SwtInputMethod extends InputMethod implements Runnable
 
 	public SwtInputMethod()
 	{
-		t = new Thread(this);
+		t = new Thread(this, "InputMethodThread");
 		t.start();
 	}
   

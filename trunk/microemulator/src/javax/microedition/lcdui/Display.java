@@ -218,7 +218,7 @@ public class Display
     
     if (eventDispatcher == null) {
     	eventDispatcher = new EventDispatcher();
-    	new Thread(eventDispatcher).start();
+    	new Thread(eventDispatcher, "EventDispatcher").start();
     }
     if (tickerPaint == null) {
     	tickerPaint = new TickerPaint();

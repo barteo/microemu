@@ -40,7 +40,7 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 
 	public J2SEInputMethod()
 	{
-		t = new Thread(this);
+		t = new Thread(this, "InputMethodThread");
 		t.start();
 	}
   

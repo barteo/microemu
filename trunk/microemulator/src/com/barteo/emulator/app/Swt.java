@@ -378,9 +378,9 @@ public class Swt
 					display.sleep ();
 			}
 			display.dispose ();			
-		} else {
-			System.exit(0);
 		}
+
+		System.exit(0);
 	}
 
 }

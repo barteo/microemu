@@ -40,7 +40,7 @@ public class AppletInputMethod extends InputMethod implements Runnable
 
 	public AppletInputMethod()
 	{
-		t = new Thread(this);
+		t = new Thread(this, "InputMethodThread");
 		t.start();
 	}
   

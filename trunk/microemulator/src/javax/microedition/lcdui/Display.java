@@ -173,7 +173,7 @@ public class Display
 		public void add(Runnable r)
 		{
 			synchronized (paintLock) {
-				events.add(r);
+				events.addElement(r);
 				paintLock.notify();
 			}
 		}

@@ -17,6 +17,7 @@ or, java -jar me-app.jar (MIDlet jad file)
  - (MIDlet application main class) parameter is optional, if used MIDlet
    application jar file must be in CLASSPATH
  - (MIDlet jad file) must have .jad extension
+ - for Nokia UI support include nokiaui.jar to the CLASSPATH
 
 
 2. In applet:
@@ -25,6 +26,8 @@ Including html code:
 		width=170 height=445 archive="me-applet.jar,(MIDlet application jar)">
 	<param name="midlet" value="(MIDlet application main class)">
 </applet>
+
+For Nokia UI support include nokiaui.jar to the archive attribute.
 
 There is additional parameter in applet definition tag if you want start applet 
 with another device than default:
@@ -36,11 +39,11 @@ and remember to include new device jar into applet archive tag
     eg. minimum phone included in distribution has
         minimum.jar
 
-Example for SimpleDemo MIDlet and Minimum device:
+Example for SimpleDemo MIDlet, Nokia UI support and Minimum device:
 <applet code="com.barteo.emulator.applet.Main" 
-		width=170 height=445 archive="me-applet.jar,minimum.jar,simpledemo.jar">
+		width=170 height=445 archive="me-applet.jar,nokiaui.jar,minimum.jar,simpledemo.jar">
 	<param name="midlet" value="com.barteo.midp.examples.simpledemo.SimpleDemo">
-  <param name="device" value="net.barteo.me.appletdevice.minimum.MinimumDevice">
+	<param name="device" value="net.barteo.me.appletdevice.minimum.MinimumDevice">
 </applet>
 
 

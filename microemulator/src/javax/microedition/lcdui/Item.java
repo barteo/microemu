@@ -48,6 +48,7 @@ public abstract class Item
 	public void setLabel(String label)	
 	{
 		labelComponent.setText(label);
+		repaint();
 	}
 
 	

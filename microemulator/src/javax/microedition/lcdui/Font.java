@@ -54,7 +54,7 @@ public final class Font
 
 	public static Font getFont(int face, int style, int size)
 	{
-		return DEFAULT_FONT;
+		return new Font(face, style, size);
 	}
 
 

@@ -162,9 +162,8 @@ public class Main extends Applet implements MicroEmulator
   public void init()
   {
     instance = this;
-    defaultFont = new Font("SansSerif", Font.PLAIN, 11);
-    setFont(defaultFont);
-    FontManager.getInstance().setDefaultFontMetrics(getFontMetrics(defaultFont));
+
+    FontManager.getInstance().setComponent(this);
     
     MIDletBridge.setMicroEmulator(this);
 

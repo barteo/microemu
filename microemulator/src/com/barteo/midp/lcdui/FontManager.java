@@ -19,7 +19,9 @@
  
 package com.barteo.midp.lcdui;
 
+import java.awt.Component;
 import java.awt.FontMetrics;
+import java.util.Hashtable;
 
 import javax.microedition.lcdui.Font;
 
@@ -28,49 +30,96 @@ public class FontManager
 {
 
   static FontManager instance = new FontManager();
-
-	java.awt.FontMetrics defaultFontMetrics;
-
+  
+  static String FACE_SYSTEM_NAME = "SansSerif";
+  static String FACE_MONOSPACE_NAME = "Monospaced";
+  static String FACE_PROPORTIONAL_NAME = "SansSerif";
+  
+  static int SIZE_SMALL = 9;
+  static int SIZE_MEDIUM = 11;
+  static int SIZE_LARGE = 13;
+  
+  Component component;
+  Hashtable fontsMetrics = new Hashtable();
+  
+  java.awt.FontMetrics getFontMetrics(javax.microedition.lcdui.Font meFont)
+  {
+    java.awt.FontMetrics tmp = (java.awt.FontMetrics) fontsMetrics.get(meFont);
+    
+    if (tmp == null) {
+      String name = null;
+      if (meFont.getFace() == javax.microedition.lcdui.Font.FACE_SYSTEM) {
+        name = FACE_SYSTEM_NAME;
+      } else if (meFont.getFace() == javax.microedition.lcdui.Font.FACE_MONOSPACE) {
+        name = FACE_MONOSPACE_NAME;
+      } else if (meFont.getFace() == javax.microedition.lcdui.Font.FACE_PROPORTIONAL) {
+        name = FACE_PROPORTIONAL_NAME;
+      }
+      int style = 0;
+      if ((meFont.getStyle() & javax.microedition.lcdui.Font.STYLE_PLAIN) != 0) {
+        style |= java.awt.Font.PLAIN;
+      }
+      if ((meFont.getStyle() & javax.microedition.lcdui.Font.STYLE_BOLD) != 0) {
+        style |= java.awt.Font.BOLD;
+      }
+      if ((meFont.getStyle() & javax.microedition.lcdui.Font.STYLE_ITALIC) != 0) {
+        style |= java.awt.Font.ITALIC;
+      }
+      int size = 0;
+      if (meFont.getSize() == javax.microedition.lcdui.Font.SIZE_SMALL) {
+        size = SIZE_SMALL;
+      } else if (meFont.getSize() == javax.microedition.lcdui.Font.SIZE_MEDIUM) {
+        size = SIZE_MEDIUM;
+      } else if (meFont.getSize() == javax.microedition.lcdui.Font.SIZE_LARGE) {
+        size = SIZE_LARGE;
+      }
+      tmp = component.getFontMetrics(new java.awt.Font(name, style, size));
+      fontsMetrics.put(meFont, tmp);
+    }
+    
+    return tmp;
+  }
+  
 
   public static FontManager getInstance()
   {
     return instance;
   }
+  
+  
+  public void setComponent(Component acomponent)
+  {
+    component = acomponent;
+  }
 
 
 	public int charWidth(javax.microedition.lcdui.Font f, char ch)
 	{
-		return defaultFontMetrics.charWidth(ch);
+		return getFontMetrics(f).charWidth(ch);
 	}
 
 
   public int charsWidth(javax.microedition.lcdui.Font f, char[] ch, int offset, int length)
   {
-    return defaultFontMetrics.charsWidth(ch, offset, length);
+    return getFontMetrics(f).charsWidth(ch, offset, length);
   }
 
 
   public int getBaselinePosition(javax.microedition.lcdui.Font f)
   {
-    return defaultFontMetrics.getAscent();
+    return getFontMetrics(f).getAscent();
   }
 
 
 	public int getHeight(javax.microedition.lcdui.Font f)
 	{
-		return defaultFontMetrics.getHeight();
-	}
-
-
-	public void setDefaultFontMetrics(FontMetrics fm)
-	{
-		defaultFontMetrics = fm;
+		return getFontMetrics(f).getHeight();
 	}
 
 
 	public int stringWidth(javax.microedition.lcdui.Font f, String str)
 	{
-		return defaultFontMetrics.stringWidth(str);
+		return getFontMetrics(f).stringWidth(str);
 	}
 
 }

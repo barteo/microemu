@@ -38,7 +38,8 @@ public class CanvasPanel extends Canvas implements ScreenPanel, CommandListener
   Command seCommand = new Command("SE Move", Command.ITEM, 3);
   Command swCommand = new Command("SW Move", Command.ITEM, 4);
 
-  int posMove = 0;
+  int moveX = 1, moveY = 1;
+  int posX = 0, posY = 0;
   static int POSNUMBER = 20;
 
   TimerTask timerTask = new TimerTask()
@@ -47,10 +48,27 @@ public class CanvasPanel extends Canvas implements ScreenPanel, CommandListener
     public void run()
     {
       if (isShown()) {
-        if (posMove >= POSNUMBER) {
-          posMove = 0;
-        } else {
-          posMove++;
+        synchronized (this) {
+          if (moveX > 0) {
+            if (posX >= POSNUMBER) {
+              posX = 0;
+            }
+          } else {
+            if (posX < 0) {
+              posX = POSNUMBER;
+            }
+          }
+          if (moveY > 0) {
+            if (posY >= POSNUMBER) {
+              posY = 0;
+            }
+          } else {
+            if (posY < 0) {
+              posY = POSNUMBER;
+            }
+          }
+          posX += moveX;
+          posY += moveY;
         }
         repaint();
       }
@@ -64,6 +82,10 @@ public class CanvasPanel extends Canvas implements ScreenPanel, CommandListener
     timer.schedule(timerTask, 0, 100);
 
     addCommand(backCommand);
+    addCommand(neCommand);
+    addCommand(nwCommand);
+    addCommand(seCommand);
+    addCommand(swCommand);
     setCommandListener(this);
   }
   
@@ -79,6 +101,22 @@ public class CanvasPanel extends Canvas implements ScreenPanel, CommandListener
     if (d == this) {
       if (c == backCommand) {
         Display.getDisplay(SimpleDemo.getInstance()).setCurrent(SimpleDemo.getInstance().menuList);
+        return;
+      }
+      synchronized (this) {
+        if (c == nwCommand) {
+          moveX = -1;
+          moveY = -1;
+        } else if (c == neCommand) {
+          moveX = 1;
+          moveY = -1;
+        } else if (c == swCommand) {
+          moveX = -1;
+          moveY = 1;
+        } else if (c == seCommand) {
+          moveX = 1;
+          moveY = 1;
+        }
       }
     }
   }
@@ -92,12 +130,12 @@ public class CanvasPanel extends Canvas implements ScreenPanel, CommandListener
     g.setGrayScale(0);
     g.drawRect(2, 2, getWidth() - 5, getHeight() - 5);
     
-    int pos = posMove;
+    int pos = posX;
     while (pos < getWidth() - 5) {
       g.drawLine(3 + pos, 3, 3 + pos, getHeight() - 4);
       pos += POSNUMBER;
     }
-    pos = posMove;
+    pos = posY;
     while (pos < getHeight() - 5) {
       g.drawLine(3, 3 + pos, getWidth() - 4, 3 + pos);
       pos += POSNUMBER;

@@ -39,7 +39,7 @@ public class ImageItemPanel extends Form implements ScreenPanel, CommandListener
     super(NAME);
     
     try {
-      Image image = Image.createImage("/com/barteo/emulator/resources/123.png");
+      Image image = Image.createImage("/com/barteo/midp/examples/simpledemo/image.png");
       
       append(new ImageItem("Default Layout", image, ImageItem.LAYOUT_DEFAULT, null));
       append(new ImageItem("Left Layout", image, ImageItem.LAYOUT_LEFT, null));

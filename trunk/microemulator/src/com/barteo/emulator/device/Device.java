@@ -103,9 +103,14 @@ public class Device {
                 commands.addElement(tmp_button.getContent());
               }
             }
+            String tmp_str = tmp_keyboard.getProperty("menuactivate");
+            boolean menuactivate = false;
+            if (tmp_str != null && tmp_str.equals("true")) {
+              menuactivate = true;
+            }
             deviceButtons.addElement(new SoftButton(tmp_keyboard.getProperty("name"),
                 rectangle, tmp_keyboard.getProperty("key"), paintable, 
-                tmp_keyboard.getProperty("alignment"), commands));
+                tmp_keyboard.getProperty("alignment"), commands, menuactivate));
           }
         }
       }
@@ -127,17 +132,25 @@ public class Device {
     
     for (Enumeration e_rectangle = source.enumerateChildren(); e_rectangle.hasMoreElements(); ) {
       XMLElement tmp_rectangle = (XMLElement) e_rectangle.nextElement();
+      // Temporary workaround of strange bug in NanoXML (inserting \0 into String)
+      String tmp_str = "";
+      byte[] data = tmp_rectangle.getContent().getBytes();
+      for (int i = 0; i < data.length; i++) {
+        if (data[i] != 0) {
+          tmp_str += (char) data[i];
+        }
+      }
       if (tmp_rectangle.getName().equals("x")) {
-        rect.x = Integer.parseInt(tmp_rectangle.getContent());
+        rect.x = Integer.parseInt(tmp_str);
       }
       if (tmp_rectangle.getName().equals("y")) {
-        rect.y = Integer.parseInt(tmp_rectangle.getContent());
+        rect.y = Integer.parseInt(tmp_str);
       }
       if (tmp_rectangle.getName().equals("width")) {
-        rect.width = Integer.parseInt(tmp_rectangle.getContent());
+        rect.width = Integer.parseInt(tmp_str);
       }
       if (tmp_rectangle.getName().equals("height")) {
-        rect.height = Integer.parseInt(tmp_rectangle.getContent());
+        rect.height = Integer.parseInt(tmp_str);
       }
     }
     

@@ -30,11 +30,22 @@
     <jar compress="true" jarfile="microemulator.jar">
       <fileset dir="./classes">
         <exclude name="com/barteo/midp/examples/**"/>
+        <exclude name="**/.*"/>
       </fileset>
-      <fileset dir="./res"/>
+      <fileset dir="./res">
+        <exclude name="com/barteo/midp/examples/**"/>
+        <exclude name="**/.*"/>
+      </fileset>
     </jar>
-    <jar basedir="./classes" compress="true" jarfile="simpledemo.jar">
-      <include name="com/barteo/midp/examples/simpledemo/**"/>
+    <jar compress="true" jarfile="simpledemo.jar">
+      <fileset dir="./classes">
+        <include name="com/barteo/midp/examples/simpledemo/**"/>
+        <exclude name="**/.*"/>
+      </fileset>
+      <fileset dir="./res">
+        <include name="com/barteo/midp/examples/simpledemo/**"/>
+        <exclude name="**/.*"/>
+      </fileset>
     </jar>
   </target>
 

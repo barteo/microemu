@@ -76,11 +76,6 @@ public class CommandManager {
     }
 
 
-    /**
-     *  Description of the Method
-     *
-     *@param  commands  Description of Parameter
-     */
     void updateCommands(Vector commands) {
         Command cmd;
         SoftButton sb;

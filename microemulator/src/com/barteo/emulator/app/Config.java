@@ -36,7 +36,8 @@ import nanoxml.XMLParseException;
 
 public class Config 
 {
-  private static String configPath = System.getProperty("user.home") + "/.microemulator/config.xml";
+  private static File configPath = new File(System.getProperty("user.home") + "/.microemulator/");
+  private static File configFile = new File(configPath, "config.xml");
   private static Vector devices = new Vector();
   
   
@@ -48,7 +49,7 @@ public class Config
 
     String xml = "";
     try {
-      InputStream dis = new BufferedInputStream(new FileInputStream(configPath));
+      InputStream dis = new BufferedInputStream(new FileInputStream(configFile));
       while (dis.available() > 0) {
         byte[] b = new byte[dis.available()];
         dis.read(b);
@@ -96,7 +97,7 @@ public class Config
                 devClass = tmp_cont.getContent();
               }
             }
-            devices.add(new DeviceEntry(devName, devFile, null, devDefault));
+            devices.add(new DeviceEntry(devName, devFile, devClass, devDefault));
           }
         }
       }
@@ -144,10 +145,9 @@ public class Config
       xmlDevice.addChild(xmlTmp);      
     }
     
-    File f = new File(configPath);
-    f.getParentFile().mkdirs();
+    configPath.mkdirs();
     try {
-      FileWriter fw = new FileWriter(f);
+      FileWriter fw = new FileWriter(configFile);
       xmlRoot.write(fw);
       fw.close();
     } catch (IOException ex) {
@@ -155,6 +155,12 @@ public class Config
     }
   }  
   
+  
+  public static File getConfigPath()
+  {
+    return configPath;
+  }
+
   
   public static Vector getDevices()
   {

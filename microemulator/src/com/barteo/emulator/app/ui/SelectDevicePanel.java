@@ -22,7 +22,11 @@ package com.barteo.emulator.app.ui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -53,8 +57,6 @@ public class SelectDevicePanel extends DialogPanel
 {
   private SelectDevicePanel instance;
   
-  private ProgressJarClassLoader loader;
-
   private JScrollPane spDevices;
   private JButton btAdd;
   private JButton btRemove;
@@ -103,6 +105,8 @@ public class SelectDevicePanel extends DialogPanel
         fileChooser.setFileFilter(jarFileFilter);
       }
       
+      ProgressJarClassLoader loader = new ProgressJarClassLoader();
+      
       if (fileChooser.showOpenDialog(instance) == JFileChooser.APPROVE_OPTION) {
         String deviceClassName = null;
         String deviceName = null;
@@ -132,6 +136,15 @@ public class SelectDevicePanel extends DialogPanel
           if (deviceClassName.charAt(0) == '/') {
             deviceClassName = deviceClassName.substring(1);
           }
+          for (Enumeration e = lsDevicesModel.elements(); e.hasMoreElements(); ) {
+            DeviceEntry entry = (DeviceEntry) e.nextElement();
+            if (deviceClassName.equals(entry.getClassName())) {
+              JOptionPane.showMessageDialog(instance, 
+                  "Device is already added.",
+                  "Info", JOptionPane.INFORMATION_MESSAGE);
+              return;
+            }
+          }
           
           loader.addRepository(fileChooser.getSelectedFile().toURL());
         } catch (IOException ex) {
@@ -158,10 +171,24 @@ public class SelectDevicePanel extends DialogPanel
           return;
         }
         
-        DeviceEntry entry = 
-            new DeviceEntry(deviceName, fileChooser.getSelectedFile().getAbsolutePath(), deviceClassName, false);
-        lsDevicesModel.addElement(entry);
-        lsDevices.setSelectedValue(entry, true);
+        try {
+          File deviceFile = File.createTempFile("dev", ".dev", Config.getConfigPath());
+          BufferedReader fr = new BufferedReader(new FileReader(fileChooser.getSelectedFile()));
+          BufferedWriter fw = new BufferedWriter(new FileWriter(deviceFile));
+          int c;
+          while ((c = fr.read()) != -1) {
+            fw.write(c);
+          }
+          fr.close();
+          fw.close();        
+        
+          DeviceEntry entry = 
+              new DeviceEntry(deviceName, deviceFile.getName(), deviceClassName, false);
+          lsDevicesModel.addElement(entry);
+          lsDevices.setSelectedValue(entry, true);
+        } catch (IOException ex) {
+          System.err.println(ex);
+        }
       }
     }    
   };
@@ -171,6 +198,8 @@ public class SelectDevicePanel extends DialogPanel
     public void actionPerformed(ActionEvent ev)
     {
       DeviceEntry entry = (DeviceEntry) lsDevices.getSelectedValue();
+      File deviceFile = new File(Config.getConfigPath(), entry.getFileName());
+      deviceFile.delete();
       if (entry.isDefaultDevice()) {
         for (Enumeration en = lsDevicesModel.elements(); en.hasMoreElements(); ) {
           DeviceEntry tmp = (DeviceEntry) en.nextElement();
@@ -228,10 +257,9 @@ public class SelectDevicePanel extends DialogPanel
   };
   
   
-  public SelectDevicePanel(ProgressJarClassLoader aloader) 
+  public SelectDevicePanel() 
   {
     instance = this;
-    loader = aloader;
     
     setLayout(new BorderLayout());
     setBorder(new TitledBorder(new EtchedBorder(), "Installed devices"));

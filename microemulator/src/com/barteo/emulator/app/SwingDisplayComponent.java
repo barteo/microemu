@@ -48,6 +48,7 @@ public class SwingDisplayComponent extends JPanel implements DisplayComponent
   boolean scrollUp = false;
   boolean scrollDown = false;
 
+  Device prevDevice = null;
 	Image offi;
 	Graphics offg;
 
@@ -70,10 +71,11 @@ public class SwingDisplayComponent extends JPanel implements DisplayComponent
     Rectangle displayRectangle = 
         ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
 
-    if (offg == null) {
+    if (prevDevice != device) {
 			offi = createImage(displayRectangle.width, displayRectangle.height);
 			offg = offi.getGraphics();
     }
+    prevDevice = device;
     
     offg.setColor(((J2SEDeviceDisplay) device.getDeviceDisplay()).getBackgroundColor());    
     offg.fillRect(0, 0, displayRectangle.width, displayRectangle.height);

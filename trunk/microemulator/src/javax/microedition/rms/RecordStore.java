@@ -33,6 +33,9 @@ public class RecordStore
   
   private String name;
   private boolean open = false;
+  private int version = 0;
+  private long lastModified = 0;
+  private int nextRecordID = 0;
   private Vector recordListeners = new Vector();
   private Hashtable records = new Hashtable();
   
@@ -108,8 +111,15 @@ public class RecordStore
 	
 	
 	public int getVersion()
+      throws RecordStoreNotOpenException
 	{
-		return 0;
+    if (!open) {
+      throw new RecordStoreNotOpenException();
+    }
+    
+    synchronized (this) {
+      return version;
+    }
 	}
 
 
@@ -120,19 +130,28 @@ public class RecordStore
       throw new RecordStoreNotOpenException();
     }
     
-		return records.size();
+    synchronized (this) {
+      return records.size();
+    }
 	}
 
-	
-	public int getSizeAvailable()
+
+  public int getSizeAvailable()
 	{
-		return 0;
+		return (int) Runtime.getRuntime().freeMemory();
 	}
 
-	
+  
 	public long getLastModified()
+      throws RecordStoreNotOpenException
 	{
-		return 0;
+    if (!open) {
+      throw new RecordStoreNotOpenException();
+    }
+
+    synchronized (this) {
+      return lastModified;
+    }
 	}
 
 
@@ -151,50 +170,149 @@ public class RecordStore
 	
 	
 	public int getNextRecordID()
+      throws RecordStoreNotOpenException, RecordStoreException
 	{
-		return 0;
+    if (!open) {
+      throw new RecordStoreNotOpenException();
+    }
+
+    synchronized (this) {
+      return nextRecordID;
+    }
 	}
 	
 	
 	public int addRecord(byte[] data, int offset, int numBytes)
+      throws RecordStoreNotOpenException, RecordStoreException, RecordStoreFullException
 	{
-		return 0;
-	}
+    if (!open) {
+      throw new RecordStoreNotOpenException();
+    }    
+    if (data == null && numBytes > 0) {
+      throw new NullPointerException();
+    }
+    
+    byte[] recordData = new byte[numBytes];
+    System.arraycopy(data, offset, recordData, 0, numBytes);
+    
+    int curRecordID;
+    synchronized (this) {
+      records.put(new Integer(nextRecordID), recordData);
+      version++;
+      curRecordID = nextRecordID;
+      nextRecordID++;
+      lastModified = System.currentTimeMillis();
+    }
+
+    fireAddedRecordListener(curRecordID);
+    
+    return nextRecordID;  
+  }
 	
 	
 	public void deleteRecord(int recordId)
+      throws RecordStoreNotOpenException, InvalidRecordIDException, RecordStoreException
 	{
+    if (!open) {
+      throw new RecordStoreNotOpenException();
+    }
+    
+    synchronized (this) {
+      if (records.remove(new Integer(recordId)) == null) {
+        throw new InvalidRecordIDException();
+      }
+      version++;
+      lastModified = System.currentTimeMillis();
+    }
+    
+    fireDeletedRecordListener(recordId);
 	}
 	
-	
-	public int getRecordSize(int recordId)
+
+  public int getRecordSize(int recordId)
+      throws RecordStoreNotOpenException, InvalidRecordIDException, RecordStoreException
 	{
-		return 0;
+    if (!open) {
+      throw new RecordStoreNotOpenException();
+    }
+
+    synchronized (this) {
+      byte[] data = (byte[]) records.get(new Integer(recordId));
+      if (data == null) {
+        throw new InvalidRecordIDException();
+      }
+      
+      return data.length;
+    }
 	}
 	
-	
+
 	public int getRecord(int recordId, byte[] buffer, int offset)
+      throws RecordStoreNotOpenException, InvalidRecordIDException, RecordStoreException
 	{
-		return 0;
+    int recordSize;
+    synchronized (this) {
+      recordSize = getRecordSize(recordId);
+      System.arraycopy(records.get(new Integer(recordId)), 0, buffer, offset, recordSize);
+    }
+    
+		return recordSize;
 	}
 	
 	
 	public byte[] getRecord(int recordId)
+      throws RecordStoreNotOpenException, InvalidRecordIDException, RecordStoreException
 	{
-		return null;
+    byte[] data;
+    
+    synchronized (this) {
+      data = new byte[getRecordSize(recordId)];
+      getRecord(recordId, data, 0);
+    }
+    
+		return data;
 	}
 	
 	
-	public void setRecord(int recordId, byte[] newData, int offset, int numBytes)
-			throws RecordStoreException
+//
+  public void setRecord(int recordId, byte[] newData, int offset, int numBytes)
+      throws RecordStoreNotOpenException, InvalidRecordIDException, RecordStoreException, RecordStoreFullException
 	{
+    if (!open) {
+      throw new RecordStoreNotOpenException();
+    }
 	}
-	
-	
+
+  
+//	
 	public RecordEnumeration enumerateRecords(RecordFilter filter, RecordComparator comparator, boolean keepUpdated)
 	{
 		return null;
 	}
-	
+  
+  
+  private void fireAddedRecordListener(int recordId)
+  {
+    for (Enumeration e = recordListeners.elements(); e.hasMoreElements(); ) {
+      ((RecordListener) e.nextElement()).recordAdded(this, recordId);
+    }
+  }
+
+  
+  private void fireChangedRecordListener(int recordId)
+  {
+    for (Enumeration e = recordListeners.elements(); e.hasMoreElements(); ) {
+      ((RecordListener) e.nextElement()).recordChanged(this, recordId);
+    }
+  }
+
+  
+  private void fireDeletedRecordListener(int recordId)
+  {
+    for (Enumeration e = recordListeners.elements(); e.hasMoreElements(); ) {
+      ((RecordListener) e.nextElement()).recordDeleted(this, recordId);
+    }
+  }
+  
 }
 

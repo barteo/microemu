@@ -34,7 +34,7 @@ public abstract class Screen extends Displayable
 	{
 		this.title = new StringComponent(title);
 		viewPortY = 0;
-		viewPortHeight = DeviceFactory.getDevice().getDeviceDisplay().getHeight() - this.title.getHeight() - 1;
+		viewPortHeight = -1;
 	}
 
 	
@@ -58,6 +58,10 @@ public abstract class Screen extends Displayable
 	
 	public void setTicker(Ticker ticker) 
 	{
+		if (viewPortHeight == -1) {
+			viewPortHeight = DeviceFactory.getDevice().getDeviceDisplay().getHeight() - this.title.getHeight() - 1;
+		}
+		
 		if (this.ticker != null) {
 			viewPortHeight += this.ticker.getHeight();
 		}
@@ -74,11 +78,14 @@ public abstract class Screen extends Displayable
 	
 	void keyPressed(int keyCode) 
 	{
+		if (viewPortHeight == -1) {
+			viewPortHeight = DeviceFactory.getDevice().getDeviceDisplay().getHeight() - this.title.getHeight() - 1;
+		}
+
 		int gameKeyCode = Display.getGameAction(keyCode);
 
 		if (gameKeyCode == Canvas.UP || gameKeyCode == Canvas.DOWN) {
-			viewPortY += traverse(gameKeyCode, viewPortY, viewPortY
-					+ viewPortHeight);
+			viewPortY += traverse(gameKeyCode, viewPortY, viewPortY + viewPortHeight);
 			repaint();
 		}
 	}

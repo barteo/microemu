@@ -47,13 +47,17 @@ public class LayerManager
 
 	public Layer getLayerAt(int index)		
 	{
-		throw new RuntimeException("TODO");
+		if (index < 0 || index >= numOfLayers) {
+			throw new IndexOutOfBoundsException();
+		}
+
+		return layers[index];		
 	}
 
 
 	public int getSize()
 	{
-		throw new RuntimeException("TODO");
+		return numOfLayers;
 	}
 
 

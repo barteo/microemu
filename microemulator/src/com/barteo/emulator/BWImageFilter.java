@@ -24,19 +24,19 @@ package com.barteo.emulator;
 import java.awt.image.RGBImageFilter;
 
 
-final class BWImageFilter extends RGBImageFilter 
+public final class BWImageFilter extends RGBImageFilter
 {
 
   private double Yr, Yg, Yb;
 
 
-  public BWImageFilter () 
+  public BWImageFilter ()
 	{
     this(0.2126d, 0.7152d, 0.0722d);
   }
 
 
-  public BWImageFilter (double Yr, double Yg, double Yb) 
+  public BWImageFilter (double Yr, double Yg, double Yb)
 	{
     this.Yr = Yr;
     this.Yg = Yg;
@@ -45,7 +45,7 @@ final class BWImageFilter extends RGBImageFilter
   }
 
 
-  public int filterRGB (int x, int y, int rgb) 
+  public int filterRGB (int x, int y, int rgb)
 	{
     int a = (rgb & 0xFF000000);
     int r = (rgb & 0x00FF0000) >>> 16;

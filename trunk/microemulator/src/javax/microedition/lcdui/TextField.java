@@ -70,12 +70,14 @@ public class TextField extends Item
 		{
 			setCaretPosition(event.getCaret());
 			setCaretVisible(true);
+			repaint();
 		}
 
 		public void inputMethodTextChanged(InputMethodEvent event) 
 		{
 			setCaretVisible(false);
 			setString(event.getText());
+			repaint();
 		}
 	};
 

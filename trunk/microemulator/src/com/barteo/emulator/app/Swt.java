@@ -56,7 +56,7 @@ import com.barteo.emulator.device.swt.SwtDevice;
 
 public class Swt
 {
-	private static Shell shell;
+	public static Shell shell;
 
 	Swt instance = null;
   
@@ -187,20 +187,32 @@ public class Swt
 	};
 	
 	StatusBarListener statusBarListener = new StatusBarListener()
-	{
-		public void statusBarChanged(String text) 
-		{
-			statusBar.setText(text);
+	{			
+		public void statusBarChanged(final String text) 
+		{			
+			shell.getDisplay().asyncExec(new Runnable()
+			{
+				public void run() 
+				{
+					statusBar.setText(text);
+				}
+			});
 		}  
 	};
   
 	ResponseInterfaceListener responseInterfaceListener = new ResponseInterfaceListener()
 	{
-		public void stateChanged(boolean state) 
+		public void stateChanged(final boolean state) 
 		{
-			menuOpenJADFile.setEnabled(state);
-			menuOpenJADURL.setEnabled(state);
-			menuSelectDevice.setEnabled(state);
+			shell.getDisplay().asyncExec(new Runnable()
+			{
+				public void run() 
+				{
+					menuOpenJADFile.setEnabled(state);
+					menuOpenJADURL.setEnabled(state);
+					menuSelectDevice.setEnabled(state);
+				}
+			});
 		}  
 	};
   

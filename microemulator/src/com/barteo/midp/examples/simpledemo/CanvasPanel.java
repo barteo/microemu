@@ -81,7 +81,7 @@ public class CanvasPanel extends Canvas implements ScreenPanel, CommandListener
   
   public CanvasPanel()
   {
-    Thread thread = new Thread(timerTask);
+    Thread thread = new Thread(timerTask, "CanvasPanel");
     thread.start();
 
     addCommand(backCommand);

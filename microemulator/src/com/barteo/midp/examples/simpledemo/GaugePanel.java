@@ -63,7 +63,7 @@ public class GaugePanel extends Form implements ScreenPanel, CommandListener
     append(new Gauge("Interactive", true, 25, 0));
     append(noninteractive);
     
-    Thread thread = new Thread(timerTask);
+    Thread thread = new Thread(timerTask, "GaugePanel");
     thread.start();
 
     addCommand(backCommand);

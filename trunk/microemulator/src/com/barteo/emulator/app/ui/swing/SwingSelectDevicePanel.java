@@ -44,11 +44,9 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.filechooser.FileFilter;
 
 import com.barteo.emulator.app.Config;
-import com.barteo.emulator.app.ui.swing.*;
-import com.barteo.emulator.app.util.*;
+import com.barteo.emulator.app.util.DeviceEntry;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.device.j2se.J2SEDevice;
 
@@ -67,42 +65,14 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
   private ActionListener btAddListener = new ActionListener()
   {
     private JFileChooser fileChooser = null;
-    
-    private FileFilter jarFileFilter = new FileFilter()
-    {
-      public boolean accept(File f)
-      {
-        if (f.isDirectory()) {
-          return true;
-        }
-        String ext = null;
-        String s = f.getName();
-        int i = s.lastIndexOf('.');
-
-        if (i > 0 &&  i < s.length() - 1) {
-            ext = s.substring(i+1).toLowerCase();
-        }
-        if (ext == null) {
-          return false;
-        }
-        if (!ext.toLowerCase().equals("dev")) {
-          return false;
-        }
         
-        return true;
-      }
-      
-      public String getDescription()
-      {
-        return "Device profile (*.dev)";
-      }
-    };
-    
     public void actionPerformed(ActionEvent ev)
     {
       if (fileChooser == null) {
         fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(jarFileFilter);
+        ExtensionFileFilter fileFilter = new ExtensionFileFilter("Device profile (*.dev)");
+        fileFilter.addExtension("dev");
+        fileChooser.setFileFilter(fileFilter);
       }
       
       ProgressJarClassLoader loader = new ProgressJarClassLoader();

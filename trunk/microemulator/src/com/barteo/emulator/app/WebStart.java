@@ -189,7 +189,7 @@ public class WebStart extends JFrame implements MicroEmulator
     
     public void actionPerformed(ActionEvent e)
     {
-      if (SwingDialogWindow.show("Select device...", selectDevicePanel)) {
+      if (SwingDialogWindow.show(instance, "Select device...", selectDevicePanel)) {
         if (selectDevicePanel.getSelectedDeviceEntry().equals(getDevice())) {
           return;
         }

@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2001-2003 Bartek Teodorczyk <barteo@it.pl>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -31,8 +31,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -50,6 +54,8 @@ import com.barteo.emulator.app.ui.awt.AwtDeviceComponent;
 import com.barteo.emulator.app.ui.awt.AwtDialogWindow;
 import com.barteo.emulator.app.ui.awt.AwtSelectDevicePanel;
 import com.barteo.emulator.app.ui.awt.ExtensionFileFilter;
+import com.barteo.emulator.app.ui.awt.FileChooser;
+import com.barteo.emulator.app.ui.awt.OptionPane;
 import com.barteo.emulator.app.util.DeviceEntry;
 import com.barteo.emulator.app.util.ProgressEvent;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
@@ -69,7 +75,7 @@ public class Awt extends Frame implements MicroEmulator
 	boolean initialized = false;
   
 	AwtSelectDevicePanel selectDevicePanel = null;
-	FileDialog fileChooser = null;
+	FileChooser fileChooser = null;
 	MenuItem menuOpenJADFile;
 	MenuItem menuOpenJADURL;
     
@@ -124,12 +130,13 @@ public class Awt extends Frame implements MicroEmulator
 			if (fileChooser == null) {
 				ExtensionFileFilter fileFilter = new ExtensionFileFilter("JAD files");
 				fileFilter.addExtension("jad");
-				fileChooser = new FileDialog(instance, "Open JAD File...", FileDialog.LOAD);
+				fileChooser = new FileChooser(instance, "Open JAD File...", FileDialog.LOAD);
 				fileChooser.setFilenameFilter(fileFilter);
 			}
       
-/*			int returnVal = fileChooser.showOpenDialog(instance);
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
+			fileChooser.show();
+						
+			if (fileChooser.getFile() != null) {
 				try {
 					FileInputStream fis = new FileInputStream(fileChooser.getSelectedFile());
 					statusBar.setText("Loading...");
@@ -138,10 +145,14 @@ public class Awt extends Frame implements MicroEmulator
 					loadFromJad();
 				} catch (FileNotFoundException ex) {
 					System.err.println("Cannot found file " + fileChooser.getSelectedFile().getName());
+				} catch (NullPointerException ex) {
+					System.err.println("Cannot open jad file " + fileChooser.getSelectedFile().getName());
+				} catch (IllegalArgumentException ex) {
+					System.err.println("Cannot open jad file " + fileChooser.getSelectedFile().getName());
 				} catch (IOException ex) {
-					System.err.println("Cannot open file " + fileChooser.getSelectedFile().getName());
+					System.err.println("Cannot open jad file " + fileChooser.getSelectedFile().getName());
 				}
-			}*/
+			}
 		}
   
 	};
@@ -151,7 +162,7 @@ public class Awt extends Frame implements MicroEmulator
 
 		public void actionPerformed(ActionEvent ev)
 		{
-/*			String entered = JOptionPane.showInputDialog("Enter JAD URL:");
+			String entered = OptionPane.showInputDialog(instance, "Enter JAD URL:");
 			if (entered != null) {
 				try {
 					URL url = new URL(entered);
@@ -164,7 +175,7 @@ public class Awt extends Frame implements MicroEmulator
 				} catch (IOException ex) {
 					System.err.println("Cannot open URL " + entered);
 				}
-			}*/
+			}
 		}
     
 	};
@@ -230,7 +241,30 @@ public class Awt extends Frame implements MicroEmulator
 		}
     
 	};
-  
+	
+	WindowAdapter windowListener = new WindowAdapter()
+	{
+		public void windowClosing(WindowEvent ev) 
+		{
+			menuExitListener.actionPerformed(null);
+		}
+		
+
+		public void windowIconified(WindowEvent ev) 
+		{
+			MIDletBridge.getMIDletAccess(launcher.getCurrentMIDlet()).pauseApp();
+		}
+		
+		public void windowDeiconified(WindowEvent ev) 
+		{
+			try {
+				MIDletBridge.getMIDletAccess(launcher.getCurrentMIDlet()).startApp();
+			} catch (MIDletStateChangeException ex) {
+				System.err.println(ex);
+			}
+		}
+	};  
+ 
   
 	Awt()
 	{
@@ -265,6 +299,8 @@ public class Awt extends Frame implements MicroEmulator
 		setMenuBar(menuBar);
     
 		setTitle("MicroEmulator");
+		addWindowListener(windowListener);
+		
     
 		Config.loadConfig();
 		addKeyListener(keyListener);
@@ -291,7 +327,7 @@ public class Awt extends Frame implements MicroEmulator
 			url = new URL(jad.getJarURL());
 		} catch (MalformedURLException ex) {
 			// it can be just file      
-			File f = new File(fileChooser.getFile(), jad.getJarURL());
+			File f = new File(fileChooser.getSelectedFile().getParent(), jad.getJarURL());
 			try {
 				url = f.toURL();
 			} catch (MalformedURLException ex1) {
@@ -393,23 +429,6 @@ public class Awt extends Frame implements MicroEmulator
 		menuOpenJADURL.setEnabled(state);
 	}
   
-  
-	protected void processWindowEvent(WindowEvent e)
-	{
-		super.processWindowEvent(e);
-		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-			menuExitListener.actionPerformed(null);
-		} else if (e.getID() == WindowEvent.WINDOW_ICONIFIED) {
-			MIDletBridge.getMIDletAccess(launcher.getCurrentMIDlet()).pauseApp();
-		} else if (e.getID() == WindowEvent.WINDOW_DEICONIFIED) {
-			try {
-				MIDletBridge.getMIDletAccess(launcher.getCurrentMIDlet()).startApp();
-			} catch (MIDletStateChangeException ex) {
-				System.err.println(ex);
-			}
-		}
-	}
-
   
 	public void startMidlet(MIDlet m)
 	{

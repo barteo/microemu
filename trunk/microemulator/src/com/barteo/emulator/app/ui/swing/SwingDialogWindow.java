@@ -45,9 +45,9 @@ public class SwingDialogWindow
    * @param panel wnetrze okienka dialogowego
    * @return true jesli zamkniecie okna zostalo wywolane przez przycisk OK
    */
-  public static boolean show(String title, final SwingDialogPanel panel)
+  public static boolean show(JFrame parent, String title, final SwingDialogPanel panel)
   {
-    final JDialog dialog = new JDialog(new JFrame(), title, true);
+    final JDialog dialog = new JDialog(parent, title, true);
     dialog.getContentPane().setLayout(new BorderLayout());
     dialog.getContentPane().add(panel, BorderLayout.CENTER);
 

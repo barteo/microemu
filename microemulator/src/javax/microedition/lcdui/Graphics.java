@@ -221,9 +221,9 @@ public class Graphics
 
 	public void setColor(int red, int green, int blue)
 	{
-    int rgb = red;
-    rgb += green << 8;
-    rgb += blue << 16;
+		int rgb = blue;  //0XRRGGBB
+		rgb += green << 8;
+    rgb += red << 16;
     setColor(rgb);
 	}
 

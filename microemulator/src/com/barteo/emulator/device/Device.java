@@ -15,6 +15,9 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Contributor(s):
+ *    3GLab
  */
  
 package com.barteo.emulator.device;
@@ -61,6 +64,8 @@ public class Device {
   public static Image modeAbcLowerImage;  
   public static Rectangle modeAbcLowerImagePaintable;
 
+  public static int numColors;
+  public static boolean isColor;
   public static Color backgroundColor;
   public static Color foregroundColor;
 
@@ -69,7 +74,14 @@ public class Device {
   public static Rectangle screenRectangle;
   public static Rectangle screenPaintable;
   
-  
+  /* Device mouse properties */
+  public static boolean hasPointerMotionEvents = false;
+  public static boolean hasPointerEvents = false;
+
+  /* Device repeat key event properties */
+  public static boolean hasRepeatEvents = false;
+
+    
   private Device()
   {
     String xml = "";
@@ -115,7 +127,11 @@ public class Device {
       } else if (tmp.getName().equals("screen")) {
         for (Enumeration e_screen = tmp.enumerateChildren(); e_screen.hasMoreElements(); ) {
           XMLElement tmp_screen = (XMLElement) e_screen.nextElement();
-          if (tmp_screen.getName().equals("background")) {
+          if (tmp_screen.getName().equals("numcolors")) {
+            numColors = Integer.parseInt(tmp_screen.getContent());
+          } else if (tmp_screen.getName().equals("iscolor")) {
+            isColor = parseBoolean(tmp_screen.getContent());
+          } else if (tmp_screen.getName().equals("background")) {
             backgroundColor = new Color(Integer.parseInt(tmp_screen.getContent(), 16));
           } else if (tmp_screen.getName().equals("foreground")) {
             foregroundColor = new Color(Integer.parseInt(tmp_screen.getContent(), 16));
@@ -258,6 +274,16 @@ public class Device {
     }
     
     return rect;
+  }
+  
+  
+  private boolean parseBoolean(String value)
+  {
+    if (value.toLowerCase().equals(new String("true").toLowerCase())) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
 }

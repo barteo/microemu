@@ -1,6 +1,7 @@
 /*
  *  MicroEmulator
  *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2002 3GLab http://www.3glab.com
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -46,13 +47,18 @@ public final class Font
 
 	private Font(int face, int style, int size)
 	{
-		this.face = face;
+    checkFace(face);
+    checkStyle(style);
+    checkSize(size);
+
+    this.face = face;
 		this.style = style;
 		this.size = size;
 	}
 
 
 	public static Font getFont(int face, int style, int size)
+      throws IllegalArgumentException
 	{
 		return new Font(face, style, size);
 	}
@@ -108,7 +114,7 @@ public final class Font
 
   public boolean isBold()
   {
-    if (style == STYLE_BOLD) {
+    if ((style & STYLE_BOLD) == STYLE_BOLD) {
       return true;
     } else {
       return false;
@@ -118,7 +124,7 @@ public final class Font
 
   public boolean isItalic()
   {
-    if (style == STYLE_ITALIC) {
+    if ((style & STYLE_ITALIC) == STYLE_ITALIC) {
       return true;
     } else {
       return false;
@@ -138,7 +144,7 @@ public final class Font
 
   public boolean isUnderlined()
   {
-    if (style == STYLE_UNDERLINED) {
+    if ((style & STYLE_UNDERLINED) == STYLE_UNDERLINED) {
       return true;
     } else {
       return false;
@@ -157,4 +163,40 @@ public final class Font
 		return stringWidth(str.substring(offset, offset + len));
 	}
 
+
+  private void checkFace(int face)
+      throws IllegalArgumentException 
+  {
+    if ((face != FACE_SYSTEM) &&
+        (face != FACE_MONOSPACE) &&
+        (face != FACE_PROPORTIONAL) ) {
+      throw new IllegalArgumentException("Font face is not a known type");
+    }
+  }
+
+  
+  private void checkStyle(int style)
+      throws IllegalArgumentException 
+  {
+    if (style == STYLE_PLAIN) {
+      return;
+    }
+
+    int allstyles = STYLE_ITALIC|STYLE_BOLD|STYLE_UNDERLINED;
+    if ((style < 0) || (style > allstyles) || ((style&allstyles) == 0)) {
+        throw new IllegalArgumentException("Font style is not a known type");
+    }
+  }
+
+  
+  private void checkSize(int size)
+      throws IllegalArgumentException 
+  {
+    if ((size != SIZE_SMALL) &&
+        (size != SIZE_MEDIUM) &&
+        (size != SIZE_LARGE) ) {
+      throw new IllegalArgumentException("Font size is not a known type");
+    }
+  }
+  
 }

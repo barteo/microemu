@@ -15,6 +15,9 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Contributor(s):
+ *    3GLab
  */
  
 package javax.microedition.lcdui;
@@ -36,8 +39,9 @@ public class Gauge extends Item
     super(label);
     
     this.interactive = interactive;
-    this.maxValue = maxValue;
-    this.value = initialValue;
+    
+    setMaxValue(maxValue);
+    setValue(initialValue);
   }
 
 
@@ -104,10 +108,10 @@ public class Gauge extends Item
   
   void keyPressed(int keyCode)
   {
-    if (Display.getGameAction(keyCode) == 2 && value > 0) {
+    if (Display.getGameAction(keyCode) == Canvas.LEFT && value > 0) {
       value--;
       repaint();
-    } else if (Display.getGameAction(keyCode) == 5 && value < maxValue) {
+    } else if (Display.getGameAction(keyCode) == Canvas.RIGHT && value < maxValue) {
       value++;
       repaint();
     }

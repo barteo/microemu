@@ -98,7 +98,7 @@ public class SwtSoftButton extends SwtButton implements SoftButton
         g.fillRectangle(paintable.x, paintable.y, paintable.width, paintable.height);
         if (command != null) {
             if (alignment == RIGHT) {
-                xoffset = paintable.width - g.stringExtent(command.getLabel()).x;
+                xoffset = paintable.width - g.stringWidth(command.getLabel());
             }
             g.setForeground(deviceDisplay.getForegroundColor());
             g.drawString(command.getLabel(), 

@@ -24,7 +24,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
@@ -164,9 +163,9 @@ public class SwtGraphics
 	}
 
 
-	public Point stringExtent(String string) 
+	public int stringWidth(String string) 
 	{
-		return gc.stringExtent(string);
+		return gc.stringExtent(string).x;
 	}
 
 

@@ -79,6 +79,14 @@ public class Display
 		}
 
 
+		public void keyReleased(int keyCode)
+		{
+			if (current != null) {
+				current.keyReleased(keyCode);
+			}
+		}
+
+
 		public void paint(Graphics g)
 		{
 			if (current != null) {

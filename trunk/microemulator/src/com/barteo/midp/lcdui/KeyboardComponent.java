@@ -42,7 +42,7 @@ public class KeyboardComponent extends Panel
 	Button four, five, six;
 	Button seven, eight, nine;
 	Button mark, zero, hash;
-	
+
 	KeyboardActionListener kb_listener = new KeyboardActionListener();
 
 
@@ -50,117 +50,117 @@ public class KeyboardComponent extends Panel
 	{
 		XYLayout xy = new XYLayout();
 		setLayout(xy);
-		
+
 		soft1 = new Button("");
-		soft1.addActionListener(kb_listener);
+		soft1.addMouseListener(kb_listener);
 		xy.addLayoutComponent(soft1, new XYConstraints(0, 0, 30, 15));
 		add(soft1);
 
 		soft2 = new Button("");
-		soft2.addActionListener(kb_listener);
+		soft2.addMouseListener(kb_listener);
 		xy.addLayoutComponent(soft2, new XYConstraints(60, 0, 30, 15));
 		add(soft2);
 
 		left = new Button("l");
-		left.addActionListener(kb_listener);
+		left.addMouseListener(kb_listener);
 		xy.addLayoutComponent(left, new XYConstraints(0, 45, 30, 15));
 		add(left);
 
 		right = new Button("r");
-		right.addActionListener(kb_listener);
+		right.addMouseListener(kb_listener);
 		xy.addLayoutComponent(right, new XYConstraints(60, 45, 30, 15));
 		add(right);
 
 		up = new Button("u");
-		up.addActionListener(kb_listener);
+		up.addMouseListener(kb_listener);
 		xy.addLayoutComponent(up, new XYConstraints(30, 30, 30, 15));
 		add(up);
 
 		down = new Button("d");
-		down.addActionListener(kb_listener);
+		down.addMouseListener(kb_listener);
 		xy.addLayoutComponent(down, new XYConstraints(30, 60, 30, 15));
 		add(down);
 
 		select = new Button("sel");
-		select.addActionListener(kb_listener);
+		select.addMouseListener(kb_listener);
 		xy.addLayoutComponent(select, new XYConstraints(30, 45, 30, 15));
 		add(select);
 
 		clear = new Button("clr");
-		clear.addActionListener(kb_listener);
+		clear.addMouseListener(kb_listener);
 		xy.addLayoutComponent(clear, new XYConstraints(30, 90, 30, 15));
 		add(clear);
 
 		one = new Button("1");
-		one.addActionListener(kb_listener);
+		one.addMouseListener(kb_listener);
 		xy.addLayoutComponent(one, new XYConstraints(0, 120, 30, 15));
 		add(one);
 
 		two = new Button("2");
-		two.addActionListener(kb_listener);
+		two.addMouseListener(kb_listener);
 		xy.addLayoutComponent(two, new XYConstraints(30, 120, 30, 15));
 		add(two);
 
 		three = new Button("3");
-		three.addActionListener(kb_listener);
+		three.addMouseListener(kb_listener);
 		xy.addLayoutComponent(three, new XYConstraints(60, 120, 30, 15));
 		add(three);
 
 		four = new Button("4");
-		four.addActionListener(kb_listener);
+		four.addMouseListener(kb_listener);
 		xy.addLayoutComponent(four, new XYConstraints(0, 135, 30, 15));
 		add(four);
 
 		five = new Button("5");
-		five.addActionListener(kb_listener);
+		five.addMouseListener(kb_listener);
 		xy.addLayoutComponent(five, new XYConstraints(30, 135, 30, 15));
 		add(five);
 
 		six = new Button("6");
-		six.addActionListener(kb_listener);
+		six.addMouseListener(kb_listener);
 		xy.addLayoutComponent(six, new XYConstraints(60, 135, 30, 15));
 		add(six);
 
 		seven = new Button("7");
-		seven.addActionListener(kb_listener);
+		seven.addMouseListener(kb_listener);
 		xy.addLayoutComponent(seven, new XYConstraints(0, 150, 30, 15));
 		add(seven);
 
 		eight = new Button("8");
-		eight.addActionListener(kb_listener);
+		eight.addMouseListener(kb_listener);
 		xy.addLayoutComponent(eight, new XYConstraints(30, 150, 30, 15));
 		add(eight);
 
 		nine = new Button("9");
-		nine.addActionListener(kb_listener);
+		nine.addMouseListener(kb_listener);
 		xy.addLayoutComponent(nine, new XYConstraints(60, 150, 30, 15));
 		add(nine);
 
 		mark = new Button("*");
-		mark.addActionListener(kb_listener);
+		mark.addMouseListener(kb_listener);
 		xy.addLayoutComponent(mark, new XYConstraints(0, 165, 30, 15));
 		add(mark);
 
 		zero = new Button("0");
-		zero.addActionListener(kb_listener);
+		zero.addMouseListener(kb_listener);
 		xy.addLayoutComponent(zero, new XYConstraints(30, 165, 30, 15));
 		add(zero);
 
 		hash = new Button("#");
-		hash.addActionListener(kb_listener);
+		hash.addMouseListener(kb_listener);
 		xy.addLayoutComponent(hash, new XYConstraints(60, 165, 30, 15));
 		add(hash);
 	}
 
 
-	class KeyboardActionListener implements ActionListener
+	class KeyboardActionListener extends MouseAdapter
 	{
-	
-		public void actionPerformed(ActionEvent e)
-		{
-			int key = 0;
+
+    int getKey(MouseEvent e)
+    {
+      int key = 0;
 			Button tmp = (Button) e.getSource();
-			
+
 			if (tmp == left) {
 				key = KeyEvent.VK_LEFT;
 			} else if (tmp == right) {
@@ -197,13 +197,22 @@ public class KeyboardComponent extends Panel
 				key = KeyEvent.VK_0;
 			} else if (tmp == hash) {
 				key = KeyEvent.VK_MODECHANGE;
-			} 
-			
+			}
+
+      return key;
+    }
+
+
+		public void mousePressed(MouseEvent e)
+		{
+			int key = getKey(e);
+
 			if (key != 0) {
 				InputMethod.getInputMethod().keyPressed(key);
 				return;
 			}
 
+			Button tmp = (Button) e.getSource();
  		 	if (tmp == soft1 || tmp == soft2) {
 				Command cmd;
 				int i = 0;
@@ -219,6 +228,16 @@ public class KeyboardComponent extends Panel
 				}
 			}
 		}
+
+    public void mouseReleased(MouseEvent e)
+    {
+			int key = getKey(e);
+
+			if (key != 0) {
+				InputMethod.getInputMethod().keyReleased(key);
+				return;
+			}
+    }
 
 	}
 

@@ -148,11 +148,15 @@ public class Form extends Screen
 
   void keyPressed(int keyCode)
   {
-    if (Display.getGameAction(keyCode) == 8 && focusItemIndex != -1) {
-			items[focusItemIndex].select();
-    } else {
-      super.keyPressed(keyCode);
+    if (focusItemIndex != -1) {
+      if (Display.getGameAction(keyCode) == 8) {
+        items[focusItemIndex].select();
+      } else {
+        items[focusItemIndex].keyPressed(keyCode);
+      }
     }
+
+    super.keyPressed(keyCode);
   }
 
 

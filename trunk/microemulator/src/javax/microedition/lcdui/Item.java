@@ -62,7 +62,12 @@ public abstract class Item
 	}
 	
 	
-	abstract int paint(Graphics g);
+  void keyPressed(int keyCode)
+  {
+  }
+  
+    
+  abstract int paint(Graphics g);
 	
 	
 	void paintContent(Graphics g)

@@ -25,6 +25,6 @@ public interface ScreenPanel
 {
 
   String getName();
-
+    
 }
 

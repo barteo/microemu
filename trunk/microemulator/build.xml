@@ -103,6 +103,12 @@
         <arg line="-keep 'class javax.** { *; }'"/>
         <arg line="-keep 'public class * extends javax.** { *;}'"/>
         <arg line="-keep 'public class * extends java.applet.Applet { *; }'"/>
+        <arg line="-keep 'public class com.barteo.emulator.device.** { *; }'"/>
+        <arg line="-keep 'public class * extends com.barteo.emulator.device.** { *; }'"/>
+        <!--<arg line="-keep 'public class com.barteo.emulator.device.applet.** { *; }'"/>-->
+        <!--<arg line="-keep 'public class * extends com.barteo.emulator.device.applet.** { *; }'"/>-->
+        <arg line="-keep 'class * extends com.sixlegs.image.png.BitMover { *; }'"/>
+        <arg line="-keep 'class * extends com.sixlegs.image.png.Chunk { *; }'"/>
     </java>
     <move file="./target/me-applet-obfuscated.jar" tofile="./target/me-applet.jar"/>
   </target>

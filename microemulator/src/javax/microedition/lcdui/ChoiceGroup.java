@@ -28,11 +28,11 @@ public class ChoiceGroup extends Item implements Choice
 	ImageStringItem items[] = new ImageStringItem[4];
 	boolean selectedItems[] = new boolean[4];
   int numOfItems = 0;
-  
+
   int choiceType;
-  
+
   int selectedIndex;
-	
+
 	static byte multiOff[] = {
   		-119, 80, 78, 71, 13, 10, 26, 10, 0, 0,
       0, 13, 73, 72, 68, 82, 0, 0, 0, 10,
@@ -45,7 +45,7 @@ public class ChoiceGroup extends Item implements Choice
       -122, 50, -4, 6, 0, 63, 116, 3, 1, 53,
       -108, 39, -26, 0, 0, 0, 0, 73, 69, 78,
       68, -82, 66, 96, -126 };
-			
+
 	static byte multiOn[] = {
 	    -119, 80, 78, 71, 13, 10, 26, 10, 0, 0,
       0, 13, 73, 72, 68, 82, 0, 0, 0, 10,
@@ -91,25 +91,28 @@ public class ChoiceGroup extends Item implements Choice
       15, -40, 119, 10, 41, 78, 26, -79, 59, 0,
       0, 0, 0, 73, 69, 78, 68, -82, 66, 96,
       -126 };
-	
+
 	private static final Image imgMultiOff = Image.createImage(multiOff, 0, multiOff.length);
 	private static final Image imgMultiOn = Image.createImage(multiOn, 0, multiOn.length);
 	private static final Image imgRadioOff = Image.createImage(radioOff, 0, radioOff.length);
 	private static final Image imgRadioOn = Image.createImage(radioOn, 0, radioOn.length);
-  
-	  
+
+
   public ChoiceGroup(String label, int choiceType)
   {
 		this(label, choiceType, null, null);
   }
-  
-  
+
+
 	public ChoiceGroup(String label, int choiceType, String[] stringElements, Image[] imageElements)
 	{
     super(label);
     this.choiceType = choiceType;
     selectedIndex = 0;
-		
+
+    if (choiceType != Choice.EXCLUSIVE && choiceType != Choice.MULTIPLE) {
+      throw new IllegalArgumentException("choiceType is neither EXCLUSIVE nor MULTIPLE");
+    }
 		if (stringElements != null) {
 			for (int i = 0; i < stringElements.length; i++) {
 				append(stringElements[i], null);
@@ -119,17 +122,17 @@ public class ChoiceGroup extends Item implements Choice
 			}
 		}
 	}
-									 
-									 
-	public int append(String stringPart, Image imagePart) 
+
+
+	public int append(String stringPart, Image imagePart)
   {
 		insert(numOfItems, stringPart, imagePart);
 
     return (numOfItems - 1);
   }
-    
 
-  public void delete(int itemNum) 
+
+  public void delete(int itemNum)
   {
 		if (itemNum < 0 || itemNum >= numOfItems) {
 			throw new IndexOutOfBoundsException();
@@ -140,9 +143,9 @@ public class ChoiceGroup extends Item implements Choice
     }
     numOfItems--;
   }
-    
 
-  public Image getImage(int elementNum) 
+
+  public Image getImage(int elementNum)
   {
 		if (elementNum < 0 || elementNum >= numOfItems) {
 			throw new IndexOutOfBoundsException();
@@ -150,10 +153,10 @@ public class ChoiceGroup extends Item implements Choice
 
     return null;
   }
-    
 
-  public int getSelectedFlags(boolean[] selectedArray_return) 
-  {	
+
+  public int getSelectedFlags(boolean[] selectedArray_return)
+  {
 		if (selectedArray_return == null) {
 			throw new NullPointerException();
 		}
@@ -168,18 +171,18 @@ public class ChoiceGroup extends Item implements Choice
 				selectedItemsNum++;
 			}
 		}
-		
+
     return selectedItemsNum;
   }
-    
 
-  public int getSelectedIndex() 
+
+  public int getSelectedIndex()
   {
 		return selectedIndex;
   }
-    
-  
-  public String getString(int elementNum) 
+
+
+  public String getString(int elementNum)
   {
 		if (elementNum < 0 || elementNum >= numOfItems) {
 			throw new IndexOutOfBoundsException();
@@ -187,9 +190,9 @@ public class ChoiceGroup extends Item implements Choice
 
     return items[elementNum].getText();
   }
-    
-  
-  public void insert(int elementNum, String stringPart, Image imagePart) 
+
+
+  public void insert(int elementNum, String stringPart, Image imagePart)
   {
 		if (elementNum < 0 || elementNum > numOfItems) {
 			throw new IndexOutOfBoundsException();
@@ -221,9 +224,9 @@ public class ChoiceGroup extends Item implements Choice
 		selectedItems[elementNum] = false;
     numOfItems++;
   }
-    
-  
-  public boolean isSelected(int elementNum) 
+
+
+  public boolean isSelected(int elementNum)
   {
 		if (elementNum < 0 || elementNum >= numOfItems) {
 			throw new IndexOutOfBoundsException();
@@ -231,9 +234,9 @@ public class ChoiceGroup extends Item implements Choice
 
     return selectedItems[elementNum];
   }
-    
-  
-  public void set(int elementNum, String stringPart, Image imagePart) 
+
+
+  public void set(int elementNum, String stringPart, Image imagePart)
 	{
 		if (elementNum < 0 || elementNum >= numOfItems) {
 			throw new IndexOutOfBoundsException();
@@ -244,12 +247,18 @@ public class ChoiceGroup extends Item implements Choice
 		if (stringPart == null) {
 			throw new NullPointerException();
 		}
-		
+
 		items[elementNum].setText(stringPart);
   }
-    
-  
-  public void setSelectedFlags(boolean[] selectedArray) 
+
+
+  public void setLabel(String label)
+  {
+    super.setLabel(label);
+  }
+
+
+  public void setSelectedFlags(boolean[] selectedArray)
   {
 		if (selectedArray == null) {
 			throw new NullPointerException();
@@ -257,12 +266,12 @@ public class ChoiceGroup extends Item implements Choice
 		if (selectedArray.length < numOfItems) {
 			throw new NullPointerException();
 		}
-		
+
 		if (choiceType == Choice.EXCLUSIVE) {
 			boolean performed = false;
 			for (int i = 0; i < numOfItems; i++) {
 				if (selectedArray[i]) {
-					setSelectedIndex(i, true);					
+					setSelectedIndex(i, true);
 					performed = true;
 					break;
 				}
@@ -271,17 +280,17 @@ public class ChoiceGroup extends Item implements Choice
 				setSelectedIndex(0, true);
 			}
 		} else if (choiceType == Choice.MULTIPLE) {
-      System.arraycopy(selectedArray, 0, selectedItems, 0, numOfItems);		
-		}		
+      System.arraycopy(selectedArray, 0, selectedItems, 0, numOfItems);
+		}
   }
-    
-  
-  public void setSelectedIndex(int elementNum, boolean selected) 
+
+
+  public void setSelectedIndex(int elementNum, boolean selected)
   {
 		if (elementNum < 0 || elementNum >= numOfItems) {
 			throw new IndexOutOfBoundsException();
 		}
-	
+
 		if (choiceType == Choice.EXCLUSIVE && selected) {
 			for (int i = 0; i < numOfItems; i++) {
 				selectedItems[i] = false;
@@ -300,27 +309,27 @@ public class ChoiceGroup extends Item implements Choice
 			repaint();
 		}
   }
-    
-  
-  public int size() 
+
+
+  public int size()
   {
     return numOfItems;
   }
-	
-	
+
+
 	boolean isFocusable()
 	{
 		return true;
 	}
 
-  
+
 	int getHeight()
 	{
 		int height = 0;
 		for (int i = 0; i < numOfItems; i++) {
       height += items[i].getHeight();
 		}
-	
+
 		return super.getHeight() + height;
 	}
 
@@ -344,27 +353,27 @@ public class ChoiceGroup extends Item implements Choice
 		}
 		g.translate(0, -translatedY);
 		g.translate(0, -super.getHeight());
-		
+
 		return getHeight();
   }
-  
+
 
   boolean select()
   {
     if (numOfItems == 0) {
       return false;
     }
-    
+
 		if (selectedItems[selectedIndex] == false) {
 			setSelectedIndex(selectedIndex, true);
 		} else {
 			setSelectedIndex(selectedIndex, false);
 		}
-		
+
     return true;
   }
-  
-	
+
+
   int traverse(int gameKeyCode, int top, int bottom, boolean action)
   {
     if (gameKeyCode == 1) {
@@ -375,7 +384,7 @@ public class ChoiceGroup extends Item implements Choice
 				int height = super.getHeight();
 				for (int i = 0; i < selectedIndex; i++) {
 					height += items[i].getHeight();
-				} 
+				}
 				if (height < top) {
 					return height - top;
 				} else {
@@ -401,13 +410,13 @@ public class ChoiceGroup extends Item implements Choice
 				if (height > bottom) {
 					return height - bottom;
 				} else {
-			    repaint();					
+			    repaint();
 				}
       } else {
 				return Item.OUTOFITEM;
 			}
     }
-		
+
 		return 0;
   }
 

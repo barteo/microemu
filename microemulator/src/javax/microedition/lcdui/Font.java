@@ -31,11 +31,11 @@ public final class Font
 	public static final int STYLE_BOLD = 1;
 	public static final int STYLE_ITALIC = 2;
 	public static final int STYLE_UNDERLINED = 4;
-	
+
 	public static final int SIZE_SMALL = 8;
 	public static final int SIZE_MEDIUM = 0;
 	public static final int SIZE_LARGE = 16;
-	
+
 	public static final int FACE_SYSTEM = 0;
 	public static final int FACE_MONOSPACE = 32;
 	public static final int FACE_PROPORTIONAL = 64;
@@ -58,26 +58,96 @@ public final class Font
 	{
 		return DEFAULT_FONT;
 	}
-													 
-													 
+
+
 	public static Font getDefaultFont()
 	{
 		return DEFAULT_FONT;
 	}
 
-    
+
+  public int getFace()
+  {
+    return face;
+  }
+
+
   public int getHeight()
   {
     return FontManager.getInstance().getHeight(this);
   }
-    
+
+
+  public int getSize()
+  {
+    return size;
+  }
+
+
+  public int getStyle()
+  {
+    return style;
+  }
+
 
   public int charWidth(char ch)
   {
     return FontManager.getInstance().charWidth(this, ch);
   }
 
-	
+
+  public int charsWidth(char[] ch, int offset, int length)
+  {
+    return FontManager.getInstance().charsWidth(this, ch, offset, length);
+  }
+
+
+  public int getBaselinePosition()
+  {
+    return FontManager.getInstance().getBaselinePosition(this);
+  }
+
+
+  public boolean isBold()
+  {
+    if (style == STYLE_BOLD) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+
+  public boolean isItalic()
+  {
+    if (style == STYLE_ITALIC) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+
+  public boolean isPlain()
+  {
+    if (style == STYLE_PLAIN) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+
+  public boolean isUnderlined()
+  {
+    if (style == STYLE_UNDERLINED) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+
 	public int stringWidth(String str)
 	{
 		return FontManager.getInstance().stringWidth(this, str);

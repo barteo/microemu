@@ -30,10 +30,10 @@ public class FontManager
 {
 
   static FontManager instance = new FontManager();
-	
+
 	java.awt.FontMetrics defaultFontMetrics;
-  
-  
+
+
   public static FontManager getInstance()
   {
     return instance;
@@ -46,17 +46,29 @@ public class FontManager
 	}
 
 
+  public int charsWidth(javax.microedition.lcdui.Font f, char[] ch, int offset, int length)
+  {
+    return defaultFontMetrics.charsWidth(ch, offset, length);
+  }
+
+
+  public int getBaselinePosition(javax.microedition.lcdui.Font f)
+  {
+    return defaultFontMetrics.getAscent();
+  }
+
+
 	public int getHeight(javax.microedition.lcdui.Font f)
 	{
 		return defaultFontMetrics.getHeight();
 	}
-  
+
 
 	public void setDefaultFontMetrics(FontMetrics fm)
 	{
 		defaultFontMetrics = fm;
 	}
-	
+
 
 	public int stringWidth(javax.microedition.lcdui.Font f, String str)
 	{

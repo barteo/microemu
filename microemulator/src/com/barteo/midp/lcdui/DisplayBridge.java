@@ -39,32 +39,32 @@ public class DisplayBridge
 
 	static DisplayAccess da = null;
 	static DisplayComponent dc = null;
-	
+
 
 	public static DisplayAccess getAccess()
 	{
 		return da;
 	}
-	
-	
+
+
 	public static void setAccess(DisplayAccess a_da)
 	{
 		da = a_da;
 	}
-	
-	
+
+
 	public static DisplayComponent getComponent()
 	{
 		return dc;
 	}
-	
-	
+
+
 	public static void setComponent(DisplayComponent a_dc)
 	{
 		dc = a_dc;
 	}
-	
-	
+
+
 	public static int getGameAction(int keyCode)
 	{
 		if (keyCode == KeyEvent.VK_LEFT) {
@@ -77,8 +77,14 @@ public class DisplayBridge
 			return Canvas.DOWN;
 		} else if (keyCode == KeyEvent.VK_ENTER) {
 			return Canvas.FIRE;
-		} else 
+		} else
 			return 0;
+	}
+
+
+	public static int getKeyCode(int gameAction)
+	{
+    return gameAction;
 	}
 
 
@@ -111,19 +117,19 @@ public class DisplayBridge
   {
 		if (da != null) {
 			return da.getCurrent();
-		}    
+		}
     return null;
   }
-  
-  
+
+
 	public static void setCurrent(Displayable d)
   {
 		if (da != null) {
 			da.setCurrent(d);
-		}    
+		}
   }
-  
-  
+
+
 	public void setScrollDown(boolean state)
 	{
 		if (dc != null) {

@@ -37,7 +37,7 @@ public class Connector
 	public static Connection open(String name)
       throws IOException
   {
-    throw new IOException("javax.microedition.io not implemented");
+    return open(name, READ_WRITE);
   }
   
   
@@ -45,6 +45,20 @@ public class Connector
       throws IOException
   {
     throw new IOException("javax.microedition.io not implemented");
+/*    try {
+      Class cl = Class.forName(
+          "com.barteo.cldc." + name.substring(0, name.indexOf(':')) + ".Connection");
+      return (Connection) cl.newInstance();
+    } catch (ClassNotFoundException ex) {
+      System.err.println(ex);
+      throw new ConnectionNotFoundException();
+    } catch (InstantiationException ex) {
+      System.err.println(ex);
+      throw new ConnectionNotFoundException();
+    } catch (IllegalAccessException ex) {
+      System.err.println(ex);
+      throw new ConnectionNotFoundException();
+    }*/
   }
   
   

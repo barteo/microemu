@@ -60,7 +60,7 @@ public class SwingDeviceComponent extends JPanel
       repaint();
       
       int key = getKey(e);
-
+      
       if (key != 0) {
         InputMethod.getInputMethod().keyPressed(key);
         return;

@@ -7,16 +7,17 @@ There are two methods of running apps in emulator:
 
 1. as an application:
 java com.barteo.emulator.app.Main (MIDlet application main class)
-emulator.jar and MIDlet application classes must be in CLASSPATH
+
+ - me-app.jar must be in CLASSPATH
+ - (MIDlet application main class) parameter is optional, if used MIDlet
+   application jar file must be in CLASSPATH
+
 
 2. in applet:
 inluding html code:
 <applet code="com.barteo.emulator.applet.Main" 
-		width=170 height=340 archive="me-applet.jar,(MIDlet application jar)">
+		width=170 height=445 archive="me-applet.jar,(MIDlet application jar)">
 	<param name="midlet" value="(MIDlet application main class)">
 </applet>
-		
-In order to run MIDlet application in applet you have to recompile
-your source code using using this package with JDK 1.1.
 
 

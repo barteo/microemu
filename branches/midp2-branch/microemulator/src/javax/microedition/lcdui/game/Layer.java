@@ -98,7 +98,7 @@ public abstract class Layer
 
 	public void setVisible(boolean visible)				
 	{
-		visible = true;
+		this.visible = visible;
 	}
 
 }

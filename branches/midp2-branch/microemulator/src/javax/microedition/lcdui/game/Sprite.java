@@ -224,7 +224,7 @@ public class Sprite extends Layer
 		if (frameWidth < 1 || frameHeight < 1) {
 			throw new IllegalArgumentException();
 		}
-		if (image.getWidth() % frameWidth != 0 || image.getHeight() % frameHeight != 0) {
+		if (img.getWidth() % frameWidth != 0 || img.getHeight() % frameHeight != 0) {
 			throw new IllegalArgumentException();
 		}
 		
@@ -252,7 +252,7 @@ public class Sprite extends Layer
 
 	public void setRefPixelPosition(int x, int y)
 	{
-		throw new RuntimeException("TODO");
+		setPosition(x - referencePixelX, y - referencePixelY);
 	}
 
 

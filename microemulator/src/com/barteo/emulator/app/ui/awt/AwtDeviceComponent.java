@@ -161,6 +161,8 @@ public class AwtDeviceComponent extends Panel
   
 	public void init()
 	{
+	    dc.init();
+	    
 		validate();
 	}
   

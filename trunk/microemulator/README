@@ -15,9 +15,10 @@ b) java -jar me-app.jar (MIDlet application main class)
 or, java -jar me-app.jar (MIDlet jad file)
 
  - (MIDlet application main class) parameter is optional, if used MIDlet
-   application jar file must be in CLASSPATH
- - (MIDlet jad file) must have .jad extension
- - for Nokia UI support include nokiaui.jar to the CLASSPATH
+   application jar file must be in CLASSPATH,
+ - (MIDlet jad file) must have .jad extension,
+ - for Nokia UI support include nokiaui.jar to the CLASSPATH,
+ - for Siemens API support include siemensapi.jar to the CLASSPATH.
 
 
 2. In applet:
@@ -27,7 +28,8 @@ Including html code:
 	<param name="midlet" value="(MIDlet application main class)">
 </applet>
 
-For Nokia UI support include nokiaui.jar to the archive attribute.
+ - for Nokia UI support include nokiaui.jar to the archive attribute,
+ - for Siemens API support include siemensapi.jar to the archive attribute.
 
 There is additional parameter in applet definition tag if you want start applet 
 with another device than default:

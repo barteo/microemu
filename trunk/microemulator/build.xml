@@ -293,10 +293,27 @@
     </jar>
   </target>
 
-  <target name="all" depends="init,jar,jar-device,jar-nokiaui,simpledemo" description="Build everything.">
+  <target name="compile-siemensapi" depends="init,jar">
+    <mkdir dir="./build/siemensapi/classes"/>
+    <javac debug="true" deprecation="true" 
+        srcdir="./ext/siemensapi/src"
+        destdir="./build/siemensapi/classes">
+      <classpath>
+        <pathelement location="./target/me-${target}.jar"/>
+      </classpath>      
+    </javac>
   </target>
 
-  <target name="dist" depends="clean,init,jar,jar-device,jar-nokiaui,simpledemo" description="Create distribution package">
+  <target name="jar-siemensapi" depends="compile-siemensapi">
+    <jar compress="true" jarfile="./target/siemensapi.jar">
+      <fileset dir="./build/siemensapi/classes" />
+    </jar>
+  </target>
+
+  <target name="all" depends="init,jar,jar-device,jar-nokiaui,jar-siemensapi,simpledemo" description="Build everything.">
+  </target>
+
+  <target name="dist" depends="clean,init,jar,jar-device,jar-nokiaui,jar-siemensapi,simpledemo" description="Create distribution package">
     <mkdir dir="dist"/>
 
     <tar basedir="../." tarfile="dist/microemulator-src.tar" defaultexcludes="yes">

@@ -35,8 +35,6 @@ import javax.swing.UIManager;
 
 import com.barteo.emulator.CommandManager;
 import com.barteo.emulator.DisplayComponent;
-import com.barteo.emulator.app.ui.XYConstraints;
-import com.barteo.emulator.app.ui.XYLayout;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.SoftButton;
 import com.barteo.emulator.device.j2se.J2SEButton;
@@ -120,10 +118,7 @@ public class SwingDeviceComponent extends JPanel
   {
     instance = this;
     
-    XYLayout xy = new XYLayout();
-    setLayout(xy);
-
-    dc = new SwingDisplayComponent();    
+    dc = new SwingDisplayComponent(this);    
     
     addMouseListener(mouseListener);
     addMouseMotionListener(mouseMotionListener);
@@ -138,9 +133,6 @@ public class SwingDeviceComponent extends JPanel
   
   public void init()
   {
-    remove(dc);
-    add(dc, new XYConstraints(
-        ((J2SEDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle()));
     revalidate();
   }
   

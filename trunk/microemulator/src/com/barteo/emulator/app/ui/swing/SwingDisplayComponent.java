@@ -16,60 +16,86 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 package com.barteo.emulator.app.ui.swing;
 
+import java.awt.Component;
 import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Rectangle;
-
-import javax.swing.JPanel;
 
 import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.app.ui.DisplayRepaintListener;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.MutableImage;
 import com.barteo.emulator.device.j2se.J2SEDeviceDisplay;
+import com.barteo.emulator.device.j2se.J2SEMutableImage;
 
-
-public class SwingDisplayComponent extends JPanel implements DisplayComponent
+public class SwingDisplayComponent implements DisplayComponent 
 {
-  Device prevDevice = null;
-	Image offi;
-	Graphics offg;
+	private Component deviceCanvas;
+	private J2SEMutableImage displayImage = null;
+	private DisplayRepaintListener displayRepaintListener;
 
 
-	public void addDisplayRepaintListener(DisplayRepaintListener l)
+	SwingDisplayComponent(Component deviceCanvas)
 	{
+		this.deviceCanvas = deviceCanvas;
 	}
 
 
-	public void removeDisplayRepaintListener(DisplayRepaintListener l)
+	public void addDisplayRepaintListener(DisplayRepaintListener l) 
 	{
+		displayRepaintListener = l;
 	}
 
 
-  public void paint(Graphics g) 
-  {
-    Device device = DeviceFactory.getDevice();
-    Rectangle displayRectangle = 
-        ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
-
-    if (prevDevice != device) {
-			offi = createImage(displayRectangle.width, displayRectangle.height);
-			offg = offi.getGraphics();
-    }
-    prevDevice = device;
-    
-    ((J2SEDeviceDisplay) device.getDeviceDisplay()).paint(offg);
-    
-		g.drawImage(offi, 0, 0, null);
-  }
-
-  
-	public void update(Graphics g)
+	public void removeDisplayRepaintListener(DisplayRepaintListener l) 
 	{
-		paint(g);
+		if (displayRepaintListener == l) {
+			displayRepaintListener = null;
+		}
 	}
-  
+
+
+	public javax.microedition.lcdui.Image getDisplayImage()
+	{
+		return displayImage;
+	}
+
+
+	public void paint(Graphics g) 
+	{
+		if (displayImage != null) {
+			g.drawImage(displayImage.getImage(), 0, 0, null);
+		}
+	}
+
+
+	public void repaint() 
+	{
+		Device device = DeviceFactory.getDevice();
+
+		if (device != null) {
+			if (displayImage == null) {
+				displayImage = new J2SEMutableImage(
+						device.getDeviceDisplay().getFullWidth(), device.getDeviceDisplay().getFullHeight());
+			}
+					
+			Graphics gc = displayImage.getImage().getGraphics();
+			((J2SEDeviceDisplay) device.getDeviceDisplay()).paint(gc);
+
+			fireDisplayRepaint(displayImage);
+		}	
+
+		deviceCanvas.repaint();
+	}
+
+
+	private void fireDisplayRepaint(MutableImage image)
+	{
+		if (displayRepaintListener != null) {
+			displayRepaintListener.repaintInvoked(image);
+		}
+	}
+
 }

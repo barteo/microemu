@@ -33,8 +33,6 @@ import javax.microedition.lcdui.Command;
 
 import com.barteo.emulator.CommandManager;
 import com.barteo.emulator.DisplayComponent;
-import com.barteo.emulator.app.ui.XYConstraints;
-import com.barteo.emulator.app.ui.XYLayout;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.SoftButton;
 import com.barteo.emulator.device.applet.AppletButton;
@@ -118,10 +116,7 @@ public class AwtDeviceComponent extends Panel
 	{
 		instance = this;
     
-		XYLayout xy = new XYLayout();
-		setLayout(xy);
-
-		dc = new AwtDisplayComponent();    
+		dc = new AwtDisplayComponent(this);    
     
 		addMouseListener(mouseListener);
 		addMouseMotionListener(mouseMotionListener);
@@ -136,9 +131,6 @@ public class AwtDeviceComponent extends Panel
   
 	public void init()
 	{
-		remove(dc);
-		add(dc, new XYConstraints(
-				((AppletDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle()));
 		validate();
 	}
   

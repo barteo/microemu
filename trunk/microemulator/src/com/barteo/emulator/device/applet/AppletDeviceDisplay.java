@@ -28,6 +28,7 @@ import java.util.Enumeration;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Image;
 
 import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletAccess;
@@ -70,6 +71,12 @@ public class AppletDeviceDisplay implements DeviceDisplay
 	public EmulatorContext getEmulatorContext() 
 	{
 		return context;
+	}
+
+
+	public Image getDisplayImage()
+	{
+		return context.getDisplayComponent().getDisplayImage();
 	}
 
 

@@ -16,29 +16,32 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 package com.barteo.emulator.device;
 
+import javax.microedition.lcdui.Image;
 
 public interface DeviceDisplay 
 {
+	
+	Image getDisplayImage();
 
-  int getWidth();
-  
-  int getHeight();
-  
-  int getFullWidth();
-  
-  int getFullHeight();  
-  
-  boolean isColor();
-  
-  int numColors();
-  
-  void repaint();
-  
-  void setScrollDown(boolean state);
+	int getWidth();
 
-  void setScrollUp(boolean state);
-  
+	int getHeight();
+
+	int getFullWidth();
+
+	int getFullHeight();
+
+	boolean isColor();
+
+	int numColors();
+
+	void repaint();
+
+	void setScrollDown(boolean state);
+
+	void setScrollUp(boolean state);
+
 }

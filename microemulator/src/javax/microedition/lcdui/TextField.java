@@ -117,7 +117,7 @@ public class TextField extends Item
 
 	public int getChars(char[] data)
 	{
-		if (data.length > field.length()) {
+		if (data.length < field.length()) {
 			throw new ArrayIndexOutOfBoundsException();
 		}
 		getString().getChars(0, field.length(), data, 0);
@@ -220,9 +220,9 @@ public class TextField extends Item
 
 	public void setConstraints(int constraints)
 	{
-		if ((constraints & TextField.CONSTRAINT_MASK) < 0 ||
-				(constraints & TextField.CONSTRAINT_MASK) > 4) {
-			throw new IllegalArgumentException();
+    if ((constraints & TextField.CONSTRAINT_MASK) < ANY ||
+        (constraints & TextField.CONSTRAINT_MASK) > URL) {
+      throw new IllegalArgumentException("constraints is an illegal value");
 		}
 		this.constraints = constraints;
 	}
@@ -312,14 +312,14 @@ public class TextField extends Item
 	{
 		Font f = Font.getDefaultFont();
 
-		if (gameKeyCode == 1) {
+		if (gameKeyCode == Canvas.UP) {
 			if (top > 0) {
 				return -top;
 			} else {
 				return Item.OUTOFITEM;
 			}
 		}
-		if (gameKeyCode == 6) {
+		if (gameKeyCode == Canvas.DOWN) {
 			if (getHeight() > bottom) {
 				return getHeight() - bottom;
 			} else {

@@ -42,7 +42,9 @@
   <target name="compile-app" depends="init" if="target.app">
     <javac debug="true" deprecation="true" destdir="./build/microemulator/classes" srcdir="./src">
       <include name="javax/**"/>
+      <exclude name="com/barteo/emulator/app/Swt*"/>
       <include name="com/barteo/emulator/app/**"/>
+      <exclude name="com/barteo/emulator/app/ui/swt/**"/>
       <include name="com/barteo/cldc/**"/>
       <include name="com/barteo/midp/**"/>
       <include name="com/sixlegs/image/png/**"/>

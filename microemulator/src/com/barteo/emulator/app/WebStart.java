@@ -393,13 +393,23 @@ public class WebStart extends JFrame
     MIDlet m = null;
 
     if (args.length > 0) {
-      Class midletClass;
-      try {
-        midletClass = Class.forName(args[0]);
-        m = app.common.loadMidlet("MIDlet", midletClass);
-      } catch (ClassNotFoundException ex) {
-        System.out.println("Cannot find " + args[0] + " MIDlet class");
-      }
+			if (args[0].endsWith(".jad")) {
+				try {
+					File file = new File(args[0]);
+				  URL url = file.exists() ? file.toURL() : new URL(args[0]);
+				  app.common.openJadFile(url);
+				} catch(MalformedURLException exception) {
+				  System.out.println("Cannot parse " + args[0] + " URL");
+				}
+		  } else {
+				Class midletClass;
+				try {
+				  midletClass = Class.forName(args[0]);
+			  	m = app.common.loadMidlet("MIDlet", midletClass);
+				} catch (ClassNotFoundException ex) {
+				  System.out.println("Cannot find " + args[0] + " MIDlet class");
+				}
+		  }
     } else {
       m = app.common.getLauncher();
     }

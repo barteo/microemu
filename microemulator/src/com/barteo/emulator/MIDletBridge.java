@@ -77,6 +77,10 @@ public class MIDletBridge
   
   public static MIDletAccess getMIDletAccess()
   {
+  	if (currentMIDlet == null) {
+  		return null;
+  	}
+  	
     return getMIDletAccess(currentMIDlet);
   }
   

@@ -26,6 +26,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Rectangle;
 
 import com.barteo.emulator.EmulatorContext;
+import com.barteo.emulator.MIDletAccess;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.app.ui.swt.SwtGraphics;
 import com.barteo.emulator.device.Device;
@@ -124,17 +125,19 @@ public class SwtDeviceDisplay implements DeviceDisplay
           modeAbcLowerImage.getRectangle().x, modeAbcLowerImage.getRectangle().y);
     }
 
-    Rectangle oldclip = g.getClipping();
-    g.setClipping(displayPaintable);
-    g.translate(displayPaintable.x, displayPaintable.y);
-    Font f = g.getFont();
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma != null) {
+			Rectangle oldclip = g.getClipping();
+			g.setClipping(displayPaintable);
+			g.translate(displayPaintable.x, displayPaintable.y);
+			Font f = g.getFont();
     
-    DisplayGraphics dg = new DisplayGraphics(g);
-    MIDletBridge.getMIDletAccess().getDisplayAccess().paint(dg);
+			ma.getDisplayAccess().paint(new DisplayGraphics(g));
     
-    g.setFont(f);
-    g.translate(-displayPaintable.x, -displayPaintable.y);
-    g.setClipping(oldclip);
+			g.setFont(f);
+  		g.translate(-displayPaintable.x, -displayPaintable.y);
+			g.setClipping(oldclip);
+		}	
 
     if (scrollUp) {
       g.drawImage(upImage.getImage(), upImage.getRectangle().x, upImage.getRectangle().y);

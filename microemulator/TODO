@@ -1,7 +1,5 @@
 * define a Main-Class in the MANIFEST.MF file - running by java -jar
 
-* move device display painting from Applet/SwingDisplayComponent to Applet/J2SEDeviceDisplay
-
 * try to run application in WebStart environment
 
 * rebuild InputMethod to extend functionality:
@@ -13,8 +11,14 @@
 
 release 0.3.1 (beta)
 
-* in javax.microedition.io.* only http supported - there is tcp, udp and https needed
+* RMS - persistence?
 
+* ConnectionFramework - currently only http connection is supported, implement other:
+  - tcp
+  - udp
+  - https
+  - file
+  
 * two classes from java.util.* are from GNU Classpath which is GPL with exception
 (i'm not sure if can be used in LGPL MicroEmulator)
 

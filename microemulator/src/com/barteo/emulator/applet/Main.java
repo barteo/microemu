@@ -72,9 +72,6 @@ public class Main extends Applet implements MicroEmulator, DisplayComponent
 
 	Image offi;
 
-  boolean scrollUp = false;
-  boolean scrollDown = false;
-
   MouseAdapter mouseListener = new MouseAdapter() 
   {
     
@@ -311,51 +308,7 @@ public class Main extends Applet implements MicroEmulator, DisplayComponent
     
     g.translate(displayRectangle.x, displayRectangle.y);
     
-    g.setColor(((AppletDeviceDisplay) device.getDeviceDisplay()).getBackgroundColor());
-    g.fillRect(0, 0, displayRectangle.width, displayRectangle.height);
-    
-    g.setColor(((AppletDeviceDisplay) device.getDeviceDisplay()).getForegroundColor());
-    for (Enumeration s = ((AppletDevice) DeviceFactory.getDevice()).getButtons().elements(); s.hasMoreElements(); ) {
-      AppletButton button = (AppletButton) s.nextElement();
-      if (button instanceof AppletSoftButton) {
-        ((AppletSoftButton) button).paint(g);
-      }
-    }
-
-    PositionedImage tmpImage;
-    
-    int inputMode = device.getInputMethod().getInputMode();
-    if (inputMode == InputMethod.INPUT_123) {
-      tmpImage = ((AppletDeviceDisplay) device.getDeviceDisplay()).getMode123Image();
-      g.drawImage(tmpImage.getImage(), tmpImage.getRectangle().x, tmpImage.getRectangle().y, this);
-    } else if (inputMode == InputMethod.INPUT_ABC_UPPER) {
-      tmpImage = ((AppletDeviceDisplay) device.getDeviceDisplay()).getModeAbcUpperImage();
-      g.drawImage(tmpImage.getImage(), tmpImage.getRectangle().x, tmpImage.getRectangle().y, this);
-    } else if (inputMode == InputMethod.INPUT_ABC_LOWER) {
-      tmpImage = ((AppletDeviceDisplay) device.getDeviceDisplay()).getModeAbcLowerImage();
-      g.drawImage(tmpImage.getImage(), tmpImage.getRectangle().x, tmpImage.getRectangle().y, this);
-    }
-
-    Rectangle displayPaintable = 
-        ((AppletDeviceDisplay) device.getDeviceDisplay()).getDisplayPaintable();
-    Shape oldclip = g.getClip();
-    g.setClip(displayPaintable);
-    g.translate(displayPaintable.x, displayPaintable.y);
-
-    DisplayGraphics dg = new DisplayGraphics(g);
-    MIDletBridge.getMIDletAccess().getDisplayAccess().paint(dg);
-
-    g.translate(-displayPaintable.x, -displayPaintable.y);
-    g.setClip(oldclip);
-
-    if (scrollUp) {
-      tmpImage = ((AppletDeviceDisplay) device.getDeviceDisplay()).getUpImage();
-      g.drawImage(tmpImage.getImage(), tmpImage.getRectangle().x, tmpImage.getRectangle().y, this);
-    }
-    if (scrollDown) {
-      tmpImage = ((AppletDeviceDisplay) device.getDeviceDisplay()).getDownImage();
-      g.drawImage(tmpImage.getImage(), tmpImage.getRectangle().x, tmpImage.getRectangle().y, this);
-    }
+    ((AppletDeviceDisplay) device.getDeviceDisplay()).paint(g);
     
     g.translate(-displayRectangle.x, -displayRectangle.y);
 
@@ -421,18 +374,6 @@ public class Main extends Applet implements MicroEmulator, DisplayComponent
       }
     }        
     return null;
-  }
-
-  
-  public void setScrollDown(boolean state) 
-  {
-    scrollDown = state;
-  }
-
-
-  public void setScrollUp(boolean state) 
-  {
-    scrollUp = state;
   }
   
 }

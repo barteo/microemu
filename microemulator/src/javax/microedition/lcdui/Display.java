@@ -167,24 +167,25 @@ public class Display
 
 	public void setCurrent(Displayable nextDisplayable)
 	{
-		if (current != null) {
-			current.hideNotify(this);
+		if (nextDisplayable != null) {
+      if (current != null) {
+        current.hideNotify(this);
+      }
+
+			if (nextDisplayable instanceof Alert)
+			{
+				setCurrent((Alert) nextDisplayable, current);
+				return;
+			}
+
+			current = nextDisplayable;
+			current.showNotify(this);
+			dispBridge.setScrollUp(false);
+			dispBridge.setScrollDown(false);
+			dispBridge.updateCommands(current.getCommands());
+
+			current.repaint();
 		}
-
-		if (nextDisplayable instanceof Alert)
-		{
-			setCurrent((Alert) nextDisplayable, current);
-			return;
-		}
-
-		current = nextDisplayable;
-
-		current.showNotify(this);
-		dispBridge.setScrollUp(false);
-		dispBridge.setScrollDown(false);
-		dispBridge.updateCommands(current.getCommands());
-
-		current.repaint();
 	}
 
 

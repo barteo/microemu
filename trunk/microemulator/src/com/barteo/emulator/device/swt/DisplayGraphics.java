@@ -36,9 +36,10 @@ import com.barteo.emulator.device.DeviceFactory;
 
 public class DisplayGraphics extends javax.microedition.lcdui.Graphics 
 {
-  SwtGraphics g;
-  int color = 0;
-  javax.microedition.lcdui.Font currentFont = javax.microedition.lcdui.Font.getDefaultFont();
+  public SwtGraphics g;
+  
+  private int color = 0;
+  private javax.microedition.lcdui.Font currentFont = javax.microedition.lcdui.Font.getDefaultFont();
   
 
 // to zostanie zmienione na protected jak zostanie zrobiony DisplayBridge

@@ -13,5 +13,7 @@ public abstract class MutableImage extends Image
 {
 
 	public abstract int getPixel(int x, int y);
+	
+	public abstract byte[] getData();
 
 }

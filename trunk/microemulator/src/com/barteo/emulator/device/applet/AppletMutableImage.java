@@ -26,10 +26,9 @@ import com.barteo.emulator.device.MutableImage;
 
 public class AppletMutableImage extends MutableImage 
 {
-
-  java.awt.Image img;
-  Frame f = new Frame();
-  DisplayGraphics displayGraphics = null;
+	private java.awt.Image img;
+	private Frame f = new Frame();
+	private DisplayGraphics displayGraphics = null;
 
 
   public AppletMutableImage(int width, int height) 
@@ -79,6 +78,12 @@ public class AppletMutableImage extends MutableImage
 	{
 		// TODO poprawic zwracanie koloru
 		return 0;
+	}
+
+
+	public byte[] getData()
+	{
+		return null;
 	}
 
 }

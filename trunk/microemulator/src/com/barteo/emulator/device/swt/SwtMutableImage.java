@@ -16,7 +16,7 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 package com.barteo.emulator.device.swt;
 
 import org.eclipse.swt.graphics.GC;
@@ -25,59 +25,67 @@ import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
 import com.barteo.emulator.app.ui.swt.SwtGraphics;
 import com.barteo.emulator.device.MutableImage;
 
-
 public class SwtMutableImage extends MutableImage 
 {
-	org.eclipse.swt.graphics.Image img;
-  DisplayGraphics displayGraphics = null;
+	public org.eclipse.swt.graphics.Image img;
+	
+	private DisplayGraphics displayGraphics = null;
 
 
-  public SwtMutableImage(int width, int height) 
-  {
-    img = SwtDeviceComponent.createImage(width, height);
-  }
+	public SwtMutableImage(int width, int height) 
+	{
+		img = SwtDeviceComponent.createImage(width, height);
+	}
 
 
-  public javax.microedition.lcdui.Graphics getGraphics() 
-  {
-    if (displayGraphics == null) {
-      displayGraphics = new DisplayGraphics(new SwtGraphics(new GC(img)));
-      displayGraphics.setGrayScale(255);
-      displayGraphics.fillRect(0, 0, getWidth(), getHeight());
-      displayGraphics.setGrayScale(0);
-    }
-    return displayGraphics;
-  }
+	public javax.microedition.lcdui.Graphics getGraphics() 
+	{
+		if (displayGraphics == null) {
+			displayGraphics = new DisplayGraphics(new SwtGraphics(new GC(img)));
+			displayGraphics.setGrayScale(255);
+			displayGraphics.fillRect(0, 0, getWidth(), getHeight());
+			displayGraphics.setGrayScale(0);
+		}
+		return displayGraphics;
+	}
 
 
-  public boolean isMutable() 
-  {
-    return true;
-  }
+	public boolean isMutable() 
+	{
+		return true;
+	}
 
-    
-	public int getHeight()
+
+	public int getHeight() 
 	{
 		return img.getBounds().height;
 	}
 
 
-	public org.eclipse.swt.graphics.Image getImage()
+	public org.eclipse.swt.graphics.Image getImage() 
 	{
 		return img;
 	}
 
 
-	public int getWidth()
+	public int getWidth() 
 	{
 		return img.getBounds().width;
 	}
-	
-	
-	public int getPixel(int x, int y)
+
+
+	public int getPixel(int x, int y) 
 	{
 		// TODO poprawic zwracanie koloru
 		return 0;
 	}
-	
+
+	public byte[] getData() 
+	{
+		System.out.println(img.getImageData().palette);
+		System.out.println(img.getImageData().depth);
+		
+		return img.getImageData().data;
+	}
+
 }

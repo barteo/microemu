@@ -25,6 +25,7 @@ import java.awt.Panel;
 import java.awt.Rectangle;
 
 import com.barteo.emulator.DisplayComponent;
+import com.barteo.emulator.app.ui.DisplayRepaintListener;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.applet.AppletDeviceDisplay;
@@ -35,6 +36,16 @@ public class AwtDisplayComponent extends Panel implements DisplayComponent
   Device prevDevice = null;
 	Image offi;
 	Graphics offg;
+
+
+	public void addDisplayRepaintListener(DisplayRepaintListener l)
+	{
+	}
+
+
+	public void removeDisplayRepaintListener(DisplayRepaintListener l)
+	{
+	}
 
 
   public void paint(Graphics g) 

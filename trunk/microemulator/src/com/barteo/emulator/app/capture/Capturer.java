@@ -78,7 +78,7 @@ public class Capturer
 	{
 		DataSource outputDS = processor.getDataOutput();
 		
-//		display.addDisplayRepaintListener(datasource.getDisplayRepaintListener());
+		display.addDisplayRepaintListener(datasource.getDisplayRepaintListener());
 		
 		try {
 			MediaLocator ml = new MediaLocator(new File(fileName).toURL());
@@ -100,7 +100,7 @@ public class Capturer
 		processor.close();
 		datasink.close();
 		
-//		display.removeDisplayRepaintListener(datasource.getDisplayRepaintListener());
+		display.removeDisplayRepaintListener(datasource.getDisplayRepaintListener());
 		
 		System.out.println("Done saving.");
 	}

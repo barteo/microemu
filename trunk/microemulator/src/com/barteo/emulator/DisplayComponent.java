@@ -19,10 +19,15 @@
  
 package com.barteo.emulator;
 
+import com.barteo.emulator.app.ui.DisplayRepaintListener;
+
 
 public interface DisplayComponent
 {
 
-  public void repaint();
+	public void addDisplayRepaintListener(DisplayRepaintListener l);
+	public void removeDisplayRepaintListener(DisplayRepaintListener l);
+		
+	public void repaint();
 
 }

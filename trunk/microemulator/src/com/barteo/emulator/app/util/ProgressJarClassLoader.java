@@ -136,19 +136,18 @@ public class ProgressJarClassLoader extends ClassLoader
           JarEntry entry = jis.getNextJarEntry();          
           if (entry != null) {
             if (!entry.isDirectory()) {
-              int b; 
+              int offset = 0;
               int i = 0;
-              while ((b = jis.read()) != -1) {
-                cache[i] = (byte) b;
-                i++;
-                if (i >= cache.length) {
+              while ((i = jis.read(cache, offset, cache.length - offset)) != -1) {
+                offset += i;
+                if (offset >= cache.length) {
                   byte newcache[] = new byte[cache.length + 1024];
                   System.arraycopy(cache, 0, newcache, 0, cache.length);
                   cache = newcache;
                 }
               }
-              byte[] tmp = new byte[i];
-              System.arraycopy(cache, 0, tmp, 0, i);
+              byte[] tmp = new byte[offset];
+              System.arraycopy(cache, 0, tmp, 0, offset);
               entries.put(entry.getName(), tmp);
               progress += entry.getCompressedSize();
               event.setCurrent(progress);
@@ -161,6 +160,7 @@ public class ProgressJarClassLoader extends ClassLoader
         }
       } catch (IOException ex) {
         System.err.println(ex);
+ex.printStackTrace();        
       }
       notLoadedRepositories.remove(repositoryEntry);
     }    

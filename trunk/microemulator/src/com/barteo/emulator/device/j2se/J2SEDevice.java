@@ -114,7 +114,11 @@ public class J2SEDevice implements Device
   public javax.microedition.lcdui.Image createImage(byte[] imageData, int imageOffset, int imageLength)
 	{
 		ByteArrayInputStream is = new ByteArrayInputStream(imageData, imageOffset, imageLength);
-		return new ImmutableImage(getImage(is));
+		try {
+			return new ImmutableImage(getImage(is));
+		} catch (IOException ex) {
+			throw new IllegalArgumentException(ex.toString());
+		}
 	}
   
   
@@ -475,7 +479,7 @@ public class J2SEDevice implements Device
   
 
 	private Image getImage(String str)
-					throws IOException
+			throws IOException
 	{
 		InputStream is = deviceDisplay.getEmulatorContext().getClassLoader().getResourceAsStream(str);
 
@@ -483,15 +487,22 @@ public class J2SEDevice implements Device
 				throw new IOException(str + " could not be found.");
 		}
 
-		return getImage(is);
+		return getImage(is);			
 	}
 
   
   private Image getImage(InputStream is)
+  		throws IOException
   {
 		ImageFilter filter = null;
     PngImage png = new PngImage(is);
     
+    try {
+			png.getWidth();
+		} catch (IOException ex) {
+			throw new IOException("Error decoding PNG image");    	
+		}
+        
     if (getDeviceDisplay().isColor()) {
 			filter = new RGBImageFilter();
     } else {

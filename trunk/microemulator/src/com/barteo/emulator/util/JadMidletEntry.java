@@ -42,6 +42,12 @@ public class JadMidletEntry
   }
   
   
+  public String getName()
+  {
+    return name;
+  }
+  
+  
   // remove it later
   public String toString()
   {

@@ -15,6 +15,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Vector;
+import java.util.jar.JarEntry;
+import java.util.jar.JarInputStream;
 
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
@@ -32,8 +34,6 @@ import com.barteo.emulator.MIDletEntry;
 import com.barteo.emulator.app.launcher.Launcher;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.util.JadProperties;
-import com.barteo.emulator.util.jar.JarInputStream;
-import com.barteo.emulator.util.jar.JarEntry;
 import com.barteo.midp.lcdui.DisplayBridge;
 import com.barteo.midp.lcdui.FontManager;
 import com.barteo.midp.lcdui.KeyboardComponent;

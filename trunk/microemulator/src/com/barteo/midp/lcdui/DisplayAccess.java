@@ -41,5 +41,7 @@ public interface DisplayAccess
   public Displayable getCurrent();
 
   public void setCurrent(Displayable d);
+  
+  public void updateCommands();
 
 }

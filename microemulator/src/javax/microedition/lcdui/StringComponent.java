@@ -39,7 +39,7 @@ class StringComponent
 	StringComponent(String text) 
 	{
 		this.width = -1;
-		this.text = text;
+		setText(text);
 	}
 
 	

@@ -27,6 +27,7 @@ import com.barteo.emulator.MIDletBridge;
 
 public abstract class MIDlet
 {
+	private boolean destroyed;
 
 	class MIDletAccessor extends MIDletAccess
 	{
@@ -55,7 +56,9 @@ public abstract class MIDlet
   	public void destroyApp(boolean unconditional)
     		throws MIDletStateChangeException
     {
-      midlet.destroyApp(unconditional);
+    	if (!destroyed) {
+      	midlet.destroyApp(unconditional);
+    	}
       getDisplayAccess().clean();
     }
 
@@ -68,6 +71,7 @@ public abstract class MIDlet
         
     // initialize display
     Display.getDisplay(this);
+    destroyed = false;
 	}
 
 
@@ -90,6 +94,7 @@ public abstract class MIDlet
 
 	public final void notifyDestroyed()
 	{
+		destroyed = true;
     MIDletBridge.notifyDestroyed();
 	}
 

@@ -1,3 +1,9 @@
+/*
+ * MicroEmulator
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package com.barteo.emulator.device;
 
 import java.awt.Color;
@@ -13,7 +19,11 @@ import com.barteo.emulator.Button;
 import com.barteo.emulator.SoftButton;
 import nanoxml.XMLElement;
 
-
+/**
+ * Device
+ *      
+ * @author <a href="mailto:barteo@it.pl">Bartek Teodorczyk</a>
+ */
 public class Device {
 
   static Device instance = new Device();

@@ -18,6 +18,7 @@ public class Device {
 
   static Device instance = new Device();
 
+  boolean initialized = false;
   Vector deviceButtons = new Vector();
 
   public static Color backgroundColor;
@@ -27,20 +28,14 @@ public class Device {
   public static Rectangle screenPaintable;
 
   public static Rectangle keyboardRectangle;
-    
   
-  public static Device getInstance()
-  {
-    return instance;
-  }
-
-
-  public boolean init()
+  
+  private Device()
   {
     String xml = "";
     // Here should be device.xml but Netscape security manager doesn't accept this extension
     DataInputStream dis = new DataInputStream(
-        instance.getClass().getResourceAsStream("/com/barteo/emulator/device/device.txt"));
+        getClass().getResourceAsStream("/com/barteo/emulator/device/device.txt"));
     try {
       while (dis.available() > 0) {
         byte[] b = new byte[dis.available()];
@@ -49,7 +44,6 @@ public class Device {
       }
     } catch (Exception ex) {
       System.out.println("Cannot find com.barteo.emulator.device.device.txt definition file");
-      return false;
     }
 
     XMLElement doc = new XMLElement();
@@ -125,7 +119,19 @@ public class Device {
       }
     }
     
-    return true;
+    initialized = true;
+  }
+  
+  
+  public static Device getInstance()
+  {
+    return instance;
+  }
+
+
+  public boolean isInitialized()
+  {    
+    return initialized;
   }
 
 

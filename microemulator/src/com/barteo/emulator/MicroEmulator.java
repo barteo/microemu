@@ -45,9 +45,8 @@ public class MicroEmulator extends Applet
 {
   static MIDletAccess midletAccess;
 	Class midletClass;
-  Device device = null;
 	MIDlet midlet = null;
-	Display disp;
+	Display disp = null;
 
 	DisplayComponent dc;
 	KeyboardComponent kc;
@@ -55,9 +54,9 @@ public class MicroEmulator extends Applet
 	Image offscreen = null;
 
   Font defaultFont;
+  
 
-
-	public void init()
+  public void init()
 	{
 		String midletName = getParameter("midlet");
 		if (midletName == null) {
@@ -78,15 +77,10 @@ public class MicroEmulator extends Applet
     setFont(defaultFont);
     FontManager.getInstance().setDefaultFontMetrics(getFontMetrics(defaultFont));
 
-    if (device == null) {
-      if (!Device.getInstance().init()) {
-        return false;
-      }
-      device = Device.getInstance();
+    if (!Device.getInstance().isInitialized()) {
+      return false;
     }
-
-    disp = Display.getDisplay(midlet);
-
+      
     XYLayout xy = new XYLayout();
     setLayout(xy);
 
@@ -96,8 +90,8 @@ public class MicroEmulator extends Applet
 
     kc = new KeyboardComponent();
     xy.addLayoutComponent(kc, new XYConstraints(Device.keyboardRectangle));
-    add(kc);
-
+    add(kc);      
+    
     try {
       midlet = (MIDlet) midletClass.newInstance();
     } catch (Exception ex) {
@@ -105,6 +99,8 @@ public class MicroEmulator extends Applet
       System.out.println(ex);        
       return false;
     }
+
+    disp = Display.getDisplay(midlet);
 
     resize(400,500);
     
@@ -129,6 +125,7 @@ public class MicroEmulator extends Applet
 		if (midlet != null) {
 			midletAccess.pauseApp();
 		}
+    
     removeAll();
   }
 

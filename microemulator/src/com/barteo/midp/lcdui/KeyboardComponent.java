@@ -47,11 +47,12 @@ public class KeyboardComponent extends Panel
 
     for (Enumeration e = Device.getDeviceButtons().elements(); e.hasMoreElements(); ) {
       com.barteo.emulator.Button button = (com.barteo.emulator.Button) e.nextElement();
-      button.getRectangle().x -= Device.keyboardRectangle.x;
-      button.getRectangle().y -= Device.keyboardRectangle.y;
+      Rectangle tmp = new Rectangle(button.getRectangle());
+      tmp.x -= Device.keyboardRectangle.x;
+      tmp.y -= Device.keyboardRectangle.y;
       java.awt.Button comp = new java.awt.Button(button.getName());
       comp.addMouseListener(kb_listener);
-      xy.addLayoutComponent(comp, new XYConstraints(button.getRectangle()));
+      xy.addLayoutComponent(comp, new XYConstraints(tmp));
       add(comp);
       compToButton.put(comp, button);
     }        

@@ -257,26 +257,108 @@ System.out.println(ev.keyCode +"+"+ ev.character +"+"+ button.isChar(ev.characte
 	}
 	
 	
+	private class CreateImageRunnable implements Runnable
+	{
+		private InputStream is;
+		private Image image;
+		
+		CreateImageRunnable(InputStream is)
+		{
+			this.is = is;
+		}
+		
+		Image getImage()
+		{
+			return image;
+		}
+			
+		public void run() 
+		{
+			image = new Image(instance.getParent().getDisplay(), is);
+		}		
+	}
+
+
 	public static Image createImage(InputStream is) 
 	{
-		return new Image(instance.getParent().getDisplay(), is);
+		CreateImageRunnable createImageRunnable = instance.new CreateImageRunnable(is);
+		
+		instance.getDisplay().syncExec(createImageRunnable); 
+		
+		return createImageRunnable.getImage(); 
+	}
+	
+	
+	private class CreateColorRunnable implements Runnable
+	{
+		private int rgb;
+		private Color color;
+		
+		CreateColorRunnable(int rgb)
+		{
+			this.rgb = rgb;
+		}
+		
+		Color getColor()
+		{
+			return color;
+		}
+			
+		public void run() 
+		{
+			color = new Color(instance.getParent().getDisplay(),
+					(rgb >> 16) % 256,
+					(rgb >> 8) % 256,
+					rgb % 256);	
+		}		
 	}
 
 
 	public static Color createColor(int rgb) 
 	{
-		return new Color(instance.getParent().getDisplay(),
-				(rgb >> 16) % 256,
-				(rgb >> 8) % 256,
-				rgb % 256);
+		CreateColorRunnable createColorRunnable = instance.new CreateColorRunnable(rgb);
+		
+		instance.getDisplay().syncExec(createColorRunnable); 
+		
+		return createColorRunnable.getColor(); 
+	}
+
+
+	private class GetFontMetricsRunnable implements Runnable
+	{
+		private String name;
+		private int size;
+		private int style;
+		private FontMetrics fontMetrics;
+		
+		GetFontMetricsRunnable(String name, int size, int style)
+		{
+			this.name = name;
+			this.size = size;
+			this.style = style;
+		}
+		
+		FontMetrics getFontMetrics()
+		{
+			return fontMetrics;
+		}
+			
+		public void run() 
+		{
+			SwtGraphics gc = new SwtGraphics(instance.getParent().getDisplay());
+			gc.setFont(new Font(instance.getParent().getDisplay(), name, size, style));
+			fontMetrics = gc.getFontMetrics();
+		}		
 	}
 
 
 	public static FontMetrics getFontMetrics(String name, int size, int style) 
 	{
-		SwtGraphics gc = new SwtGraphics(instance.getParent().getDisplay());
-		gc.setFont(new Font(instance.getParent().getDisplay(), name, size, style));
-		return gc.getFontMetrics();
+		GetFontMetricsRunnable getFontMetricsRunnable = instance.new GetFontMetricsRunnable(name, size, style);
+		
+		instance.getDisplay().syncExec(getFontMetricsRunnable); 
+		
+		return getFontMetricsRunnable.getFontMetrics(); 
 	}
   
 }

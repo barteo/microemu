@@ -20,10 +20,18 @@
 package com.barteo.emulator.device.applet;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.Shape;
+import java.util.Enumeration;
 
 import com.barteo.emulator.EmulatorContext;
+import com.barteo.emulator.MIDletBridge;
+import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceDisplay;
+import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.InputMethod;
 
 
 public class AppletDeviceDisplay implements DeviceDisplay
@@ -45,6 +53,9 @@ public class AppletDeviceDisplay implements DeviceDisplay
   PositionedImage modeAbcUpperImage;  
   PositionedImage modeAbcLowerImage;  
   
+  boolean scrollUp = false;
+  boolean scrollDown = false;
+
   
   AppletDeviceDisplay(EmulatorContext acontext)
   {
@@ -76,6 +87,51 @@ public class AppletDeviceDisplay implements DeviceDisplay
   }
   
   
+  public void paint(Graphics g)
+  {
+    Device device = DeviceFactory.getDevice();
+
+    g.setColor(backgroundColor);    
+    g.fillRect(0, 0, displayRectangle.width, displayRectangle.height);
+
+    g.setColor(foregroundColor);
+    for (Enumeration s = device.getSoftButtons().elements(); s.hasMoreElements(); ) {
+      ((AppletSoftButton) s.nextElement()).paint(g);
+    }
+
+    int inputMode = device.getInputMethod().getInputMode();
+    if (inputMode == InputMethod.INPUT_123) {
+      g.drawImage(mode123Image.getImage(), 
+          mode123Image.getRectangle().x, mode123Image.getRectangle().y, null);
+    } else if (inputMode == InputMethod.INPUT_ABC_UPPER) {
+      g.drawImage(modeAbcUpperImage.getImage(), 
+          modeAbcUpperImage.getRectangle().x, modeAbcUpperImage.getRectangle().y, null);
+    } else if (inputMode == InputMethod.INPUT_ABC_LOWER) {
+      g.drawImage(modeAbcLowerImage.getImage(), 
+          modeAbcLowerImage.getRectangle().x, modeAbcLowerImage.getRectangle().y, null);
+    }
+
+    Shape oldclip = g.getClip();
+    g.setClip(displayPaintable);
+    g.translate(displayPaintable.x, displayPaintable.y);
+    Font f = g.getFont();
+    
+    DisplayGraphics dg = new DisplayGraphics(g);
+    MIDletBridge.getMIDletAccess().getDisplayAccess().paint(dg);
+    
+    g.setFont(f);
+    g.translate(-displayPaintable.x, -displayPaintable.y);
+    g.setClip(oldclip);
+
+    if (scrollUp) {
+      g.drawImage(upImage.getImage(), upImage.getRectangle().x, upImage.getRectangle().y, null);
+    }
+    if (scrollDown) {
+      g.drawImage(downImage.getImage(), downImage.getRectangle().x, downImage.getRectangle().y, null);
+    }
+  }
+
+  
   public void repaint()
   {
     context.getDisplayComponent().repaint();
@@ -84,19 +140,13 @@ public class AppletDeviceDisplay implements DeviceDisplay
   
   public void setScrollDown(boolean state) 
   {
-    context.getDisplayComponent().setScrollDown(state);
+    scrollDown = state;
   }
 
 
   public void setScrollUp(boolean state) 
   {
-    context.getDisplayComponent().setScrollUp(state);
-  }
-
-  
-  public Rectangle getDisplayPaintable()
-  {
-    return displayPaintable;
+    scrollUp = state;
   }
 
   
@@ -116,35 +166,5 @@ public class AppletDeviceDisplay implements DeviceDisplay
   {
     return foregroundColor;
   }  
-
-  
-  public PositionedImage getUpImage()
-  {
-    return upImage;
-  }
-
-  
-  public PositionedImage getDownImage()
-  {
-    return downImage;
-  }
-
-  
-  public PositionedImage getMode123Image()
-  {
-    return mode123Image;
-  }
-
-  
-  public PositionedImage getModeAbcUpperImage()
-  {
-    return modeAbcUpperImage;
-  }
-
-  
-  public PositionedImage getModeAbcLowerImage()
-  {
-    return modeAbcLowerImage;
-  }
   
 }

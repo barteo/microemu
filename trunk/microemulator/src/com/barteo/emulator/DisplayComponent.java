@@ -23,10 +23,6 @@ package com.barteo.emulator;
 public interface DisplayComponent
 {
 
-  public void setScrollDown(boolean state);
-
-  public void setScrollUp(boolean state);
-
   public void repaint();
 
 }

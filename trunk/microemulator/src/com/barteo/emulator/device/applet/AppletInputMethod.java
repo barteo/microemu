@@ -142,8 +142,8 @@ public class AppletInputMethod extends InputMethod implements Runnable
   					tmp += text.substring(0, caret);
   				}
   				tmp += ev.getKeyChar();
-  				if (caret < text.length() - 1) {
-  					tmp += text.substring(caret + 1);
+					if (caret < text.length()) {
+						tmp += text.substring(caret);
   				}
   				text = tmp;
     			caret++;

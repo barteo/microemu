@@ -162,7 +162,6 @@ public class SwtInputMethod extends InputMethod implements Runnable
 
 	public void keyPressed(int keyCode)
 	{
-System.out.println(keyCode);
 		String tmp;
     
     if (commonKeyPressed(keyCode)) {

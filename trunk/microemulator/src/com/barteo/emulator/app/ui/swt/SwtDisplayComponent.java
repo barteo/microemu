@@ -30,10 +30,21 @@ import com.barteo.emulator.device.swt.SwtDeviceDisplay;
 
 public class SwtDisplayComponent extends Canvas implements DisplayComponent
 {
+	private Canvas deviceCanvas;
+	
+	private Runnable redrawRunnable = new Runnable()
+	{
+		public void run() {
+			deviceCanvas.redraw();
+		}
+	};
 
-	SwtDisplayComponent(Composite parent)
+
+	SwtDisplayComponent(Composite parent, Canvas deviceCanvas)
 	{
 		super(parent, 0);
+		
+		this.deviceCanvas = deviceCanvas;
 	}
 
 
@@ -47,7 +58,7 @@ public class SwtDisplayComponent extends Canvas implements DisplayComponent
   
 	public void repaint() 
 	{
-		// TODO Auto-generated method stub	
+		getDisplay().syncExec(redrawRunnable);
 	}
   
 }

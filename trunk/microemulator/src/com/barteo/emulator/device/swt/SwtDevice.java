@@ -26,9 +26,12 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import javax.microedition.lcdui.Canvas;
+
 import nanoxml.XMLElement;
 import nanoxml.XMLParseException;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 
@@ -146,23 +149,23 @@ public class SwtDevice implements Device
   public int getGameAction(int keyCode) 
   {
 		// TODO poprawic KeyEvent	
-/*		switch (keyCode) {
-			case KeyEvent.VK_UP:
+		switch (keyCode) {
+			case SWT.ARROW_UP:
 				return Canvas.UP;
         
-			case KeyEvent.VK_DOWN:
+			case SWT.ARROW_DOWN:
 				return Canvas.DOWN;
         
-			case KeyEvent.VK_LEFT:
+			case SWT.ARROW_LEFT:
 				return Canvas.LEFT;
       	
-			case KeyEvent.VK_RIGHT:
+			case SWT.ARROW_RIGHT:
 				return Canvas.RIGHT;
       	
-			case KeyEvent.VK_ENTER:
+			case SWT.CR:
 				return Canvas.FIRE;
       	
-			case KeyEvent.VK_1:
+/*			case KeyEvent.VK_1:
 			case KeyEvent.VK_A:
 				return Canvas.GAME_A;
         
@@ -176,34 +179,34 @@ public class SwtDevice implements Device
         
 			case KeyEvent.VK_9:
 			case KeyEvent.VK_D:
-				return Canvas.GAME_D;
+				return Canvas.GAME_D;*/
         
-			default:*/
+			default:
 				return 0;
-//		}
+		}
   }
 
 
   public int getKeyCode(int gameAction) 
   {
 		// TODO poprawic KeyEvent	
-/*		switch (gameAction) {
+		switch (gameAction) {
 			case Canvas.UP:
-				return KeyEvent.VK_UP;
+				return SWT.ARROW_UP;
         
 			case Canvas.DOWN:
-				return KeyEvent.VK_DOWN;
+				return SWT.ARROW_DOWN;
         
 			case Canvas.LEFT:
-				return KeyEvent.VK_LEFT;
+				return SWT.ARROW_LEFT;
         
 			case Canvas.RIGHT:
-				return KeyEvent.VK_RIGHT;
+				return SWT.ARROW_RIGHT;
         
 			case Canvas.FIRE:
-				return KeyEvent.VK_ENTER;
+				return SWT.CR;
         
-			case Canvas.GAME_A:
+/*			case Canvas.GAME_A:
 				return KeyEvent.VK_1;
         
 			case Canvas.GAME_B:
@@ -213,11 +216,11 @@ public class SwtDevice implements Device
 				return KeyEvent.VK_7;
         
 			case Canvas.GAME_D:
-				return KeyEvent.VK_9;
+				return KeyEvent.VK_9;*/
 
-			default:*/
+			default:
 				throw new IllegalArgumentException();
-//		}
+		}
   }
 
 

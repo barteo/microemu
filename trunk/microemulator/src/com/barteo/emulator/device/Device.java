@@ -24,6 +24,8 @@ import java.util.Vector;
 
 import javax.microedition.lcdui.Image;
 
+import com.barteo.emulator.EmulatorContext;
+
 
 public interface Device 
 {
@@ -32,6 +34,8 @@ public interface Device
   Image createImage(String name) throws IOException;
   Image createImage(Image source);
   Image createImage(byte[] imageData, int imageOffset, int imageLength);
+  
+  EmulatorContext getEmulatorContext(); 
   
   DeviceDisplay getDeviceDisplay();
   FontManager getFontManager();

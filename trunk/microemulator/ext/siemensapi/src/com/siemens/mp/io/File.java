@@ -18,10 +18,11 @@
  */
 package com.siemens.mp.io;
 
-import javax.microedition.rms.*;
-import java.util.Vector;
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.util.Hashtable;
-import java.io.*;
+import java.util.Vector;
+
 import com.barteo.emulator.device.DeviceFactory;
 
 /**
@@ -58,7 +59,7 @@ public class File {
     public static int exists(java.lang.String fileName) {
         //System.out.println("public static int exists(java.lang.String "+fileName+") "+data.containsKey(fileName));
         if (data.containsKey(fileName.intern())||
-        DeviceFactory.getDevice().getDeviceDisplay().getEmulatorContext().getClassLoader().getResourceAsStream(fileName)!=null
+        DeviceFactory.getDevice().getEmulatorContext().getClassLoader().getResourceAsStream(fileName)!=null
         ) return 1; else return -1;
     }
     
@@ -87,7 +88,7 @@ public class File {
         if (!data.containsKey(fileName)) {
             data.put(fileName.intern(), new FileInfo(s));
             try {
-                InputStream is=DeviceFactory.getDevice().getDeviceDisplay().getEmulatorContext().getClassLoader().getResourceAsStream(fileName);
+                InputStream is=DeviceFactory.getDevice().getEmulatorContext().getClassLoader().getResourceAsStream(fileName);
 
                 if(is!=null) {
                     BufferedInputStream bis=new BufferedInputStream(is);

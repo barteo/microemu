@@ -47,15 +47,17 @@ import nanoxml.XMLParseException;
 
 public class J2SEDevice implements Device
 {
-  private J2SEDeviceDisplay deviceDisplay;
-  private FontManager fontManager = null;
-  private J2SEInputMethod inputMethod = null;
-  private Vector buttons;
-  private Vector softButtons;
+	private EmulatorContext context; 	
+	
+	private J2SEDeviceDisplay deviceDisplay;
+	private FontManager fontManager = null;
+	private J2SEInputMethod inputMethod = null;
+	private Vector buttons;
+	private Vector softButtons;
   
-  private Image normalImage;
-  private Image overImage;
-  private Image pressedImage;
+	private Image normalImage;
+	private Image overImage;
+	private Image pressedImage;
   
   
   public J2SEDevice()
@@ -72,7 +74,9 @@ public class J2SEDevice implements Device
   
   public void init(EmulatorContext context, String config)
   {
-    deviceDisplay = new J2SEDeviceDisplay(context);
+  	this.context = context;
+  	
+    deviceDisplay = new J2SEDeviceDisplay(this);
     buttons = new Vector();
     softButtons = new Vector();
     
@@ -128,6 +132,12 @@ public class J2SEDevice implements Device
   }
   
   
+  public EmulatorContext getEmulatorContext() 
+  {
+	  return context;
+  }
+
+
   public FontManager getFontManager()
   {
     if (fontManager == null) {
@@ -476,7 +486,7 @@ public class J2SEDevice implements Device
 	private Image getImage(String str)
 			throws IOException
 	{
-		InputStream is = deviceDisplay.getEmulatorContext().getClassLoader().getResourceAsStream(str);
+		InputStream is = getEmulatorContext().getClassLoader().getResourceAsStream(str);
 
 		if (is == null) {
 				throw new IOException(str + " could not be found.");

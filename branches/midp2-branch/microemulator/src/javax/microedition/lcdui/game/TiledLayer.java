@@ -25,22 +25,39 @@ import javax.microedition.lcdui.Image;
 
 public class TiledLayer extends Layer 
 {
+	private int cells[][];
 	private int columns;
 	private int rows;
 	private Image image;
-	private int tileWidth;
-	private int tileHeight;
+	private int cellWidth;
+	private int cellHeight;
+	private int numGridX;
+	private int numGridY;
 	
 
 	public TiledLayer(int columns, int rows, Image image, int tileWidth, int tileHeight)
-	{
+	{		
+		if (columns < 1 || rows < 1) {
+			throw new IllegalArgumentException();
+		}
+		if (tileWidth < 1 || tileHeight < 1) {
+			throw new IllegalArgumentException();
+		}
+		if (image.getWidth() % tileWidth != 0 || image.getHeight() % tileHeight != 0) {
+			throw new IllegalArgumentException();
+		}
+		
+		this.cells = new int[columns][rows];
 		this.columns = columns;
 		this.rows = rows;
 		this.image = image;
-		this.tileWidth = tileWidth;
-		this.tileHeight = tileHeight;
-		
-//		throw new RuntimeException("TODO");
+		this.cellWidth = tileWidth;
+		this.cellHeight = tileHeight;
+		this.width = columns * tileWidth;
+		this.height = rows * tileHeight;
+
+		this.numGridX = image.getWidth() / tileWidth;
+		this.numGridY = image.getHeight() / tileHeight;
 	}
 
 
@@ -52,7 +69,21 @@ public class TiledLayer extends Layer
 
 	public void fillCells(int col, int row, int numCols, int numRows, int tileIndex)
 	{
-//		throw new RuntimeException("TODO");
+		if (numCols < 0 || numRows < 0) {
+			throw new IllegalArgumentException();
+		}
+		if (col + numCols > columns || row + numRows > rows) {
+			throw new IndexOutOfBoundsException();
+		}
+		if (tileIndex < 0 || tileIndex > numGridX * numGridY) {
+			throw new IndexOutOfBoundsException();
+		}
+		
+		for (int c = col; c < col + numCols; c++) {
+			for (int r = row; r < row + numRows; r++) {
+				setCell(c, r, tileIndex);
+			}
+		}
 	}
 
 
@@ -64,36 +95,47 @@ public class TiledLayer extends Layer
 
 	public int getCell(int col, int row)
 	{
-		throw new RuntimeException("TODO");
+		return cells[col][row];
 	}
 
 
 	public final int getCellHeight()
 	{
-		throw new RuntimeException("TODO");
+		return cellHeight;
 	}
 
 
 	public final int getCellWidth()
 	{
-		throw new RuntimeException("TODO");
+		return cellWidth;
 	}
 
 
 	public final int getColumns()
 	{
-		throw new RuntimeException("TODO");
+		return columns;
 	}
 
 
 	public final int getRows()
 	{
-		throw new RuntimeException("TODO");
+		return rows;
 	}
 
 
 	public final void paint(Graphics g) 
 	{
+		for (int c = 0; c < columns; c++) {
+			for (int r = 0; r < rows; r++) {
+				if (cells[c][r] != 0) {
+					int tileGridX = cells[c][r] % numGridX;
+					int tileGridY = cells[c][r] / numGridX;
+					g.drawRegion(image, tileGridX, tileGridY, cellWidth, cellHeight, 
+							Sprite.TRANS_NONE, getX() + c * cellWidth, getY() + r * cellHeight, Graphics.LEFT | Graphics.TOP);
+				}
+			}
+		}
+		
 //		throw new RuntimeException("TODO");
 	}
 
@@ -106,7 +148,11 @@ public class TiledLayer extends Layer
 
 	public void setCell(int col, int row, int tileIndex)
 	{
-		throw new RuntimeException("TODO");
+		if (tileIndex < 0 || tileIndex > numGridX * numGridY) {
+			throw new IndexOutOfBoundsException();
+		}
+		
+		cells[col][row] = tileIndex;
 	}
 
 

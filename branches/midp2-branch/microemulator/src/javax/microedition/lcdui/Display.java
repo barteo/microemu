@@ -26,6 +26,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.microedition.lcdui.game.GameCanvas;
+import javax.microedition.lcdui.game.Sprite;
 import javax.microedition.midlet.MIDlet;
 
 import com.barteo.emulator.CommandManager;
@@ -136,8 +137,10 @@ public class Display
 				if (current instanceof GameCanvas) {
 					synchronized (flushLock) {
 						if (flushImage != null) {
-//System.out.println("drawImage: " + flushImageRect.x +"+"+ flushImageRect.y);					
-							g.drawImage(flushImage, flushImageRect.x, flushImageRect.y, 0);
+//System.out.println("drawImage: " + flushImageRect.x +"+"+ flushImageRect.y);
+							g.drawRegion(flushImage, 
+									flushImageRect.x, flushImageRect.y, flushImageRect.width, flushImageRect.height, 
+									Sprite.TRANS_NONE, 0, 0, Graphics.LEFT | Graphics.TOP);					
 //System.out.println("drawImage:" + Thread.currentThread());						
 							flushImage = null;
 							flushLock.notify();

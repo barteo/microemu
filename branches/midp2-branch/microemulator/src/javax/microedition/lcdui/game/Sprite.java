@@ -148,7 +148,7 @@ public class Sprite extends Layer
 			int frameGridY = frameSequence[currentFrameIndex] / numGridX;
 			g.drawRegion(image, 
 					frameGridX * getWidth(), frameGridY * getHeight(), getWidth(), getHeight(), 
-					Sprite.TRANS_NONE, 0, 0, Graphics.LEFT | Graphics.TOP);
+					Sprite.TRANS_NONE, getX(), getY(), Graphics.LEFT | Graphics.TOP);
 		}
 //		throw new RuntimeException("TODO");
 	}

@@ -197,11 +197,11 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 	{
 //		throw new RuntimeException("TODO");
 		if (src.isMutable()) {
-			g.drawImage(((MutableImage) src).getImage(), 
+			g.drawImage(((MutableImage) src).getImage(),
 					x_dest, y_dest, x_dest + width, y_dest + height, 
 					x_src, y_src, x_src + width, y_src + height, null);
 		} else {
-			g.drawImage(((MutableImage) src).getImage(),
+			g.drawImage(((ImmutableImage) src).getImage(),
 					x_dest, y_dest, x_dest + width, y_dest + height,
 					x_src, y_src, x_src + width, y_src + height, null);
 		}

@@ -34,7 +34,9 @@ public class SwtDisplayComponent implements DisplayComponent
 	private Runnable redrawRunnable = new Runnable()
 	{
 		public void run() {
-			deviceCanvas.redraw();
+			if (!deviceCanvas.isDisposed()) {
+				deviceCanvas.redraw();
+			}
 		}
 	};
 

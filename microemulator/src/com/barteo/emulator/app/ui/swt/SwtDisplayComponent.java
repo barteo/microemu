@@ -84,8 +84,8 @@ public class SwtDisplayComponent implements DisplayComponent
 			Device device = DeviceFactory.getDevice();
 
 			SwtMutableImage image = new SwtMutableImage(
-					device.getDeviceDisplay().getWidth(),
-					device.getDeviceDisplay().getHeight());
+					((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle().width,
+					((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle().height);
 						
 			SwtGraphics gc = ((DisplayGraphics) image.getGraphics()).g;
 			try {

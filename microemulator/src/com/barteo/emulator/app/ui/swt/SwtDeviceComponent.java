@@ -141,7 +141,7 @@ public class SwtDeviceComponent extends Canvas
 		super(parent, SWT.NO_BACKGROUND);
 		instance = this;
     
-		dc = new SwtDisplayComponent(parent, this);    
+		dc = new SwtDisplayComponent(this);    
     
 		addKeyListener(keyListener);
 		addMouseListener(mouseListener);

@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,7 +53,10 @@ import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.MIDletEntry;
 import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.app.launcher.Launcher;
-import com.barteo.emulator.app.ui.swing.*;
+import com.barteo.emulator.app.ui.swing.ExtensionFileFilter;
+import com.barteo.emulator.app.ui.swing.SwingDeviceComponent;
+import com.barteo.emulator.app.ui.swing.SwingDialogWindow;
+import com.barteo.emulator.app.ui.swing.SwingSelectDevicePanel;
 import com.barteo.emulator.app.util.DeviceEntry;
 import com.barteo.emulator.app.util.ProgressEvent;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
@@ -142,8 +146,12 @@ public class Main extends JFrame implements MicroEmulator
           loadFromJad();
         } catch (FileNotFoundException ex) {
           System.err.println("Cannot found file " + fileChooser.getSelectedFile().getName());
+				} catch (NullPointerException ex) {
+					System.err.println("Cannot open jad file " + fileChooser.getSelectedFile().getName());
+				} catch (IllegalArgumentException ex) {
+					System.err.println("Cannot open jad file " + fileChooser.getSelectedFile().getName());
         } catch (IOException ex) {
-          System.err.println("Cannot open file " + fileChooser.getSelectedFile().getName());
+          System.err.println("Cannot open jad file " + fileChooser.getSelectedFile().getName());
         }
       }
     }
@@ -155,7 +163,7 @@ public class Main extends JFrame implements MicroEmulator
 
     public void actionPerformed(ActionEvent ev)
     {
-      String entered = JOptionPane.showInputDialog("Enter JAD URL:");
+      String entered = JOptionPane.showInputDialog(instance, "Enter JAD URL:");
       if (entered != null) {
         try {
           URL url = new URL(entered);
@@ -189,7 +197,7 @@ public class Main extends JFrame implements MicroEmulator
     
     public void actionPerformed(ActionEvent e)
     {
-      if (SwingDialogWindow.show("Select device...", selectDevicePanel)) {
+      if (SwingDialogWindow.show(instance, "Select device...", selectDevicePanel)) {
         if (selectDevicePanel.getSelectedDeviceEntry().equals(getDevice())) {
           return;
         }
@@ -235,7 +243,30 @@ public class Main extends JFrame implements MicroEmulator
     
   };
   
-  
+	WindowAdapter windowListener = new WindowAdapter()
+	{
+		public void windowClosing(WindowEvent ev) 
+		{
+			menuExitListener.actionPerformed(null);
+		}
+		
+
+		public void windowIconified(WindowEvent ev) 
+		{
+			MIDletBridge.getMIDletAccess(launcher.getCurrentMIDlet()).pauseApp();
+		}
+		
+		public void windowDeiconified(WindowEvent ev) 
+		{
+			try {
+				MIDletBridge.getMIDletAccess(launcher.getCurrentMIDlet()).startApp();
+			} catch (MIDletStateChangeException ex) {
+				System.err.println(ex);
+			}
+		}
+	};  
+
+
   Main()
   {
     instance = this;
@@ -269,6 +300,7 @@ public class Main extends JFrame implements MicroEmulator
     setJMenuBar(menuBar);
     
     setTitle("MicroEmulator");
+    addWindowListener(windowListener);
     
     Config.loadConfig();
     addKeyListener(keyListener);
@@ -397,23 +429,6 @@ public class Main extends JFrame implements MicroEmulator
     menuOpenJADURL.setEnabled(state);
   }
   
-  
-  protected void processWindowEvent(WindowEvent e)
-  {
-    super.processWindowEvent(e);
-    if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-      menuExitListener.actionPerformed(null);
-    } else if (e.getID() == WindowEvent.WINDOW_ICONIFIED) {
-      MIDletBridge.getMIDletAccess(launcher.getCurrentMIDlet()).pauseApp();
-    } else if (e.getID() == WindowEvent.WINDOW_DEICONIFIED) {
-      try {
-        MIDletBridge.getMIDletAccess(launcher.getCurrentMIDlet()).startApp();
-  		} catch (MIDletStateChangeException ex) {
-        System.err.println(ex);
-  		}
-    }
-  }
-
   
   public void startMidlet(MIDlet m)
   {

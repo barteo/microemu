@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2001-2003 Bartek Teodorczyk <barteo@it.pl>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -40,6 +40,7 @@ public class ExtensionFileFilter implements FilenameFilter
   
 	public boolean accept(File dir, String name) 
 	{
+System.out.println(dir +"+"+ name);		
 		if(dir != null) {
 			if(dir.isDirectory()) {
 				return true;

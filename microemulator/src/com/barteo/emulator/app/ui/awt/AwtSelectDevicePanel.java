@@ -21,16 +21,29 @@ package com.barteo.emulator.app.ui.awt;
 
 import java.awt.BorderLayout;
 import java.awt.Button;
+import java.awt.FileDialog;
+import java.awt.Frame;
 import java.awt.List;
 import java.awt.Panel;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Vector;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
 import com.barteo.emulator.app.Config;
 import com.barteo.emulator.app.util.DeviceEntry;
+import com.barteo.emulator.app.util.ProgressJarClassLoader;
+import com.barteo.emulator.device.j2se.J2SEDevice;
 
 
 public class AwtSelectDevicePanel extends AwtDialogPanel
@@ -41,80 +54,53 @@ public class AwtSelectDevicePanel extends AwtDialogPanel
 	private Button btAdd;
 	private Button btRemove;
 	private Button btDefault;
-//	private DefaultListModel lsDevicesModel;
 	private List lsDevices;
-	private Vector devices;
+	private Vector deviceModel;
   
 	private ActionListener btAddListener = new ActionListener()
 	{
-/*		private JFileChooser fileChooser = null;
-    
-		private FileFilter jarFileFilter = new FileFilter()
-		{
-			public boolean accept(File f)
-			{
-				if (f.isDirectory()) {
-					return true;
-				}
-				String ext = null;
-				String s = f.getName();
-				int i = s.lastIndexOf('.');
-
-				if (i > 0 &&  i < s.length() - 1) {
-						ext = s.substring(i+1).toLowerCase();
-				}
-				if (ext == null) {
-					return false;
-				}
-				if (!ext.toLowerCase().equals("dev")) {
-					return false;
-				}
-        
-				return true;
-			}
-      
-			public String getDescription()
-			{
-				return "Device profile (*.dev)";
-			}
-		};*/
+		private FileChooser fileChooser = null;
     
 		public void actionPerformed(ActionEvent ev)
 		{
-/*			if (fileChooser == null) {
-				fileChooser = new JFileChooser();
-				fileChooser.setFileFilter(jarFileFilter);
+			if (fileChooser == null) {
+				ExtensionFileFilter fileFilter = new ExtensionFileFilter("Device profile (*.dev)");
+				fileFilter.addExtension("dev");
+				fileChooser = new FileChooser(new Frame(), "Open device profile file...", FileDialog.LOAD);
+				fileChooser.setFilenameFilter(fileFilter);
 			}
       
 			ProgressJarClassLoader loader = new ProgressJarClassLoader();
       
-			if (fileChooser.showOpenDialog(instance) == JFileChooser.APPROVE_OPTION) {
+			fileChooser.show();
+			
+			if (fileChooser.getFile() != null) {
 				String deviceClassName = null;
 				String deviceName = null;
 				try {
 					JarFile jar = new JarFile(fileChooser.getSelectedFile());
 					Manifest manifest = jar.getManifest();
 					if (manifest == null) {
-						JOptionPane.showMessageDialog(instance,
+						OptionPane.showMessageDialog(instance,
 								"Missing manifest in dev file.",
-								"Error", JOptionPane.ERROR_MESSAGE);
+								"Error", OptionPane.ERROR_MESSAGE);
 						return;
 					}          
 					Attributes attrs = manifest.getMainAttributes();
           
 					deviceName = attrs.getValue("Device-Name");
 					if (deviceName == null) {
-						JOptionPane.showMessageDialog(instance, 
+						OptionPane.showMessageDialog(instance, 
 								"Missing Device-Name entry in jar manifest.",
-								"Error", JOptionPane.ERROR_MESSAGE);
+								"Error", OptionPane.ERROR_MESSAGE);
 						return;
 					}
           
 					deviceClassName = attrs.getValue("Device-Class");
 					if (deviceClassName == null) {
-						JOptionPane.showMessageDialog(instance, 
+						OptionPane.showMessageDialog(instance, 
 								"Missing Device-Class entry in jar manifest.",
-								"Error", JOptionPane.ERROR_MESSAGE);
+								"Error", OptionPane.ERROR_MESSAGE);
 						return;
 					}
           
@@ -123,21 +109,21 @@ public class AwtSelectDevicePanel extends AwtDialogPanel
 					if (deviceClassName.charAt(0) == '/') {
 						deviceClassName = deviceClassName.substring(1);
 					}
-					for (Enumeration e = lsDevicesModel.elements(); e.hasMoreElements(); ) {
+					for (Enumeration e = deviceModel.elements(); e.hasMoreElements(); ) {
 						DeviceEntry entry = (DeviceEntry) e.nextElement();
 						if (deviceClassName.equals(entry.getClassName())) {
-							JOptionPane.showMessageDialog(instance, 
+							OptionPane.showMessageDialog(instance, 
 									"Device is already added.",
-									"Info", JOptionPane.INFORMATION_MESSAGE);
+									"Info", OptionPane.INFORMATION_MESSAGE);
 							return;
 						}
 					}
           
 					loader.addRepository(fileChooser.getSelectedFile().toURL());
 				} catch (IOException ex) {
-					JOptionPane.showMessageDialog(instance, 
+					OptionPane.showMessageDialog(instance, 
 							"Error reading " + fileChooser.getSelectedFile().getName() + " file.",
-							"Error", JOptionPane.ERROR_MESSAGE);
+							"Error", OptionPane.ERROR_MESSAGE);
 					return;
 				}
         
@@ -145,16 +131,16 @@ public class AwtSelectDevicePanel extends AwtDialogPanel
 				try {
 					deviceClass = loader.findClass(deviceClassName);
 				} catch (ClassNotFoundException ex) {
-					JOptionPane.showMessageDialog(instance, 
+					OptionPane.showMessageDialog(instance, 
 							"Cannot find class defined in Device-Class entry in jar manifest.",
-							"Error", JOptionPane.ERROR_MESSAGE);
+							"Error", OptionPane.ERROR_MESSAGE);
 					return;
 				}
           
 				if (!J2SEDevice.class.isAssignableFrom(deviceClass)) {
-					JOptionPane.showMessageDialog(instance, 
+					OptionPane.showMessageDialog(instance, 
 							"Cannot find class defined in Device-Class entry in jar manifest.",
-							"Error", JOptionPane.ERROR_MESSAGE);
+							"Error", OptionPane.ERROR_MESSAGE);
 					return;
 				}
         
@@ -172,12 +158,18 @@ public class AwtSelectDevicePanel extends AwtDialogPanel
         
 					DeviceEntry entry = 
 							new DeviceEntry(deviceName, deviceFile.getName(), deviceClassName, false);
-					lsDevicesModel.addElement(entry);
-					lsDevices.setSelectedValue(entry, true);
+					deviceModel.addElement(entry);
+					for (i = 0; i < deviceModel.size(); i++) {
+						if (deviceModel.elementAt(i) == entry) {
+							lsDevices.add(entry.getName());
+							lsDevices.select(i);
+						}
+					}
+					lsDevicesListener.itemStateChanged(null);
 				} catch (IOException ex) {
 					System.err.println(ex);
 				}
-			}*/
+			}
 		}    
 	};
   
@@ -185,19 +177,27 @@ public class AwtSelectDevicePanel extends AwtDialogPanel
 	{
 		public void actionPerformed(ActionEvent ev)
 		{
-/*			DeviceEntry entry = (DeviceEntry) lsDevices.getSelectedValue();
+			DeviceEntry entry = (DeviceEntry) deviceModel.elementAt(lsDevices.getSelectedIndex());
 			File deviceFile = new File(Config.getConfigPath(), entry.getFileName());
 			deviceFile.delete();
 			if (entry.isDefaultDevice()) {
-				for (Enumeration en = lsDevicesModel.elements(); en.hasMoreElements(); ) {
-					DeviceEntry tmp = (DeviceEntry) en.nextElement();
+				for (int i = 0; i < deviceModel.size(); i++) {
+					DeviceEntry tmp = (DeviceEntry) deviceModel.elementAt(i);
 					if (!tmp.canRemove()) {
 						tmp.setDefaultDevice(true);
+						lsDevices.replaceItem(tmp.getName() + " (default)", i);						
 						break;
 					}
 				}
 			}
-			lsDevicesModel.removeElement(entry);*/
+			for (int i = 0; i < deviceModel.size(); i++) {
+				if (deviceModel.elementAt(i) == entry) {
+					deviceModel.removeElementAt(i);
+					lsDevices.remove(i);
+					break;
+				}
+			}
+			lsDevicesListener.itemStateChanged(null);
 		}
 	};
   
@@ -205,26 +205,29 @@ public class AwtSelectDevicePanel extends AwtDialogPanel
 	{
 		public void actionPerformed(ActionEvent ev)
 		{
-/*			DeviceEntry entry = (DeviceEntry) lsDevices.getSelectedValue();
-			for (Enumeration en = lsDevicesModel.elements(); en.hasMoreElements(); ) {
-				DeviceEntry tmp = (DeviceEntry) en.nextElement();
+			DeviceEntry entry = (DeviceEntry) deviceModel.elementAt(lsDevices.getSelectedIndex());
+			for (int i = 0; i < deviceModel.size(); i++) {
+				DeviceEntry tmp = (DeviceEntry) deviceModel.elementAt(i);
 				if (tmp == entry) {
 					tmp.setDefaultDevice(true);
+					lsDevices.replaceItem(tmp.getName() + " (default)", i);
 				} else {
 					tmp.setDefaultDevice(false);
+					lsDevices.replaceItem(tmp.getName(), i);
 				}
 			}
 			lsDevices.repaint();
-			btDefault.setEnabled(false);*/
+			btDefault.setEnabled(false);
 		}
 	};
-
-/*	ListSelectionListener listSelectionListener = new ListSelectionListener()
+	
+	ItemListener lsDevicesListener = new ItemListener()
 	{
-		public void valueChanged(ListSelectionEvent ev)
+		public void itemStateChanged(ItemEvent ev) 
 		{
-			DeviceEntry entry = (DeviceEntry) lsDevices.getSelectedValue();
-			if (entry != null) {
+			int index = lsDevices.getSelectedIndex();
+			if (index != -1) {
+				DeviceEntry entry = (DeviceEntry) deviceModel.elementAt(index);
 				if (entry.isDefaultDevice()) {
 					btDefault.setEnabled(false);
 				} else {
@@ -242,7 +245,7 @@ public class AwtSelectDevicePanel extends AwtDialogPanel
 				btOk.setEnabled(false);
 			}
 		}
-	};*/
+	};
   
   
 	public AwtSelectDevicePanel() 
@@ -250,15 +253,13 @@ public class AwtSelectDevicePanel extends AwtDialogPanel
 		instance = this;
     
 		setLayout(new BorderLayout());
-//		setBorder(new TitledBorder(new EtchedBorder(), "Installed devices"));
 
-//		lsDevicesModel = new DefaultListModel();
 		lsDevices = new List();
-		devices = new Vector();
-//		lsDevices.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//		lsDevices.addListSelectionListener(listSelectionListener);
-//		spDevices = new ScrollPane(lsDevices);
-//		add(spDevices, BorderLayout.CENTER);
+		deviceModel = new Vector();
+		lsDevices.addItemListener(lsDevicesListener);
+		spDevices = new ScrollPane();
+		spDevices.add(lsDevices);
+		add(spDevices, BorderLayout.CENTER);
     
 		Panel panel = new Panel();
 		btAdd = new Button("Add...");
@@ -273,21 +274,24 @@ public class AwtSelectDevicePanel extends AwtDialogPanel
     
 		add(panel, BorderLayout.SOUTH);
     
-    int i = 0;
-		for (Enumeration e = Config.getDevices().elements(); e.hasMoreElements(); i++) {
-			DeviceEntry entry = (DeviceEntry) e.nextElement();
-			lsDevices.add(entry.getName());
-			devices.addElement(entry);
+    Vector devs = Config.getDevices();
+		for (int i = 0; i < devs.size(); i++) {
+			DeviceEntry entry = (DeviceEntry) devs.elementAt(i);
+			deviceModel.addElement(entry);
 			if (entry.isDefaultDevice()) {
+				lsDevices.add(entry.getName() + " (default)");
 				lsDevices.select(i);
+			} else {
+				lsDevices.add(entry.getName());
 			}
 		}
+		lsDevicesListener.itemStateChanged(null);
 	}
   
   
 	public DeviceEntry getSelectedDeviceEntry()
 	{
-		return (DeviceEntry) devices.elementAt(lsDevices.getSelectedIndex());
+		return (DeviceEntry) deviceModel.elementAt(lsDevices.getSelectedIndex());
 	}
   
   
@@ -296,9 +300,9 @@ public class AwtSelectDevicePanel extends AwtDialogPanel
 		Vector devices = Config.getDevices();
 		devices.removeAllElements();
     
-/*		for (Enumeration e = lsDevicesModel.elements(); e.hasMoreElements(); ) {
+		for (Enumeration e = deviceModel.elements(); e.hasMoreElements(); ) {
 			devices.add(e.nextElement());
-		}*/
+		}
     
 		Config.saveConfig();
 	}

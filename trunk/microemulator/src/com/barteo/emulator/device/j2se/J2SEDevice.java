@@ -504,7 +504,7 @@ public class J2SEDevice implements Device
     try {
 			png.getWidth();
 		} catch (IOException ex) {
-			throw new IOException("Error decoding PNG image");    	
+			throw new IOException("Error decoding PNG image: " + ex.toString());    	
 		}
         
     if (getDeviceDisplay().isColor()) {

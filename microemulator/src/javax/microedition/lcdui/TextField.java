@@ -40,31 +40,16 @@ public class TextField extends Item
 	public static final int CONSTRAINT_MASK = 0xffff;
 
 	StringComponent stringComponent;
-	String field;
-	int caret;
-	boolean caretVisible;
-	int maxSize;
-	int constraints;
+	
+	private String field;
+	private int caret;
+	private boolean caretVisible;
+	private int maxSize;
+	private int constraints;
 
-	TextBox tb = null;
-	static final Command doneCommand = new Command("Done", Command.OK, 0);
-	static final Command cancelCommand = new Command("Cancel", Command.CANCEL, 0);
+	private TextBox tb = null;
 
-	CommandListener textBoxListener = new CommandListener() 
-	{
-		public void commandAction(Command cmd, Displayable d) 
-		{
-			if (cmd == doneCommand) {
-				setString(tb.getString());
-				getOwner().currentDisplay.setCurrent(owner);
-			} else if (cmd == cancelCommand) {
-				getOwner().currentDisplay.setCurrent(owner);
-			}
-		}
-
-	};
-
-	InputMethodListener inputMethodListener = new InputMethodListener() 
+	private InputMethodListener inputMethodListener = new InputMethodListener() 
 	{
 		public void caretPositionChanged(InputMethodEvent event) 
 		{
@@ -97,8 +82,8 @@ public class TextField extends Item
 			setString("");
 		}
 		stringComponent.setWidth(DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 8);
-		caret = 0;
-		caretVisible = false;
+		setCaretPosition(getString().length());
+		setCaretVisible(false);
 	}
 
 	
@@ -312,22 +297,6 @@ public class TextField extends Item
 	}
 
 	
-	boolean select() 
-	{
-		if (tb == null) {
-			tb = new TextBox(getLabel(), getString(), maxSize, constraints);
-			tb.addCommand(doneCommand);
-			tb.addCommand(cancelCommand);
-			tb.setCommandListener(textBoxListener);
-		} else {
-			tb.setString(getString());
-		}
-		getOwner().currentDisplay.setCurrent(tb);
-
-		return true;
-	}
-
-	
 	int traverse(int gameKeyCode, int top, int bottom, boolean action) 
 	{
 		if (gameKeyCode == Canvas.UP) {
@@ -359,11 +328,11 @@ public class TextField extends Item
 			inputMethod.setConstraints(getConstraints());
 			inputMethod.setText(getString());
 			inputMethod.setMaxSize(getMaxSize());
-			setCaretPosition(getString().length());
 			setCaretVisible(true);
 		} else {
 			// unregister input listener
 			DeviceFactory.getDevice().getInputMethod().removeInputMethodListener(inputMethodListener);
+			setCaretVisible(false);
 		}
 	}
 

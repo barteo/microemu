@@ -47,9 +47,8 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
   {
     g = a_g;
     g.setBackground(((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor());
-		// TODO poprawic setFont	
-//    g.setFont(
-//        ((SwtFontManager) DeviceFactory.getDevice().getFontManager()).getFontMetrics(currentFont).getFont());
+    g.setFont(
+        ((SwtFontManager) DeviceFactory.getDevice().getFontManager()).getFont(currentFont));
   }
 
 
@@ -89,9 +88,8 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 	public void setFont(javax.microedition.lcdui.Font font)
 	{
 		currentFont = font;
-		// TODO poprawic setFont	
-//    g.setFont(
-//        ((SwtFontManager) DeviceFactory.getDevice().getFontManager()).getFontMetrics(currentFont).getFont());
+    g.setFont(
+        ((SwtFontManager) DeviceFactory.getDevice().getFontManager()).getFont(currentFont));
 	}
 
 
@@ -222,15 +220,15 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
       newy -= g.getFontMetrics().getHeight();
     }
     if ((anchor & javax.microedition.lcdui.Graphics.HCENTER) != 0) {
-      newx -= g.stringExtent(str).x / 2;
+      newx -= g.stringWidth(str) / 2;
     } else if ((anchor & javax.microedition.lcdui.Graphics.RIGHT) != 0) {
-      newx -= g.stringExtent(str).x;
+      newx -= g.stringWidth(str);
     }
 
     g.drawString(str, newx, newy, true);
     
     if ((currentFont.getStyle() & javax.microedition.lcdui.Font.STYLE_UNDERLINED) != 0) {
-      g.drawLine(newx, newy + 1, newx + g.stringExtent(str).x, newy + 1);
+      g.drawLine(newx, newy + 1, newx + g.stringWidth(str), newy + 1);
     }
   }
 

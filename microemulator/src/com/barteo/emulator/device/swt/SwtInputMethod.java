@@ -23,6 +23,7 @@ import java.util.Enumeration;
 
 import javax.microedition.lcdui.TextField;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 
 import com.barteo.emulator.MIDletBridge;
@@ -63,7 +64,8 @@ public class SwtInputMethod extends InputMethod implements Runnable
 			return true;
 		}
 
-		// TODO poprawic KeyEvent	
+		// TODO poprawic KeyEvent
+System.out.println("IM::commonKeyPressed:" + keyCode);			
 /*    if (keyCode == KeyEvent.VK_MODECHANGE) {
 			if (getInputMode() == InputMethod.INPUT_123) {
 				setInputMode(InputMethod.INPUT_ABC_UPPER);
@@ -82,9 +84,9 @@ public class SwtInputMethod extends InputMethod implements Runnable
 			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
 			inputMethodListener.caretPositionChanged(event);
 			return true;
-		}
+		}*/
 
-		if (keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_RIGHT) {
+/*		if (keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_RIGHT) {
 			synchronized (this) {
 				if (keyCode == KeyEvent.VK_LEFT && caret > 0) {
 					caret--;
@@ -98,9 +100,9 @@ public class SwtInputMethod extends InputMethod implements Runnable
 			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
 			inputMethodListener.caretPositionChanged(event);
 			return true;
-		}
+		}*/
 
-		if (keyCode == KeyEvent.VK_BACK_SPACE) {
+		if (keyCode == SWT.BS) {
 			synchronized (this) {
 				if (lastButton != null) {
 					caret++;
@@ -124,7 +126,7 @@ public class SwtInputMethod extends InputMethod implements Runnable
 			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
 			inputMethodListener.caretPositionChanged(event);
 			return true;
-		}*/
+		}
     
     return false;
   }
@@ -135,10 +137,11 @@ public class SwtInputMethod extends InputMethod implements Runnable
     if (commonKeyPressed(ev.keyCode)) {
       return; 
     }
-    
-/*    if (text.length() < maxSize && ev.getKeyChar() != KeyEvent.CHAR_UNDEFINED) {
+
+System.out.println("IM::keyboardKeyPressed:" + ev.keyCode +"+"+ ev.character);			    
+    if (text.length() < maxSize /*&& ev.character != KeyEvent.CHAR_UNDEFINED*/) {
       char[] test = new char[1];
-      test[0] = ev.getKeyChar();
+      test[0] = ev.character;
       test = filterConstraints(test);
       if (test.length > 0) {
   			synchronized (this) {
@@ -151,7 +154,7 @@ public class SwtInputMethod extends InputMethod implements Runnable
   				if (caret > 0) {
   					tmp += text.substring(0, caret);
   				}
-  				tmp += ev.getKeyChar();
+  				tmp += ev.character;
   				if (caret < text.length()) {
   					tmp += text.substring(caret);
   				}
@@ -163,7 +166,7 @@ public class SwtInputMethod extends InputMethod implements Runnable
   			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
   			inputMethodListener.caretPositionChanged(event);
       }
-    }*/
+    }
   }
 
 

@@ -32,11 +32,52 @@ public class SwtFontManager implements FontManager
   static String FACE_MONOSPACE_NAME = "Monospaced";
   static String FACE_PROPORTIONAL_NAME = "SansSerif";
   
-  static int SIZE_SMALL = 9;
-  static int SIZE_MEDIUM = 11;
-  static int SIZE_LARGE = 13;
+  static int SIZE_SMALL = 6;
+  static int SIZE_MEDIUM = 8;
+  static int SIZE_LARGE = 10;
   
+  Hashtable fonts = new Hashtable();
   Hashtable fontsMetrics = new Hashtable();
+  
+
+  org.eclipse.swt.graphics.Font getFont(javax.microedition.lcdui.Font meFont)
+  {
+		org.eclipse.swt.graphics.Font tmp = (org.eclipse.swt.graphics.Font) fonts.get(meFont);
+    
+		if (tmp == null) {
+		  String name = null;
+		  if (meFont.getFace() == javax.microedition.lcdui.Font.FACE_SYSTEM) {
+			name = FACE_SYSTEM_NAME;
+		  } else if (meFont.getFace() == javax.microedition.lcdui.Font.FACE_MONOSPACE) {
+			name = FACE_MONOSPACE_NAME;
+		  } else if (meFont.getFace() == javax.microedition.lcdui.Font.FACE_PROPORTIONAL) {
+			name = FACE_PROPORTIONAL_NAME;
+		  }
+		  int style = 0;
+		  if ((meFont.getStyle() & javax.microedition.lcdui.Font.STYLE_PLAIN) != 0) {
+			style |= java.awt.Font.PLAIN;
+		  }
+		  if ((meFont.getStyle() & javax.microedition.lcdui.Font.STYLE_BOLD) != 0) {
+			style |= java.awt.Font.BOLD;
+		  }
+		  if ((meFont.getStyle() & javax.microedition.lcdui.Font.STYLE_ITALIC) != 0) {
+			style |= java.awt.Font.ITALIC;
+		  }
+		  int size = 0;
+		  if (meFont.getSize() == javax.microedition.lcdui.Font.SIZE_SMALL) {
+			size = SIZE_SMALL;
+		  } else if (meFont.getSize() == javax.microedition.lcdui.Font.SIZE_MEDIUM) {
+			size = SIZE_MEDIUM;
+		  } else if (meFont.getSize() == javax.microedition.lcdui.Font.SIZE_LARGE) {
+			size = SIZE_LARGE;
+		  }
+	
+		  tmp =	SwtDeviceComponent.getFont(name, size, style);
+		  fonts.put(meFont, tmp);
+		}
+	    
+		return tmp;
+  }
   
 
   org.eclipse.swt.graphics.FontMetrics getFontMetrics(javax.microedition.lcdui.Font meFont)
@@ -81,17 +122,13 @@ public class SwtFontManager implements FontManager
 
 	public int charWidth(javax.microedition.lcdui.Font f, char ch)
 	{
-		// TODO poprawic pobieranie z font metrics	
-//		return getFontMetrics(f).charWidth(ch);
-		return -1;
+		return charsWidth(f, new char[] {ch}, 0, 1);
 	}
 
 
   public int charsWidth(javax.microedition.lcdui.Font f, char[] ch, int offset, int length)
   {
-		// TODO poprawic pobieranie font metrics	
-//    return getFontMetrics(f).charsWidth(ch, offset, length);
-		return -1;
+		return SwtDeviceComponent.stringWidth(getFont(f), new String(ch, offset, length));
   }
 
 
@@ -109,9 +146,7 @@ public class SwtFontManager implements FontManager
 
 	public int stringWidth(javax.microedition.lcdui.Font f, String str)
 	{
-		// TODO poprawic pobieranie font metrics	
-//		return getFontMetrics(f).stringWidth(str);
-		return -1;
+		return SwtDeviceComponent.stringWidth(getFont(f), str);
 	}
 
 }

@@ -121,11 +121,9 @@ public class SwtDeviceComponent extends Canvas
 
 	MouseMoveListener mouseMoveListener = new MouseMoveListener() 
 	{
-		// TODO poprawic mouseDragged	
-/*		public void mouseDragged(MouseEvent e)
+		public void mouseDragged(MouseEvent e)
 		{
-			overButton = getButton(e.x, e.y);
-		}*/
+		}
 
 		public void mouseMove(MouseEvent e)
 		{
@@ -246,7 +244,6 @@ public class SwtDeviceComponent extends Canvas
 	{
 		for (Enumeration e = ((SwtDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
 			SwtButton button = (SwtButton) e.nextElement();
-System.out.println(ev.keyCode +"+"+ ev.character +"+"+ button.isChar(ev.character));			
 			if (ev.keyCode == button.getKey()) {
 				return button;
 			}
@@ -296,9 +293,22 @@ System.out.println(ev.keyCode +"+"+ ev.character +"+"+ button.isChar(ev.characte
 	{
 		ImageData data = new ImageData(is);
 		
-		RGB[] rgbs = data.getRGBs();	
-		for (int i = 0; i < rgbs.length; i++) {
-			rgbs[i] = filter.filterRGB(0, 0, rgbs[i]);
+		RGB[] rgbs = data.getRGBs();
+		if (rgbs != null) {	
+			for (int i = 0; i < rgbs.length; i++) {
+				rgbs[i] = filter.filterRGB(0, 0, rgbs[i]);
+			}
+		} else {
+			RGB rgb;
+			int pixel;
+			for (int y = 0; y < data.height; y++) {
+				for (int x = 0; x < data.width; x++) {
+					pixel = data.getPixel(x, y);
+					rgb = new RGB((pixel >> 16) & 255, (pixel >> 8) & 255, pixel & 255);
+					rgb = filter.filterRGB(x, y, rgb);					
+					data.setPixel(x, y, (rgb.red << 16) + (rgb.green << 8) + rgb.blue);
+				}
+			}
 		}		
 			
 		CreateImageRunnable createImageRunnable = instance.new CreateImageRunnable(data);		
@@ -364,7 +374,74 @@ System.out.println(ev.keyCode +"+"+ ev.character +"+"+ button.isChar(ev.characte
 			SwtGraphics gc = new SwtGraphics(instance.getParent().getDisplay());
 			gc.setFont(new Font(instance.getParent().getDisplay(), name, size, style));
 			fontMetrics = gc.getFontMetrics();
+			gc.dispose();
 		}		
+	}
+
+
+	private class GetFontRunnable implements Runnable
+	{
+		private String name;
+		private int size;
+		private int style;
+		private Font font;
+		
+		GetFontRunnable(String name, int size, int style)
+		{
+			this.name = name;
+			this.size = size;
+			this.style = style;
+		}
+		
+		Font getFont()
+		{
+			return font;
+		}
+			
+		public void run() 
+		{
+			SwtGraphics gc = new SwtGraphics(instance.getParent().getDisplay());
+			gc.setFont(new Font(instance.getParent().getDisplay(), name, size, style));
+			font = gc.getFont();
+			gc.dispose();
+		}		
+	}
+
+
+	private class StringWidthRunnable implements Runnable
+	{
+		private Font font;
+		private String str;
+		private int stringWidth;
+		
+		StringWidthRunnable(Font font, String str)
+		{
+			this.font = font;
+			this.str = str;
+		}
+		
+		int stringWidth()
+		{
+			return stringWidth;
+		}
+			
+		public void run() 
+		{
+			SwtGraphics gc = new SwtGraphics(instance.getParent().getDisplay());
+			gc.setFont(font);
+			stringWidth = gc.stringWidth(str);
+			gc.dispose();
+		}		
+	}
+
+
+	public static Font getFont(String name, int size, int style) 
+	{
+		GetFontRunnable getFontRunnable = instance.new GetFontRunnable(name, size, style);
+		
+		instance.getDisplay().syncExec(getFontRunnable); 
+		
+		return getFontRunnable.getFont(); 
 	}
 
 
@@ -375,6 +452,16 @@ System.out.println(ev.keyCode +"+"+ ev.character +"+"+ button.isChar(ev.characte
 		instance.getDisplay().syncExec(getFontMetricsRunnable); 
 		
 		return getFontMetricsRunnable.getFontMetrics(); 
+	}
+	
+	
+	public static int stringWidth(Font font, String str)
+	{
+		StringWidthRunnable stringWidthRunnable = instance.new StringWidthRunnable(font, str);
+		
+		instance.getDisplay().syncExec(stringWidthRunnable); 
+
+		return stringWidthRunnable.stringWidth(); 
 	}
   
 }

@@ -173,22 +173,25 @@ public class Display
 		
 		public void run()
 		{
+			Vector jobs;		
+				
 			while (true) {
-				if (!repaintPending) {
-					Vector jobs = null;			
-					synchronized (paintLock) {
+				jobs = null;
+				synchronized (paintLock) {
+					if (!repaintPending) {
 						if (events.size() > 0) {
 							jobs = (Vector) events.clone();
 							events.removeAllElements();
 						}
 					}
-					if (jobs != null) {
-						for (Enumeration en = jobs.elements(); en.hasMoreElements(); ) {
-							((Runnable) en.nextElement()).run(); 
-						}
-					}
 				}
 				
+				if (jobs != null) {
+					for (Enumeration en = jobs.elements(); en.hasMoreElements(); ) {
+						((Runnable) en.nextElement()).run(); 
+					}
+				}
+
 				try {
 					synchronized (paintLock) {
 						if (events.size() == 0) {

@@ -113,6 +113,13 @@ public class Display
     {
       getDisplay().updateCommands();
     }
+
+		public void clean()
+		{
+			if (current != null) {
+				current.hideNotify();
+			}
+		}
 	}
 
 

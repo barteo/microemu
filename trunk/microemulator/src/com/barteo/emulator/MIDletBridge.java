@@ -25,6 +25,7 @@ package com.barteo.emulator;
 import java.util.Hashtable;
 
 import javax.microedition.midlet.MIDlet;
+import javax.microedition.midlet.MIDletStateChangeException;
 
 
 public class MIDletBridge 
@@ -57,7 +58,14 @@ public class MIDletBridge
   
   public static void setCurrentMIDlet(MIDlet a_midlet)
   {
-    currentMIDlet = a_midlet;    
+  	if (currentMIDlet != null) {
+			try {
+				MIDletBridge.getMIDletAccess(currentMIDlet).destroyApp(true);
+			} catch (MIDletStateChangeException ex) {
+				System.err.println(ex);
+			}
+  	}
+    currentMIDlet = a_midlet;   
   }
 
   

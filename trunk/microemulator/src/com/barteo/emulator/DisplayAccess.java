@@ -44,4 +44,6 @@ public interface DisplayAccess
   
   void updateCommands();
 
+	void clean();
+
 }

@@ -20,7 +20,7 @@
     <!-- <property name="mylib" value="../lib/mylib.jar"/> -->
   </target>
 
-  <target depends="init" name="compile">
+  <target name="compile" depends="init">
     <mkdir dir="./classes"/>
     <!-- Both srcdir and destdir should be package roots. -->
     <!-- They could be different of course; in that case NetBeans can also be set -->
@@ -28,7 +28,7 @@
     <javac debug="true" deprecation="true" destdir="./classes" srcdir="./src"/>
   </target>
 
-  <target depends="init,compile" name="jar">
+  <target name="jar" depends="init,compile">
     <jar compress="true" jarfile="microemulator.jar">
       <fileset dir="./classes">
         <exclude name="com/barteo/midp/examples/**"/>
@@ -52,10 +52,10 @@
     </jar>
   </target>
 
-  <target depends="init,jar" description="Build everything." name="all">
+  <target name="all" depends="init,jar" description="Build everything.">
   </target>
 
-  <target depends="init,all" description="Try running it." name="test">
+  <target name="test" depends="init,all" description="Try running it.">
     <java classname="com.barteo.emulator.MicroEmulator" failonerror="true" fork="true">
       <classpath>
         <pathelement location="microemulator.jar"/>
@@ -65,23 +65,24 @@
     </java>
   </target>
 
-  <target depends="init" description="Javadoc for my API." name="javadoc">
+  <target name="javadoc" depends="init" description="Javadoc for my API.">
     <mkdir dir="apidoc"/>
     <javadoc destdir="apidoc" packagenames="javax.microedition.*" sourcepath="src"/>
   </target>
 
-  <target depends="init,jar" description="Create distribution package" name="dist">
+  <target name="dist" depends="init,jar" description="Create distribution package">
     <mkdir dir="dist"/>
     <tar basedir="../." tarfile="dist/microemulator.tar">
       <exclude name="microemulator/**/.*"/>
       <exclude name="microemulator/classes/**"/>
       <exclude name="microemulator/dist/*"/>
+      <exclude name="microemulator/doc/**"/>
     </tar>
     <gzip src="dist/microemulator.tar" zipfile="dist/microemulator.tar.gz"/>
     <delete file="dist/microemulator.tar"/>
   </target>
 
-  <target depends="init" description="Clean all build products." name="clean">
+  <target name="clean" depends="init" description="Clean all build products.">
     <delete>
       <fileset dir=".">
         <include name="**/*.class"/>

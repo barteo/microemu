@@ -32,6 +32,14 @@ public class JadProperties extends Properties
   Vector midletEntries = null;
   
 
+  public void clear()
+  {
+    super.clear();
+    
+    midletEntries = null;
+  }
+
+  
   public String getName()
   {
     return getProperty("MIDlet-Name");
@@ -65,6 +73,12 @@ public class JadProperties extends Properties
   public String getJarURL()
   {
     return getProperty("MIDlet-Jar-URL");
+  }
+  
+  
+  public int getJarSize()
+  {
+    return Integer.parseInt(getProperty("MIDlet-Jar-Size"));
   }
   
   

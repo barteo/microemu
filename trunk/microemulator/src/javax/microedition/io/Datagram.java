@@ -27,23 +27,23 @@ import java.io.IOException;
 public interface Datagram extends DataInput, DataOutput
 {
 
-	public String getAddress();
+	String getAddress();
 	
-	public byte[] getData();
+	byte[] getData();
 	
-	public int getLength();
+	int getLength();
+
+	int getOffset();
 	
-	public int getOffset();
-	
-	public void setAddress(String addr)
+	void setAddress(String addr)
 			throws IOException;
 	
-	public void setAddress(Datagram reference);
+	void setAddress(Datagram reference);
 	
-	public void setLength(int len);
+	void setLength(int len);
 	
-	public void setData(byte[] buffer, int offset, int len);
+	void setData(byte[] buffer, int offset, int len);
 	
-	public void reset();
+	void reset();
 
 }

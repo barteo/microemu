@@ -50,6 +50,12 @@ public class MIDletBridge
   }  
 
   
+  public static String getAppProperty(String key)
+  {
+    return emulator.getAppProperty(key);
+  }
+
+    
   public static void notifyDestroyed()
   {
     emulator.notifyDestroyed();

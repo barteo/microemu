@@ -28,6 +28,9 @@ public abstract class Displayable
 
 	Display currentDisplay = null;
 
+    /**
+     * @associates Command 
+     */
 	Vector commands = new Vector();
 	CommandListener listener = null;
 

@@ -23,6 +23,8 @@ package com.barteo.emulator;
 public interface MicroEmulator
 {
   
+  public String getAppProperty(String key);
+  
   public void notifyDestroyed();
     
 }

@@ -27,29 +27,29 @@ public interface Choice {
   static final int IMPLICIT = 3;
   
 
-  public int append(String stringPart, Image imagePart);
+  int append(String stringPart, Image imagePart);
     
-  public void delete(int elementNum);
+  void delete(int elementNum);
   
-  public Image getImage(int elementNum);
+  Image getImage(int elementNum);
     
-  public int getSelectedFlags(boolean[] selectedArray_return);
+  int getSelectedFlags(boolean[] selectedArray_return);
   
-  public int getSelectedIndex();
+  int getSelectedIndex();
   
-  public String getString(int elementNum);
+  String getString(int elementNum);
     
-  public void insert(int elementNum, String stringPart, Image imagePart);
+  void insert(int elementNum, String stringPart, Image imagePart);
   
-  public boolean isSelected(int elementNum);
+  boolean isSelected(int elementNum);
   
-  public void set(int elementNum, String stringPart, Image imagePart);
+  void set(int elementNum, String stringPart, Image imagePart);
   
-  public void setSelectedFlags(boolean[] selectedArray);
+  void setSelectedFlags(boolean[] selectedArray);
   
-  public void setSelectedIndex(int elementNum, boolean selected);
+  void setSelectedIndex(int elementNum, boolean selected);
   
-  public int size();
+  int size();
   
 }
 

@@ -19,6 +19,7 @@
  
 package com.barteo.emulator.app;
 
+import javax.swing.DebugGraphics;
 import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -38,8 +39,6 @@ import com.barteo.midp.lcdui.InputMethod;
 
 public class SwingDisplayComponent extends JPanel implements com.barteo.midp.lcdui.DisplayComponent
 {
-  Container parent;
-
   Image up_arrow, down_arrow;
   Image input_123, input_abc_upper, input_abc_lower;
   boolean scrollUp = false;
@@ -48,14 +47,9 @@ public class SwingDisplayComponent extends JPanel implements com.barteo.midp.lcd
 	Image offi;
 	Graphics offg;
 
-  /**
-   *  Constructor for the DisplayComponent object
-   *
-   *@param  a_parent  Description of Parameter
-   */
-  public SwingDisplayComponent(Container a_parent) 
+
+  public SwingDisplayComponent() 
   {
-    parent = a_parent;
     DisplayBridge.setComponent(this);
     setBackground(Device.backgroundColor);
 
@@ -72,33 +66,18 @@ public class SwingDisplayComponent extends JPanel implements com.barteo.midp.lcd
   }
 
 
-  /**
-   *  Sets the scrollDown attribute of the DisplayComponent object
-   *
-   *@param  state  The new scrollDown value
-   */
   public void setScrollDown(boolean state) 
   {
     scrollDown = state;
   }
 
 
-  /**
-   *  Sets the scrollUp attribute of the DisplayComponent object
-   *
-   *@param  state  The new scrollUp value
-   */
   public void setScrollUp(boolean state) 
   {
     scrollUp = state;
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@param  g  Description of Parameter
-   */
   public void paint(Graphics g) 
   {
     if (offg == null) {

@@ -27,10 +27,10 @@ import java.io.IOException;
 public interface InputConnection extends Connection
 {
 
-	public InputStream openInputStream()
+	InputStream openInputStream()
       throws IOException;
       
-  public DataInputStream openDataInputStream()
+  DataInputStream openDataInputStream()
       throws IOException;
 
 }

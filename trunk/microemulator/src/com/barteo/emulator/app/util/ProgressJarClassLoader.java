@@ -33,7 +33,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 
-public class ProgressJarClassLoader extends URLClassLoader
+public class ProgressJarClassLoader extends ClassLoader
 {
   Hashtable entries = new Hashtable();
 
@@ -41,16 +41,10 @@ public class ProgressJarClassLoader extends URLClassLoader
   
   ProgressListener listener;
   
-  public ProgressJarClassLoader()
+
+  public void addRepository(URL url, int size)
   {
-    super(new URL[0]);
-  }
-  
-  
-  public void addRepository(URL url)
-  {
-    super.addURL(url);
-    notLoadedRepositories.add(url);
+    notLoadedRepositories.add(new RepositoryEntry(url, size));
   }
 
 
@@ -104,10 +98,10 @@ public class ProgressJarClassLoader extends URLClassLoader
   }
   
   
-  private void fireProgressListener()
+  private void fireProgressListener(ProgressEvent event)
   {
     if (listener != null) {
-      listener.stateChanged();
+      listener.stateChanged(event);
     }
   }
   
@@ -115,11 +109,13 @@ public class ProgressJarClassLoader extends URLClassLoader
   private synchronized void loadRepositories()
   {
     for (Enumeration en = notLoadedRepositories.elements(); en.hasMoreElements(); ) {
-      URL url = (URL) en.nextElement();
+      RepositoryEntry repositoryEntry = (RepositoryEntry) en.nextElement();
       byte[] cache = new byte[1024];
+      ProgressEvent event = new ProgressEvent();
+      int progress = 0;
     
       try {
-        URLConnection conn = url.openConnection();
+        URLConnection conn = repositoryEntry.url.openConnection();
         JarInputStream jis = new JarInputStream(conn.getInputStream());
         while (true) {
           JarEntry entry = jis.getNextJarEntry();          
@@ -139,7 +135,10 @@ public class ProgressJarClassLoader extends URLClassLoader
               byte[] tmp = new byte[i];
               System.arraycopy(cache, 0, tmp, 0, i);
               entries.put(entry.getName(), tmp);
-              fireProgressListener();
+              progress += entry.getCompressedSize();
+              event.setCurrent(progress);
+              event.setMax(repositoryEntry.size);
+              fireProgressListener(event);
             }
           } else {
             break;
@@ -148,8 +147,23 @@ public class ProgressJarClassLoader extends URLClassLoader
       } catch (IOException ex) {
         System.err.println(ex);
       }
-      notLoadedRepositories.remove(url);
+      notLoadedRepositories.remove(repositoryEntry);
     }    
+  }
+  
+  
+  class RepositoryEntry
+  {
+    URL url;
+    int size;
+    
+    
+    RepositoryEntry(URL url, int size)
+    {
+      this.url = url;
+      this.size = size;
+    }
+    
   }
 
 }

@@ -180,7 +180,7 @@ public class Display
 			current.showNotify(this);
 			dispBridge.setScrollUp(false);
 			dispBridge.setScrollDown(false);
-			dispBridge.updateCommands(current.getCommands());
+			DisplayBridge.updateCommands(current.getCommands());
 
 			current.repaint();
 		}
@@ -194,7 +194,7 @@ public class Display
 		current = alert;
 
 		current.showNotify(this);
-		dispBridge.updateCommands(current.getCommands());
+		DisplayBridge.updateCommands(current.getCommands());
 		current.repaint();
 
 		if (alert.getTimeout() != Alert.FOREVER) {
@@ -249,7 +249,7 @@ public class Display
 	void repaint()
 	{
     if (current != null) {
-			dispBridge.repaint();
+			DisplayBridge.repaint();
     }
   }
     
@@ -257,14 +257,14 @@ public class Display
   void repaint(Displayable d)
 	{
 		if (current == d) {
-			dispBridge.repaint();
+			DisplayBridge.repaint();
 		}
 	}
 
 
 	void updateCommands()
 	{
-		dispBridge.updateCommands(current.getCommands());
+		DisplayBridge.updateCommands(current.getCommands());
 	}
 
 }

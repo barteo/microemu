@@ -77,7 +77,7 @@ public abstract class MIDlet
 
   public final String getAppProperty(String key)
   {
-    return null;
+    return MIDletBridge.getAppProperty(key);
   }
 
 

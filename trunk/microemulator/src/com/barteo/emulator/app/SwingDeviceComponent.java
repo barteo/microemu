@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2001,2002 Bartek Teodorczyk <barteo@it.pl>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -16,55 +16,41 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
-package com.barteo.emulator.applet;
 
-import java.applet.Applet;
+package com.barteo.emulator.app;
+
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Enumeration;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.Display;
-import javax.microedition.midlet.MIDlet;
-import javax.microedition.midlet.MIDletStateChangeException;
-
 import com.barteo.emulator.Button;
-import com.barteo.emulator.MicroEmulator;
-import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.SoftButton;
 import com.barteo.emulator.XYConstraints;
 import com.barteo.emulator.XYLayout;
 import com.barteo.emulator.device.Device;
 import com.barteo.midp.lcdui.CommandManager;
-import com.barteo.midp.lcdui.FontManager;
 import com.barteo.midp.lcdui.InputMethod;
 
 
-public class Main extends Applet implements MicroEmulator
+public class SwingDeviceComponent extends JPanel
 {
-  MIDlet midlet;
+	SwingDisplayComponent dc;
 
-	AWTDisplayComponent dc;
-
-  Font defaultFont;
-  
   Button prevOverButton;
   Button overButton;
   Button pressedButton;
-
+  
 	Image offi;
 	Graphics offg;
-
+      
   MouseAdapter mouseListener = new MouseAdapter() 
   {
     
@@ -141,108 +127,18 @@ public class Main extends Applet implements MicroEmulator
   };
 
   
-  public void init()
+  public SwingDeviceComponent() 
   {
-    defaultFont = new Font("SansSerif", Font.PLAIN, 11);
-    setFont(defaultFont);
-    FontManager.getInstance().setDefaultFontMetrics(getFontMetrics(defaultFont));
-    
-    MIDletBridge.setMicroEmulator(this);
-
-    if (!Device.getInstance().isInitialized()) {
-      return;
-    }
-      
     XYLayout xy = new XYLayout();
     setLayout(xy);
 
-    dc = new AWTDisplayComponent(this);
-    add(dc, new XYConstraints(Device.screenRectangle));
-
+    dc = new SwingDisplayComponent();
+    add(dc, new XYConstraints(Device.screenRectangle));    
 
     addMouseListener(mouseListener);
     addMouseMotionListener(mouseMotionListener);
-    
-		String midletName = getParameter("midlet");
-		if (midletName == null) {
-			System.out.println("There is no midlet parameter");
-			return;
-		}
-
-    Class midletClass;
-		try {
-			midletClass = Class.forName(midletName);
-		} catch (ClassNotFoundException ex) {
-			System.out.println("Cannot find " + midletName + " MIDlet class");
-			return;
-		}
-
-    try {
-      midlet = (MIDlet) midletClass.newInstance();
-    } catch (Exception ex) {
-      System.out.println("Cannot initialize " + midletClass + " MIDlet class");
-      System.out.println(ex);        
-      return;
-    }
-
-    resize(Device.deviceRectangle.getSize());
-    
-    return;
   }
-
-
-  public void start()
-	{
-    try {
-      MIDletBridge.getAccess(midlet).startApp();
-		} catch (MIDletStateChangeException ex) {
-      System.err.println(ex);
-		}
-  }
-
-
-	public void stop() 
-  {
-    MIDletBridge.getAccess(midlet).pauseApp();
-  }
-
-
-	public void destroy()
-	{
-    try {
-			MIDletBridge.getAccess(midlet).destroyApp(true);
-		} catch (MIDletStateChangeException ex) {
-  		System.err.println(ex);
-		}
-	}
-
-
-  public String getAppProperty(String key)
-  {
-    return null;
-  }
-
   
-  public void notifyDestroyed()
-  {
-  }
-
-  
-  public String getAppletInfo()
-	{
-    return "Title: MicroEmulator \nAuthor: Bartek Teodorczyk, 2001";
-  }
-
-
-  public String[][] getParameterInfo()
-	{
-    String[][] info = {
-		    {"midlet", "MIDlet class name", "The MIDlet class name. This field is mandatory."},
-    };
-
-		return info;
-  }
-
 
   public void paint(Graphics g) 
   {
@@ -252,6 +148,9 @@ public class Main extends Applet implements MicroEmulator
 			offg = offi.getGraphics();
     }
 
+    Dimension size = getSize();
+    offg.setColor(UIManager.getColor("text"));
+    offg.fillRect(0, 0, size.width, size.height);
     offg.drawImage(Device.normalImage, 0, 0, this);
     
     offg.translate(Device.screenRectangle.x, Device.screenRectangle.y);
@@ -287,7 +186,7 @@ public class Main extends Applet implements MicroEmulator
 	{
 		paint(g);
 	}
-
+ 
   
   Button getButton(int x, int y)
   {

@@ -25,7 +25,7 @@ import java.io.IOException;
 public interface Connection
 {
 
-	public void close()
+	void close()
 			throws IOException;
 
 }

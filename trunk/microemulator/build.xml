@@ -87,14 +87,42 @@
 
   <target name="dist" depends="init,jar" description="Create distribution package">
     <mkdir dir="dist"/>
-    <tar basedir="../." tarfile="dist/microemulator.tar">
+
+    <tar basedir="../." tarfile="dist/microemulator-src.tar">
       <exclude name="microemulator/**/.*"/>
+      <exclude name="microemulator/*.jar"/>
       <exclude name="microemulator/classes/**"/>
       <exclude name="microemulator/dist/*"/>
       <exclude name="microemulator/doc/**"/>
     </tar>
-    <gzip src="dist/microemulator.tar" zipfile="dist/microemulator.tar.gz"/>
-    <delete file="dist/microemulator.tar"/>
+    <gzip src="dist/microemulator-src.tar" zipfile="dist/microemulator-src.tar.gz"/>
+    <delete file="dist/microemulator-src.tar"/>
+
+    <tar basedir="../." tarfile="dist/microemulator-applet.tar">
+      <exclude name="microemulator/**/.*"/>
+      <exclude name="microemulator/build.xml"/>
+      <exclude name="microemulator/me-app.jar"/>
+      <exclude name="microemulator/classes/**"/>
+      <exclude name="microemulator/dist/*"/>
+      <exclude name="microemulator/doc/**"/>
+      <exclude name="microemulator/res/**"/>
+      <exclude name="microemulator/src/**"/>
+    </tar>
+    <gzip src="dist/microemulator-applet.tar" zipfile="dist/microemulator-applet.tar.gz"/>
+    <delete file="dist/microemulator-applet.tar"/>
+
+    <tar basedir="../." tarfile="dist/microemulator-app.tar">
+      <exclude name="microemulator/**/.*"/>
+      <exclude name="microemulator/build.xml"/>
+      <exclude name="microemulator/me-applet.jar"/>
+      <exclude name="microemulator/classes/**"/>
+      <exclude name="microemulator/dist/*"/>
+      <exclude name="microemulator/doc/**"/>
+      <exclude name="microemulator/res/**"/>
+      <exclude name="microemulator/src/**"/>
+    </tar>
+    <gzip src="dist/microemulator-app.tar" zipfile="dist/microemulator-app.tar.gz"/>
+    <delete file="dist/microemulator-app.tar"/>
   </target>
 
   <target name="clean" depends="init" description="Clean all build products.">

@@ -26,7 +26,9 @@ import java.util.Vector;
 
 public class RecordStore 
 {
-
+  /**
+   * @associates RecordStore 
+   */
   private static Hashtable recordStores = new Hashtable();
   
   private String name;
@@ -34,6 +36,10 @@ public class RecordStore
   private int version = 0;
   private long lastModified = 0;
   private int nextRecordID = 0;
+
+  /**
+   * @associates RecordListener 
+   */
   private Vector recordListeners = new Vector();
   private Hashtable records = new Hashtable();
   
@@ -339,6 +345,9 @@ public class RecordStore
     RecordComparator comparator;
     boolean keepUpdated;
     
+    /**
+     * @associates EnumerationRecord 
+     */
     Vector enumerationRecords = new Vector();
     int currentRecord;
     

@@ -23,33 +23,33 @@ package javax.microedition.rms;
 public interface RecordEnumeration
 {
 
-  public int numRecords();
+  int numRecords();
   
-  public byte[] nextRecord()
+  byte[] nextRecord()
       throws InvalidRecordIDException, RecordStoreNotOpenException, RecordStoreException;
   
-  public int nextRecordId()
+  int nextRecordId()
       throws InvalidRecordIDException;
   
-  public byte[] previousRecord()
+  byte[] previousRecord()
       throws InvalidRecordIDException, RecordStoreNotOpenException, RecordStoreException;
   
-  public int previousRecordId()
+  int previousRecordId()
       throws InvalidRecordIDException;
   
-  public boolean hasNextElement();
+  boolean hasNextElement();
   
-  public boolean hasPreviousElement();
+  boolean hasPreviousElement();
   
-  public void reset();
+  void reset();
   
-  public void rebuild();
+  void rebuild();
   
-  public void keepUpdated(boolean keepUpdated);
+  void keepUpdated(boolean keepUpdated);
   
-  public boolean isKeptUpdated();
+  boolean isKeptUpdated();
   
-  public void destroy();
+  void destroy();
 
 }
 

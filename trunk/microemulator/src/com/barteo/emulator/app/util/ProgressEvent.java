@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2001,2002 Bartek Teodorczyk <barteo@it.pl>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -16,16 +16,37 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
-package javax.microedition.io;
 
-import java.io.IOException;
+package com.barteo.emulator.app.util;
 
 
-public interface StreamConnectionNotifier extends Connection
+public class ProgressEvent 
 {
-	
-	StreamConnection acceptAndOpen()
-			throws IOException;
-                               
+  int current;
+  int max;
+
+
+  public int getCurrent()
+  {
+    return current;
+  }
+  
+  
+  public void setCurrent(int current)
+  {
+    this.current = current;
+  }
+  
+  
+  public int getMax()
+  {
+    return max;
+  }
+  
+  
+  public void setMax(int max)
+  {
+    this.max = max;
+  }
+
 }

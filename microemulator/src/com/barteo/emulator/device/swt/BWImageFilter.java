@@ -19,14 +19,13 @@
  
 package com.barteo.emulator.device.swt;
 
-import java.awt.image.RGBImageFilter;
-
 import org.eclipse.swt.graphics.Color;
 
+import com.barteo.emulator.app.ui.swt.ImageFilter;
 import com.barteo.emulator.device.DeviceFactory;
 
 
-public final class BWImageFilter extends RGBImageFilter
+public final class BWImageFilter implements ImageFilter
 {
 
   private double Yr, Yg, Yb;
@@ -43,16 +42,12 @@ public final class BWImageFilter extends RGBImageFilter
     this.Yr = Yr;
     this.Yg = Yg;
     this.Yb = Yb;
-    canFilterIndexColorModel = true;
   }
 
 
-  public int filterRGB (int x, int y, int rgb)
+  public int filterRGB (int x, int y, int r, int g, int b)
 	{
-    int a = (rgb & 0xFF000000);
-    int r = (rgb & 0x00FF0000) >>> 16;
-    int g = (rgb & 0x0000FF00) >>> 8;
-    int b = (rgb & 0x000000FF);
+    int a = 0;
     int Y = (int)(Yr * r + Yg * g + Yb * b);
     if (Y > 127) {
     	Color tmp = ((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor();

@@ -27,6 +27,7 @@ import javax.microedition.lcdui.Image;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
 
+import com.barteo.emulator.app.ui.swt.ImageFilter;
 import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
 import com.barteo.emulator.app.ui.swt.SwtGraphics;
 import com.barteo.emulator.device.DeviceDisplay;
@@ -59,7 +60,7 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
   
   public void setColor(int RGB) 
   {
-		java.awt.image.RGBImageFilter filter = null;
+		ImageFilter filter = null;
     color = RGB;
     
     DeviceDisplay deviceDisplay = DeviceFactory.getDevice().getDeviceDisplay();
@@ -73,7 +74,8 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
       }
     }
 
-    g.setForeground(SwtDeviceComponent.createColor(filter.filterRGB(0, 0, RGB)));
+    g.setForeground(SwtDeviceComponent.createColor(
+    		filter.filterRGB(0, 0, (color >> 16) % 256, (color >> 8) % 256, color % 256)));
   }
 
 

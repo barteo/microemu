@@ -37,7 +37,9 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
@@ -259,12 +261,12 @@ System.out.println(ev.keyCode +"+"+ ev.character +"+"+ button.isChar(ev.characte
 	
 	private class CreateImageRunnable implements Runnable
 	{
-		private InputStream is;
+		private ImageData data;
 		private Image image;
 		
-		CreateImageRunnable(InputStream is)
+		CreateImageRunnable(ImageData data)
 		{
-			this.is = is;
+			this.data = data;
 		}
 		
 		Image getImage()
@@ -274,15 +276,36 @@ System.out.println(ev.keyCode +"+"+ ev.character +"+"+ button.isChar(ev.characte
 			
 		public void run() 
 		{
-			image = new Image(instance.getParent().getDisplay(), is);
+			image = new Image(instance.getParent().getDisplay(), data);
 		}		
 	}
 
 
 	public static Image createImage(InputStream is) 
 	{
-		CreateImageRunnable createImageRunnable = instance.new CreateImageRunnable(is);
+		ImageData data = new ImageData(is);
+			
+		CreateImageRunnable createImageRunnable = instance.new CreateImageRunnable(data);		
+		instance.getDisplay().syncExec(createImageRunnable); 
 		
+		return createImageRunnable.getImage(); 
+	}
+	
+	
+	public static Image createImage(InputStream is, ImageFilter filter) 
+	{
+		ImageData data = new ImageData(is);
+		
+		RGB[] rgbs = data.getRGBs();	
+		RGB rgb;
+		for (int y = 0; y < data.height; y++) {
+			for (int x = 0; x < data.width; x++) {
+				rgb = rgbs[data.getPixel(x, y)];
+				data.setPixel(x, y, filter.filterRGB(x, y, rgb.red, rgb.green, rgb.blue));
+			}
+		}
+			
+		CreateImageRunnable createImageRunnable = instance.new CreateImageRunnable(data);		
 		instance.getDisplay().syncExec(createImageRunnable); 
 		
 		return createImageRunnable.getImage(); 

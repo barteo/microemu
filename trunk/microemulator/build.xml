@@ -38,7 +38,7 @@
         <exclude name="**/.*"/>
       </fileset>
     </jar>
-    <copy file="./simpledemo.jad" todir="./target"/>
+    <copy file="./misc/simpledemo.jad" todir="./target"/>
   </target>
 
   <target depends="init,compile" name="jar-applet">
@@ -74,8 +74,8 @@
   <target depends="init,jar-app" name="webstart">
     <copy file="./target/me-app.jar" tofile="./target/me-webstart.jar"/>
     <signjar jar="./target/me-webstart.jar" alias="secret" storepass="secret"/>
-    <copy file="./webstart.html" todir="./target"/>
-    <copy file="./microemulator.jnlp" todir="./target"/>
+    <copy file="./misc/webstart.html" todir="./target"/>
+    <copy file="./misc/microemulator.jnlp" todir="./target"/>
   </target>
 
   <target depends="init,jar-app,jar-device" description="Build everything." name="all">
@@ -148,12 +148,12 @@
     <tar basedir="../." tarfile="dist/microemulator-applet.tar">
       <exclude name="microemulator/**/.*"/>
       <exclude name="microemulator/build.xml"/>
-      <exclude name="microemulator/simpledemo.jad"/>
       <exclude name="microemulator/build/**"/>
       <exclude name="microemulator/devices/**"/>
       <exclude name="microemulator/dist/**"/>
       <exclude name="microemulator/doc/**"/>
       <exclude name="microemulator/lib/**"/>
+      <exclude name="microemulator/misc/**"/>
       <exclude name="microemulator/res/**"/>
       <exclude name="microemulator/src/**"/>
       <exclude name="microemulator/target/me-app.jar"/>

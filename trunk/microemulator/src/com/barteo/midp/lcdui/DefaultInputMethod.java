@@ -37,7 +37,8 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 			KeyEvent.VK_6,
 			KeyEvent.VK_7,
 			KeyEvent.VK_8,
-			KeyEvent.VK_9
+			KeyEvent.VK_9,
+      KeyEvent.VK_MULTIPLY
 	};
 
 	char[][] abcUpperKeys = {
@@ -50,7 +51,8 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 			{ 'M', 'N', 'O', '6' },
 			{ 'P', 'Q', 'R', 'S', '7' },
 			{ 'T', 'U', 'V', '8' },
-			{ 'W', 'X', 'Y', 'Z', '9' }
+			{ 'W', 'X', 'Y', 'Z', '9' },
+      { '*' }
 	};
 
 	char[][] abcLowerKeys = {
@@ -63,7 +65,8 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 			{ 'm', 'n', 'o', '6' },
 			{ 'p', 'q', 'r', 's', '7' },
 			{ 't', 'u', 'v', '8' },
-			{ 'w', 'x', 'y', 'z', '9' }
+			{ 'w', 'x', 'y', 'z', '9' },
+      { '*' }      
 	};
 
 	char[][] numericKeys = {
@@ -76,7 +79,8 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 			{ '6' },
 			{ '7' },
 			{ '8' },
-			{ '9' }
+			{ '9' },
+			{ '.' }
 	};
 
 	int lastKeyIndex = -1;

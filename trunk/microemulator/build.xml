@@ -53,11 +53,7 @@
 
   <target name="javadoc" depends="init" description="Javadoc for my API.">
     <mkdir dir="apidoc"/>
-    <javadoc destdir="apidoc" packagenames="com.foo.mylib.*,com.foo.myapi.*">
-      <sourcepath>
-        <pathelement location="."/>
-      </sourcepath>
-    </javadoc>
+    <javadoc packagenames="javax.microedition.*" sourcepath="src" destdir="apidoc"/>
   </target>
 
   <target name="dist" depends="init,jar" description="Create distribution package">

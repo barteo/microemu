@@ -100,18 +100,20 @@ public class ChoiceGroup extends Item implements Choice
 
   public ChoiceGroup(String label, int choiceType)
   {
-		this(label, choiceType, null, null);
+		super(label);
+		this.choiceType = choiceType;
   }
 
 
   // XXX imageElements is ignored.
 	public ChoiceGroup(String label, int choiceType, String[] stringElements, Image[] imageElements)
 	{
-    super(label);
-    this.choiceType = choiceType;
+		this(label, choiceType);
 
-		if (stringElements != null) {
-			for (int i = 0; i < stringElements.length; i++) {
+		for (int i = 0; i < stringElements.length; i++) {
+			if (imageElements == null) {
+				append(stringElements[i], null);
+			} else {
 				append(stringElements[i], imageElements[i]);
 			}
 		}

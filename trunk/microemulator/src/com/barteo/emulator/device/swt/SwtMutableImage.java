@@ -74,12 +74,6 @@ public class SwtMutableImage extends MutableImage
 	}
 
 
-	public int getPixel(int x, int y) 
-	{
-		// TODO poprawic zwracanie koloru
-		return 0;
-	}
-
 	public byte[] getData() 
 	{
 		System.out.println(img.getImageData().palette);

@@ -22,8 +22,6 @@ package com.barteo.emulator.app.ui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -31,8 +29,8 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Vector;
 import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;

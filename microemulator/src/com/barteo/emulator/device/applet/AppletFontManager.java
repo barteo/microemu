@@ -21,10 +21,7 @@ package com.barteo.emulator.device.applet;
 
 import java.awt.Component;
 import java.awt.Label;
-import java.awt.FontMetrics;
 import java.util.Hashtable;
-
-import javax.microedition.lcdui.Font;
 
 import com.barteo.emulator.device.FontManager;
 

@@ -23,13 +23,12 @@
 package com.barteo.emulator.device.applet;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Rectangle;
 
 import javax.microedition.lcdui.Image;
+
 import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
-import com.barteo.emulator.device.applet.GrayImageFilter;
 
 
 public class DisplayGraphics extends javax.microedition.lcdui.Graphics 

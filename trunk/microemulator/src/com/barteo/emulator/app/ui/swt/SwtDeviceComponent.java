@@ -374,7 +374,6 @@ public class SwtDeviceComponent extends Canvas
 			SwtGraphics gc = new SwtGraphics(instance.getParent().getDisplay());
 			gc.setFont(new Font(instance.getParent().getDisplay(), name, size, style));
 			fontMetrics = gc.getFontMetrics();
-			gc.dispose();
 		}		
 	}
 
@@ -403,7 +402,6 @@ public class SwtDeviceComponent extends Canvas
 			SwtGraphics gc = new SwtGraphics(instance.getParent().getDisplay());
 			gc.setFont(new Font(instance.getParent().getDisplay(), name, size, style));
 			font = gc.getFont();
-			gc.dispose();
 		}		
 	}
 
@@ -430,7 +428,6 @@ public class SwtDeviceComponent extends Canvas
 			SwtGraphics gc = new SwtGraphics(instance.getParent().getDisplay());
 			gc.setFont(font);
 			stringWidth = gc.stringWidth(str);
-			gc.dispose();
 		}		
 	}
 

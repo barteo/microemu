@@ -177,9 +177,9 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
     }
 
     if (img.isMutable()) {
-      g.drawImage(((MutableImage) img).getImage(), newx, newy);
+      g.drawImage(((SwtMutableImage) img).getImage(), newx, newy);
     } else {
-      g.drawImage(((ImmutableImage) img).getImage(), newx, newy);
+      g.drawImage(((SwtImmutableImage) img).getImage(), newx, newy);
     }
   }
 

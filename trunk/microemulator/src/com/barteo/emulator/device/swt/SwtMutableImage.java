@@ -19,25 +19,43 @@
  
 package com.barteo.emulator.device.swt;
 
+import org.eclipse.swt.graphics.GC;
 
-public class ImmutableImage extends javax.microedition.lcdui.Image
+import com.barteo.emulator.app.Swt;
+import com.barteo.emulator.app.ui.swt.SwtGraphics;
+import com.barteo.emulator.device.MutableImage;
+
+
+public class SwtMutableImage extends MutableImage 
 {
 	org.eclipse.swt.graphics.Image img;
+  DisplayGraphics displayGraphics = null;
 
-  
-	public ImmutableImage(org.eclipse.swt.graphics.Image image)
-	{
-  	img = image;
-	}
-  
-  
-  public ImmutableImage(MutableImage image)
+
+  public SwtMutableImage(int width, int height) 
   {
-	// TODO poprawic tworzenie image	
-//    img = Toolkit.getDefaultToolkit().createImage(image.getImage().getSource());
+    img = new org.eclipse.swt.graphics.Image(Swt.shell.getDisplay(), width, height);
   }
 
 
+  public javax.microedition.lcdui.Graphics getGraphics() 
+  {
+    if (displayGraphics == null) {
+      displayGraphics = new DisplayGraphics(new SwtGraphics(new GC(img)));
+      displayGraphics.setGrayScale(255);
+      displayGraphics.fillRect(0, 0, getWidth(), getHeight());
+      displayGraphics.setGrayScale(0);
+    }
+    return displayGraphics;
+  }
+
+
+  public boolean isMutable() 
+  {
+    return true;
+  }
+
+    
 	public int getHeight()
 	{
 		return img.getBounds().height;
@@ -53,6 +71,13 @@ public class ImmutableImage extends javax.microedition.lcdui.Image
 	public int getWidth()
 	{
 		return img.getBounds().width;
-	}  
-  
+	}
+	
+	
+	public int getPixel(int x, int y)
+	{
+		// TODO poprawic zwracanie koloru
+		return 0;
+	}
+	
 }

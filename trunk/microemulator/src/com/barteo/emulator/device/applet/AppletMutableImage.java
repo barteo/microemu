@@ -17,28 +17,46 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
  
-package com.barteo.emulator.device.j2se;
+package com.barteo.emulator.device.applet;
 
-import java.awt.Toolkit;
+import java.awt.Frame;
+
+import com.barteo.emulator.device.MutableImage;
 
 
-public class ImmutableImage extends javax.microedition.lcdui.Image
+public class AppletMutableImage extends MutableImage 
 {
-	java.awt.Image img;
 
-  
-	public ImmutableImage(java.awt.Image image)
-	{
-  	img = image;
-	}
-  
-  
-  public ImmutableImage(MutableImage image)
+  java.awt.Image img;
+  Frame f = new Frame();
+  DisplayGraphics displayGraphics = null;
+
+
+  public AppletMutableImage(int width, int height) 
   {
-    img = Toolkit.getDefaultToolkit().createImage(image.getImage().getSource());
+    f.addNotify();
+    img = f.createImage(width, height);
   }
 
 
+  public javax.microedition.lcdui.Graphics getGraphics() 
+  {
+    if (displayGraphics == null) {
+      displayGraphics = new DisplayGraphics(img.getGraphics());
+      displayGraphics.setGrayScale(255);
+      displayGraphics.fillRect(0, 0, getWidth(), getHeight());
+      displayGraphics.setGrayScale(0);
+    }
+    return displayGraphics;
+  }
+
+
+  public boolean isMutable() 
+  {
+    return true;
+  }
+
+    
 	public int getHeight()
 	{
 		return img.getHeight(null);
@@ -54,6 +72,13 @@ public class ImmutableImage extends javax.microedition.lcdui.Image
 	public int getWidth()
 	{
 		return img.getWidth(null);
-	}  
-  
+	}
+	
+	
+	public int getPixel(int x, int y)
+	{
+		// TODO poprawic zwracanie koloru
+		return 0;
+	}
+
 }

@@ -17,51 +17,34 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
  
-package com.barteo.emulator.device.applet;
-
-import java.awt.Frame;
+package com.barteo.emulator.device.swt;
 
 
-public class MutableImage extends javax.microedition.lcdui.Image 
+public class SwtImmutableImage extends javax.microedition.lcdui.Image
 {
+	org.eclipse.swt.graphics.Image img;
 
-  java.awt.Image img;
-  Frame f = new Frame();
-  DisplayGraphics displayGraphics = null;
-
-
-  public MutableImage(int width, int height) 
+  
+	public SwtImmutableImage(org.eclipse.swt.graphics.Image image)
+	{
+  	img = image;
+	}
+  
+  
+  public SwtImmutableImage(SwtMutableImage image)
   {
-    f.addNotify();
-    img = f.createImage(width, height);
+	// TODO poprawic tworzenie image	
+//    img = Toolkit.getDefaultToolkit().createImage(image.getImage().getSource());
   }
 
 
-  public javax.microedition.lcdui.Graphics getGraphics() 
-  {
-    if (displayGraphics == null) {
-      displayGraphics = new DisplayGraphics(img.getGraphics());
-      displayGraphics.setGrayScale(255);
-      displayGraphics.fillRect(0, 0, getWidth(), getHeight());
-      displayGraphics.setGrayScale(0);
-    }
-    return displayGraphics;
-  }
-
-
-  public boolean isMutable() 
-  {
-    return true;
-  }
-
-    
 	public int getHeight()
 	{
-		return img.getHeight(null);
+		return img.getBounds().height;
 	}
 
 
-	public java.awt.Image getImage()
+	public org.eclipse.swt.graphics.Image getImage()
 	{
 		return img;
 	}
@@ -69,6 +52,7 @@ public class MutableImage extends javax.microedition.lcdui.Image
 
 	public int getWidth()
 	{
-		return img.getWidth(null);
-	}
+		return img.getBounds().width;
+	}  
+  
 }

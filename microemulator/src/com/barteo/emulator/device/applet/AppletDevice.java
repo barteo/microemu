@@ -47,15 +47,17 @@ import nanoxml.XMLParseException;
 
 public class AppletDevice implements Device
 {
-  AppletDeviceDisplay deviceDisplay;
-  FontManager fontManager = null;
-  AppletInputMethod inputMethod = null;
-  Vector buttons;
-  Vector softButtons;
+	private EmulatorContext context; 	
+	
+	private AppletDeviceDisplay deviceDisplay;
+	private FontManager fontManager = null;
+	private AppletInputMethod inputMethod = null;
+	private Vector buttons;
+	private Vector softButtons;
 
-  Image normalImage;
-  Image overImage;
-  Image pressedImage;
+	private Image normalImage;
+	private Image overImage;
+	private Image pressedImage;
   
   
   public AppletDevice()
@@ -72,7 +74,9 @@ public class AppletDevice implements Device
   
   public void init(EmulatorContext context, String config)
   {
-    deviceDisplay = new AppletDeviceDisplay(context);
+  	this.context = context;
+  	
+    deviceDisplay = new AppletDeviceDisplay(this);
     buttons = new Vector();
     softButtons = new Vector();
     
@@ -128,6 +132,12 @@ public class AppletDevice implements Device
   }
   
   
+	public EmulatorContext getEmulatorContext() 
+  	{
+  		return context;
+	}
+
+
   public FontManager getFontManager()
   {
     if (fontManager == null) {

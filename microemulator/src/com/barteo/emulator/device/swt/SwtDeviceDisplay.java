@@ -29,7 +29,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Rectangle;
 
-import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletAccess;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.app.ui.swt.SwtGraphics;
@@ -40,7 +39,7 @@ import com.barteo.emulator.device.InputMethod;
 
 public class SwtDeviceDisplay implements DeviceDisplay 
 {
-	EmulatorContext context;
+	Device device;
 
 	Rectangle displayRectangle;
 	Rectangle displayPaintable;
@@ -62,21 +61,15 @@ public class SwtDeviceDisplay implements DeviceDisplay
 	boolean scrollDown = false;
 
 
-	SwtDeviceDisplay(EmulatorContext acontext) 
+	SwtDeviceDisplay(Device device) 
 	{
-		context = acontext;
+		this.device = device;
 	}
 
 
-	public EmulatorContext getEmulatorContext() 
-	{
-		return context;
-	}
-	
-	
 	public Image getDisplayImage()
 	{
-		return context.getDisplayComponent().getDisplayImage();
+		return device.getEmulatorContext().getDisplayComponent().getDisplayImage();
 	}
 
 
@@ -177,7 +170,7 @@ public class SwtDeviceDisplay implements DeviceDisplay
 
 	public void repaint() 
 	{
-		context.getDisplayComponent().repaint();
+		device.getEmulatorContext().getDisplayComponent().repaint();
 	}
 
 

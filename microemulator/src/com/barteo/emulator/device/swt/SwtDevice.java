@@ -47,15 +47,17 @@ import com.barteo.emulator.device.InputMethod;
 
 public class SwtDevice implements Device
 {
-  private SwtDeviceDisplay deviceDisplay;
-  private FontManager fontManager = null;
-  private SwtInputMethod inputMethod = null;
-  private Vector buttons;
-  private Vector softButtons;
+	private EmulatorContext context; 	
+
+	private SwtDeviceDisplay deviceDisplay;
+	private FontManager fontManager = null;
+	private SwtInputMethod inputMethod = null;
+	private Vector buttons;
+	private Vector softButtons;
   
-  private Image normalImage;
-  private Image overImage;
-  private Image pressedImage;
+	private Image normalImage;
+	private Image overImage;
+	private Image pressedImage;
   
   
   public SwtDevice()
@@ -72,7 +74,9 @@ public class SwtDevice implements Device
   
   public void init(EmulatorContext context, String config)
   {
-    deviceDisplay = new SwtDeviceDisplay(context);
+  	this.context = context;
+  	
+    deviceDisplay = new SwtDeviceDisplay(this);
     buttons = new Vector();
     softButtons = new Vector();
     
@@ -122,6 +126,12 @@ public class SwtDevice implements Device
 	}
   
   
+	public EmulatorContext getEmulatorContext() 
+	{
+		return context;
+	}
+
+
   public DeviceDisplay getDeviceDisplay()
   {
     return deviceDisplay;
@@ -483,7 +493,7 @@ public class SwtDevice implements Device
 	private Image getImage(String str)
 			throws IOException
 	{
-		InputStream is = deviceDisplay.getEmulatorContext().getClassLoader().getResourceAsStream(str);
+		InputStream is = getEmulatorContext().getClassLoader().getResourceAsStream(str);
 
 		if (is == null) {
 				throw new IOException(str + " could not be found.");

@@ -30,7 +30,6 @@ import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Image;
 
-import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletAccess;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.device.Device;
@@ -40,8 +39,8 @@ import com.barteo.emulator.device.InputMethod;
 
 public class J2SEDeviceDisplay implements DeviceDisplay 
 {
-	EmulatorContext context;
-
+	Device device;
+	
 	Rectangle displayRectangle;
 	Rectangle displayPaintable;
 
@@ -62,21 +61,15 @@ public class J2SEDeviceDisplay implements DeviceDisplay
 	boolean scrollDown = false;
 
 
-	J2SEDeviceDisplay(EmulatorContext acontext) 
+	J2SEDeviceDisplay(Device device) 
 	{
-		context = acontext;
-	}
-
-
-	public EmulatorContext getEmulatorContext() 
-	{
-		return context;
+		this.device = device;
 	}
 
 
 	public Image getDisplayImage()
 	{
-		return context.getDisplayComponent().getDisplayImage();
+		return device.getEmulatorContext().getDisplayComponent().getDisplayImage();
 	}
 
 
@@ -178,7 +171,7 @@ public class J2SEDeviceDisplay implements DeviceDisplay
 
 	public void repaint() 
 	{
-		context.getDisplayComponent().repaint();
+		device.getEmulatorContext().getDisplayComponent().repaint();
 	}
 
 

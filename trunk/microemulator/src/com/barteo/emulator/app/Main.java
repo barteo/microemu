@@ -270,11 +270,12 @@ public class Main extends JFrame
 
     devicePanel = new SwingDeviceComponent();
     selectDevicePanel = new SwingSelectDevicePanel();
-    setDevice(selectDevicePanel.getSelectedDeviceEntry());
     
-		common = new Common(emulatorContext);
-		common.setStatusBarListener(statusBarListener);
-		common.setResponseInterfaceListener(responseInterfaceListener);
+	common = new Common(emulatorContext);
+	common.setStatusBarListener(statusBarListener);
+	common.setResponseInterfaceListener(responseInterfaceListener);
+
+	setDevice(selectDevicePanel.getSelectedDeviceEntry());
 
     getContentPane().add(devicePanel, "Center");
     getContentPane().add(statusBar, "South");    

@@ -6,6 +6,8 @@
 <!-- for the classes in your application. -->
 <project basedir="." default="run" name="microemulator">
 
+  <property name="build.compiler" value="javac1.1"/>
+
   <target name="init">
     <mkdir dir="./build/microemulator/classes"/>
     <mkdir dir="./target"/>

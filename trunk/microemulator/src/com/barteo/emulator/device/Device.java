@@ -30,6 +30,7 @@ public interface Device
 
   Image createImage(int width, int height);
   Image createImage(String name) throws IOException;
+  Image createImage(Image source);
   Image createImage(byte[] imageData, int imageOffset, int imageLength);
   
   DeviceDisplay getDeviceDisplay();

@@ -97,6 +97,16 @@ public class AppletDevice implements Device
 	}
   
   
+	public javax.microedition.lcdui.Image createImage(javax.microedition.lcdui.Image source)
+  {
+    if (source.isMutable()) {
+      return new ImmutableImage((MutableImage) source);
+    } else {
+      return source;
+    }
+  }
+  
+
 	public javax.microedition.lcdui.Image createImage(byte[] imageData, int imageOffset, int imageLength)
 	{
 		ByteArrayInputStream is = new ByteArrayInputStream(imageData, imageOffset, imageLength);

@@ -63,7 +63,7 @@ public class Gauge extends Item
   }
 
 
-  public void setMaxValue(int maxValue) throws IllegalArgumentException
+  public void setMaxValue(int maxValue)
   {
     if (maxValue <= 0) {
       throw new IllegalArgumentException();

@@ -32,6 +32,7 @@ public class SimpleDemo extends MIDlet implements CommandListener
   List menuList;
   ScreenPanel screenPanels[] = {
       new AlertPanel(),
+      new DateFieldPanel(),
       new GaugePanel(),
       new ImageItemPanel(),
       new ListPanel(),

@@ -1,5 +1,5 @@
 /*
- *  @(#)GaugePanel.java  10/10/2001
+ *  @(#)DateFieldPanel.java  10/10/2001
  *
  *  Copyright (c) 2001 Bartek Teodorczyk <barteo@it.pl>. All Rights Reserved.
  *
@@ -21,48 +21,23 @@
 
 package com.barteo.midp.examples.simpledemo;
 
-import java.util.*;
-
 import javax.microedition.lcdui.*;
 
 
-public class GaugePanel extends Form implements ScreenPanel, CommandListener
+public class DateFieldPanel extends Form implements ScreenPanel, CommandListener
 {
   
-  static String NAME = "Gauge";
+  static String NAME = "DateField";
   
   Command backCommand = new Command("Back", Command.BACK, 1);
   
-  Gauge noninteractive = new Gauge("Noninteractive", false, 25, 0);
   
-  TimerTask timerTask = new TimerTask()
-  {
-    
-    public void run()
-    {
-      if (isShown()) {
-        int value = noninteractive.getValue();
-      
-        if (noninteractive.getValue() >= 25) {
-          noninteractive.setValue(0);
-        } else {
-          noninteractive.setValue(++value);
-        }
-      }
-    }
-  };
-  
-  
-  public GaugePanel()
+  public DateFieldPanel()
   {
     super(NAME);
     
-    append("First gauge is interactive and second noninteractive");
-    append(new Gauge("Interactive", true, 25, 0));
-    append(noninteractive);
-    
-    Timer timer = new Timer();
-    timer.schedule(timerTask, 0, 500);
+    append(new DateField("Time", DateField.TIME));
+    append(new DateField("Date & time", DateField.DATE_TIME));
 
     addCommand(backCommand);
     setCommandListener(this);

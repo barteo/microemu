@@ -38,6 +38,12 @@ public class RecordStore
 	private Hashtable records = new Hashtable();
   
 	
+	protected RecordStore()
+	{
+	    this(null);
+	}
+	
+	
 	private RecordStore(String name)
 	{
 		this.name = name;
@@ -133,8 +139,26 @@ public class RecordStore
     }
 
 
-    public int getSizeAvailable()
+    public int getSize()
+    		throws RecordStoreNotOpenException
     {
+        if (!open) {
+            throw new RecordStoreNotOpenException();
+        }
+
+        // FIXME invalid size 
+        return records.size();
+    }
+
+  
+    public int getSizeAvailable()
+    		throws RecordStoreNotOpenException
+    {
+        if (!open) {
+            throw new RecordStoreNotOpenException();
+        }
+
+        // FIXME invalid size 
         return (int) Runtime.getRuntime().freeMemory();
     }
 

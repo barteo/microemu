@@ -81,14 +81,6 @@ public class MicroEmulator extends Applet
       return false;
     }
 
-    try {
-      midlet = (MIDlet) midletClass.newInstance();
-    } catch (Exception ex) {
-      System.out.println("Cannot initialize " + midletClass + " MIDlet class");
-      System.out.println(ex);        
-      return false;
-    }
-
     disp = Display.getDisplay(midlet);
 
     XYLayout xy = new XYLayout();
@@ -101,6 +93,14 @@ public class MicroEmulator extends Applet
     kc = new KeyboardComponent();
     xy.addLayoutComponent(kc, new XYConstraints(Device.keyboardRectangle));
     add(kc);
+
+    try {
+      midlet = (MIDlet) midletClass.newInstance();
+    } catch (Exception ex) {
+      System.out.println("Cannot initialize " + midletClass + " MIDlet class");
+      System.out.println(ex);        
+      return false;
+    }
 
     resize(400,500);
     

@@ -51,7 +51,7 @@ public class Resource
 	{
 		ImageFilter grayFilter;
 
-		PngImage png = new PngImage(getClass().getResourceAsStream(str));
+    PngImage png = new PngImage(getClass().getResourceAsStream(str));
 //   	double[][] chrom = (double[][])png.getProperty("chromaticity xyz");
 //		if (chrom == null) {
 			grayFilter = new GrayImageFilter();

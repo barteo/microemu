@@ -19,12 +19,12 @@
 		<rectangle>
 			<x>10</x>
 			<y>140</y>
-			<width>90</width>
+			<width>100</width>
 			<height>200</height>
 		</rectangle>
 		<softbutton name="" key="VK_F1" alignment="LEFT">
 			<rectangle>
-				<x>10</x>
+				<x>15</x>
 				<y>140</y>
 				<width>30</width>
 				<height>15</height>
@@ -42,7 +42,7 @@
 		</softbutton>
 		<softbutton name="" key="VK_F2" alignment="RIGHT" menuactivate="true">
 			<rectangle>
-				<x>70</x>
+				<x>75</x>
 				<y>140</y>
 				<width>30</width>
 				<height>15</height>
@@ -60,7 +60,7 @@
 		</softbutton>
 		<button name="l" key="VK_LEFT">
 			<rectangle>
-				<x>10</x>
+				<x>15</x>
 				<y>185</y>
 				<width>30</width>
 				<height>15</height>
@@ -68,7 +68,7 @@
 		</button>
 		<button name="r" key="VK_RIGHT">
 			<rectangle>
-				<x>70</x>
+				<x>75</x>
 				<y>185</y>
 				<width>30</width>
 				<height>15</height>
@@ -76,7 +76,7 @@
 		</button>
 		<button name="u" key="VK_UP">
 			<rectangle>
-				<x>40</x>
+				<x>45</x>
 				<y>170</y>
 				<width>30</width>
 				<height>15</height>
@@ -84,7 +84,7 @@
 		</button>
 		<button name="d" key="VK_DOWN">
 			<rectangle>
-				<x>40</x>
+				<x>45</x>
 				<y>200</y>
 				<width>30</width>
 				<height>15</height>
@@ -92,7 +92,7 @@
 		</button>
 		<button name="sel" key="VK_ENTER">
 			<rectangle>
-				<x>40</x>
+				<x>45</x>
 				<y>185</y>
 				<width>30</width>
 				<height>15</height>
@@ -100,7 +100,7 @@
 		</button>
 		<button name="del" key="VK_BACK_SPACE">
 			<rectangle>
-				<x>40</x>
+				<x>45</x>
 				<y>230</y>
 				<width>30</width>
 				<height>15</height>
@@ -108,7 +108,7 @@
 		</button>
 		<button name="0" key="VK_0">
 			<rectangle>
-				<x>40</x>
+				<x>45</x>
 				<y>305</y>
 				<width>30</width>
 				<height>15</height>
@@ -116,7 +116,7 @@
 		</button>
 		<button name="1" key="VK_1">
 			<rectangle>
-				<x>10</x>
+				<x>15</x>
 				<y>260</y>
 				<width>30</width>
 				<height>15</height>
@@ -124,7 +124,7 @@
 		</button>
 		<button name="2" key="VK_2">
 			<rectangle>
-				<x>40</x>
+				<x>45</x>
 				<y>260</y>
 				<width>30</width>
 				<height>15</height>
@@ -132,7 +132,7 @@
 		</button>
 		<button name="3" key="VK_3">
 			<rectangle>
-				<x>70</x>
+				<x>75</x>
 				<y>260</y>
 				<width>30</width>
 				<height>15</height>
@@ -140,7 +140,7 @@
 		</button>
 		<button name="4" key="VK_4">
 			<rectangle>
-				<x>10</x>
+				<x>15</x>
 				<y>275</y>
 				<width>30</width>
 				<height>15</height>
@@ -148,7 +148,7 @@
 		</button>
 		<button name="5" key="VK_5">
 			<rectangle>
-				<x>40</x>
+				<x>45</x>
 				<y>275</y>
 				<width>30</width>
 				<height>15</height>
@@ -156,7 +156,7 @@
 		</button>
 		<button name="6" key="VK_6">
 			<rectangle>
-				<x>70</x>
+				<x>75</x>
 				<y>275</y>
 				<width>30</width>
 				<height>15</height>
@@ -164,7 +164,7 @@
 		</button>
 		<button name="7" key="VK_7">
 			<rectangle>
-				<x>10</x>
+				<x>15</x>
 				<y>290</y>
 				<width>30</width>
 				<height>15</height>
@@ -172,7 +172,7 @@
 		</button>
 		<button name="8" key="VK_8">
 			<rectangle>
-				<x>40</x>
+				<x>45</x>
 				<y>290</y>
 				<width>30</width>
 				<height>15</height>
@@ -180,7 +180,7 @@
 		</button>
 		<button name="9" key="VK_9">
 			<rectangle>
-				<x>70</x>
+				<x>75</x>
 				<y>290</y>
 				<width>30</width>
 				<height>15</height>
@@ -188,7 +188,7 @@
 		</button>
 		<button name="*" key="VK_MULTIPLY">
 			<rectangle>
-				<x>10</x>
+				<x>15</x>
 				<y>305</y>
 				<width>30</width>
 				<height>15</height>
@@ -196,7 +196,7 @@
 		</button>
 		<button name="#" key="VK_MODECHANGE">
 			<rectangle>
-				<x>70</x>
+				<x>75</x>
 				<y>305</y>
 				<width>30</width>
 				<height>15</height>

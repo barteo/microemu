@@ -63,57 +63,8 @@ public abstract class SwtDialog
 	public SwtDialog(Shell parentShell)
 	{
 		this.parentShell = parentShell;
-		
-/*		final Dialog dialog = new Dialog(new Frame(), title, true);
-		dialog.setLayout(new BorderLayout());
-		dialog.add(panel, BorderLayout.CENTER);
-
-		Panel actionPanel = new Panel();
-		actionPanel.add(panel.btOk);
-		actionPanel.add(panel.btCancel);
-		dialog.add(actionPanel, BorderLayout.SOUTH);
-
-		dialog.pack();
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = dialog.getSize();
-		dialog.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
-
-		ActionListener closeListener = new ActionListener()
-		{
-			public void actionPerformed(ActionEvent event)
-			{
-				if (event.getSource() == panel.btOk) {
-					if (panel.check(true)) {
-						panel.state = true;
-						dialog.setVisible(false);
-						panel.hideNotify();
-					}
-				} else {
-					panel.state = false;
-					dialog.setVisible(false);
-					panel.hideNotify();
-				}
-			}
-		};
-    
-		WindowAdapter windowAdapter = new WindowAdapter()
-		{
-			public void windowClosing(WindowEvent e)
-			{
-				panel.state = false;
-				panel.hideNotify();
-			}
-		};
-
-		dialog.addWindowListener(windowAdapter);
-		panel.btOk.addActionListener(closeListener);
-		panel.btCancel.addActionListener(closeListener);
-		panel.showNotify();
-		dialog.setVisible(true);
-		panel.btOk.removeActionListener(closeListener);
-		panel.btCancel.removeActionListener(closeListener);
-
-		return panel.state;*/
+		this.block = true;
+		this.shellStyle = SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL;
 	}
 	
 	
@@ -201,7 +152,7 @@ public abstract class SwtDialog
 		{
 			public void widgetSelected(SelectionEvent event) 
 			{
-				okPressed();
+				buttonPressed(OK);
 			}
 		});
 		
@@ -211,7 +162,7 @@ public abstract class SwtDialog
 		{
 			public void widgetSelected(SelectionEvent event) 
 			{
-				cancelPressed();
+				buttonPressed(CANCEL);
 			}
 		});
 
@@ -252,6 +203,16 @@ public abstract class SwtDialog
 	}
 	
 	
+	protected void buttonPressed(int buttonId) 
+	{
+		if (buttonId == OK) {
+			okPressed();
+		} else if (buttonId == CANCEL) {
+			cancelPressed();
+		}
+	}
+
+
 	protected void okPressed() 
 	{
 		setReturnCode(OK);

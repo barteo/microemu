@@ -291,6 +291,10 @@ public class Awt extends Frame
   
 	public void setDevice(DeviceEntry entry)
 	{
+		if (DeviceFactory.getDevice() != null) {
+			((AppletDevice) DeviceFactory.getDevice()).dispose();
+		}
+		
 		ProgressJarClassLoader loader = (ProgressJarClassLoader) emulatorContext.getClassLoader();
 		try {
 			Class deviceClass = null;

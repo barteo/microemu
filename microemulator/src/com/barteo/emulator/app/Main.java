@@ -291,6 +291,10 @@ public class Main extends JFrame
   
   public void setDevice(DeviceEntry entry)
   {
+		if (DeviceFactory.getDevice() != null) {
+			((J2SEDevice) DeviceFactory.getDevice()).dispose();
+		}
+
     ProgressJarClassLoader loader = (ProgressJarClassLoader) emulatorContext.getClassLoader();
     try {
       Class deviceClass = null;

@@ -31,11 +31,12 @@ import com.barteo.emulator.device.InputMethodEvent;
 
 public class AppletInputMethod extends InputMethod implements Runnable
 {
-	int lastButtonCharIndex = -1;
-  AppletButton lastButton = null;
-	boolean resetKey;
+	private int lastButtonCharIndex = -1;
+  private AppletButton lastButton = null;
+	private boolean resetKey;
 
-	Thread t;
+	private Thread t;
+	private boolean cancel = false;
 
 
 	public AppletInputMethod()
@@ -45,6 +46,12 @@ public class AppletInputMethod extends InputMethod implements Runnable
 	}
   
   
+	void dispose()
+	{
+		  cancel = true;
+	}
+
+
   private boolean commonKeyPressed(int keyCode)
   {
 		String tmp;
@@ -241,7 +248,7 @@ public class AppletInputMethod extends InputMethod implements Runnable
 
 	public void run()
 	{
-		while (true) {
+		while (!cancel) {
 			try {
 				resetKey = true;
 				synchronized (this) {

@@ -33,11 +33,12 @@ import com.barteo.emulator.device.InputMethodEvent;
 
 public class SwtInputMethod extends InputMethod implements Runnable
 {
-	int lastButtonCharIndex = -1;
-  SwtButton lastButton = null;
-	boolean resetKey;
+	private int lastButtonCharIndex = -1;
+  private SwtButton lastButton = null;
+	private boolean resetKey;
 
-	Thread t;
+	private Thread t;
+	private boolean cancel = false;
 
 
 	public SwtInputMethod()
@@ -47,6 +48,12 @@ public class SwtInputMethod extends InputMethod implements Runnable
 	}
   
   
+	void dispose()
+	{
+		  cancel = true;
+	}
+
+
   private boolean commonKeyPressed(int keyCode)
   {
 		String tmp;
@@ -244,7 +251,7 @@ public class SwtInputMethod extends InputMethod implements Runnable
 
 	public void run()
 	{
-		while (true) {
+		while (!cancel) {
 			try {
 				resetKey = true;
 				synchronized (this) {

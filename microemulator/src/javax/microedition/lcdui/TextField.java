@@ -87,18 +87,23 @@ public class TextField extends Item
 	public void setString(String text)
 	{
 		validate(text);
-		if (text.length() > maxSize) {
-			throw new IllegalArgumentException("text.length(): " + text.length() + " > maxsize: " + maxSize);
-		}
-    field = text;
-    if ((constraints & PASSWORD) == 0) {
-      stringComponent.setText(text);
+    if (text == null) {
+      field = "";
+      stringComponent.setText("");
     } else {
-      StringBuffer sb = new StringBuffer();
-      for (int i = 0; i < text.length(); i++) {
-        sb.append('*');
+  		if (text.length() > maxSize) {
+  			throw new IllegalArgumentException();
+  		}
+      field = text;
+      if ((constraints & PASSWORD) == 0) {
+        stringComponent.setText(text);
+      } else {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < text.length(); i++) {
+          sb.append('*');
+        }
+        stringComponent.setText(sb.toString());
       }
-      stringComponent.setText(sb.toString());
     }
 		repaint();
 	}

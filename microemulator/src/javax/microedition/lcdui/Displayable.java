@@ -93,9 +93,8 @@ public abstract class Displayable
 	}
 
 
-	void hideNotify(Display d)
+	final void hideNotify(Display d)
 	{
-		currentDisplay = null;
 		hideNotify();
 	}
 
@@ -126,7 +125,7 @@ public abstract class Displayable
 	}
 
 
-	void showNotify(Display d)
+	final void showNotify(Display d)
 	{
 		currentDisplay = d;
 		showNotify();

@@ -45,11 +45,12 @@ public class SoftButton extends Button
 
 
   public SoftButton(String name, Rectangle rectangle, String keyName, 
-      Rectangle paintable, String alignmentName, Vector commands)
+      Rectangle paintable, String alignmentName, Vector commands, boolean menuActivate)
   {
     super(name, rectangle, keyName);
       
     this.paintable = paintable;
+    this.menuActivate = menuActivate;
     
     try {
       alignment = SoftButton.class.getField(alignmentName).getInt(null);
@@ -153,12 +154,6 @@ public class SoftButton extends Button
     }
 
 
-    /**
-     *  A unit test for JUnit
-     *
-     *@param  cmd  Description of Parameter
-     *@return      Description of the Returned Value
-     */
     public boolean testCommandType(Command cmd) {
         for (Enumeration ct = commandTypes.elements(); ct.hasMoreElements(); ) {
             if (cmd.getCommandType() == ((Integer) ct.nextElement()).intValue()) {
@@ -169,11 +164,6 @@ public class SoftButton extends Button
     }
 
 
-    /**
-     *  Adds a feature to the CommandType attribute of the SoftButton object
-     *
-     *@param  commandType  The feature to be added to the CommandType attribute
-     */
     public void addCommandType(int commandType) {
         commandTypes.addElement(new Integer(commandType));
     }

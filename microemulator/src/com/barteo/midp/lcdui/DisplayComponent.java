@@ -130,15 +130,15 @@ public class DisplayComponent extends Canvas
     offg.setClip(oldclip);
 
     offg.setColor(Device.backgroundColor);
-    offg.fillRect(40, 120, up_arrow.getWidth(this), up_arrow.getHeight(this));
-    offg.fillRect(48, 120, down_arrow.getWidth(this), down_arrow.getHeight(this));
+    offg.fillRect(40, 115, up_arrow.getWidth(this), up_arrow.getHeight(this));
+    offg.fillRect(48, 115, down_arrow.getWidth(this), down_arrow.getHeight(this));
     if (scrollUp) {
       offg.setColor(Device.foregroundColor);
-      offg.drawImage(up_arrow, 40, 120, this);
+      offg.drawImage(up_arrow, 40, 115, this);
     }
     if (scrollDown) {
       offg.setColor(Device.foregroundColor);
-      offg.drawImage(down_arrow, 48, 120, this);
+      offg.drawImage(down_arrow, 48, 115, this);
     }
     
 		g.drawImage(offi, 0, 0, null);

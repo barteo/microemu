@@ -158,14 +158,14 @@ public class RecordStore
 	public void addRecordListener(RecordListener listener)
 	{
     if (!recordListeners.contains(listener)) {
-      recordListeners.add(listener);
+      recordListeners.addElement(listener);
     }
 	}
 	
 	
 	public void removeRecordListener(RecordListener listener)
 	{
-    recordListeners.remove(listener);
+    recordListeners.removeElement(listener);
 	}
 	
 	
@@ -395,24 +395,28 @@ public class RecordStore
         throw new RecordStoreNotOpenException();
       }      
 
-      currentRecord++;      
       if (currentRecord >= numRecords()) {
         throw new InvalidRecordIDException();
       }
+
+      byte[] result = ((EnumerationRecord) enumerationRecords.elementAt(currentRecord)).value;
+      currentRecord++;      
       
-      return ((EnumerationRecord) enumerationRecords.elementAt(currentRecord)).value;
+      return result;
     }
   
     
     public int nextRecordId()
         throws InvalidRecordIDException
     {
-      currentRecord++;
       if (currentRecord >= numRecords()) {
         throw new InvalidRecordIDException();
       }
 
-      return ((EnumerationRecord) enumerationRecords.elementAt(currentRecord)).recordId;
+      int result = ((EnumerationRecord) enumerationRecords.elementAt(currentRecord)).recordId;
+      currentRecord++;
+      
+      return result;
     }
   
     
@@ -423,26 +427,28 @@ public class RecordStore
       if (!open) {
         throw new RecordStoreNotOpenException();
       }      
-      if (currentRecord == 0) {
+      if (currentRecord < 0) {
         throw new InvalidRecordIDException();
       }
 
+      byte[] result = ((EnumerationRecord) enumerationRecords.elementAt(currentRecord)).value;
       currentRecord--;
       
-      return ((EnumerationRecord) enumerationRecords.elementAt(currentRecord)).value;
+      return result;
     }
   
     
     public int previousRecordId()
         throws InvalidRecordIDException
     {
-      if (currentRecord == 0) {
+      if (currentRecord < 0) {
         throw new InvalidRecordIDException();
       }
 
+      int result = ((EnumerationRecord) enumerationRecords.elementAt(currentRecord)).recordId;
       currentRecord--;
 
-      return ((EnumerationRecord) enumerationRecords.elementAt(currentRecord)).recordId;
+      return result;
     }
   
     

@@ -1734,7 +1734,7 @@ public class XMLElement
 
          ch = this.readChar();
 
-         if (ch == '!') {
+         if ((ch == '!') || (ch == '?')) {
             this.skipSpecialTag(0);
          } else {
             this.unreadChar(ch);

@@ -430,7 +430,8 @@ public class ChoiceGroup extends Item implements Choice
 			}
     }
     if (gameKeyCode == 6) {
-      if (highlightedItemIndex < (numOfItems - 1)) {
+      if ((!action && highlightedItemIndex < numOfItems)
+      		|| (action && highlightedItemIndex < (numOfItems - 1))) {
 				if (action) {
 	        highlightedItemIndex++;
 				}

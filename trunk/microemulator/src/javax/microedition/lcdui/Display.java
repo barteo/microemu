@@ -222,7 +222,7 @@ public class Display
     }
     if (tickerPaint == null) {
     	tickerPaint = new TickerPaint();
-			new Thread(tickerPaint).start();    	
+			new Thread(tickerPaint, "TickerPaint").start();    	
     }    	
 	}
 

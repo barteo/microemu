@@ -129,7 +129,7 @@ public abstract class Screen extends Displayable
     g.translate(0, contentHeight - translatedY);
 		translatedY = contentHeight;
 
-		g.clipRect(0, 0, 
+		g.setClip(0, 0, 
         DeviceFactory.getDevice().getDeviceDisplay().getWidth(), 
         DeviceFactory.getDevice().getDeviceDisplay().getHeight() - contentHeight);
     g.translate(0, -viewPortY);

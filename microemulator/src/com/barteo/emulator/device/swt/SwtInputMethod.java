@@ -62,13 +62,12 @@ public class SwtInputMethod extends InputMethod implements Runnable
 			return true;
 		}
 
-		if (keyCode == SWT.UP || keyCode == SWT.DOWN) {
+		if (keyCode == SWT.ARROW_UP || keyCode == SWT.ARROW_DOWN) {
 			MIDletBridge.getMIDletAccess().getDisplayAccess().keyPressed(keyCode);
 			return true;
 		}
 
 		// TODO poprawic KeyEvent
-		System.out.println("IM::commonKeyPressed:" + keyCode);
 		/*
 		 * if (keyCode == KeyEvent.VK_MODECHANGE) { if (getInputMode() ==
 		 * InputMethod.INPUT_123) { setInputMode(InputMethod.INPUT_ABC_UPPER); }
@@ -81,15 +80,23 @@ public class SwtInputMethod extends InputMethod implements Runnable
 		 * text); inputMethodListener.caretPositionChanged(event); return true;
 		 */
 
-		/*
-		 * if (keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_RIGHT) {
-		 * synchronized (this) { if (keyCode == KeyEvent.VK_LEFT && caret > 0) {
-		 * caret--; } if (keyCode == KeyEvent.VK_RIGHT && caret
-		 * < text.length()) { caret++; } lastButton = null; lastButtonCharIndex =
-		 * -1; } InputMethodEvent event = new
-		 * InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret,
-		 * text); inputMethodListener.caretPositionChanged(event); return true;
-		 */
+		if (keyCode == SWT.ARROW_LEFT || keyCode == SWT.ARROW_RIGHT) {
+			synchronized (this) {
+				if (keyCode == SWT.ARROW_LEFT && caret > 0) {
+					caret--;
+				}
+				if (keyCode == SWT.ARROW_RIGHT && caret < text.length()) {
+					caret++;
+				}
+				lastButton = null;
+				lastButtonCharIndex = -1;
+			}
+			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
+			inputMethodListener.caretPositionChanged(event);
+			return true;
+		}
+
+System.out.println("IM::commonKeyPressed:" + keyCode);
 
 		if (keyCode == SWT.BS) {
 			synchronized (this) {

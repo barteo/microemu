@@ -28,9 +28,7 @@ import javax.microedition.midlet.MIDlet;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
@@ -46,8 +44,8 @@ import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.app.ui.ResponseInterfaceListener;
 import com.barteo.emulator.app.ui.StatusBarListener;
 import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
-import com.barteo.emulator.app.ui.swt.SwtDialogWindow;
-import com.barteo.emulator.app.ui.swt.SwtSelectDevicePanel;
+import com.barteo.emulator.app.ui.swt.SwtDialog;
+import com.barteo.emulator.app.ui.swt.SwtSelectDeviceDialog;
 import com.barteo.emulator.app.util.DeviceEntry;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.device.DeviceFactory;
@@ -64,7 +62,7 @@ public class Swt
   
 	boolean initialized = false;
   
-	SwtSelectDevicePanel selectDevicePanel = null;
+	SwtSelectDeviceDialog selectDeviceDialog;
 	FileDialog fileDialog = null;
 	MenuItem menuOpenJADFile;
 	MenuItem menuOpenJADURL;
@@ -159,8 +157,8 @@ public class Swt
 	{    
 		public void handleEvent(Event e)
 		{
-			if (SwtDialogWindow.show("Select device...", selectDevicePanel)) {
-				if (selectDevicePanel.getSelectedDeviceEntry().equals(getDevice())) {
+			if (selectDeviceDialog.open() == SwtDialog.OK) {
+				if (selectDeviceDialog.getSelectedDeviceEntry().equals(getDevice())) {
 					return;
 				}
 				if (MIDletBridge.getCurrentMIDlet() != common.getLauncher()) {
@@ -170,7 +168,7 @@ public class Swt
 						return;
 					}*/
 				}
-				setDevice(selectDevicePanel.getSelectedDeviceEntry());
+				setDevice(selectDeviceDialog.getSelectedDeviceEntry());
 
 				if (MIDletBridge.getCurrentMIDlet() != common.getLauncher()) {
 					try {
@@ -288,8 +286,8 @@ public class Swt
 		statusBar = new Label(shell, SWT.HORIZONTAL);
 		statusBar.setText("Status");
 
-		selectDevicePanel = new SwtSelectDevicePanel();
-		setDevice(selectDevicePanel.getSelectedDeviceEntry());
+		selectDeviceDialog = new SwtSelectDeviceDialog(shell);
+		setDevice(selectDeviceDialog.getSelectedDeviceEntry());
     
 		common = new Common(emulatorContext);
 		common.setStatusBarListener(statusBarListener);
@@ -321,10 +319,6 @@ public class Swt
 			DeviceFactory.setDevice(device);
 			device.init(emulatorContext);
 			this.deviceEntry = entry;
-			Image tmpImg = device.getNormalImage();
-			Point size = new Point(tmpImg.getBounds().width, tmpImg.getBounds().height);
-			size.x += 10;
-			size.y += statusBar.computeSize(SWT.DEFAULT, SWT.DEFAULT).y + 55;
 //			setSize(size);
 //			doLayout();
 		} catch (MalformedURLException ex) {
@@ -343,8 +337,8 @@ public class Swt
 	{
 		Display display = new Display();
 		shell = new Shell(display);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
+		RowLayout layout = new RowLayout();
+		layout.type = SWT.VERTICAL;
 		shell.setLayout(layout);
 		    
 		Swt app = new Swt(shell);

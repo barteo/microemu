@@ -28,7 +28,7 @@ public class MinimumDevice extends AppletDevice
   
   public void init(EmulatorContext context) 
   {
-    super.init(context, "/net/barteo/me/appletdevice/minimum/device.xml");
+    super.init(context, "/net/barteo/me/appletdevice/minimum/device.txt");
   }
   
 }

@@ -182,10 +182,11 @@ public class CommandManager
      */
     public void commandAction(Command cmd, Displayable d) 
     {
+      Command tmpCmd = (Command) menuCommands.elementAt(commandList.getSelectedIndex());
+      
       MIDletBridge.getMIDletAccess().getDisplayAccess().setCurrent(previous);
       if ((cmd == SELECT_COMMAND) || cmd == List.SELECT_COMMAND) {
-        MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(
-            (Command) menuCommands.elementAt(commandList.getSelectedIndex()));
+        MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(tmpCmd);
       }
     }
   }

@@ -33,6 +33,7 @@ import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.MIDletEntry;
 import com.barteo.emulator.MicroEmulator;
+import com.barteo.emulator.RecordStoreManager;
 //import com.barteo.emulator.app.capture.Capturer;
 import com.barteo.emulator.app.launcher.Launcher;
 import com.barteo.emulator.app.ui.ResponseInterfaceListener;
@@ -58,6 +59,8 @@ public class Common implements MicroEmulator
 	protected JadProperties jad = new JadProperties();
 	protected JadProperties manifest = new JadProperties();
 	
+	private RecordStoreManager recordStoreManager;
+	
 	private StatusBarListener statusBarListener = null; 
 	private ResponseInterfaceListener responseInterfaceListener = null; 
   
@@ -80,11 +83,19 @@ public class Common implements MicroEmulator
 	public Common(EmulatorContext context)
 	{
 		emulatorContext = context;
-
+		
 		launcher = new Launcher();
 		launcher.setCurrentMIDlet(launcher);     
 
+		recordStoreManager = new AppRecordStoreManager(launcher);
+
 		MIDletBridge.setMicroEmulator(this);
+	}
+	
+	
+	public RecordStoreManager getRecordStoreManager()
+	{
+		return recordStoreManager;
 	}
 	
 	
@@ -226,6 +237,8 @@ public class Common implements MicroEmulator
 			public void run()
 			{
 				loader.setProgressListener(progressListener);
+				
+				launcher.setSuiteName(jad.getSuiteName());
 				try {
 					for (Enumeration e = jad.getMidletEntries().elements(); e.hasMoreElements(); ) {
 						JadMidletEntry jadEntry = (JadMidletEntry) e.nextElement();

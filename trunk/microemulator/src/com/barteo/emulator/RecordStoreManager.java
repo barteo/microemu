@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2001-2005 Bartek Teodorczyk <barteo@barteo.net>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -15,26 +15,30 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- *  Contributor(s):
- *    3GLab
  */
  
 package com.barteo.emulator;
 
+import javax.microedition.rms.RecordStore;
+import javax.microedition.rms.RecordStoreException;
+import javax.microedition.rms.RecordStoreNotFoundException;
+import javax.microedition.rms.RecordStoreNotOpenException;
 
-public interface MicroEmulator
-{
-	
-  RecordStoreManager getRecordStoreManager();
-	
-  String getAppProperty(String key);
-  
-  void notifyDestroyed();
+import com.barteo.emulator.util.RecordStoreImpl;
 
-  /**
-   * Allows notification when softkeys have changed
-   */
-  void notifySoftkeyLabelsChanged();
-    
+
+public interface RecordStoreManager 
+{	
+	
+	void deleteRecordStore(String recordStoreName) 
+			throws RecordStoreNotFoundException, RecordStoreException;
+	
+	RecordStore openRecordStore(String recordStoreName, boolean createIfNecessary) 
+			throws RecordStoreNotFoundException;
+	
+	String[] listRecordStores();
+	
+	void saveChanges(RecordStoreImpl recordStoreImpl) 
+			throws RecordStoreNotOpenException; 
+	
 }

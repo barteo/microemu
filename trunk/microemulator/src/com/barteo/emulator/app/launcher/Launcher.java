@@ -35,18 +35,30 @@ import com.barteo.emulator.MIDletEntry;
 
 public class Launcher extends MIDlet implements CommandListener
 {
-
-  static String nomidlets = "[no midlets]";
+	private static String nomidlets = "[no midlets]";
   
-  List menuList;
+	private List menuList;
   
-  Vector midletEntries = new Vector();
+	private String midletSuiteName = null;
+	private Vector midletEntries = new Vector();
   
-  MIDlet currentMIDlet = null;
+	private MIDlet currentMIDlet = null;
   
   
   public Launcher()
   {
+  }
+  
+  
+  public String getSuiteName()
+  {
+  	return midletSuiteName;
+  }
+  
+  
+  public void setSuiteName(String midletSuiteName)
+  {
+  	this.midletSuiteName = midletSuiteName;
   }
 
 

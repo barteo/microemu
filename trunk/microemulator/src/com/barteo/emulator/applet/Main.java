@@ -33,6 +33,7 @@ import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.MicroEmulator;
+import com.barteo.emulator.RecordStoreManager;
 import com.barteo.emulator.app.ui.awt.AwtDeviceComponent;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.applet.AppletDevice;
@@ -42,6 +43,8 @@ import com.barteo.emulator.util.JadProperties;
 public class Main extends Applet implements MicroEmulator
 {
   MIDlet midlet = null;
+  
+  private RecordStoreManager recordStoreManager;
   
   private JadProperties manifest = new JadProperties();
 
@@ -66,6 +69,7 @@ public class Main extends Applet implements MicroEmulator
   
   public Main()
   {
+  	recordStoreManager = new AppletRecordStoreManager();
 	devicePanel = new AwtDeviceComponent();
   }
   
@@ -176,6 +180,13 @@ System.out.println("Applet::destroy()");
 		}
 	}
 
+	
+	public RecordStoreManager getRecordStoreManager()
+	{
+		return recordStoreManager;
+	}
+	
+	
 
   public String getAppProperty(String key)
   {

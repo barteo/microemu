@@ -21,7 +21,7 @@ package com.barteo.emulator.device.swt;
 
 import org.eclipse.swt.graphics.GC;
 
-import com.barteo.emulator.app.Swt;
+import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
 import com.barteo.emulator.app.ui.swt.SwtGraphics;
 import com.barteo.emulator.device.MutableImage;
 
@@ -34,7 +34,7 @@ public class SwtMutableImage extends MutableImage
 
   public SwtMutableImage(int width, int height) 
   {
-    img = new org.eclipse.swt.graphics.Image(Swt.shell.getDisplay(), width, height);
+    img = SwtDeviceComponent.createImage(width, height);
   }
 
 

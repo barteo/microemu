@@ -47,8 +47,9 @@ public class Common implements MicroEmulator
 {
 	private static Launcher launcher;
   
-  private EmulatorContext emulatorContext;
-	private JadProperties jad = new JadProperties();
+  protected EmulatorContext emulatorContext;
+  
+	protected JadProperties jad = new JadProperties();
 	
 	private StatusBarListener statusBarListener = null; 
 	private ResponseInterfaceListener responseInterfaceListener = null; 

@@ -1,0 +1,22 @@
+MicroEmulator
+
+J2ME Device Emulator is based on JDK 1.1 so allows demonstrate 
+MIDlet (MIDP/CLDC) based applications in browser applet.
+
+There are two methods of running apps in emulator:
+
+1. as an application:
+java com.barteo.emulator.MicroEmulator (MIDlet application main class)
+emulator.jar and MIDlet application classes must be in CLASSPATH
+
+2. in applet:
+inluding html code:
+<applet code="com.barteo.emulator.MicroEmulator" 
+		width=170 height=340 archive="emulator.jar,(MIDlet application jar)">
+	<param name="midlet" value="(MIDlet application main class)">
+</applet>
+		
+In order to run MIDlet application in applet you have to recompile
+your source code using using this package with JDK 1.1.
+
+

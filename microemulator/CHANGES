@@ -1,0 +1,18 @@
+MicroEmulator
+
+0.1 (pre-alpha) - 23.07.2001
+- no javax.microedition.io.* implementation
+- only framework of java.microedition.rms package
+- DateField, Gauge, Ticker in javax.microedition.lcdui.* should be implemented
+- many methods of other classes are missing and incomplete (exceptions throwing)
+
+0.1.1 (pre-alpha) - 30.08.2001
+- javax.microedition.lcdui.* API completed but DateField, Gauge, Ticker not implemented
+  and some methods of other classes may be empty, incompete exceptions throwing
+- change from BW to 256-grayscale display
+- bug fixes
+
+(next release)
+- included NanoXML (done)
+- moved device preference into XML file (device.xml) (not complete)
+- fully implemented javax.microedition.lcdui.* and javax.microedition.rms.* (not complete)

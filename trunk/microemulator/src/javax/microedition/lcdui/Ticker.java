@@ -32,35 +32,8 @@ public class Ticker
   Ticker instance = null;
 
   String text;
-  boolean running = false;
   int textPos = 0;
   int resetTextPosTo = -1;
-  TickerPaint tickerPaint;
-
-
-	class TickerPaint implements Runnable
-	{
-
-		public void run()
-		{
-      while (true) {
-        if (running) {
-          synchronized (instance) {
-            if (resetTextPosTo != -1) {
-              textPos = resetTextPosTo;
-              resetTextPosTo = -1;
-            }
-            textPos -= PAINT_MOVE;
-          }
-//          Display.getDisplay().repaint();
-        }
-  			try {
-  				Thread.sleep(PAINT_TIMEOUT);
-  			} catch (InterruptedException ex) {}
-      }
-		}
-
-	}
 
 
   public Ticker(String str)
@@ -115,16 +88,4 @@ public class Ticker
     return f.getHeight();
   }
   
-  
-  void setRunning(boolean state)
-  {
-    if (tickerPaint == null && state == true) {
-      tickerPaint = new TickerPaint();
-      Thread t = new Thread(tickerPaint);
-      t.start();
-    }
-
-    running = state;
-  }
-
 }

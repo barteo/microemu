@@ -197,7 +197,9 @@ public class RecordStore
     }
     
     byte[] recordData = new byte[numBytes];
-    System.arraycopy(data, offset, recordData, 0, numBytes);
+    if (data != null) {
+      System.arraycopy(data, offset, recordData, 0, numBytes);
+    }
     
     int curRecordID;
     synchronized (this) {

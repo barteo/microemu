@@ -27,6 +27,10 @@ public interface DeviceDisplay
   
   int getHeight();
   
+  int getFullWidth();
+  
+  int getFullHeight();  
+  
   boolean isColor();
   
   int numColors();

@@ -94,8 +94,29 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 
   public void clipRect(int x, int y, int width, int height) 
   {
-		// TODO poprawic clipRect	
-//    g.clipRect(x, y, width, height);
+	Rectangle rect = new Rectangle(x, y, width, height);
+
+	if (rect.x < getClipX()) {
+		rect.x = getClipX();
+	}
+	
+	if (rect.y < getClipY()) {
+		rect.y = getClipY();
+	}
+	
+	if (x + width > getClipX() + getClipWidth()) {
+		rect.width = getClipX() + getClipWidth() - rect.x;
+	} else {
+		rect.width = x + width - rect.x;
+	}
+	
+	if (y + height > getClipY() + getClipHeight()) {
+		rect.height = getClipY() + getClipHeight() - rect.y;
+	} else {
+		rect.height = y + height - rect.y;
+	}
+	
+    setClip(rect.x, rect.y, rect.width, rect.height);
   }
 
 

@@ -133,7 +133,9 @@ public class SwingDeviceComponent extends JPanel
   
   public void init()
   {
-    revalidate();
+      dc.init();
+      
+      revalidate();
   }
   
   

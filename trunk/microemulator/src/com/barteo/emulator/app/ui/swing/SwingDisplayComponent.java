@@ -41,6 +41,12 @@ public class SwingDisplayComponent implements DisplayComponent
 	{
 		this.deviceCanvas = deviceCanvas;
 	}
+	
+	
+	public void init()
+	{
+	    displayImage = null;
+	}
 
 
 	public void addDisplayRepaintListener(DisplayRepaintListener l) 

@@ -48,6 +48,12 @@ public class SwtGraphics
 	}
 
 
+	public void dispose()
+	{
+		gc.dispose();
+	}
+
+
 	public void drawImage(Image image, int srcX, int srcY, int srcWidth, int srcHeight,
 			int destX, int destY, int destWidth, int destHeight) 
 	{

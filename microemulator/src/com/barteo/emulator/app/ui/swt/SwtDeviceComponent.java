@@ -24,6 +24,7 @@ import java.util.Enumeration;
 
 import javax.microedition.lcdui.Command;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
@@ -34,6 +35,7 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -52,12 +54,14 @@ import com.barteo.emulator.device.swt.SwtInputMethod;
 
 public class SwtDeviceComponent extends Canvas
 {
-	static SwtDeviceComponent instance;
-	SwtDisplayComponent dc;
+	private static SwtDeviceComponent instance;
+	private SwtDisplayComponent dc;
+	
+	private Image fBuffer = null;
 
-	SwtButton prevOverButton;
-	SwtButton overButton;
-	SwtButton pressedButton;
+	private SwtButton prevOverButton;
+	private SwtButton overButton;
+	private SwtButton pressedButton;
   
   KeyListener keyListener = new KeyListener()
   {
@@ -134,7 +138,7 @@ public class SwtDeviceComponent extends Canvas
   
 	public SwtDeviceComponent(Composite parent) 
 	{
-		super(parent, 0);
+		super(parent, SWT.NO_BACKGROUND);
 		instance = this;
     
 		dc = new SwtDisplayComponent(parent, this);    
@@ -161,43 +165,64 @@ public class SwtDeviceComponent extends Canvas
 	public Point computeSize(int wHint, int hHint, boolean changed)
 	{
 		Rectangle tmp = ((SwtDevice) DeviceFactory.getDevice()).getNormalImage().getBounds();
-		
+
 		return new Point(tmp.width, tmp.height);		
 	}
 							 
   
 	public void paintControl(PaintEvent pe) 
 	{
-		SwtGraphics gc = new SwtGraphics(pe.gc);
-		
-		gc.drawImage(((SwtDevice) DeviceFactory.getDevice()).getNormalImage(), 0, 0);
-    
-		Rectangle displayRectangle = 
-				((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle();
-		gc.translate(displayRectangle.x, displayRectangle.y);
-		dc.paint(gc);
-		gc.translate(-displayRectangle.x, -displayRectangle.y);
+		Point size= getSize();
 
-		Rectangle rect;
-		if (prevOverButton != null ) {
-			rect = prevOverButton.getRectangle();    
-			gc.drawImage(((SwtDevice) DeviceFactory.getDevice()).getNormalImage(), 
-					rect.x, rect.y, rect.width, rect.height,
-					rect.x, rect.y, rect.width, rect.height);
-			prevOverButton = null;
+		if (size.x <= 0 || size.y <= 0)
+		 return;
+
+		if (fBuffer != null) {
+			Rectangle r= fBuffer.getBounds();
+			if (r.width != size.x || r.height != size.y) {
+			fBuffer.dispose();
+			fBuffer= null;
+			}
 		}
-		if (overButton != null) {
-			rect = overButton.getRectangle();   
-			gc.drawImage(((SwtDevice) DeviceFactory.getDevice()).getOverImage(), 
-					rect.x, rect.y, rect.width, rect.height,
-					rect.x, rect.y, rect.width, rect.height);
+		if (fBuffer == null) {
+			fBuffer= new Image(getDisplay(), size.x, size.y);
 		}
-		if (pressedButton != null) {
-			rect = pressedButton.getRectangle();    
-			gc.drawImage(((SwtDevice) DeviceFactory.getDevice()).getPressedImage(), 
-					rect.x, rect.y, rect.width, rect.height,
-					rect.x, rect.y, rect.width, rect.height);
+
+		SwtGraphics gc = new SwtGraphics(new GC(fBuffer));
+		try {
+			gc.drawImage(((SwtDevice) DeviceFactory.getDevice()).getNormalImage(), 0, 0);
+    
+			Rectangle displayRectangle = 
+					((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle();
+			gc.translate(displayRectangle.x, displayRectangle.y);
+			dc.paint(gc);
+			gc.translate(-displayRectangle.x, -displayRectangle.y);
+
+			Rectangle rect;
+			if (prevOverButton != null ) {
+				rect = prevOverButton.getRectangle();    
+				gc.drawImage(((SwtDevice) DeviceFactory.getDevice()).getNormalImage(), 
+						rect.x, rect.y, rect.width, rect.height,
+						rect.x, rect.y, rect.width, rect.height);
+				prevOverButton = null;
+			}
+			if (overButton != null) {
+				rect = overButton.getRectangle();   
+				gc.drawImage(((SwtDevice) DeviceFactory.getDevice()).getOverImage(), 
+						rect.x, rect.y, rect.width, rect.height,
+						rect.x, rect.y, rect.width, rect.height);
+			}
+			if (pressedButton != null) {
+				rect = pressedButton.getRectangle();    
+				gc.drawImage(((SwtDevice) DeviceFactory.getDevice()).getPressedImage(), 
+						rect.x, rect.y, rect.width, rect.height,
+						rect.x, rect.y, rect.width, rect.height);
+			}
+		} finally {
+			gc.dispose();
 		}
+		
+		pe.gc.drawImage(fBuffer, 0, 0);
 	}
 
 

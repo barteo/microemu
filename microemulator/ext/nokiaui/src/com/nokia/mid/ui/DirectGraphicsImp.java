@@ -160,8 +160,11 @@ class DirectGraphicsImp implements DirectGraphics {
                 int ypos = yj * width;
                 for (int xj = 0; xj < width; xj++) {
                     c=doAlpha(pix, alpha, (line + xj) /8,b);
-                    if (g.getColor()!=c) g.setColor(c);
-                    g.drawLine(xj+x,yj+y,xj+x,yj+y);
+                    if((c >> 24 & 0xff)!=0)//alpha
+                    {
+                        if (g.getColor()!=c) g.setColor(c);
+                        g.drawLine(xj+x,yj+y,xj+x,yj+y);
+                    }
                     b--;
                     if(b<0)b=7;
                 }
@@ -177,7 +180,8 @@ class DirectGraphicsImp implements DirectGraphics {
                 for (int xj = 0; xj < width; xj++) {
                     c=doAlpha(pix, alpha, tmp + xj, b);
                     if (g.getColor()!=c) g.setColor(c);
-                    g.drawLine(xj+x,yj+y,xj+x,yj+y);
+                    if((c >> 24 & 0xff)!=0) //alpha
+                        g.drawLine(xj+x,yj+y,xj+x,yj+y);
                 }
                 b++;
                 if(b>7) b=0;
@@ -295,9 +299,9 @@ class DirectGraphicsImp implements DirectGraphics {
         if (isBitSet(pix[pos],shift))
             p=0;
         else
-            p=Integer.MAX_VALUE;
+            p=0x00FFFFFF;
         if (alpha == null || isBitSet(alpha[pos],shift))
-            a=Integer.MIN_VALUE;
+            a=0xFF000000;
         else
             a=0;
         return p|a;
@@ -307,5 +311,5 @@ class DirectGraphicsImp implements DirectGraphics {
     private static boolean isBitSet(byte b, int pos) {
         return ((b & (byte)(1 << pos)) != 0);
     }
- 
+    
 }

@@ -21,36 +21,89 @@
 
 package javax.microedition.rms;
 
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+
 
 public class RecordStore 
 {
 
+  private static Hashtable recordStores = new Hashtable();
+  
+  private String name;
+  private boolean open = false;
+  private Vector recordListeners = new Vector();
+  private Hashtable records = new Hashtable();
+  
 	
-	public static void deleteRecordStore(String recordStoreName)
+  private RecordStore(String name)
+  {
+    this.name = name;
+  }
+  
+  
+  public static void deleteRecordStore(String recordStoreName)
+      throws RecordStoreException, RecordStoreNotFoundException
 	{
+    RecordStore recordStore = (RecordStore) recordStores.get(recordStoreName);
+    if (recordStore == null) {
+      throw new RecordStoreNotFoundException();
+    }
+    if (recordStore.open) {
+      throw new RecordStoreException();
+    }
+    
+    recordStores.remove(recordStoreName);
 	}
 	
 	
 	public static RecordStore openRecordStore(String recordStoreName, boolean createIfNecessary)
+      throws RecordStoreException, RecordStoreFullException, RecordStoreNotFoundException
 	{
-		return null;
+    RecordStore recordStore = (RecordStore) recordStores.get(recordStoreName);
+    if (recordStore == null) {
+      if (!createIfNecessary) {
+        throw new RecordStoreNotFoundException();
+      }
+      recordStore = new RecordStore(recordStoreName);
+      recordStore.open = true;
+      recordStores.put(recordStoreName, recordStore);
+    }
+    
+		return recordStore;
 	}
 	
 	
 	public void closeRecordStore()
+      throws RecordStoreNotOpenException, RecordStoreException
 	{
+    if (!open) {
+      throw new RecordStoreNotOpenException();
+    }
+    
+    recordListeners.removeAllElements();
+    open = false;
 	}
 	
 	
 	public static String[] listRecordStores()
 	{
-		return null;
+    String[] result = new String[recordStores.size()];
+    
+    int i = 0;
+    for (Enumeration e = recordStores.keys(); e.hasMoreElements(); ) {
+      result[i] = (String) e.nextElement();
+      i++;
+    }
+    
+		return result;
 	}
 	
 	
 	public String getName()
 	{
-		return "this";
+		return name;
 	}
 	
 	
@@ -61,8 +114,13 @@ public class RecordStore
 
 
 	public int getNumRecords()
+      throws RecordStoreNotOpenException
 	{
-		return 0;
+    if (!open) {
+      throw new RecordStoreNotOpenException();
+    }
+    
+		return records.size();
 	}
 
 	
@@ -80,11 +138,15 @@ public class RecordStore
 
 	public void addRecordListener(RecordListener listener)
 	{
+    if (!recordListeners.contains(listener)) {
+      recordListeners.add(listener);
+    }
 	}
 	
 	
 	public void removeRecordListener(RecordListener listener)
 	{
+    recordListeners.remove(listener);
 	}
 	
 	

@@ -37,13 +37,27 @@ public abstract class Displayable
 
 	public void addCommand(Command cmd)
 	{
-		for (Enumeration e = commands.elements() ; e.hasMoreElements() ;) {
-			if (cmd == (Command) e.nextElement()) {
+    // Check that its not the same command
+    for (int i=0; i<commands.size(); i++) {
+      if (cmd == (Command)commands.elementAt(i)) {
+        // Its the same just return
 				return;
 			}
 		}
 
-		commands.addElement(cmd);
+    // Now insert it in order
+    boolean inserted = false;
+    for (int i=0; i<commands.size(); i++) {
+      if (cmd.getPriority() < ((Command)commands.elementAt(i)).getPriority()) {
+        commands.insertElementAt(cmd, i);
+        inserted = true;
+        break;
+      }
+    }
+    if (inserted == false) {
+      // Not inserted just place it at the end
+      commands.addElement(cmd);
+    }
 
 		if (isShown()) {
 			currentDisplay.updateCommands();

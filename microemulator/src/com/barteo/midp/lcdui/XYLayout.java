@@ -1,24 +1,22 @@
 /*
- * @(#)XYLayout.java  07/07/2001
+ *  MicroEmulator
+ *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
  *
- * Copyright (c) 2001 Bartek Teodorczyk <barteo@it.pl>. All Rights Reserved.
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
+ 
 package com.barteo.midp.lcdui;
 
 import java.awt.*;
@@ -32,43 +30,77 @@ public class XYLayout implements LayoutManager2
   int width;           // <= 0 means use the container's preferred size
   int height;          // <= 0 means use the container's preferred size
 
-  public XYLayout() {}
 
-  public XYLayout(int width, int height) {
+  public XYLayout() 
+  {
+  }
+
+
+  public XYLayout(int width, int height) 
+  {
     this.width  = width;
     this.height = height;
   }
 
-  public int getWidth() { return width; }
-  public void setWidth(int width) { this.width = width; }
 
-  public int getHeight() { return height; }
-  public void setHeight(int height) { this.height = height; }
+  public int getWidth() 
+  { 
+  	return width; 
+  }
+  
+  
+  public void setWidth(int width) 
+  { 
+  	this.width = width; 
+  }
 
-  public String toString() {
-    return "XYLayout" + "[width=" + width + ",height=" + height + "]";  //NORES
+
+  public int getHeight() 
+  { 
+  	return height; 
+  }
+  
+  
+  public void setHeight(int height) 
+  { 
+  	this.height = height; 
+  }
+
+
+  public String toString() 
+  {
+    return "XYLayout" + "[width=" + width + ",height=" + height + "]";
   }
 
   // LayoutManager interface
 
-  public void addLayoutComponent(String name, Component component) {
+  public void addLayoutComponent(String name, Component component) 
+  {
     //System.err.println("XYLayout.addLayoutComponent(" + name + "," + component + ")");
   }
   
-  public void removeLayoutComponent(Component component) {
+  
+  public void removeLayoutComponent(Component component) 
+  {
     //System.err.println("XYLayout.removeLayoutComponent(" + component + ")");
     info.remove(component);
   }
 
-  public Dimension preferredLayoutSize(Container target) {
+
+  public Dimension preferredLayoutSize(Container target) 
+  {
     return getLayoutSize(target, true);
   }
 
-  public Dimension minimumLayoutSize(Container target) {
+
+  public Dimension minimumLayoutSize(Container target) 
+  {
     return getLayoutSize(target, false);
   }
 
-  public void layoutContainer(Container target) {
+
+  public void layoutContainer(Container target) 
+  {
     Insets insets = target.getInsets();
     int count = target.getComponentCount();
     //System.err.println("XYLayout.layoutContainer(" + target + ") insets=" + insets + " count=" + count);
@@ -83,32 +115,43 @@ public class XYLayout implements LayoutManager2
 
   // LayoutManager2 interface
 
-  public void addLayoutComponent(Component component, Object constraints) {
+  public void addLayoutComponent(Component component, Object constraints) 
+  {
     //System.err.println("XYLayout.addLayoutComponent(" + component + "," + constraints + ")");
     if (constraints instanceof XYConstraints)
       info.put(component, constraints);
   }
+
   
-  public Dimension maximumLayoutSize(Container target) {
+  public Dimension maximumLayoutSize(Container target) 
+  {
     return new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
   }
 
-  public float getLayoutAlignmentX(Container target) {
+
+  public float getLayoutAlignmentX(Container target) 
+  {
     return 0.5f;
   }
 
-  public float getLayoutAlignmentY(Container target) {
+
+  public float getLayoutAlignmentY(Container target) 
+  {
     return 0.5f;
   }
 
-  public void invalidateLayout(Container target) {}
+
+  public void invalidateLayout(Container target) 
+  {
+  }
 
   // internal
 
   Hashtable info = new Hashtable(); // leave this as non-transient
   static final XYConstraints defaultConstraints = new XYConstraints();
 
-  Rectangle getComponentBounds(Component component, boolean doPreferred) {
+  Rectangle getComponentBounds(Component component, boolean doPreferred) 
+  {
     XYConstraints constraints = (XYConstraints)info.get(component);
     //System.err.println("XYLayout.getComponentBounds(" + component + "," + doPreferred + ") constraints=" + constraints + " width=" + width + " height=" + height);
     if (constraints == null)
@@ -124,7 +167,9 @@ public class XYLayout implements LayoutManager2
     return r;
   }
 
-  Dimension getLayoutSize(Container target, boolean doPreferred) {
+
+  Dimension getLayoutSize(Container target, boolean doPreferred) 
+  {
     Dimension dim = new Dimension(0, 0);
 
     //System.err.println("XYLayout.getLayoutSize(" + target + "," + doPreferred + ") width=" + width + " height=" + height);

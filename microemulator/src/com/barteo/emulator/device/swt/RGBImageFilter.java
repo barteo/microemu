@@ -20,6 +20,7 @@
 package com.barteo.emulator.device.swt;
 
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 
 import com.barteo.emulator.app.ui.swt.ImageFilter;
 import com.barteo.emulator.device.DeviceFactory;
@@ -45,27 +46,28 @@ public final class RGBImageFilter implements ImageFilter
   }
 
 
-  public int filterRGB (int x, int y, int r, int g, int b)
+  public RGB filterRGB (int x, int y, RGB rgb)
 	{
     int a = 0;
+    int r, g, b;
 
     if (Rr > 0) {
-      r = (int) (r * Rr) / 256 + backgroundColor.getRed();
+      r = (int) (rgb.red * Rr) / 256 + backgroundColor.getRed();
     } else {
-      r = (int) (r * -Rr) / 256 + foregroundColor.getRed();
+      r = (int) (rgb.red * -Rr) / 256 + foregroundColor.getRed();
     }
     if (Rr > 0) {
-      g = (int) (g * Rg) / 256 + backgroundColor.getGreen();
+      g = (int) (rgb.green * Rg) / 256 + backgroundColor.getGreen();
     } else {
-      g = (int) (g * -Rg) / 256 + foregroundColor.getGreen();
+      g = (int) (rgb.green * -Rg) / 256 + foregroundColor.getGreen();
     }
     if (Rr > 0) {
-      b = (int) (b * Rb) / 256 + backgroundColor.getBlue();
+      b = (int) (rgb.blue * Rb) / 256 + backgroundColor.getBlue();
     } else {
-      b = (int) (b * -Rb) / 256 + foregroundColor.getBlue();
+      b = (int) (rgb.blue * -Rb) / 256 + foregroundColor.getBlue();
     }
 
-    return a | (r << 16) | (g << 8) | b;
+    return new RGB(r, g, b);
   }
 
 }

@@ -33,6 +33,7 @@ import nanoxml.XMLParseException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 
 import com.barteo.emulator.EmulatorContext;
@@ -323,11 +324,15 @@ public class SwtDevice implements Device
           } else if (tmp_display.getName().equals("iscolor")) {
             deviceDisplay.isColor = parseBoolean(tmp_display.getContent());
           } else if (tmp_display.getName().equals("background")) {
+          	int color = Integer.parseInt(tmp_display.getContent(), 16);
             deviceDisplay.backgroundColor = 
-            		SwtDeviceComponent.createColor(Integer.parseInt(tmp_display.getContent(), 16));
+            		SwtDeviceComponent.createColor(
+            				new RGB((color >> 16) % 256, (color >> 8) % 256, color % 256));
           } else if (tmp_display.getName().equals("foreground")) {
+						int color = Integer.parseInt(tmp_display.getContent(), 16);
             deviceDisplay.foregroundColor = 
-								SwtDeviceComponent.createColor(Integer.parseInt(tmp_display.getContent(), 16));
+								SwtDeviceComponent.createColor(
+										new RGB((color >> 16) % 256, (color >> 8) % 256, color % 256));
           } else if (tmp_display.getName().equals("rectangle")) {
             deviceDisplay.displayRectangle = getRectangle(tmp_display);
           } else if (tmp_display.getName().equals("paintable")) {

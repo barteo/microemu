@@ -20,6 +20,7 @@
 package com.barteo.emulator.device.swt;
 
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 
 import com.barteo.emulator.app.ui.swt.ImageFilter;
 import com.barteo.emulator.device.DeviceFactory;
@@ -53,20 +54,20 @@ public final class GrayImageFilter implements ImageFilter
   }
 
 
-  public int filterRGB (int x, int y, int r, int g, int b)
+  public RGB filterRGB (int x, int y, RGB rgb)
 	{
     int a = 0;
-    int Y = (int)(Yr * r + Yg * g + Yb * b) % 256;
+    int Y = (int)(Yr * rgb.red + Yg * rgb.green + Yb * rgb.blue) % 256;
     if (Y > 255) {
       Y = 255;
     }
     Color foregroundColor = 
-        ((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor();    
-    r = (int) (Rr * Y) + foregroundColor.getRed();
-    g = (int) (Rg * Y) + foregroundColor.getGreen();
-    b = (int) (Rb * Y) + foregroundColor.getBlue();
-
-    return a | (r << 16) | (g << 8) | b;
+        ((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor();
+    
+    return new RGB(    
+    		(int) (Rr * Y) + foregroundColor.getRed(),
+    		(int) (Rg * Y) + foregroundColor.getGreen(),
+    		(int) (Rb * Y) + foregroundColor.getBlue());
   }
 
 }

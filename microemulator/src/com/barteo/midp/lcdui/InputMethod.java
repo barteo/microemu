@@ -28,11 +28,11 @@ public abstract class InputMethod
 	public static final int INPUT_NONE = 0;
 	public static final int INPUT_123 = 1;
 	public static final int INPUT_ABC_UPPER = 2;
-	public static final int INPUT_ABC_LOWER = 3;	
+	public static final int INPUT_ABC_LOWER = 3;
 
 	static InputMethod inputMethod = null;
 	int inputMode = INPUT_NONE;
-	
+
 	InputMethodListener inputMethodListener = null;
 	String text;
 	int caret;
@@ -44,12 +44,14 @@ public abstract class InputMethod
 		if (inputMethod == null) {
 			inputMethod = new DefaultInputMethod();
 		}
-		
+
 		return inputMethod;
 	}
 
 
 	public abstract void keyPressed(int keyCode);
+
+	public abstract void keyReleased(int keyCode);
 
 
 	public void removeInputMethodListener(InputMethodListener l)
@@ -59,7 +61,7 @@ public abstract class InputMethod
 			setInputMode(INPUT_NONE);
 		}
 	}
-	
+
 
 	public void setInputMethodListener(InputMethodListener l)
 	{

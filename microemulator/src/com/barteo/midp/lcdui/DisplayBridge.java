@@ -104,6 +104,14 @@ public class DisplayBridge
 	}
 
 
+	public static void keyReleased(int keyCode)
+	{
+		if (da != null) {
+			da.keyReleased(keyCode);
+		}
+	}
+
+
 	public static void paint(Graphics g)
 	{
 		if (da != null) {

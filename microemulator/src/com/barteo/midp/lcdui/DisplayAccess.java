@@ -34,8 +34,10 @@ public interface DisplayAccess
 
 	public void keyPressed(int keyCode);
 
+	public void keyReleased(int keyCode);
+
 	public void paint(Graphics g);
-  
+
   public Displayable getCurrent();
 
   public void setCurrent(Displayable d);

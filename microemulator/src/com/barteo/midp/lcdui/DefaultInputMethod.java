@@ -29,7 +29,7 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 
 	int[] deviceKeys = {
 			KeyEvent.VK_0,
-			KeyEvent.VK_1, 
+			KeyEvent.VK_1,
 			KeyEvent.VK_2,
 			KeyEvent.VK_3,
 			KeyEvent.VK_4,
@@ -39,7 +39,7 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 			KeyEvent.VK_8,
 			KeyEvent.VK_9
 	};
-	
+
 	char[][] abcUpperKeys = {
 			{ ' ', '0' },
 			{ '.', ',', '?', '!', ':', ';', '-', '+', '#', '*', '1' },
@@ -52,7 +52,7 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 			{ 'T', 'U', 'V', '8' },
 			{ 'W', 'X', 'Y', 'Z', '9' }
 	};
-	
+
 	char[][] abcLowerKeys = {
 			{ ' ', '0' },
 			{ '.', ',', '?', '!', ':', ';', '-', '+', '#', '*', '1' },
@@ -65,7 +65,7 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 			{ 't', 'u', 'v', '8' },
 			{ 'w', 'x', 'y', 'z', '9' }
 	};
-	
+
 	char[][] numericKeys = {
 			{ '0' },
 			{ '1' },
@@ -78,13 +78,13 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 			{ '8' },
 			{ '9' }
 	};
-	
+
 	int lastKeyIndex = -1;
 	int lastKeyCountIndex = -1;
 	boolean resetKey;
-	
+
 	Thread t;
-				
+
 
 	DefaultInputMethod()
 	{
@@ -96,12 +96,12 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 	public void keyPressed(int keyCode)
 	{
 		String tmp;
-		
+
 		if (inputMethodListener == null) {
 			DisplayBridge.keyPressed(keyCode);
 			return;
 		}
-		
+
 		if (keyCode == KeyEvent.VK_MODECHANGE) {
 			if (getInputMode() == InputMethod.INPUT_123) {
 				setInputMode(InputMethod.INPUT_ABC_UPPER);
@@ -121,7 +121,7 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 			inputMethodListener.caretPositionChanged(event);
 			return;
 		}
-		
+
 		if (keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_RIGHT) {
 			synchronized (this) {
 				if (keyCode == KeyEvent.VK_LEFT && caret > 0) {
@@ -137,7 +137,7 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 			inputMethodListener.caretPositionChanged(event);
 			return;
 		}
-		
+
 		if (keyCode == KeyEvent.VK_BACK_SPACE) {
 			synchronized (this) {
 				if (lastKeyIndex != -1) {
@@ -152,7 +152,7 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 						tmp += text.substring(0, caret);
 					}
 					if (caret < text.length() - 1) {
-						tmp += text.substring(caret + 1); 
+						tmp += text.substring(caret + 1);
 					}
 					text = tmp;
 				}
@@ -162,7 +162,7 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 			inputMethodListener.caretPositionChanged(event);
 			return;
 		}
-		
+
 		if (text.length() < maxSize) {
 			char[][] transformKeys = null;
 			if (getInputMode() == InputMethod.INPUT_123) {
@@ -196,7 +196,7 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 							}
 							tmp += transformKeys[i][0];
 							if (caret < text.length()) {
-								tmp += text.substring(caret); 
+								tmp += text.substring(caret);
 							}
 							text = tmp;
 							lastKeyCountIndex = 0;
@@ -207,7 +207,7 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 							}
 							tmp += transformKeys[i][lastKeyCountIndex];
 							if (caret < text.length() - 1) {
-								tmp += text.substring(caret + 1); 
+								tmp += text.substring(caret + 1);
 							}
 							text = tmp;
 						}
@@ -223,8 +223,14 @@ public class DefaultInputMethod extends InputMethod implements Runnable
 			}
 		}
 	}
-	
-	
+
+
+	public void keyReleased(int keyCode)
+	{
+		DisplayBridge.keyReleased(keyCode);
+  }
+
+
 	public void run()
 	{
 		while (true) {

@@ -32,7 +32,7 @@ public abstract class Displayable
 
 	Vector commands = new Vector();
 	CommandListener listener = null;
-	
+
 
 	public void addCommand(Command cmd)
 	{
@@ -43,7 +43,7 @@ public abstract class Displayable
 		}
 
 		commands.addElement(cmd);
-		
+
 		if (isShown()) {
 			currentDisplay.updateCommands();
 		}
@@ -53,7 +53,7 @@ public abstract class Displayable
 	public void removeCommand(Command cmd)
 	{
 		commands.removeElement(cmd);
-		
+
 		if (isShown()) {
 			currentDisplay.updateCommands();
 		}
@@ -67,8 +67,8 @@ public abstract class Displayable
 		}
 		return currentDisplay.isShown(this);
 	}
-	
-	
+
+
 	public void setCommandListener(CommandListener l)
 	{
 		listener = l;
@@ -91,7 +91,7 @@ public abstract class Displayable
 	{
 	}
 
-	
+
 	void hideNotify(Display d)
 	{
 		currentDisplay = null;
@@ -104,16 +104,21 @@ public abstract class Displayable
 	}
 
 
+	void keyReleased(int keyCode)
+	{
+	}
+
+
 	abstract void paint(Graphics g);
-	
-	
+
+
 	void repaint()
 	{
 		if (currentDisplay != null) {
 			currentDisplay.repaint(this);
 		}
 	}
-	
+
 
 	void showNotify()
 	{
@@ -125,5 +130,5 @@ public abstract class Displayable
 		currentDisplay = d;
 		showNotify();
 	}
-	
+
 }

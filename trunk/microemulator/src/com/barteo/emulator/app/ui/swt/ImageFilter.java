@@ -19,10 +19,12 @@
  
 package com.barteo.emulator.app.ui.swt;
 
+import org.eclipse.swt.graphics.RGB;
+
 
 public interface ImageFilter 
 {
 
-	int filterRGB (int x, int y, int r, int g, int b);
+	RGB filterRGB (int x, int y, RGB rgb);
 	
 }

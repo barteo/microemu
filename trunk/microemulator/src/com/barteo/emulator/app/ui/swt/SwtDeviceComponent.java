@@ -297,13 +297,9 @@ System.out.println(ev.keyCode +"+"+ ev.character +"+"+ button.isChar(ev.characte
 		ImageData data = new ImageData(is);
 		
 		RGB[] rgbs = data.getRGBs();	
-		RGB rgb;
-		for (int y = 0; y < data.height; y++) {
-			for (int x = 0; x < data.width; x++) {
-				rgb = rgbs[data.getPixel(x, y)];
-				data.setPixel(x, y, filter.filterRGB(x, y, rgb.red, rgb.green, rgb.blue));
-			}
-		}
+		for (int i = 0; i < rgbs.length; i++) {
+			rgbs[i] = filter.filterRGB(0, 0, rgbs[i]);
+		}		
 			
 		CreateImageRunnable createImageRunnable = instance.new CreateImageRunnable(data);		
 		instance.getDisplay().syncExec(createImageRunnable); 
@@ -314,10 +310,10 @@ System.out.println(ev.keyCode +"+"+ ev.character +"+"+ button.isChar(ev.characte
 	
 	private class CreateColorRunnable implements Runnable
 	{
-		private int rgb;
+		private RGB rgb;
 		private Color color;
 		
-		CreateColorRunnable(int rgb)
+		CreateColorRunnable(RGB rgb)
 		{
 			this.rgb = rgb;
 		}
@@ -329,15 +325,12 @@ System.out.println(ev.keyCode +"+"+ ev.character +"+"+ button.isChar(ev.characte
 			
 		public void run() 
 		{
-			color = new Color(instance.getParent().getDisplay(),
-					(rgb >> 16) % 256,
-					(rgb >> 8) % 256,
-					rgb % 256);	
+			color = new Color(instance.getParent().getDisplay(), rgb);
 		}		
 	}
 
 
-	public static Color createColor(int rgb) 
+	public static Color createColor(RGB rgb) 
 	{
 		CreateColorRunnable createColorRunnable = instance.new CreateColorRunnable(rgb);
 		

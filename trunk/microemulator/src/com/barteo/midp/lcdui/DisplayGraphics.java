@@ -136,9 +136,7 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 
 	public void fillRect(int x, int y, int width, int height)
 	{
-		for (int i = y; i <= (y + height); i++) {
-			drawLine(x, i, x + width, i);
-		}
+    g.fillRect(x, y, width, height);
 	}
 
 

@@ -61,16 +61,16 @@ class StringComponent
 
 	int getCharPositionX(int num)
 	{
-		int i, previndex = 0;
+		int i, prevIndex = 0;
 		Font f = Font.getDefaultFont();
 
 		for (i = 0; i < numOfBreaks; i++) {
 			if (num < breaks[i]) {
 				break;
 			}
-			previndex = breaks[i];
+			prevIndex = breaks[i];
 		}
-		return f.substringWidth(text, previndex, num - previndex);
+		return f.substringWidth(text, prevIndex, num - prevIndex);
 	}
 
 
@@ -87,6 +87,12 @@ class StringComponent
 		}
 
 		return y;
+	}
+	
+	
+	int getCharHeight()
+	{
+		return Font.getDefaultFont().getHeight();
 	}
 
 
@@ -169,9 +175,6 @@ class StringComponent
       }
       g.drawSubstring(text, prevIndex, breaks[i] - prevIndex, 0, y, 0);
 			prevIndex = breaks[i];
-      if (text.charAt(prevIndex) == '\n' || text.charAt(prevIndex) == ' ') {
-				prevIndex++;
-			}
 			y += f.getHeight();
     }
 		if (prevIndex != text.length()) {

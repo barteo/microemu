@@ -70,7 +70,7 @@ public class SwingDeviceComponent extends JPanel
           }
         } else {
           int key = pressedButton.getKey();
-          KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key);
+          KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key, KeyEvent.CHAR_UNDEFINED);
           DeviceFactory.getDevice().getInputMethod().keyPressed(ev.getKeyCode());
         }
         repaint();
@@ -83,7 +83,7 @@ public class SwingDeviceComponent extends JPanel
       J2SEButton prevOverButton = getButton(e.getX(), e.getY());
       if (prevOverButton != null) {
         int key = prevOverButton.getKey();
-        KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key);
+        KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key, KeyEvent.CHAR_UNDEFINED);
 
         DeviceFactory.getDevice().getInputMethod().keyReleased(ev.getKeyCode());
       }

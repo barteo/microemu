@@ -22,6 +22,7 @@ package com.barteo.emulator.app.ui.swt;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -39,6 +40,9 @@ public abstract class SwtDialog
 	private Shell parentShell;
 	private Shell shell;
 	
+	protected Control dialogArea;
+	protected Control buttonBar;
+
 	private boolean resizeHasOccurred = false;
 	private Listener resizeListener;
 	private Control contents;
@@ -144,9 +148,41 @@ public abstract class SwtDialog
 
 	protected Control createContents(Composite parent) 
 	{
-		return new Composite(parent, SWT.NONE);
+		Composite composite = new Composite(parent, 0);
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.marginWidth = 0;
+		layout.verticalSpacing = 0;
+		composite.setLayout(layout);
+		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+		composite.setFont(parent.getFont());
+
+		dialogArea = createDialogArea(composite);
+		buttonBar = createButtonBar(composite);
+
+		return composite;
 	}
 
+
+	protected Control createDialogArea(Composite parent) 
+	{
+		Composite composite = new Composite(parent, SWT.NONE);
+		
+		composite.setLayout(new GridLayout());
+		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+		composite.setFont(parent.getFont());
+
+		return composite;
+	}
+	
+
+	protected Control createButtonBar(Composite parent) 
+	{
+		Composite composite = new Composite(parent, SWT.NONE);
+		
+		return composite;
+	}
+	
 
 	protected void initializeBounds() 
 	{

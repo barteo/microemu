@@ -1,69 +1,108 @@
 /*
- * Layer.java
+ *  Siemens API for MicroEmulator
+ *  Copyright (C) 2003 Markus Heberling <markus@heberling.net>
  *
- * Created on 2. Juli 2003, 12:45
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.siemens.mp.color_game;
 
-import javax.microedition.midlet.*;
+import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
 
-/**
- *
- * @author  markus
- * @version
- */
 public abstract class Layer {
-    protected Layer(javax.microedition.lcdui.Image image) {
+    Image image;
+    protected Layer(int width, int height) {
+        this.width=width;
+        this.height=height;
     }
     
-    protected Layer(int width, int height) {
+    protected Layer(Image img) {
+        this(img.getWidth(),img.getHeight());
+        image=img;
     }
     
     protected  void copyAllLayerVariables(com.siemens.mp.color_game.Layer l) {
+        l.width=width;
+        l.height=height;
+        l.x=x;
+        l.y=y;
+        l.image=image;
     }
     
-    public int getHeight() {
-        return 0;
+    protected void setLayerImage(Image img) {
+        image=img;
     }
     
     protected  javax.microedition.lcdui.Image getLayerImage() {
-        return null;
-    }
-    
-    public int getWidth() {
-        return 0;
-    }
-    
-    public int getX() {
-        return 0;
-    }
-    
-    public int getY() {
-        return 0;
-    }
-    
-    public boolean isVisible() {
-        return false;
-    }
-    
-    public void move(int dx, int dy) {
-    }
-    
-    public abstract  void paint(javax.microedition.lcdui.Graphics g);
-    
-    public void setHeight(int height) {
-    }
-    
-    protected  void setLayerImage(javax.microedition.lcdui.Image image) {
+        return image;
     }
     
     public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
+    
+    
+    public void move(int dx, int dy) {
+        x += dx;
+        y += dy;
+    }
+    
+    
+    public final int getX() {
+        return x;
+    }
+    
+    
+    public final int getY() {
+        return y;
+    }
+    
+    public final int getWidth() {
+        return width;
+    }
+    
+    
+    public final int getHeight() {
+        return height;
+    }
+    
     
     public void setVisible(boolean visible) {
+        this.visible = visible;
     }
     
-    public void setWidth(int width) {
+    
+    public final boolean isVisible() {
+        return visible;
     }
+    
+    public abstract void paint(Graphics g);
+    
+    void setWidthImpl(int w){
+        width=w;
+    }
+    
+    void setHeightImpl(int h){
+        height=h;
+    }
+    
+    int x; // = 0;
+    int y; // = 0;
+    int width; // = 0;
+    int height; // = 0;
+    boolean visible = true;
+    
 }

@@ -82,6 +82,7 @@ public class SwtButton
   
   private int getKeyCode(String keyName)
   {
+System.out.println(keyName);  	
     int key = -1;
 
 	// TODO poprawic KeyEvent	

@@ -25,6 +25,7 @@ import java.util.Enumeration;
 import javax.microedition.lcdui.Command;
 
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
@@ -59,9 +60,35 @@ public class SwtDeviceComponent extends Canvas
 	SwtButton overButton;
 	SwtButton pressedButton;
   
+  KeyListener keyListener = new KeyListener()
+  {
+		public void keyPressed(KeyEvent ev)
+		{
+System.out.println(ev.keyCode);			
+System.out.println(ev.character);			
+			((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).keyboardKeyPressed(ev);
+			pressedButton = getButton(ev);
+			redraw();
+			if (pressedButton instanceof SoftButton) {
+				Command cmd = ((SoftButton) pressedButton).getCommand();
+				if (cmd != null) {
+					CommandManager.getInstance().commandAction(cmd);
+				}
+			}      
+		}   
+	  
+		public void keyReleased(KeyEvent ev)
+		{
+			((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).keyboardKeyReleased(ev);
+			prevOverButton = pressedButton;
+			pressedButton = null;
+			redraw();      
+		}   
+  };
+  
 	MouseAdapter mouseListener = new MouseAdapter() 
 	{    
-		public void mousePressed(MouseEvent e) 
+		public void mouseDown(MouseEvent e) 
 		{
 			pressedButton = getButton(e.x, e.y);
 			if (pressedButton != null) {
@@ -71,23 +98,17 @@ public class SwtDeviceComponent extends Canvas
 						CommandManager.getInstance().commandAction(cmd);
 					}
 				} else {
-					int key = pressedButton.getKey();
-					// TODO poprawic KeyEvent	
-/*					KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key, KeyEvent.CHAR_UNDEFINED);
-					DeviceFactory.getDevice().getInputMethod().keyPressed(ev.getKeyCode());*/
+					DeviceFactory.getDevice().getInputMethod().keyPressed(pressedButton.getKey());
 				}
 				redraw();
 			}
 		}
 
-		public void mouseReleased(MouseEvent e) 
+		public void mouseUp(MouseEvent e) 
 		{
 			SwtButton prevOverButton = getButton(e.x, e.y);
 			if (prevOverButton != null) {
-				int key = prevOverButton.getKey();
-				// TODO poprawic KeyEvent	
-/*				KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key, KeyEvent.CHAR_UNDEFINED);
-				DeviceFactory.getDevice().getInputMethod().keyReleased(ev.getKeyCode());*/
+				DeviceFactory.getDevice().getInputMethod().keyReleased(prevOverButton.getKey());
 			}
 			pressedButton = null;
 			redraw();      
@@ -121,6 +142,7 @@ public class SwtDeviceComponent extends Canvas
     
 		dc = new SwtDisplayComponent(parent);    
     
+		addKeyListener(keyListener);
 		addMouseListener(mouseListener);
 		addMouseMoveListener(mouseMoveListener);
 		addPaintListener(new PaintListener() 
@@ -146,28 +168,6 @@ public class SwtDeviceComponent extends Canvas
 		return new Point(tmp.width, tmp.height);		
 	}
 							 
-	public void keyPressed(KeyEvent ev)
-	{
-		((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).keyboardKeyPressed(ev);
-		pressedButton = getButton(ev);
-		redraw();
-		if (pressedButton instanceof SoftButton) {
-			Command cmd = ((SoftButton) pressedButton).getCommand();
-			if (cmd != null) {
-				CommandManager.getInstance().commandAction(cmd);
-			}
-		}      
-	}
-   
-  
-	public void keyReleased(KeyEvent ev)
-	{
-		((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).keyboardKeyReleased(ev);
-		prevOverButton = pressedButton;
-		pressedButton = null;
-		redraw();      
-	}
-   
   
 	public void paintControl(PaintEvent pe) 
 	{
@@ -245,9 +245,9 @@ public class SwtDeviceComponent extends Canvas
 	public static Color createColor(int rgb) 
 	{
 		return new Color(instance.getParent().getDisplay(),
-				(rgb >> 16) % 255,
-				(rgb >> 8) % 255,
-				rgb % 255);
+				(rgb >> 16) % 256,
+				(rgb >> 8) % 256,
+				rgb % 256);
 	}
 
 

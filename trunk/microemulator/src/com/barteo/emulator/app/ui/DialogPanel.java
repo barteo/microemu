@@ -32,6 +32,7 @@ public class DialogPanel extends JPanel
   public JButton btOk = new JButton("OK");
   public JButton btCancel = new JButton("Cancel");
 
+  boolean state;
 
   /**
    * Walidacja panelu
@@ -45,9 +46,11 @@ public class DialogPanel extends JPanel
   }
 
 
-  /**
-   * Metoda wywolywana w momencie wyswietlania okna dialogowego
-   */
+  protected void hideNotify()
+  {
+  }
+
+  
   protected void showNotify()
   {
   }

@@ -281,6 +281,12 @@ public class XMLElement
    }
 
 
+   public XMLElement(boolean skipLeadingWhitespace, boolean ignoreCase)
+   {
+      this(new Hashtable(), skipLeadingWhitespace, true, ignoreCase);
+   }
+
+
    /**
     * Creates and initializes a new XML element.
     * Calling the construction is equivalent to:

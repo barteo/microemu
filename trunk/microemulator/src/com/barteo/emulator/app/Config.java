@@ -20,7 +20,11 @@
 package com.barteo.emulator.app;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -32,19 +36,16 @@ import nanoxml.XMLParseException;
 
 public class Config 
 {
-  static String configPath;
+  private static String configPath = System.getProperty("user.home") + "/.microemulator/config.xml";
+  private static Vector devices = new Vector();
   
-  Vector devices = new Vector();
   
-  
-  public Config(String configPath)
+  static void loadConfig()
   {
-    this.configPath = configPath;
-    loadConfig();
-  }
-  
-  void loadConfig()
-  {
+    DeviceEntry defaultDevice = 
+        new DeviceEntry("Default device", null, "com.barteo.emulator.device.j2se.J2SEDevice", true, false);
+    devices.add(defaultDevice);
+
     String xml = "";
     try {
       InputStream dis = new BufferedInputStream(new FileInputStream(configPath));
@@ -53,8 +54,11 @@ public class Config
         dis.read(b);
         xml += new String(b);
       }
-    } catch (Exception ex) {
-      System.err.println(ex);
+    } catch (FileNotFoundException ex) {
+      loadDefaultConfig();
+      return;
+    } catch (IOException ex) {
+      System.out.println(ex);
       loadDefaultConfig();
       return;
     }
@@ -75,8 +79,9 @@ public class Config
           XMLElement tmp_device = (XMLElement) e_device.nextElement();
           if (tmp_device.getName().equals("device")) {            
             boolean devDefault = false;
-            if (tmp.getStringAttribute("default").equals("true")) {
+            if (tmp_device.getStringAttribute("default") != null && tmp_device.getStringAttribute("default").equals("true")) {
               devDefault = true;
+              defaultDevice.setDefaultDevice(false);
             }
             String devName = null;
             String devFile = null;
@@ -85,7 +90,7 @@ public class Config
               XMLElement tmp_cont = (XMLElement) e_cont.nextElement();
               if (tmp_cont.getName().equals("name")) {
                 devName = tmp_cont.getContent();
-              } else if (tmp_cont.getName().equals("file")) {
+              } else if (tmp_cont.getName().equals("filename")) {
                 devFile = tmp_cont.getContent();
               } else if (tmp_cont.getName().equals("class")) {
                 devClass = tmp_cont.getContent();
@@ -99,13 +104,61 @@ public class Config
   }
   
   
-  void loadDefaultConfig()
+  private static void loadDefaultConfig()
   {
   }
   
   
-  static void saveConfig()
+  public static void saveConfig()
   {
+    XMLElement xmlTmp;
+    XMLElement xmlRoot = new XMLElement();
+    xmlRoot.setName("config");
+    XMLElement xmlDevices = new XMLElement();
+    xmlDevices.setName("devices");
+    xmlRoot.addChild(xmlDevices);
+    
+    for (Enumeration e = devices.elements(); e.hasMoreElements(); ) {
+      DeviceEntry entry = (DeviceEntry) e.nextElement();
+      if (!entry.canRemove()) {
+        continue;
+      }
+      
+      XMLElement xmlDevice = new XMLElement(false, false);
+      xmlDevice.setName("device");
+      xmlDevices.addChild(xmlDevice);
+      if (entry.isDefaultDevice()) {
+        xmlDevice.setAttribute("default", "true");
+      }
+      xmlTmp = new XMLElement();
+      xmlTmp.setName("name");
+      xmlTmp.setContent(entry.getName());
+      xmlDevice.addChild(xmlTmp);
+      xmlTmp = new XMLElement();
+      xmlTmp.setName("filename");
+      xmlTmp.setContent(entry.getFileName());
+      xmlDevice.addChild(xmlTmp);
+      xmlTmp = new XMLElement();
+      xmlTmp.setName("class");
+      xmlTmp.setContent(entry.getClassName());
+      xmlDevice.addChild(xmlTmp);      
+    }
+    
+    File f = new File(configPath);
+    f.getParentFile().mkdirs();
+    try {
+      FileWriter fw = new FileWriter(f);
+      xmlRoot.write(fw);
+      fw.close();
+    } catch (IOException ex) {
+      System.out.println(ex);
+    }
   }  
+  
+  
+  public static Vector getDevices()
+  {
+    return devices;
+  }
   
 }

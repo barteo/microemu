@@ -252,6 +252,7 @@ public class Main extends JFrame implements MicroEmulator
     
     setTitle("MicroEmulator");
     
+    Config.loadConfig();
     addKeyListener(keyListener);
 
     devicePanel = new SwingDeviceComponent();
@@ -341,10 +342,13 @@ public class Main extends JFrame implements MicroEmulator
   public void setDevice(DeviceEntry entry)
   {
     try {
-      J2SEDevice device = (J2SEDevice) entry.getDeviceClass().newInstance();
+      Class deviceClass = Class.forName(entry.getClassName());
+      J2SEDevice device = (J2SEDevice) deviceClass.newInstance();
       DeviceFactory.setDevice(device);
       device.init(devicePanel.getEmulatorContext());
       devicePanel.init();
+    } catch (ClassNotFoundException ex) {
+      System.err.println(ex);          
     } catch (InstantiationException ex) {
       System.err.println(ex);          
     } catch (IllegalAccessException ex) {

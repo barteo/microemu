@@ -25,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Vector;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.jar.JarFile;
@@ -43,6 +44,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 
+import com.barteo.emulator.app.Config;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.device.j2se.J2SEDevice;
 
@@ -156,7 +158,8 @@ public class SelectDevicePanel extends DialogPanel
           return;
         }
         
-        DeviceEntry entry = new DeviceEntry(deviceName, null, deviceClass, false);
+        DeviceEntry entry = 
+            new DeviceEntry(deviceName, fileChooser.getSelectedFile().getAbsolutePath(), deviceClassName, false);
         lsDevicesModel.addElement(entry);
         lsDevices.setSelectedValue(entry, true);
       }
@@ -253,13 +256,12 @@ public class SelectDevicePanel extends DialogPanel
     
     add(panel, BorderLayout.SOUTH);
     
-    try {
-      Class device = loader.loadClass("com.barteo.emulator.device.j2se.J2SEDevice");
-      DeviceEntry entry = new DeviceEntry("Default device", null, device, true, false);
+    for (Enumeration e = Config.getDevices().elements(); e.hasMoreElements(); ) {
+      DeviceEntry entry = (DeviceEntry) e.nextElement();
       lsDevicesModel.addElement(entry);
-      lsDevices.setSelectedValue(entry, true);
-    } catch (ClassNotFoundException ex) {
-System.err.println(ex);      
+      if (entry.isDefaultDevice()) {
+        lsDevices.setSelectedValue(entry, true);
+      }
     }
   }
   
@@ -267,6 +269,19 @@ System.err.println(ex);
   public DeviceEntry getSelectedDeviceEntry()
   {
     return (DeviceEntry) lsDevices.getSelectedValue();
+  }
+  
+  
+  public void hideNotify()
+  {
+    Vector devices = Config.getDevices();
+    devices.removeAllElements();
+    
+    for (Enumeration e = lsDevicesModel.elements(); e.hasMoreElements(); ) {
+      devices.add(e.nextElement());
+    }
+    
+    Config.saveConfig();
   }
     
 }

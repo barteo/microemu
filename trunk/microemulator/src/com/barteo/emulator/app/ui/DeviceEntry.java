@@ -23,23 +23,23 @@ package com.barteo.emulator.app.ui;
 public class DeviceEntry
 {
   private String name;
-  private String file;
-  private Class deviceClass;
+  private String fileName;
+  private String className;
   private boolean defaultDevice;
   private boolean canRemove;
   
   
-  public DeviceEntry(String name, String file, Class deviceClass, boolean defaultDevice)
+  public DeviceEntry(String name, String fileName, String className, boolean defaultDevice)
   {
-    this(name, file, deviceClass, defaultDevice, true);
+    this(name, fileName, className, defaultDevice, true);
   }
   
   
-  DeviceEntry(String name, String file, Class deviceClass, boolean defaultDevice, boolean canRemove)
+  public DeviceEntry(String name, String fileName, String className, boolean defaultDevice, boolean canRemove)
   {
     this.name = name;
-    this.file = file;
-    this.deviceClass = deviceClass;
+    this.fileName = fileName;
+    this.className = className;
     this.defaultDevice = defaultDevice;
     this.canRemove = canRemove;
   }
@@ -51,9 +51,21 @@ public class DeviceEntry
   }
   
   
-  public Class getDeviceClass()
+  public String getClassName()
   {
-    return deviceClass;
+    return className;
+  }
+  
+  
+  public String getFileName()
+  {
+    return fileName;
+  }
+  
+  
+  public String getName()
+  {
+    return name;
   }
   
   

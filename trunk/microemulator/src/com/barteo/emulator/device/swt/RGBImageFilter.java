@@ -51,19 +51,19 @@ public final class RGBImageFilter implements ImageFilter
     int r, g, b;
 
     if (Rr > 0) {
-      r = (int) (rgb.red * Rr) / 256 + backgroundColor.getRed();
+      r = (int) (rgb.red * Rr) / 255 + backgroundColor.getRed();
     } else {
-      r = (int) (rgb.red * -Rr) / 256 + foregroundColor.getRed();
+      r = (int) (rgb.red * -Rr) / 255 + foregroundColor.getRed();
     }
     if (Rr > 0) {
-      g = (int) (rgb.green * Rg) / 256 + backgroundColor.getGreen();
+      g = (int) (rgb.green * Rg) / 255 + backgroundColor.getGreen();
     } else {
-      g = (int) (rgb.green * -Rg) / 256 + foregroundColor.getGreen();
+      g = (int) (rgb.green * -Rg) / 255 + foregroundColor.getGreen();
     }
     if (Rr > 0) {
-      b = (int) (rgb.blue * Rb) / 256 + backgroundColor.getBlue();
+      b = (int) (rgb.blue * Rb) / 255 + backgroundColor.getBlue();
     } else {
-      b = (int) (rgb.blue * -Rb) / 256 + foregroundColor.getBlue();
+      b = (int) (rgb.blue * -Rb) / 255 + foregroundColor.getBlue();
     }
 
     return new RGB(r, g, b);

@@ -183,9 +183,7 @@ public class Main extends Applet implements MicroEmulator, DisplayComponent
       device = new AppletDevice();    
     } else {
       try {
-System.out.println(deviceClassName);      	
       	Class cl = Class.forName(deviceClassName);
-System.out.println(cl);      	
         device = (AppletDevice) cl.newInstance();
       } catch (ClassNotFoundException ex) {
         System.out.println(ex);

@@ -53,19 +53,19 @@ public final class RGBImageFilter extends java.awt.image.RGBImageFilter
     int b = (rgb & 0x000000FF);
 
     if (Rr > 0) {
-      r = (int) (r * Rr) / 256 + backgroundColor.getRed();
+      r = (int) (r * Rr) / 255 + backgroundColor.getRed();
     } else {
-      r = (int) (r * -Rr) / 256 + foregroundColor.getRed();
+      r = (int) (r * -Rr) / 255 + foregroundColor.getRed();
     }
     if (Rr > 0) {
-      g = (int) (g * Rg) / 256 + backgroundColor.getGreen();
+      g = (int) (g * Rg) / 255 + backgroundColor.getGreen();
     } else {
-      g = (int) (g * -Rg) / 256 + foregroundColor.getGreen();
+      g = (int) (g * -Rg) / 255 + foregroundColor.getGreen();
     }
     if (Rr > 0) {
-      b = (int) (b * Rb) / 256 + backgroundColor.getBlue();
+      b = (int) (b * Rb) / 255 + backgroundColor.getBlue();
     } else {
-      b = (int) (b * -Rb) / 256 + foregroundColor.getBlue();
+      b = (int) (b * -Rb) / 255 + foregroundColor.getBlue();
     }
 
     return a | (r << 16) | (g << 8) | b;

@@ -19,6 +19,8 @@
  
 package com.barteo.emulator.app.ui.swt;
 
+import javax.microedition.lcdui.Image;
+
 import org.eclipse.swt.widgets.Canvas;
 
 import com.barteo.emulator.DisplayComponent;
@@ -66,6 +68,12 @@ public class SwtDisplayComponent implements DisplayComponent
 			displayRepaintListener = null;
 		}
 	}
+	
+	
+	public Image getDisplayImage()
+	{
+		return displayImage;
+	}
 
 
 	public void paint(SwtGraphics gc) 
@@ -84,8 +92,7 @@ public class SwtDisplayComponent implements DisplayComponent
 			Device device = DeviceFactory.getDevice();
 
 			SwtMutableImage image = new SwtMutableImage(
-					((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle().width,
-					((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle().height);
+					device.getDeviceDisplay().getFullWidth(), device.getDeviceDisplay().getFullHeight());
 						
 			SwtGraphics gc = ((DisplayGraphics) image.getGraphics()).g;
 			try {

@@ -61,7 +61,7 @@ public class Awt extends Frame
 {
 	Awt instance = null;
   
-	Common common;
+	private Common common;
   
 	boolean initialized = false;
   
@@ -270,11 +270,12 @@ public class Awt extends Frame
 
 		devicePanel = new AwtDeviceComponent();
 		selectDevicePanel = new AwtSelectDevicePanel();
-		setDevice(selectDevicePanel.getSelectedDeviceEntry());
     
 		common = new Common(emulatorContext);
 		common.setStatusBarListener(statusBarListener);
 		common.setResponseInterfaceListener(responseInterfaceListener);
+
+		setDevice(selectDevicePanel.getSelectedDeviceEntry());
 
 		add(devicePanel, "Center");
 		add(statusBar, "South");    

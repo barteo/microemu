@@ -23,6 +23,7 @@ import java.util.Enumeration;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Image;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -70,6 +71,12 @@ public class SwtDeviceDisplay implements DeviceDisplay
 	public EmulatorContext getEmulatorContext() 
 	{
 		return context;
+	}
+	
+	
+	public Image getDisplayImage()
+	{
+		return context.getDisplayComponent().getDisplayImage();
 	}
 
 

@@ -19,23 +19,27 @@
  
 package com.barteo.emulator.app.ui.awt;
 
+import java.awt.Component;
 import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Panel;
-import java.awt.Rectangle;
 
 import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.app.ui.DisplayRepaintListener;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.applet.AppletDeviceDisplay;
+import com.barteo.emulator.device.applet.AppletMutableImage;
 
 
-public class AwtDisplayComponent extends Panel implements DisplayComponent
+public class AwtDisplayComponent implements DisplayComponent
 {
-  Device prevDevice = null;
-	Image offi;
-	Graphics offg;
+	private Component deviceCanvas;
+	private AppletMutableImage displayImage = null;
+
+
+	AwtDisplayComponent(Component deviceCanvas)
+	{
+		this.deviceCanvas = deviceCanvas;
+	}
 
 
 	public void addDisplayRepaintListener(DisplayRepaintListener l)
@@ -48,27 +52,34 @@ public class AwtDisplayComponent extends Panel implements DisplayComponent
 	}
 
 
-  public void paint(Graphics g) 
-  {
-    Device device = DeviceFactory.getDevice();
-    Rectangle displayRectangle = 
-        ((AppletDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
+	public javax.microedition.lcdui.Image getDisplayImage()
+	{
+		return displayImage;
+	}
 
-    if (prevDevice != device) {
-			offi = createImage(displayRectangle.width, displayRectangle.height);
-			offg = offi.getGraphics();
-    }
-    prevDevice = device;
-    
-    ((AppletDeviceDisplay) device.getDeviceDisplay()).paint(offg);
-    
-		g.drawImage(offi, 0, 0, null);
-  }
+
+	public void paint(Graphics g) 
+	{
+		if (displayImage != null) {
+			g.drawImage(displayImage.getImage(), 0, 0, null);
+		}
+	}
 
   
-	public void update(Graphics g)
+	public void repaint() 
 	{
-		paint(g);
+		Device device = DeviceFactory.getDevice();
+	
+		if (device != null) {
+			if (displayImage == null) {
+				displayImage = new AppletMutableImage(device.getDeviceDisplay().getFullWidth(), device.getDeviceDisplay().getFullHeight());
+			}
+	
+			Graphics gc = displayImage.getImage().getGraphics();
+			((AppletDeviceDisplay) device.getDeviceDisplay()).paint(gc);
+		}
+	
+		deviceCanvas.repaint();
 	}
   
 }

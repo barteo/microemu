@@ -18,7 +18,11 @@
  */
 package com.siemens.mp.game;
 
-import javax.microedition.lcdui.*;
+import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
+
+import com.barteo.emulator.device.DeviceDisplay;
+import com.barteo.emulator.device.DeviceFactory;
 
 /**
  *
@@ -33,6 +37,12 @@ public class ExtendedImage extends com.siemens.mp.misc.NativeMem {
     }
     
     public void blitToScreen(int x, int y) {
+/*		DeviceDisplay dd = DeviceFactory.getDevice().getDeviceDisplay();
+    	Image image = dd.getDisplayImage();
+    	
+    	draw ExtendedImage to image 
+    	
+    	dd.repaint();*/
         System.out.println(" public void blitToScreen(int x, int y)");
     }
     

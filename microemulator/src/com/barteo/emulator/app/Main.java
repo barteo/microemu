@@ -62,7 +62,7 @@ public class Main extends JFrame
 {
   Main instance = null;
   
-  Common common;
+  private Common common;
   
   boolean initialized = false;
   

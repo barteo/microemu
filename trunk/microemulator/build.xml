@@ -33,6 +33,7 @@
       <fileset dir="./classes">
         <exclude name="com/barteo/midp/examples/**"/>
         <exclude name="**/.*"/>
+        <exclude name="javax/microedition/io/**"/>
       </fileset>
       <fileset dir="./res">
         <exclude name="com/barteo/midp/examples/**"/>
@@ -71,7 +72,11 @@
 
   <target depends="init,jar" description="Create distribution package" name="dist">
     <mkdir dir="dist"/>
-    <tar basedir="." excludes="**/.*,classes/**,dist/*" tarfile="dist/microemulator.tar"/>
+    <tar basedir="../." tarfile="dist/microemulator.tar">
+      <exclude name="microemulator/**/.*"/>
+      <exclude name="microemulator/classes/**"/>
+      <exclude name="microemulator/dist/*"/>
+    </tar>
     <gzip src="dist/microemulator.tar" zipfile="dist/microemulator.tar.gz"/>
     <delete file="dist/microemulator.tar"/>
   </target>

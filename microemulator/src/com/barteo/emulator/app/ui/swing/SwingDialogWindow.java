@@ -17,7 +17,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package com.barteo.emulator.app.ui;
+package com.barteo.emulator.app.ui.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -26,6 +26,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -34,7 +35,7 @@ import javax.swing.JPanel;
  * Uniwersalna klasa sluzaca do wyswietlania okienek dialogowych
  */
 
-public class DialogWindow
+public class SwingDialogWindow
 {
 
   /**
@@ -44,7 +45,7 @@ public class DialogWindow
    * @param panel wnetrze okienka dialogowego
    * @return true jesli zamkniecie okna zostalo wywolane przez przycisk OK
    */
-  public static boolean show(String title, final DialogPanel panel)
+  public static boolean show(String title, final SwingDialogPanel panel)
   {
     final JDialog dialog = new JDialog(new JFrame(), title, true);
     dialog.getContentPane().setLayout(new BorderLayout());

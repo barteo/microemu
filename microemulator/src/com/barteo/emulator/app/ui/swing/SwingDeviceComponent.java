@@ -17,7 +17,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package com.barteo.emulator.app;
+package com.barteo.emulator.app.ui.swing;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -28,12 +28,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.Enumeration;
+
+import javax.microedition.lcdui.Command;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
-import javax.microedition.lcdui.Command;
-import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.CommandManager;
+import com.barteo.emulator.DisplayComponent;
+import com.barteo.emulator.app.ui.XYConstraints;
+import com.barteo.emulator.app.ui.XYLayout;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.SoftButton;
 import com.barteo.emulator.device.j2se.J2SEButton;

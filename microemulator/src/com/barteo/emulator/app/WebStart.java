@@ -52,9 +52,8 @@ import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.MIDletEntry;
 import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.app.launcher.Launcher;
-import com.barteo.emulator.app.ui.DeviceEntry;
-import com.barteo.emulator.app.ui.DialogWindow;
-import com.barteo.emulator.app.ui.SelectDevicePanel;
+import com.barteo.emulator.app.ui.swing.*;
+import com.barteo.emulator.app.util.DeviceEntry;
 import com.barteo.emulator.app.util.ProgressEvent;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.app.util.ProgressListener;
@@ -72,7 +71,7 @@ public class WebStart extends JFrame implements MicroEmulator
   
   boolean initialized = false;
   
-  SelectDevicePanel selectDevicePanel = null;
+  SwingSelectDevicePanel selectDevicePanel = null;
   JFileChooser fileChooser = null;
   JMenuItem menuOpenJADFile;
   JMenuItem menuOpenJADURL;
@@ -190,7 +189,7 @@ public class WebStart extends JFrame implements MicroEmulator
     
     public void actionPerformed(ActionEvent e)
     {
-      if (DialogWindow.show("Select device...", selectDevicePanel)) {
+      if (SwingDialogWindow.show("Select device...", selectDevicePanel)) {
         if (selectDevicePanel.getSelectedDeviceEntry().equals(getDevice())) {
           return;
         }
@@ -275,7 +274,7 @@ public class WebStart extends JFrame implements MicroEmulator
     addKeyListener(keyListener);
 
     devicePanel = new SwingDeviceComponent();
-    selectDevicePanel = new SelectDevicePanel();
+    selectDevicePanel = new SwingSelectDevicePanel();
     setDevice(selectDevicePanel.getSelectedDeviceEntry());
     
     launcher = new Launcher();

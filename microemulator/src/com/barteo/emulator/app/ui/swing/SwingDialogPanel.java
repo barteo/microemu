@@ -17,7 +17,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package com.barteo.emulator.app.ui;
+package com.barteo.emulator.app.ui.swing;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -26,7 +26,7 @@ import javax.swing.JPanel;
  * Bazowa klasa panelu wyswietlanego w oknie dialogowym
  */
 
-public class DialogPanel extends JPanel
+public class SwingDialogPanel extends JPanel
 {
 
   public JButton btOk = new JButton("OK");

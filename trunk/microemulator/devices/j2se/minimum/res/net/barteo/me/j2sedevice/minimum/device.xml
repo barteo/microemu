@@ -8,12 +8,12 @@
     <numcolors>2</numcolors>
     <iscolor>false</iscolor>
 		<foreground>000000</foreground>
-		<background>d4d7cf</background>
+		<background>c3cbb6</background>
 		<rectangle>
-			<x>33</x>
-			<y>38</y>
-			<width>104</width>
-			<height>134</height>
+			<x>28</x>
+			<y>33</y>
+			<width>96</width>
+			<height>120</height>
 		</rectangle>
 		<paintable>
 			<x>0</x>
@@ -23,16 +23,16 @@
 		</paintable>
     <img name="up" src="/net/barteo/me/j2sedevice/minimum/up.png">
 		  <paintable>
-			  <x>49</x>
-			  <y>130</y>
+			  <x>39</x>
+			  <y>110</y>
 			  <width>8</width>
 			  <height>8</height>
 		  </paintable>
     </img>
     <img name="down" src="/net/barteo/me/j2sedevice/minimum/down.png">
 		  <paintable>
-			  <x>57</x>
-			  <y>130</y>
+			  <x>49</x>
+			  <y>110</y>
 			  <width>8</width>
 			  <height>8</height>
 		  </paintable>
@@ -65,14 +65,14 @@
 	<keyboard>
 		<softbutton name="" key="VK_F1" alignment="LEFT">
 			<rectangle>
-				<x>30</x>
-				<y>184</y>
+				<x>21</x>
+				<y>162</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
 			<paintable>
 				<x>0</x>
-				<y>127</y>
+				<y>102</y>
 				<width>38</width>
 				<height>16</height>
 			</paintable>
@@ -83,14 +83,14 @@
 		</softbutton>
 		<softbutton name="" key="VK_F2" alignment="RIGHT" menuactivate="true">
 			<rectangle>
-				<x>103</x>
-				<y>184</y>
+				<x>94</x>
+				<y>162</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
 			<paintable>
-				<x>66</x>
-				<y>127</y>
+				<x>58</x>
+				<y>102</y>
 				<width>38</width>
 				<height>16</height>
 			</paintable>
@@ -101,40 +101,40 @@
 		</softbutton>
 		<button name="l" key="VK_LEFT">
 			<rectangle>
-				<x>30</x>
-				<y>240</y>
+				<x>21</x>
+				<y>218</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
 		</button>
 		<button name="r" key="VK_RIGHT">
 			<rectangle>
-				<x>103</x>
-				<y>240</y>
+				<x>94</x>
+				<y>218</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
 		</button>
 		<button name="u" key="VK_UP">
 			<rectangle>
-				<x>68</x>
-				<y>213</y>
+				<x>59</x>
+				<y>191</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
 		</button>
 		<button name="d" key="VK_DOWN">
 			<rectangle>
-				<x>68</x>
-				<y>267</y>
+				<x>59</x>
+				<y>245</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
 		</button>
 		<button name="sel" key="VK_ENTER">
 			<rectangle>
-				<x>68</x>
-				<y>240</y>
+				<x>59</x>
+				<y>218</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -145,8 +145,8 @@
         <char>0</char>
       </chars>
 			<rectangle>
-				<x>68</x>
-				<y>391</y>
+				<x>59</x>
+				<y>369</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -179,8 +179,8 @@
         <char>1</char>
       </chars>
 			<rectangle>
-				<x>30</x>
-				<y>309</y>
+				<x>21</x>
+				<y>287</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -193,8 +193,8 @@
         <char>2</char>
       </chars>
 			<rectangle>
-				<x>68</x>
-				<y>309</y>
+				<x>59</x>
+				<y>287</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -207,8 +207,8 @@
         <char>3</char>
       </chars>
 			<rectangle>
-				<x>103</x>
-				<y>309</y>
+				<x>94</x>
+				<y>287</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -221,8 +221,8 @@
         <char>4</char>
       </chars>
 			<rectangle>
-				<x>30</x>
-				<y>337</y>
+				<x>21</x>
+				<y>315</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -235,8 +235,8 @@
         <char>5</char>
       </chars>
 			<rectangle>
-				<x>68</x>
-				<y>337</y>
+				<x>59</x>
+				<y>315</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -249,8 +249,8 @@
         <char>6</char>
       </chars>
 			<rectangle>
-				<x>103</x>
-				<y>337</y>
+				<x>94</x>
+				<y>315</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -264,8 +264,8 @@
         <char>7</char>
       </chars>
 			<rectangle>
-				<x>30</x>
-				<y>364</y>
+				<x>21</x>
+				<y>342</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -278,8 +278,8 @@
         <char>8</char>
       </chars>
 			<rectangle>
-				<x>68</x>
-				<y>364</y>
+				<x>59</x>
+				<y>342</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -293,8 +293,8 @@
         <char>9</char>
       </chars>
 			<rectangle>
-				<x>103</x>
-				<y>364</y>
+				<x>94</x>
+				<y>342</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -305,16 +305,16 @@
         <char>+</char>
       </chars>
 			<rectangle>
-				<x>30</x>
-				<y>391</y>
+				<x>21</x>
+				<y>369</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
 		</button>
 		<button name="#" key="VK_MODECHANGE">
 			<rectangle>
-				<x>103</x>
-				<y>391</y>
+				<x>94</x>
+				<y>369</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>

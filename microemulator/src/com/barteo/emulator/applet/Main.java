@@ -43,6 +43,7 @@ import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.app.ui.DisplayRepaintListener;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.MutableImage;
 import com.barteo.emulator.device.SoftButton;
 import com.barteo.emulator.device.applet.AppletButton;
 import com.barteo.emulator.device.applet.AppletDevice;
@@ -381,7 +382,7 @@ public class Main extends Applet implements MicroEmulator, DisplayComponent
 	}
 
 
-	public javax.microedition.lcdui.Image getDisplayImage() 
+	public MutableImage getDisplayImage() 
 	{
 		// TODO Auto-generated method stub
 		return null;

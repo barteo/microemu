@@ -12,6 +12,6 @@ import javax.microedition.lcdui.Image;
 public abstract class MutableImage extends Image 
 {
 
-	public abstract byte[] getData();
+	public abstract int[] getData();
 
 }

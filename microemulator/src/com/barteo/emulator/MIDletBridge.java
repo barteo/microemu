@@ -49,6 +49,12 @@ public class MIDletBridge
   }
   
   
+  public static MIDlet getCurrentMIDlet()
+  {
+    return currentMIDlet;    
+  }
+
+  
   public static void setCurrentMIDlet(MIDlet a_midlet)
   {
     currentMIDlet = a_midlet;    

@@ -17,14 +17,39 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package com.barteo.emulator;
+package com.barteo.emulator.app.ui;
 
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
-public interface EmulatorContext 
+/**
+ * Bazowa klasa panelu wyswietlanego w oknie dialogowym
+ */
+
+public class DialogPanel extends JPanel
 {
-  
-  ClassLoader getClassLoader();
-  
-  DisplayComponent getDisplayComponent();
-  
+
+  public JButton btOk = new JButton("OK");
+  public JButton btCancel = new JButton("Cancel");
+
+
+  /**
+   * Walidacja panelu
+   *
+   * @param state czy wyswietlac komunikaty bledow
+   * @return true jesli wszysko jest ok
+   */
+  public boolean check(boolean state)
+  {
+    return true;
+  }
+
+
+  /**
+   * Metoda wywolywana w momencie wyswietlania okna dialogowego
+   */
+  protected void showNotify()
+  {
+  }
+
 }

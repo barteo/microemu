@@ -35,6 +35,7 @@ import javax.microedition.lcdui.Command;
 import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.CommandManager;
 import com.barteo.emulator.EmulatorContext;
+import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.SoftButton;
 import com.barteo.emulator.device.j2se.J2SEButton;
@@ -114,8 +115,14 @@ public class SwingDeviceComponent extends JPanel
   };
   
   
-  EmulatorContext emulatorContext = new EmulatorContext()
+  private EmulatorContext emulatorContext = new EmulatorContext()
   {
+    ProgressJarClassLoader loader = new ProgressJarClassLoader();
+    
+    public ClassLoader getClassLoader()
+    {
+      return loader;
+    }
     
     public DisplayComponent getDisplayComponent()
     {
@@ -129,17 +136,27 @@ public class SwingDeviceComponent extends JPanel
   {
     instance = this;
     
-    DeviceFactory.setDevice(new J2SEDevice(emulatorContext));
-    
     XYLayout xy = new XYLayout();
     setLayout(xy);
 
     dc = new SwingDisplayComponent();    
-    add(dc, new XYConstraints(
-        ((J2SEDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle()));    
     
     addMouseListener(mouseListener);
     addMouseMotionListener(mouseMotionListener);
+  }
+  
+  
+  public EmulatorContext getEmulatorContext()
+  {
+    return emulatorContext;
+  }
+  
+  
+  public void init()
+  {
+    remove(dc);
+    add(dc, new XYConstraints(
+        ((J2SEDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle()));    
   }
   
   

@@ -45,15 +45,18 @@ public class TextField extends Item
 	int constraints;
 
 	TextBox tb = null;
-	static final Command backCommand = new Command("Back", Command.BACK, 0);
+	static final Command doneCommand = new Command("Done", Command.OK, 0);
+	static final Command cancelCommand = new Command("Cancel", Command.CANCEL, 0);
 
 	CommandListener textBoxListener = new CommandListener()
 	{
 
 		public void commandAction(Command cmd, Displayable d)
 		{
-			if (cmd == backCommand) {
+			if (cmd == doneCommand) {
 				setString(tb.getString());
+        getOwner().currentDisplay.setCurrent(owner);
+			} else if (cmd == cancelCommand) {
         getOwner().currentDisplay.setCurrent(owner);
 			} 
 		}
@@ -293,7 +296,8 @@ public class TextField extends Item
 	{
 		if (tb == null) {
 			tb = new TextBox(getLabel(), getString(), maxSize, constraints);
-			tb.addCommand(backCommand);
+			tb.addCommand(doneCommand);
+			tb.addCommand(cancelCommand);
 			tb.setCommandListener(textBoxListener);
 		} else {
 			tb.setString(getString());

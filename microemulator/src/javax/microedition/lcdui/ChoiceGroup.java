@@ -15,6 +15,9 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Contributor(s):
+ *    Shane Harper
  */
  
 package javax.microedition.lcdui;
@@ -23,13 +26,12 @@ package javax.microedition.lcdui;
 public class ChoiceGroup extends Item implements Choice
 {
 
-	ImageStringItem items[] = new ImageStringItem[4];
-	boolean selectedItems[] = new boolean[4];
+	ChoiceItem items[] = new ChoiceItem[4];
   int numOfItems = 0;
 
   int choiceType;
 
-  int selectedIndex;
+  int highlightedItemIndex = -1;
 
 	static byte multiOff[] = {
   		-119, 80, 78, 71, 13, 10, 26, 10, 0, 0,
@@ -102,18 +104,15 @@ public class ChoiceGroup extends Item implements Choice
   }
 
 
+  // XXX imageElements is ignored.
 	public ChoiceGroup(String label, int choiceType, String[] stringElements, Image[] imageElements)
 	{
     super(label);
     this.choiceType = choiceType;
-    selectedIndex = 0;
 
 		if (stringElements != null) {
 			for (int i = 0; i < stringElements.length; i++) {
 				append(stringElements[i], null);
-			}
-			if (this.choiceType == Choice.EXCLUSIVE) {
-				setSelectedIndex(0, true);
 			}
 		}
 	}
@@ -133,10 +132,28 @@ public class ChoiceGroup extends Item implements Choice
 			throw new IndexOutOfBoundsException();
 		}
 
-    if(itemNum != numOfItems - 1) {
-      System.arraycopy(items, itemNum + 1, items, itemNum, numOfItems - itemNum - 1);
+    // Ensure that an item of an EXCLUSIVE list remains selected.
+    if (Choice.EXCLUSIVE == choiceType && items[itemNum].isSelected()) {
+      if (numOfItems > 1) {
+        items[itemNum!=0 ? 0 : 1].setSelectedState(true);
+      }
+    }
+
+    // Delete item.
+    if (itemNum != numOfItems - 1) {
+      System.arraycopy(items, itemNum+1, items, itemNum, numOfItems-itemNum-1);
     }
     numOfItems--;
+
+    // Ensure highlighted item remains highlighted (if it wasn't just deleted).
+    if (highlightedItemIndex > itemNum) {
+      --highlightedItemIndex;
+    }
+
+    // Ensure that an item remains highlighted.
+    if (highlightedItemIndex >= numOfItems) {
+      highlightedItemIndex = numOfItems-1;
+    }
   }
 
 
@@ -150,6 +167,17 @@ public class ChoiceGroup extends Item implements Choice
   }
 
 
+  /**
+   * Queries the state of a ChoiceGroup and returns the state of all elements in
+   * the boolean array selectedArray_return. NOTE: this is a result parameter.
+   * It must be at least as long as the size of the ChoiceGroup as returned by
+   * size(). If the array is longer, the extra elements are set to false.
+   *
+   * For ChoiceGroup objects of type MULTIPLE, any number of elements may be
+   * selected and set to true in the result array. For ChoiceGroup objects of
+   * type EXCLUSIVE, exactly one element will be selected, unless there are zero
+   * elements in the ChoiceGroup.
+   */
   public int getSelectedFlags(boolean[] selectedArray_return)
   {
 		if (selectedArray_return == null) {
@@ -158,22 +186,43 @@ public class ChoiceGroup extends Item implements Choice
 		if (selectedArray_return.length < numOfItems) {
 			throw new IllegalArgumentException();
 		}
-		System.arraycopy(selectedItems, 0, selectedArray_return, 0, numOfItems);
 
-		int selectedItemsNum = 0;
-		for (int i = 0; i < numOfItems; i++) {
-			if (selectedItems[i] == true) {
-				selectedItemsNum++;
-			}
-		}
+    // set selectedArray_return elements and count number of selected items
+		int selectedItemsCount = 0;
+    for (int i = 0; i < selectedArray_return.length; ++i) {
+      selectedArray_return[i] = (i<numOfItems) ? items[i].isSelected() : false;
+      if (selectedArray_return[i]) {
+        ++selectedItemsCount;
+      }
+    }
 
-    return selectedItemsNum;
+    return selectedItemsCount;
   }
 
-
+  /**
+   *  Returns the index number of an element in the ChoiceGroup that is
+   *  selected. For ChoiceGroup objects of type EXCLUSIVE there is at most one
+   *  element selected, so this method is useful for determining the user's
+   *  choice. Returns -1 if there are no elements in the ChoiceGroup.
+   *
+   *  For ChoiceGroup objects of type MULTIPLE, this always returns -1 because
+   *  no single value can in general represent the state of such a ChoiceGroup.
+   *  To get the complete state of a MULTIPLE Choice, see getSelectedFlags.
+   */
   public int getSelectedIndex()
   {
-		return selectedIndex;
+    switch (choiceType) {
+      case Choice.EXCLUSIVE:
+        // XXX It'd be nice if the selected item index was stored, so it isn't
+        //     necessary to search for it.
+        for (int i = 0; i < numOfItems; ++i) {
+          if (items[i].isSelected()) return i;
+        }
+        break;
+      case Choice.IMPLICIT:
+        return highlightedItemIndex;
+    }
+    return -1;
   }
 
 
@@ -199,25 +248,25 @@ public class ChoiceGroup extends Item implements Choice
 			throw new NullPointerException();
 		}
 
-    if (numOfItems + 1 == items.length) {
-      ImageStringItem newitems[] = new ImageStringItem[numOfItems + 4];
-			boolean newselectedItems[] = new boolean[numOfItems + 4];
-      System.arraycopy(items, 0, newitems, 0, elementNum);
-      System.arraycopy(items, elementNum, newitems, elementNum + 1, numOfItems - elementNum);
-      System.arraycopy(selectedItems, 0, newselectedItems, 0, elementNum);
-      System.arraycopy(selectedItems, elementNum, newselectedItems, elementNum + 1, numOfItems - elementNum);
-      items = newitems;
-			selectedItems = newselectedItems;
+    if (numOfItems == items.length  /*no space left in item array*/) {
+      ChoiceItem newItems[] = new ChoiceItem[numOfItems + 4];
+      System.arraycopy(items, 0, newItems, 0, numOfItems);
+      items = newItems;
     }
-		if (choiceType == Choice.EXCLUSIVE) {
-	    items[elementNum] = new ImageStringItem(null, imgRadioOff, stringPart);
-		} else if (choiceType == Choice.MULTIPLE) {
-	    items[elementNum] = new ImageStringItem(null, imgMultiOff, stringPart);
-		} else if (choiceType == Choice.IMPLICIT) {
-	    items[elementNum] = new ImageStringItem(null, null, stringPart);
-		}
-		selectedItems[elementNum] = false;
-    numOfItems++;
+
+    System.arraycopy(items, elementNum, items, elementNum + 1,
+                     numOfItems - elementNum);
+  
+	  items[elementNum] = new ChoiceItem(null, null, stringPart);
+
+    ++numOfItems;
+
+    if (numOfItems == 1) {
+      highlightedItemIndex = 0;
+      if (Choice.EXCLUSIVE == choiceType) {
+        setSelectedIndex(0, true);
+      }
+    }
   }
 
 
@@ -227,7 +276,7 @@ public class ChoiceGroup extends Item implements Choice
 			throw new IndexOutOfBoundsException();
 		}
 
-    return selectedItems[elementNum];
+    return items[elementNum].isSelected();
   }
 
 
@@ -290,19 +339,11 @@ public class ChoiceGroup extends Item implements Choice
 
 		if (choiceType == Choice.EXCLUSIVE && selected) {
 			for (int i = 0; i < numOfItems; i++) {
-				selectedItems[i] = false;
-				items[i].setImage(imgRadioOff);
+				items[i].setSelectedState(elementNum == i);
 			}
-			selectedItems[elementNum] = selected;
-			items[elementNum].setImage(imgRadioOn);
 			repaint();
 		} else if (choiceType == Choice.MULTIPLE) {
-			selectedItems[elementNum] = selected;
-			if (selected) {
-				items[elementNum].setImage(imgMultiOn);
-			} else {
-				items[elementNum].setImage(imgMultiOff);
-			}
+      items[elementNum].setSelectedState(selected);
 			repaint();
 		}
   }
@@ -339,11 +380,7 @@ public class ChoiceGroup extends Item implements Choice
 		int translatedY = 0;
     StringItem tmp;
 		for (int i = 0; i < numOfItems; i++) {
-      if (i == selectedIndex && focus) {
-        items[i].invertPaint(true);
-      } else {
-        items[i].invertPaint(false);
-      }
+      items[i].invertPaint(i == highlightedItemIndex && focus);
 			items[i].paint(g);
       g.translate(0, items[i].getHeight());
 			translatedY += items[i].getHeight();
@@ -361,11 +398,8 @@ public class ChoiceGroup extends Item implements Choice
       return false;
     }
 
-		if (selectedItems[selectedIndex] == false) {
-			setSelectedIndex(selectedIndex, true);
-		} else {
-			setSelectedIndex(selectedIndex, false);
-		}
+    // XXX What does the following statement do?
+    setSelectedIndex(highlightedItemIndex, !items[highlightedItemIndex].isSelected());
 
     return true;
   }
@@ -374,12 +408,12 @@ public class ChoiceGroup extends Item implements Choice
   int traverse(int gameKeyCode, int top, int bottom, boolean action)
   {
     if (gameKeyCode == 1) {
-      if (selectedIndex > 0) {
+      if (highlightedItemIndex > 0) {
 				if (action) {
-        	selectedIndex--;
+        	highlightedItemIndex--;
 				}
 				int height = super.getHeight();
-				for (int i = 0; i < selectedIndex; i++) {
+				for (int i = 0; i < highlightedItemIndex; i++) {
 					height += items[i].getHeight();
 				}
 				if (height < top) {
@@ -396,12 +430,12 @@ public class ChoiceGroup extends Item implements Choice
 			}
     }
     if (gameKeyCode == 6) {
-      if (selectedIndex < (numOfItems - 1)) {
+      if (highlightedItemIndex < (numOfItems - 1)) {
 				if (action) {
-	        selectedIndex++;
+	        highlightedItemIndex++;
 				}
 				int height = super.getHeight();
-				for (int i = 0; i <= selectedIndex; i++) {
+				for (int i = 0; i <= highlightedItemIndex; i++) {
 					height += items[i].getHeight();
 				}
 				if (height > bottom) {
@@ -417,4 +451,29 @@ public class ChoiceGroup extends Item implements Choice
 		return 0;
   }
 
+
+  class ChoiceItem extends ImageStringItem
+  {
+    private boolean selected;
+
+    ChoiceItem(String label, Image image /*XXX*/, String text)
+    {
+      super(label, null, text);
+      setSelectedState(false);
+    }
+
+    boolean isSelected()
+    {
+      return selected;
+    }
+
+    void setSelectedState(boolean state)
+    {
+      selected = state;
+      setImage(Choice.EXCLUSIVE  == choiceType ? (state? imgRadioOn:imgRadioOff)
+               : Choice.MULTIPLE == choiceType ? (state? imgMultiOn:imgMultiOff)
+               : null);
+    }
+  }
+  
 }

@@ -32,6 +32,12 @@ class StringComponent
 	int width;
 
 
+  StringComponent()
+  {
+    this(null);
+  }
+
+
   StringComponent(String text)
   {
     this.text = text;

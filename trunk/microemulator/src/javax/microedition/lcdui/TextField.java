@@ -35,6 +35,7 @@ public class TextField extends Item
 	public static final int CONSTRAINT_MASK = 0xffff;
 
 	StringComponent stringComponent;
+  String field;
 	int caret;
 	boolean caretVisible;
 	int maxSize;
@@ -64,15 +65,12 @@ public class TextField extends Item
 			throw new IllegalArgumentException();
 		}
 		setConstraints(constraints);
-		if (text == null) {
-			stringComponent = new StringComponent("");
+    stringComponent = new StringComponent();
+		if (text != null) {
+      setString(text);
 		} else {
-			validate(text);
-			if (text.length() > maxSize) {
-				throw new IllegalArgumentException();
-			}
-			stringComponent = new StringComponent(text);
-		}
+      setString("");
+    }
 		this.maxSize = maxSize;
 		stringComponent.setWidth(Device.screenPaintable.width - 8);
 		caret = 0;
@@ -82,7 +80,7 @@ public class TextField extends Item
 
 	public String getString()
 	{
-		return stringComponent.getText();
+		return field;
 	}
 
 
@@ -92,19 +90,28 @@ public class TextField extends Item
 		if (text.length() > maxSize) {
 			throw new IllegalArgumentException();
 		}
-		stringComponent.setText(text);
+    field = text;
+    if ((constraints & PASSWORD) == 0) {
+      stringComponent.setText(text);
+    } else {
+      StringBuffer sb = new StringBuffer();
+      for (int i = 0; i < text.length(); i++) {
+        sb.append('*');
+      }
+      stringComponent.setText(sb.toString());
+    }
 		repaint();
 	}
 
 
 	public int getChars(char[] data)
 	{
-		if (data.length > stringComponent.length()) {
+		if (data.length > field.length()) {
 			throw new ArrayIndexOutOfBoundsException();
 		}
-		stringComponent.getText().getChars(0, stringComponent.length(), data, 0);
+		getString().getChars(0, field.length(), data, 0);
 
-		return stringComponent.length();
+		return field.length();
 	}
 
 
@@ -118,7 +125,7 @@ public class TextField extends Item
 			}
 			String newtext = new String(data, offset, length);
 			validate(newtext);
-			stringComponent.setText(newtext);
+			setString(newtext);
 		}
 		repaint();
 	}
@@ -127,18 +134,18 @@ public class TextField extends Item
 	public void insert(String src, int position)
 	{
 		validate(src);
-		if (stringComponent.length() + src.length() > maxSize) {
+		if (field.length() + src.length() > maxSize) {
 			throw new IllegalArgumentException();
 		}
 		String newtext = "";
 		if (position > 0) {
-			newtext = stringComponent.getText().substring(0, position);
+			newtext = getString().substring(0, position);
 		}
 		newtext += src;
-		if (position < stringComponent.length()) {
-			newtext += stringComponent.getText().substring(position + 1);
+		if (position < field.length()) {
+			newtext += getString().substring(position + 1);
 		}
-		stringComponent.setText(newtext);
+		setString(newtext);
 		repaint();
 	}
 
@@ -154,17 +161,17 @@ public class TextField extends Item
 
 	public void delete(int offset, int length)
 	{
-		if (offset + length > stringComponent.length()) {
+		if (offset + length > field.length()) {
 			throw new StringIndexOutOfBoundsException();
 		}
 		String newtext = "";
 		if (offset > 0) {
-			newtext = stringComponent.getText().substring(0, offset);
+			newtext = getString().substring(0, offset);
 		}
-		if (offset + length < stringComponent.length()) {
-			newtext += stringComponent.getText().substring(offset + length);
+		if (offset + length < field.length()) {
+			newtext += getString().substring(offset + length);
 		}
-		stringComponent.setText(newtext);
+		setString(newtext);
 		repaint();
 	}
 
@@ -180,8 +187,8 @@ public class TextField extends Item
 		if (maxSize <= 0) {
 			throw new IllegalArgumentException();
 		}
-		if (stringComponent.length() > maxSize) {
-			stringComponent.setText(stringComponent.getText().substring(0, maxSize));
+		if (field.length() > maxSize) {
+			setString(getString().substring(0, maxSize));
 		}
 		this.maxSize = maxSize;
 		return maxSize;
@@ -190,7 +197,7 @@ public class TextField extends Item
 
 	public int size()
 	{
-		return stringComponent.length();
+		return field.length();
 	}
 
 

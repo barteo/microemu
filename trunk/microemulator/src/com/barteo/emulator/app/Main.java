@@ -25,7 +25,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -41,12 +40,15 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.MIDletEntry;
+import com.barteo.emulator.Resource;
 import com.barteo.emulator.app.launcher.Launcher;
+import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.util.JadMidletEntry;
 import com.barteo.emulator.util.JadProperties;
@@ -61,6 +63,7 @@ public class Main extends JFrame implements MicroEmulator
 {
   
   Main instance = null;
+  ProgressJarClassLoader loader = new ProgressJarClassLoader();
   
   boolean initialized = false;
   
@@ -90,43 +93,38 @@ public class Main extends JFrame implements MicroEmulator
         try {
           FileInputStream fis = new FileInputStream(fileChooser.getSelectedFile());
           jad.load(fis);
+          loadMIDlet(jad);
         } catch (FileNotFoundException ex) {
           System.err.println("Cannot found file " + fileChooser.getSelectedFile().getName());
-          return;
         } catch (IOException ex) {
           System.err.println("Cannot open file " + fileChooser.getSelectedFile().getName());
-          return;
         }
-        
-        URL[] urls = new URL[1];
-        try {
-          urls[0] = new URL(jad.getJarURL());
-        } catch (MalformedURLException ex) {
-          System.err.println(ex);
-        }
-        URLClassLoader classLoader = new URLClassLoader(urls);
-        launcher.removeMIDletEntries();
-        try {
-          for (Enumeration e = jad.getMidletEntries().elements(); e.hasMoreElements(); ) {
-            JadMidletEntry jadEntry = (JadMidletEntry) e.nextElement();
-            Class midletClass = classLoader.loadClass(jadEntry.getClassName());
-            MIDlet midlet = (MIDlet) midletClass.newInstance();
-            
-            launcher.addMIDletEntry(new MIDletEntry(jadEntry.getName(), midlet));
-          }
-          notifyDestroyed();
-        } catch (ClassNotFoundException ex) {
-          System.err.println(ex);
-        } catch (IllegalAccessException ex) {
-          System.err.println(ex);
-        } catch (InstantiationException ex) {
-          System.err.println(ex);
-        }        
       }
     }
   
   };
   
+  ActionListener menuOpenJADURLListener = new ActionListener()
+  {
+
+    public void actionPerformed(ActionEvent ev)
+    {
+      String entered = JOptionPane.showInputDialog("Enter JAD URL:");
+      if (entered != null) {
+        JadProperties jad = new JadProperties();
+        try {
+          URL url = new URL(entered);
+          jad.load(url.openStream());
+          loadMIDlet(jad);
+        } catch (MalformedURLException ex) {
+          System.err.println("Bad URL format " + entered);
+        } catch (IOException ex) {
+          System.err.println("Cannot open URL " + entered);
+        }
+      }
+    }
+    
+  };
   
   ActionListener menuExitListener = new ActionListener()
   {
@@ -142,6 +140,7 @@ public class Main extends JFrame implements MicroEmulator
   Main()
   {
     instance = this;
+    Resource.setClassLoader(loader);
     
     JMenuBar menuBar = new JMenuBar();
     
@@ -150,6 +149,10 @@ public class Main extends JFrame implements MicroEmulator
     JMenuItem menuItem;
     menuItem = new JMenuItem("Open JAD File...");
     menuItem.addActionListener(menuOpenJADFileListener);
+    menu.add(menuItem);
+
+    menuItem = new JMenuItem("Open JAD URL...");
+    menuItem.addActionListener(menuOpenJADURLListener);
     menu.add(menuItem);
     
     menu.addSeparator();
@@ -188,6 +191,40 @@ public class Main extends JFrame implements MicroEmulator
 
     setSize(Device.deviceRectangle.getSize());
     initialized = true;
+  }
+  
+  
+  public void loadMIDlet(JadProperties jad)
+  {
+    URL url = null;
+    try {
+      url = new URL(jad.getJarURL());
+    } catch (MalformedURLException ex) {
+      // it can be just file 
+      File f = new File(fileChooser.getSelectedFile().getParent(), jad.getJarURL());
+      try {
+        url = f.toURL();
+      } catch (MalformedURLException ex1) {
+        System.err.println(ex1);
+      }
+    }
+    loader.addRepository(url);
+    launcher.removeMIDletEntries();
+    try {
+      for (Enumeration e = jad.getMidletEntries().elements(); e.hasMoreElements(); ) {
+        JadMidletEntry jadEntry = (JadMidletEntry) e.nextElement();
+        Class midletClass = loader.loadClass(jadEntry.getClassName());
+        MIDlet midlet = (MIDlet) midletClass.newInstance();
+        launcher.addMIDletEntry(new MIDletEntry(jadEntry.getName(), midlet));
+      }
+      notifyDestroyed();
+    } catch (ClassNotFoundException ex) {
+      System.err.println(ex);
+    } catch (IllegalAccessException ex) {
+      System.err.println(ex);
+    } catch (InstantiationException ex) {
+      System.err.println(ex);
+    }        
   }
   
   

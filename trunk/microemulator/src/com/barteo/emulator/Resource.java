@@ -37,20 +37,33 @@ public class Resource
 {
 
 	private static Resource resource = new Resource();
-
-
+  
+  static ClassLoader loader;
+  
+  
 	public static Resource getInstance()
 	{
 		return resource;
 	}
+  
+  
+  public static void setClassLoader(ClassLoader a_loader)
+  {
+    loader = a_loader;
+  }
 
 
-	public Image getImage(String str)
+  public Image getImage(String str)
 			throws IOException
 	{
 		ImageFilter grayFilter;
 
-    PngImage png = new PngImage(getClass().getResourceAsStream(str));
+    PngImage png;
+    if (loader == null) {
+      png = new PngImage(getClass().getResourceAsStream(str));
+    } else {
+      png = new PngImage(loader.getResourceAsStream(str));
+    }
 //   	double[][] chrom = (double[][])png.getProperty("chromaticity xyz");
 //		if (chrom == null) {
 			grayFilter = new GrayImageFilter();

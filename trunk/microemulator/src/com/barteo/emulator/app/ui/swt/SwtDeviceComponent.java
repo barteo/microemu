@@ -219,6 +219,7 @@ public class SwtDeviceComponent extends Canvas
 	{
 		for (Enumeration e = ((SwtDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
 			SwtButton button = (SwtButton) e.nextElement();
+System.out.println(ev.keyCode +"+"+ ev.character +"+"+ button.isChar(ev.character));			
 			if (ev.keyCode == button.getKey()) {
 				return button;
 			}

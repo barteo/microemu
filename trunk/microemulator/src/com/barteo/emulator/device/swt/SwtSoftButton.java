@@ -94,15 +94,16 @@ public class SwtSoftButton extends SwtButton implements SoftButton
 
         SwtDeviceDisplay deviceDisplay =
             (SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
-        g.setForeground(deviceDisplay.getBackgroundColor());
+        g.setBackground(deviceDisplay.getBackgroundColor());
         g.fillRectangle(paintable.x, paintable.y, paintable.width, paintable.height);
         if (command != null) {
             if (alignment == RIGHT) {
                 xoffset = paintable.width - g.stringExtent(command.getLabel()).x;
             }
             g.setForeground(deviceDisplay.getForegroundColor());
-            g.drawString(command.getLabel(), paintable.x + xoffset, paintable.y + paintable.height, true);
-        }
+            g.drawString(command.getLabel(), 
+            		paintable.x + xoffset, paintable.y + (paintable.height - g.getFontMetrics().getHeight()), true);
+			  }
     }
 
 

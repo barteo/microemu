@@ -94,6 +94,10 @@ public class SwtButton
 			return SWT.ARROW_DOWN;
 		} else if (keyName.equals("VK_ENTER")) {
 			return SWT.CR;
+		} else if (keyName.equals("VK_F1")) {
+			return SWT.F1;
+		} else if (keyName.equals("VK_F2")) {
+			return SWT.F2;
 		} else {
 			return -1;
 		}

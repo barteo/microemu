@@ -2,12 +2,6 @@
   <img name="normal" src="/com/barteo/emulator/device/normal.png"/>
   <img name="over" src="/com/barteo/emulator/device/over.png"/>
   <img name="pressed" src="/com/barteo/emulator/device/pressed.png"/>
-	<rectangle>
-		<x>0</x>
-		<y>0</y>
-		<width>170</width>
-		<height>445</height>
-	</rectangle>
 	<display>
     <numcolors>256</numcolors>
     <iscolor>false</iscolor>

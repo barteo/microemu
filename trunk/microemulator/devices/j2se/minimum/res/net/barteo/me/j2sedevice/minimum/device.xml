@@ -4,12 +4,6 @@
   <img name="normal" src="/net/barteo/me/j2sedevice/minimum/normal.png"/>
   <img name="over" src="/net/barteo/me/j2sedevice/minimum/over.png"/>
   <img name="pressed" src="/net/barteo/me/j2sedevice/minimum/pressed.png"/>
-	<rectangle>
-		<x>0</x>
-		<y>0</y>
-		<width>170</width>
-		<height>445</height>
-	</rectangle>
 	<display>
     <numcolors>2</numcolors>
     <iscolor>false</iscolor>

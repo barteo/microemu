@@ -105,13 +105,21 @@
   <target depends="compile-device" description="Package minimum device" name="jar-device">
     <mkdir dir="./target/devices/j2se"/>
     <jar compress="true" jarfile="./target/devices/j2se/minimum.dev" manifest="./devices/j2se/minimum/manifest.mf">
-      <fileset dir="./build/devices/j2se/minimum/classes"/>
-      <fileset dir="./devices/j2se/minimum/res"/>
+      <fileset dir="./build/devices/j2se/minimum/classes">
+        <exclude name="**/.*"/>
+      </fileset>
+      <fileset dir="./devices/j2se/minimum/res">
+        <exclude name="**/.*"/>
+      </fileset>
     </jar>
     <mkdir dir="./target/devices/applet"/>
     <jar compress="true" jarfile="./target/devices/applet/minimum.jar">
-      <fileset dir="./build/devices/applet/minimum/classes"/>
-      <fileset dir="./devices/applet/minimum/res"/>
+      <fileset dir="./build/devices/applet/minimum/classes">
+        <exclude name="**/.*"/>
+      </fileset>
+      <fileset dir="./devices/applet/minimum/res">
+        <exclude name="**/.*"/>
+      </fileset>
     </jar>
   </target>
 

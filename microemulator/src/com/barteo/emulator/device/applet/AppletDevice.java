@@ -454,7 +454,7 @@ public class AppletDevice implements Device
 	{
     InputStream is;
 
-    is = getClass().getResourceAsStream(str);
+    is = EmulatorContext.class.getResourceAsStream(str);
     if (is == null) {
       throw new IOException();
     }
@@ -466,7 +466,7 @@ public class AppletDevice implements Device
   
   private Image getImage(String str)
   {
-    InputStream is = AppletDevice.class.getResourceAsStream(str);
+    InputStream is = EmulatorContext.class.getResourceAsStream(str);
     return getImage(is);
   }
   

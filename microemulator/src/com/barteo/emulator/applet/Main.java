@@ -54,7 +54,7 @@ import com.barteo.emulator.device.applet.AppletInputMethod;
 public class Main extends Applet implements MicroEmulator, DisplayComponent
 {
   Main instance;
-  MIDlet midlet;
+  MIDlet midlet = null;
 
   Font defaultFont;
   
@@ -166,10 +166,15 @@ public class Main extends Applet implements MicroEmulator, DisplayComponent
       return instance;
     }    
   };
-
+  
   
   public void init()
   {
+System.out.println("Applet::init()");
+	if (midlet != null) {
+		return;
+	}
+
     instance = this;
 
     MIDletBridge.setMicroEmulator(this);
@@ -234,6 +239,7 @@ public class Main extends Applet implements MicroEmulator, DisplayComponent
 
   public void start()
 	{
+System.out.println("Applet::start()");  	
     try {
       MIDletBridge.getMIDletAccess(midlet).startApp();
 		} catch (MIDletStateChangeException ex) {
@@ -245,12 +251,14 @@ public class Main extends Applet implements MicroEmulator, DisplayComponent
 
 	public void stop() 
   {
+System.out.println("Applet::stop()");  	
     MIDletBridge.getMIDletAccess(midlet).pauseApp();
   }
 
 
 	public void destroy()
 	{
+System.out.println("Applet::destroy()");  	
     try {
 			MIDletBridge.getMIDletAccess(midlet).destroyApp(true);
 		} catch (MIDletStateChangeException ex) {

@@ -15,6 +15,9 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Contributor(s):
+ *    3GLab
  */
  
 package com.barteo.midp.lcdui;
@@ -27,6 +30,7 @@ import java.util.Vector;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Displayable;
+import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.SoftButton;
 
 
@@ -71,17 +75,43 @@ public class DisplayBridge
 
   public static int getGameAction(int keyCode) 
   {
-    if (keyCode == KeyEvent.VK_LEFT) {
+        switch (keyCode) {
+        case KeyEvent.VK_UP:
+            return Canvas.UP;
+        case KeyEvent.VK_DOWN:
+            return Canvas.DOWN;
+        case KeyEvent.VK_LEFT:
       return Canvas.LEFT;
-    } else if (keyCode == KeyEvent.VK_RIGHT) {
+        case KeyEvent.VK_RIGHT:
       return Canvas.RIGHT;
-    } else if (keyCode == KeyEvent.VK_UP) {
-      return Canvas.UP;
-    } else if (keyCode == KeyEvent.VK_DOWN) {
-      return Canvas.DOWN;
-    } else if (keyCode == KeyEvent.VK_ENTER) {
+        case KeyEvent.VK_ENTER:
       return Canvas.FIRE;
-    } else {
+       case KeyEvent.VK_A:
+            return Canvas.GAME_A;
+        case KeyEvent.VK_B:
+            return Canvas.GAME_B;
+        case KeyEvent.VK_C:
+            return Canvas.GAME_C;
+        case KeyEvent.VK_D:
+            return Canvas.GAME_D;
+
+        case KeyEvent.VK_0:
+        case KeyEvent.VK_1:
+        case KeyEvent.VK_2:
+        case KeyEvent.VK_3:
+        case KeyEvent.VK_4:
+        case KeyEvent.VK_5:
+        case KeyEvent.VK_6:
+        case KeyEvent.VK_7:
+        case KeyEvent.VK_8:
+        case KeyEvent.VK_9:
+            int rval = Canvas.KEY_NUM0 + (keyCode-KeyEvent.VK_0);
+            return rval;
+        case KeyEvent.VK_MULTIPLY:
+            return Canvas.KEY_STAR;
+        case KeyEvent.VK_NUMBER_SIGN:
+            return Canvas.KEY_POUND;
+        default:
       return 0;
     }
   }
@@ -89,7 +119,45 @@ public class DisplayBridge
 
   public static int getKeyCode(int gameAction) 
   {
-    return gameAction;
+        switch (gameAction) {
+        case Canvas.UP:
+            return KeyEvent.VK_UP;
+        case Canvas.DOWN:
+            return KeyEvent.VK_DOWN;
+        case Canvas.LEFT:
+            return KeyEvent.VK_LEFT;
+        case Canvas.RIGHT:
+            return KeyEvent.VK_RIGHT;
+        case Canvas.FIRE:
+            return KeyEvent.VK_ENTER;
+        case Canvas.GAME_A:
+            return KeyEvent.VK_A;
+        case Canvas.GAME_B:
+            return KeyEvent.VK_B;
+        case Canvas.GAME_C:
+            return KeyEvent.VK_C;
+        case Canvas.GAME_D:
+            return KeyEvent.VK_D;
+
+        case Canvas.KEY_NUM0:
+        case Canvas.KEY_NUM1:
+        case Canvas.KEY_NUM2:        
+        case Canvas.KEY_NUM3:        
+        case Canvas.KEY_NUM4:
+        case Canvas.KEY_NUM5:
+        case Canvas.KEY_NUM6:
+        case Canvas.KEY_NUM7:        
+        case Canvas.KEY_NUM8:        
+        case Canvas.KEY_NUM9:
+            int rval = KeyEvent.VK_0 + (gameAction-Canvas.KEY_NUM0);
+            return rval;
+        case Canvas.KEY_POUND:
+            return KeyEvent.VK_NUMBER_SIGN;
+        case Canvas.KEY_STAR:
+            return KeyEvent.VK_MULTIPLY;
+        default:
+            return 0;
+        }
   }
 
 
@@ -139,6 +207,12 @@ public class DisplayBridge
   public static void updateCommands(Vector commands) 
   {
     CommandManager.getInstance().updateCommands(commands);
+    
+    /**
+     * updateCommands has changed the softkey labels
+     * tell the outside world it has happened.
+     */
+    MIDletBridge.notifySoftkeyLabelsChanged();
     repaint();
   }
 

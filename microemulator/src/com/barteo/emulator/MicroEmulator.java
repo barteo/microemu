@@ -15,6 +15,9 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Contributor(s):
+ *    3GLab
  */
  
 package com.barteo.emulator;
@@ -23,8 +26,13 @@ package com.barteo.emulator;
 public interface MicroEmulator
 {
   
-  public String getAppProperty(String key);
+  String getAppProperty(String key);
   
-  public void notifyDestroyed();
+  void notifyDestroyed();
+
+  /**
+   * Allows notification when softkeys have changed
+   */
+  void notifySoftkeyLabelsChanged();
     
 }

@@ -244,6 +244,11 @@ public class Main extends Applet implements MicroEmulator, com.barteo.midp.lcdui
   }
   
   
+  public void notifySoftkeyLabelsChanged()
+  {
+  }
+  
+  
   public String getAppletInfo()
 	{
     return "Title: MicroEmulator \nAuthor: Bartek Teodorczyk, 2001";

@@ -273,6 +273,11 @@ System.out.println(fc.getName());
   }
   
   
+  public void notifySoftkeyLabelsChanged()
+  {
+  }
+  
+  
   public void setResponseInterface(boolean state)
   {
     menuOpenJADFile.setEnabled(state);

@@ -22,6 +22,9 @@
  
 package javax.microedition.lcdui;
 
+import java.util.Enumeration;
+import java.util.Vector;
+
 import javax.microedition.midlet.MIDlet;
 
 import com.barteo.emulator.CommandManager;
@@ -32,24 +35,25 @@ import com.barteo.emulator.device.DeviceFactory;
 
 public class Display
 {
+	private static EventDispatcher eventDispatcher = null;
+	private static TickerPaint tickerPaint = null;
 
-	Displayable current = null;
-	Displayable nextScreen = null;
+	private Displayable current = null;
+	private Displayable nextScreen = null;
 
-	DisplayAccessor accessor = null;
+	private DisplayAccessor accessor = null;
+	
+	private Object paintLock = new Object();
+	private boolean repaintPending = false;
 
-
-	class DisplayAccessor implements DisplayAccess
+	private class DisplayAccessor implements DisplayAccess
 	{
-
 		Display display;
-
 
 		DisplayAccessor(Display d)
 		{
 			display = d;
 		}
-
 
 		public void commandAction(Command cmd)
 		{
@@ -63,12 +67,10 @@ public class Display
 			listener.commandAction(cmd, current);
 		}
 
-
 		public Display getDisplay()
 		{
 			return display;
 		}
-
 
 		public void keyPressed(int keyCode)
 		{
@@ -77,7 +79,6 @@ public class Display
 			}
 		}
 
-
 		public void keyReleased(int keyCode)
 		{
 			if (current != null) {
@@ -85,47 +86,44 @@ public class Display
 			}
 		}
 
-
 		public void paint(Graphics g)
 		{
 			if (current != null) {
         current.paint(g);
 				g.translate(-g.getTranslateX(), -g.getTranslateY());
+				Vector jobs = null;
+				synchronized (paintLock) {
+					repaintPending = false;
+					paintLock.notify();
+				}
 			}
 		}
-    
-    
+        
     public Displayable getCurrent()
 		{
       return getDisplay().getCurrent();
     }
-
 
     public void setCurrent(Displayable d)
 		{
       getDisplay().setCurrent(d);
     }
     
-    
     public void updateCommands()
     {
       getDisplay().updateCommands();
     }
-
 	}
 
 
-	class AlertTimeout implements Runnable
+	private class AlertTimeout implements Runnable
 	{
-
 		int time;
-
 
 		AlertTimeout(int time)
 		{
 			this.time = time;
 		}
-
 
 		public void run()
 		{
@@ -136,9 +134,8 @@ public class Display
 		}
 	}
   
-  class TickerPaint implements Runnable
+  private class TickerPaint implements Runnable
   {
-
     public void run()
 		{
       while (true) {
@@ -160,21 +157,69 @@ public class Display
     		} catch (InterruptedException ex) {}
       }
 		}
-  
   }
 
+	private class EventDispatcher implements Runnable
+	{
+		private Vector events = new Vector();
+		
+		public void add(Runnable r)
+		{
+			synchronized (paintLock) {
+				events.add(r);
+				paintLock.notify();
+			}
+		}
+		
+		public void run()
+		{
+			while (true) {
+				if (!repaintPending) {
+					Vector jobs = null;			
+					synchronized (paintLock) {
+						if (events.size() > 0) {
+							jobs = (Vector) events.clone();
+							events.removeAllElements();
+						}
+					}
+					if (jobs != null) {
+						for (Enumeration en = jobs.elements(); en.hasMoreElements(); ) {
+							((Runnable) en.nextElement()).run(); 
+						}
+					}
+				}
+				
+				try {
+					synchronized (paintLock) {
+						if (events.size() == 0) {
+							paintLock.wait();
+						}
+					}
+				} catch (InterruptedException ex) {
+					System.err.println(ex);
+				}
+			}
+		}
+	}
 
 	Display()
 	{
 		accessor = new DisplayAccessor(this);
     
-    new Thread(new TickerPaint()).start();
+    if (eventDispatcher == null) {
+    	eventDispatcher = new EventDispatcher();
+    	new Thread(eventDispatcher).start();
+    }
+    if (tickerPaint == null) {
+    	tickerPaint = new TickerPaint();
+			new Thread(tickerPaint).start();    	
+    }    	
 	}
 
 
   public void callSerially(Runnable r)
   {
-    // Not implemented
+  	eventDispatcher.add(r);
   }
 
 
@@ -281,17 +326,12 @@ public class Display
 	}
 
 
-	void repaint()
-	{
-    if (current != null) {
-      repaint(current);
-    }
-  }
-    
-    
   void repaint(Displayable d)
 	{
 		if (current == d) {
+			synchronized (paintLock) {
+				repaintPending = true;
+			}
 			DeviceFactory.getDevice().getDeviceDisplay().repaint();
 		}
 	}
@@ -323,5 +363,13 @@ public class Display
     MIDletBridge.notifySoftkeyLabelsChanged();
     repaint();
 	}
+
+
+	private void repaint()
+	{
+		if (current != null) {
+			repaint(current);
+		}
+	}    
 
 }

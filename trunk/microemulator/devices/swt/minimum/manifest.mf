@@ -1,0 +1,2 @@
+Device-Name: Minimum Device
+Device-Class: net.barteo.me.swtdevice.minimum.MinimumDevice

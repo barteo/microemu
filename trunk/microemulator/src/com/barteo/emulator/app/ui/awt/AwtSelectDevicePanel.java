@@ -41,10 +41,10 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 import com.barteo.emulator.app.Config;
-import com.barteo.emulator.app.util.*;
 import com.barteo.emulator.app.util.DeviceEntry;
+import com.barteo.emulator.app.util.ExtensionFileFilter;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
-import com.barteo.emulator.device.j2se.J2SEDevice;
+import com.barteo.emulator.device.applet.AppletDevice;
 
 
 public class AwtSelectDevicePanel extends AwtDialogPanel
@@ -138,7 +138,7 @@ public class AwtSelectDevicePanel extends AwtDialogPanel
 					return;
 				}
           
-				if (!J2SEDevice.class.isAssignableFrom(deviceClass)) {
+				if (!AppletDevice.class.isAssignableFrom(deviceClass)) {
 					OptionPane.showMessageDialog(instance, 
 							"Cannot find class defined in Device-Class entry in jar manifest.",
 							"Error", OptionPane.ERROR_MESSAGE);
@@ -305,7 +305,7 @@ public class AwtSelectDevicePanel extends AwtDialogPanel
 			devices.add(e.nextElement());
 		}
     
-		Config.saveConfig("config.xml");
+		Config.saveConfig("config-awt.xml");
 	}
     
 }

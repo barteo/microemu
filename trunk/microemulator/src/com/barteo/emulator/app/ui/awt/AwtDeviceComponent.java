@@ -37,10 +37,10 @@ import com.barteo.emulator.app.ui.XYConstraints;
 import com.barteo.emulator.app.ui.XYLayout;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.SoftButton;
-import com.barteo.emulator.device.j2se.J2SEButton;
-import com.barteo.emulator.device.j2se.J2SEDevice;
-import com.barteo.emulator.device.j2se.J2SEDeviceDisplay;
-import com.barteo.emulator.device.j2se.J2SEInputMethod;
+import com.barteo.emulator.device.applet.AppletButton;
+import com.barteo.emulator.device.applet.AppletDevice;
+import com.barteo.emulator.device.applet.AppletDeviceDisplay;
+import com.barteo.emulator.device.applet.AppletInputMethod;
 
 
 public class AwtDeviceComponent extends Panel
@@ -48,9 +48,9 @@ public class AwtDeviceComponent extends Panel
 	AwtDeviceComponent instance;
 	AwtDisplayComponent dc;
 
-	J2SEButton prevOverButton;
-	J2SEButton overButton;
-	J2SEButton pressedButton;
+	AppletButton prevOverButton;
+	AppletButton overButton;
+	AppletButton pressedButton;
   
 	Image offi;
 	Graphics offg;
@@ -79,7 +79,7 @@ public class AwtDeviceComponent extends Panel
 
 		public void mouseReleased(MouseEvent e) 
 		{
-			J2SEButton prevOverButton = getButton(e.getX(), e.getY());
+			AppletButton prevOverButton = getButton(e.getX(), e.getY());
 			if (prevOverButton != null) {
 				int key = prevOverButton.getKey();
 				KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key, KeyEvent.CHAR_UNDEFINED);
@@ -138,14 +138,14 @@ public class AwtDeviceComponent extends Panel
 	{
 		remove(dc);
 		add(dc, new XYConstraints(
-				((J2SEDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle()));
+				((AppletDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle()));
 		validate();
 	}
   
   
 	public void keyPressed(KeyEvent ev)
 	{
-		((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod()).keyboardKeyPressed(ev);
+		((AppletInputMethod) DeviceFactory.getDevice().getInputMethod()).keyboardKeyPressed(ev);
 		pressedButton = getButton(ev);
 		repaint();
 		if (pressedButton instanceof SoftButton) {
@@ -159,7 +159,7 @@ public class AwtDeviceComponent extends Panel
   
 	public void keyReleased(KeyEvent ev)
 	{
-		((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod()).keyboardKeyReleased(ev);
+		((AppletInputMethod) DeviceFactory.getDevice().getInputMethod()).keyboardKeyReleased(ev);
 		prevOverButton = pressedButton;
 		pressedButton = null;
 		repaint();      
@@ -174,10 +174,10 @@ public class AwtDeviceComponent extends Panel
 			offg = offi.getGraphics();
 		}
 
-		offg.drawImage(((J2SEDevice) DeviceFactory.getDevice()).getNormalImage(), 0, 0, this);
+		offg.drawImage(((AppletDevice) DeviceFactory.getDevice()).getNormalImage(), 0, 0, this);
     
 		Rectangle displayRectangle = 
-				((J2SEDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle();
+				((AppletDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle();
 		offg.translate(displayRectangle.x, displayRectangle.y);
 		dc.paint(offg);
 		offg.translate(-displayRectangle.x, -displayRectangle.y);
@@ -185,20 +185,20 @@ public class AwtDeviceComponent extends Panel
 		Rectangle rect;
 		if (prevOverButton != null ) {
 			rect = prevOverButton.getRectangle();    
-			offg.drawImage(((J2SEDevice) DeviceFactory.getDevice()).getNormalImage(), 
+			offg.drawImage(((AppletDevice) DeviceFactory.getDevice()).getNormalImage(), 
 					rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
 					rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
 			prevOverButton = null;
 		}
 		if (overButton != null) {
 			rect = overButton.getRectangle();    
-			offg.drawImage(((J2SEDevice) DeviceFactory.getDevice()).getOverImage(), 
+			offg.drawImage(((AppletDevice) DeviceFactory.getDevice()).getOverImage(), 
 					rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
 					rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
 		}
 		if (pressedButton != null) {
 			rect = pressedButton.getRectangle();    
-			offg.drawImage(((J2SEDevice) DeviceFactory.getDevice()).getPressedImage(), 
+			offg.drawImage(((AppletDevice) DeviceFactory.getDevice()).getPressedImage(), 
 					rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
 					rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
 		}
@@ -213,10 +213,10 @@ public class AwtDeviceComponent extends Panel
 	}
  
   
-	private J2SEButton getButton(int x, int y)
+	private AppletButton getButton(int x, int y)
 	{
-		for (Enumeration e = ((J2SEDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
-			J2SEButton button = (J2SEButton) e.nextElement();
+		for (Enumeration e = ((AppletDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
+			AppletButton button = (AppletButton) e.nextElement();
 			Rectangle tmp = new Rectangle(button.getRectangle());
 			if (x >= tmp.x && x < tmp.x + tmp.width && y >= tmp.y && y < tmp.y + tmp.height) {
 				return button;
@@ -226,10 +226,10 @@ public class AwtDeviceComponent extends Panel
 	}
 
   
-	private J2SEButton getButton(KeyEvent ev)
+	private AppletButton getButton(KeyEvent ev)
 	{
-		for (Enumeration e = ((J2SEDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
-			J2SEButton button = (J2SEButton) e.nextElement();
+		for (Enumeration e = ((AppletDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
+			AppletButton button = (AppletButton) e.nextElement();
 			if (ev.getKeyCode() == button.getKey()) {
 				return button;
 			}

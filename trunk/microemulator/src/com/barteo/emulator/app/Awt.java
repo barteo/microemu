@@ -54,7 +54,7 @@ import com.barteo.emulator.app.util.DeviceEntry;
 import com.barteo.emulator.app.util.ExtensionFileFilter;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.device.DeviceFactory;
-import com.barteo.emulator.device.j2se.J2SEDevice;
+import com.barteo.emulator.device.applet.AppletDevice;
 
 
 public class Awt extends Frame
@@ -265,7 +265,7 @@ public class Awt extends Frame
 		addWindowListener(windowListener);
 		
     
-		Config.loadConfig("config.xml");
+		Config.loadConfig("config-awt.xml");
 		addKeyListener(keyListener);
 
 		devicePanel = new AwtDeviceComponent();
@@ -301,7 +301,7 @@ public class Awt extends Frame
 			} else {
 				deviceClass = Class.forName(entry.getClassName());
 			}
-			J2SEDevice device = (J2SEDevice) deviceClass.newInstance();
+			AppletDevice device = (AppletDevice) deviceClass.newInstance();
 			DeviceFactory.setDevice(device);
 			device.init(emulatorContext);
 			devicePanel.init();

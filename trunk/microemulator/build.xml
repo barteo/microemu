@@ -14,6 +14,27 @@
       <equals arg1="${target}" arg2="app"/>
     </condition>
     
+    <condition property="target.app.type.awt">
+      <and>
+        <equals arg1="${target}" arg2="app"/>
+        <equals arg1="${target.app.type}" arg2="awt"/>
+      </and>
+    </condition>
+
+    <condition property="target.app.type.swing">
+      <and>
+        <equals arg1="${target}" arg2="app"/>
+        <equals arg1="${target.app.type}" arg2="swing"/>
+      </and>
+    </condition>
+
+    <condition property="target.app.type.swt">
+      <and>
+        <equals arg1="${target}" arg2="app"/>
+        <equals arg1="${target.app.type}" arg2="swt"/>
+      </and>
+    </condition>
+
     <condition property="target.applet.obfuscate.true">
       <and>
         <equals arg1="${target}" arg2="applet"/>
@@ -22,14 +43,84 @@
     </condition>
   </target>
   
-  <target name="init-app" depends="init-base" if="target.app">  	
-    <property name="target.device.prefix" value="j2se"/>
+  <target name="init-app" depends="init-base,init-app-awt,init-app-swing,init-app-swt" if="target.app">  	
     <property name="target.device.extension" value="dev"/>
+  </target>
+
+  <target name="init-app-awt" depends="init-base" if="target.app.type.awt">  	
+    <property name="target.device.prefix" value="applet"/>
+	<property name="target.app.classname" value="com.barteo.emulator.app.Awt"/>
+
+    <patternset id="project.src">
+      <include name="javax/**"/>
+      <include name="com/barteo/emulator/app/**"/>
+      <exclude name="com/barteo/emulator/app/Main*"/>
+      <exclude name="com/barteo/emulator/app/Swt*"/>
+      <exclude name="com/barteo/emulator/app/WebStart*"/>
+      <exclude name="com/barteo/emulator/app/ui/swing/**"/>
+      <exclude name="com/barteo/emulator/app/ui/swt/**"/>
+      <include name="com/barteo/emulator/device/**"/>
+      <exclude name="com/barteo/emulator/device/j2se/**"/>
+      <exclude name="com/barteo/emulator/device/swt/**"/>
+      <include name="com/barteo/cldc/**"/>
+      <include name="com/barteo/midp/**"/>
+      <include name="com/sixlegs/image/png/**"/>
+    </patternset>
+  </target>
+
+  <target name="init-app-swing" depends="init-base" if="target.app.type.swing">  	
+    <property name="target.device.prefix" value="j2se"/>
+	<property name="target.app.classname" value="com.barteo.emulator.app.Main"/>
+
+    <patternset id="project.src">
+      <include name="javax/**"/>
+      <include name="com/barteo/emulator/app/**"/>
+      <exclude name="com/barteo/emulator/app/Awt*"/>
+      <exclude name="com/barteo/emulator/app/Swt*"/>
+      <exclude name="com/barteo/emulator/app/ui/awt/**"/>
+      <exclude name="com/barteo/emulator/app/ui/swt/**"/>
+      <include name="com/barteo/emulator/device/**"/>
+      <exclude name="com/barteo/emulator/device/applet/**"/>
+      <exclude name="com/barteo/emulator/device/swt/**"/>
+      <include name="com/barteo/cldc/**"/>
+      <include name="com/barteo/midp/**"/>
+      <include name="com/sixlegs/image/png/**"/>
+    </patternset>
+  </target>
+
+  <target name="init-app-swt" depends="init-base" if="target.app.type.swt">  	
+    <property name="target.device.prefix" value="swt"/>
+	<property name="target.app.classname" value="com.barteo.emulator.app.Swt"/>
+
+    <patternset id="project.src">
+      <include name="javax/**"/>
+      <include name="com/barteo/emulator/app/**"/>
+      <exclude name="com/barteo/emulator/app/Awt*"/>
+      <exclude name="com/barteo/emulator/app/Main*"/>
+      <exclude name="com/barteo/emulator/app/WebStart*"/>
+      <exclude name="com/barteo/emulator/app/ui/awt/**"/>
+      <exclude name="com/barteo/emulator/app/ui/swing/**"/>
+      <include name="com/barteo/emulator/device/**"/>
+      <exclude name="com/barteo/emulator/device/applet/**"/>
+      <exclude name="com/barteo/emulator/device/j2se/**"/>
+      <include name="com/barteo/cldc/**"/>
+      <include name="com/barteo/midp/**"/>
+      <include name="com/sixlegs/image/png/**"/>
+    </patternset>
   </target>
 
   <target name="init-applet" depends="init-base" if="target.applet">
     <property name="target.device.prefix" value="applet"/>
     <property name="target.device.extension" value="jar"/>
+    
+    <patternset id="project.src">
+      <include name="java/util/**"/>
+      <include name="javax/**"/>
+      <include name="com/barteo/emulator/applet/**"/>
+      <include name="com/barteo/cldc/**"/>
+      <include name="com/barteo/midp/**"/>
+      <include name="com/sixlegs/image/png/**"/>
+    </patternset>
   </target>
 
   <target name="init" depends="init-app,init-applet">
@@ -41,27 +132,17 @@
 
   <target name="compile-app" depends="init" if="target.app">
     <javac debug="true" deprecation="true" destdir="./build/microemulator/classes" srcdir="./src">
-      <include name="javax/**"/>
-      <exclude name="com/barteo/emulator/app/Swt*"/>
-      <include name="com/barteo/emulator/app/**"/>
-      <exclude name="com/barteo/emulator/app/ui/swt/**"/>
-      <include name="com/barteo/cldc/**"/>
-      <include name="com/barteo/midp/**"/>
-      <include name="com/sixlegs/image/png/**"/>
+	  <patternset refid="project.src"/>
       <classpath>
         <pathelement location="./lib/jnlp.jar"/>
+        <pathelement location="${target.app.type.swt.jar}"/>
       </classpath>      
     </javac>
   </target>
 
   <target name="compile-applet" depends="init" if="target.applet">
     <javac target="1.1" debug="true" deprecation="true" destdir="./build/microemulator/classes" srcdir="./src">
-      <include name="java/util/**"/>
-      <include name="javax/**"/>
-      <include name="com/barteo/emulator/applet/**"/>
-      <include name="com/barteo/cldc/**"/>
-      <include name="com/barteo/midp/**"/>
-      <include name="com/sixlegs/image/png/**"/>
+	  <patternset refid="project.src"/>
     </javac>
   </target>
   
@@ -142,10 +223,11 @@
   </target>
   
   <target name="run" depends="init,jar,simpledemo" description="Try running it." if="target.app">
-    <java classname="com.barteo.emulator.app.Main" failonerror="true" fork="true">
+    <java classname="${target.app.classname}" failonerror="true" fork="true">
       <classpath>
         <pathelement location="./target/me-app.jar"/>
         <pathelement location="./target/simpledemo.jar"/>
+        <pathelement location="${target.app.type.swt.jar}"/>        
       </classpath>
       <arg value="com.barteo.midp.examples.simpledemo.SimpleDemo"/>
     </java>

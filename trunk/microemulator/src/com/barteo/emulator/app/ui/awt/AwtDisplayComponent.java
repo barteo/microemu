@@ -27,7 +27,7 @@ import java.awt.Rectangle;
 import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceFactory;
-import com.barteo.emulator.device.j2se.J2SEDeviceDisplay;
+import com.barteo.emulator.device.applet.AppletDeviceDisplay;
 
 
 public class AwtDisplayComponent extends Panel implements DisplayComponent
@@ -41,7 +41,7 @@ public class AwtDisplayComponent extends Panel implements DisplayComponent
   {
     Device device = DeviceFactory.getDevice();
     Rectangle displayRectangle = 
-        ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
+        ((AppletDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
 
     if (prevDevice != device) {
 			offi = createImage(displayRectangle.width, displayRectangle.height);
@@ -49,7 +49,7 @@ public class AwtDisplayComponent extends Panel implements DisplayComponent
     }
     prevDevice = device;
     
-    ((J2SEDeviceDisplay) device.getDeviceDisplay()).paint(offg);
+    ((AppletDeviceDisplay) device.getDeviceDisplay()).paint(offg);
     
 		g.drawImage(offi, 0, 0, null);
   }

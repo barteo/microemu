@@ -49,7 +49,10 @@ public class Config
     if (configFileName.equals("config-swt.xml")) { 
 			defaultDevice =
 				  new DeviceEntry("Default device", null, "com.barteo.emulator.device.swt.SwtDevice", true, false);
-    } else {
+    } else if (configFileName.equals("config-awt.xml")) {
+			defaultDevice =
+				  new DeviceEntry("Default device", null, "com.barteo.emulator.device.applet.AppletDevice", true, false);
+  	} else {
 			defaultDevice =
       	  new DeviceEntry("Default device", null, "com.barteo.emulator.device.j2se.J2SEDevice", true, false);
     }

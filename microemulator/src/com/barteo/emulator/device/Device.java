@@ -83,7 +83,7 @@ public class Device {
             for (Enumeration e_button = tmp_keyboard.enumerateChildren(); e_button.hasMoreElements(); ) {
               XMLElement tmp_button = (XMLElement) e_button.nextElement();
               if (tmp_button.getName().equals("rectangle")) {
-                deviceButtons.add(new Button(tmp_keyboard.getProperty("name"), 
+                deviceButtons.addElement(new Button(tmp_keyboard.getProperty("name"), 
                     getRectangle(tmp_button), tmp_keyboard.getProperty("key")));
               }
             }
@@ -100,10 +100,10 @@ public class Device {
                 paintable = getRectangle(tmp_button);
               }
               if (tmp_button.getName().equals("command")) {
-                commands.add(tmp_button.getContent());
+                commands.addElement(tmp_button.getContent());
               }
             }
-            deviceButtons.add(new SoftButton(tmp_keyboard.getProperty("name"),
+            deviceButtons.addElement(new SoftButton(tmp_keyboard.getProperty("name"),
                 rectangle, tmp_keyboard.getProperty("key"), paintable, 
                 tmp_keyboard.getProperty("alignment"), commands));
           }

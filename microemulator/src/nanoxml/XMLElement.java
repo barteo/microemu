@@ -324,7 +324,7 @@ public class XMLElement
         this.contents = null;
         this.attributes.clear();
         this.attributes = null;
-        this.children.clear();
+        this.children.removeAllElements();
         this.children = null;
         this.entities.clear();
         this.entities = null;

@@ -77,13 +77,13 @@ public abstract class Displayable
 
 	public int getHeight()
 	{
-		throw new RuntimeException("TODO");
+		return viewPortHeight;
 	}
 	
 
 	public int getWidth()
 	{
-		throw new RuntimeException("TODO");
+		return DeviceFactory.getDevice().getDeviceDisplay().getWidth();
 	}
 	
 		

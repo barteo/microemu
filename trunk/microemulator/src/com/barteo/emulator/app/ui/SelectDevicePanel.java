@@ -112,7 +112,13 @@ public class SelectDevicePanel extends DialogPanel
         String deviceName = null;
         try {
           JarFile jar = new JarFile(fileChooser.getSelectedFile());
-          Manifest manifest = jar.getManifest();          
+          Manifest manifest = jar.getManifest();
+          if (manifest == null) {
+            JOptionPane.showMessageDialog(instance,
+                "Missing manifest in dev file.",
+                "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+          }          
           Attributes attrs = manifest.getMainAttributes();
           
           deviceName = attrs.getValue("Device-Name");

@@ -21,8 +21,6 @@ package com.barteo.emulator.device.j2se;
 
 import java.awt.Frame;
 
-import javax.microedition.lcdui.Graphics;
-
 
 public class MutableImage extends javax.microedition.lcdui.Image 
 {

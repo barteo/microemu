@@ -20,43 +20,33 @@
 package com.barteo.emulator.applet;
 
 import java.applet.Applet;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Enumeration;
 
 import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.Display;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
 import com.barteo.emulator.CommandManager;
-import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.DisplayComponent;
-import com.barteo.emulator.MicroEmulator;
+import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletBridge;
+import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceFactory;
-import com.barteo.emulator.device.InputMethod;
 import com.barteo.emulator.device.SoftButton;
 import com.barteo.emulator.device.applet.AppletButton;
 import com.barteo.emulator.device.applet.AppletDevice;
 import com.barteo.emulator.device.applet.AppletDeviceDisplay;
 import com.barteo.emulator.device.applet.AppletInputMethod;
-import com.barteo.emulator.device.applet.AppletSoftButton;
-import com.barteo.emulator.device.applet.DisplayGraphics;
-import com.barteo.emulator.device.applet.PositionedImage;
 
 
 public class Main extends Applet implements MicroEmulator, DisplayComponent

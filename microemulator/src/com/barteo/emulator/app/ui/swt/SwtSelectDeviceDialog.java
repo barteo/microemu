@@ -30,8 +30,9 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -39,6 +40,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
@@ -217,33 +219,30 @@ public class SwtSelectDeviceDialog extends SwtDialog
 		}
 	};
 	
-	SelectionListener lsDevicesListener = new SelectionListener()
+	SelectionAdapter lsDevicesListener = new SelectionAdapter()
 	{
 		public void widgetSelected(SelectionEvent e) 
 		{
 			int index = lsDevices.getSelectionIndex();
 			if (index != -1) {
-				DeviceEntry entry = (DeviceEntry) deviceModel.elementAt(index);
-				if (entry.isDefaultDevice()) {
+				selectedEntry = (DeviceEntry) deviceModel.elementAt(index);
+				if (selectedEntry.isDefaultDevice()) {
 					btDefault.setEnabled(false);
 				} else {
 					btDefault.setEnabled(true);
 				}
-				if (entry.canRemove()) {
+				if (selectedEntry.canRemove()) {
 					btRemove.setEnabled(true);
 				} else {
 					btRemove.setEnabled(false);
 				}
-//				btOk.setEnabled(true);
+				btOk.setEnabled(true);
 			} else {
+				selectedEntry = null;
 				btDefault.setEnabled(false);
 				btRemove.setEnabled(false);
-//				btOk.setEnabled(false);
+				btOk.setEnabled(false);
 			}
-		}
-
-		public void widgetDefaultSelected(SelectionEvent e) 
-		{
 		}
 	};
 
@@ -270,27 +269,48 @@ public class SwtSelectDeviceDialog extends SwtDialog
 	}
 
 
-	protected Control createDialogArea(Composite parent) 
+	protected Control createDialogArea(Composite composite) 
 	{
-		Composite composite = new Composite(parent, SWT.NONE);
-		
-		composite.setLayout(new GridLayout());
-		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		composite.setFont(parent.getFont());
+		GridLayout gridLayout = new GridLayout();
+   	gridLayout.numColumns = 1;
+		composite.setLayout(gridLayout);
+//		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		lsDevices = new List(composite, SWT.SINGLE);
+		Group gpDevices = new Group(composite, SWT.NONE);
+		gpDevices.setText("Installed devices");
+		gridLayout = new GridLayout();
+		gridLayout.numColumns = 1;
+	  gpDevices.setLayout(gridLayout);
+		gpDevices.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		lsDevices = new List(gpDevices, SWT.SINGLE | SWT.V_SCROLL);
+		GridData gridData = new GridData(GridData.FILL_BOTH);
+		gridData.horizontalSpan = 3;
+		gridData.grabExcessVerticalSpace = true;
+		Rectangle trim = lsDevices.computeTrim(0, 0, 0, lsDevices.getItemHeight() * 5);
+		gridData.heightHint = trim.height;
+		lsDevices.setLayoutData(gridData);
 		lsDevices.addSelectionListener(lsDevicesListener);
-//		spDevices = new ScrollPane();
+		
+		Composite btDevices = new Composite(gpDevices, SWT.NONE);
+		gridLayout = new GridLayout();
+		gridLayout.numColumns = 3;
+		btDevices.setLayout(gridLayout);
+		btDevices.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_CENTER));
     
-		Composite panel = new Composite(composite, SWT.NONE);
-		btAdd = new Button(panel, SWT.PUSH);
+		btAdd = new Button(btDevices, SWT.PUSH);
 		btAdd.setText("Add...");
+		btAdd.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_CENTER));
 		btAdd.addListener(SWT.Selection, btAddListener);
-		btRemove = new Button(panel, SWT.PUSH);
+		
+		btRemove = new Button(btDevices, SWT.PUSH);
 		btRemove.setText("Remove");
+		btRemove.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_CENTER));
 		btRemove.addListener(SWT.Selection, btRemoveListener);
-		btDefault = new Button(panel, SWT.PUSH);
+		
+		btDefault = new Button(btDevices, SWT.PUSH);
 		btDefault.setText("Set as default");
+		btDefault.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_CENTER));
 		btDefault.addListener(SWT.Selection, btDefaultListener);
     
     Vector devs = Config.getDevices();
@@ -305,7 +325,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 				lsDevices.add(entry.getName());
 			}
 		}
-		lsDevicesListener.widgetSelected(null);
+//		lsDevicesListener.widgetSelected(null);
 
 		return composite;
 	}
@@ -317,16 +337,22 @@ public class SwtSelectDeviceDialog extends SwtDialog
 	}
   
   
-	public void hideNotify()
+	public boolean close()
 	{
-		Vector devices = Config.getDevices();
-		devices.removeAllElements();
+		super.close();
+		
+		if (getReturnCode() == OK) { 
+			Vector devices = Config.getDevices();
+			devices.removeAllElements();
     
-		for (Enumeration e = deviceModel.elements(); e.hasMoreElements(); ) {
-			devices.add(e.nextElement());
+			for (Enumeration e = deviceModel.elements(); e.hasMoreElements(); ) {
+				devices.add(e.nextElement());
+			}
+    
+			Config.saveConfig("config-swt.xml");
 		}
-    
-		Config.saveConfig("config-swt.xml");
+		
+		return true;
 	}
     
 }

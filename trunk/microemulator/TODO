@@ -1,15 +1,19 @@
+* bugs in CommandManager
+
+* extended web site with overview, api docs, faq section, instalation instructions, etc.
+  (app requires Java 2, applet can be run in JVM 1.1)
+
+release 0.3.1 (alpha)
+
 * try to run application in WebStart environment
 
 * rebuild InputMethod to extend functionality:
   - switching between modes (numeric, password, URL, etc.)
   - solve problem with VK_BACKSPACE key on emulator device
 
-* extended web site with overview, api docs, faq section, instalation instructions, etc.
-  (app requires Java 2, applet can be run in JVM 1.1)
-
-release 0.3.1 (beta)
-
 * RMS - persistence?
+
+release 0.4 (alpha)
 
 * ConnectionFramework - currently only http connection is supported, implement other:
   - tcp

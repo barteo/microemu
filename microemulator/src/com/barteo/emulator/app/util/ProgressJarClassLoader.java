@@ -41,6 +41,18 @@ public class ProgressJarClassLoader extends ClassLoader
   
   ProgressListener listener;
   
+  
+  public ProgressJarClassLoader()
+  {
+    super();
+  }
+  
+
+  public ProgressJarClassLoader(ClassLoader parent)
+  {
+    super(parent);
+  }
+  
 
   public void addRepository(URL url)
   {

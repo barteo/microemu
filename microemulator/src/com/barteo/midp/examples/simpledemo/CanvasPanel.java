@@ -33,6 +33,11 @@ public class CanvasPanel extends Canvas implements ScreenPanel, CommandListener
   
   Command backCommand = new Command("Back", Command.BACK, 1);
   
+  Command neCommand = new Command("NE Move", Command.ITEM, 1);
+  Command nwCommand = new Command("NW Move", Command.ITEM, 2);
+  Command seCommand = new Command("SE Move", Command.ITEM, 3);
+  Command swCommand = new Command("SW Move", Command.ITEM, 4);
+
   int posMove = 0;
   static int POSNUMBER = 20;
 

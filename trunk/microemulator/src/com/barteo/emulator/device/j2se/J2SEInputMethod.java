@@ -168,63 +168,62 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 	{
 		String tmp;
     
-    if (commonKeyPressed(keyCode)) {
-      return;
-    }
+		if (commonKeyPressed(keyCode)) {
+			return;
+		}
 
 		if (text.length() < maxSize) {
-      for (Enumeration e = ((J2SEDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
-        J2SEButton button = (J2SEButton) e.nextElement();
-        if (keyCode == button.getKey()) {
-          synchronized (this) {
+			for (Enumeration e = ((J2SEDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
+				J2SEButton button = (J2SEButton) e.nextElement();
+				if (keyCode == button.getKey()) {
+					synchronized (this) {
 						lastButtonCharIndex++;
-            char[] buttonChars = filterConstraints(filterInputMode(button.getChars()));
-            if (buttonChars.length > 0) {
-              if (lastButtonCharIndex == buttonChars.length) {
-  							if (buttonChars.length == 1) {
-  								if (lastButton != null) {
-  									caret++;
-  								}
-  								lastButton = null;
-  							} else {
-  								lastButtonCharIndex = 0;
-  							}
-  						}
-  						if (lastButton != button) {
-  							if (lastButton != null) {
-  								caret++;
-  							}
-  							tmp = "";
-  							if (caret > 0) {
-  								tmp += text.substring(0, caret);
-  							}
-  							tmp += buttonChars[0];
-  							if (caret < text.length()) {
-  								tmp += text.substring(caret);
-  							}
-  							text = tmp;
-     						lastButton = button;
-  							lastButtonCharIndex = 0;
-  						} else {
-  							tmp = "";
-  							if (caret > 0) {
-  								tmp += text.substring(0, caret);
-  							}
-  							tmp += filterInputMode(lastButton.getChars())[lastButtonCharIndex];
-  							if (caret < text.length() - 1) {
-  								tmp += text.substring(caret + 1);
-  							}
-  							text = tmp;
-     						lastButton = button;
-  						}
-            } else {
-  						lastButton = null;
-              lastButtonCharIndex = -1;
-            }
+						char[] buttonChars = filterConstraints(filterInputMode(button.getChars()));
+						if (buttonChars.length > 0) {
+							if (lastButtonCharIndex == buttonChars.length) {
+								if (buttonChars.length == 1) {
+									if (lastButton != null) {
+										caret++;
+									}
+									lastButton = null;
+								} else {
+									lastButtonCharIndex = 0;
+								}
+							}
+							if (lastButton != button) {
+								if (lastButton != null) {
+									caret++;
+								}
+								tmp = "";
+								if (caret > 0) {
+									tmp += text.substring(0, caret);
+								}
+								tmp += buttonChars[0];
+								if (caret < text.length()) {
+									tmp += text.substring(caret);
+								}
+								text = tmp;
+								lastButton = button;
+								lastButtonCharIndex = 0;
+							} else {
+								tmp = "";
+								if (caret > 0) {
+									tmp += text.substring(0, caret);
+								}
+								tmp += buttonChars[lastButtonCharIndex];								
+								if (caret < text.length() - 1) {
+									tmp += text.substring(caret + 1);
+								}
+								text = tmp;
+								lastButton = button;
+							}
+						} else {
+							lastButton = null;
+							lastButtonCharIndex = -1;
+						}
 						resetKey = false;
 						notify();
-          }
-
+					}
 					InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, text);
 					inputMethodListener.inputMethodTextChanged(event);
 					break;

@@ -216,7 +216,7 @@ System.out.println("IM::keyboardKeyPressed:" + ev.keyCode +"+"+ ev.character);
   							if (caret > 0) {
   								tmp += text.substring(0, caret);
   							}
-  							tmp += filterInputMode(lastButton.getChars())[lastButtonCharIndex];
+							tmp += buttonChars[lastButtonCharIndex];								
   							if (caret < text.length() - 1) {
   								tmp += text.substring(caret + 1);
   							}

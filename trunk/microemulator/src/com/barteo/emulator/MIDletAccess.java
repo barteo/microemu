@@ -27,7 +27,7 @@ import javax.microedition.midlet.MIDletStateChangeException;
 public abstract class MIDletAccess
 {
   public MIDlet midlet;
-  DisplayAccess displayAccess;
+  private DisplayAccess displayAccess;
     
     
   public MIDletAccess(MIDlet amidlet)

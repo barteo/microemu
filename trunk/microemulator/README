@@ -7,14 +7,16 @@ There are two methods of running apps in emulator:
 
 1. As an application:
 a) java com.barteo.emulator.app.Main (MIDlet application main class)
+or, java com.barteo.emulator.app.Main (MIDlet jad file)
 
  - me-app.jar must be in CLASSPATH
 
-or,
 b) java -jar me-app.jar (MIDlet application main class)
+or, java -jar me-app.jar (MIDlet jad file)
 
  - (MIDlet application main class) parameter is optional, if used MIDlet
    application jar file must be in CLASSPATH
+ - (MIDlet jad file) must have .jad extension
 
 
 2. In applet:

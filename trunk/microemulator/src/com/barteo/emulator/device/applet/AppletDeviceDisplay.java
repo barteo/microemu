@@ -27,6 +27,7 @@ import java.awt.Shape;
 import java.util.Enumeration;
 
 import com.barteo.emulator.EmulatorContext;
+import com.barteo.emulator.MIDletAccess;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceDisplay;
@@ -124,17 +125,19 @@ public class AppletDeviceDisplay implements DeviceDisplay
           modeAbcLowerImage.getRectangle().x, modeAbcLowerImage.getRectangle().y, null);
     }
 
-    Shape oldclip = g.getClip();
-    g.setClip(displayPaintable);
-    g.translate(displayPaintable.x, displayPaintable.y);
-    Font f = g.getFont();
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma != null) {
+			Shape oldclip = g.getClip();
+			g.setClip(displayPaintable);
+			g.translate(displayPaintable.x, displayPaintable.y);
+			Font f = g.getFont();
     
-    DisplayGraphics dg = new DisplayGraphics(g);
-    MIDletBridge.getMIDletAccess().getDisplayAccess().paint(dg);
+			ma.getDisplayAccess().paint(new DisplayGraphics(g));
     
-    g.setFont(f);
-    g.translate(-displayPaintable.x, -displayPaintable.y);
-    g.setClip(oldclip);
+			g.setFont(f);
+  		g.translate(-displayPaintable.x, -displayPaintable.y);
+			g.setClip(oldclip);
+		}
 
     if (scrollUp) {
       g.drawImage(upImage.getImage(), upImage.getRectangle().x, upImage.getRectangle().y, null);

@@ -1,5 +1,6 @@
 MicroEmulator
 
+- app: opening initial MIDlet using jad file: java -jar me-app.jar mymidlet.jad
 - added socket connection in javax.microedition.io.*
 
 0.3.2 (alpha) - 24.03.2003

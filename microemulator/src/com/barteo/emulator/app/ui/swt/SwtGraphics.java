@@ -19,25 +19,32 @@
 
 package com.barteo.emulator.app.ui.swt;
 
+import java.util.HashMap;
+import java.util.Iterator;
+
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
 
 public class SwtGraphics 
 {
+	private Display display;
 	private GC gc;
 	private int transX = 0;
 	private int transY = 0;
+	private HashMap colors;
 	
 
 	public SwtGraphics(Display display) 
 	{
-		gc = new GC(display);
+		this.display = display;
+		this.gc = new GC(display);
 	}
 
 
@@ -50,6 +57,12 @@ public class SwtGraphics
 	public void dispose()
 	{
 		gc.dispose();
+		
+		if (colors != null) {
+			for (Iterator it = colors.values().iterator(); it.hasNext(); ) {
+				((Color) it.next()).dispose();
+			}
+		}
 	}
 
 
@@ -70,6 +83,22 @@ public class SwtGraphics
 	{
 		transX += x;
 		transY += y;
+	}
+	
+	
+	public Color getColor(RGB rgb)
+	{
+		if (colors == null) {
+			colors = new HashMap();
+		}
+		
+		Color result = (Color) colors.get(rgb);
+		if (result == null) {
+			result = new Color(display, rgb);
+			colors.put(rgb, result);
+		}
+		
+		return result;
 	}
 
 

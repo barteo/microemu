@@ -352,16 +352,12 @@ public class SwtDeviceComponent extends Canvas
 
 	private class GetFontMetricsRunnable implements Runnable
 	{
-		private String name;
-		private int size;
-		private int style;
+		private Font font;
 		private FontMetrics fontMetrics;
 		
-		GetFontMetricsRunnable(String name, int size, int style)
+		GetFontMetricsRunnable(Font font)
 		{
-			this.name = name;
-			this.size = size;
-			this.style = style;
+			this.font = font;
 		}
 		
 		FontMetrics getFontMetrics()
@@ -372,8 +368,9 @@ public class SwtDeviceComponent extends Canvas
 		public void run() 
 		{
 			SwtGraphics gc = new SwtGraphics(instance.getParent().getDisplay());
-			gc.setFont(new Font(instance.getParent().getDisplay(), name, size, style));
+			gc.setFont(font);
 			fontMetrics = gc.getFontMetrics();
+			gc.dispose();
 		}		
 	}
 
@@ -402,6 +399,7 @@ public class SwtDeviceComponent extends Canvas
 			SwtGraphics gc = new SwtGraphics(instance.getParent().getDisplay());
 			gc.setFont(new Font(instance.getParent().getDisplay(), name, size, style));
 			font = gc.getFont();
+			gc.dispose();
 		}		
 	}
 
@@ -428,6 +426,7 @@ public class SwtDeviceComponent extends Canvas
 			SwtGraphics gc = new SwtGraphics(instance.getParent().getDisplay());
 			gc.setFont(font);
 			stringWidth = gc.stringWidth(str);
+			gc.dispose();
 		}		
 	}
 
@@ -442,9 +441,9 @@ public class SwtDeviceComponent extends Canvas
 	}
 
 
-	public static FontMetrics getFontMetrics(String name, int size, int style) 
+	public static FontMetrics getFontMetrics(Font font) 
 	{
-		GetFontMetricsRunnable getFontMetricsRunnable = instance.new GetFontMetricsRunnable(name, size, style);
+		GetFontMetricsRunnable getFontMetricsRunnable = instance.new GetFontMetricsRunnable(font);
 		
 		instance.getDisplay().syncExec(getFontMetricsRunnable); 
 		

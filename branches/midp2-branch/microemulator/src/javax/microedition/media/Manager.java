@@ -22,6 +22,8 @@ package javax.microedition.media;
 import java.io.InputStream;
 import java.io.IOException;
 
+import com.barteo.emulator.media.TonePlayer;
+
 
 public final class Manager 
 {
@@ -38,7 +40,14 @@ public final class Manager
 	public static Player createPlayer(String locator)
 			throws IOException, MediaException	
 	{
-		throw new RuntimeException("TODO");
+		if (locator == null) {
+			throw new IllegalArgumentException();
+		}
+		if (!locator.equals(TONE_DEVICE_LOCATOR)) {
+			throw new MediaException("Cannot create player using " + locator + " locator");
+		}
+		
+		return new TonePlayer();
 	}
 
 

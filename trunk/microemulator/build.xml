@@ -300,6 +300,7 @@
     <tar basedir="../." tarfile="dist/microemulator-src.tar" defaultexcludes="yes">
       <include name="microemulator/build.properties"/>
       <include name="microemulator/build.xml"/>
+      <include name="microemulator/AUTHORS"/>
       <include name="microemulator/CHANGES"/>
       <include name="microemulator/LICENSE"/>
       <include name="microemulator/README"/>
@@ -315,6 +316,7 @@
     <delete file="dist/microemulator-src.tar"/>
 
     <tar basedir="../." tarfile="dist/microemulator-${target}.tar" defaultexcludes="yes">
+      <include name="microemulator/AUTHORS"/>
       <include name="microemulator/CHANGES"/>
       <include name="microemulator/LICENSE"/>
       <include name="microemulator/README"/>

@@ -179,7 +179,12 @@ System.out.println("Applet::destroy()");
 
   public String getAppProperty(String key)
   {
-    return manifest.getProperty(key);
+    String property = getParameter(key);
+    if (property==null) {
+        property = manifest.getProperty(key);
+    }
+    
+    return property;
   }
 
   

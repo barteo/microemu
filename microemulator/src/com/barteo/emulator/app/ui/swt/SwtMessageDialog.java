@@ -19,6 +19,15 @@
  
 package com.barteo.emulator.app.ui.swt;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 
@@ -26,16 +35,22 @@ public class SwtMessageDialog extends SwtDialog
 {
 	public final static int ERROR = 1;
 	public final static int INFORMATION = 2;
+	public final static int QUESTION = 3;
 	
 	private String title;
+	private String message;
+	private String[] buttonLabels;
+	private int defaultIndex;
 
 
-	public SwtMessageDialog(Shell parentShell, String title, String message, int dialogImageType, String[] dialogButtonLabels, int defaultIndex) 
+	public SwtMessageDialog(Shell parentShell, String title, String message, int imageType, String[] buttonLabels, int defaultIndex) 
 	{
 		super(parentShell);
 		
 		this.title = title;
-		// TODO Auto-generated constructor stub
+		this.message = message;
+		this.buttonLabels = buttonLabels;
+		this.defaultIndex = defaultIndex;
 	}
 
 
@@ -43,7 +58,6 @@ public class SwtMessageDialog extends SwtDialog
 	{
 		SwtMessageDialog dialog = 
 				new SwtMessageDialog(parent, title, message, ERROR, new String[] {"OK"}, 0);
-System.out.println(message);				
 		dialog.open();
 	}
 	
@@ -52,10 +66,17 @@ System.out.println(message);
 	{
 		SwtMessageDialog dialog = 
 				new SwtMessageDialog(parent, title, message, INFORMATION, new String[] {"OK"}, 0);
-System.out.println(message);				
-		dialog.open();
-	
+		dialog.open();	
 	}
+	
+	
+	public static boolean openQuestion(Shell parent, String title, String message) 
+	{
+		SwtMessageDialog dialog = 
+				new SwtMessageDialog(parent, title, message, QUESTION, new String[] {"Yes", "No"}, 0);
+		return dialog.open() == 0;
+	}
+	
 
 
 	protected void configureShell(Shell shell) 
@@ -66,5 +87,59 @@ System.out.println(message);
 			shell.setText(title);
 		}
 	}
+	
+	
+	protected Control createDialogArea(Composite composite) 
+	{
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 1;
+		composite.setLayout(gridLayout);
+
+		Label lbMessage = new Label(composite, SWT.NONE);
+		lbMessage.setText(message);
+		lbMessage.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		return composite;
+	}
+
+
+	protected Control createButtonBar(Composite parent) 
+	{
+		Composite composite = new Composite(parent, SWT.NONE);
+		
+		composite.setLayout(new GridLayout(buttonLabels.length, false));
+		composite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_CENTER));
+		composite.setFont(parent.getFont());
+
+		for (int i = 0; i < buttonLabels.length; i++) {
+			Button button = new Button(composite, SWT.PUSH);
+			button.setText(buttonLabels[i]);
+			button.setData(new Integer(i));
+			button.addSelectionListener(new SelectionAdapter() 
+			{
+				public void widgetSelected(SelectionEvent event) 
+				{
+					buttonPressed(((Integer) event.widget.getData()).intValue());
+				}
+			});
+			
+			if (i == defaultIndex) {
+				Shell shell = parent.getShell();
+				if (shell != null) {
+					shell.setDefaultButton(button);
+				}
+			}
+		}
+
+		return composite;
+	}
+
+
+	protected void buttonPressed(int buttonId) 
+	{
+		setReturnCode(buttonId);
+		close();
+	}
+	
 
 }

@@ -163,7 +163,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 							lsDevices.select(i);
 						}
 					}
-//					lsDevicesListener.widgetSelected(null);
+					lsDevicesListener.widgetSelected(null);
 				} catch (IOException ex) {
 					System.err.println(ex);
 				}
@@ -195,7 +195,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 					break;
 				}
 			}
-//			lsDevicesListener.widgetSelected(null);
+			lsDevicesListener.widgetSelected(null);
 		}
 	};
   
@@ -214,7 +214,6 @@ public class SwtSelectDeviceDialog extends SwtDialog
 					lsDevices.setItem(i, tmp.getName());
 				}
 			}
-//			lsDevices.redraw();
 			btDefault.setEnabled(false);
 		}
 	};
@@ -274,7 +273,6 @@ public class SwtSelectDeviceDialog extends SwtDialog
 		GridLayout gridLayout = new GridLayout();
    	gridLayout.numColumns = 1;
 		composite.setLayout(gridLayout);
-//		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Group gpDevices = new Group(composite, SWT.NONE);
 		gpDevices.setText("Installed devices");
@@ -325,12 +323,21 @@ public class SwtSelectDeviceDialog extends SwtDialog
 				lsDevices.add(entry.getName());
 			}
 		}
-//		lsDevicesListener.widgetSelected(null);
 
 		return composite;
 	}
   
   
+	protected Control createButtonBar(Composite parent) 
+	{
+		Control control = super.createButtonBar(parent);
+		
+		lsDevicesListener.widgetSelected(null);
+
+		return control;
+	}
+	
+
 	public DeviceEntry getSelectedDeviceEntry()
 	{
 		return selectedEntry;
@@ -341,16 +348,14 @@ public class SwtSelectDeviceDialog extends SwtDialog
 	{
 		super.close();
 		
-		if (getReturnCode() == OK) { 
-			Vector devices = Config.getDevices();
-			devices.removeAllElements();
+		Vector devices = Config.getDevices();
+		devices.removeAllElements();
     
-			for (Enumeration e = deviceModel.elements(); e.hasMoreElements(); ) {
-				devices.add(e.nextElement());
-			}
-    
-			Config.saveConfig("config-swt.xml");
+		for (Enumeration e = deviceModel.elements(); e.hasMoreElements(); ) {
+			devices.add(e.nextElement());
 		}
+    
+		Config.saveConfig("config-swt.xml");
 		
 		return true;
 	}

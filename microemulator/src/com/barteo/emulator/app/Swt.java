@@ -45,6 +45,7 @@ import com.barteo.emulator.app.ui.ResponseInterfaceListener;
 import com.barteo.emulator.app.ui.StatusBarListener;
 import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
 import com.barteo.emulator.app.ui.swt.SwtDialog;
+import com.barteo.emulator.app.ui.swt.SwtMessageDialog;
 import com.barteo.emulator.app.ui.swt.SwtSelectDeviceDialog;
 import com.barteo.emulator.app.util.DeviceEntry;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
@@ -162,11 +163,10 @@ public class Swt
 					return;
 				}
 				if (MIDletBridge.getCurrentMIDlet() != common.getLauncher()) {
-/*					if (JOptionPane.showConfirmDialog(instance, 
-							"Changing device needs MIDlet to be restarted. All MIDlet data will be lost. Are you sure?", 
-							"Question?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != 0) {
+					if (!SwtMessageDialog.openQuestion(shell,
+							"Question?", "Changing device needs MIDlet to be restarted. All MIDlet data will be lost. Are you sure?")) { 
 						return;
-					}*/
+					}
 				}
 				setDevice(selectDeviceDialog.getSelectedDeviceEntry());
 
@@ -319,8 +319,7 @@ public class Swt
 			DeviceFactory.setDevice(device);
 			device.init(emulatorContext);
 			this.deviceEntry = entry;
-//			setSize(size);
-//			doLayout();
+			shell.setSize(shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
 		} catch (MalformedURLException ex) {
 			System.err.println(ex);          
 		} catch (ClassNotFoundException ex) {

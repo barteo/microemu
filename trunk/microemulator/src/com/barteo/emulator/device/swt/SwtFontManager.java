@@ -39,7 +39,6 @@ public class SwtFontManager implements FontManager
   static int SIZE_LARGE = 10;
   
   Hashtable fonts = new Hashtable();
-  Hashtable fontsMetrics = new Hashtable();
   
 
   org.eclipse.swt.graphics.Font getFont(javax.microedition.lcdui.Font meFont)
@@ -83,42 +82,8 @@ public class SwtFontManager implements FontManager
   
 
   org.eclipse.swt.graphics.FontMetrics getFontMetrics(javax.microedition.lcdui.Font meFont)
-  {
-		org.eclipse.swt.graphics.FontMetrics tmp = (org.eclipse.swt.graphics.FontMetrics) fontsMetrics.get(meFont);
-    
-    if (tmp == null) {
-      String name = null;
-      if (meFont.getFace() == javax.microedition.lcdui.Font.FACE_SYSTEM) {
-        name = FACE_SYSTEM_NAME;
-      } else if (meFont.getFace() == javax.microedition.lcdui.Font.FACE_MONOSPACE) {
-        name = FACE_MONOSPACE_NAME;
-      } else if (meFont.getFace() == javax.microedition.lcdui.Font.FACE_PROPORTIONAL) {
-        name = FACE_PROPORTIONAL_NAME;
-      }
-      int style = 0;
-      if ((meFont.getStyle() & javax.microedition.lcdui.Font.STYLE_PLAIN) != 0) {
-        style |= java.awt.Font.PLAIN;
-      }
-      if ((meFont.getStyle() & javax.microedition.lcdui.Font.STYLE_BOLD) != 0) {
-        style |= java.awt.Font.BOLD;
-      }
-      if ((meFont.getStyle() & javax.microedition.lcdui.Font.STYLE_ITALIC) != 0) {
-        style |= java.awt.Font.ITALIC;
-      }
-      int size = 0;
-      if (meFont.getSize() == javax.microedition.lcdui.Font.SIZE_SMALL) {
-        size = SIZE_SMALL;
-      } else if (meFont.getSize() == javax.microedition.lcdui.Font.SIZE_MEDIUM) {
-        size = SIZE_MEDIUM;
-      } else if (meFont.getSize() == javax.microedition.lcdui.Font.SIZE_LARGE) {
-        size = SIZE_LARGE;
-      }
-
-      tmp =	SwtDeviceComponent.getFontMetrics(name, size, style);
-      fontsMetrics.put(meFont, tmp);
-    }
-    
-    return tmp;
+  {    
+    return SwtDeviceComponent.getFontMetrics(getFont(meFont));
   }
   
 

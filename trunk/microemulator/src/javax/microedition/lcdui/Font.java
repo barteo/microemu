@@ -162,6 +162,31 @@ public final class Font
 	{
 		return stringWidth(str.substring(offset, offset + len));
 	}
+	
+	
+	public boolean equals(Object obj)
+	{
+		if (obj == null || !(obj instanceof Font)) {
+			return false;
+		}
+		if (((Font) obj).face != face) {
+			return false;
+		}
+		if (((Font) obj).style != style) {
+			return false;
+		}
+		if (((Font) obj).size != size) {
+			return false;
+		}
+		
+		return true;
+	}
+
+
+	public int hashCode()
+	{
+		return face | style | size;
+	}
 
 
   private void checkFace(int face)

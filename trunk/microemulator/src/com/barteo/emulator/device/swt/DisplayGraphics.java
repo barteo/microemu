@@ -29,7 +29,6 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 
 import com.barteo.emulator.app.ui.swt.ImageFilter;
-import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
 import com.barteo.emulator.app.ui.swt.SwtGraphics;
 import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
@@ -73,9 +72,8 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
         filter = new GrayImageFilter();
       }
     }
-
-    g.setForeground(SwtDeviceComponent.createColor(
-    		filter.filterRGB(0, 0, new RGB((color >> 16) % 256, (color >> 8) % 256, color % 256))));
+    
+    g.setForeground(g.getColor(filter.filterRGB(0, 0, new RGB((color >> 16) % 256, (color >> 8) % 256, color % 256))));
   }
 
 

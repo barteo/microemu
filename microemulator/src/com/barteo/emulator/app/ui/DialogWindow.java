@@ -19,9 +19,16 @@
 
 package com.barteo.emulator.app.ui;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  * Uniwersalna klasa sluzaca do wyswietlania okienek dialogowych
@@ -53,23 +60,34 @@ public class DialogWindow
     Dimension frameSize = dialog.getSize();
     dialog.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
 
-    CloseListener closeListener = new CloseListener(panel.btOk)
+    ActionListener closeListener = new ActionListener()
     {
-
       public void actionPerformed(ActionEvent event)
       {
-        if (event.getSource() == btOk) {
+        if (event.getSource() == panel.btOk) {
           if (panel.check(true)) {
-            state = true;
+            panel.state = true;
             dialog.setVisible(false);
+            panel.hideNotify();
           }
         } else {
+          panel.state = false;
           dialog.setVisible(false);
+          panel.hideNotify();
         }
       }
     };
+    
+    WindowAdapter windowAdapter = new WindowAdapter()
+    {
+      public void windowClosing(WindowEvent e)
+      {
+        panel.state = false;
+        panel.hideNotify();
+      }
+    };
 
-
+    dialog.addWindowListener(windowAdapter);
     panel.btOk.addActionListener(closeListener);
     panel.btCancel.addActionListener(closeListener);
     panel.showNotify();
@@ -77,27 +95,8 @@ public class DialogWindow
     panel.btOk.removeActionListener(closeListener);
     panel.btCancel.removeActionListener(closeListener);
 
-    return closeListener.getState();
+    return panel.state;
   }
 
 }
 
-
-abstract class CloseListener implements ActionListener
-{
-  boolean state = false;
-  JButton btOk;
-
-
-  CloseListener(JButton btOk)
-  {
-    this.btOk = btOk;
-  }
-
-
-  public boolean getState()
-  {
-    return state;
-  }
-
-}

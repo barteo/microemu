@@ -26,13 +26,19 @@ public class StringItem extends Item
 {
 
   StringComponent stringComponent;
-  
-  
+
+
   public StringItem(String label, String text)
   {
     super(label);
     stringComponent = new StringComponent(text);
   }
+
+
+	public String getText()
+	{
+		return stringComponent.getText();
+	}
 
 
 	public void setText(String text)
@@ -50,14 +56,14 @@ public class StringItem extends Item
   int paint(Graphics g)
   {
 		super.paintContent(g);
-	
+
 		g.translate(0, super.getHeight());
 		stringComponent.paint(g);
 		g.translate(0, -super.getHeight());
-		
+
 		return getHeight();
   }
-	
+
 
 	int traverse(int gameKeyCode, int top, int bottom, boolean action)
 	{
@@ -71,7 +77,7 @@ public class StringItem extends Item
 					return -(top % f.getHeight());
 				}
 			} else {
-				return Item.OUTOFITEM;				
+				return Item.OUTOFITEM;
 			}
 		}
 		if (gameKeyCode == 6) {
@@ -85,8 +91,8 @@ public class StringItem extends Item
 				return Item.OUTOFITEM;
 			}
 		}
-		
+
 		return 0;
 	}
-	
+
 }

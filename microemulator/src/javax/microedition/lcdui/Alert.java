@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
- 
+
  package javax.microedition.lcdui;
 
 
@@ -35,15 +35,15 @@ public class Alert extends Screen
 
 	CommandListener alertListener = new CommandListener()
 	{
-	
+
 		public void commandAction(Command cmd, Displayable d)
 		{
 			currentDisplay.clearAlert();
 		}
 
 	};
-		
-		
+
+
 	public Alert(String title)
 	{
 		this(title, null, null, null);
@@ -67,7 +67,13 @@ public class Alert extends Screen
 
 	public int getDefaultTimeout()
 	{
-		return Alert.FOREVER; // this should be changed to 2000
+		return Alert.FOREVER;
+	}
+
+
+	public String getString()
+	{
+		return alertText.getText();
 	}
 
 
@@ -87,10 +93,13 @@ public class Alert extends Screen
 	{
 		throw new IllegalStateException("Alert does not accept listeners");
 	}
-	
-	
+
+
 	public void setImage(Image img)
 	{
+    if (img.isMutable()) {
+      throw new IllegalArgumentException("Image cannot be mutable");
+    }
 	}
 
 
@@ -103,6 +112,9 @@ public class Alert extends Screen
 
 	public void setTimeout(int time)
 	{
+    if (time != FOREVER && time <= 0) {
+      throw new IllegalArgumentException();
+    }
 		this.time = time;
 	}
 
@@ -141,14 +153,14 @@ public class Alert extends Screen
 	int traverse(int gameKeyCode, int top, int bottom)
 	{
 		Font f = Font.getDefaultFont();
-	
+
 		if (gameKeyCode == 1 && top != 0) {
 			return -f.getHeight();
 		}
 		if (gameKeyCode == 6 && bottom < getHeight()) {
 			return f.getHeight();
 		}
-		
+
 		return 0;
 	}
 

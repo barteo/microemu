@@ -22,6 +22,8 @@ package javax.microedition.lcdui.game;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
+import com.barteo.emulator.util.Rectangle;
+
 
 public class Sprite extends Layer 
 {
@@ -43,6 +45,7 @@ public class Sprite extends Layer
 	private int currentTransform;
 	private int referencePixelX;
 	private int referencePixelY;
+	private Rectangle collisionRectangle;
 	
 	
 	public Sprite(Image image)
@@ -53,24 +56,10 @@ public class Sprite extends Layer
 
 	public Sprite(Image image, int frameWidth, int frameHeight)
 	{
-		if (frameWidth < 1 || frameHeight < 1) {
-			throw new IllegalArgumentException();
-		}
-		if (image.getWidth() % frameWidth != 0 || image.getHeight() % frameHeight != 0) {
-			throw new IllegalArgumentException();
-		}
-		
-		this.image = image;
-		this.width = frameWidth;
-		this.height = frameHeight;
-		
-		numGridX = image.getWidth() / frameWidth;
-		numGridY = image.getHeight() / frameHeight;
-		setFrameSequence(null);
+		setImage(image, frameWidth, frameHeight);
+
 		defineReferencePixel(0, 0);
 		setTransform(TRANS_NONE);
-		
-//		throw new RuntimeException("TODO");
 	}
 	
 
@@ -105,7 +94,11 @@ public class Sprite extends Layer
 
 	public void defineCollisionRectangle(int x, int y, int width, int height)
 	{
-		throw new RuntimeException("TODO");
+		if (width < 0 || height < 0) {
+			throw new IllegalArgumentException();
+		}
+
+		collisionRectangle = new Rectangle(x, y, width, height);
 	}
 	
 	
@@ -124,31 +117,35 @@ public class Sprite extends Layer
 
 	public int getFrameSequenceLength()
 	{
-		throw new RuntimeException("TODO");
+		return frameSequence.length;
 	}
 
 
 	public int getRawFrameCount()
 	{
-		throw new RuntimeException("TODO");
+		return numGridX * numGridY;
 	}
 
 
 	public int getRefPixelX()
 	{
-		throw new RuntimeException("TODO");
+		return getX() + referencePixelX;
 	}
 
 
 	public int getRefPixelY()
 	{
-		throw new RuntimeException("TODO");
+		return getY() + referencePixelY;
 	}
 
 
 	public void nextFrame()
 	{
-		throw new RuntimeException("TODO");
+		currentFrameIndex++;
+		
+		if (currentFrameIndex == frameSequence.length) {
+			currentFrameIndex = 0;
+		}
 	}
 
 	
@@ -167,7 +164,11 @@ public class Sprite extends Layer
 
 	public void prevFrame()
 	{
-		throw new RuntimeException("TODO");
+		currentFrameIndex--;
+		
+		if (currentFrameIndex < 0) {
+			currentFrameIndex = frameSequence.length - 1;
+		}
 	}
 
 
@@ -208,7 +209,32 @@ public class Sprite extends Layer
 
 	public void setImage(Image img, int frameWidth, int frameHeight)
 	{
-		throw new RuntimeException("TODO");
+		if (frameWidth < 1 || frameHeight < 1) {
+			throw new IllegalArgumentException();
+		}
+		if (image.getWidth() % frameWidth != 0 || image.getHeight() % frameHeight != 0) {
+			throw new IllegalArgumentException();
+		}
+		
+		int prevRawFrameCount = getRawFrameCount();
+		int prevFrameWidth = getWidth();
+		int prevFrameHeight = getHeight();
+		
+		this.image = img;		
+		this.width = frameWidth;
+		this.height = frameHeight;
+		
+		numGridX = image.getWidth() / frameWidth;
+		numGridY = image.getHeight() / frameHeight;
+		
+		if (frameSequence == null || prevRawFrameCount > numGridX * numGridY) {
+			setFrameSequence(null);
+			setFrame(0);
+		}
+		
+		if (prevFrameWidth != frameWidth || prevFrameHeight != frameHeight) {
+			defineCollisionRectangle(0, 0, frameWidth, frameHeight);
+		}
 	}
 
 

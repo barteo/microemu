@@ -86,7 +86,7 @@ public class CommandManager
    * Requires that the command vector passed in
    * is in priority order.
    */
-  public void updateCommands(Vector commands) 
+  public void updateCommands(Vector commands)
   {
     // Verify that the list is ordered
     // Really an assert condition leave till all working
@@ -113,34 +113,22 @@ public class CommandManager
         button.setMenuActivate(false);
       }
     }
-
+       
     if (commands == null) {
       return;
     }
-          
+
     int nSoftButtons = sbArray.size();
     if (isMenuCommands(commands, nSoftButtons) == true) {
       /* Special case if we have our BACK, SELECT commands */
 
       ((SoftButton)sbArray.elementAt(0)).setCommand(BACK_COMMAND);
-      ((SoftButton)sbArray.elementAt(nSoftButtons-1)).setCommand(SELECT_COMMAND);
-    } else if (nSoftButtons >= commands.size()) {
-      /* No menus or special menus need to be created */
-
-      for (int i=0; i<commands.size(); i++) {
-        for (int j = 0; j < sbArray.size(); j++) {
-          if (((SoftButton)sbArray.elementAt(j)).setCommand((Command)commands.elementAt(i))) {
-            break;
-          }
-        }
-      }
+			((SoftButton)sbArray.elementAt(nSoftButtons-1)).setCommand(SELECT_COMMAND);
     } else {
-      /* Menu needed */
-
       Vector cmdsToAdd = (Vector) commands.clone();
-           
+
       // Fill out the most important ones we can
-      for (int i=0; i < (nSoftButtons - 1); i++) {
+      for (int i=0; i < nSoftButtons; i++) {
         for (int j = 0; j < cmdsToAdd.size(); j++) {
           Command tmpC = (Command) cmdsToAdd.elementAt(j);
           if (((SoftButton) sbArray.elementAt(i)).setCommand(tmpC)) {
@@ -150,24 +138,43 @@ public class CommandManager
         }
       }
 
-      // Now we need a menu for the rest of the items
-      // Clear the commandList
-      while (commandList.size() > 0) {
-        commandList.delete(0);
-      }
+      if (cmdsToAdd.size() > 0) {
+        /* Menu needed */
+        SoftButton menuSB = (SoftButton)sbArray.elementAt(nSoftButtons-1);
+        Command cmd = menuSB.getCommand();
+        if (cmd != null) {
+          boolean inserted = false;
+          for (int i = 0; i < cmdsToAdd.size(); i++) {
+            if (cmd.getPriority() < ((Command) cmdsToAdd.elementAt(i)).getPriority()) {
+              cmdsToAdd.insertElementAt(cmd, i);
+              inserted = true;
+              break;
+            }
+          }
+          if (inserted == false) {
+            // Not inserted just place it at the end
+            cmdsToAdd.addElement(cmd);
+          }
+          menuSB.removeCommand();
+        }
 
-      menuCommands.removeAllElements();
-      for (int i = 0; i < cmdsToAdd.size(); i++) {
-        Command tmpC = (Command) cmdsToAdd.elementAt(i);
-        menuCommands.addElement(tmpC);
-        commandList.append(tmpC.getLabel(), null);
-      }
+        // Now we need a menu for the rest of the items
+        // Clear the commandList
+        while (commandList.size() > 0) {
+          commandList.delete(0);
+        }
 
-      // Now set it up to be a menu button, and select button
-      SoftButton menuSB = (SoftButton)sbArray.elementAt(nSoftButtons-1);
-      menuSB.setMenuActivate(true);
-      menuSB.removeCommand();
-      menuSB.setCommand(MENU_COMMAND);
+        menuCommands.removeAllElements();
+        for (int i = 0; i < cmdsToAdd.size(); i++) {
+          Command tmpC = (Command) cmdsToAdd.elementAt(i);
+          menuCommands.addElement(tmpC);
+          commandList.append(tmpC.getLabel(), null);
+        }
+
+        // Now set it up to be a menu button, and select button
+        menuSB.setMenuActivate(true);
+        menuSB.setCommand(MENU_COMMAND);
+      }
     }
   }
 

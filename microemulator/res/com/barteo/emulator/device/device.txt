@@ -4,9 +4,9 @@
   <img name="pressed" src="/com/barteo/emulator/device/pressed.png"/>
 	<display>
     <numcolors>256</numcolors>
-    <iscolor>false</iscolor>
-		<foreground>000000</foreground>
-		<background>c3cbb6</background>
+    <iscolor>true</iscolor>
+		<foreground>142924</foreground>
+		<background>d0d0d7</background>
 		<rectangle>
 			<x>28</x>
 			<y>33</y>

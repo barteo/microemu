@@ -223,7 +223,7 @@ public class Graphics
 	{
     int rgb = red;
     rgb += green << 8;
-    rgb += red << 16;
+    rgb += blue << 16;
     setColor(rgb);
 	}
 

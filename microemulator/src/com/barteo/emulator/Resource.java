@@ -49,37 +49,37 @@ public class Resource
 	public Image getImage(String str)
 			throws IOException
 	{
-		ImageFilter bwFilter;
+		ImageFilter grayFilter;
 
 		PngImage png = new PngImage(getClass().getResourceAsStream(str));
 //   	double[][] chrom = (double[][])png.getProperty("chromaticity xyz");
 //		if (chrom == null) {
-			bwFilter = new BWImageFilter();
+			grayFilter = new GrayImageFilter();
 //		} else {
 //			bwFilter = new BWImageFilter(chrom[1][1], chrom[2][1], chrom[3][1]);
 //		}
-		FilteredImageSource bwImageSource = new FilteredImageSource(png, bwFilter);
+		FilteredImageSource grayImageSource = new FilteredImageSource(png, grayFilter);
 
-		return Toolkit.getDefaultToolkit().createImage(bwImageSource);
+		return Toolkit.getDefaultToolkit().createImage(grayImageSource);
 	}
 
 
 	public Image getImage(byte[] imageData, int imageOffset, int imageLength)
 			throws IOException
 	{
-		ImageFilter bwFilter;
+		ImageFilter grayFilter;
 
 		ByteArrayInputStream is = new ByteArrayInputStream(imageData, imageOffset, imageLength);
 		PngImage png = new PngImage(is);
    	double[][] chrom = (double[][])png.getProperty("chromaticity xyz");
 		if (chrom == null) {
-			bwFilter = new BWImageFilter();
+			grayFilter = new GrayImageFilter();
 		} else {
-			bwFilter = new BWImageFilter(chrom[1][1], chrom[2][1], chrom[3][1]);
+			grayFilter = new GrayImageFilter(chrom[1][1], chrom[2][1], chrom[3][1]);
 		}
-		FilteredImageSource bwImageSource = new FilteredImageSource(png, bwFilter);
+		FilteredImageSource grayImageSource = new FilteredImageSource(png, grayFilter);
 
-		return Toolkit.getDefaultToolkit().createImage(bwImageSource);
+		return Toolkit.getDefaultToolkit().createImage(grayImageSource);
 	}
 
 }

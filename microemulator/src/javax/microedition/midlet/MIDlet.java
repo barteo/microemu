@@ -56,6 +56,7 @@ public abstract class MIDlet
     		throws MIDletStateChangeException
     {
       midlet.destroyApp(unconditional);
+      getDisplayAccess().clean();
     }
 
   }

@@ -7,6 +7,8 @@
 <project basedir="." default="run" name="microemulator">
 
   <target name="init">
+    <mkdir dir="./build/microemulator/classes"/>
+    <mkdir dir="./target"/>
     <!-- You can set up any variables you want used throughout the script here. -->
     <!-- To use e.g. Jikes, uncomment this line. -->
     <!-- (Or make the same change in Tools | Options | Ant Settings | Properties.) -->
@@ -16,7 +18,6 @@
   </target>
 
   <target depends="init" name="compile">
-    <mkdir dir="./build/microemulator/classes"/>
     <javac debug="true" deprecation="true" destdir="./build/microemulator/classes" srcdir="./src">
       <classpath>
         <pathelement location="./lib/jnlp.jar"/>
@@ -25,7 +26,7 @@
   </target>
 
   <target depends="init,compile" name="jar-simpledemo">
-    <jar compress="true" jarfile="simpledemo.jar">
+    <jar compress="true" jarfile="./target/simpledemo.jar">
       <fileset dir="./build/microemulator/classes">
         <include name="com/barteo/midp/examples/simpledemo/**"/>
         <exclude name="**/.*"/>
@@ -35,11 +36,10 @@
         <exclude name="**/.*"/>
       </fileset>
     </jar>
-    <copy file="simpledemo.jar" todir="doc/www"/>
   </target>
 
   <target depends="init,compile" name="jar-applet">
-    <jar compress="true" jarfile="me-applet.jar">
+    <jar compress="true" jarfile="./target/me-applet.jar">
       <fileset dir="./build/microemulator/classes">
         <exclude name="com/barteo/midp/examples/**"/>
         <exclude name="com/barteo/emulator/app/**"/>
@@ -51,11 +51,10 @@
         <exclude name="**/.*"/>
       </fileset>
     </jar>
-    <copy file="me-applet.jar" todir="doc/www"/>
   </target>
 
   <target depends="init,compile,jar-applet,jar-simpledemo" name="jar-app">
-    <jar compress="true" jarfile="me-app.jar">
+    <jar compress="true" jarfile="./target/me-app.jar">
       <fileset dir="./build/microemulator/classes">
         <exclude name="com/barteo/midp/examples/**"/>
         <exclude name="com/barteo/emulator/applet/**"/>
@@ -69,14 +68,14 @@
     </jar>
   </target>
 
-  <target depends="init,jar-app" description="Build everything." name="all">
+  <target depends="init,jar-app,jar-device" description="Build everything." name="all">
   </target>
 
   <target depends="init,all" description="Try running it." name="run">
     <java classname="com.barteo.emulator.app.Main" failonerror="true" fork="true">
       <classpath>
-        <pathelement location="me-app.jar"/>
-        <pathelement location="simpledemo.jar"/>
+        <pathelement location="./target/me-app.jar"/>
+        <pathelement location="./target/simpledemo.jar"/>
       </classpath>
       <arg value="com.barteo.midp.examples.simpledemo.SimpleDemo"/>
     </java>
@@ -88,15 +87,29 @@
         srcdir="./devices/j2se/minimum/java"
         destdir="./build/devices/j2se/minimum/classes">
       <classpath>
-        <pathelement location="./me-app.jar"/>
+        <pathelement location="./target/me-app.jar"/>
+      </classpath>      
+    </javac>
+    <mkdir dir="./build/devices/applet/minimum/classes"/>
+    <javac debug="true" deprecation="true" 
+        srcdir="./devices/applet/minimum/java"
+        destdir="./build/devices/applet/minimum/classes">
+      <classpath>
+        <pathelement location="./target/me-applet.jar"/>
       </classpath>      
     </javac>
   </target>
 
   <target depends="compile-device" description="Package minimum device" name="jar-device">
-    <jar compress="true" jarfile="./minimum.dev" manifest="./devices/j2se/minimum/manifest.mf">
+    <mkdir dir="./target/devices/j2se"/>
+    <jar compress="true" jarfile="./target/devices/j2se/minimum.dev" manifest="./devices/j2se/minimum/manifest.mf">
       <fileset dir="./build/devices/j2se/minimum/classes"/>
       <fileset dir="./devices/j2se/minimum/res"/>
+    </jar>
+    <mkdir dir="./target/devices/applet"/>
+    <jar compress="true" jarfile="./target/devices/applet/minimum.jar">
+      <fileset dir="./build/devices/applet/minimum/classes"/>
+      <fileset dir="./devices/applet/minimum/res"/>
     </jar>
   </target>
 
@@ -142,11 +155,9 @@
     <delete file="dist/microemulator-app.tar"/>
   </target>
 
-  <target depends="init" description="Clean all build products." name="clean">
+  <target description="Clean all build products." name="clean">
     <delete dir="./build"/>
-    <delete file="me-app.jar"/>
-    <delete file="me-applet.jar"/>
-    <delete file="simpledemo.jar"/>
+    <delete dir="./target"/>
     <delete dir="apidoc"/>
     <delete dir="dist"/>
   </target>

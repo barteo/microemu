@@ -248,6 +248,22 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 	}
 
 
+	public void drawRGB(int[] rgbData, int offset, int scanlength, 
+			int x, int y, int width, int height, boolean processAlpha)
+	{
+		BufferedImage img;
+		
+		if (processAlpha) {
+			img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		} else {
+			img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		}
+		
+		img.setRGB(0, 0, width, height, rgbData, offset, scanlength);
+		g.drawImage(img, x, y, null);
+	}
+	
+		
   public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) 
   {
     g.drawRoundRect(x, y, width, height, arcWidth, arcHeight);

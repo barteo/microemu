@@ -104,7 +104,7 @@ public class Graphics
 	public void drawRGB(int[] rgbData, int offset, int scanlength, 
 			int x, int y, int width, int height, boolean processAlpha)
 	{
-		throw new RuntimeException("TODO");
+		// Implemented in DisplayGraphics
 	}
 	
 		

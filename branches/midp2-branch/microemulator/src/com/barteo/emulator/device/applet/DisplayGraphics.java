@@ -208,6 +208,13 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 	}
 
 
+	public void drawRGB(int[] rgbData, int offset, int scanlength, 
+			int x, int y, int width, int height, boolean processAlpha)
+	{
+		throw new RuntimeException("TODO");
+	}
+	
+		
   public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) 
   {
     g.drawRoundRect(x, y, width, height, arcWidth, arcHeight);

@@ -27,6 +27,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 
 import javax.microedition.lcdui.Image;
+import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.applet.GrayImageFilter;
 
@@ -55,10 +56,21 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
   
   public void setColor(int RGB) 
   {
-      color = RGB;
-      GrayImageFilter filter = new GrayImageFilter();
+		java.awt.image.RGBImageFilter filter = null;
+    color = RGB;
+    
+    DeviceDisplay deviceDisplay = DeviceFactory.getDevice().getDeviceDisplay();
+    if (deviceDisplay.isColor()) {
+			filter = new RGBImageFilter();
+    } else {
+      if (deviceDisplay.numColors() == 2) {
+        filter = new BWImageFilter();
+      } else {
+        filter = new GrayImageFilter();
+      }
+    }
 
-      g.setColor(new Color(filter.filterRGB(0, 0, RGB)));
+    g.setColor(new Color(filter.filterRGB(0, 0, RGB)));
   }
 
 

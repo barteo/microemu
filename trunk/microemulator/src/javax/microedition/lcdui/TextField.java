@@ -260,10 +260,15 @@ public class TextField extends Item
 		super.paintContent(g);
 
 		g.translate(0, super.getHeight());
-		if (hasFocus()) {
-			g.drawRect(
-					1, 1, 
-					DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 3, stringComponent.getHeight() + 4);
+		int savedColor = g.getColor();
+		if (!hasFocus()) {
+		    g.setGrayScale(127);
+		}
+		g.drawRect(
+		        1, 1, 
+				DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 3, stringComponent.getHeight() + 4);
+		if (!hasFocus()) {
+		    g.setColor(savedColor);
 		}
 		g.translate(3, 3);
 		paintContent(g);

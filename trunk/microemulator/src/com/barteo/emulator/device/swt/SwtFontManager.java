@@ -21,6 +21,8 @@ package com.barteo.emulator.device.swt;
 
 import java.util.Hashtable;
 
+import org.eclipse.swt.SWT;
+
 import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
 import com.barteo.emulator.device.FontManager;
 
@@ -55,13 +57,13 @@ public class SwtFontManager implements FontManager
 		  }
 		  int style = 0;
 		  if ((meFont.getStyle() & javax.microedition.lcdui.Font.STYLE_PLAIN) != 0) {
-			style |= java.awt.Font.PLAIN;
+			style |= SWT.NORMAL;
 		  }
 		  if ((meFont.getStyle() & javax.microedition.lcdui.Font.STYLE_BOLD) != 0) {
-			style |= java.awt.Font.BOLD;
+			style |= SWT.BOLD;
 		  }
 		  if ((meFont.getStyle() & javax.microedition.lcdui.Font.STYLE_ITALIC) != 0) {
-			style |= java.awt.Font.ITALIC;
+			style |= SWT.ITALIC;
 		  }
 		  int size = 0;
 		  if (meFont.getSize() == javax.microedition.lcdui.Font.SIZE_SMALL) {

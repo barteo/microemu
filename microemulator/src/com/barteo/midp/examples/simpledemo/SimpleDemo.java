@@ -33,7 +33,8 @@ public class SimpleDemo extends MIDlet implements CommandListener
   ScreenPanel screenPanels[] = {
       new AlertPanel(),
       new ImageItemPanel(),
-      new ListPanel()
+      new ListPanel(),
+      new TextBoxPanel()
   };
   
   Command exitCommand = new Command("Exit", Command.EXIT, 1);

@@ -94,6 +94,12 @@ public abstract class Item
 	}
   
   
+  Screen getOwner()
+  {
+    return owner;
+  }
+	
+	
   void setOwner(Screen owner)
   {
     this.owner = owner;

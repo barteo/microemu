@@ -107,9 +107,9 @@ public abstract class Screen extends Displayable
 		int translatedY;
 
 		if (viewPortY == 0) {
-			currentDisplay.dispBridge.setScrollUp(false);
+			currentDisplay.setScrollUp(false);
 		} else {
-			currentDisplay.dispBridge.setScrollUp(true);
+			currentDisplay.setScrollUp(true);
 		}
 
 		g.setGrayScale(255);
@@ -137,9 +137,9 @@ public abstract class Screen extends Displayable
     g.translate(0, viewPortY);
 
 		if (contentHeight - viewPortY > Device.screenPaintable.height) {
-			currentDisplay.dispBridge.setScrollDown(true);
+			currentDisplay.setScrollDown(true);
 		} else {
-			currentDisplay.dispBridge.setScrollDown(false);
+			currentDisplay.setScrollDown(false);
 		}
 		g.translate(0, -translatedY);
 	}

@@ -21,6 +21,7 @@ package javax.microedition.lcdui;
 
 import javax.microedition.midlet.*;
 
+import com.barteo.emulator.MIDletBridge;
 import com.barteo.midp.lcdui.*;
 
 
@@ -29,8 +30,6 @@ public class Display
 
 	Displayable current = null;
 	Displayable nextScreen = null;
-
-	static DisplayBridge dispBridge = new DisplayBridge();
 
 	DisplayAccessor accessor = null;
 
@@ -147,7 +146,16 @@ public class Display
 
 	public static Display getDisplay(MIDlet m)
 	{
-		return getDisplay();
+    Display result;
+    
+    if (MIDletBridge.getAccess(m).getDisplayAccess() == null) {
+      result = new Display();
+      MIDletBridge.getAccess(m).setDisplayAccess(result.accessor);
+    } else {
+      result = MIDletBridge.getAccess(m).getDisplayAccess().getDisplay();
+    }
+
+    return result;
 	}
 
 
@@ -178,9 +186,9 @@ public class Display
 
 			current = nextDisplayable;
 			current.showNotify(this);
-			dispBridge.setScrollUp(false);
-			dispBridge.setScrollDown(false);
-			DisplayBridge.updateCommands(current.getCommands());
+			setScrollUp(false);
+			setScrollDown(false);
+			updateCommands();
 
 			current.repaint();
 		}
@@ -208,19 +216,6 @@ public class Display
 	void clearAlert()
 	{
 		setCurrent(nextScreen);
-	}
-
-
-	static Display getDisplay()
-	{
-		DisplayAccess a = DisplayBridge.getAccess();
-		if (a == null) {
-			Display d = new Display();
-			a = d.accessor;
-			DisplayBridge.setAccess(a);
-		}
-
-		return a.getDisplay();
 	}
 
 
@@ -260,6 +255,18 @@ public class Display
 			DisplayBridge.repaint();
 		}
 	}
+  
+  
+  void setScrollDown(boolean state)
+  {
+    DisplayBridge.setScrollUp(state);
+  }
+
+
+  void setScrollUp(boolean state)
+  {
+    DisplayBridge.setScrollUp(state);
+  }
 
 
 	void updateCommands()

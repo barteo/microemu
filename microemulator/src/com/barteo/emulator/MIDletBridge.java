@@ -47,8 +47,8 @@ public class MIDletBridge
   public static MIDletAccess getAccess(MIDlet a_midlet) 
   {
     return (MIDletAccess) midletAccess.get(a_midlet);
-  }  
-
+  }
+  
   
   public static String getAppProperty(String key)
   {

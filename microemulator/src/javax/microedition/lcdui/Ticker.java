@@ -52,7 +52,7 @@ public class Ticker
             }
             textPos -= PAINT_MOVE;
           }
-          Display.getDisplay().repaint();
+//          Display.getDisplay().repaint();
         }
   			try {
   				Thread.sleep(PAINT_TIMEOUT);

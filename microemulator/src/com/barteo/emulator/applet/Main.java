@@ -190,7 +190,9 @@ public class Main extends Applet implements MicroEmulator, DisplayComponent
     addMouseListener(mouseListener);
     addMouseMotionListener(mouseMotionListener);
     
-    DeviceFactory.setDevice(new AppletDevice(emulatorContext));
+    AppletDevice device = new AppletDevice();
+    DeviceFactory.setDevice(device);
+    device.init(emulatorContext);
 
     String midletName = getParameter("midlet");
 		if (midletName == null) {

@@ -269,11 +269,6 @@ public class Main extends JFrame implements MicroEmulator
     getContentPane().add(devicePanel, "Center");
     getContentPane().add(statusBar, "South");    
 
-    Image tmpImg = ((J2SEDevice) DeviceFactory.getDevice()).getNormalImage();
-    Dimension size = new Dimension(tmpImg.getWidth(null), tmpImg.getHeight(null));
-    size.width += 10;
-    size.height += statusBar.getPreferredSize().height + 55;
-    setSize(size);
     initialized = true;
   }
   
@@ -366,6 +361,12 @@ public class Main extends JFrame implements MicroEmulator
       device.init(devicePanel.getEmulatorContext());
       devicePanel.init();
       this.deviceEntry = entry;
+      Image tmpImg = device.getNormalImage();
+      Dimension size = new Dimension(tmpImg.getWidth(null), tmpImg.getHeight(null));
+      size.width += 10;
+      size.height += statusBar.getPreferredSize().height + 55;
+      setSize(size);
+      doLayout();
     } catch (MalformedURLException ex) {
       System.err.println(ex);          
     } catch (ClassNotFoundException ex) {

@@ -274,10 +274,27 @@
     </jar>
   </target>
 
-  <target name="all" depends="init,jar,jar-device" description="Build everything.">
+  <target name="compile-nokiaui" depends="init,jar">
+    <mkdir dir="./build/nokiaui/classes"/>
+    <javac debug="true" deprecation="true" 
+        srcdir="./ext/nokiaui/src"
+        destdir="./build/nokiaui/classes">
+      <classpath>
+        <pathelement location="./target/me-${target}.jar"/>
+      </classpath>      
+    </javac>
   </target>
 
-  <target name="dist" depends="clean,init,jar,jar-device" description="Create distribution package">
+  <target name="jar-nokiaui" depends="compile-nokiaui">
+    <jar compress="true" jarfile="./target/nokiaui.jar">
+      <fileset dir="./build/nokiaui/classes" />
+    </jar>
+  </target>
+
+  <target name="all" depends="init,jar,jar-device,jar-nokiaui" description="Build everything.">
+  </target>
+
+  <target name="dist" depends="clean,init,jar,jar-device,jar-nokiaui" description="Create distribution package">
     <mkdir dir="dist"/>
 
     <tar basedir="../." tarfile="dist/microemulator-src.tar" defaultexcludes="yes">
@@ -288,6 +305,7 @@
       <include name="microemulator/README"/>
       <include name="microemulator/TODO"/>
       <include name="microemulator/devices/**"/>
+      <include name="microemulator/ext/**"/>
       <include name="microemulator/lib/**"/>
       <include name="microemulator/misc/**"/>
       <include name="microemulator/res/**"/>

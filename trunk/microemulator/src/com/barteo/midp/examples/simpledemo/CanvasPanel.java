@@ -1,5 +1,5 @@
 /*
- *  @(#)GaugePanel.java  10/10/2001
+ *  @(#)CanvasPanel.java  10/10/2001
  *
  *  Copyright (c) 2001 Bartek Teodorczyk <barteo@it.pl>. All Rights Reserved.
  *
@@ -26,42 +26,37 @@ import java.util.*;
 import javax.microedition.lcdui.*;
 
 
-public class GaugePanel extends Form implements ScreenPanel, CommandListener
+public class CanvasPanel extends Canvas implements ScreenPanel, CommandListener
 {
   
-  static String NAME = "Gauge";
+  static String NAME = "Canvas";
   
   Command backCommand = new Command("Back", Command.BACK, 1);
   
-  Gauge noninteractive = new Gauge("Noninteractive", false, 25, 0);
-  
+  int posMove = 0;
+  static int POSNUMBER = 20;
+
   TimerTask timerTask = new TimerTask()
   {
     
     public void run()
     {
       if (isShown()) {
-        int value = noninteractive.getValue();
-      
-        if (noninteractive.getValue() >= 25) {
-          noninteractive.setValue(0);
+        if (posMove >= POSNUMBER) {
+          posMove = 0;
         } else {
-          noninteractive.setValue(++value);
+          posMove++;
         }
+        repaint();
       }
     }
   };
+
   
-  
-  public GaugePanel()
+  public CanvasPanel()
   {
-    super(NAME);
-    
-    append(new Gauge("Interactive", true, 25, 0));
-    append(noninteractive);
-    
     Timer timer = new Timer();
-    timer.schedule(timerTask, 0, 500);
+    timer.schedule(timerTask, 0, 100);
 
     addCommand(backCommand);
     setCommandListener(this);
@@ -83,4 +78,25 @@ public class GaugePanel extends Form implements ScreenPanel, CommandListener
     }
   }
   
+  
+  public void paint(Graphics g)
+  {
+    g.setGrayScale(255);
+    g.fillRect(0, 0, getWidth(), getHeight());
+
+    g.setGrayScale(0);
+    g.drawRect(2, 2, getWidth() - 5, getHeight() - 5);
+    
+    int pos = posMove;
+    while (pos < getWidth() - 5) {
+      g.drawLine(3 + pos, 3, 3 + pos, getHeight() - 4);
+      pos += POSNUMBER;
+    }
+    pos = posMove;
+    while (pos < getHeight() - 5) {
+      g.drawLine(3, 3 + pos, getWidth() - 4, 3 + pos);
+      pos += POSNUMBER;
+    }
+  }
+
 }

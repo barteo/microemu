@@ -24,6 +24,7 @@ import java.awt.Image;
 import java.awt.Panel;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -52,6 +53,34 @@ public class AwtDeviceComponent extends Panel
   
 	Image offi;
 	Graphics offg;
+	
+	KeyListener keyListener = new KeyListener()
+	{
+		public void keyPressed(KeyEvent ev) 
+		{
+			((AppletInputMethod) DeviceFactory.getDevice().getInputMethod()).keyboardKeyPressed(ev);
+			pressedButton = getButton(ev);
+			repaint();
+			if (pressedButton instanceof SoftButton) {
+				Command cmd = ((SoftButton) pressedButton).getCommand();
+				if (cmd != null) {
+					CommandManager.getInstance().commandAction(cmd);
+				}
+			}      
+		}
+
+		public void keyReleased(KeyEvent ev) 
+		{
+			((AppletInputMethod) DeviceFactory.getDevice().getInputMethod()).keyboardKeyReleased(ev);
+			prevOverButton = pressedButton;
+			pressedButton = null;
+			repaint();      
+		}
+
+		public void keyTyped(KeyEvent e) 
+		{
+		}		
+	};
       
 	MouseAdapter mouseListener = new MouseAdapter() 
 	{
@@ -118,6 +147,7 @@ public class AwtDeviceComponent extends Panel
     
 		dc = new AwtDisplayComponent(this);    
     
+		addKeyListener(keyListener);
 		addMouseListener(mouseListener);
 		addMouseMotionListener(mouseMotionListener);
 	}
@@ -134,29 +164,6 @@ public class AwtDeviceComponent extends Panel
 		validate();
 	}
   
-  
-	public void keyPressed(KeyEvent ev)
-	{
-		((AppletInputMethod) DeviceFactory.getDevice().getInputMethod()).keyboardKeyPressed(ev);
-		pressedButton = getButton(ev);
-		repaint();
-		if (pressedButton instanceof SoftButton) {
-			Command cmd = ((SoftButton) pressedButton).getCommand();
-			if (cmd != null) {
-				CommandManager.getInstance().commandAction(cmd);
-			}
-		}      
-	}
-   
-  
-	public void keyReleased(KeyEvent ev)
-	{
-		((AppletInputMethod) DeviceFactory.getDevice().getInputMethod()).keyboardKeyReleased(ev);
-		prevOverButton = pressedButton;
-		pressedButton = null;
-		repaint();      
-	}
-   
   
 	public void paint(Graphics g) 
 	{

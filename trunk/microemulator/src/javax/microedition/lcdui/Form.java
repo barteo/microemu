@@ -15,6 +15,9 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Contributor(s):
+ *    3GLab
  */
  
 package javax.microedition.lcdui;
@@ -26,7 +29,7 @@ public class Form extends Screen
 	Item items[] = new Item[4];
 	int numOfItems = 0;
 	int focusItemIndex;
-  ItemStateListener itemStateListener;
+  ItemStateListener itemStateListener = null;
 
 
   public Form(String title)
@@ -43,21 +46,14 @@ public class Form extends Screen
     this.items = items;
     numOfItems = items.length;
     for (int i = 0; i < numOfItems; i++) {
-      items[i].setOwner(this);
+      verifyItem(items[i]);
     }
   }
 
 
 	public int append(Item item)
 	{
-    if (item == null) {
-      throw new NullPointerException();
-    }
-    for (int i = 0; i < numOfItems; i++) {
-      if (items[i] == item) {
-        throw new IllegalStateException();
-      }
-    }
+    verifyItem(item);
     
     if (numOfItems + 1 == items.length) {
       Item newitems[] = new Item[numOfItems + 4];
@@ -65,7 +61,6 @@ public class Form extends Screen
       items = newitems;
     }
 	  items[numOfItems] = item;
-		items[numOfItems].setOwner(this);
     numOfItems++;
 
     return (numOfItems - 1);
@@ -90,9 +85,7 @@ public class Form extends Screen
 
   public void delete(int itemNum)
   {
-    if (itemNum < 0 || itemNum >= numOfItems) {
-      throw new IndexOutOfBoundsException();
-    }
+    verifyItemNum(itemNum);
     
 		items[itemNum].setOwner(null);
     System.arraycopy(items, itemNum + 1, items, itemNum, numOfItems - itemNum - 1);
@@ -102,9 +95,7 @@ public class Form extends Screen
 
   public Item get(int itemNum)
   {
-    if (itemNum < 0 || itemNum >= numOfItems) {
-      throw new IndexOutOfBoundsException();
-    }
+    verifyItemNum(itemNum);
     
     return items[itemNum];
   }
@@ -112,17 +103,8 @@ public class Form extends Screen
 
   public void insert(int itemNum, Item item)
   {
-    if (item == null) {
-      throw new NullPointerException();
-    }
-    if (itemNum < 0 || itemNum > numOfItems) {
-      throw new IndexOutOfBoundsException();
-    }
-    for (int i = 0; i < numOfItems; i++) {
-      if (items[i] == item) {
-        throw new IllegalStateException();
-      }
-    }
+    verifyItemNum(itemNum);
+    verifyItem(item);
 
     if (numOfItems + 1 == items.length) {
       Item newitems[] = new Item[numOfItems + 4];
@@ -138,17 +120,8 @@ public class Form extends Screen
 
   public void set(int itemNum, Item item)
   {
-    if (item == null) {
-      throw new NullPointerException();
-    }
-    if (itemNum < 0 || itemNum >= numOfItems) {
-      throw new IndexOutOfBoundsException();
-    }
-    for (int i = 0; i < numOfItems; i++) {
-      if (items[i] == item) {
-        throw new IllegalStateException();
-      }
-    }
+    verifyItemNum(itemNum);
+    verifyItem(item);
 
     items[itemNum] = item;
 		items[itemNum].setOwner(this);
@@ -203,8 +176,11 @@ public class Form extends Screen
   void keyPressed(int keyCode)
   {
     if (focusItemIndex != -1) {
-      if (Display.getGameAction(keyCode) == 8) {
+      if (Display.getGameAction(keyCode) == Canvas.FIRE) {
         items[focusItemIndex].select();
+        if (itemStateListener != null) {
+          itemStateListener.itemStateChanged(items[focusItemIndex]);
+        }
       } else {
         items[focusItemIndex].keyPressed(keyCode);
       }
@@ -394,5 +370,44 @@ public class Form extends Screen
 
 		return height;
 	}
+  
+  
+  /**
+   * Verify that the item is non null and
+   * is not owned by this form or anyone else.
+   * If all is ok set the owner to this Form
+   *
+   * @param item the item to be verified
+   * @throws IllegalStateException
+   * @throws NullPointerException
+   */
+  private void verifyItem(Item item)
+  {
+    // Check that we are being passed valid items
+    if (item == null) {
+      throw new NullPointerException("item is null");
+    }
+    if (item.getOwner() != null) {
+      throw new IllegalStateException("item is already owned");
+    }
+    // All is ok make ourselves the owner
+    item.setOwner(this);
+  }
+
+  
+  /**
+   * Verify that the index passed in is
+   * valid for this form. ie within the
+   * range 0..size-1
+   *
+   * @param itemNum the number of the item
+   * @throws IndexOutOfBoundsException
+   */
+  private void verifyItemNum(int itemNum)
+  {
+    if (itemNum < 0 || itemNum >= numOfItems) {
+      throw new IndexOutOfBoundsException("item number is outside range of Form");
+    }
+  }
 
 }

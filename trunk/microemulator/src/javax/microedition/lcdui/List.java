@@ -15,6 +15,9 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Contributor(s):
+ *    3GLab
  */
  
 package javax.microedition.lcdui;
@@ -110,7 +113,8 @@ public class List extends Screen implements Choice
   
   void keyPressed(int keyCode)
   {
-    if(Display.getGameAction(keyCode) == 8 && choiceGroup.select() && super.listener != null) {
+    if(Display.getGameAction(keyCode) == Canvas.FIRE 
+        && choiceGroup.select() && super.listener != null) {
       super.listener.commandAction(SELECT_COMMAND, this);
     } else {
       super.keyPressed(keyCode);

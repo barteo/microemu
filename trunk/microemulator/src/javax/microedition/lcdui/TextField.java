@@ -15,6 +15,9 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Contributor(s):
+ *    3GLab
  */
  
 package javax.microedition.lcdui;
@@ -327,6 +330,21 @@ public class TextField extends Item
 	void validate(String text)
 	{
 		// text is illegal for the specified constraints so IllegalArgumentException
+    if ((constraints & CONSTRAINT_MASK) == ANY) {
+      return;
+    }
+    /*
+    if ((constraints & CONSTRAINT_MASK) == NUMERIC) {
+      try {
+        int tmp = Integer.parseInt(text);
+      } catch (NumberFormatException e) {
+        throw new IllegalArgumentException(
+            "TextField limited to numeric values: text = " + text);
+      }
+    }
+    */
+
+    /* @todo add more constraints checking */
 	}
 
 }

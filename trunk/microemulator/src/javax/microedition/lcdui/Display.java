@@ -15,6 +15,9 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Contributor(s):
+ *    3GLab
  */
  
 package javax.microedition.lcdui;
@@ -22,6 +25,7 @@ package javax.microedition.lcdui;
 import javax.microedition.midlet.*;
 
 import com.barteo.emulator.MIDletBridge;
+import com.barteo.emulator.device.Device;
 import com.barteo.midp.lcdui.*;
 
 
@@ -175,7 +179,7 @@ public class Display
 
 	public int numColors()
 	{
-		return 256;
+		return Device.numColors;
 	}
 
 
@@ -202,7 +206,7 @@ public class Display
 
 	public boolean isColor()
 	{
-		return false;
+		return Device.isColor;
 	}
 
 

@@ -124,7 +124,7 @@ public class Gauge extends Item
     
 		g.translate(0, super.getHeight());
     
- 		if (isFocus()) {
+ 		if (hasFocus()) {
       g.drawRect(2, 2, 
           DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 5, HEIGHT - 5);
     }

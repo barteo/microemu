@@ -257,7 +257,7 @@ public class TextField extends Item
 		super.paintContent(g);
 
 		g.translate(0, super.getHeight());
-		if (isFocus()) {
+		if (hasFocus()) {
 			g.drawRect(1, 1, 
           DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 3, stringComponent.getHeight() + 4);
 		}

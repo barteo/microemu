@@ -217,7 +217,7 @@ public class Form extends Screen
       return 0;
     }
 
-		if (gameKeyCode == 1) {
+		if (gameKeyCode == Canvas.UP) {
 			topItemIndex = getTopVisibleIndex(top);
 			if (focusItemIndex == -1) {
 				testItemIndex = topItemIndex;
@@ -271,7 +271,7 @@ public class Form extends Screen
 				}
 			}
 		}
-		if (gameKeyCode == 6) {
+		if (gameKeyCode == Canvas.DOWN) {
 			bottomItemIndex = getBottomVisibleIndex(bottom);
 			if (focusItemIndex == -1) {
 				testItemIndex = bottomItemIndex;

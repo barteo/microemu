@@ -19,6 +19,11 @@
  
 package com.barteo.emulator.device.swt;
 
+import org.eclipse.swt.graphics.GC;
+
+import com.barteo.emulator.app.Swt;
+import com.barteo.emulator.app.ui.swt.SwtGraphics;
+
 
 public class MutableImage extends javax.microedition.lcdui.Image 
 {
@@ -28,16 +33,14 @@ public class MutableImage extends javax.microedition.lcdui.Image
 
   public MutableImage(int width, int height) 
   {
-		// TODO poprawic tworzenie image	
-//    img = f.createImage(width, height);
+    img = new org.eclipse.swt.graphics.Image(Swt.shell.getDisplay(), width, height);
   }
 
 
   public javax.microedition.lcdui.Graphics getGraphics() 
   {
     if (displayGraphics == null) {
-		// TODO poprawic tworzenie displaygraphics	
-//      displayGraphics = new DisplayGraphics(img.getGraphics());
+      displayGraphics = new DisplayGraphics(new SwtGraphics(new GC(img)));
       displayGraphics.setGrayScale(255);
       displayGraphics.fillRect(0, 0, getWidth(), getHeight());
       displayGraphics.setGrayScale(0);

@@ -21,8 +21,6 @@
 
 package com.barteo.midp.examples.simpledemo;
 
-import java.util.*;
-
 import javax.microedition.lcdui.*;
 
 
@@ -35,18 +33,25 @@ public class GaugePanel extends Form implements ScreenPanel, CommandListener
   
   Gauge noninteractive = new Gauge("Noninteractive", false, 25, 0);
   
-  TimerTask timerTask = new TimerTask()
+  Runnable timerTask = new Runnable()
   {
     
     public void run()
     {
-      if (isShown()) {
-        int value = noninteractive.getValue();
+      while (true) {
+        if (isShown()) {
+          int value = noninteractive.getValue();
       
-        if (noninteractive.getValue() >= 25) {
-          noninteractive.setValue(0);
-        } else {
-          noninteractive.setValue(++value);
+          if (noninteractive.getValue() >= 25) {
+            noninteractive.setValue(0);
+          } else {
+            noninteractive.setValue(++value);
+          }
+        }
+        try {
+          Thread.sleep(500);
+        } catch (InterruptedException ex) {
+          break;
         }
       }
     }
@@ -60,8 +65,8 @@ public class GaugePanel extends Form implements ScreenPanel, CommandListener
     append(new Gauge("Interactive", true, 25, 0));
     append(noninteractive);
     
-    Timer timer = new Timer();
-    timer.schedule(timerTask, 0, 500);
+    Thread thread = new Thread(timerTask);
+    thread.start();
 
     addCommand(backCommand);
     setCommandListener(this);

@@ -21,8 +21,6 @@
 
 package com.barteo.midp.examples.simpledemo;
 
-import java.util.*;
-
 import javax.microedition.lcdui.*;
 
 
@@ -42,35 +40,42 @@ public class CanvasPanel extends Canvas implements ScreenPanel, CommandListener
   int posX = 0, posY = 0;
   static int POSNUMBER = 20;
 
-  TimerTask timerTask = new TimerTask()
+  Runnable timerTask = new Runnable()
   {
     
     public void run()
     {
-      if (isShown()) {
-        synchronized (this) {
-          if (moveX > 0) {
-            if (posX >= POSNUMBER) {
-              posX = 0;
+      while (true) {
+        if (isShown()) {
+          synchronized (this) {
+            if (moveX > 0) {
+              if (posX >= POSNUMBER) {
+                posX = 0;
+              }
+            } else {
+              if (posX < 0) {
+                posX = POSNUMBER;
+              }
             }
-          } else {
-            if (posX < 0) {
-              posX = POSNUMBER;
+            if (moveY > 0) {
+              if (posY >= POSNUMBER) {
+                posY = 0;
+              }
+            } else {
+              if (posY < 0) {
+                posY = POSNUMBER;
+              }
             }
+            posX += moveX;
+            posY += moveY;
           }
-          if (moveY > 0) {
-            if (posY >= POSNUMBER) {
-              posY = 0;
-            }
-          } else {
-            if (posY < 0) {
-              posY = POSNUMBER;
-            }
-          }
-          posX += moveX;
-          posY += moveY;
+          repaint();
         }
-        repaint();
+        try {
+          Thread.sleep(100);
+        } catch (InterruptedException ex) {
+          break;
+        }
       }
     }
   };
@@ -78,8 +83,8 @@ public class CanvasPanel extends Canvas implements ScreenPanel, CommandListener
   
   public CanvasPanel()
   {
-    Timer timer = new Timer();
-    timer.schedule(timerTask, 0, 100);
+    Thread thread = new Thread(timerTask);
+    thread.start();
 
     addCommand(backCommand);
     addCommand(neCommand);

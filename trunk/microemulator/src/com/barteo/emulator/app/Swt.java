@@ -28,7 +28,8 @@ import javax.microedition.midlet.MIDlet;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
@@ -45,6 +46,7 @@ import com.barteo.emulator.app.ui.ResponseInterfaceListener;
 import com.barteo.emulator.app.ui.StatusBarListener;
 import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
 import com.barteo.emulator.app.ui.swt.SwtDialog;
+import com.barteo.emulator.app.ui.swt.SwtInputDialog;
 import com.barteo.emulator.app.ui.swt.SwtMessageDialog;
 import com.barteo.emulator.app.ui.swt.SwtSelectDeviceDialog;
 import com.barteo.emulator.app.util.DeviceEntry;
@@ -133,15 +135,15 @@ public class Swt
 	{
 		public void handleEvent(Event ev)
 		{
-/*			String entered = OptionPane.showInputDialog(instance, "Enter JAD URL:");
-			if (entered != null) {
+			SwtInputDialog inputDialog = new SwtInputDialog(shell, "Open...", "Enter JAD URL:");
+			if (inputDialog.open() == SwtDialog.OK) {
 				try {
-					URL url = new URL(entered);
+					URL url = new URL(inputDialog.getValue());
 					common.openJadFile(url);
 				} catch (MalformedURLException ex) {
-					System.err.println("Bad URL format " + entered);
+					System.err.println("Bad URL format " + inputDialog.getValue());
 				}
-			}*/
+			}
 		}    
 	};
   
@@ -242,6 +244,10 @@ public class Swt
 	{
 		instance = this;
     
+		GridLayout layout = new GridLayout(1, false);
+		shell.setLayout(layout);
+		shell.setLayoutData(new GridData(GridData.FILL_BOTH));
+
 		Menu bar = new Menu(shell, SWT.BAR);
 		shell.setMenuBar(bar);
     
@@ -282,9 +288,11 @@ public class Swt
 		shell.addKeyListener(keyListener);
 
 		devicePanel = new SwtDeviceComponent(shell);
+		devicePanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		statusBar = new Label(shell, SWT.HORIZONTAL);
 		statusBar.setText("Status");
+		statusBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		selectDeviceDialog = new SwtSelectDeviceDialog(shell);
 		setDevice(selectDeviceDialog.getSelectedDeviceEntry());
@@ -339,10 +347,7 @@ public class Swt
 	public static void main(String args[])
 	{
 		Display display = new Display();
-		shell = new Shell(display);
-		RowLayout layout = new RowLayout();
-		layout.type = SWT.VERTICAL;
-		shell.setLayout(layout);
+		shell = new Shell(display, SWT.CLOSE | SWT.TITLE | SWT.MIN);
 		    
 		Swt app = new Swt(shell);
 		MIDlet m = null;

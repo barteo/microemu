@@ -19,9 +19,7 @@
  
 package com.barteo.emulator.app.ui.swt;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Composite;
 
 import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.device.Device;
@@ -29,7 +27,7 @@ import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.swt.SwtDeviceDisplay;
 
 
-public class SwtDisplayComponent extends Canvas implements DisplayComponent
+public class SwtDisplayComponent implements DisplayComponent
 {
 	private Canvas deviceCanvas;
 	
@@ -41,10 +39,8 @@ public class SwtDisplayComponent extends Canvas implements DisplayComponent
 	};
 
 
-	SwtDisplayComponent(Composite parent, Canvas deviceCanvas)
+	SwtDisplayComponent(Canvas deviceCanvas)
 	{
-		super(parent, SWT.NO_BACKGROUND);
-		
 		this.deviceCanvas = deviceCanvas;
 	}
 
@@ -59,7 +55,7 @@ public class SwtDisplayComponent extends Canvas implements DisplayComponent
   
 	public void repaint() 
 	{
-		getDisplay().syncExec(redrawRunnable);
+		deviceCanvas.getDisplay().syncExec(redrawRunnable);
 	}
   
 }

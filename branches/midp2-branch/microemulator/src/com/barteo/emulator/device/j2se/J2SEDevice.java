@@ -49,7 +49,7 @@ public class J2SEDevice implements Device
 {
   private J2SEDeviceDisplay deviceDisplay;
   private FontManager fontManager = null;
-  private InputMethod inputMethod = null;
+  private J2SEInputMethod inputMethod = null;
   private Vector buttons;
   private Vector softButtons;
   
@@ -90,21 +90,21 @@ public class J2SEDevice implements Device
 			throw new IllegalArgumentException();
 		}
 	
-		return new MutableImage(width, height);
+		return new J2SEMutableImage(width, height);
 	}
 	
 																
 	public javax.microedition.lcdui.Image createImage(String name)
   		throws IOException
 	{
-		return new ImmutableImage(getImage(name));
+		return new J2SEImmutableImage(getImage(name));
 	}
   
   
 	public javax.microedition.lcdui.Image createImage(javax.microedition.lcdui.Image source)
   {
     if (source.isMutable()) {
-      return new ImmutableImage((MutableImage) source);
+      return new J2SEImmutableImage((J2SEMutableImage) source);
     } else {
       return source;
     }
@@ -114,7 +114,11 @@ public class J2SEDevice implements Device
   public javax.microedition.lcdui.Image createImage(byte[] imageData, int imageOffset, int imageLength)
 	{
 		ByteArrayInputStream is = new ByteArrayInputStream(imageData, imageOffset, imageLength);
-		return new ImmutableImage(getImage(is));
+		try {
+			return new J2SEImmutableImage(getImage(is));
+		} catch (IOException ex) {
+			throw new IllegalArgumentException(ex.toString());
+		}
 	}
   
   
@@ -149,35 +153,35 @@ public class J2SEDevice implements Device
 		switch (keyCode) {
 			case KeyEvent.VK_UP:
 				return Canvas.UP;
-	        
+        
 			case KeyEvent.VK_DOWN:
 				return Canvas.DOWN;
-	        
+        
 			case KeyEvent.VK_LEFT:
 				return Canvas.LEFT;
-	      	
+      	
 			case KeyEvent.VK_RIGHT:
 				return Canvas.RIGHT;
-	      	
+      	
 			case KeyEvent.VK_ENTER:
 				return Canvas.FIRE;
-	      	
+      	
 			case KeyEvent.VK_1:
 			case KeyEvent.VK_A:
 				return Canvas.GAME_A;
-	        
+        
 			case KeyEvent.VK_3:
 			case KeyEvent.VK_B:
 				return Canvas.GAME_B;
-	        
+        
 			case KeyEvent.VK_7:
 			case KeyEvent.VK_C:
 				return Canvas.GAME_C;
-	        
+        
 			case KeyEvent.VK_9:
 			case KeyEvent.VK_D:
 				return Canvas.GAME_D;
-	        
+        
 			default:
 				return 0;
 		}
@@ -189,31 +193,31 @@ public class J2SEDevice implements Device
 		switch (gameAction) {
 			case Canvas.UP:
 				return KeyEvent.VK_UP;
-	        
+        
 			case Canvas.DOWN:
 				return KeyEvent.VK_DOWN;
-	        
+        
 			case Canvas.LEFT:
 				return KeyEvent.VK_LEFT;
-	        
+        
 			case Canvas.RIGHT:
 				return KeyEvent.VK_RIGHT;
-	        
+        
 			case Canvas.FIRE:
 				return KeyEvent.VK_ENTER;
-	        
+        
 			case Canvas.GAME_A:
 				return KeyEvent.VK_1;
-	        
+        
 			case Canvas.GAME_B:
 				return KeyEvent.VK_3;
-	        
+        
 			case Canvas.GAME_C:
 				return KeyEvent.VK_7;
-	        
+        
 			case Canvas.GAME_D:
 				return KeyEvent.VK_9;
-	
+
 			default:
 				throw new IllegalArgumentException();
 		}
@@ -261,6 +265,13 @@ public class J2SEDevice implements Device
     return false;
   }
 
+  
+  public void dispose()
+  {
+		inputMethod.dispose();
+		inputMethod = null;
+  }
+  
   
   public Vector getButtons()
   {
@@ -463,7 +474,7 @@ public class J2SEDevice implements Device
   
 
 	private Image getImage(String str)
-					throws IOException
+			throws IOException
 	{
 		InputStream is = deviceDisplay.getEmulatorContext().getClassLoader().getResourceAsStream(str);
 
@@ -471,15 +482,22 @@ public class J2SEDevice implements Device
 				throw new IOException(str + " could not be found.");
 		}
 
-		return getImage(is);
+		return getImage(is);			
 	}
 
   
   private Image getImage(InputStream is)
+  		throws IOException
   {
 		ImageFilter filter = null;
     PngImage png = new PngImage(is);
     
+    try {
+			png.getWidth();
+		} catch (IOException ex) {
+			throw new IOException("Error decoding PNG image");    	
+		}
+        
     if (getDeviceDisplay().isColor()) {
 			filter = new RGBImageFilter();
     } else {

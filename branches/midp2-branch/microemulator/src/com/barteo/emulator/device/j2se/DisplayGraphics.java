@@ -173,9 +173,9 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
     }
 
     if (img.isMutable()) {
-      g.drawImage(((MutableImage) img).getImage(), newx, newy, null);
+      g.drawImage(((J2SEMutableImage) img).getImage(), newx, newy, null);
     } else {
-      g.drawImage(((ImmutableImage) img).getImage(), newx, newy, null);
+      g.drawImage(((J2SEImmutableImage) img).getImage(), newx, newy, null);
     }
   }
 
@@ -201,9 +201,9 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 //		throw new RuntimeException("TODO");
 		java.awt.Image img;
 		if (src.isMutable()) {
-			img = ((MutableImage) src).getImage();
+			img = ((J2SEMutableImage) src).getImage();
 		} else {
-			img = ((ImmutableImage) src).getImage();
+			img = ((J2SEImmutableImage) src).getImage();
 		}
 		if (transform == Sprite.TRANS_NONE) {
 			g.drawImage(img,

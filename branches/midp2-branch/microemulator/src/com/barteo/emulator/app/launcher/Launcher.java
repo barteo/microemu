@@ -21,8 +21,13 @@ package com.barteo.emulator.app.launcher;
 
 import java.util.Vector;
 
-import javax.microedition.lcdui.*;
-import javax.microedition.midlet.*;
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.CommandListener;
+import javax.microedition.lcdui.Display;
+import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.List;
+import javax.microedition.midlet.MIDlet;
+import javax.microedition.midlet.MIDletStateChangeException;
 
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.MIDletEntry;
@@ -42,9 +47,6 @@ public class Launcher extends MIDlet implements CommandListener
   
   public Launcher()
   {
-    menuList = new List("Launcher", List.IMPLICIT);
-
-    menuList.setCommandListener(this);
   }
 
 
@@ -84,9 +86,9 @@ public class Launcher extends MIDlet implements CommandListener
   
   public void startApp() 
   {
-    for (int i = menuList.size() - 1; i >= 0; i--) {
-      menuList.delete(i);
-    }
+		menuList = new List("Launcher", List.IMPLICIT);
+		menuList.setCommandListener(this);
+
     if (midletEntries.size() == 0) {
       menuList.append(nomidlets, null);
     } else {

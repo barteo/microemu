@@ -31,20 +31,27 @@ import com.barteo.emulator.device.InputMethodEvent;
 
 public class J2SEInputMethod extends InputMethod implements Runnable
 {
-	int lastButtonCharIndex = -1;
-  J2SEButton lastButton = null;
-	boolean resetKey;
+	private int lastButtonCharIndex = -1;
+  private J2SEButton lastButton = null;
+	private boolean resetKey;
 
-	Thread t;
+	private Thread t;
+	private boolean cancel = false;
 
 
 	public J2SEInputMethod()
 	{
-		t = new Thread(this);
+		t = new Thread(this, "InputMethodThread");
 		t.start();
 	}
   
   
+	void dispose()
+	{
+		  cancel = true;
+	}
+
+
   private boolean commonKeyPressed(int keyCode)
   {
 		String tmp;
@@ -142,8 +149,8 @@ public class J2SEInputMethod extends InputMethod implements Runnable
   					tmp += text.substring(0, caret);
   				}
   				tmp += ev.getKeyChar();
-  				if (caret < text.length() - 1) {
-  					tmp += text.substring(caret + 1);
+  				if (caret < text.length()) {
+  					tmp += text.substring(caret);
   				}
   				text = tmp;
     			caret++;
@@ -241,7 +248,7 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 
 	public void run()
 	{
-		while (true) {
+		while (!cancel) {
 			try {
 				resetKey = true;
 				synchronized (this) {

@@ -170,9 +170,9 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
     }
 
     if (img.isMutable()) {
-      g.drawImage(((MutableImage) img).getImage(), newx, newy, null);
+      g.drawImage(((AppletMutableImage) img).getImage(), newx, newy, null);
     } else {
-      g.drawImage(((ImmutableImage) img).getImage(), newx, newy, null);
+      g.drawImage(((AppletImmutableImage) img).getImage(), newx, newy, null);
     }
   }
 
@@ -197,11 +197,11 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
 	{
 //		throw new RuntimeException("TODO");
 		if (src.isMutable()) {
-			g.drawImage(((MutableImage) src).getImage(),
+			g.drawImage(((AppletMutableImage) src).getImage(),
 					x_dest, y_dest, x_dest + width, y_dest + height, 
 					x_src, y_src, x_src + width, y_src + height, null);
 		} else {
-			g.drawImage(((ImmutableImage) src).getImage(),
+			g.drawImage(((AppletImmutableImage) src).getImage(),
 					x_dest, y_dest, x_dest + width, y_dest + height,
 					x_src, y_src, x_src + width, y_src + height, null);
 		}

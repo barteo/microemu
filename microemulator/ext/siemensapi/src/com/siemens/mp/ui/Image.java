@@ -82,9 +82,9 @@ public class Image {
         
         return ret;
     }
-    public static javax.microedition.lcdui.Image createImageWithoutScaling(String name) {
+    public static javax.microedition.lcdui.Image createImageWithoutScaling(String name) throws java.io.IOException{
         System.out.println("public static javax.microedition.lcdui.Image createImageWithoutScaling(String name)");
-        return null;
+        return javax.microedition.lcdui.Image.createImage(name);
     }
     
     public static javax.microedition.lcdui.Image createTransparentImageFromBitmap(byte[] imageData, int imageWidth, int imageHeight) {

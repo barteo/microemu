@@ -45,11 +45,11 @@ public final class GrayImageFilter implements ImageFilter
     this.Yr = Yr;
     this.Yg = Yg;
     this.Yb = Yb;
-    Color backgroundColor = SwtDeviceComponent.createColor(new RGB(
+    Color backgroundColor = SwtDeviceComponent.getColor(new RGB(
     		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getRed(),
     		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getGreen(),
     		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getBlue()));
-    foregroundColor = SwtDeviceComponent.createColor(new RGB(
+    foregroundColor = SwtDeviceComponent.getColor(new RGB(
     		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor().getRed(),
     		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor().getGreen(),
     		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor().getBlue()));

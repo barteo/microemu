@@ -37,7 +37,7 @@ public class Display
 {
 	private static EventDispatcher eventDispatcher = null;
 	private static TickerPaint tickerPaint = null;
-
+	
 	private Displayable current = null;
 	private Displayable nextScreen = null;
 
@@ -140,31 +140,41 @@ public class Display
 		}
 	}
   
-  private class TickerPaint implements Runnable
-  {
-    public void run()
+	
+	private class TickerPaint implements Runnable 
+	{
+		private Display currentDisplay;
+		
+		public void setCurrentDisplay(Display currentDisplay) 
 		{
-      while (true) {
-        if (current != null && current instanceof Screen) {
-          Ticker ticker = ((Screen) current).getTicker();
-          if (ticker != null) {
-            synchronized (ticker) {
-              if (ticker.resetTextPosTo != -1) {
-                ticker.textPos = ticker.resetTextPosTo;
-                ticker.resetTextPosTo = -1;
-              }
-              ticker.textPos -= Ticker.PAINT_MOVE;
-            }
-            repaint();        
-          }
-        }
-    		try {
-    			Thread.sleep(Ticker.PAINT_TIMEOUT);
-    		} catch (InterruptedException ex) {}
-      }
+			this.currentDisplay = currentDisplay;
 		}
-  }
+		
+		public void run() 
+		{
+			while (true) {
+				if (currentDisplay.current != null && currentDisplay.current instanceof Screen) {
+					Ticker ticker = ((Screen) currentDisplay.current).getTicker();
+					if (ticker != null) {
+						synchronized (ticker) {
+							if (ticker.resetTextPosTo != -1) {
+								ticker.textPos = ticker.resetTextPosTo;
+								ticker.resetTextPosTo = -1;
+							}
+							ticker.textPos -= Ticker.PAINT_MOVE;
+						}
+						currentDisplay.repaint();
+					}
+				}
+				try {
+					Thread.sleep(Ticker.PAINT_TIMEOUT);
+				} catch (InterruptedException ex) {
+				}
+			}
+		}
+	}
 
+	
 	private class EventDispatcher implements Runnable
 	{
 		private Vector events = new Vector();
@@ -240,16 +250,18 @@ public class Display
 
 	public static Display getDisplay(MIDlet m)
 	{
-    Display result;
+		Display result;
     
-    if (MIDletBridge.getMIDletAccess(m).getDisplayAccess() == null) {
-      result = new Display();
-      MIDletBridge.getMIDletAccess(m).setDisplayAccess(result.accessor);
-    } else {
-      result = MIDletBridge.getMIDletAccess(m).getDisplayAccess().getDisplay();
-    }
+		if (MIDletBridge.getMIDletAccess(m).getDisplayAccess() == null) {
+			result = new Display();
+			MIDletBridge.getMIDletAccess(m).setDisplayAccess(result.accessor);
+		} else {
+			result = MIDletBridge.getMIDletAccess(m).getDisplayAccess().getDisplay();
+		}
+    
+		tickerPaint.setCurrentDisplay(result);
 
-    return result;
+		return result;
 	}
 
 

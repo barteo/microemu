@@ -74,9 +74,9 @@
     <java classname="com.barteo.emulator.app.Main" failonerror="true" fork="true">
       <classpath>
         <pathelement location="me-app.jar"/>
-        <pathelement location="simpledemo.jar"/>
+<!--        <pathelement location="simpledemo.jar"/> -->
       </classpath>
-      <arg value="com.barteo.midp.examples.simpledemo.SimpleDemo"/>
+<!--      <arg value="com.barteo.midp.examples.simpledemo.SimpleDemo"/> -->
     </java>
   </target>
 

@@ -102,16 +102,8 @@ public class Device {
             for (Enumeration e_button = tmp_keyboard.enumerateChildren(); e_button.hasMoreElements(); ) {
               XMLElement tmp_button = (XMLElement) e_button.nextElement();
               if (tmp_button.getName().equals("rectangle")) {
-                // Temporary workaround of strange bug in NanoXML (inserting \0 into String)
-                String tmp_str = "";
-                byte[] data = tmp_keyboard.getProperty("name").getBytes();
-                for (int i = 0; i < data.length; i++) {
-                  if (data[i] != 0) {
-                    tmp_str += (char) data[i];
-                  }
-                }
-                deviceButtons.addElement(new Button(tmp_str, 
-                    getRectangle(tmp_button), tmp_keyboard.getProperty("key")));
+                deviceButtons.addElement(new Button(tmp_keyboard.getStringAttribute("name"), 
+                    getRectangle(tmp_button), tmp_keyboard.getStringAttribute("key")));
               }
             }
           }
@@ -130,14 +122,14 @@ public class Device {
                 commands.addElement(tmp_button.getContent());
               }
             }
-            String tmp_str = tmp_keyboard.getProperty("menuactivate");
+            String tmp_str = tmp_keyboard.getStringAttribute("menuactivate");
             boolean menuactivate = false;
             if (tmp_str != null && tmp_str.equals("true")) {
               menuactivate = true;
             }
-            deviceButtons.addElement(new SoftButton(tmp_keyboard.getProperty("name"),
-                rectangle, tmp_keyboard.getProperty("key"), paintable, 
-                tmp_keyboard.getProperty("alignment"), commands, menuactivate));
+            deviceButtons.addElement(new SoftButton(tmp_keyboard.getStringAttribute("name"),
+                rectangle, tmp_keyboard.getStringAttribute("key"), paintable, 
+                tmp_keyboard.getStringAttribute("alignment"), commands, menuactivate));
           }
         }
       }
@@ -171,25 +163,17 @@ public class Device {
     
     for (Enumeration e_rectangle = source.enumerateChildren(); e_rectangle.hasMoreElements(); ) {
       XMLElement tmp_rectangle = (XMLElement) e_rectangle.nextElement();
-      // Temporary workaround of strange bug in NanoXML (inserting \0 into String)
-      String tmp_str = "";
-      byte[] data = tmp_rectangle.getContent().getBytes();
-      for (int i = 0; i < data.length; i++) {
-        if (data[i] != 0) {
-          tmp_str += (char) data[i];
-        }
-      }
       if (tmp_rectangle.getName().equals("x")) {
-        rect.x = Integer.parseInt(tmp_str);
+        rect.x = Integer.parseInt(tmp_rectangle.getContent());
       }
       if (tmp_rectangle.getName().equals("y")) {
-        rect.y = Integer.parseInt(tmp_str);
+        rect.y = Integer.parseInt(tmp_rectangle.getContent());
       }
       if (tmp_rectangle.getName().equals("width")) {
-        rect.width = Integer.parseInt(tmp_str);
+        rect.width = Integer.parseInt(tmp_rectangle.getContent());
       }
       if (tmp_rectangle.getName().equals("height")) {
-        rect.height = Integer.parseInt(tmp_str);
+        rect.height = Integer.parseInt(tmp_rectangle.getContent());
       }
     }
     

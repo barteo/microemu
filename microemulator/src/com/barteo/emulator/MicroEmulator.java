@@ -22,7 +22,7 @@ package com.barteo.emulator;
 
 public interface MicroEmulator
 {
-
-  public void notifyDestroyed();
   
+  public void notifyDestroyed();
+    
 }

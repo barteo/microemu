@@ -41,6 +41,12 @@ public class StringItem extends Item
 	}
 
 
+  public void setLabel(String label)
+  {
+    super.setLabel(label);
+  }
+
+
 	public void setText(String text)
 	{
 		stringComponent.setText(text);

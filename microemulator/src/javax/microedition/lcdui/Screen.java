@@ -28,6 +28,7 @@ public abstract class Screen extends Displayable
 {
 
 	StringComponent title;
+  Ticker ticker;
 	int viewPortY;
 	int viewPortHeight;
 
@@ -40,13 +41,37 @@ public abstract class Screen extends Displayable
 	}
 
 
+  public Ticker getTicker()
+  {
+    return ticker;
+  }
+
+
+  public String getTitle()
+  {
+    return title.getText();
+  }
+
+
+  public void setTitle(String s)
+  {
+    title.setText(s);
+  }
+
+
+  public void setTicker(Ticker ticker)
+  {
+    this.ticker = ticker;
+  }
+
+
 	abstract int traverse(int gameKeyCode, int top, int bottom);
-  
-  
+
+
   void keyPressed(int keyCode)
 	{
     int gameKeyCode = Display.getGameAction(keyCode);
-    
+
     if (gameKeyCode == 1 || gameKeyCode == 6) {
 			viewPortY += traverse(gameKeyCode, viewPortY, viewPortY + viewPortHeight);
 			repaint();
@@ -69,7 +94,7 @@ public abstract class Screen extends Displayable
 	final void paint(Graphics g)
 	{
 		int translatedY;
-	
+
 		if (viewPortY == 0) {
 			currentDisplay.dispBridge.setScrollUp(false);
 		} else {
@@ -78,21 +103,21 @@ public abstract class Screen extends Displayable
 
 		g.setGrayScale(255);
 		g.fillRect(0, 0, Display.width, Display.height);
-	
+
 		g.setGrayScale(0);
 		int contentHeight = title.paint(g);
-		                
+
     g.drawLine(0, contentHeight, Display.width, contentHeight);
 		contentHeight += 1;
-    
+
     g.translate(0, contentHeight);
 		translatedY = contentHeight;
-		
+
 		g.clipRect(0, 0, Display.width, Display.height - contentHeight);
     g.translate(0, -viewPortY);
     contentHeight += paintContent(g);
     g.translate(0, viewPortY);
-		
+
 		if (contentHeight - viewPortY > Display.height) {
 			currentDisplay.dispBridge.setScrollDown(true);
 		} else {
@@ -103,17 +128,17 @@ public abstract class Screen extends Displayable
 
 
   abstract int paintContent(Graphics g);
-  
-  
+
+
   void repaint()
   {
     super.repaint();
   }
-	
-	
+
+
 	void showNotify()
 	{
 		super.showNotify();
 	}
-  
+
 }

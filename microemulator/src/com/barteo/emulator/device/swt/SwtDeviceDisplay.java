@@ -98,7 +98,7 @@ public class SwtDeviceDisplay implements DeviceDisplay
   {
     Device device = DeviceFactory.getDevice();
 
-    g.setForeground(backgroundColor);    
+    g.setBackground(backgroundColor);    
     g.fillRectangle(0, 0, displayRectangle.width, displayPaintable.y);
     g.fillRectangle(0, displayPaintable.y, displayPaintable.x, displayPaintable.height);
     g.fillRectangle(

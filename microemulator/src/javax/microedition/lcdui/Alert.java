@@ -19,7 +19,7 @@
  *
  */
 
- package javax.microedition.lcdui;
+package javax.microedition.lcdui;
 
 
 public class Alert extends Screen

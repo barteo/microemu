@@ -58,14 +58,19 @@ public class AppletDevice implements Device
   Image pressedImage;
   
   
-  public AppletDevice(EmulatorContext context)
+  public AppletDevice()
   {
-    // Here should be device.xml but Netscape security manager doesn't accept this extension
-    this(context, "/com/barteo/emulator/device/device.txt");
   }
   
   
-  public AppletDevice(EmulatorContext context, String config)
+  public void init(EmulatorContext context)
+  {
+    // Here should be device.xml but Netscape security manager doesn't accept this extension
+    init(context, "/com/barteo/emulator/device/device.txt");
+  }
+  
+  
+  public void init(EmulatorContext context, String config)
   {
     deviceDisplay = new AppletDeviceDisplay(context);
     buttons = new Vector();

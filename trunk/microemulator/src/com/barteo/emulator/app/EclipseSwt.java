@@ -27,10 +27,13 @@ import java.net.URL;
 import java.util.Enumeration;
 
 import javax.microedition.midlet.MIDlet;
+import javax.microedition.midlet.MIDletStateChangeException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.DeviceData;
@@ -56,10 +59,12 @@ import org.eclipse.swt.widgets.Text;
 
 import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.EmulatorContext;
+import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
 import com.barteo.emulator.app.ui.swt.SwtSelectDeviceDialog;
 import com.barteo.emulator.app.util.DeviceEntry;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
+import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.swt.SwtDevice;
 import com.barteo.emulator.util.JadMidletEntry;
@@ -93,31 +98,38 @@ public class EclipseSwt extends Common
 		}    
 	};
        
-/*	WindowAdapter windowListener = new WindowAdapter()
+	private ShellListener shellListener = new ShellListener()
 	{
-		public void windowClosing(WindowEvent ev) 
+		public void shellActivated(ShellEvent e) 
 		{
-			menuExitListener.actionPerformed(null);
 		}
-		
 
-		public void windowIconified(WindowEvent ev) 
+		public void shellClosed(ShellEvent e) 
 		{
-			MIDletBridge.getMIDletAccess(common.getLauncher().getCurrentMIDlet()).pauseApp();
+			close();
 		}
-		
-		public void windowDeiconified(WindowEvent ev) 
+
+		public void shellDeactivated(ShellEvent e) 
+		{
+		}
+
+		public void shellDeiconified(ShellEvent e) 
 		{
 			try {
-				MIDletBridge.getMIDletAccess(common.getLauncher().getCurrentMIDlet()).startApp();
+				MIDletBridge.getMIDletAccess(getLauncher().getCurrentMIDlet()).startApp();
 			} catch (MIDletStateChangeException ex) {
 				System.err.println(ex);
 			}
 		}
-	};*/  
+
+		public void shellIconified(ShellEvent e) 
+		{
+			MIDletBridge.getMIDletAccess(getLauncher().getCurrentMIDlet()).pauseApp();
+		}
+	};
  
   
-	EclipseSwt(Shell shell)
+	EclipseSwt(Shell shell, Device device, String captureFile)
 	{
 		super(new EmulatorContext()
 		{
@@ -146,9 +158,15 @@ public class EclipseSwt extends Common
 
 		devicePanel = new SwtDeviceComponent(shell);
 		devicePanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		this.captureFile = captureFile;
 
-		selectDeviceDialog = new SwtSelectDeviceDialog(shell);
-		setDevice(selectDeviceDialog.getSelectedDeviceEntry());
+		if (device == null) {
+			selectDeviceDialog = new SwtSelectDeviceDialog(shell);
+			setDevice(selectDeviceDialog.getSelectedDeviceEntry());
+		} else {
+			setDevice(device);
+		}
     
 		initialized = true;
 	}
@@ -177,10 +195,8 @@ public class EclipseSwt extends Common
 				deviceClass = Class.forName(entry.getClassName());
 			}
 			SwtDevice device = (SwtDevice) deviceClass.newInstance();
-			DeviceFactory.setDevice(device);
-			device.init(emulatorContext);
 			this.deviceEntry = entry;
-			shell.setSize(shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
+			setDevice(device);
 		} catch (MalformedURLException ex) {
 			System.err.println(ex);          
 		} catch (ClassNotFoundException ex) {
@@ -193,6 +209,15 @@ public class EclipseSwt extends Common
 	}
 
 
+	protected void setDevice(SwtDevice device)
+	{
+		super.setDevice(device);
+
+		device.init(emulatorContext);
+		shell.setSize(shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
+	}
+  
+  
 	protected void loadFromJad(URL jadUrl)
 	{		
 		try {
@@ -216,33 +241,61 @@ public class EclipseSwt extends Common
 		Display display = new Display(data);
 		shell = new Shell(display, SWT.CLOSE | SWT.TITLE | SWT.MIN | SWT.ON_TOP);
 		    
-		EclipseSwt app = new EclipseSwt(shell);
 		MIDlet m = null;
 
-		Sleak sleak = app.new Sleak (display);
-		sleak.open ();
+//		Sleak sleak = app.new Sleak (display);
+//		sleak.open ();
+
+		Device device = null;
+		String captureFile = null;
+		URL jadUrl = null;
+		Class midletClass = null;
 
 		if (args.length > 0) {
-			if (args[0].endsWith(".jad")) {
-				try {
-					File file = new File(args[0]);
-				  URL url = file.exists() ? file.toURL() : new URL(args[0]);
-				  app.openJadFile(url);
-				} catch(MalformedURLException exception) {
-				  System.out.println("Cannot parse " + args[0] + " URL");
+			for (int i = 0; i < args.length; i++) {
+				if (args[i].equals("--deviceClass")) {
+					i++;
+					try {
+						Class deviceClass = Class.forName(args[i]);
+						device = (Device) deviceClass.newInstance();
+					} catch (ClassNotFoundException ex) {
+						System.err.println(ex);          
+					} catch (InstantiationException ex) {
+						System.err.println(ex);          
+					} catch (IllegalAccessException ex) {
+						System.err.println(ex);          
+					}					
+				} else if (args[i].equals("--captureFile")) {
+					i++;
+					captureFile = args[i];
+				} else if (args[i].endsWith(".jad")) {
+					try {
+						File file = new File(args[i]);
+						jadUrl = file.exists() ? file.toURL() : new URL(args[i]);
+					} catch(MalformedURLException exception) {
+						System.out.println("Cannot parse " + args[0] + " URL");
+					}
+				} else {
+					try {
+						midletClass = Class.forName(args[i]);
+					} catch (ClassNotFoundException ex) {
+						System.out.println("Cannot find " + args[i] + " MIDlet class");
+					}
 				}
-		  } else {
-				Class midletClass;
-				try {
-				  midletClass = Class.forName(args[0]);
-				m = app.loadMidlet("MIDlet", midletClass);
-				} catch (ClassNotFoundException ex) {
-				  System.out.println("Cannot find " + args[0] + " MIDlet class");
-				}
-		  }
+			}
+		}
+
+		EclipseSwt app = new EclipseSwt(shell, device, captureFile);
+		shell.addShellListener(app.shellListener);
+		
+		if (jadUrl != null) {
+			app.openJadFile(jadUrl);			
+		} else if (midletClass != null) {
+			m = app.loadMidlet("MIDlet", midletClass);			
 		} else {
 			m = app.getLauncher();
 		}
+		
     
 		if (app.initialized) {
 			if (m != null) {

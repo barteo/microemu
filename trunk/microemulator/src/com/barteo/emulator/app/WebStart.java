@@ -308,16 +308,8 @@ public class WebStart extends JFrame
         deviceClass = Class.forName(entry.getClassName());
       }
       J2SEDevice device = (J2SEDevice) deviceClass.newInstance();
-      DeviceFactory.setDevice(device);
-      device.init(emulatorContext);
-      devicePanel.init();
-      this.deviceEntry = entry;
-      Image tmpImg = device.getNormalImage();
-      Dimension size = new Dimension(tmpImg.getWidth(null), tmpImg.getHeight(null));
-      size.width += 10;
-      size.height += statusBar.getPreferredSize().height + 55;
-      setSize(size);
-      doLayout();
+		this.deviceEntry = entry;
+      	setDevice(device);
     } catch (MalformedURLException ex) {
       System.err.println(ex);          
     } catch (ClassNotFoundException ex) {
@@ -330,7 +322,22 @@ public class WebStart extends JFrame
   }
     
   
-  public static void main(String args[])
+	private void setDevice(J2SEDevice device) 
+	{
+		common.setDevice(device);
+		
+		device.init(emulatorContext);
+		devicePanel.init();
+		Image tmpImg = device.getNormalImage();
+		Dimension size = new Dimension(tmpImg.getWidth(null), tmpImg.getHeight(null));
+		size.width += 10;
+		size.height += statusBar.getPreferredSize().height + 55;
+		setSize(size);
+		doLayout();
+	}
+
+
+	public static void main(String args[])
   {
     Class uiClass = null;
     int uiFontSize = 11;

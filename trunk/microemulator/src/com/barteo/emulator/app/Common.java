@@ -33,12 +33,15 @@ import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.MIDletEntry;
 import com.barteo.emulator.MicroEmulator;
+import com.barteo.emulator.app.capture.Capturer;
 import com.barteo.emulator.app.launcher.Launcher;
 import com.barteo.emulator.app.ui.ResponseInterfaceListener;
 import com.barteo.emulator.app.ui.StatusBarListener;
 import com.barteo.emulator.app.util.ProgressEvent;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.app.util.ProgressListener;
+import com.barteo.emulator.device.Device;
+import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.util.JadMidletEntry;
 import com.barteo.emulator.util.JadProperties;
 
@@ -47,8 +50,11 @@ public class Common implements MicroEmulator
 {
 	private static Launcher launcher;
   
-  protected EmulatorContext emulatorContext;
+  	protected EmulatorContext emulatorContext;
   
+  	protected String captureFile = null;
+  	private Capturer capturer = null;
+  	
 	protected JadProperties jad = new JadProperties();
 	
 	private StatusBarListener statusBarListener = null; 
@@ -133,10 +139,13 @@ public class Common implements MicroEmulator
 		} catch (FileNotFoundException ex) {
 			System.err.println("Cannot found " + url.getPath());
 		} catch (NullPointerException ex) {
+			ex.printStackTrace();
 			System.err.println("Cannot open jad " + url.getPath());
 		} catch (IllegalArgumentException ex) {
+			ex.printStackTrace();
 			System.err.println("Cannot open jad " + url.getPath());
 		} catch (IOException ex) {
+			ex.printStackTrace();
 			System.err.println("Cannot open jad " + url.getPath());
 		}
 	}
@@ -162,6 +171,16 @@ public class Common implements MicroEmulator
 	{
 		responseInterfaceListener = listener;
 	}
+	
+	
+	protected void close()
+	{
+		if (captureFile != null) {
+			if (capturer != null) {
+				capturer.stopCapture(emulatorContext.getDisplayComponent());
+			}
+		}		
+	}	
   
 
 	protected void loadFromJad(URL jadUrl)
@@ -213,6 +232,25 @@ public class Common implements MicroEmulator
 	}
 	
 	
+	protected void setDevice(Device device)
+	{
+		if (captureFile != null) {
+			if (capturer != null) {
+				capturer.stopCapture(emulatorContext.getDisplayComponent());
+			}
+		}
+
+		DeviceFactory.setDevice(device);
+		
+		if (captureFile != null) {
+			if (capturer == null) {
+				capturer = new Capturer();
+			}
+			capturer.startCapture(emulatorContext.getDisplayComponent(), captureFile);
+		}
+	}
+
+
 	private void setStatusBar(String text)
 	{
 		if (statusBarListener != null) {

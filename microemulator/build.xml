@@ -28,10 +28,11 @@
     <javac debug="true" deprecation="true" destdir="./classes" srcdir="./src"/>
   </target>
 
-  <target name="jar" depends="init,compile">
-    <jar compress="true" jarfile="microemulator.jar">
+  <target name="jar-applet" depends="init,compile">
+    <jar compress="true" jarfile="me-applet.jar">
       <fileset dir="./classes">
         <exclude name="com/barteo/midp/examples/**"/>
+        <exclude name="com/barteo/emulator/app/**"/>
         <exclude name="**/.*"/>
         <exclude name="javax/microedition/io/**"/>
       </fileset>
@@ -40,6 +41,25 @@
         <exclude name="**/.*"/>
       </fileset>
     </jar>
+     <copy file="me-applet.jar" todir="doc/www"/>
+  </target>
+
+  <target name="jar-app" depends="init,compile">
+    <jar compress="true" jarfile="me-app.jar">
+      <fileset dir="./classes">
+        <exclude name="com/barteo/midp/examples/**"/>
+        <exclude name="com/barteo/emulator/applet/**"/>
+        <exclude name="**/.*"/>
+        <exclude name="javax/microedition/io/**"/>
+      </fileset>
+      <fileset dir="./res">
+        <exclude name="com/barteo/midp/examples/**"/>
+        <exclude name="**/.*"/>
+      </fileset>
+    </jar>
+  </target>
+
+  <target name="jar" depends="init,compile,jar-applet,jar-app">
     <jar compress="true" jarfile="simpledemo.jar">
       <fileset dir="./classes">
         <include name="com/barteo/midp/examples/simpledemo/**"/>
@@ -56,9 +76,9 @@
   </target>
 
   <target name="test" depends="init,all" description="Try running it.">
-    <java classname="com.barteo.emulator.MicroEmulator" failonerror="true" fork="true">
+    <java classname="com.barteo.emulator.app.Main" failonerror="true" fork="true">
       <classpath>
-        <pathelement location="microemulator.jar"/>
+        <pathelement location="me-app.jar"/>
         <pathelement location="simpledemo.jar"/>
       </classpath>
       <arg value="com.barteo.midp.examples.simpledemo.SimpleDemo"/>
@@ -88,7 +108,8 @@
         <include name="**/*.class"/>
       </fileset>
     </delete>
-    <delete file="microemulator.jar"/>
+    <delete file="me-app.jar"/>
+    <delete file="me-applet.jar"/>
     <delete file="simpledemo.jar"/>
     <delete dir="apidoc"/>
     <delete dir="dist"/>

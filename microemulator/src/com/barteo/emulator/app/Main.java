@@ -19,7 +19,7 @@
  *
  */
 
-package microemulator.src.com.barteo.emulator.app;
+package com.barteo.emulator.app;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -27,16 +27,47 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
 import javax.swing.LookAndFeel;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.UIManager;
 
+import com.barteo.emulator.device.Device;
+import com.barteo.midp.lcdui.KeyboardComponent;
+import com.barteo.midp.lcdui.XYConstraints;
+import com.barteo.midp.lcdui.XYLayout;
+
 
 public class Main extends JFrame 
 {
+  
+  Main instance = null;
+  
+  boolean initialized = false;
+  
+  JFileChooser fileChooser = null;
+  
+	SwingDisplayComponent dc;
+	KeyboardComponent kc;
 
+  ActionListener menuOpenJADFileListener = new ActionListener()
+  {
+
+    public void actionPerformed(ActionEvent e)
+    {
+      if (fileChooser == null) {
+        fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Open JAD File...");
+      }
+      
+      int returnVal = fileChooser.showOpenDialog(instance);
+    }
+  
+  };
+  
+  
   ActionListener menuExitListener = new ActionListener()
   {
     
@@ -50,14 +81,14 @@ public class Main extends JFrame
   
   Main()
   {
+    instance = this;
+    
     JMenuBar menuBar = new JMenuBar();
     
     JMenu menu = new JMenu("File");
     
     JMenuItem menuItem = new JMenuItem("Open JAD File...");
-    menu.add(menuItem);
-    
-    menuItem = new JMenuItem("Open JAD URL...");
+    menuItem.addActionListener(menuOpenJADFileListener);
     menu.add(menuItem);
     
     menu.addSeparator();
@@ -70,7 +101,25 @@ public class Main extends JFrame
     setJMenuBar(menuBar);
     
     setTitle("MicroEmulator");
-    setSize(200, 400);
+    
+    if (!Device.getInstance().isInitialized()) {
+      System.out.println("Cannot initialize device configuration");
+      return;
+    }
+    
+    XYLayout xy = new XYLayout();
+    getContentPane().setLayout(xy);
+
+    dc = new SwingDisplayComponent(this);
+    xy.addLayoutComponent(dc, new XYConstraints(Device.screenRectangle));
+    getContentPane().add(dc);
+
+    kc = new KeyboardComponent();
+    xy.addLayoutComponent(kc, new XYConstraints(Device.keyboardRectangle));
+    getContentPane().add(kc);      
+
+    setSize(Device.deviceRectangle.getSize());
+    initialized = true;
   }
   
   
@@ -148,8 +197,10 @@ public class Main extends JFrame
     
     Main app = new Main();
 
-    app.validate();
-    app.setVisible(true);
+    if (app.initialized) {
+      app.validate();
+      app.setVisible(true);
+    }
   }
 
 }

@@ -267,7 +267,7 @@ public class WebStart extends JFrame
     setTitle("MicroEmulator");
 		addWindowListener(windowListener);
     
-    Config.loadConfig();
+    Config.loadConfig("config.xml");
     addKeyListener(keyListener);
 
     devicePanel = new SwingDeviceComponent();

@@ -17,7 +17,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package com.barteo.emulator.app.ui.awt;
+package com.barteo.emulator.app.ui.swt;
 
 import java.awt.BorderLayout;
 import java.awt.Button;
@@ -41,15 +41,15 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 import com.barteo.emulator.app.Config;
-import com.barteo.emulator.app.util.*;
 import com.barteo.emulator.app.util.DeviceEntry;
+import com.barteo.emulator.app.util.ExtensionFileFilter;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
-import com.barteo.emulator.device.j2se.J2SEDevice;
+import com.barteo.emulator.device.swt.SwtDevice;
 
 
-public class AwtSelectDevicePanel extends AwtDialogPanel
+public class SwtSelectDevicePanel extends SwtDialogPanel
 {
-	private AwtSelectDevicePanel instance;
+	private SwtSelectDevicePanel instance;
   
 	private ScrollPane spDevices;
 	private Button btAdd;
@@ -138,7 +138,7 @@ public class AwtSelectDevicePanel extends AwtDialogPanel
 					return;
 				}
           
-				if (!J2SEDevice.class.isAssignableFrom(deviceClass)) {
+				if (!SwtDevice.class.isAssignableFrom(deviceClass)) {
 					OptionPane.showMessageDialog(instance, 
 							"Cannot find class defined in Device-Class entry in jar manifest.",
 							"Error", OptionPane.ERROR_MESSAGE);
@@ -249,7 +249,7 @@ public class AwtSelectDevicePanel extends AwtDialogPanel
 	};
   
   
-	public AwtSelectDevicePanel() 
+	public SwtSelectDevicePanel() 
 	{
 		instance = this;
     

@@ -286,7 +286,7 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
       devices.add(e.nextElement());
     }
     
-    Config.saveConfig();
+    Config.saveConfig("config.xml");
   }
     
 }

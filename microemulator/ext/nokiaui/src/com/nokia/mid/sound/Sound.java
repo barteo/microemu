@@ -43,7 +43,7 @@ public class Sound
     
     public static int getConcurrentSoundCount(int type) 
     {
-        throw new java.lang.IllegalArgumentException();
+        return 0;
     }
     
     

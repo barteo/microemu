@@ -25,6 +25,8 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import com.barteo.cldc.ClosedConnection;
+
 
 public class Connector
 {
@@ -37,18 +39,25 @@ public class Connector
 	public static Connection open(String name)
       throws IOException
   {
-    return open(name, READ_WRITE);
+    return open(name, READ_WRITE, false);
   }
   
   
   public static Connection open(String name, int mode)
       throws IOException
   {
-    throw new IOException("javax.microedition.io not implemented");
-/*    try {
+    return open(name, mode, false);
+  }
+  
+  
+  public static Connection open(String name, int mode, boolean timeouts)
+      throws IOException
+  {
+    ClosedConnection cn;
+    try {
       Class cl = Class.forName(
           "com.barteo.cldc." + name.substring(0, name.indexOf(':')) + ".Connection");
-      return (Connection) cl.newInstance();
+      cn = (ClosedConnection) cl.newInstance();
     } catch (ClassNotFoundException ex) {
       System.err.println(ex);
       throw new ConnectionNotFoundException();
@@ -58,42 +67,44 @@ public class Connector
     } catch (IllegalAccessException ex) {
       System.err.println(ex);
       throw new ConnectionNotFoundException();
-    }*/
-  }
-  
-  
-  public static Connection open(String name, int mode, boolean timeouts)
-      throws IOException
-  {
-    throw new IOException("javax.microedition.io not implemented");
+    }
+    return cn.open(name);
   }
   
   
   public static DataInputStream openDataInputStream(String name)
       throws IOException
   {
-    throw new IOException("javax.microedition.io not implemented");
+    InputConnection cn = (InputConnection) open(name);
+    
+    return cn.openDataInputStream();
   }
   
   
   public static DataOutputStream openDataOutputStream(String name)
       throws IOException
   {
-    throw new IOException("javax.microedition.io not implemented");
+    OutputConnection cn = (OutputConnection) open(name);
+    
+    return cn.openDataOutputStream();
   }
   
   
   public static InputStream openInputStream(String name)
       throws IOException
   {
-    throw new IOException("javax.microedition.io not implemented");
+    InputConnection cn = (InputConnection) open(name);
+    
+    return cn.openInputStream();
   }
   
     
 	public static OutputStream openOutputStream(String name)
       throws IOException
   {
-    throw new IOException("javax.microedition.io not implemented");
+    OutputConnection cn = (OutputConnection) open(name);
+    
+    return cn.openOutputStream();
   }
   
 }

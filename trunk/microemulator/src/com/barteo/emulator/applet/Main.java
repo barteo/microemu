@@ -379,5 +379,12 @@ public class Main extends Applet implements MicroEmulator, DisplayComponent
 	{
 		// TODO Auto-generated method stub
 	}
+
+
+	public javax.microedition.lcdui.Image getDisplayImage() 
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
   
 }

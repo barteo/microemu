@@ -36,7 +36,7 @@ public class J2SESoftButton extends J2SEButton implements SoftButton
   public static int LEFT = 1;
   public static int RIGHT = 2;
 
-  boolean menuActivate = false;
+  boolean menuActivate;
   Vector commandTypes = new Vector();
 
   Command command = null;
@@ -73,37 +73,9 @@ public class J2SESoftButton extends J2SEButton implements SoftButton
      *  Sets the command attribute of the SoftButton object
      *
      *@param  cmd  The new command value
-     *@return      Description of the Returned Value
      */
-    public boolean setCommand(Command cmd) {
-        boolean properType = false;
-
-        if (!testCommandType(cmd)) {
-            return false;
-        }
-
-        if (command == null) {
-            command = cmd;
-            return true;
-        } else {
-            if (cmd.getPriority() < command.getPriority()) {
-                command = cmd;
-                return true;
-            } else {
-                command = null;
-                return false;
-            }
-        }
-    }
-
-
-    /**
-     *  Sets the menuActivate attribute of the SoftButton object
-     *
-     *@param  state  The new menuActivate value
-     */
-    public void setMenuActivate(boolean state) {
-        menuActivate = state;
+    public void setCommand(Command cmd) {
+        command = cmd;
     }
 
 
@@ -117,13 +89,13 @@ public class J2SESoftButton extends J2SEButton implements SoftButton
     }
 
 
-    /**
-     *  Gets the menuActivate attribute of the SoftButton object
-     *
-     *@return    The menuActivate value
-     */
+    public void setMenuActivate(boolean state) {
+      menuActivate = state;
+    }
+
+
     public boolean getMenuActivate() {
-        return menuActivate;
+      return menuActivate;
     }
 
 
@@ -145,15 +117,7 @@ public class J2SESoftButton extends J2SEButton implements SoftButton
     }
 
 
-    /**
-     *  Description of the Method
-     */
-    public void removeCommand() {
-        command = null;
-    }
-
-
-    public boolean testCommandType(Command cmd) {
+    public boolean preferredCommandType(Command cmd) {
         for (Enumeration ct = commandTypes.elements(); ct.hasMoreElements(); ) {
             if (cmd.getCommandType() == ((Integer) ct.nextElement()).intValue()) {
                 return true;

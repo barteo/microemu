@@ -3,6 +3,7 @@
 <project basedir="." default="run" name="microemulator">
 
   <property file="build.properties"/>
+  <property environment="env"/>
         
   <target name="init-base">
 	<condition property="target.applet">
@@ -11,6 +12,13 @@
 
 	<condition property="target.app">
       <equals arg1="${target}" arg2="app"/>
+    </condition>
+    
+    <condition property="target.applet.obfuscate.true">
+      <and>
+        <equals arg1="${target}" arg2="applet"/>
+        <equals arg1="${target.applet.obfuscate}" arg2="true"/>
+      </and>
     </condition>
   </target>
   
@@ -42,7 +50,7 @@
   </target>
 
   <target name="init" depends="init-app,init-applet">
-<!-- check target.src.files property, if not exist exit -->
+    <fail message="Valid target definition property in build.properties is missing (allowed only: applet, app)" unless="target.device.prefix"/>
   
     <mkdir dir="./build/microemulator/classes"/>
     <mkdir dir="./target"/>
@@ -85,8 +93,20 @@
       </fileset>
     </jar>
   </target>
+    
+  <target name="jar-applet-obfuscate" depends="init,jar-applet" if="target.applet.obfuscate.true">  
+    <java fork="yes" classname="proguard.ProGuard" classpath="./lib/proguard.jar">
+        <arg line="-libraryjars ${env.JAVA_HOME}/jre/lib/rt.jar"/>
+        <arg line="-injars ./target/me-applet.jar"/>
+        <arg line="-outjar ./target/me-applet-obfuscated.jar"/>
+        <arg line="-keep 'class javax.** { *; }'"/>
+        <arg line="-keep 'public class * extends javax.** { *;}'"/>
+        <arg line="-keep 'public class * extends java.applet.Applet { *; }'"/>
+    </java>
+    <move file="./target/me-applet-obfuscated.jar" tofile="./target/me-applet.jar"/>
+  </target>
 
-  <target name="jar" depends="init,jar-app,jar-applet">
+  <target name="jar" depends="init,jar-app,jar-applet-obfuscate">
   </target>
 
 <!--

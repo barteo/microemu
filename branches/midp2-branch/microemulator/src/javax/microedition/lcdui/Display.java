@@ -22,12 +22,17 @@
  
 package javax.microedition.lcdui;
 
+import java.util.Enumeration;
+import java.util.Vector;
+
+import javax.microedition.lcdui.game.GameCanvas;
 import javax.microedition.midlet.MIDlet;
 
 import com.barteo.emulator.CommandManager;
 import com.barteo.emulator.DisplayAccess;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.util.Rectangle;
 
 
 public class Display
@@ -43,23 +48,29 @@ public class Display
 	static final int COLOR_BORDER = 4;
 	static final int COLOR_HIGHLIGHTED_BORDER = 5;
 		
+	private static EventDispatcher eventDispatcher = null;
+	private static TickerPaint tickerPaint = null;
+
 	private Displayable current = null;
 	private Displayable nextScreen = null;
 
 	private DisplayAccessor accessor = null;
 
+	private Object paintLock = new Object();
+	private boolean repaintPending = false;
 
-	class DisplayAccessor implements DisplayAccess
+	private class DisplayAccessor implements DisplayAccess
 	{
-
-		Display display;
-
+		private Display display;
+		
+		private Object flushLock = new Object();
+		private Image flushImage = null;
+		private Rectangle flushImageRect;
 
 		DisplayAccessor(Display d)
 		{
 			display = d;
 		}
-
 
 		public void commandAction(Command cmd)
 		{
@@ -72,13 +83,38 @@ public class Display
 			}
 			listener.commandAction(cmd, current);
 		}
+		
+		public void flush(Displayable d, Image img, int x, int y, int width, int height)
+		{
+//System.out.println("0:" + flushImage);				
+			synchronized (flushLock) {
+				flushImage = img;
+				flushImageRect = new Rectangle(x, y, width, height);
+			}
+			
 
+			synchronized (flushLock) {
+//System.out.println("a:" +  Thread.currentThread());				
+				repaint(d);
+				try {
+					flushLock.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+//System.out.println("b:");				
+			}
+		}
+
+		public Displayable getCurrent()
+			{
+		  return getDisplay().getCurrent();
+		}
 
 		public Display getDisplay()
 		{
 			return display;
 		}
-
 
 		public void keyPressed(int keyCode)
 		{
@@ -87,7 +123,6 @@ public class Display
 			}
 		}
 
-
 		public void keyReleased(int keyCode)
 		{
 			if (current != null) {
@@ -95,47 +130,50 @@ public class Display
 			}
 		}
 
-
 		public void paint(Graphics g)
 		{
 			if (current != null) {
-        current.paintContent(g);
-				g.translate(-g.getTranslateX(), -g.getTranslateY());
+				if (current instanceof GameCanvas) {
+					synchronized (flushLock) {
+						if (flushImage != null) {
+//System.out.println("drawImage: " + flushImageRect.x +"+"+ flushImageRect.y);					
+							g.drawImage(flushImage, flushImageRect.x, flushImageRect.y, 0);
+//System.out.println("drawImage:" + Thread.currentThread());						
+							flushImage = null;
+							flushLock.notify();
+							return;
+						}
+					}
+				} else {
+	        current.paintContent(g);
+					g.translate(-g.getTranslateX(), -g.getTranslateY());
+					synchronized (paintLock) {
+						repaintPending = false;
+						paintLock.notify();
+					}
+				}
 			}
 		}
-    
-    
-    public Displayable getCurrent()
-		{
-      return getDisplay().getCurrent();
-    }
-
-
+        
     public void setCurrent(Displayable d)
 		{
       getDisplay().setCurrent(d);
     }
     
-    
     public void updateCommands()
     {
       getDisplay().updateCommands();
     }
-
 	}
 
-
-	class AlertTimeout implements Runnable
+	private class AlertTimeout implements Runnable
 	{
-
 		int time;
-
 
 		AlertTimeout(int time)
 		{
 			this.time = time;
 		}
-
 
 		public void run()
 		{
@@ -146,9 +184,8 @@ public class Display
 		}
 	}
   
-  class TickerPaint implements Runnable
+  private class TickerPaint implements Runnable
   {
-
     public void run()
 		{
       while (true) {
@@ -162,15 +199,60 @@ public class Display
               }
               ticker.textPos -= Ticker.PAINT_MOVE;
             }
-            repaint();        
+            repaint(current);        
           }
         }
     		try {
     			Thread.sleep(Ticker.PAINT_TIMEOUT);
     		} catch (InterruptedException ex) {}
       }
-		}
-  
+		} 
+  }
+
+  private class EventDispatcher implements Runnable
+  {
+	  private Vector events = new Vector();
+		
+	  public void add(Runnable r)
+	  {
+		  synchronized (paintLock) {
+			  events.addElement(r);
+			  paintLock.notify();
+		  }
+	  }
+		
+	  public void run()
+	  {
+		  Vector jobs;		
+				
+		  while (true) {
+			  jobs = null;
+			  synchronized (paintLock) {
+				  if (!repaintPending) {
+					  if (events.size() > 0) {
+						  jobs = (Vector) events.clone();
+						  events.removeAllElements();
+					  }
+				  }
+			  }
+				
+			  if (jobs != null) {
+				  for (Enumeration en = jobs.elements(); en.hasMoreElements(); ) {
+					  ((Runnable) en.nextElement()).run(); 
+				  }
+			  }
+
+			  try {
+				  synchronized (paintLock) {
+					  if (events.size() == 0) {
+						  paintLock.wait();
+					  }
+				  }
+			  } catch (InterruptedException ex) {
+				  System.err.println(ex);
+			  }
+		  }
+	  }
   }
 
 
@@ -178,13 +260,26 @@ public class Display
 	{
 		accessor = new DisplayAccessor(this);
     
-    new Thread(new TickerPaint()).start();
+		if (eventDispatcher == null) {
+			eventDispatcher = new EventDispatcher();
+			new Thread(eventDispatcher).start();
+		}
+		if (tickerPaint == null) {
+			tickerPaint = new TickerPaint();
+				new Thread(tickerPaint).start();    	
+		}    	
 	}
 
 
   public void callSerially(Runnable r)
   {
-    // Not implemented
+		eventDispatcher.add(r);
+  }
+
+
+  public int numColors()
+  {
+	  return DeviceFactory.getDevice().getDeviceDisplay().numColors();
   }
 
 
@@ -251,12 +346,6 @@ public class Display
 	}
 	
 	
-	public int numColors()
-	{
-		return DeviceFactory.getDevice().getDeviceDisplay().numColors();
-	}
-
-
 	public void setCurrent(Displayable nextDisplayable)
 	{
 		if (nextDisplayable != null) {
@@ -338,17 +427,12 @@ public class Display
 	}
 
 
-	void repaint()
-	{
-    if (current != null) {
-      repaint(current);
-    }
-  }
-    
-    
   void repaint(Displayable d)
 	{
 		if (current == d) {
+			synchronized (paintLock) {
+				repaintPending = true;
+			}
 			DeviceFactory.getDevice().getDeviceDisplay().repaint();
 		}
 	}
@@ -378,7 +462,7 @@ public class Display
      * tell the outside world it has happened.
      */
     MIDletBridge.notifySoftkeyLabelsChanged();
-    repaint();
+    repaint(current);
 	}
 
 }

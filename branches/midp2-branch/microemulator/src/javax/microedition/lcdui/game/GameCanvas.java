@@ -23,6 +23,9 @@ import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
+import com.barteo.emulator.DisplayAccess;
+import com.barteo.emulator.MIDletBridge;
+
 
 public class GameCanvas extends Canvas 
 {
@@ -51,13 +54,15 @@ public class GameCanvas extends Canvas
 
 	public void flushGraphics()
 	{
-//		throw new RuntimeException("TODO");
+		flushGraphics(0, 0, getWidth(), getHeight());
 	}
 	
 	
 	public void flushGraphics(int x, int y, int width, int height)
 	{
-		throw new RuntimeException("TODO");
+		DisplayAccess access = MIDletBridge.getMIDletAccess().getDisplayAccess();
+		
+		access.flush(this, bufferImage, x, y, width, height);
 	}
 	
 	

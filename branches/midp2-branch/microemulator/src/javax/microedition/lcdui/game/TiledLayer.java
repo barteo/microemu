@@ -25,9 +25,21 @@ import javax.microedition.lcdui.Image;
 
 public class TiledLayer extends Layer 
 {
+	private int columns;
+	private int rows;
+	private Image image;
+	private int tileWidth;
+	private int tileHeight;
+	
 
 	public TiledLayer(int columns, int rows, Image image, int tileWidth, int tileHeight)
 	{
+		this.columns = columns;
+		this.rows = rows;
+		this.image = image;
+		this.tileWidth = tileWidth;
+		this.tileHeight = tileHeight;
+		
 //		throw new RuntimeException("TODO");
 	}
 
@@ -94,7 +106,7 @@ public class TiledLayer extends Layer
 
 	public void setCell(int col, int row, int tileIndex)
 	{
-//		throw new RuntimeException("TODO");
+		throw new RuntimeException("TODO");
 	}
 
 

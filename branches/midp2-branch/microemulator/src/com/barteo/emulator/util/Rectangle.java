@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2003 Bartek Teodorczyk <barteo@barteo.net>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -16,35 +16,24 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
-package com.barteo.emulator;
 
-import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.Display;
-import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.Graphics;
-import javax.microedition.lcdui.Image;
+package com.barteo.emulator.util;
 
 
-public interface DisplayAccess
+public class Rectangle 
 {
-
-	void commandAction(Command cmd);
-
-	void flush(Displayable d, Image img, int x, int y, int width, int height);
-
-	Displayable getCurrent();
-
-	Display getDisplay();
+	public int x;
+	public int y;
+	public int width;
+	public int height;
 	
-	void keyPressed(int keyCode);
-
-	void keyReleased(int keyCode);
-
-	void paint(Graphics g);
-  
-  void setCurrent(Displayable d);
-  
-  void updateCommands();
-
+	
+	public Rectangle(int x, int y, int width, int height)
+	{
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+	}
+	
 }

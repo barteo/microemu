@@ -65,6 +65,7 @@ public class DisplayComponent extends Canvas
       input_abc_lower = Resource.getInstance().getImage("/com/barteo/emulator/resources/abc_lower.png");
     } catch (IOException ex) {
       System.err.println(ex);
+      ex.printStackTrace();
     }
   }
 

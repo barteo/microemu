@@ -98,7 +98,14 @@ public class AppletDeviceDisplay implements DeviceDisplay
     Device device = DeviceFactory.getDevice();
 
     g.setColor(backgroundColor);    
-    g.fillRect(0, 0, displayRectangle.width, displayRectangle.height);
+		g.fillRect(0, 0, displayRectangle.width, displayPaintable.y);
+		g.fillRect(0, displayPaintable.y, displayPaintable.x, displayPaintable.height);
+		g.fillRect(
+				displayPaintable.x + displayPaintable.width, displayPaintable.y, 
+				displayRectangle.width - displayPaintable.x - displayPaintable.width, displayPaintable.height);
+		g.fillRect(
+				0, displayPaintable.y + displayPaintable.height, 
+				displayRectangle.width, displayRectangle.height - displayPaintable.y - displayPaintable.height);		
 
     g.setColor(foregroundColor);
     for (Enumeration s = device.getSoftButtons().elements(); s.hasMoreElements(); ) {

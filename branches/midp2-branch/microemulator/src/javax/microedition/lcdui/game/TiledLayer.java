@@ -128,9 +128,9 @@ public class TiledLayer extends Layer
 		for (int c = 0; c < columns; c++) {
 			for (int r = 0; r < rows; r++) {
 				if (cells[c][r] != 0) {
-					int tileGridX = cells[c][r] % numGridX;
+					int tileGridX = cells[c][r] % numGridX - 1;
 					int tileGridY = cells[c][r] / numGridX;
-					g.drawRegion(image, tileGridX, tileGridY, cellWidth, cellHeight, 
+					g.drawRegion(image, tileGridX * cellWidth, tileGridY * cellHeight, cellWidth, cellHeight, 
 							Sprite.TRANS_NONE, getX() + c * cellWidth, getY() + r * cellHeight, Graphics.LEFT | Graphics.TOP);
 				}
 			}

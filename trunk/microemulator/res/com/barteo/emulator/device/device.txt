@@ -9,6 +9,8 @@
 		<height>445</height>
 	</rectangle>
 	<screen>
+    <numcolors>256</numcolors>
+    <iscolor>false</iscolor>
 		<foreground>000000</foreground>
 		<background>c3cbb6</background>
 		<rectangle>

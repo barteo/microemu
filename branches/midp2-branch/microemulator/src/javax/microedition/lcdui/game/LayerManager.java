@@ -24,16 +24,24 @@ import javax.microedition.lcdui.Graphics;
 
 public class LayerManager 
 {
+	private Layer layers[] = new Layer[4];
+	private int numOfLayers = 0;
+	private int x, y;
+	private int width, height;
+	
 
 	public LayerManager()
 	{
-		throw new RuntimeException("TODO");
+		setViewWindow(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+//		throw new RuntimeException("TODO");
 	}
 
 
 	public void append(Layer l)
 	{
-		throw new RuntimeException("TODO");
+		remove(l);
+
+		insert(l, numOfLayers);
 	}
 
 
@@ -51,25 +59,54 @@ public class LayerManager
 
 	public void insert(Layer l, int index)
 	{
-		throw new RuntimeException("TODO");
+		remove(l);
+
+		if (index < 0 || index > numOfLayers) {
+			throw new IndexOutOfBoundsException();
+		}
+
+		if (numOfLayers == layers.length) {
+			Layer newLayers[] = new Layer[numOfLayers + 4];
+			System.arraycopy(layers, 0, newLayers, 0, numOfLayers);
+			layers = newLayers;
+		}
+		System.arraycopy(layers, index, layers, index + 1, numOfLayers - index);
+		layers[index] = l;
+		numOfLayers++;
 	}
 
 
 	public void paint(Graphics g, int x, int y)
 	{
-		throw new RuntimeException("TODO");
+//		throw new RuntimeException("TODO");
+		for (int i = numOfLayers - 1; i >= 0; i--) {
+			layers[i].paint(g);
+		} 
 	}
 
 
 	public void remove(Layer l)
 	{
-		throw new RuntimeException("TODO");
+		for (int i = 0; i < numOfLayers; i++) {
+			if (layers[i] == l) {
+				System.arraycopy(layers, i + 1, layers, i, numOfLayers - i - 1);
+				numOfLayers--;
+				return;
+			}
+		}		
 	}
 	
 	
 	public void setViewWindow(int x, int y, int width, int height)	
 	{
-		throw new RuntimeException("TODO");
+		if (width < 0 || height < 0) {
+			throw new IllegalArgumentException();
+		}
+		
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
 	}
 	
 }

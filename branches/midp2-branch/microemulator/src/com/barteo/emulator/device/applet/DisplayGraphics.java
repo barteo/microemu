@@ -192,6 +192,13 @@ public class DisplayGraphics extends javax.microedition.lcdui.Graphics
   }
 
 
+	public void drawRegion(Image src, int x_src, int y_src, int width, int height,
+			int transform, int x_dest, int y_dest, int anchor)
+	{
+		throw new RuntimeException("TODO");
+	}
+
+
   public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) 
   {
     g.drawRoundRect(x, y, width, height, arcWidth, arcHeight);

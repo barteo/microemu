@@ -21,6 +21,7 @@ package javax.microedition.lcdui.game;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
 
 
 public class GameCanvas extends Canvas 
@@ -36,15 +37,21 @@ public class GameCanvas extends Canvas
 	public static final int GAME_D_PRESSED = 1 << Canvas.GAME_D;
 	
 
+	private Image bufferImage;
+	
+	
 	protected GameCanvas(boolean suppressKeyEvents)
 	{
-		throw new RuntimeException("TODO");
+		super();
+		
+		bufferImage = Image.createImage(getWidth(), getHeight());
+//		throw new RuntimeException("TODO");
 	}
 
 
 	public void flushGraphics()
 	{
-		throw new RuntimeException("TODO");
+//		throw new RuntimeException("TODO");
 	}
 	
 	
@@ -56,7 +63,7 @@ public class GameCanvas extends Canvas
 	
 	protected Graphics getGraphics()
 	{
-		throw new RuntimeException("TODO");
+		return bufferImage.getGraphics();
 	}
 	
 	

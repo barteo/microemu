@@ -28,7 +28,7 @@ public class TiledLayer extends Layer
 
 	public TiledLayer(int columns, int rows, Image image, int tileWidth, int tileHeight)
 	{
-		throw new RuntimeException("TODO");
+//		throw new RuntimeException("TODO");
 	}
 
 
@@ -40,7 +40,7 @@ public class TiledLayer extends Layer
 
 	public void fillCells(int col, int row, int numCols, int numRows, int tileIndex)
 	{
-		throw new RuntimeException("TODO");
+//		throw new RuntimeException("TODO");
 	}
 
 
@@ -82,7 +82,7 @@ public class TiledLayer extends Layer
 
 	public final void paint(Graphics g) 
 	{
-		throw new RuntimeException("TODO");
+//		throw new RuntimeException("TODO");
 	}
 
 
@@ -94,7 +94,7 @@ public class TiledLayer extends Layer
 
 	public void setCell(int col, int row, int tileIndex)
 	{
-		throw new RuntimeException("TODO");
+//		throw new RuntimeException("TODO");
 	}
 
 

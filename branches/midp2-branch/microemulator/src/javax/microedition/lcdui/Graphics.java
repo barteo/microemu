@@ -97,7 +97,7 @@ public class Graphics
 	public void drawRegion(Image src, int x_src, int y_src, int width, int height, 
 			int transform, int x_dest, int y_dest, int anchor)
 	{
-		throw new RuntimeException("TODO");
+		// Implemented in DisplayGraphics
 	}
 	
 

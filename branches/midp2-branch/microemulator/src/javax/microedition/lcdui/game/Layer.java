@@ -24,34 +24,40 @@ import javax.microedition.lcdui.Graphics;
 
 public abstract class Layer 
 {
+	protected int height;
+	protected int width;
+	
 
 	public final int getHeight()
 	{
-		throw new RuntimeException("TODO");
+		return height;
 	}
 	
 	
 	public final int getWidth()
 	{
-		throw new RuntimeException("TODO");
+		return width;
 	}
 
 
 	public final int getX()
 	{
-		throw new RuntimeException("TODO");
+//		throw new RuntimeException("TODO");
+		return 0;
 	}
 
 
 	public final int getY()
 	{
-		throw new RuntimeException("TODO");
+//		throw new RuntimeException("TODO");
+		return 0;
 	}	
 
 
 	public final boolean isVisible()
 	{
-		throw new RuntimeException("TODO");
+//		throw new RuntimeException("TODO");
+		return true;
 	}
 
 
@@ -66,7 +72,7 @@ public abstract class Layer
 
 	public void setPosition(int x, int y)
 	{
-		throw new RuntimeException("TODO");
+//		throw new RuntimeException("TODO");
 	}
 
 

@@ -35,15 +35,37 @@ public class Sprite extends Layer
 	public static final int TRANS_ROT90 = 5;
 
 
+	private Image image;
+	private int numGridX;
+	private int numGridY;
+	private int[] frameSequence;
+	private int currentFrameIndex;
+	
+	
 	public Sprite(Image image)
 	{
-		throw new RuntimeException("TODO");
+		this(image, image.getWidth(), image.getHeight());
 	}
 	
 
 	public Sprite(Image image, int frameWidth, int frameHeight)
 	{
-		throw new RuntimeException("TODO");
+		if (frameWidth < 1 || frameHeight < 1) {
+			throw new IllegalArgumentException();
+		}
+		if (image.getWidth() % frameWidth != 0 || image.getHeight() % frameHeight != 0) {
+			throw new IllegalArgumentException();
+		}
+		
+		this.image = image;
+		this.width = frameWidth;
+		this.height = frameHeight;
+		
+		numGridX = image.getWidth() / frameWidth;
+		numGridY = image.getHeight() / frameHeight;
+		setFrameSequence(null);
+		
+//		throw new RuntimeException("TODO");
 	}
 	
 
@@ -79,7 +101,7 @@ public class Sprite extends Layer
 	
 	public void defineReferencePixel(int x, int y)		
 	{
-		throw new RuntimeException("TODO");
+//		throw new RuntimeException("TODO");
 	}
 
 
@@ -87,6 +109,7 @@ public class Sprite extends Layer
 	{
 		throw new RuntimeException("TODO");
 	}
+
 
 	public int getFrameSequenceLength()
 	{
@@ -120,7 +143,14 @@ public class Sprite extends Layer
 	
 	public final void paint(Graphics g) 
 	{
-		throw new RuntimeException("TODO");
+		if (isVisible()) {
+			int frameGridX = frameSequence[currentFrameIndex] % numGridX;
+			int frameGridY = frameSequence[currentFrameIndex] / numGridX;
+			g.drawRegion(image, 
+					frameGridX * getWidth(), frameGridY * getHeight(), getWidth(), getHeight(), 
+					Sprite.TRANS_NONE, 0, 0, Graphics.LEFT | Graphics.TOP);
+		}
+//		throw new RuntimeException("TODO");
 	}
 
 
@@ -138,7 +168,26 @@ public class Sprite extends Layer
 
 	public void setFrameSequence(int[] sequence)
 	{
-		throw new RuntimeException("TODO");
+		if (sequence == null) {
+			frameSequence = new int[numGridX * numGridY];
+			for (int i = 0; i < frameSequence.length; i++) {
+				frameSequence[i] = i;
+			}
+		} else {
+			if (sequence.length < 1) {
+				throw new IllegalArgumentException();
+			}
+			int numOfFrames = numGridX * numGridY;
+			for (int i = 0; i < sequence.length; i++) {
+				if (sequence[i] < 0 || sequence[i] >= numOfFrames) {
+					throw new ArrayIndexOutOfBoundsException();
+				}
+			}
+			
+			frameSequence = new int[sequence.length];
+			System.arraycopy(sequence, 0, frameSequence, 0, sequence.length);
+		}
+		currentFrameIndex = 0;
 	}
 
 
@@ -156,7 +205,7 @@ public class Sprite extends Layer
 
 	public void setTransform(int transform)
 	{
-		throw new RuntimeException("TODO");
+//		throw new RuntimeException("TODO");
 	}
 	
 }

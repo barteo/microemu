@@ -53,6 +53,7 @@
 
     <patternset id="project.src">
       <include name="javax/**"/>
+      <exclude name="com/barteo/emulator/app/capture/**"/>
       <include name="com/barteo/emulator/app/**"/>
       <exclude name="com/barteo/emulator/app/Main*"/>
       <exclude name="com/barteo/emulator/app/Swt*"/>
@@ -74,6 +75,7 @@
 
     <patternset id="project.src">
       <include name="javax/**"/>
+      <exclude name="com/barteo/emulator/app/capture/**"/>
       <include name="com/barteo/emulator/app/**"/>
       <exclude name="com/barteo/emulator/app/Awt*"/>
       <exclude name="com/barteo/emulator/app/Swt*"/>
@@ -94,6 +96,7 @@
 
     <patternset id="project.src">
       <include name="javax/**"/>
+      <exclude name="com/barteo/emulator/app/capture/**"/>
       <include name="com/barteo/emulator/app/**"/>
       <exclude name="com/barteo/emulator/app/Awt*"/>
       <exclude name="com/barteo/emulator/app/Main*"/>

@@ -33,7 +33,7 @@ import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.MIDletEntry;
 import com.barteo.emulator.MicroEmulator;
-import com.barteo.emulator.app.capture.Capturer;
+//import com.barteo.emulator.app.capture.Capturer;
 import com.barteo.emulator.app.launcher.Launcher;
 import com.barteo.emulator.app.ui.ResponseInterfaceListener;
 import com.barteo.emulator.app.ui.StatusBarListener;
@@ -53,7 +53,7 @@ public class Common implements MicroEmulator
   	protected EmulatorContext emulatorContext;
   
   	protected String captureFile = null;
-  	private Capturer capturer = null;
+//  	private Capturer capturer = null;
   	
 	protected JadProperties jad = new JadProperties();
 	
@@ -176,9 +176,9 @@ public class Common implements MicroEmulator
 	protected void close()
 	{
 		if (captureFile != null) {
-			if (capturer != null) {
-				capturer.stopCapture(emulatorContext.getDisplayComponent());
-			}
+//			if (capturer != null) {
+//				capturer.stopCapture(emulatorContext.getDisplayComponent());
+//			}
 		}		
 	}	
   
@@ -235,18 +235,18 @@ public class Common implements MicroEmulator
 	protected void setDevice(Device device)
 	{
 		if (captureFile != null) {
-			if (capturer != null) {
-				capturer.stopCapture(emulatorContext.getDisplayComponent());
-			}
+//			if (capturer != null) {
+//				capturer.stopCapture(emulatorContext.getDisplayComponent());
+//			}
 		}
 
 		DeviceFactory.setDevice(device);
 		
 		if (captureFile != null) {
-			if (capturer == null) {
-				capturer = new Capturer();
-			}
-			capturer.startCapture(emulatorContext.getDisplayComponent(), captureFile);
+//			if (capturer == null) {
+//				capturer = new Capturer();
+//			}
+//			capturer.startCapture(emulatorContext.getDisplayComponent(), captureFile);
 		}
 	}
 

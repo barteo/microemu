@@ -1,5 +1,8 @@
 MicroEmulator
 
+0.3 - not yet released
+- created custom device framework (currently applet and j2se)
+
 0.2 (alpha) - 3.04.2002
 - MIDP/CLDC API finished (with javax.microedition.io.* currently http only)
 - handled computer keyboard input

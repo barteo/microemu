@@ -1,6 +1,8 @@
 * move device display painting from Applet/SwingDisplayComponent to Applet/J2SEDeviceDisplay
 
-* create new another device (J2SE) (maybe minimal phone)
+* create new another device (J2SE) (minimal phone) included into distro
+
+* default device has color display
 
 * app: chaging devices on-the-fly
 

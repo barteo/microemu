@@ -17,6 +17,7 @@ public class Device {
   static Device instance = new Device();
 
   Vector softButtons = new Vector();
+  Vector deviceButtons = new Vector();
 
   public static Color backgroundColor;
   public static Color foregroundColor;
@@ -117,7 +118,12 @@ public class Device {
         for (Enumeration e_keyboard = tmp.enumerateChildren(); e_keyboard.hasMoreElements(); ) {
           XMLElement tmp_keyboard = (XMLElement) e_keyboard.nextElement();
           if (tmp_keyboard.getName().equals("button")) {
-//            System.out.println(getRectangle(tmp_keyboard));
+            for (Enumeration e_button = tmp_keyboard.enumerateChildren(); e_button.hasMoreElements(); ) {
+              XMLElement tmp_button = (XMLElement) e_button.nextElement();
+              if (tmp_button.getName().equals("rectangle")) {
+//                System.out.println(getRectangle(tmp_button));                
+              }
+            }
           }
         }
       }

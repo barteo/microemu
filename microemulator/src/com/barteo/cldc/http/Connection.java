@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.HttpURLConnection;
+import java.net.URLConnection;
 
 import javax.microedition.io.HttpConnection;
 
@@ -35,7 +35,7 @@ import com.barteo.cldc.ClosedConnection;
 
 public class Connection implements HttpConnection, ClosedConnection
 {
-  HttpURLConnection cn;
+  URLConnection cn;
   boolean connected = false;
     
   
@@ -47,8 +47,8 @@ public class Connection implements HttpConnection, ClosedConnection
       url = new URL(name);
     } catch (MalformedURLException ex) {
       throw new IOException(ex.toString());
-    }  
-    cn = (HttpURLConnection) url.openConnection();
+    }
+    cn = url.openConnection();
     
     return this;
   }
@@ -61,7 +61,7 @@ public class Connection implements HttpConnection, ClosedConnection
       return;
     }
     
-    cn.disconnect();
+//    cn.disconnect();
     cn = null;
   }
 
@@ -138,7 +138,8 @@ public class Connection implements HttpConnection, ClosedConnection
       return null;
     }
 
-    return cn.getRequestMethod();
+//    return cn.getRequestMethod();
+    return null;
   }
   
 	
@@ -148,8 +149,12 @@ public class Connection implements HttpConnection, ClosedConnection
     if (cn == null) {
       throw new IOException();
     }
+    
+    if (method.equals(HttpConnection.POST)) {
+      cn.setDoOutput(true);
+    }
 
-    cn.setRequestMethod(method);
+//    cn.setRequestMethod(method);
   }
 
   
@@ -185,7 +190,8 @@ public class Connection implements HttpConnection, ClosedConnection
       connected = true;
     }
     
-    return cn.getResponseCode();
+//    return cn.getResponseCode();
+    return -1;
   }
       
       
@@ -200,7 +206,8 @@ public class Connection implements HttpConnection, ClosedConnection
       connected = true;
     }
     
-    return cn.getResponseMessage();
+//    return cn.getResponseMessage();
+    return null;
   }
       
       
@@ -330,10 +337,8 @@ public class Connection implements HttpConnection, ClosedConnection
     if (cn == null) {
       throw new IOException();
     }
-    if (!connected) {
-      cn.connect();
-      connected = true;
-    }
+
+    connected = true;
 
     return cn.getInputStream();
   }
@@ -352,10 +357,8 @@ public class Connection implements HttpConnection, ClosedConnection
     if (cn == null) {
       throw new IOException();
     }
-    if (!connected) {
-      cn.connect();
-      connected = true;
-    }
+
+    connected = true;
 
     return cn.getOutputStream();
   }

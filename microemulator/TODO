@@ -1,4 +1,5 @@
 1. javax.microedition.io.* supported (mostly done, extensive testing needed)
+  bug in IE not working HttpConnection - URLConnection used - check closing connetions
 
 2. rebuild InputMethod to extend functionality:
   - respond to typing on computer keyboard

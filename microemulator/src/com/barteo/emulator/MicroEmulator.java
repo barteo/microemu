@@ -71,37 +71,41 @@ public class MicroEmulator extends Applet
 	}
 
 
-  public void initApp()
-	{
+  public boolean initApp()
+  {
     defaultFont = new Font("SansSerif", Font.PLAIN, 11);
-		setFont(defaultFont);
-		FontManager.getInstance().setDefaultFontMetrics(getFontMetrics(defaultFont));
+    setFont(defaultFont);
+    FontManager.getInstance().setDefaultFontMetrics(getFontMetrics(defaultFont));
 
-    Device.init();
+    if (!Device.init()) {
+      return false;
+    }
 
-		try {
-			midlet = (MIDlet) midletClass.newInstance();
-		} catch (Exception ex) {
-			System.out.println("Cannot initialize " + midletClass + " MIDlet class");
-			ex.printStackTrace();
-			return;
-		}
+    try {
+      midlet = (MIDlet) midletClass.newInstance();
+    } catch (Exception ex) {
+System.out.println(ex);        
+      System.out.println("Cannot initialize " + midletClass + " MIDlet class");
+      return false;
+    }
 
-		disp = Display.getDisplay(midlet);
+    disp = Display.getDisplay(midlet);
 
-		XYLayout xy = new XYLayout();
-		setLayout(xy);
+    XYLayout xy = new XYLayout();
+    setLayout(xy);
 
-		dc = new DisplayComponent(this);
-		xy.addLayoutComponent(dc, new XYConstraints(Device.screenRectangleX, Device.screenRectangleY,
-        Device.screenRectangleWidth, Device.screenRectangleHeight));
-		add(dc);
+    dc = new DisplayComponent(this);
+    xy.addLayoutComponent(dc, new XYConstraints(Device.screenRectangleX, Device.screenRectangleY,
+    Device.screenRectangleWidth, Device.screenRectangleHeight));
+    add(dc);
 
-		kc = new KeyboardComponent();
-		xy.addLayoutComponent(kc, new XYConstraints(13, 140, 90, 200));
-		add(kc);
+    kc = new KeyboardComponent();
+    xy.addLayoutComponent(kc, new XYConstraints(13, 140, 90, 200));
+    add(kc);
 
     resize(400,500);
+    
+    return true;
   }
 
 
@@ -206,20 +210,22 @@ public class MicroEmulator extends Applet
 
 
   public static void main(String args[])
-	{
-		if (args.length != 1) {
-			System.out.println("Usage: java com.barteo.emulator.MicroEmulator [midlet class name]");
+  {
+    if (args.length != 1) {
+      System.out.println("Usage: java com.barteo.emulator.MicroEmulator [midlet class name]");
       System.exit(0);
-		}
+    }
 
     Frame f = new Frame("MicroEmulator");
     MicroEmulator app = new MicroEmulator();
 
-		if (!app.setMidletClass(args[0])) {
+    if (!app.setMidletClass(args[0])) {
       System.exit(0);
-		}
+    }
 
-    app.initApp();
+    if (!app.initApp()) {
+      System.exit(0);
+    }
     app.start();
 
     f.add("Center", app);

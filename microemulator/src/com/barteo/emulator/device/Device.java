@@ -9,7 +9,7 @@ import java.util.Vector;
 import javax.microedition.lcdui.Command;
 
 import com.barteo.emulator.SoftButton;
-import nanoxml.kXMLElement;
+import nanoxml.XMLElement;
 
 
 public class Device {
@@ -53,7 +53,7 @@ public class Device {
   }
 
 
-  public static void init()
+  public static boolean init()
   {
     String xml = "";
     DataInputStream dis = new DataInputStream(
@@ -64,18 +64,19 @@ public class Device {
         dis.read(b);
         xml += new String(b);
       }
-    } catch (IOException ex) {
-      System.err.println(ex);
+    } catch (Exception ex) {
+      System.out.println("Cannot find com.barteo.emulator.device.device.xml definition file");
+      return false;
     }
 
-    kXMLElement doc = new kXMLElement();
+    XMLElement doc = new XMLElement();
     doc.parseString(xml);
 
     for (Enumeration e = doc.enumerateChildren(); e.hasMoreElements(); ) {
-      kXMLElement tmp = (kXMLElement) e.nextElement();
+      XMLElement tmp = (XMLElement) e.nextElement();
       if (tmp.getTagName().equals("screen")) {
         for (Enumeration e_screen = tmp.enumerateChildren(); e_screen.hasMoreElements(); ) {
-          kXMLElement tmp_screen = (kXMLElement) e_screen.nextElement();
+          XMLElement tmp_screen = (XMLElement) e_screen.nextElement();
           if (tmp_screen.getTagName().equals("background")) {
             backgroundColor = new Color(Integer.parseInt(tmp_screen.getContents(), 16));
           }
@@ -84,7 +85,7 @@ public class Device {
           }
           if (tmp_screen.getTagName().equals("rectangle")) {
             for (Enumeration e_rectangle = tmp_screen.enumerateChildren(); e_rectangle.hasMoreElements(); ) {
-              kXMLElement tmp_rectangle = (kXMLElement) e_rectangle.nextElement();
+              XMLElement tmp_rectangle = (XMLElement) e_rectangle.nextElement();
               if (tmp_rectangle.getTagName().equals("x")) {
                 screenRectangleX = Integer.parseInt(tmp_rectangle.getContents());
               }
@@ -101,7 +102,7 @@ public class Device {
           }
           if (tmp_screen.getTagName().equals("paintable")) {
             for (Enumeration e_paintable = tmp_screen.enumerateChildren(); e_paintable.hasMoreElements(); ) {
-              kXMLElement tmp_paintable = (kXMLElement) e_paintable.nextElement();
+              XMLElement tmp_paintable = (XMLElement) e_paintable.nextElement();
               if (tmp_paintable.getTagName().equals("x")) {
                 screenPaintableX = Integer.parseInt(tmp_paintable.getContents());
               }
@@ -119,7 +120,11 @@ public class Device {
         }
         break;
       }
+      if (tmp.getTagName().equals("keyboard")) {
+      }
     }
+    
+    return true;
   }
 
 

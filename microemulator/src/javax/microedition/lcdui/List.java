@@ -33,13 +33,18 @@ public class List extends Screen implements Choice
   
   public List(String title, int listType)
   {
-		this(title, listType, null, null);
+  	super(title);
+  	
+		choiceGroup = new ChoiceGroup(null, listType);
+		choiceGroup.setOwner(this);
+		choiceGroup.setFocus(true);
   }
   
   
 	public List(String title, int listType, String[] stringElements, Image[] imageElements)
 	{
     super(title);
+    
     choiceGroup = new ChoiceGroup(null, listType, stringElements, imageElements);
     choiceGroup.setOwner(this);
 		choiceGroup.setFocus(true);

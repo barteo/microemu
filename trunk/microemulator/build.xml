@@ -52,7 +52,6 @@
         <exclude name="com/barteo/midp/examples/**"/>
         <exclude name="com/barteo/emulator/app/**"/>
         <exclude name="**/.*"/>
-        <exclude name="javax/microedition/io/**"/>
       </fileset>
       <fileset dir="./res">
         <exclude name="com/barteo/midp/examples/**"/>
@@ -127,6 +126,7 @@
       <exclude name="microemulator/classes/**"/>
       <exclude name="microemulator/dist/*"/>
       <exclude name="microemulator/doc/**"/>
+      <exclude name="microemulator/lib/**"/>
       <exclude name="microemulator/res/**"/>
       <exclude name="microemulator/src/**"/>
     </tar>

@@ -109,31 +109,6 @@ System.out.println(ex);
   }
 
 
-    // Paint is the main part of the program
-    public void paint(Graphics g)
-		{
-			if (midlet != null) {
-     		if(offscreen == null) {
-        	offscreen = createImage(getSize().width, getSize().height);
-	      }
-
-	      Graphics og = offscreen.getGraphics();
-	      og.setClip(0,0,getSize().width, getSize().height);
-
-	      dc.paint(og);
-
-	      g.drawImage(offscreen, 0, 0, null);
-	      og.dispose();
-			}
-    }
-
-
-		public void update(Graphics g)
-		{
-			paint(g);
-		}
-
-
   public void start()
 	{
 		if (midlet != null) {

@@ -62,7 +62,14 @@ public abstract class Screen extends Displayable
 
   public void setTicker(Ticker ticker)
   {
+    if (this.ticker != null) {
+      viewPortHeight += this.ticker.getHeight();
+    }
     this.ticker = ticker;
+    if (this.ticker != null) {
+      viewPortHeight -= this.ticker.getHeight();
+    }
+    repaint();
   }
 
 
@@ -83,6 +90,10 @@ public abstract class Screen extends Displayable
 	void hideNotify()
 	{
 		super.hideNotify();
+    
+    if (ticker != null) {
+      ticker.setRunning(false);
+    }
 	}
 
 
@@ -109,15 +120,14 @@ public abstract class Screen extends Displayable
 		g.setGrayScale(0);
 
     if (ticker != null) {
-      contentHeight += 20; // ticker height
+      contentHeight += ticker.paintContent(g);
     }
 
     g.translate(0, contentHeight);
 		translatedY = contentHeight;
 
 		contentHeight += title.paint(g);
-
-    g.drawLine(0, contentHeight, Device.screenPaintableWidth, contentHeight);
+    g.drawLine(0, title.getHeight(), Device.screenPaintableWidth, title.getHeight());
 		contentHeight += 1;
 
     g.translate(0, contentHeight - translatedY);
@@ -149,6 +159,10 @@ public abstract class Screen extends Displayable
 	void showNotify()
 	{
 		super.showNotify();
-	}
+
+    if (ticker != null) {
+      ticker.setRunning(true);
+    }
+  }
 
 }

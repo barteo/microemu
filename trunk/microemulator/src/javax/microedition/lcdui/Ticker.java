@@ -21,13 +21,23 @@
 
 package javax.microedition.lcdui;
 
+import com.barteo.emulator.device.Device;
+
 
 public class Ticker
 {
 
-  static int PAINT_TIMEOUT = 500;
+  static int PAINT_TIMEOUT = 250;
+  static int PAINT_MOVE = 5;
+  static int PAINT_GAP = 10;
+  
+  Ticker instance = null;
 
   String text;
+  boolean running = false;
+  int textPos = 0;
+  int resetTextPosTo = -1;
+  TickerPaint tickerPaint;
 
 
 	class TickerPaint implements Runnable
@@ -36,7 +46,16 @@ public class Ticker
 		public void run()
 		{
       while (true) {
-        System.out.println("ticker move");
+        if (running) {
+          synchronized (instance) {
+            if (resetTextPosTo != -1) {
+              textPos = resetTextPosTo;
+              resetTextPosTo = -1;
+            }
+            textPos -= PAINT_MOVE;
+          }
+          Display.getDisplay().repaint();
+        }
   			try {
   				Thread.sleep(PAINT_TIMEOUT);
   			} catch (InterruptedException ex) {}
@@ -51,10 +70,9 @@ public class Ticker
     if (str == null) {
       throw new NullPointerException();
     }
+    instance = this;
+    
     text = str;
-    TickerPaint tp = new TickerPaint();
-		Thread t = new Thread(tp);
-		t.start();
   }
 
 
@@ -70,6 +88,45 @@ public class Ticker
       throw new NullPointerException();
     }
     text = str;
+  }
+  
+
+  int getHeight()
+  {
+    return Font.getDefaultFont().getHeight();
+  }
+  
+  
+  int paintContent(Graphics g)
+  {
+		Font f = Font.getDefaultFont();
+    
+    synchronized (instance) {
+      int stringWidth = f.stringWidth(text) + PAINT_GAP;
+      g.drawString(text, textPos, 0, 0);
+      int xPos = textPos + stringWidth;
+      while (xPos < Device.screenPaintableWidth) {
+        g.drawString(text, xPos, 0, 0);
+        xPos += stringWidth;
+      }
+      if (textPos + stringWidth < 0) {
+        resetTextPosTo = textPos + stringWidth;
+      }
+    }
+    
+    return f.getHeight();
+  }
+  
+  
+  void setRunning(boolean state)
+  {
+    if (tickerPaint == null && state == true) {
+      tickerPaint = new TickerPaint();
+      Thread t = new Thread(tickerPaint);
+      t.start();
+    }
+
+    running = state;
   }
 
 }

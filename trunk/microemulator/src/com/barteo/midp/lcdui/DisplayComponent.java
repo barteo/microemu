@@ -33,108 +33,111 @@ import com.barteo.emulator.device.Device;
  *@author     barteo
  *@created    3 wrzesieñ 2001
  */
-public class DisplayComponent extends Canvas {
+public class DisplayComponent extends Canvas 
+{
+  Container parent;
 
-    Container parent;
+  Image up_arrow, down_arrow;
+  Image input_123, input_abc_upper, input_abc_lower;
+  boolean scrollUp = false;
+  boolean scrollDown = false;
 
-    Image up_arrow, down_arrow;
-    Image input_123, input_abc_upper, input_abc_lower;
-    boolean scrollUp = false;
-    boolean scrollDown = false;
+	Image offi;
+	Graphics offg;
+
+  /**
+   *  Constructor for the DisplayComponent object
+   *
+   *@param  a_parent  Description of Parameter
+   */
+  public DisplayComponent(Container a_parent) 
+  {
+    parent = a_parent;
+    DisplayBridge.setComponent(this);
+    setBackground(Device.backgroundColor);
+
+    try {
+      up_arrow = Resource.getInstance().getImage("/com/barteo/emulator/resources/up.png");
+      down_arrow = Resource.getInstance().getImage("/com/barteo/emulator/resources/down.png");
+      input_123 = Resource.getInstance().getImage("/com/barteo/emulator/resources/123.png");
+      input_abc_upper = Resource.getInstance().getImage("/com/barteo/emulator/resources/abc_upper.png");
+      input_abc_lower = Resource.getInstance().getImage("/com/barteo/emulator/resources/abc_lower.png");
+    } catch (IOException ex) {
+      System.err.println(ex);
+    }
+  }
 
 
-    /**
-     *  Constructor for the DisplayComponent object
-     *
-     *@param  a_parent  Description of Parameter
-     */
-    public DisplayComponent(Container a_parent) {
-        parent = a_parent;
-        DisplayBridge.setComponent(this);
-        setBackground(Device.backgroundColor);
+  /**
+   *  Sets the scrollDown attribute of the DisplayComponent object
+   *
+   *@param  state  The new scrollDown value
+   */
+  public void setScrollDown(boolean state) 
+  {
+    scrollDown = state;
+  }
 
-        try {
-            up_arrow = Resource.getInstance().getImage("/com/barteo/emulator/resources/up.png");
-            down_arrow = Resource.getInstance().getImage("/com/barteo/emulator/resources/down.png");
-            input_123 = Resource.getInstance().getImage("/com/barteo/emulator/resources/123.png");
-            input_abc_upper = Resource.getInstance().getImage("/com/barteo/emulator/resources/abc_upper.png");
-            input_abc_lower = Resource.getInstance().getImage("/com/barteo/emulator/resources/abc_lower.png");
-        } catch (IOException ex) {
-            System.err.println(ex);
-        }
+
+  /**
+   *  Sets the scrollUp attribute of the DisplayComponent object
+   *
+   *@param  state  The new scrollUp value
+   */
+  public void setScrollUp(boolean state) 
+  {
+    scrollUp = state;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  g  Description of Parameter
+   */
+  public void paint(Graphics g) 
+  {
+    if (offg == null) {
+			offi = createImage(Device.screenRectangleWidth, Device.screenRectangleHeight);
+			offg = offi.getGraphics();
+    }
+    
+    for (Enumeration s = Device.getSoftButtons().elements(); s.hasMoreElements(); ) {
+      ((SoftButton) s.nextElement()).paint(offg);
     }
 
-
-    /**
-     *  Sets the scrollDown attribute of the DisplayComponent object
-     *
-     *@param  state  The new scrollDown value
-     */
-    public void setScrollDown(boolean state) {
-        scrollDown = state;
+    offg.setColor(Device.backgroundColor);
+    offg.fillRect(0, 0, input_abc_upper.getWidth(this), input_abc_upper.getHeight(this));
+    offg.setColor(Device.foregroundColor);
+    int inputMode = InputMethod.getInputMethod().getInputMode();
+    if (inputMode == InputMethod.INPUT_123) {
+      offg.drawImage(input_123, 0, 0, this);
+    } else if (inputMode == InputMethod.INPUT_ABC_UPPER) {
+      offg.drawImage(input_abc_upper, 0, 0, this);
+    } else if (inputMode == InputMethod.INPUT_ABC_LOWER) {
+      offg.drawImage(input_abc_lower, 0, 0, this);
     }
 
+    Shape oldclip = offg.getClip();
+    offg.setClip(Device.screenPaintableX, Device.screenPaintableY, Device.screenPaintableWidth, Device.screenPaintableHeight);
+    offg.translate(Device.screenPaintableX, Device.screenPaintableY);
+    DisplayBridge.paint(offg);
+    offg.translate(-Device.screenPaintableX, -Device.screenPaintableY);
+    offg.setClip(oldclip);
 
-    /**
-     *  Sets the scrollUp attribute of the DisplayComponent object
-     *
-     *@param  state  The new scrollUp value
-     */
-    public void setScrollUp(boolean state) {
-        scrollUp = state;
+    offg.setColor(Device.backgroundColor);
+    offg.fillRect(40, 120, up_arrow.getWidth(this), up_arrow.getHeight(this));
+    offg.fillRect(48, 120, down_arrow.getWidth(this), down_arrow.getHeight(this));
+    if (scrollUp) {
+      offg.setColor(Device.foregroundColor);
+      offg.drawImage(up_arrow, 40, 120, this);
     }
-
-
-    /**
-     *  Description of the Method
-     *
-     *@param  g  Description of Parameter
-     */
-    public void paint(Graphics g) {
-        Graphics graphics = getGraphics();
-
-        for (Enumeration s = Device.getSoftButtons().elements(); s.hasMoreElements(); ) {
-            ((SoftButton) s.nextElement()).paint(graphics);
-        }
-
-        graphics.setColor(Device.backgroundColor);
-        graphics.fillRect(0, 0, input_abc_upper.getWidth(this), input_abc_upper.getHeight(this));
-        graphics.setColor(Device.foregroundColor);
-        int inputMode = InputMethod.getInputMethod().getInputMode();
-        if (inputMode == InputMethod.INPUT_123) {
-            graphics.drawImage(input_123, 0, 0, this);
-        } else if (inputMode == InputMethod.INPUT_ABC_UPPER) {
-            graphics.drawImage(input_abc_upper, 0, 0, this);
-        } else if (inputMode == InputMethod.INPUT_ABC_LOWER) {
-            graphics.drawImage(input_abc_lower, 0, 0, this);
-        }
-
-        Shape oldclip = graphics.getClip();
-        graphics.setClip(Device.screenPaintableX, Device.screenPaintableY, Device.screenPaintableWidth, Device.screenPaintableHeight);
-        graphics.translate(Device.screenPaintableX, Device.screenPaintableY);
-        DisplayBridge.paint(graphics);
-        graphics.translate(-Device.screenPaintableX, -Device.screenPaintableY);
-        graphics.setClip(oldclip);
-
-        graphics.setColor(Device.backgroundColor);
-        graphics.fillRect(40, 120, up_arrow.getWidth(this), up_arrow.getHeight(this));
-        graphics.fillRect(48, 120, down_arrow.getWidth(this), down_arrow.getHeight(this));
-        if (scrollUp) {
-            graphics.setColor(Device.foregroundColor);
-            graphics.drawImage(up_arrow, 40, 120, this);
-        }
-        if (scrollDown) {
-            graphics.setColor(Device.foregroundColor);
-            graphics.drawImage(down_arrow, 48, 120, this);
-        }
+    if (scrollDown) {
+      offg.setColor(Device.foregroundColor);
+      offg.drawImage(down_arrow, 48, 120, this);
     }
-
-
-    /**
-     *  Description of the Method
-     */
-    public void repaint() {
-        parent.repaint();
-    }
+    
+		g.drawImage(offi, 0, 0, null);
+  }
 
 }

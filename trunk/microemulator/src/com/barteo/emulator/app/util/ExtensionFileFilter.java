@@ -40,7 +40,6 @@ public class ExtensionFileFilter implements FilenameFilter
   
 	public boolean accept(File dir, String name) 
 	{
-System.out.println(dir +"+"+ name);		
 		if(dir != null) {
 			if(dir.isDirectory()) {
 				return true;

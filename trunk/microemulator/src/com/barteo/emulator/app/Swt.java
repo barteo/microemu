@@ -33,6 +33,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -44,12 +45,10 @@ import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.app.ui.ResponseInterfaceListener;
 import com.barteo.emulator.app.ui.StatusBarListener;
-import com.barteo.emulator.app.ui.awt.FileChooser;
 import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
 import com.barteo.emulator.app.ui.swt.SwtDialogWindow;
 import com.barteo.emulator.app.ui.swt.SwtSelectDevicePanel;
 import com.barteo.emulator.app.util.DeviceEntry;
-import com.barteo.emulator.app.util.ExtensionFileFilter;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.swt.SwtDevice;
@@ -57,6 +56,8 @@ import com.barteo.emulator.device.swt.SwtDevice;
 
 public class Swt
 {
+	private static Shell shell;
+
 	Swt instance = null;
   
 	Common common;
@@ -64,7 +65,7 @@ public class Swt
 	boolean initialized = false;
   
 	SwtSelectDevicePanel selectDevicePanel = null;
-	FileChooser fileChooser = null;
+	FileDialog fileDialog = null;
 	MenuItem menuOpenJADFile;
 	MenuItem menuOpenJADURL;
 	MenuItem menuSelectDevice;
@@ -110,20 +111,20 @@ public class Swt
 	{
 		public void handleEvent(Event ev)
 		{
-			if (fileChooser == null) {
-				ExtensionFileFilter fileFilter = new ExtensionFileFilter("JAD files");
-				fileFilter.addExtension("jad");
-//				fileChooser = new FileChooser(instance, "Open JAD File...", FileDialog.LOAD);
-				fileChooser.setFilenameFilter(fileFilter);
+			if (fileDialog == null) {
+				fileDialog = new FileDialog(shell, SWT.OPEN);
+				fileDialog.setText("Open JAD File...");
+				fileDialog.setFilterNames(new String[] {"JAD files"});
+				fileDialog.setFilterExtensions(new String[] {"*.jad"});
 			}
       
-			fileChooser.show();
-						
-			if (fileChooser.getFile() != null) {
+			fileDialog.open();
+
+			if (fileDialog.getFileName().length() > 0) {
 				try {
-					common.openJadFile(fileChooser.getSelectedFile().toURL());
+					common.openJadFile(new File(fileDialog.getFilterPath(), fileDialog.getFileName()).toURL());
 				} catch (MalformedURLException ex) {
-					System.err.println("Bad URL format " + fileChooser.getSelectedFile().getName());
+					System.err.println("Bad URL format " + fileDialog.getFileName());
 				}
 			}
 		} 
@@ -329,7 +330,7 @@ public class Swt
 	public static void main(String args[])
 	{
 		Display display = new Display();
-		Shell shell = new Shell(display);
+		shell = new Shell(display);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
 		shell.setLayout(layout);

@@ -4,10 +4,6 @@
 
 * create new another device (J2SE) (minimal phone) included into distro
 
-* default device has color display
-
-* app: chaging devices on-the-fly
-
 * (?) try to run application in WebStart environment
 
 -- Release 0.3 --

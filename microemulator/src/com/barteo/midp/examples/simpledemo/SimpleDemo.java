@@ -44,10 +44,13 @@ public class SimpleDemo extends MIDlet implements CommandListener
   {
     instance = this;
     
+    Ticker ticker = new Ticker("This is SimpleDemo ticker");
+    
     menuList = new List("SimpleDemo", List.IMPLICIT);
       
     for (int i = 0; i < screenPanels.length; i++) {
       menuList.append(screenPanels[i].getName(), null);
+      ((Screen) screenPanels[i]).setTicker(ticker);
     }
     menuList.addCommand(exitCommand);
     menuList.setCommandListener(this);

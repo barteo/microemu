@@ -247,7 +247,15 @@ public class Display
 	}
 
 
-	void repaint(Displayable d)
+	void repaint()
+	{
+    if (current != null) {
+			dispBridge.repaint();
+    }
+  }
+    
+    
+  void repaint(Displayable d)
 	{
 		if (current == d) {
 			dispBridge.repaint();

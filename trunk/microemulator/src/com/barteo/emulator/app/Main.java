@@ -66,6 +66,7 @@ import com.barteo.emulator.util.JadProperties;
 
 public class Main extends JFrame implements MicroEmulator
 {
+  static Launcher launcher;
   
   Main instance = null;
   
@@ -82,7 +83,6 @@ public class Main extends JFrame implements MicroEmulator
   JLabel statusBar = new JLabel("Status");
   
   JadProperties jad = new JadProperties();
-  Launcher launcher;
   
   KeyListener keyListener = new KeyListener()
   {
@@ -506,6 +506,8 @@ public class Main extends JFrame implements MicroEmulator
       } catch (ClassNotFoundException ex) {
         System.out.println("Cannot find " + args[0] + " MIDlet class");
       }
+    } else {
+      m = launcher;
     }
     
     if (app.initialized) {

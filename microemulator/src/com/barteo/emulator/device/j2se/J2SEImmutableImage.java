@@ -19,42 +19,26 @@
  
 package com.barteo.emulator.device.j2se;
 
-import java.awt.Frame;
+import java.awt.Toolkit;
 
 
-public class MutableImage extends javax.microedition.lcdui.Image 
+public class J2SEImmutableImage extends javax.microedition.lcdui.Image
 {
+	java.awt.Image img;
 
-  java.awt.Image img;
-  Frame f = new Frame();
-  DisplayGraphics displayGraphics = null;
-
-
-  public MutableImage(int width, int height) 
+  
+	public J2SEImmutableImage(java.awt.Image image)
+	{
+  	img = image;
+	}
+  
+  
+  public J2SEImmutableImage(J2SEMutableImage image)
   {
-    f.addNotify();
-    img = f.createImage(width, height);
+    img = Toolkit.getDefaultToolkit().createImage(image.getImage().getSource());
   }
 
 
-  public javax.microedition.lcdui.Graphics getGraphics() 
-  {
-    if (displayGraphics == null) {
-      displayGraphics = new DisplayGraphics(img.getGraphics());
-      displayGraphics.setGrayScale(255);
-      displayGraphics.fillRect(0, 0, getWidth(), getHeight());
-      displayGraphics.setGrayScale(0);
-    }
-    return displayGraphics;
-  }
-
-
-  public boolean isMutable() 
-  {
-    return true;
-  }
-
-    
 	public int getHeight()
 	{
 		return img.getHeight(null);
@@ -70,5 +54,6 @@ public class MutableImage extends javax.microedition.lcdui.Image
 	public int getWidth()
 	{
 		return img.getWidth(null);
-	}
+	}  
+  
 }

@@ -90,21 +90,21 @@ public class AppletDevice implements Device
 			throw new IllegalArgumentException();
 		}
 	
-		return new MutableImage(width, height);
+		return new AppletMutableImage(width, height);
 	}
 	
 																
 	public javax.microedition.lcdui.Image createImage(String name)
   		throws IOException
 	{
-		return new ImmutableImage(getImage(name));
+		return new AppletImmutableImage(getImage(name));
 	}
   
   
 	public javax.microedition.lcdui.Image createImage(javax.microedition.lcdui.Image source)
   {
     if (source.isMutable()) {
-      return new ImmutableImage((MutableImage) source);
+      return new AppletImmutableImage((AppletMutableImage) source);
     } else {
       return source;
     }
@@ -115,7 +115,7 @@ public class AppletDevice implements Device
 	{
 		ByteArrayInputStream is = new ByteArrayInputStream(imageData, imageOffset, imageLength);
 		try {
-			return new ImmutableImage(getImage(is));
+			return new AppletImmutableImage(getImage(is));
 		} catch (IOException ex) {
 			throw new IllegalArgumentException(ex.toString());
 		}

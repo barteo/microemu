@@ -22,18 +22,18 @@ package com.barteo.emulator.device.applet;
 import java.awt.Toolkit;
 
 
-public class ImmutableImage extends javax.microedition.lcdui.Image
+public class AppletImmutableImage extends javax.microedition.lcdui.Image
 {
 	java.awt.Image img;
 
   
-	public ImmutableImage(java.awt.Image image)
+	public AppletImmutableImage(java.awt.Image image)
 	{
   	img = image;
 	}
 
 
-  public ImmutableImage(MutableImage image)
+  public AppletImmutableImage(AppletMutableImage image)
   {
     img = Toolkit.getDefaultToolkit().createImage(image.getImage().getSource());
   }

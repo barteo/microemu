@@ -32,12 +32,9 @@ public class ImmutableImage extends ImageImpl
 
 
 	public ImmutableImage(String name)
+      throws IOException
 	{
-		try {
-			img = Resource.getInstance().getImage(name);
-		} catch (IOException ex) {
-			System.err.println(ex);
-		}
+  	img = Resource.getInstance().getImage(name);
 	}
 
 

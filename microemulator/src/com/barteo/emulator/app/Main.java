@@ -43,7 +43,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 import com.barteo.emulator.MicroEmulator;
@@ -51,6 +50,7 @@ import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.MIDletEntry;
 import com.barteo.emulator.Resource;
 import com.barteo.emulator.app.launcher.Launcher;
+import com.barteo.emulator.app.util.ProgressEvent;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.app.util.ProgressListener;
 import com.barteo.emulator.device.Device;
@@ -58,9 +58,6 @@ import com.barteo.emulator.util.JadMidletEntry;
 import com.barteo.emulator.util.JadProperties;
 import com.barteo.midp.lcdui.DisplayBridge;
 import com.barteo.midp.lcdui.FontManager;
-import com.barteo.midp.lcdui.KeyboardComponent;
-import com.barteo.midp.lcdui.XYConstraints;
-import com.barteo.midp.lcdui.XYLayout;
 
 
 public class Main extends JFrame implements MicroEmulator
@@ -77,9 +74,7 @@ public class Main extends JFrame implements MicroEmulator
     
   JLabel statusBar = new JLabel("Status");
   
-	SwingDisplayComponent dc;
-	KeyboardComponent kc;
-
+  JadProperties jad = new JadProperties();
   Launcher launcher;
   
   ActionListener menuOpenJADFileListener = new ActionListener()
@@ -97,11 +92,11 @@ public class Main extends JFrame implements MicroEmulator
       
       int returnVal = fileChooser.showOpenDialog(instance);
       if (returnVal == JFileChooser.APPROVE_OPTION) {
-        JadProperties jad = new JadProperties();
         try {
           FileInputStream fis = new FileInputStream(fileChooser.getSelectedFile());
+          jad.clear();
           jad.load(fis);
-          loadMIDlet(jad);
+          loadMIDlet();
         } catch (FileNotFoundException ex) {
           System.err.println("Cannot found file " + fileChooser.getSelectedFile().getName());
         } catch (IOException ex) {
@@ -119,11 +114,11 @@ public class Main extends JFrame implements MicroEmulator
     {
       String entered = JOptionPane.showInputDialog("Enter JAD URL:");
       if (entered != null) {
-        JadProperties jad = new JadProperties();
         try {
           URL url = new URL(entered);
+          jad.clear();
           jad.load(url.openStream());
-          loadMIDlet(jad);
+          loadMIDlet();
         } catch (MalformedURLException ex) {
           System.err.println("Bad URL format " + entered);
         } catch (IOException ex) {
@@ -147,29 +142,17 @@ public class Main extends JFrame implements MicroEmulator
   
   ProgressListener progressListener = new ProgressListener()
   {
-    int dots = 0;
+    int percent = -1;
     
-    
-    public void reset()
-    {
-      dots = 0;
-    }
-    
-    
-    public void stateChanged()
-    {
-      dots++;
-      if (dots > 20) {
-        dots = 0;
-      }
 
-      StringBuffer tmp = new StringBuffer();
-      tmp.append("Loading");
-      for (int i = 0; i < dots; i++) {
-        tmp.append('.');
-      }
+    public void stateChanged(ProgressEvent event)
+    {
+      int newpercent = (int) ((float) event.getCurrent() / (float) event.getMax() * 100);
       
-      statusBar.setText(tmp.toString());
+      if (newpercent != percent) {
+        statusBar.setText("Loading... (" + newpercent +" %)");
+        percent = newpercent;
+      }
     }
     
   };
@@ -207,37 +190,28 @@ public class Main extends JFrame implements MicroEmulator
     setFont(defaultFont);
     FontManager.getInstance().setDefaultFontMetrics(getFontMetrics(defaultFont));
 
-    launcher = new Launcher();
-    launcher.setCurrentMIDlet(launcher);
- 
     if (!Device.getInstance().isInitialized()) {
       System.out.println("Cannot initialize device configuration");
       return;
     }
-    
-    JPanel devicePanel = new JPanel();
-    XYLayout xy = new XYLayout();
-    devicePanel.setLayout(xy);
 
-    dc = new SwingDisplayComponent(this);
-    xy.addLayoutComponent(dc, new XYConstraints(Device.screenRectangle));
-    devicePanel.add(dc);
-
-    kc = new KeyboardComponent();
-    xy.addLayoutComponent(kc, new XYConstraints(Device.keyboardRectangle));
-    devicePanel.add(kc);
+    launcher = new Launcher();
+    launcher.setCurrentMIDlet(launcher);
+     
+    SwingDeviceComponent devicePanel = new SwingDeviceComponent();
     
     getContentPane().add(devicePanel, "Center");
     getContentPane().add(statusBar, "South");    
 
     Dimension size = new Dimension(Device.deviceRectangle.getSize());
-    size.height += statusBar.getPreferredSize().height + 10;
+    size.width += 10;
+    size.height += statusBar.getPreferredSize().height + 55;
     setSize(size);
     initialized = true;
   }
   
   
-  public void loadMIDlet(final JadProperties jad)
+  public void loadMIDlet()
   {
     URL url = null;
     try {
@@ -251,7 +225,7 @@ public class Main extends JFrame implements MicroEmulator
         System.err.println(ex1);
       }
     }
-    loader.addRepository(url);
+    loader.addRepository(url, jad.getJarSize());
     launcher.removeMIDletEntries();
     
     Thread task = new Thread() 
@@ -286,6 +260,12 @@ public class Main extends JFrame implements MicroEmulator
     task.start();
   }
   
+  
+  public String getAppProperty(String key)
+  {
+    return jad.getProperty(key);
+  }
+
   
   public void notifyDestroyed()
   {
@@ -381,37 +361,37 @@ public class Main extends JFrame implements MicroEmulator
       java.awt.Font serifPlain = new java.awt.Font("Serif", java.awt.Font.PLAIN, uiFontSize);
       java.awt.Font sansSerifPlain = new java.awt.Font("SansSerif", java.awt.Font.PLAIN, uiFontSize); 
       java.awt.Font monospacedPlain = new java.awt.Font("Monospaced", java.awt.Font.PLAIN, uiFontSize); 
-      UIManager.getDefaults ().put ("Button.font", dialogPlain); 
-      UIManager.getDefaults ().put ("ToggleButton.font", dialogPlain); 
-      UIManager.getDefaults ().put ("RadioButton.font", dialogPlain); 
-      UIManager.getDefaults ().put ("CheckBox.font", dialogPlain); 
-      UIManager.getDefaults ().put ("ColorChooser.font", dialogPlain);
-      UIManager.getDefaults ().put ("ComboBox.font", dialogPlain); 
-      UIManager.getDefaults ().put ("Label.font", dialogPlain); 
-      UIManager.getDefaults ().put ("List.font", dialogPlain);
-      UIManager.getDefaults ().put ("MenuBar.font", dialogPlain); 
-      UIManager.getDefaults ().put ("MenuItem.font", dialogPlain); 
-      UIManager.getDefaults ().put ("RadioButtonMenuItem.font", dialogPlain);
-      UIManager.getDefaults ().put ("CheckBoxMenuItem.font", dialogPlain); 
-      UIManager.getDefaults ().put ("Menu.font", dialogPlain); 
-      UIManager.getDefaults ().put ("PopupMenu.font", dialogPlain);
-      UIManager.getDefaults ().put ("OptionPane.font", dialogPlain);
-      UIManager.getDefaults ().put ("Panel.font", dialogPlain); 
-      UIManager.getDefaults ().put ("ProgressBar.font", dialogPlain); 
-      UIManager.getDefaults ().put ("ScrollPane.font", dialogPlain); 
-      UIManager.getDefaults ().put ("Viewport.font", dialogPlain); 
-      UIManager.getDefaults ().put ("TabbedPane.font", dialogPlain); 
-      UIManager.getDefaults ().put ("Table.font", dialogPlain); 
-      UIManager.getDefaults ().put ("TableHeader.font", dialogPlain); 
-      UIManager.getDefaults ().put ("TextField.font", sansSerifPlain); 
-      UIManager.getDefaults ().put ("PasswordField.font", monospacedPlain);
-      UIManager.getDefaults ().put ("TextArea.font", monospacedPlain); 
-      UIManager.getDefaults ().put ("TextPane.font", serifPlain); 
-      UIManager.getDefaults ().put ("EditorPane.font", serifPlain); 
-      UIManager.getDefaults ().put ("TitledBorder.font", dialogPlain); 
-      UIManager.getDefaults ().put ("ToolBar.font", dialogPlain);
-      UIManager.getDefaults ().put ("ToolTip.font", sansSerifPlain); 
-      UIManager.getDefaults ().put ("Tree.font", dialogPlain); 
+      UIManager.getDefaults().put ("Button.font", dialogPlain); 
+      UIManager.getDefaults().put ("ToggleButton.font", dialogPlain); 
+      UIManager.getDefaults().put ("RadioButton.font", dialogPlain); 
+      UIManager.getDefaults().put ("CheckBox.font", dialogPlain); 
+      UIManager.getDefaults().put ("ColorChooser.font", dialogPlain);
+      UIManager.getDefaults().put ("ComboBox.font", dialogPlain); 
+      UIManager.getDefaults().put ("Label.font", dialogPlain); 
+      UIManager.getDefaults().put ("List.font", dialogPlain);
+      UIManager.getDefaults().put ("MenuBar.font", dialogPlain); 
+      UIManager.getDefaults().put ("MenuItem.font", dialogPlain); 
+      UIManager.getDefaults().put ("RadioButtonMenuItem.font", dialogPlain);
+      UIManager.getDefaults().put ("CheckBoxMenuItem.font", dialogPlain); 
+      UIManager.getDefaults().put ("Menu.font", dialogPlain); 
+      UIManager.getDefaults().put ("PopupMenu.font", dialogPlain);
+      UIManager.getDefaults().put ("OptionPane.font", dialogPlain);
+      UIManager.getDefaults().put ("Panel.font", dialogPlain); 
+      UIManager.getDefaults().put ("ProgressBar.font", dialogPlain); 
+      UIManager.getDefaults().put ("ScrollPane.font", dialogPlain); 
+      UIManager.getDefaults().put ("Viewport.font", dialogPlain); 
+      UIManager.getDefaults().put ("TabbedPane.font", dialogPlain); 
+      UIManager.getDefaults().put ("Table.font", dialogPlain); 
+      UIManager.getDefaults().put ("TableHeader.font", dialogPlain); 
+      UIManager.getDefaults().put ("TextField.font", sansSerifPlain); 
+      UIManager.getDefaults().put ("PasswordField.font", monospacedPlain);
+      UIManager.getDefaults().put ("TextArea.font", monospacedPlain); 
+      UIManager.getDefaults().put ("TextPane.font", serifPlain); 
+      UIManager.getDefaults().put ("EditorPane.font", serifPlain); 
+      UIManager.getDefaults().put ("TitledBorder.font", dialogPlain); 
+      UIManager.getDefaults().put ("ToolBar.font", dialogPlain);
+      UIManager.getDefaults().put ("ToolTip.font", sansSerifPlain); 
+      UIManager.getDefaults().put ("Tree.font", dialogPlain); 
     }
     
     Main app = new Main();
@@ -422,11 +402,12 @@ public class Main extends JFrame implements MicroEmulator
       app.setMidletClass(args[0]);
     }
     
-    app.start();
-
     if (app.initialized) {
+      app.start();
       app.validate();
       app.setVisible(true);
+    } else {
+      System.exit(0);
     }
   }
 

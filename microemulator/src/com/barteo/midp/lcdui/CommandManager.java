@@ -50,7 +50,7 @@ public class CommandManager {
     }
 
 
-    void commandAction(Command cmd) {
+    public void commandAction(Command cmd) {
         if (cmd == MENU_COMMAND) {
             previous = DisplayBridge.getCurrent();
             DisplayBridge.setCurrent(commandList);

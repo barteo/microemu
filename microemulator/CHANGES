@@ -1,16 +1,10 @@
 MicroEmulator
 
-0.1 (pre-alpha) - 23.07.2001
-- no javax.microedition.io.* implementation
-- only framework of java.microedition.rms package
-- DateField, Gauge, Ticker in javax.microedition.lcdui.* should be implemented
-- many methods of other classes are missing and incomplete (exceptions throwing)
-
-0.1.1 (pre-alpha) - 30.08.2001
-- javax.microedition.lcdui.* API completed but DateField, Gauge, Ticker not implemented
-  and some methods of other classes may be empty, incompete exceptions throwing
-- change from BW to 256-grayscale display
-- bug fixes
+(next release)
+- framework for javax.microedition.io.* (implementation to be written)
+- better look of phone device
+- application can load MIDlet based on definition in JAD file
+- changed license to LGPL
 
 0.1.2 (pre-alpha) - 23.11.2001
 - included NanoXML
@@ -19,7 +13,15 @@ MicroEmulator
 - implemented javax.microedition.lcdui.* - synchronization is not done
 - written simple MIDP/CLDC demo showing functionality of emulator
 
-(next release)
-- framework for javax.microedition.io.*
-- rewritten repaint stuff
+0.1.1 (pre-alpha) - 30.08.2001
+- javax.microedition.lcdui.* API completed but DateField, Gauge, Ticker not implemented
+  and some methods of other classes may be empty, incompete exceptions throwing
+- change from BW to 256-grayscale display
 - bug fixes
+
+0.1 (pre-alpha) - 23.07.2001
+- no javax.microedition.io.* implementation
+- only framework of java.microedition.rms package
+- DateField, Gauge, Ticker in javax.microedition.lcdui.* should be implemented
+- many methods of other classes are missing and incomplete (exceptions throwing)
+

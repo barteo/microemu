@@ -26,6 +26,7 @@ import java.awt.Toolkit;
 import java.awt.image.ImageFilter;
 import java.awt.image.FilteredImageSource;
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.MalformedURLException;
@@ -57,13 +58,18 @@ public class Resource
 			throws IOException
 	{
 		ImageFilter grayFilter;
+    InputStream is;
 
-    PngImage png;
     if (loader == null) {
-      png = new PngImage(getClass().getResourceAsStream(str));
+      is = getClass().getResourceAsStream(str);
     } else {
-      png = new PngImage(loader.getResourceAsStream(str));
+      is = loader.getResourceAsStream(str);
     }
+    if (is == null) {
+      throw new IOException();
+    }
+    PngImage png = new PngImage(is);
+    
 //   	double[][] chrom = (double[][])png.getProperty("chromaticity xyz");
 //		if (chrom == null) {
 			grayFilter = new GrayImageFilter();
@@ -73,6 +79,25 @@ public class Resource
 		FilteredImageSource grayImageSource = new FilteredImageSource(png, grayFilter);
 
 		return Toolkit.getDefaultToolkit().createImage(grayImageSource);
+	}
+
+
+  public Image getSystemImage(String str)
+			throws IOException
+	{
+    InputStream is;
+
+    if (loader == null) {
+      is = getClass().getResourceAsStream(str);
+    } else {
+      is = loader.getResourceAsStream(str);
+    }
+    if (is == null) {
+      throw new IOException();
+    }
+    PngImage png = new PngImage(is);
+    
+		return Toolkit.getDefaultToolkit().createImage(png);
 	}
 
 

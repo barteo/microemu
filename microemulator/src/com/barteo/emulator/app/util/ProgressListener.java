@@ -23,6 +23,6 @@ package com.barteo.emulator.app.util;
 public interface ProgressListener 
 {
 
-  public void stateChanged();
+  public void stateChanged(ProgressEvent event);
   
 }

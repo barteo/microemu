@@ -28,7 +28,7 @@ public class AppletMutableImage extends MutableImage
 {
 	private java.awt.Image img;
 	private Frame f = new Frame();
-	private DisplayGraphics displayGraphics = null;
+	private AppletDisplayGraphics displayGraphics = null;
 
 
   public AppletMutableImage(int width, int height) 
@@ -41,7 +41,7 @@ public class AppletMutableImage extends MutableImage
   public javax.microedition.lcdui.Graphics getGraphics() 
   {
     if (displayGraphics == null) {
-      displayGraphics = new DisplayGraphics(img.getGraphics());
+      displayGraphics = new AppletDisplayGraphics(img.getGraphics(), this);
       displayGraphics.setGrayScale(255);
       displayGraphics.fillRect(0, 0, getWidth(), getHeight());
       displayGraphics.setGrayScale(0);
@@ -74,7 +74,7 @@ public class AppletMutableImage extends MutableImage
 	}
 	
 	
-	public byte[] getData()
+	public int[] getData()
 	{
 		return null;
 	}

@@ -23,7 +23,6 @@ import java.util.Enumeration;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.Image;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -36,6 +35,7 @@ import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.InputMethod;
+import com.barteo.emulator.device.MutableImage;
 
 public class SwtDeviceDisplay implements DeviceDisplay 
 {
@@ -67,7 +67,7 @@ public class SwtDeviceDisplay implements DeviceDisplay
 	}
 
 
-	public Image getDisplayImage()
+	public MutableImage getDisplayImage()
 	{
 		return device.getEmulatorContext().getDisplayComponent().getDisplayImage();
 	}
@@ -147,7 +147,7 @@ public class SwtDeviceDisplay implements DeviceDisplay
 			}
 			Font f = g.getFont();
 
-			ma.getDisplayAccess().paint(new DisplayGraphics(g));
+			ma.getDisplayAccess().paint(new SwtDisplayGraphics(g, getDisplayImage()));
 
 			g.setFont(f);
 			

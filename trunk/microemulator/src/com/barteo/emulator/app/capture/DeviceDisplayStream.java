@@ -105,7 +105,7 @@ public class DeviceDisplayStream implements PushBufferStream, DisplayRepaintList
 		synchronized (this) {
 			System.err.println("  - creating image: " + seqNo);
 
-			byte data[] = image.getData();
+			int data[] = image.getData();
 			buf.setData(data);
 
 			System.err.println("    read " + data.length + " bytes.");

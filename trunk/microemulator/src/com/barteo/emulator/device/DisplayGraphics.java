@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2002 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2003 Markus Heberling
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -19,27 +19,10 @@
 
 package com.barteo.emulator.device;
 
-public interface DeviceDisplay 
+
+public interface DisplayGraphics 
 {
+
+	public MutableImage getImage();
 	
-	MutableImage getDisplayImage();
-
-	int getWidth();
-
-	int getHeight();
-
-	int getFullWidth();
-
-	int getFullHeight();
-
-	boolean isColor();
-
-	int numColors();
-
-	void repaint();
-
-	void setScrollDown(boolean state);
-
-	void setScrollUp(boolean state);
-
 }

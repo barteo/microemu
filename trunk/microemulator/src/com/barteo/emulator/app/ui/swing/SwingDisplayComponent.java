@@ -57,7 +57,7 @@ public class SwingDisplayComponent implements DisplayComponent
 	}
 
 
-	public javax.microedition.lcdui.Image getDisplayImage()
+	public MutableImage getDisplayImage()
 	{
 		return displayImage;
 	}

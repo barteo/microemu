@@ -19,9 +19,8 @@
  
 package com.barteo.emulator;
 
-import javax.microedition.lcdui.Image;
-
 import com.barteo.emulator.app.ui.DisplayRepaintListener;
+import com.barteo.emulator.device.MutableImage;
 
 
 public interface DisplayComponent
@@ -30,7 +29,7 @@ public interface DisplayComponent
 	public void addDisplayRepaintListener(DisplayRepaintListener l);
 	public void removeDisplayRepaintListener(DisplayRepaintListener l);
 	
-	public Image getDisplayImage();
+	public MutableImage getDisplayImage();
 		
 	public void repaint();
 

@@ -26,6 +26,7 @@ import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.app.ui.DisplayRepaintListener;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.MutableImage;
 import com.barteo.emulator.device.applet.AppletDeviceDisplay;
 import com.barteo.emulator.device.applet.AppletMutableImage;
 
@@ -52,7 +53,7 @@ public class AwtDisplayComponent implements DisplayComponent
 	}
 
 
-	public javax.microedition.lcdui.Image getDisplayImage()
+	public MutableImage getDisplayImage()
 	{
 		return displayImage;
 	}

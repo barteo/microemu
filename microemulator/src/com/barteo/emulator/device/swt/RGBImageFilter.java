@@ -37,11 +37,11 @@ public final class RGBImageFilter implements ImageFilter
 
   public RGBImageFilter()
 	{
-    backgroundColor = SwtDeviceComponent.createColor(new RGB(
+    backgroundColor = SwtDeviceComponent.getColor(new RGB(
     		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getRed(),
     		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getGreen(),
     		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getBlue()));
-    foregroundColor = SwtDeviceComponent.createColor(new RGB(
+    foregroundColor = SwtDeviceComponent.getColor(new RGB(
     		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor().getRed(),
     		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor().getGreen(),
     		((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getForegroundColor().getBlue()));

@@ -22,6 +22,7 @@ package com.barteo.emulator.app.ui.swt;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.HashMap;
 
 import javax.microedition.lcdui.Command;
 
@@ -59,6 +60,8 @@ import com.barteo.emulator.device.swt.SwtInputMethod;
 public class SwtDeviceComponent extends Canvas
 {
 	private static SwtDeviceComponent instance;
+	private static HashMap colors = new HashMap();
+
 	private SwtDisplayComponent dc;
 	
 	private Image fBuffer = null;
@@ -353,13 +356,18 @@ public class SwtDeviceComponent extends Canvas
 	}
 
 
-	public static Color createColor(RGB rgb) 
+	public static Color getColor(RGB rgb) 
 	{
-		CreateColorRunnable createColorRunnable = instance.new CreateColorRunnable(rgb);
+		Color result = (Color) colors.get(rgb);
 		
-		instance.getDisplay().syncExec(createColorRunnable); 
+		if (result == null) {
+			CreateColorRunnable createColorRunnable = instance.new CreateColorRunnable(rgb);		
+			instance.getDisplay().syncExec(createColorRunnable); 		
+			result = createColorRunnable.getColor();
+			colors.put(rgb, result);
+		}
 		
-		return createColorRunnable.getColor(); 
+		return result;
 	}
 
 

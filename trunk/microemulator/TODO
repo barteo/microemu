@@ -1,3 +1,5 @@
+* alert is hasn't return button
+
 * move device display painting from Applet/SwingDisplayComponent to Applet/J2SEDeviceDisplay
 
 * create new another device (J2SE) (minimal phone) included into distro

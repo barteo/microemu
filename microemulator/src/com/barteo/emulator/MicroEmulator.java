@@ -45,6 +45,7 @@ public class MicroEmulator extends Applet
 {
   static MIDletAccess midletAccess;
 	Class midletClass;
+  Device device = null;
 	MIDlet midlet = null;
 	Display disp;
 
@@ -77,8 +78,11 @@ public class MicroEmulator extends Applet
     setFont(defaultFont);
     FontManager.getInstance().setDefaultFontMetrics(getFontMetrics(defaultFont));
 
-    if (!Device.getInstance().init()) {
-      return false;
+    if (device == null) {
+      if (!Device.getInstance().init()) {
+        return false;
+      }
+      device = Device.getInstance();
     }
 
     disp = Display.getDisplay(midlet);
@@ -120,10 +124,12 @@ public class MicroEmulator extends Applet
   }
 
 
-	public void stop() {
+	public void stop() 
+  {
 		if (midlet != null) {
 			midletAccess.pauseApp();
 		}
+    removeAll();
   }
 
 

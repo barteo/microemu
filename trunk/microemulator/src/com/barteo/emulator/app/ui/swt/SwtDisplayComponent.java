@@ -19,8 +19,6 @@
  
 package com.barteo.emulator.app.ui.swt;
 
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
@@ -39,10 +37,8 @@ public class SwtDisplayComponent extends Canvas implements DisplayComponent
 	}
 
 
-  public void paintControl(PaintEvent pe) 
+  public void paint(SwtGraphics gc) 
   {
-		GC gc = pe.gc;
-		
     Device device = DeviceFactory.getDevice();
     
     ((SwtDeviceDisplay) device.getDeviceDisplay()).paint(gc);

@@ -34,7 +34,6 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -171,15 +170,15 @@ System.out.println(ev.character);
   
 	public void paintControl(PaintEvent pe) 
 	{
-		GC gc = pe.gc;
+		SwtGraphics gc = new SwtGraphics(pe.gc);
 		
 		gc.drawImage(((SwtDevice) DeviceFactory.getDevice()).getNormalImage(), 0, 0);
     
 		Rectangle displayRectangle = 
 				((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle();
-//		gc.translate(displayRectangle.x, displayRectangle.y);
-		dc.paintControl(pe);
-//		offg.translate(-displayRectangle.x, -displayRectangle.y);
+		gc.translate(displayRectangle.x, displayRectangle.y);
+		dc.paint(gc);
+		gc.translate(-displayRectangle.x, -displayRectangle.y);
 
 		Rectangle rect;
 		if (prevOverButton != null ) {
@@ -253,7 +252,7 @@ System.out.println(ev.character);
 
 	public static FontMetrics getFontMetrics(String name, int size, int style) 
 	{
-		GC gc = new GC(instance.getParent().getDisplay());
+		SwtGraphics gc = new SwtGraphics(instance.getParent().getDisplay());
 		gc.setFont(new Font(instance.getParent().getDisplay(), name, size, style));
 		return gc.getFontMetrics();
 	}

@@ -23,11 +23,11 @@ import java.util.Enumeration;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
 import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletBridge;
+import com.barteo.emulator.app.ui.swt.SwtGraphics;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
@@ -93,7 +93,7 @@ public class SwtDeviceDisplay implements DeviceDisplay
   }
   
   
-  public void paint(GC g)
+  public void paint(SwtGraphics g)
   {
     Device device = DeviceFactory.getDevice();
 

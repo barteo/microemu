@@ -28,6 +28,20 @@
     <javac debug="true" deprecation="true" destdir="./classes" srcdir="./src"/>
   </target>
 
+  <target name="jar-simpledemo" depends="init,compile">
+    <jar compress="true" jarfile="simpledemo.jar">
+      <fileset dir="./classes">
+        <include name="com/barteo/midp/examples/simpledemo/**"/>
+        <exclude name="**/.*"/>
+      </fileset>
+      <fileset dir="./res">
+        <include name="com/barteo/midp/examples/simpledemo/**"/>
+        <exclude name="**/.*"/>
+      </fileset>
+    </jar>
+    <copy file="simpledemo.jar" todir="doc/www"/>
+  </target>
+
   <target name="jar-applet" depends="init,compile">
     <jar compress="true" jarfile="me-applet.jar">
       <fileset dir="./classes">
@@ -41,10 +55,10 @@
         <exclude name="**/.*"/>
       </fileset>
     </jar>
-     <copy file="me-applet.jar" todir="doc/www"/>
+    <copy file="me-applet.jar" todir="doc/www"/>
   </target>
 
-  <target name="jar" depends="init,compile,jar-applet">
+  <target name="jar" depends="init,compile,jar-applet,jar-simpledemo">
     <jar compress="true" jarfile="me-app.jar">
       <fileset dir="./classes">
         <exclude name="com/barteo/midp/examples/**"/>
@@ -52,16 +66,6 @@
       </fileset>
       <fileset dir="./res">
         <exclude name="com/barteo/midp/examples/**"/>
-        <exclude name="**/.*"/>
-      </fileset>
-    </jar>
-    <jar compress="true" jarfile="simpledemo.jar">
-      <fileset dir="./classes">
-        <include name="com/barteo/midp/examples/simpledemo/**"/>
-        <exclude name="**/.*"/>
-      </fileset>
-      <fileset dir="./res">
-        <include name="com/barteo/midp/examples/simpledemo/**"/>
         <exclude name="**/.*"/>
       </fileset>
     </jar>

@@ -17,7 +17,7 @@
 			<x>0</x>
 			<y>10</y>
 			<width>114</width>
-			<height>120</height>
+			<height>116</height>
 		</paintable>
     <img name="up" src="/com/barteo/emulator/device/up.png">
 		  <paintable>

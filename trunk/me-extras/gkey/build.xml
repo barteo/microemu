@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="jar" name="me-extras gkey">
+
+	<target name="clean">
+		<delete dir="./build" />
+		<delete dir="./target" />
+	</target>
+
+	<target name="compile" depends="clean">
+		<mkdir dir="./build/device/classes" />
+		<javac debug="true" deprecation="true" srcdir="./interface/src" destdir="./build/device/classes">
+		</javac>
+		<javac debug="true" deprecation="true" srcdir="./device/src" destdir="./build/device/classes">
+			<classpath>
+				<pathelement location="../../microemulator/target/me-app.jar" />
+				<pathelement location="./build/device/classes" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile">
+		<mkdir dir="./target"/>
+		<jar compress="true" jarfile="./target/gkey.dev" 
+	        manifest="./device/manifest.mf">
+			<fileset dir="./build/device/classes">
+				<exclude name="**/.*"/>
+			</fileset>
+			<fileset dir="./device/res">
+				<exclude name="**/.*"/>
+			</fileset>
+		</jar>
+		<jar compress="true" jarfile="./target/gkey.jar" 
+	        manifest="./device/manifest.mf">
+			<fileset dir="./build/device/classes">
+				<exclude name="**/.*"/>
+			</fileset>
+			<fileset dir="./device/res">
+				<exclude name="**/.*"/>
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="run" depends="jar">
+		<mkdir dir="./build/test/classes" />
+		<javac debug="true" deprecation="true" srcdir="./test/src" destdir="./build/test/classes">
+			<classpath>
+				<pathelement location="../../microemulator/target/me-app.jar" />
+				<pathelement location="./target/gkey.jar"/>
+			</classpath>
+		</javac>
+		<java classname="com.barteo.emulator.app.Main" failonerror="true" fork="true">
+			<classpath>
+				<pathelement location="../../microemulator/target/me-app.jar" />
+				<pathelement location="./target/gkey.jar"/>
+				<pathelement location="./build/test/classes"/>
+			</classpath>
+			<arg value="-d"/>
+			<arg value="net.barteo.me.gkey.device.GKeyJ2SEDevice"/>
+			<arg value="net.barteo.me.gkey.GetKeyMIDletTest"/>
+		</java>
+	</target>
+
+</project>

@@ -48,11 +48,12 @@ import nanoxml.XMLParseException;
 
 public class J2SEDevice implements Device
 {
-	private EmulatorContext context; 	
+	protected EmulatorContext context; 	
 	
+	protected J2SEInputMethod inputMethod = null;
+
 	private J2SEDeviceDisplay deviceDisplay;
 	private FontManager fontManager = null;
-	private J2SEInputMethod inputMethod = null;
 	private Vector buttons;
 	private Vector softButtons;
   

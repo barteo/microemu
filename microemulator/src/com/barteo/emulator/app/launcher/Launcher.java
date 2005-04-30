@@ -117,16 +117,24 @@ public class Launcher extends MIDlet implements CommandListener
   {
     if (d == menuList) {
       if (c == List.SELECT_COMMAND) {
-        if (!menuList.getString(menuList.getSelectedIndex()).equals(nomidlets)) {
-          currentMIDlet = ((MIDletEntry) midletEntries.elementAt(menuList.getSelectedIndex())).getMIDlet();
-          try {
-            MIDletBridge.getMIDletAccess(currentMIDlet).startApp();
-      		} catch (MIDletStateChangeException ex) {
-            System.err.println(ex);
-      		}
-        }
+      	startSelectedMIDlet();
       }
     }
   }
+
+
+	public MIDlet startSelectedMIDlet() 
+	{
+        if (!menuList.getString(menuList.getSelectedIndex()).equals(nomidlets)) {
+			currentMIDlet = ((MIDletEntry) midletEntries.elementAt(menuList.getSelectedIndex())).getMIDlet();
+			try {
+				MIDletBridge.getMIDletAccess(currentMIDlet).startApp();
+			} catch (MIDletStateChangeException ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		return currentMIDlet;
+	}
   
 }

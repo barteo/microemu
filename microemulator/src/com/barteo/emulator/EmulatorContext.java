@@ -19,11 +19,15 @@
 
 package com.barteo.emulator;
 
+import com.barteo.emulator.app.launcher.Launcher;
+
 
 public interface EmulatorContext 
 {
   
   ClassLoader getClassLoader();
+  
+  Launcher getLauncher();
   
   DisplayComponent getDisplayComponent();
   

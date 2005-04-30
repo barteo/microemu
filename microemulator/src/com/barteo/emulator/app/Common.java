@@ -135,7 +135,6 @@ public class Common implements MicroEmulator
 		try {
 			result = (MIDlet) midletClass.newInstance();
 			launcher.addMIDletEntry(new MIDletEntry(name, result));
-			launcher.setCurrentMIDlet(result);
 		} catch (Exception ex) {
 			System.out.println("Cannot initialize " + midletClass + " MIDlet class");
 			System.out.println(ex);
@@ -172,6 +171,7 @@ public class Common implements MicroEmulator
 	public void startMidlet(MIDlet m)
 	{
 		try {
+			launcher.setCurrentMIDlet(m);
 			MIDletBridge.getMIDletAccess(m).startApp();
 		} catch (MIDletStateChangeException ex) {
 			System.err.println(ex);

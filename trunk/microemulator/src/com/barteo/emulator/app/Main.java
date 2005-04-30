@@ -46,6 +46,7 @@ import javax.swing.UIManager;
 import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletBridge;
+import com.barteo.emulator.app.launcher.Launcher;
 import com.barteo.emulator.app.ui.ResponseInterfaceListener;
 import com.barteo.emulator.app.ui.StatusBarListener;
 import com.barteo.emulator.app.ui.swing.ExtensionFileFilter;
@@ -89,7 +90,12 @@ public class Main extends JFrame
     public DisplayComponent getDisplayComponent()
     {
       return devicePanel.getDisplayComponent();
-    }    
+    }
+
+	public Launcher getLauncher() 
+	{
+		return common.getLauncher();
+	}    
   };
   
   KeyListener keyListener = new KeyListener()
@@ -402,27 +408,43 @@ public class Main extends JFrame
     Main app = new Main();
     MIDlet m = null;
 
-    if (args.length > 0) {
-    	if (args[0].endsWith(".jad")) {
-      	try {
-        	File file = new File(args[0]);
-          URL url = file.exists() ? file.toURL() : new URL(args[0]);
-          app.common.openJadFile(url);
-        } catch(MalformedURLException exception) {
-          System.out.println("Cannot parse " + args[0] + " URL");
-        }
-      } else {
-        Class midletClass;
-        try {
-          midletClass = Class.forName(args[0]);
-          m = app.common.loadMidlet("MIDlet", midletClass);
-        } catch (ClassNotFoundException ex) {
-          System.out.println("Cannot find " + args[0] + " MIDlet class");
-        }
-      }
-    } else {
-      m = app.common.getLauncher();
-    }
+    	for (int i = 0; i < args.length; i++) {
+    		if (args[i].equals("-d")) {
+    			i++;
+    			if (i < args.length) {
+					try {
+						Class deviceClass = Class.forName(args[i]);
+						app.setDevice((J2SEDevice) deviceClass.newInstance());
+					} catch (ClassNotFoundException ex) {
+						ex.printStackTrace();
+					} catch (InstantiationException ex) {
+						ex.printStackTrace();
+					} catch (IllegalAccessException ex) {
+						ex.printStackTrace();
+					}
+    			}
+    		} else if (m == null && args[i].endsWith(".jad")) {
+				try {
+					File file = new File(args[i]);
+					URL url = file.exists() ? file.toURL() : new URL(args[0]);
+					app.common.openJadFile(url);
+				} catch (MalformedURLException exception) {
+					System.out.println("Cannot parse " + args[i] + " URL");
+				}
+			} else {
+				Class midletClass;
+				try {
+					midletClass = Class.forName(args[i]);
+					m = app.common.loadMidlet("MIDlet", midletClass);
+				} catch (ClassNotFoundException ex) {
+					System.out.println("Cannot find " + args[i] + " MIDlet class");
+				}
+			}
+		}
+    	
+    	if (m == null) {
+    		m = app.common.getLauncher();    	
+    	}    	
     
     if (app.initialized) {
       if (m != null) {

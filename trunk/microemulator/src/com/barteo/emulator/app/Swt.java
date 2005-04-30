@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Shell;
 import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletBridge;
+import com.barteo.emulator.app.launcher.Launcher;
 import com.barteo.emulator.app.ui.ResponseInterfaceListener;
 import com.barteo.emulator.app.ui.StatusBarListener;
 import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
@@ -238,6 +239,11 @@ public class Swt extends Common
 			public DisplayComponent getDisplayComponent()
 			{
 				return devicePanel.getDisplayComponent();
+			}
+
+			public Launcher getLauncher() 
+			{
+				return getLauncher();
 			}    
 		});
 

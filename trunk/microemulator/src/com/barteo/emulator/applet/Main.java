@@ -34,6 +34,7 @@ import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.RecordStoreManager;
+import com.barteo.emulator.app.launcher.Launcher;
 import com.barteo.emulator.app.ui.awt.AwtDeviceComponent;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.applet.AppletDevice;
@@ -63,7 +64,12 @@ public class Main extends Applet implements MicroEmulator
     public DisplayComponent getDisplayComponent()
     {
       return devicePanel.getDisplayComponent();
-    }    
+    }
+
+	public Launcher getLauncher() 
+	{
+		return null;
+	}    
   };
   
   

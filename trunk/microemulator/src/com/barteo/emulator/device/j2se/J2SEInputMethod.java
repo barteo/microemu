@@ -51,7 +51,7 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 	}
 
 	
-	private boolean commonKeyPressed(int keyCode) 
+	protected boolean commonKeyPressed(int keyCode) 
 	{
 		String tmp;
 

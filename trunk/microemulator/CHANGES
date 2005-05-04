@@ -1,5 +1,9 @@
 MicroEmulator
 
+- app: persistent RMS
+- new custom device: large device
+- upgraded Proguard to 3.2
+
 0.4 (alpha) - 12.12.2003
 - partially implemented Nokia UI API (thanks to Markus Heberling)
 - partially implemented Siemens API (thanks to Markus Heberling)

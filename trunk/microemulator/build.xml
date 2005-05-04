@@ -272,6 +272,14 @@
         <pathelement location="./target/me-${target}.jar"/>
       </classpath>      
     </javac>
+    <mkdir dir="./build/devices/${target.device.prefix}/large/classes"/>
+    <javac target="1.1" debug="true" deprecation="true" 
+        srcdir="./devices/${target.device.prefix}/large/java"
+        destdir="./build/devices/${target.device.prefix}/large/classes">
+      <classpath>
+        <pathelement location="./target/me-${target}.jar"/>
+      </classpath>      
+    </javac>
   </target>
 
   <target name="compile-device" depends="init,compile-device-app,compile-device-applet">

@@ -7,10 +7,6 @@
   - switching between modes (numeric, password, URL, etc.)
   - solve problem with VK_BACKSPACE key on emulator device
 
-* RMS - persistence?
-
-release 0.4 (alpha)
-
 * ConnectionFramework - currently only http connection is supported, implement other:
   - udp
   - https

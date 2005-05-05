@@ -9,7 +9,7 @@
 		<background>d0d0d7</background>
 		<rectangle>
 			<x>28</x>
-			<y>60</y>
+			<y>30</y>
 			<width>114</width>
 			<height>144</height>
 		</rectangle>
@@ -64,7 +64,7 @@
 		<softbutton name="" key="VK_F1" alignment="LEFT">
 			<rectangle>
 				<x>30</x>
-				<y>211</y>
+				<y>184</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -82,7 +82,7 @@
 		<softbutton name="" key="VK_F2" alignment="RIGHT">
 			<rectangle>
 				<x>103</x>
-				<y>211</y>
+				<y>184</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -100,7 +100,7 @@
 		<button name="l" key="VK_LEFT">
 			<rectangle>
 				<x>30</x>
-				<y>267</y>
+				<y>240</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -108,7 +108,7 @@
 		<button name="r" key="VK_RIGHT">
 			<rectangle>
 				<x>103</x>
-				<y>267</y>
+				<y>240</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -116,7 +116,7 @@
 		<button name="u" key="VK_UP">
 			<rectangle>
 				<x>68</x>
-				<y>240</y>
+				<y>213</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -124,7 +124,7 @@
 		<button name="d" key="VK_DOWN">
 			<rectangle>
 				<x>68</x>
-				<y>294</y>
+				<y>267</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -132,7 +132,7 @@
 		<button name="sel" key="VK_ENTER">
 			<rectangle>
 				<x>68</x>
-				<y>267</y>
+				<y>240</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -321,7 +321,7 @@
 		<button name="gkey" key="VK_F8">
 			<rectangle>
 				<x>30</x>
-				<y>15</y>
+				<y>310</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>

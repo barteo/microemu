@@ -5,6 +5,7 @@
 	<target name="clean">
 		<delete dir="./build" />
 		<delete dir="./target" />
+		<delete dir="./dist" />
 	</target>
 
 	<target name="compile" depends="clean">
@@ -12,6 +13,14 @@
 		<javac debug="true" deprecation="true" srcdir="./interface/src" destdir="./build/device/classes">
 		</javac>
 		<javac debug="true" deprecation="true" srcdir="./device/src" destdir="./build/device/classes">
+			<classpath>
+				<pathelement location="../../microemulator/target/me-app.jar" />
+				<pathelement location="./build/device/classes" />
+			</classpath>
+		</javac>
+		
+		<mkdir dir="./build/test/classes" />
+		<javac debug="true" deprecation="true" srcdir="./test/src" destdir="./build/test/classes">
 			<classpath>
 				<pathelement location="../../microemulator/target/me-app.jar" />
 				<pathelement location="./build/device/classes" />
@@ -39,26 +48,43 @@
 				<exclude name="**/.*"/>
 			</fileset>
 		</jar>
+		<jar compress="true" jarfile="./target/gkey-test.jar">
+			<fileset dir="./build/test/classes">
+				<exclude name="**/.*"/>
+			</fileset>
+		</jar>
 	</target>
 
 	<target name="run" depends="jar">
-		<mkdir dir="./build/test/classes" />
-		<javac debug="true" deprecation="true" srcdir="./test/src" destdir="./build/test/classes">
-			<classpath>
-				<pathelement location="../../microemulator/target/me-app.jar" />
-				<pathelement location="./target/gkey.jar"/>
-			</classpath>
-		</javac>
 		<java classname="com.barteo.emulator.app.Main" failonerror="true" fork="true">
 			<classpath>
 				<pathelement location="../../microemulator/target/me-app.jar" />
 				<pathelement location="./target/gkey.jar"/>
-				<pathelement location="./build/test/classes"/>
+				<pathelement location="./target/gkey-test.jar"/>
 			</classpath>
 			<arg value="-d"/>
 			<arg value="net.barteo.me.gkey.device.GKeyJ2SEDevice"/>
 			<arg value="net.barteo.me.gkey.GetKeyMIDletTest"/>
 		</java>
+	</target>
+
+	<target name="dist" depends="jar">
+		<mkdir dir="dist"/>
+
+		<tar basedir="../." tarfile="dist/gkey-src.tar" defaultexcludes="yes">
+			<include name="gkey/build.xml"/>
+			<include name="gkey/device/**"/>
+			<include name="gkey/interface/**"/>
+			<include name="gkey/test/**"/>
+		</tar>
+		<gzip src="dist/gkey-src.tar" zipfile="dist/gkey-src.tar.gz"/>
+		<delete file="dist/gkey-src.tar"/>
+
+		<tar basedir="../." tarfile="dist/gkey-bin.tar" defaultexcludes="yes">
+			<include name="gkey/target/**"/>
+		</tar>
+		<gzip src="dist/gkey-bin.tar" zipfile="dist/gkey-bin.tar.gz"/>
+		<delete file="dist/gkey-bin.tar"/>
 	</target>
 
 </project>

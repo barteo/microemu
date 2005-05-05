@@ -1,6 +1,7 @@
 MicroEmulator
 
 - app: persistent RMS
+- applet: new optional jad parameter in <applet> tag
 - new custom device: large device
 - upgraded Proguard to 3.2
 

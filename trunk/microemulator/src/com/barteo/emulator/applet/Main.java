@@ -15,6 +15,9 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Contributor(s):
+ *    daniel(at)angrymachine.com.ar
  */
  
 package com.barteo.emulator.applet;
@@ -24,7 +27,9 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Image;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.Vector;
 
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
@@ -38,6 +43,7 @@ import com.barteo.emulator.app.launcher.Launcher;
 import com.barteo.emulator.app.ui.awt.AwtDeviceComponent;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.applet.AppletDevice;
+import com.barteo.emulator.util.JadMidletEntry;
 import com.barteo.emulator.util.JadProperties;
 
 
@@ -116,31 +122,8 @@ System.out.println("Applet::init()");
     device.init(emulatorContext);
 	devicePanel.init();
 
-    String midletName = getParameter("midlet");
-		if (midletName == null) {
-			System.out.println("There is no midlet parameter");
-			return;
-		}
-    
-    Class midletClass;
-		try {
-			midletClass = Class.forName(midletName);
-		} catch (ClassNotFoundException ex) {
-			System.out.println("Cannot find " + midletName + " MIDlet class");
-			return;
-		}
-
+    manifest.clear();
     try {
-      midlet = (MIDlet) midletClass.newInstance();
-    } catch (Exception ex) {
-      System.out.println("Cannot initialize " + midletClass + " MIDlet class");
-      System.out.println(ex);        
-      ex.printStackTrace();
-      return;
-    }
-    
-	manifest.clear();
-	try {
 		URL url = emulatorContext.getClassLoader().getResource("META-INF/MANIFEST.MF");
 		manifest.load(url.openStream());
 		if (manifest.getProperty("MIDlet-Name") == null) {
@@ -149,6 +132,78 @@ System.out.println("Applet::init()");
 	} catch (IOException e) {
 		e.printStackTrace();
 	}
+	
+    // load jad
+    String midletClassName = null;
+    String jadFile = getParameter("jad");
+    if(jadFile != null)
+    {
+        InputStream jadInputStream = null;
+        try
+        {
+            URL jad = new URL(getCodeBase(), jadFile);
+            jadInputStream = jad.openStream();
+            manifest.load(jadInputStream);
+            Vector entries = manifest.getMidletEntries();
+            // only load the first (no midlet suite support anyway)
+            if(entries.size()>0)
+            {
+                JadMidletEntry entry = (JadMidletEntry) entries.elementAt(0);
+                midletClassName = entry.getClassName();
+            }
+        } 
+        catch (IOException e)
+        {
+        }
+        finally
+        {
+            if(jadInputStream != null)
+            {
+                try
+                {
+                    jadInputStream.close();
+                } 
+                catch (IOException e1)
+                {
+                }
+            }
+        }
+    }
+    
+    if(midletClassName == null)
+    {
+        midletClassName = getParameter("midlet");
+        if (midletClassName == null)
+        {
+            System.out.println("There is no midlet parameter");
+            return;
+        }            
+    }
+
+    Class midletClass;
+    try
+    {
+        midletClass = Class.forName(midletClassName);
+    } 
+    catch (ClassNotFoundException ex)
+    {
+        System.out.println("Cannot find " + midletClassName + " MIDlet class");
+        return;
+    }
+
+    try
+    {
+        midlet = (MIDlet) midletClass.newInstance();
+    } 
+    catch (Exception ex)
+    {
+        System.out.println("Cannot initialize " + midletClass
+                + " MIDlet class");
+        System.out.println(ex);
+        ex.printStackTrace();
+        return;
+    }
+
 	
     Image tmpImg = ((AppletDevice) DeviceFactory.getDevice()).getNormalImage();
     resize(tmpImg.getWidth(null), tmpImg.getHeight(null));
@@ -178,11 +233,15 @@ System.out.println("Applet::stop()");
 
 	public void destroy()
 	{
-System.out.println("Applet::destroy()");  	
-    try {
-			MIDletBridge.getMIDletAccess(midlet).destroyApp(true);
-		} catch (MIDletStateChangeException ex) {
-  		System.err.println(ex);
+	    System.out.println("Applet::destroy()");  	
+	    try 
+	    {
+	        MIDletBridge.getMIDletAccess(midlet).destroyApp(true);
+	        notifyDestroyed();
+		} 
+	    catch (MIDletStateChangeException ex) 
+	    {
+	        System.err.println(ex);
 		}
 	}
 
@@ -206,7 +265,9 @@ System.out.println("Applet::destroy()");
 
   
   public void notifyDestroyed()
-	{
+  {
+      // disable the applet
+      super.removeAll();
   }
   
   

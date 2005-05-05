@@ -15,6 +15,9 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Contributor(s):
+ *    daniel(at)angrymachine.com.ar
  */
  
 package com.nokia.mid.ui;
@@ -86,7 +89,7 @@ public abstract class FullCanvas extends Canvas
 	void press(int i)
 	{
 		keyPressed(i);
-		keyRepeated(i);
+		keyReleased(i);
 	}
                   
 }

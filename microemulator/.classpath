@@ -2,11 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="ext/nokiaui/src"/>
-	<classpathentry kind="src" path="ext/siemensapi/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/opt/eclipse/plugins/org.eclipse.swt.gtk_3.0.2/ws/gtk/swt.jar"/>
+	<classpathentry kind="lib" path="/usr/share/jmf-bin/lib/jmf.jar"/>
 	<classpathentry kind="lib" path="res"/>
-	<classpathentry kind="lib" path="/usr/share/jmf/lib/jmf.jar"/>
-	<classpathentry kind="lib" path="/opt/eclipse/plugins/org.eclipse.swt.gtk_3.0.0/ws/gtk/swt.jar"/>
-	<classpathentry kind="lib" path="/opt/eclipse/plugins/org.eclipse.swt.gtk_3.0.0/ws/gtk/swt-pi.jar"/>
 	<classpathentry kind="output" path=".bin"/>
 </classpath>

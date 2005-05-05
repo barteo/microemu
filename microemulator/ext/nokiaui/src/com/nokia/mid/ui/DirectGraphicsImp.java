@@ -22,12 +22,11 @@
 
 package com.nokia.mid.ui;
 
-import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.Graphics;
-import com.barteo.emulator.device.DeviceFactory;
-import com.barteo.emulator.device.MutableImage;
-import com.barteo.emulator.device.DeviceDisplay;
+import javax.microedition.lcdui.Image;
+
 import com.barteo.emulator.device.DisplayGraphics;
+import com.barteo.emulator.device.MutableImage;
 
 
 public class DirectGraphicsImp implements DirectGraphics{

@@ -63,9 +63,9 @@ public class Main extends JFrame
 {
   Main instance = null;
   
-  private Common common;
+  protected Common common;
   
-  boolean initialized = false;
+  protected boolean initialized = false;
   
   SwingSelectDevicePanel selectDevicePanel = null;
   JFileChooser fileChooser = null;

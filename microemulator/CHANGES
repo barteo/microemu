@@ -1,6 +1,6 @@
 MicroEmulator
 
-- support for MMAPI (only midi, and not 100% compliant)
+- support for MMAPI (only midi, and not 100% compliant) (daniel(at)angrymachine.com.ar)
 - app: persistent RMS
 - applet: new optional jad parameter in <applet> tag
 - new custom device: large device

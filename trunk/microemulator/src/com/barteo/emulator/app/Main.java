@@ -236,7 +236,7 @@ public class Main extends JFrame
 	};  
 
 
-  Main()
+  public Main()
   {
     instance = this;
         

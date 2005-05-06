@@ -56,14 +56,12 @@
 	</target>
 
 	<target name="run" depends="jar">
-		<java classname="com.barteo.emulator.app.Main" failonerror="true" fork="true">
+		<java classname="net.barteo.me.gkey.device.Starter" failonerror="true" fork="true">
 			<classpath>
 				<pathelement location="../../microemulator/target/me-app.jar" />
 				<pathelement location="./target/gkey.jar"/>
 				<pathelement location="./target/gkey-test.jar"/>
 			</classpath>
-			<arg value="-d"/>
-			<arg value="net.barteo.me.gkey.device.GKeyJ2SEDevice"/>
 			<arg value="net.barteo.me.gkey.GetKeyMIDletTest"/>
 		</java>
 	</target>

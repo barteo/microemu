@@ -20,7 +20,6 @@
 package com.barteo.emulator.app;
 
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -31,6 +30,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.microedition.lcdui.Image;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 import javax.swing.JFileChooser;
@@ -335,7 +335,7 @@ public class WebStart extends JFrame
 		device.init(emulatorContext);
 		devicePanel.init();
 		Image tmpImg = device.getNormalImage();
-		Dimension size = new Dimension(tmpImg.getWidth(null), tmpImg.getHeight(null));
+		Dimension size = new Dimension(tmpImg.getWidth(), tmpImg.getHeight());
 		size.width += 10;
 		size.height += statusBar.getPreferredSize().height + 55;
 		setSize(size);

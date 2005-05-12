@@ -25,12 +25,12 @@ package com.barteo.emulator.applet;
 import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.awt.Image;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Vector;
 
+import javax.microedition.lcdui.Image;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
@@ -206,7 +206,7 @@ System.out.println("Applet::init()");
 
 	
     Image tmpImg = ((AppletDevice) DeviceFactory.getDevice()).getNormalImage();
-    resize(tmpImg.getWidth(null), tmpImg.getHeight(null));
+    resize(tmpImg.getWidth(), tmpImg.getHeight());
     
     return;
   }

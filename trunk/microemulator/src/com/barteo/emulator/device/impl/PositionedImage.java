@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2002 Bartek Teodorczyk <barteo@it.pl>
+ *  Copyright (C) 2002-2005 Bartek Teodorczyk <barteo@it.pl>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -17,34 +17,31 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package com.barteo.emulator.device.swt;
+package com.barteo.emulator.device.impl;
 
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
+import javax.microedition.lcdui.Image;
 
 
-public class PositionedImage 
+public class PositionedImage
 {
-  private Image image;
-  private Rectangle rectangle;
-  
-  
-  public PositionedImage(Image img, Rectangle arectangle) 
-  {
-    image = img;
-    rectangle = arectangle;
-  }
-  
-  
-  public Image getImage()
-  {
-    return image;
-  }
-  
-  
-  public Rectangle getRectangle()
-  {
-    return rectangle;
-  }
-  
+    private Image image;
+
+    private Rectangle rectangle;
+
+    public PositionedImage(Image img, Rectangle arectangle)
+    {
+        image = img;
+        rectangle = arectangle;
+    }
+
+    public Image getImage()
+    {
+        return image;
+    }
+
+    public Rectangle getRectangle()
+    {
+        return rectangle;
+    }
+
 }

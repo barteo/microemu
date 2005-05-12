@@ -22,7 +22,6 @@ package com.barteo.emulator.app;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Frame;
-import java.awt.Image;
 import java.awt.Label;
 import java.awt.Menu;
 import java.awt.MenuBar;
@@ -35,6 +34,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.microedition.lcdui.Image;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
@@ -314,7 +314,7 @@ public class Awt extends Frame
 		device.init(emulatorContext);
 		devicePanel.init();
 		Image tmpImg = device.getNormalImage();
-		Dimension size = new Dimension(tmpImg.getWidth(null), tmpImg.getHeight(null));
+		Dimension size = new Dimension(tmpImg.getWidth(), tmpImg.getHeight());
 		size.width += 10;
 		size.height += statusBar.getPreferredSize().height + 55;
 		setSize(size);

@@ -22,7 +22,6 @@ package com.barteo.emulator.app.ui.swing;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -37,9 +36,11 @@ import com.barteo.emulator.CommandManager;
 import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.SoftButton;
+import com.barteo.emulator.device.impl.Rectangle;
 import com.barteo.emulator.device.j2se.J2SEButton;
 import com.barteo.emulator.device.j2se.J2SEDevice;
 import com.barteo.emulator.device.j2se.J2SEDeviceDisplay;
+import com.barteo.emulator.device.j2se.J2SEImmutableImage;
 import com.barteo.emulator.device.j2se.J2SEInputMethod;
 
 
@@ -173,7 +174,8 @@ public class SwingDeviceComponent extends JPanel
     Dimension size = getSize();
     offg.setColor(UIManager.getColor("text"));
     offg.fillRect(0, 0, size.width, size.height);
-    offg.drawImage(((J2SEDevice) DeviceFactory.getDevice()).getNormalImage(), 0, 0, this);
+    offg.drawImage(((J2SEImmutableImage) ((J2SEDevice) DeviceFactory.getDevice()).getNormalImage()).getImage(), 
+            0, 0, this);
     
     Rectangle displayRectangle = 
         ((J2SEDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle();
@@ -184,20 +186,20 @@ public class SwingDeviceComponent extends JPanel
     Rectangle rect;
     if (prevOverButton != null ) {
       rect = prevOverButton.getRectangle();    
-      offg.drawImage(((J2SEDevice) DeviceFactory.getDevice()).getNormalImage(), 
+      offg.drawImage(((J2SEImmutableImage) ((J2SEDevice) DeviceFactory.getDevice()).getNormalImage()).getImage(), 
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
       prevOverButton = null;
     }
     if (overButton != null) {
       rect = overButton.getRectangle();    
-      offg.drawImage(((J2SEDevice) DeviceFactory.getDevice()).getOverImage(), 
+      offg.drawImage(((J2SEImmutableImage) ((J2SEDevice) DeviceFactory.getDevice()).getOverImage()).getImage(), 
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
     }
     if (pressedButton != null) {
       rect = pressedButton.getRectangle();    
-      offg.drawImage(((J2SEDevice) DeviceFactory.getDevice()).getPressedImage(), 
+      offg.drawImage(((J2SEImmutableImage) ((J2SEDevice) DeviceFactory.getDevice()).getPressedImage()).getImage(), 
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
     }

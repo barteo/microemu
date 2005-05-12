@@ -39,6 +39,7 @@ import com.barteo.emulator.device.SoftButton;
 import com.barteo.emulator.device.applet.AppletButton;
 import com.barteo.emulator.device.applet.AppletDevice;
 import com.barteo.emulator.device.applet.AppletDeviceDisplay;
+import com.barteo.emulator.device.applet.AppletImmutableImage;
 import com.barteo.emulator.device.applet.AppletInputMethod;
 
 
@@ -175,7 +176,8 @@ public class AwtDeviceComponent extends Panel
 			offg = offi.getGraphics();
 		}
 
-		offg.drawImage(((AppletDevice) DeviceFactory.getDevice()).getNormalImage(), 0, 0, this);
+		offg.drawImage(((AppletImmutableImage) ((AppletDevice) DeviceFactory.getDevice()).getNormalImage()).getImage(), 
+		        0, 0, this);
     
 		Rectangle displayRectangle = 
 				((AppletDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle();
@@ -186,20 +188,20 @@ public class AwtDeviceComponent extends Panel
 		Rectangle rect;
 		if (prevOverButton != null ) {
 			rect = prevOverButton.getRectangle();    
-			offg.drawImage(((AppletDevice) DeviceFactory.getDevice()).getNormalImage(), 
+			offg.drawImage(((AppletImmutableImage) ((AppletDevice) DeviceFactory.getDevice()).getNormalImage()).getImage(), 
 					rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
 					rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
 			prevOverButton = null;
 		}
 		if (overButton != null) {
 			rect = overButton.getRectangle();    
-			offg.drawImage(((AppletDevice) DeviceFactory.getDevice()).getOverImage(), 
+			offg.drawImage(((AppletImmutableImage) ((AppletDevice) DeviceFactory.getDevice()).getOverImage()).getImage(), 
 					rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
 					rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
 		}
 		if (pressedButton != null) {
 			rect = pressedButton.getRectangle();    
-			offg.drawImage(((AppletDevice) DeviceFactory.getDevice()).getPressedImage(), 
+			offg.drawImage(((AppletImmutableImage) ((AppletDevice) DeviceFactory.getDevice()).getPressedImage()).getImage(), 
 					rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
 					rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
 		}

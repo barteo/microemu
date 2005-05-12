@@ -66,8 +66,12 @@ import com.barteo.emulator.app.ui.swt.SwtSelectDeviceDialog;
 import com.barteo.emulator.app.util.DeviceEntry;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.device.Device;
+import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.InputMethod;
 import com.barteo.emulator.device.swt.SwtDevice;
+import com.barteo.emulator.device.swt.SwtDeviceDisplay;
+import com.barteo.emulator.device.swt.SwtInputMethod;
 import com.barteo.emulator.util.JadMidletEntry;
 
 
@@ -134,7 +138,11 @@ public class EclipseSwt extends Common
 	{
 		super(new EmulatorContext()
 		{
-			ProgressJarClassLoader loader = new ProgressJarClassLoader();
+			private ProgressJarClassLoader loader = new ProgressJarClassLoader();
+			
+			private InputMethod inputMethod = new SwtInputMethod();
+			
+			private DeviceDisplay deviceDisplay = new SwtDeviceDisplay(this);
     
 			public ClassLoader getClassLoader()
 			{
@@ -149,7 +157,17 @@ public class EclipseSwt extends Common
 			public Launcher getLauncher() 
 			{
 				return getLauncher();
-			}    
+			}
+
+            public InputMethod getDeviceInputMethod()
+            {
+                return inputMethod;
+            }
+
+            public DeviceDisplay getDeviceDisplay()
+            {
+                return deviceDisplay;
+            }    
 		});
 
 		GridLayout layout = new GridLayout(1, false);
@@ -187,7 +205,7 @@ public class EclipseSwt extends Common
 	public void setDevice(DeviceEntry entry)
 	{
 		if (DeviceFactory.getDevice() != null) {
-			((SwtDevice) DeviceFactory.getDevice()).dispose();
+//			((SwtDevice) DeviceFactory.getDevice()).dispose();
 		}
 		
 		ProgressJarClassLoader loader = (ProgressJarClassLoader) emulatorContext.getClassLoader();

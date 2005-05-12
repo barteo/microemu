@@ -52,8 +52,12 @@ import com.barteo.emulator.app.ui.awt.OptionPane;
 import com.barteo.emulator.app.util.DeviceEntry;
 import com.barteo.emulator.app.util.ExtensionFileFilter;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
+import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.InputMethod;
 import com.barteo.emulator.device.applet.AppletDevice;
+import com.barteo.emulator.device.applet.AppletDeviceDisplay;
+import com.barteo.emulator.device.applet.AppletInputMethod;
 
 
 public class Awt extends Frame
@@ -77,9 +81,13 @@ public class Awt extends Frame
   
 	private EmulatorContext emulatorContext = new EmulatorContext()
 	{
-		ProgressJarClassLoader loader = new ProgressJarClassLoader();
-    
-		public ClassLoader getClassLoader()
+		private ProgressJarClassLoader loader = new ProgressJarClassLoader();
+		
+		private InputMethod inputMethod = new AppletInputMethod();
+      	    
+  	    private DeviceDisplay deviceDisplay = new AppletDeviceDisplay(this); 
+
+  	    public ClassLoader getClassLoader()
 		{
 			return loader;
 		}
@@ -92,7 +100,17 @@ public class Awt extends Frame
 		public Launcher getLauncher() 
 		{
 			return common.getLauncher();
-		}    
+		}
+
+        public InputMethod getDeviceInputMethod()
+        {
+            return inputMethod;
+        }
+
+        public DeviceDisplay getDeviceDisplay()
+        {
+            return deviceDisplay;
+        }    
 	};
   
 	ActionListener menuOpenJADFileListener = new ActionListener()
@@ -279,7 +297,7 @@ public class Awt extends Frame
 	public void setDevice(DeviceEntry entry)
 	{
 		if (DeviceFactory.getDevice() != null) {
-			((AppletDevice) DeviceFactory.getDevice()).dispose();
+//			((AppletDevice) DeviceFactory.getDevice()).dispose();
 		}
 		
 		ProgressJarClassLoader loader = (ProgressJarClassLoader) emulatorContext.getClassLoader();

@@ -28,6 +28,7 @@ import javax.microedition.lcdui.Displayable;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
 
+import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletAccess;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.app.ui.swt.SwtGraphics;
@@ -41,7 +42,7 @@ import com.barteo.emulator.device.impl.Rectangle;
 
 public class SwtDeviceDisplay implements DeviceDisplayImpl 
 {
-	Device device;
+    EmulatorContext context;
 
 	org.eclipse.swt.graphics.Rectangle displayRectangle;
 	org.eclipse.swt.graphics.Rectangle displayPaintable;
@@ -63,15 +64,15 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 	boolean scrollDown = false;
 
 
-	SwtDeviceDisplay(Device device) 
+	public SwtDeviceDisplay(EmulatorContext context) 
 	{
-		this.device = device;
+		this.context = context;
 	}
 
 
 	public MutableImage getDisplayImage()
 	{
-		return device.getEmulatorContext().getDisplayComponent().getDisplayImage();
+		return context.getDisplayComponent().getDisplayImage();
 	}
 
 
@@ -183,7 +184,7 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 
 	public void repaint() 
 	{
-		device.getEmulatorContext().getDisplayComponent().repaint();
+		context.getDisplayComponent().repaint();
 	}
 
 

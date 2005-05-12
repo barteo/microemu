@@ -55,8 +55,12 @@ import com.barteo.emulator.app.ui.swing.SwingDialogWindow;
 import com.barteo.emulator.app.ui.swing.SwingSelectDevicePanel;
 import com.barteo.emulator.app.util.DeviceEntry;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
+import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.InputMethod;
 import com.barteo.emulator.device.j2se.J2SEDevice;
+import com.barteo.emulator.device.j2se.J2SEDeviceDisplay;
+import com.barteo.emulator.device.j2se.J2SEInputMethod;
 import com.barteo.emulator.util.JadProperties;
 
 
@@ -83,8 +87,12 @@ public class WebStart extends JFrame
   
   private EmulatorContext emulatorContext = new EmulatorContext()
   {
-    ProgressJarClassLoader loader = new ProgressJarClassLoader(WebStart.class.getClassLoader());
+    private ProgressJarClassLoader loader = new ProgressJarClassLoader(WebStart.class.getClassLoader());
     
+    private InputMethod inputMethod = new J2SEInputMethod();
+    
+    private DeviceDisplay deviceDisplay = new J2SEDeviceDisplay(this);
+
     public ClassLoader getClassLoader()
     {
       return loader;
@@ -98,7 +106,17 @@ public class WebStart extends JFrame
 	public Launcher getLauncher() 
 	{
 		return common.getLauncher();
-	}    
+	}
+
+    public InputMethod getDeviceInputMethod()
+    {
+        return inputMethod;
+    }
+
+    public DeviceDisplay getDeviceDisplay()
+    {
+        return deviceDisplay;
+    }    
   };
   
   KeyListener keyListener = new KeyListener()
@@ -300,7 +318,7 @@ public class WebStart extends JFrame
   public void setDevice(DeviceEntry entry)
   {
 		if (DeviceFactory.getDevice() != null) {
-			((J2SEDevice) DeviceFactory.getDevice()).dispose();
+//			((J2SEDevice) DeviceFactory.getDevice()).dispose();
 		}
 
     ProgressJarClassLoader loader = (ProgressJarClassLoader) emulatorContext.getClassLoader();

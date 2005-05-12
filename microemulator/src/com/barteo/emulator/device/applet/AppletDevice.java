@@ -19,34 +19,28 @@
  
 package com.barteo.emulator.device.applet;
 
-import java.awt.Color;
-import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Enumeration;
+import java.io.InputStream;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Image;
 
 import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.FontManager;
 import com.barteo.emulator.device.InputMethod;
+import com.barteo.emulator.device.impl.DeviceDisplayImpl;
 import com.sixlegs.image.png.PngImage;
-import nanoxml.XMLElement;
-import nanoxml.XMLParseException;
 
 
-public class AppletDevice implements Device
+public class AppletDevice extends Device
 {
 	private EmulatorContext context; 	
 	
@@ -99,10 +93,10 @@ public class AppletDevice implements Device
 	}
 	
 																
-	public javax.microedition.lcdui.Image createImage(String name)
+	public Image createImage(String name)
   		throws IOException
 	{
-		return new AppletImmutableImage(getImage(name));
+		return getImage(name);
 	}
   
   
@@ -116,11 +110,11 @@ public class AppletDevice implements Device
   }
   
 
-	public javax.microedition.lcdui.Image createImage(byte[] imageData, int imageOffset, int imageLength)
+	public Image createImage(byte[] imageData, int imageOffset, int imageLength)
 	{
 		ByteArrayInputStream is = new ByteArrayInputStream(imageData, imageOffset, imageLength);
 		try {
-			return new AppletImmutableImage(getImage(is));
+			return getImage(is);
 		} catch (IOException ex) {
 			throw new IllegalArgumentException(ex.toString());
 		}
@@ -290,180 +284,7 @@ public class AppletDevice implements Device
   }
 
   
-  public void loadConfig(String config)
-  		throws IOException
-  {
-	String readLine;
-	StringBuffer xmlBuffer = new StringBuffer();
-	BufferedReader dis = new BufferedReader(
-			new InputStreamReader(getClass().getResourceAsStream(config)));
-	while ((readLine = dis.readLine()) != null) {
-		xmlBuffer.append(readLine);
-	}
-
-    XMLElement doc = new XMLElement();
-    try {
-      doc.parseString(xmlBuffer.toString());
-    } catch (XMLParseException ex) {
-    	throw new IOException(ex.toString());
-    }
-
-    for (Enumeration e = doc.enumerateChildren(); e.hasMoreElements(); ) {
-      XMLElement tmp = (XMLElement) e.nextElement();
-      if (tmp.getName().equals("img")) {
-        try {
-          if (tmp.getStringAttribute("name").equals("normal")) {
-            normalImage = getSystemImage(tmp.getStringAttribute("src"));
-          } else if (tmp.getStringAttribute("name").equals("over")) {
-            overImage = getSystemImage(tmp.getStringAttribute("src"));
-          } else if (tmp.getStringAttribute("name").equals("pressed")) {
-            pressedImage = getSystemImage(tmp.getStringAttribute("src"));
-          }
-        } catch (IOException ex) {
-          System.out.println("Cannot load " + tmp.getStringAttribute("src"));
-          return;
-        }
-      } else if (tmp.getName().equals("display")) {
-        for (Enumeration e_display = tmp.enumerateChildren(); e_display.hasMoreElements(); ) {
-          XMLElement tmp_display = (XMLElement) e_display.nextElement();
-          if (tmp_display.getName().equals("numcolors")) {
-            deviceDisplay.numColors = Integer.parseInt(tmp_display.getContent());
-          } else if (tmp_display.getName().equals("iscolor")) {
-            deviceDisplay.isColor = parseBoolean(tmp_display.getContent());
-          } else if (tmp_display.getName().equals("background")) {
-            deviceDisplay.backgroundColor = new Color(Integer.parseInt(tmp_display.getContent(), 16));
-          } else if (tmp_display.getName().equals("foreground")) {
-            deviceDisplay.foregroundColor = new Color(Integer.parseInt(tmp_display.getContent(), 16));
-          } else if (tmp_display.getName().equals("rectangle")) {
-            deviceDisplay.displayRectangle = getRectangle(tmp_display);
-          } else if (tmp_display.getName().equals("paintable")) {
-            deviceDisplay.displayPaintable = getRectangle(tmp_display);
-          } else if (tmp_display.getName().equals("img")) {
-            if (tmp_display.getStringAttribute("name").equals("up")) {
-              deviceDisplay.upImage = new PositionedImage(
-                  getImage(tmp_display.getStringAttribute("src")),
-                  getRectangle(getElement(tmp_display, "paintable")));
-            } else if (tmp_display.getStringAttribute("name").equals("down")) {
-              deviceDisplay.downImage = new PositionedImage(
-                  getImage(tmp_display.getStringAttribute("src")),
-                  getRectangle(getElement(tmp_display, "paintable")));
-            } else if (tmp_display.getStringAttribute("name").equals("mode")) {
-              if (tmp_display.getStringAttribute("type").equals("123")) {
-                deviceDisplay.mode123Image = new PositionedImage(
-                    getImage(tmp_display.getStringAttribute("src")),
-                    getRectangle(getElement(tmp_display, "paintable")));
-              } else if (tmp_display.getStringAttribute("type").equals("abc")) {
-                deviceDisplay.modeAbcLowerImage = new PositionedImage(
-                    getImage(tmp_display.getStringAttribute("src")),
-                    getRectangle(getElement(tmp_display, "paintable")));
-              } else if (tmp_display.getStringAttribute("type").equals("ABC")) {
-                deviceDisplay.modeAbcUpperImage = new PositionedImage(
-                    getImage(tmp_display.getStringAttribute("src")),
-                    getRectangle(getElement(tmp_display, "paintable")));
-              }
-            }
-          }
-        }
-      } else if (tmp.getName().equals("keyboard")) {
-        for (Enumeration e_keyboard = tmp.enumerateChildren(); e_keyboard.hasMoreElements(); ) {
-          XMLElement tmp_keyboard = (XMLElement) e_keyboard.nextElement();
-          if (tmp_keyboard.getName().equals("button")) {
-            Rectangle rectangle = null;
-            Vector stringArray = new Vector();
-            for (Enumeration e_button = tmp_keyboard.enumerateChildren(); e_button.hasMoreElements(); ) {
-              XMLElement tmp_button = (XMLElement) e_button.nextElement();
-              if (tmp_button.getName().equals("chars")) {
-                for (Enumeration e_chars = tmp_button.enumerateChildren(); e_chars.hasMoreElements(); ) {
-                  XMLElement tmp_chars = (XMLElement) e_chars.nextElement();
-                  if (tmp_chars.getName().equals("char")) {                 
-                    stringArray.addElement(tmp_chars.getContent());                    
-                  }
-                }
-              } else if (tmp_button.getName().equals("rectangle")) {
-                rectangle = getRectangle(tmp_button);
-              }
-            }
-            char[] charArray = new char[stringArray.size()];
-            for (int i = 0; i < stringArray.size(); i++) {
-              String str = (String) stringArray.elementAt(i);
-              if (str.length() > 0) {
-                charArray[i] = str.charAt(0);
-              } else {
-                charArray[i] = ' ';
-              }
-            }
-            buttons.addElement(new AppletButton(tmp_keyboard.getStringAttribute("name"), 
-                rectangle, tmp_keyboard.getStringAttribute("key"), charArray));
-          } else if (tmp_keyboard.getName().equals("softbutton")) {
-            Vector commands = new Vector();
-            Rectangle rectangle = null, paintable = null;
-            for (Enumeration e_button = tmp_keyboard.enumerateChildren(); e_button.hasMoreElements(); ) {
-              XMLElement tmp_button = (XMLElement) e_button.nextElement();
-              if (tmp_button.getName().equals("rectangle")) {
-                rectangle = getRectangle(tmp_button);
-              } else if (tmp_button.getName().equals("paintable")) {
-                paintable = getRectangle(tmp_button);
-              } else if (tmp_button.getName().equals("command")) {
-                commands.addElement(tmp_button.getContent());
-              }
-            }
-            AppletSoftButton button = new AppletSoftButton(tmp_keyboard.getStringAttribute("name"),
-                rectangle, tmp_keyboard.getStringAttribute("key"), paintable, 
-                tmp_keyboard.getStringAttribute("alignment"), commands);
-            buttons.addElement(button);
-            softButtons.addElement(button);
-          }
-        }
-      }
-    }
-  }
-
-  
-  private XMLElement getElement(XMLElement source, String name)
-  {
-    for (Enumeration e_content = source.enumerateChildren(); e_content.hasMoreElements(); ) {
-      XMLElement tmp_content = (XMLElement) e_content.nextElement();
-      if (tmp_content.getName().equals(name)) {
-        return tmp_content;
-      }
-    }
-
-    return null;
-  }
-  
-  
-  private Rectangle getRectangle(XMLElement source)
-  {
-    Rectangle rect = new Rectangle();
-    
-    for (Enumeration e_rectangle = source.enumerateChildren(); e_rectangle.hasMoreElements(); ) {
-      XMLElement tmp_rectangle = (XMLElement) e_rectangle.nextElement();
-      if (tmp_rectangle.getName().equals("x")) {
-        rect.x = Integer.parseInt(tmp_rectangle.getContent());
-      } else if (tmp_rectangle.getName().equals("y")) {
-        rect.y = Integer.parseInt(tmp_rectangle.getContent());
-      } else if (tmp_rectangle.getName().equals("width")) {
-        rect.width = Integer.parseInt(tmp_rectangle.getContent());
-      } else if (tmp_rectangle.getName().equals("height")) {
-        rect.height = Integer.parseInt(tmp_rectangle.getContent());
-      }
-    }
-    
-    return rect;
-  }
-  
-  
-  private boolean parseBoolean(String value)
-  {
-    if (value.toLowerCase().equals(new String("true").toLowerCase())) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  
-  private Image getSystemImage(String str)
+  protected Image createSystemImage(String str)
 			throws IOException
 	{
     InputStream is;
@@ -474,7 +295,7 @@ public class AppletDevice implements Device
     }
     PngImage png = new PngImage(is);
     
-		return Toolkit.getDefaultToolkit().createImage(png);
+		return new AppletImmutableImage(Toolkit.getDefaultToolkit().createImage(png));
 	}
 
   
@@ -514,7 +335,45 @@ public class AppletDevice implements Device
     }
     FilteredImageSource imageSource = new FilteredImageSource(png, filter);
 
-		return Toolkit.getDefaultToolkit().createImage(imageSource);
+		return new AppletImmutableImage(Toolkit.getDefaultToolkit().createImage(imageSource));
   }
+
+
+/* (non-Javadoc)
+ * @see com.barteo.emulator.device.Device#getDeviceDisplayImpl()
+ */
+protected DeviceDisplayImpl getDeviceDisplayImpl()
+{
+    // TODO Auto-generated method stub
+    return deviceDisplay;
+}
+
+
+/* (non-Javadoc)
+ * @see com.barteo.emulator.device.Device#setNormalImage(javax.microedition.lcdui.Image)
+ */
+protected void setNormalImage(Image image)
+{
+    normalImage = image;
+}
+
+
+/* (non-Javadoc)
+ * @see com.barteo.emulator.device.Device#setOverImage(javax.microedition.lcdui.Image)
+ */
+protected void setOverImage(Image image)
+{
+    overImage = image;
+}
+
+
+/* (non-Javadoc)
+ * @see com.barteo.emulator.device.Device#setPressedImage(javax.microedition.lcdui.Image)
+ */
+protected void setPressedImage(Image image)
+{
+    pressedImage = image;
+}
+
   
 }

@@ -22,7 +22,6 @@ package com.barteo.emulator.device.j2se;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.Enumeration;
 
@@ -32,17 +31,19 @@ import javax.microedition.lcdui.Displayable;
 import com.barteo.emulator.MIDletAccess;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.device.Device;
-import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.InputMethod;
 import com.barteo.emulator.device.MutableImage;
+import com.barteo.emulator.device.impl.DeviceDisplayImpl;
+import com.barteo.emulator.device.impl.PositionedImage;
+import com.barteo.emulator.device.impl.Rectangle;
 
-public class J2SEDeviceDisplay implements DeviceDisplay 
+public class J2SEDeviceDisplay implements DeviceDisplayImpl 
 {
 	Device device;
 	
 	Rectangle displayRectangle;
-	Rectangle displayPaintable;
+	java.awt.Rectangle displayPaintable;
 
 	boolean isColor;
 	int numColors;
@@ -129,11 +130,14 @@ public class J2SEDeviceDisplay implements DeviceDisplay
 
 		int inputMode = device.getInputMethod().getInputMode();
 		if (inputMode == InputMethod.INPUT_123) {
-			g.drawImage(mode123Image.getImage(), mode123Image.getRectangle().x, mode123Image.getRectangle().y, null);
+			g.drawImage(((J2SEImmutableImage) mode123Image.getImage()).getImage(), 
+			        mode123Image.getRectangle().x, mode123Image.getRectangle().y, null);
 		} else if (inputMode == InputMethod.INPUT_ABC_UPPER) {
-			g.drawImage(modeAbcUpperImage.getImage(), modeAbcUpperImage.getRectangle().x, modeAbcUpperImage.getRectangle().y, null);
+			g.drawImage(((J2SEImmutableImage) modeAbcUpperImage.getImage()).getImage(), 
+			        modeAbcUpperImage.getRectangle().x, modeAbcUpperImage.getRectangle().y, null);
 		} else if (inputMode == InputMethod.INPUT_ABC_LOWER) {
-			g.drawImage(modeAbcLowerImage.getImage(), modeAbcLowerImage.getRectangle().x, modeAbcLowerImage.getRectangle().y, null);
+			g.drawImage(((J2SEImmutableImage) modeAbcLowerImage.getImage()).getImage(), 
+			        modeAbcLowerImage.getRectangle().x, modeAbcLowerImage.getRectangle().y, null);
 		}
 
 		MIDletAccess ma = MIDletBridge.getMIDletAccess();
@@ -161,10 +165,12 @@ public class J2SEDeviceDisplay implements DeviceDisplay
 		}
 
 		if (scrollUp) {
-			g.drawImage(upImage.getImage(), upImage.getRectangle().x, upImage.getRectangle().y, null);
+			g.drawImage(((J2SEImmutableImage) upImage.getImage()).getImage(), 
+			        upImage.getRectangle().x, upImage.getRectangle().y, null);
 		}
 		if (scrollDown) {
-			g.drawImage(downImage.getImage(), downImage.getRectangle().x, downImage.getRectangle().y, null);
+			g.drawImage(((J2SEImmutableImage) downImage.getImage()).getImage(), 
+			        downImage.getRectangle().x, downImage.getRectangle().y, null);
 		}
 	}
 
@@ -203,5 +209,104 @@ public class J2SEDeviceDisplay implements DeviceDisplay
 	{
 		return foregroundColor;
 	}
+
+
+    /* (non-Javadoc)
+     * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setNumColors(int)
+     */
+    public void setNumColors(int i)
+    {
+        numColors = i;
+    }
+
+
+    /* (non-Javadoc)
+     * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setIsColor(boolean)
+     */
+    public void setIsColor(boolean b)
+    {
+        isColor = b;
+    }
+
+
+    /* (non-Javadoc)
+     * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setBackgroundColor(java.awt.Color)
+     */
+    public void setBackgroundColor(Color color)
+    {
+        backgroundColor = color;
+    }
+
+
+    /* (non-Javadoc)
+     * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setForegroundColor(java.awt.Color)
+     */
+    public void setForegroundColor(Color color)
+    {
+        foregroundColor = color;
+    }
+
+
+    /* (non-Javadoc)
+     * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setDisplayRectangle(java.awt.Rectangle)
+     */
+    public void setDisplayRectangle(Rectangle rectangle)
+    {
+        displayRectangle = rectangle;
+    }
+
+
+    /* (non-Javadoc)
+     * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setDisplayPaintable(java.awt.Rectangle)
+     */
+    public void setDisplayPaintable(Rectangle rectangle)
+    {
+        displayPaintable = new java.awt.Rectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+    }
+
+
+    /* (non-Javadoc)
+     * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setUpImage(com.barteo.emulator.device.impl.PositionedImage)
+     */
+    public void setUpImage(PositionedImage object)
+    {
+        upImage = object;
+    }
+
+
+    /* (non-Javadoc)
+     * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setDownImage(com.barteo.emulator.device.impl.PositionedImage)
+     */
+    public void setDownImage(PositionedImage object)
+    {
+        downImage = object;
+    }
+
+
+    /* (non-Javadoc)
+     * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setMode123Image(com.barteo.emulator.device.impl.PositionedImage)
+     */
+    public void setMode123Image(PositionedImage object)
+    {
+        mode123Image = object;
+    }
+
+
+    /* (non-Javadoc)
+     * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setModeAbcLowerImage(com.barteo.emulator.device.impl.PositionedImage)
+     */
+    public void setModeAbcLowerImage(PositionedImage object)
+    {
+        modeAbcLowerImage = object;
+    }
+
+
+    /* (non-Javadoc)
+     * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setModeAbcUpperImage(com.barteo.emulator.device.impl.PositionedImage)
+     */
+    public void setModeAbcUpperImage(PositionedImage object)
+    {
+        modeAbcUpperImage = object;
+    }
 
 }

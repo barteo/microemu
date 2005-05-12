@@ -54,6 +54,7 @@ import com.barteo.emulator.device.SoftButton;
 import com.barteo.emulator.device.swt.SwtButton;
 import com.barteo.emulator.device.swt.SwtDevice;
 import com.barteo.emulator.device.swt.SwtDeviceDisplay;
+import com.barteo.emulator.device.swt.SwtImmutableImage;
 import com.barteo.emulator.device.swt.SwtInputMethod;
 
 
@@ -169,9 +170,9 @@ public class SwtDeviceComponent extends Canvas
   
 	public Point computeSize(int wHint, int hHint, boolean changed)
 	{
-		Rectangle tmp = ((SwtDevice) DeviceFactory.getDevice()).getNormalImage().getBounds();
+		javax.microedition.lcdui.Image tmp = ((SwtDevice) DeviceFactory.getDevice()).getNormalImage();
 
-		return new Point(tmp.width, tmp.height);		
+		return new Point(tmp.getWidth(), tmp.getHeight());		
 	}
 							 
   
@@ -195,7 +196,8 @@ public class SwtDeviceComponent extends Canvas
 
 		SwtGraphics gc = new SwtGraphics(new GC(fBuffer));
 		try {
-			gc.drawImage(((SwtDevice) DeviceFactory.getDevice()).getNormalImage(), 0, 0);
+			gc.drawImage(((SwtImmutableImage) ((SwtDevice) DeviceFactory.getDevice()).getNormalImage()).getImage()
+			        , 0, 0);
     
 			Rectangle displayRectangle = 
 					((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle();
@@ -206,20 +208,20 @@ public class SwtDeviceComponent extends Canvas
 			Rectangle rect;
 			if (prevOverButton != null ) {
 				rect = prevOverButton.getRectangle();    
-				gc.drawImage(((SwtDevice) DeviceFactory.getDevice()).getNormalImage(), 
+				gc.drawImage(((SwtImmutableImage) ((SwtDevice) DeviceFactory.getDevice()).getNormalImage()).getImage(), 
 						rect.x, rect.y, rect.width, rect.height,
 						rect.x, rect.y, rect.width, rect.height);
 				prevOverButton = null;
 			}
 			if (overButton != null) {
 				rect = overButton.getRectangle();   
-				gc.drawImage(((SwtDevice) DeviceFactory.getDevice()).getOverImage(), 
+				gc.drawImage(((SwtImmutableImage) ((SwtDevice) DeviceFactory.getDevice()).getOverImage()).getImage(), 
 						rect.x, rect.y, rect.width, rect.height,
 						rect.x, rect.y, rect.width, rect.height);
 			}
 			if (pressedButton != null) {
 				rect = pressedButton.getRectangle();    
-				gc.drawImage(((SwtDevice) DeviceFactory.getDevice()).getPressedImage(), 
+				gc.drawImage(((SwtImmutableImage) ((SwtDevice) DeviceFactory.getDevice()).getPressedImage()).getImage(), 
 						rect.x, rect.y, rect.width, rect.height,
 						rect.x, rect.y, rect.width, rect.height);
 			}

@@ -34,26 +34,26 @@ public class Image
 			throw new IllegalArgumentException();
 		}
 	
-		return DeviceFactory.getDevice().createImage(width, height);
+		return DeviceFactory.getDevice().getDeviceDisplay().createImage(width, height);
 	}
 	
 																
 	public static Image createImage(String name)
   		throws IOException
 	{
-		return DeviceFactory.getDevice().createImage(name);
+		return DeviceFactory.getDevice().getDeviceDisplay().createImage(name);
 	}												 
 												   
 
 	public static Image createImage(Image source)
 	{
-		return DeviceFactory.getDevice().createImage(source);
+		return DeviceFactory.getDevice().getDeviceDisplay().createImage(source);
 	}
 	
 
 	public static Image createImage(byte[] imageData, int imageOffset, int imageLength)
 	{
-		return DeviceFactory.getDevice().createImage(imageData, imageOffset, imageLength);
+		return DeviceFactory.getDevice().getDeviceDisplay().createImage(imageData, imageOffset, imageLength);
 	}
 																
 

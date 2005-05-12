@@ -43,9 +43,11 @@ import com.barteo.emulator.app.launcher.Launcher;
 import com.barteo.emulator.app.ui.awt.AwtDeviceComponent;
 import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.FontManager;
 import com.barteo.emulator.device.InputMethod;
 import com.barteo.emulator.device.applet.AppletDevice;
 import com.barteo.emulator.device.applet.AppletDeviceDisplay;
+import com.barteo.emulator.device.applet.AppletFontManager;
 import com.barteo.emulator.device.applet.AppletInputMethod;
 import com.barteo.emulator.util.JadMidletEntry;
 import com.barteo.emulator.util.JadProperties;
@@ -70,7 +72,9 @@ public class Main extends Applet implements MicroEmulator
   	    
   	    private DeviceDisplay deviceDisplay = new AppletDeviceDisplay(this); 
   	    
+  	    private FontManager fontManager = new AppletFontManager();
 
+  	    
         public ClassLoader getClassLoader()
         {
             return getClass().getClassLoader();
@@ -94,7 +98,12 @@ public class Main extends Applet implements MicroEmulator
         public DeviceDisplay getDeviceDisplay()
         {
             return deviceDisplay;
-        }    
+        }
+
+		public FontManager getDeviceFontManager() 
+		{
+			return fontManager;
+		}    
   	};
   
   

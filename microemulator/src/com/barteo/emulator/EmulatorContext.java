@@ -21,6 +21,7 @@ package com.barteo.emulator;
 
 import com.barteo.emulator.app.launcher.Launcher;
 import com.barteo.emulator.device.DeviceDisplay;
+import com.barteo.emulator.device.FontManager;
 import com.barteo.emulator.device.InputMethod;
 
 
@@ -36,5 +37,7 @@ public interface EmulatorContext
     InputMethod getDeviceInputMethod();
 
     DeviceDisplay getDeviceDisplay();
+    
+    FontManager getDeviceFontManager();
   
 }

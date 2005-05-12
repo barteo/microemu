@@ -43,6 +43,10 @@ public abstract class Device
 {
 	private EmulatorContext context; 	
 
+	private Image normalImage;
+	private Image overImage;
+	private Image pressedImage;
+    
 	private Vector buttons;
 	private Vector softButtons;
 	
@@ -51,16 +55,6 @@ public abstract class Device
 	{	    
 	}
 	
-
-    public abstract Image createImage(int width, int height);
-
-    public abstract Image createImage(String name) throws IOException;
-
-    public abstract Image createImage(Image source);
-
-    public abstract Image createImage(byte[] imageData, int imageOffset, int imageLength);
-
-    public abstract FontManager getFontManager();
 
     public abstract int getGameAction(int keyCode);
 
@@ -71,15 +65,6 @@ public abstract class Device
     public abstract boolean hasPointerEvents();
 
     public abstract boolean hasRepeatEvents();
-    
-    
-    protected abstract void setNormalImage(Image image);
-
-    protected abstract void setOverImage(Image image);
-    
-    protected abstract void setPressedImage(Image image);
-
-    protected abstract Image createSystemImage(String name) throws IOException;
     
     
     public void init(EmulatorContext context)
@@ -116,10 +101,34 @@ public abstract class Device
     }
     
     
+    public FontManager getFontManager()
+    {
+		return context.getDeviceFontManager();
+    }
+    
+    
     public DeviceDisplay getDeviceDisplay()
     {
         return context.getDeviceDisplay();
     }
+    
+    
+    public Image getNormalImage()
+    {
+      return normalImage;
+    }
+
+    
+    public Image getOverImage()
+    {
+      return overImage;
+    }
+
+    
+    public Image getPressedImage()
+    {
+      return pressedImage;
+    }  
     
     
     public Vector getSoftButtons()
@@ -158,11 +167,11 @@ public abstract class Device
           if (tmp.getName().equals("img")) {
             try {
               if (tmp.getStringAttribute("name").equals("normal")) {
-                setNormalImage(createSystemImage(tmp.getStringAttribute("src")));
+                normalImage = deviceDisplay.createSystemImage(tmp.getStringAttribute("src"));
               } else if (tmp.getStringAttribute("name").equals("over")) {
-                setOverImage(createSystemImage(tmp.getStringAttribute("src")));
+                overImage = deviceDisplay.createSystemImage(tmp.getStringAttribute("src"));
               } else if (tmp.getStringAttribute("name").equals("pressed")) {
-                setPressedImage(createSystemImage(tmp.getStringAttribute("src")));
+                pressedImage = deviceDisplay.createSystemImage(tmp.getStringAttribute("src"));
               }
             } catch (IOException ex) {
               System.out.println("Cannot load " + tmp.getStringAttribute("src"));
@@ -190,24 +199,24 @@ public abstract class Device
               if (tmp_display.getName().equals("img")) {
                 if (tmp_display.getStringAttribute("name").equals("up")) {
                   deviceDisplay.setUpImage(new PositionedImage(
-                      createImage(tmp_display.getStringAttribute("src")),
+                      deviceDisplay.createImage(tmp_display.getStringAttribute("src")),
                       getRectangle(getElement(tmp_display, "paintable"))));
                 } else if (tmp_display.getStringAttribute("name").equals("down")) {
                   deviceDisplay.setDownImage(new PositionedImage(
-                      createImage(tmp_display.getStringAttribute("src")),
+                  		deviceDisplay.createImage(tmp_display.getStringAttribute("src")),
                       getRectangle(getElement(tmp_display, "paintable"))));
                 } else if (tmp_display.getStringAttribute("name").equals("mode")) {
                   if (tmp_display.getStringAttribute("type").equals("123")) {
                     deviceDisplay.setMode123Image(new PositionedImage(
-                        createImage(tmp_display.getStringAttribute("src")),
+                    	deviceDisplay.createImage(tmp_display.getStringAttribute("src")),
                         getRectangle(getElement(tmp_display, "paintable"))));
                   } else if (tmp_display.getStringAttribute("type").equals("abc")) {
                     deviceDisplay.setModeAbcLowerImage(new PositionedImage(
-                        createImage(tmp_display.getStringAttribute("src")),
+                    	deviceDisplay.createImage(tmp_display.getStringAttribute("src")),
                         getRectangle(getElement(tmp_display, "paintable"))));
                   } else if (tmp_display.getStringAttribute("type").equals("ABC")) {
                     deviceDisplay.setModeAbcUpperImage(new PositionedImage(
-                        createImage(tmp_display.getStringAttribute("src")),
+                    	deviceDisplay.createImage(tmp_display.getStringAttribute("src")),
                         getRectangle(getElement(tmp_display, "paintable"))));
                   }
                 }

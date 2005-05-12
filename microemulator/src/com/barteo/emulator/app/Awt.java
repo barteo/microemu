@@ -54,9 +54,11 @@ import com.barteo.emulator.app.util.ExtensionFileFilter;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.FontManager;
 import com.barteo.emulator.device.InputMethod;
 import com.barteo.emulator.device.applet.AppletDevice;
 import com.barteo.emulator.device.applet.AppletDeviceDisplay;
+import com.barteo.emulator.device.applet.AppletFontManager;
 import com.barteo.emulator.device.applet.AppletInputMethod;
 
 
@@ -87,6 +89,8 @@ public class Awt extends Frame
       	    
   	    private DeviceDisplay deviceDisplay = new AppletDeviceDisplay(this); 
 
+		private FontManager fontManager = new AppletFontManager();
+  	    
   	    public ClassLoader getClassLoader()
 		{
 			return loader;
@@ -110,7 +114,12 @@ public class Awt extends Frame
         public DeviceDisplay getDeviceDisplay()
         {
             return deviceDisplay;
-        }    
+        }
+
+		public FontManager getDeviceFontManager() 
+		{
+			return fontManager;
+		}    
 	};
   
 	ActionListener menuOpenJADFileListener = new ActionListener()

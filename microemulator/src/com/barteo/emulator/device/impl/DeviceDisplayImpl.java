@@ -20,12 +20,17 @@
 package com.barteo.emulator.device.impl;
 
 import java.awt.Color;
+import java.io.IOException;
+
+import javax.microedition.lcdui.Image;
 
 import com.barteo.emulator.device.DeviceDisplay;
 
 
 public interface DeviceDisplayImpl extends DeviceDisplay
 {
+	
+	Image createSystemImage(String name) throws IOException;  
 
     /**
      * @param i

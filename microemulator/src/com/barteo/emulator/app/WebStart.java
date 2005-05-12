@@ -57,9 +57,11 @@ import com.barteo.emulator.app.util.DeviceEntry;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.FontManager;
 import com.barteo.emulator.device.InputMethod;
 import com.barteo.emulator.device.j2se.J2SEDevice;
 import com.barteo.emulator.device.j2se.J2SEDeviceDisplay;
+import com.barteo.emulator.device.j2se.J2SEFontManager;
 import com.barteo.emulator.device.j2se.J2SEInputMethod;
 import com.barteo.emulator.util.JadProperties;
 
@@ -93,6 +95,8 @@ public class WebStart extends JFrame
     
     private DeviceDisplay deviceDisplay = new J2SEDeviceDisplay(this);
 
+    private FontManager fontManager = new J2SEFontManager();
+    
     public ClassLoader getClassLoader()
     {
       return loader;
@@ -116,7 +120,12 @@ public class WebStart extends JFrame
     public DeviceDisplay getDeviceDisplay()
     {
         return deviceDisplay;
-    }    
+    }
+
+	public FontManager getDeviceFontManager() 
+	{
+		return fontManager;
+	}    
   };
   
   KeyListener keyListener = new KeyListener()

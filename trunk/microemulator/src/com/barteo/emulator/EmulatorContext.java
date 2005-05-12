@@ -20,15 +20,21 @@
 package com.barteo.emulator;
 
 import com.barteo.emulator.app.launcher.Launcher;
+import com.barteo.emulator.device.DeviceDisplay;
+import com.barteo.emulator.device.InputMethod;
 
 
 public interface EmulatorContext 
 {
   
   ClassLoader getClassLoader();
-  
-  Launcher getLauncher();
-  
-  DisplayComponent getDisplayComponent();
+
+    Launcher getLauncher();
+
+    DisplayComponent getDisplayComponent();
+
+    InputMethod getDeviceInputMethod();
+
+    DeviceDisplay getDeviceDisplay();
   
 }

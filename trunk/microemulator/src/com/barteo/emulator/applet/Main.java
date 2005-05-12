@@ -41,8 +41,12 @@ import com.barteo.emulator.MicroEmulator;
 import com.barteo.emulator.RecordStoreManager;
 import com.barteo.emulator.app.launcher.Launcher;
 import com.barteo.emulator.app.ui.awt.AwtDeviceComponent;
+import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.InputMethod;
 import com.barteo.emulator.device.applet.AppletDevice;
+import com.barteo.emulator.device.applet.AppletDeviceDisplay;
+import com.barteo.emulator.device.applet.AppletInputMethod;
 import com.barteo.emulator.util.JadMidletEntry;
 import com.barteo.emulator.util.JadProperties;
 
@@ -60,23 +64,38 @@ public class Main extends Applet implements MicroEmulator
   AwtDeviceComponent devicePanel;
 
     
-  EmulatorContext emulatorContext = new EmulatorContext()
-  {    
-    public ClassLoader getClassLoader()
-    {
-      return getClass().getClassLoader();
-    }
-    
-    public DisplayComponent getDisplayComponent()
-    {
-      return devicePanel.getDisplayComponent();
-    }
+  	EmulatorContext emulatorContext = new EmulatorContext()
+  	{	    
+  	    private InputMethod inputMethod = new AppletInputMethod();
+  	    
+  	    private DeviceDisplay deviceDisplay = new AppletDeviceDisplay(this); 
+  	    
 
-	public Launcher getLauncher() 
-	{
-		return null;
-	}    
-  };
+        public ClassLoader getClassLoader()
+        {
+            return getClass().getClassLoader();
+        }
+
+        public DisplayComponent getDisplayComponent()
+        {
+            return devicePanel.getDisplayComponent();
+        }
+
+        public Launcher getLauncher()
+        {
+            return null;
+        }
+
+        public InputMethod getDeviceInputMethod()
+        {
+            return inputMethod;
+        }
+
+        public DeviceDisplay getDeviceDisplay()
+        {
+            return deviceDisplay;
+        }    
+  	};
   
   
   public Main()

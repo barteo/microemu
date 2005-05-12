@@ -26,62 +26,22 @@ import java.awt.image.ImageFilter;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Vector;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Image;
 
-import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.device.Device;
-import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.FontManager;
-import com.barteo.emulator.device.InputMethod;
-import com.barteo.emulator.device.impl.DeviceDisplayImpl;
 import com.sixlegs.image.png.PngImage;
 
 
 public class J2SEDevice extends Device
 {
-	protected EmulatorContext context; 	
-	
-	protected J2SEInputMethod inputMethod = null;
-
-	private J2SEDeviceDisplay deviceDisplay;
 	private FontManager fontManager = null;
-	private Vector buttons;
-	private Vector softButtons;
   
 	private Image normalImage;
 	private Image overImage;
 	private Image pressedImage;
-  
-  
-  public J2SEDevice()
-  {
-  }
-  
-  
-  public void init(EmulatorContext context)
-  {
-    // Here should be device.xml but Netscape security manager doesn't accept this extension
-    init(context, "/com/barteo/emulator/device/device.txt");
-  }
-  
-  
-  public void init(EmulatorContext context, String config)
-  {
-  	this.context = context;
-  	
-    deviceDisplay = new J2SEDeviceDisplay(this);
-    buttons = new Vector();
-    softButtons = new Vector();
-    
-    try {
-    	loadConfig(config);
-    } catch (IOException ex) {
-    	System.out.println("Cannot load config: " + ex);
-    }
-  }
   
   
 	public Image createImage(int width, int height)
@@ -122,18 +82,6 @@ public class J2SEDevice extends Device
 	}
   
   
-  public DeviceDisplay getDeviceDisplay()
-  {
-    return deviceDisplay;
-  }
-  
-  
-  public EmulatorContext getEmulatorContext() 
-  {
-	  return context;
-  }
-
-
   public FontManager getFontManager()
   {
     if (fontManager == null) {
@@ -141,16 +89,6 @@ public class J2SEDevice extends Device
     }
     
     return fontManager;
-  }
-  
-  
-  public InputMethod getInputMethod()
-  {
-    if (inputMethod == null) {
-      inputMethod = new J2SEInputMethod();
-    }
-    
-    return inputMethod;
   }
   
   
@@ -230,12 +168,6 @@ public class J2SEDevice extends Device
   }
 
 
-  public Vector getSoftButtons()
-  {
-    return softButtons;
-  }
-
-  
   public Image getNormalImage()
   {
     return normalImage;
@@ -269,19 +201,6 @@ public class J2SEDevice extends Device
   public boolean hasRepeatEvents()
   {
     return false;
-  }
-
-  
-  public void dispose()
-  {
-		inputMethod.dispose();
-		inputMethod = null;
-  }
-  
-  
-  public Vector getButtons()
-  {
-    return buttons;
   }
 
   
@@ -338,15 +257,6 @@ public class J2SEDevice extends Device
 
 		return new J2SEImmutableImage(Toolkit.getDefaultToolkit().createImage(imageSource));
   }
-
-
-/* (non-Javadoc)
- * @see com.barteo.emulator.device.Device#getDeviceDisplayImpl()
- */
-protected DeviceDisplayImpl getDeviceDisplayImpl()
-{
-    return deviceDisplay;
-}
 
 
 /* (non-Javadoc)

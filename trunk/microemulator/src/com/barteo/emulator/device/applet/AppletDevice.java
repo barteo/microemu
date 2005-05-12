@@ -26,64 +26,26 @@ import java.awt.image.ImageFilter;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Vector;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Image;
 
 import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.device.Device;
-import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.FontManager;
-import com.barteo.emulator.device.InputMethod;
-import com.barteo.emulator.device.impl.DeviceDisplayImpl;
 import com.sixlegs.image.png.PngImage;
 
 
 public class AppletDevice extends Device
 {
-	private EmulatorContext context; 	
-	
-	private AppletDeviceDisplay deviceDisplay;
 	private FontManager fontManager = null;
-	private AppletInputMethod inputMethod = null;
-	private Vector buttons;
-	private Vector softButtons;
 
 	private Image normalImage;
 	private Image overImage;
 	private Image pressedImage;
   
   
-  public AppletDevice()
-  {
-  }
-  
-  
-  public void init(EmulatorContext context)
-  {
-    // Here should be device.xml but Netscape security manager doesn't accept this extension
-    init(context, "/com/barteo/emulator/device/device.txt");
-  }
-  
-  
-  public void init(EmulatorContext context, String config)
-  {
-  	this.context = context;
-  	
-    deviceDisplay = new AppletDeviceDisplay(this);
-    buttons = new Vector();
-    softButtons = new Vector();
-    
-    try {
-    	loadConfig(config);
-  	} catch (IOException ex) {
-  		System.out.println("Cannot load config: " + ex);
-  	}
-  }
-  
-  
-	public javax.microedition.lcdui.Image createImage(int width, int height)
+	public Image createImage(int width, int height)
 	{
 		if (width <= 0 || height <= 0) {
 			throw new IllegalArgumentException();
@@ -100,7 +62,7 @@ public class AppletDevice extends Device
 	}
   
   
-	public javax.microedition.lcdui.Image createImage(javax.microedition.lcdui.Image source)
+	public Image createImage(javax.microedition.lcdui.Image source)
   {
     if (source.isMutable()) {
       return new AppletImmutableImage((AppletMutableImage) source);
@@ -121,18 +83,6 @@ public class AppletDevice extends Device
 	}
   
   
-  public DeviceDisplay getDeviceDisplay()
-  {
-    return deviceDisplay;
-  }
-  
-  
-	public EmulatorContext getEmulatorContext() 
-  	{
-  		return context;
-	}
-
-
   public FontManager getFontManager()
   {
     if (fontManager == null) {
@@ -140,16 +90,6 @@ public class AppletDevice extends Device
     }
     
     return fontManager;
-  }
-  
-  
-  public InputMethod getInputMethod()
-  {
-    if (inputMethod == null) {
-      inputMethod = new AppletInputMethod();
-    }
-    
-    return inputMethod;
   }
   
   
@@ -229,12 +169,6 @@ public class AppletDevice extends Device
   }
 
 
-  public Vector getSoftButtons()
-  {
-    return softButtons;
-  }
-
-  
   public Image getNormalImage()
   {
     return normalImage;
@@ -271,19 +205,6 @@ public class AppletDevice extends Device
   }
   
 
-  public void dispose()
-  {
-		inputMethod.dispose();
-		inputMethod = null;
-  }
-  
-  
-  public Vector getButtons()
-  {
-    return buttons;
-  }
-
-  
   protected Image createSystemImage(String str)
 			throws IOException
 	{
@@ -337,16 +258,6 @@ public class AppletDevice extends Device
 
 		return new AppletImmutableImage(Toolkit.getDefaultToolkit().createImage(imageSource));
   }
-
-
-/* (non-Javadoc)
- * @see com.barteo.emulator.device.Device#getDeviceDisplayImpl()
- */
-protected DeviceDisplayImpl getDeviceDisplayImpl()
-{
-    // TODO Auto-generated method stub
-    return deviceDisplay;
-}
 
 
 /* (non-Javadoc)

@@ -41,6 +41,16 @@ import com.barteo.emulator.device.j2se.J2SESoftButton;
 
 public abstract class Device 
 {
+	private EmulatorContext context; 	
+
+	private Vector buttons;
+	private Vector softButtons;
+	
+	
+	public Device()
+	{	    
+	}
+	
 
     public abstract Image createImage(int width, int height);
 
@@ -50,15 +60,7 @@ public abstract class Device
 
     public abstract Image createImage(byte[] imageData, int imageOffset, int imageLength);
 
-    public abstract EmulatorContext getEmulatorContext();
-
-    public abstract DeviceDisplay getDeviceDisplay();
-
     public abstract FontManager getFontManager();
-
-    public abstract InputMethod getInputMethod();
-
-    public abstract Vector getSoftButtons();
 
     public abstract int getGameAction(int keyCode);
 
@@ -71,10 +73,6 @@ public abstract class Device
     public abstract boolean hasRepeatEvents();
     
     
-    protected abstract DeviceDisplayImpl getDeviceDisplayImpl();
-    
-    protected abstract Vector getButtons();
-    
     protected abstract void setNormalImage(Image image);
 
     protected abstract void setOverImage(Image image);
@@ -82,6 +80,58 @@ public abstract class Device
     protected abstract void setPressedImage(Image image);
 
     protected abstract Image createSystemImage(String name) throws IOException;
+    
+    
+    public void init(EmulatorContext context)
+    {     
+        // Here should be device.xml but Netscape security manager doesn't accept this extension
+        init(context, "/com/barteo/emulator/device/device.txt");
+    }       
+
+    
+    public void init(EmulatorContext context, String config)
+    {
+    	this.context = context;
+
+        buttons = new Vector();
+        softButtons = new Vector();
+
+        try {
+            loadConfig(config);
+        } catch (IOException ex) {
+            System.out.println("Cannot load config: " + ex);
+        }
+    }
+    
+    
+    public EmulatorContext getEmulatorContext() 
+    {
+  	  	return context;
+    }
+
+
+    public InputMethod getInputMethod()
+    {
+        return context.getDeviceInputMethod();
+    }
+    
+    
+    public DeviceDisplay getDeviceDisplay()
+    {
+        return context.getDeviceDisplay();
+    }
+    
+    
+    public Vector getSoftButtons()
+    {
+      return softButtons;
+    }
+
+    
+    public Vector getButtons()
+    {
+      return buttons;
+    }
 
     
     protected void loadConfig(String config)
@@ -102,7 +152,7 @@ public abstract class Device
         	throw new IOException(ex.toString());
         }
 
-        DeviceDisplayImpl deviceDisplay = getDeviceDisplayImpl();
+        DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) getDeviceDisplay();
         for (Enumeration e = doc.enumerateChildren(); e.hasMoreElements(); ) {
           XMLElement tmp = (XMLElement) e.nextElement();
           if (tmp.getName().equals("img")) {

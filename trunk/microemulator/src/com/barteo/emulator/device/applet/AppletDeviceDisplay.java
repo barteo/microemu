@@ -28,6 +28,7 @@ import java.util.Enumeration;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Displayable;
 
+import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletAccess;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.device.Device;
@@ -40,7 +41,7 @@ import com.barteo.emulator.device.impl.Rectangle;
 
 public class AppletDeviceDisplay implements DeviceDisplayImpl 
 {
-	Device device;
+    EmulatorContext context;
 
 	java.awt.Rectangle displayRectangle;
 	java.awt.Rectangle displayPaintable;
@@ -62,15 +63,15 @@ public class AppletDeviceDisplay implements DeviceDisplayImpl
 	boolean scrollDown = false;
 
 
-	AppletDeviceDisplay(Device device) 
+	public AppletDeviceDisplay(EmulatorContext context) 
 	{
-		this.device = device;
+		this.context = context;
 	}
 
 
 	public MutableImage getDisplayImage()
 	{
-		return device.getEmulatorContext().getDisplayComponent().getDisplayImage();
+		return context.getDisplayComponent().getDisplayImage();
 	}
 
 
@@ -177,7 +178,7 @@ public class AppletDeviceDisplay implements DeviceDisplayImpl
 
 	public void repaint() 
 	{
-		device.getEmulatorContext().getDisplayComponent().repaint();
+		context.getDisplayComponent().repaint();
 	}
 
 

@@ -23,10 +23,17 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Shape;
+import java.awt.Toolkit;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageFilter;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Image;
 
 import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletAccess;
@@ -38,6 +45,7 @@ import com.barteo.emulator.device.MutableImage;
 import com.barteo.emulator.device.impl.DeviceDisplayImpl;
 import com.barteo.emulator.device.impl.PositionedImage;
 import com.barteo.emulator.device.impl.Rectangle;
+import com.sixlegs.image.png.PngImage;
 
 public class AppletDeviceDisplay implements DeviceDisplayImpl 
 {
@@ -210,11 +218,48 @@ public class AppletDeviceDisplay implements DeviceDisplayImpl
 	{
 		return foregroundColor;
 	}
+	
+	
+	public Image createImage(int width, int height) 
+	{
+		if (width <= 0 || height <= 0) {
+			throw new IllegalArgumentException();
+		}
+
+		return new AppletMutableImage(width, height);
+	}
+
+	public Image createImage(String name) throws IOException 
+	{
+		return getImage(name);
+	}
+
+	public Image createImage(javax.microedition.lcdui.Image source) 
+	{
+		if (source.isMutable()) {
+			return new AppletImmutableImage((AppletMutableImage) source);
+		} else {
+			return source;
+		}
+	}
+
+	public Image createImage(byte[] imageData, int imageOffset, int imageLength) 
+	{
+		ByteArrayInputStream is = new ByteArrayInputStream(imageData, imageOffset, imageLength);
+		try {
+			return getImage(is);
+		} catch (IOException ex) {
+			throw new IllegalArgumentException(ex.toString());
+		}
+	}
 
 
-    /* (non-Javadoc)
-     * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setNumColors(int)
-     */
+
+    /*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setNumColors(int)
+	 */
     public void setNumColors(int i)
     {
         numColors = i;
@@ -309,5 +354,62 @@ public class AppletDeviceDisplay implements DeviceDisplayImpl
     {
         modeAbcUpperImage = object;
     }
+    
+    
+    public Image createSystemImage(String str) 
+    		throws IOException 
+	{
+		InputStream is;
+
+		is = EmulatorContext.class.getResourceAsStream(str);
+		if (is == null) {
+			throw new IOException();
+		}
+		PngImage png = new PngImage(is);
+
+		return new AppletImmutableImage(Toolkit.getDefaultToolkit()
+				.createImage(png));
+	}
+
+    
+	private Image getImage(String str) 
+			throws IOException 
+	{
+		InputStream is = EmulatorContext.class.getResourceAsStream(str);
+
+		if (is == null) {
+			throw new IOException(str + " could not be found.");
+		}
+
+		return getImage(is);
+	}
+
+	
+	private Image getImage(InputStream is) 
+			throws IOException 
+	{
+		ImageFilter filter = null;
+		PngImage png = new PngImage(is);
+
+		try {
+			png.getWidth();
+		} catch (IOException ex) {
+			throw new IOException("Error decoding PNG image: " + ex.toString());
+		}
+
+		if (isColor()) {
+			filter = new RGBImageFilter();
+		} else {
+			if (numColors() == 2) {
+				filter = new BWImageFilter();
+			} else {
+				filter = new GrayImageFilter();
+			}
+		}
+		FilteredImageSource imageSource = new FilteredImageSource(png, filter);
+
+		return new AppletImmutableImage(Toolkit.getDefaultToolkit()
+				.createImage(imageSource));
+	}
 
 }

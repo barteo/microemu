@@ -19,79 +19,15 @@
  
 package com.barteo.emulator.device.applet;
 
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.ImageFilter;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Image;
 
-import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.device.Device;
-import com.barteo.emulator.device.FontManager;
-import com.sixlegs.image.png.PngImage;
 
 
 public class AppletDevice extends Device
 {
-	private FontManager fontManager = null;
-
-	private Image normalImage;
-	private Image overImage;
-	private Image pressedImage;
-  
-  
-	public Image createImage(int width, int height)
-	{
-		if (width <= 0 || height <= 0) {
-			throw new IllegalArgumentException();
-		}
-	
-		return new AppletMutableImage(width, height);
-	}
-	
-																
-	public Image createImage(String name)
-  		throws IOException
-	{
-		return getImage(name);
-	}
-  
-  
-	public Image createImage(javax.microedition.lcdui.Image source)
-  {
-    if (source.isMutable()) {
-      return new AppletImmutableImage((AppletMutableImage) source);
-    } else {
-      return source;
-    }
-  }
-  
-
-	public Image createImage(byte[] imageData, int imageOffset, int imageLength)
-	{
-		ByteArrayInputStream is = new ByteArrayInputStream(imageData, imageOffset, imageLength);
-		try {
-			return getImage(is);
-		} catch (IOException ex) {
-			throw new IllegalArgumentException(ex.toString());
-		}
-	}
-  
-  
-  public FontManager getFontManager()
-  {
-    if (fontManager == null) {
-      fontManager = new AppletFontManager();
-    }
-    
-    return fontManager;
-  }
-  
   
   public int getGameAction(int keyCode) 
   {
@@ -169,24 +105,6 @@ public class AppletDevice extends Device
   }
 
 
-  public Image getNormalImage()
-  {
-    return normalImage;
-  }
-
-  
-  public Image getOverImage()
-  {
-    return overImage;
-  }
-
-  
-  public Image getPressedImage()
-  {
-    return pressedImage;
-  }
-
-  
   public boolean hasPointerMotionEvents()
   {
     return false;
@@ -203,88 +121,5 @@ public class AppletDevice extends Device
   {
     return false;
   }
-  
-
-  protected Image createSystemImage(String str)
-			throws IOException
-	{
-    InputStream is;
-
-    is = EmulatorContext.class.getResourceAsStream(str);
-    if (is == null) {
-      throw new IOException();
-    }
-    PngImage png = new PngImage(is);
     
-		return new AppletImmutableImage(Toolkit.getDefaultToolkit().createImage(png));
-	}
-
-  
-	private Image getImage(String str)
-			throws IOException
-	{
-		InputStream is = EmulatorContext.class.getResourceAsStream(str);
-
-		if (is == null) {
-				throw new IOException(str + " could not be found.");
-		}
-
-		return getImage(is);
-	}
-
-  
-  private Image getImage(InputStream is)
-			throws IOException
-  {
-		ImageFilter filter = null;
-    PngImage png = new PngImage(is);
-    
-		try {
-			png.getWidth();
-		} catch (IOException ex) {
-			throw new IOException("Error decoding PNG image: " + ex.toString());    	
-		}
-        
-    if (getDeviceDisplay().isColor()) {
-			filter = new RGBImageFilter();
-    } else {
-      if (getDeviceDisplay().numColors() == 2) {
-        filter = new BWImageFilter();
-      } else {
-        filter = new GrayImageFilter();
-      }
-    }
-    FilteredImageSource imageSource = new FilteredImageSource(png, filter);
-
-		return new AppletImmutableImage(Toolkit.getDefaultToolkit().createImage(imageSource));
-  }
-
-
-/* (non-Javadoc)
- * @see com.barteo.emulator.device.Device#setNormalImage(javax.microedition.lcdui.Image)
- */
-protected void setNormalImage(Image image)
-{
-    normalImage = image;
-}
-
-
-/* (non-Javadoc)
- * @see com.barteo.emulator.device.Device#setOverImage(javax.microedition.lcdui.Image)
- */
-protected void setOverImage(Image image)
-{
-    overImage = image;
-}
-
-
-/* (non-Javadoc)
- * @see com.barteo.emulator.device.Device#setPressedImage(javax.microedition.lcdui.Image)
- */
-protected void setPressedImage(Image image)
-{
-    pressedImage = image;
-}
-
-  
 }

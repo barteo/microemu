@@ -20,10 +20,14 @@
 package com.barteo.emulator.device.swt;
 
 import java.awt.Color;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Image;
 
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.RGB;
@@ -31,6 +35,8 @@ import org.eclipse.swt.graphics.RGB;
 import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.MIDletAccess;
 import com.barteo.emulator.MIDletBridge;
+import com.barteo.emulator.app.ui.swt.ImageFilter;
+import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
 import com.barteo.emulator.app.ui.swt.SwtGraphics;
 import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceFactory;
@@ -216,11 +222,50 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 	{
 		return foregroundColor;
 	}
+	
+	
+	public Image createImage(int width, int height) 
+	{
+		if (width <= 0 || height <= 0) {
+			throw new IllegalArgumentException();
+		}
 
+		return new SwtMutableImage(width, height);
+	}
 
-    /* (non-Javadoc)
-     * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setNumColors(int)
-     */
+	
+	public Image createImage(String name) 
+			throws IOException 
+	{
+		return getImage(name);
+	}
+
+	
+	public Image createImage(javax.microedition.lcdui.Image source) 
+	{
+		if (source.isMutable()) {
+			return new SwtImmutableImage((SwtMutableImage) source);
+		} else {
+			return source;
+		}
+	}
+
+	
+	public Image createImage(byte[] imageData, int imageOffset, int imageLength) 
+	{
+		ByteArrayInputStream is = new ByteArrayInputStream(imageData, imageOffset, imageLength);
+		try {
+			return getImage(is);
+		} catch (IOException ex) {
+			throw new IllegalArgumentException(ex.toString());
+		}
+	}
+
+    /*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setNumColors(int)
+	 */
     public void setNumColors(int i)
     {
         numColors = i;
@@ -315,5 +360,50 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
     {
         modeAbcUpperImage = object;
     }
+
+    
+    public Image createSystemImage(String str) 
+    		throws IOException 
+	{
+		InputStream is;
+
+		is = getClass().getResourceAsStream(str);
+		if (is == null) {
+			throw new IOException();
+		}
+
+		return new SwtImmutableImage(SwtDeviceComponent.createImage(is));
+	}
+
+    
+	private Image getImage(String str) 
+			throws IOException 
+	{
+		InputStream is = context.getClassLoader().getResourceAsStream(str);
+
+		if (is == null) {
+			throw new IOException(str + " could not be found.");
+		}
+
+		return getImage(is);
+	}
+
+	
+	private Image getImage(InputStream is) 
+			throws IOException 
+	{
+		ImageFilter filter = null;
+		if (isColor()) {
+			filter = new RGBImageFilter();
+		} else {
+			if (numColors() == 2) {
+				filter = new BWImageFilter();
+			} else {
+				filter = new GrayImageFilter();
+			}
+		}
+
+		return new SwtImmutableImage(SwtDeviceComponent.createImage(is, filter));
+	}
 
 }

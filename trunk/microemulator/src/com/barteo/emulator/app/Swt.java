@@ -54,9 +54,11 @@ import com.barteo.emulator.app.util.DeviceEntry;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
 import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.FontManager;
 import com.barteo.emulator.device.InputMethod;
 import com.barteo.emulator.device.swt.SwtDevice;
 import com.barteo.emulator.device.swt.SwtDeviceDisplay;
+import com.barteo.emulator.device.swt.SwtFontManager;
 import com.barteo.emulator.device.swt.SwtInputMethod;
 
 
@@ -239,6 +241,8 @@ public class Swt extends Common
 			
 			private DeviceDisplay deviceDisplay = new SwtDeviceDisplay(this);
 
+			private FontManager fontManager = new SwtFontManager();
+			
 			public ClassLoader getClassLoader()
 			{
 				return loader;
@@ -262,7 +266,12 @@ public class Swt extends Common
             public DeviceDisplay getDeviceDisplay()
             {
                 return deviceDisplay;
-            }    
+            }
+
+			public FontManager getDeviceFontManager() 
+			{
+				return fontManager;
+			}    
 		});
 
 		instance = this;

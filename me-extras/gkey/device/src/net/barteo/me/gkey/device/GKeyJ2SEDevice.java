@@ -31,6 +31,8 @@ import com.barteo.emulator.device.j2se.J2SEDevice;
 
 public class GKeyJ2SEDevice extends J2SEDevice implements GetKeyHandler
 {
+    private InputMethod inputMethod;
+    
 
 	public void init(EmulatorContext context) 
 	{
@@ -50,7 +52,7 @@ public class GKeyJ2SEDevice extends J2SEDevice implements GetKeyHandler
 
 	public void getKeyPressed() 
 	{
-		Launcher launcher = context.getLauncher();
+		Launcher launcher = getEmulatorContext().getLauncher();
 		MIDlet midlet = launcher.getCurrentMIDlet();
 		if (midlet == launcher) {
 			midlet = launcher.startSelectedMIDlet();

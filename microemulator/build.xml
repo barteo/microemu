@@ -244,64 +244,42 @@
 		</java>
 	</target>
 
-	<target name="compile-device-app" depends="init,jar"  if="target.app" description="Create devices">
-		<mkdir dir="./build/devices/${target.device.prefix}/minimum/classes"/>
+	<target name="compile-device" depends="init,jar"  if="target.app" description="Create devices">
+		<mkdir dir="./build/devices/minimum/classes"/>
 		<javac debug="true" deprecation="true" 
-        srcdir="./devices/${target.device.prefix}/minimum/java"
-        destdir="./build/devices/${target.device.prefix}/minimum/classes">
+        srcdir="./devices/minimum/java"
+        destdir="./build/devices/minimum/classes">
 			<classpath>
 				<pathelement location="./target/me-${target}.jar"/>
 			</classpath>
 		</javac>
-		<mkdir dir="./build/devices/${target.device.prefix}/large/classes"/>
+		<mkdir dir="./build/devices/large/classes"/>
 		<javac debug="true" deprecation="true" 
-        srcdir="./devices/${target.device.prefix}/large/java"
-        destdir="./build/devices/${target.device.prefix}/large/classes">
+        srcdir="./devices/large/java"
+        destdir="./build/devices/large/classes">
 			<classpath>
 				<pathelement location="./target/me-${target}.jar"/>
 			</classpath>
 		</javac>
-	</target>
-
-	<target name="compile-device-applet" depends="init,jar"  if="target.applet" description="Create minimum device">
-		<mkdir dir="./build/devices/${target.device.prefix}/minimum/classes"/>
-		<javac target="1.1" debug="true" deprecation="true" 
-        srcdir="./devices/${target.device.prefix}/minimum/java"
-        destdir="./build/devices/${target.device.prefix}/minimum/classes">
-			<classpath>
-				<pathelement location="./target/me-${target}.jar"/>
-			</classpath>
-		</javac>
-		<mkdir dir="./build/devices/${target.device.prefix}/large/classes"/>
-		<javac target="1.1" debug="true" deprecation="true" 
-        srcdir="./devices/${target.device.prefix}/large/java"
-        destdir="./build/devices/${target.device.prefix}/large/classes">
-			<classpath>
-				<pathelement location="./target/me-${target}.jar"/>
-			</classpath>
-		</javac>
-	</target>
-
-	<target name="compile-device" depends="init,compile-device-app,compile-device-applet">
 	</target>
 
 	<target name="jar-device" depends="compile-device" description="Package devices">
-		<mkdir dir="./target/devices/${target.device.prefix}"/>
-		<jar compress="true" jarfile="./target/devices/${target.device.prefix}/minimum.${target.device.extension}" 
-        manifest="./devices/${target.device.prefix}/minimum/manifest.mf">
-			<fileset dir="./build/devices/${target.device.prefix}/minimum/classes">
+		<mkdir dir="./target/devices"/>
+		<jar compress="true" jarfile="./target/devices/minimum.${target.device.extension}" 
+        manifest="./devices/minimum/manifest.mf">
+			<fileset dir="./build/devices/minimum/classes">
 				<exclude name="**/.*"/>
 			</fileset>
-			<fileset dir="./devices/${target.device.prefix}/minimum/res">
+			<fileset dir="./devices/minimum/res">
 				<exclude name="**/.*"/>
 			</fileset>
 		</jar>
-		<jar compress="true" jarfile="./target/devices/${target.device.prefix}/large.${target.device.extension}" 
-        manifest="./devices/${target.device.prefix}/large/manifest.mf">
-			<fileset dir="./build/devices/${target.device.prefix}/large/classes">
+		<jar compress="true" jarfile="./target/devices/large.${target.device.extension}" 
+        manifest="./devices/large/manifest.mf">
+			<fileset dir="./build/devices/large/classes">
 				<exclude name="**/.*"/>
 			</fileset>
-			<fileset dir="./devices/${target.device.prefix}/large/res">
+			<fileset dir="./devices/large/res">
 				<exclude name="**/.*"/>
 			</fileset>
 		</jar>

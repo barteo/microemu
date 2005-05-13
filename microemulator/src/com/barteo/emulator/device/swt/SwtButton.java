@@ -20,10 +20,12 @@
 package com.barteo.emulator.device.swt;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Rectangle;
+
+import com.barteo.emulator.device.impl.Button;
+import com.barteo.emulator.device.impl.Rectangle;
 
 
-public class SwtButton 
+public class SwtButton implements Button
 {
  
   String name;

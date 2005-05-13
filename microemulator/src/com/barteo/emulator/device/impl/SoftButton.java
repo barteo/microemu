@@ -16,12 +16,24 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
-package com.barteo.emulator.device.swt;
 
-import com.barteo.emulator.device.Device;
+package com.barteo.emulator.device.impl;
+
+import javax.microedition.lcdui.Command;
 
 
-public class SwtDevice extends Device
+/**
+ * A SoftButton can have an associated Command.
+ */
+public interface SoftButton 
 {
+  Command getCommand();
+  
+  void setCommand(Command cmd);
+  
+  /**
+   * Check if the command is of a type usually associated with this SoftButton.
+   * E.g. "BACK" commands are normally placed only on a particular button.
+   */
+  boolean preferredCommandType(Command cmd);
 }

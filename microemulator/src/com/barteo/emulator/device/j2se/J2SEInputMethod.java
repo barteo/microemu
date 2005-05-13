@@ -22,6 +22,7 @@ package com.barteo.emulator.device.j2se;
 import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 
+import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.TextField;
 import com.barteo.emulator.MIDletBridge;
 import com.barteo.emulator.device.DeviceFactory;
@@ -51,6 +52,100 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 	}
 
 	
+	public int getGameAction(int keyCode)
+    {
+        switch (keyCode) {
+            case KeyEvent.VK_UP:
+                return Canvas.UP;
+
+            case KeyEvent.VK_DOWN:
+                return Canvas.DOWN;
+
+            case KeyEvent.VK_LEFT:
+                return Canvas.LEFT;
+
+            case KeyEvent.VK_RIGHT:
+                return Canvas.RIGHT;
+
+            case KeyEvent.VK_ENTER:
+                return Canvas.FIRE;
+
+            case KeyEvent.VK_1:
+            case KeyEvent.VK_A:
+                return Canvas.GAME_A;
+
+            case KeyEvent.VK_3:
+            case KeyEvent.VK_B:
+                return Canvas.GAME_B;
+
+            case KeyEvent.VK_7:
+            case KeyEvent.VK_C:
+                return Canvas.GAME_C;
+
+            case KeyEvent.VK_9:
+            case KeyEvent.VK_D:
+                return Canvas.GAME_D;
+
+            default:
+                return 0;
+        }
+    }
+
+	
+    public int getKeyCode(int gameAction)
+    {
+        switch (gameAction) {
+            case Canvas.UP:
+                return KeyEvent.VK_UP;
+
+            case Canvas.DOWN:
+                return KeyEvent.VK_DOWN;
+
+            case Canvas.LEFT:
+                return KeyEvent.VK_LEFT;
+
+            case Canvas.RIGHT:
+                return KeyEvent.VK_RIGHT;
+
+            case Canvas.FIRE:
+                return KeyEvent.VK_ENTER;
+
+            case Canvas.GAME_A:
+                return KeyEvent.VK_1;
+
+            case Canvas.GAME_B:
+                return KeyEvent.VK_3;
+
+            case Canvas.GAME_C:
+                return KeyEvent.VK_7;
+
+            case Canvas.GAME_D:
+                return KeyEvent.VK_9;
+
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    
+    public boolean hasPointerMotionEvents()
+    {
+        return false;
+    }
+
+    
+    public boolean hasPointerEvents()
+    {
+        return false;
+    }
+
+    
+    public boolean hasRepeatEvents()
+    {
+        return false;
+    }
+
+	  
 	protected boolean commonKeyPressed(int keyCode) 
 	{
 		String tmp;

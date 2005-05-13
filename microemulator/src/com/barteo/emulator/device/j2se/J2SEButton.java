@@ -21,10 +21,11 @@ package com.barteo.emulator.device.j2se;
 
 import java.awt.event.KeyEvent;
 
+import com.barteo.emulator.device.impl.Button;
 import com.barteo.emulator.device.impl.Rectangle;
 
 
-public class J2SEButton 
+public class J2SEButton implements Button
 {
  
   String name;

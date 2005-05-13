@@ -34,12 +34,22 @@ public abstract class InputMethod
 	int inputMode = INPUT_NONE;
 
 	protected InputMethodListener inputMethodListener = null;
-  protected int constraints = TextField.ANY;
-  protected String text;
+	protected int constraints = TextField.ANY;
+	protected String text;
 	protected int caret;
 	protected int maxSize;
 
 
+    public abstract int getGameAction(int keyCode);
+
+    public abstract int getKeyCode(int gameAction);
+
+    public abstract boolean hasPointerMotionEvents();
+
+    public abstract boolean hasPointerEvents();
+
+    public abstract boolean hasRepeatEvents();
+        
 	public abstract void keyPressed(int keyCode);
 
 	public abstract void keyReleased(int keyCode);
@@ -63,10 +73,10 @@ public abstract class InputMethod
 	}
   
   
-  public void setConstraints(int aconstraints)
-  {
-    constraints = aconstraints;
-  }
+	public void setConstraints(int aconstraints)
+  	{
+	    constraints = aconstraints;
+  	}
 
 
 	public int getInputMode()

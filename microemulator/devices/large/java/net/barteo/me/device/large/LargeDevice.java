@@ -16,12 +16,19 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
-package com.barteo.emulator.device.swt;
 
+package net.barteo.me.device.large;
+
+import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.device.Device;
 
 
-public class SwtDevice extends Device
+public class LargeDevice extends Device
 {
+  
+  public void init(EmulatorContext context) 
+  {
+    super.init(context, "/net/barteo/me/device/large/device.xml");
+  }
+  
 }

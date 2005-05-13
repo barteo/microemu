@@ -26,8 +26,8 @@ import java.util.Vector;
 import javax.microedition.lcdui.Command;
 
 import com.barteo.emulator.device.DeviceFactory;
-import com.barteo.emulator.device.SoftButton;
 import com.barteo.emulator.device.impl.Rectangle;
+import com.barteo.emulator.device.impl.SoftButton;
 
 
 public class J2SESoftButton extends J2SEButton implements SoftButton

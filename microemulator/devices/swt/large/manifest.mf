@@ -1,2 +1,0 @@
-Device-Name: Large Device
-Device-Class: net.barteo.me.swtdevice.large.LargeDevice

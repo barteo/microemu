@@ -21,6 +21,7 @@ package com.barteo.emulator.device.impl;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.Vector;
 
 import javax.microedition.lcdui.Image;
 
@@ -31,6 +32,13 @@ public interface DeviceDisplayImpl extends DeviceDisplay
 {
 	
 	Image createSystemImage(String name) throws IOException;  
+	
+	Button createButton(
+	        String name, Rectangle rectangle, String keyName, char[] chars);
+	
+	SoftButton createSoftButton(
+	        String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands);
+
 
     /**
      * @param i

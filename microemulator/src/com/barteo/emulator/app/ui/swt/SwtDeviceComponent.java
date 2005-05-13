@@ -43,14 +43,14 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
 import com.barteo.emulator.CommandManager;
 import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.device.DeviceFactory;
-import com.barteo.emulator.device.SoftButton;
+import com.barteo.emulator.device.impl.Rectangle;
+import com.barteo.emulator.device.impl.SoftButton;
 import com.barteo.emulator.device.swt.SwtButton;
 import com.barteo.emulator.device.swt.SwtDevice;
 import com.barteo.emulator.device.swt.SwtDeviceDisplay;
@@ -184,7 +184,7 @@ public class SwtDeviceComponent extends Canvas
 		 return;
 
 		if (fBuffer != null) {
-			Rectangle r= fBuffer.getBounds();
+			org.eclipse.swt.graphics.Rectangle r= fBuffer.getBounds();
 			if (r.width != size.x || r.height != size.y) {
 			fBuffer.dispose();
 			fBuffer= null;
@@ -208,20 +208,20 @@ public class SwtDeviceComponent extends Canvas
 			Rectangle rect;
 			if (prevOverButton != null ) {
 				rect = prevOverButton.getRectangle();    
-				gc.drawImage(((SwtImmutableImage) ((SwtDevice) DeviceFactory.getDevice()).getNormalImage()).getImage(), 
+				gc.drawImage(((SwtImmutableImage) DeviceFactory.getDevice().getNormalImage()).getImage(), 
 						rect.x, rect.y, rect.width, rect.height,
 						rect.x, rect.y, rect.width, rect.height);
 				prevOverButton = null;
 			}
 			if (overButton != null) {
 				rect = overButton.getRectangle();   
-				gc.drawImage(((SwtImmutableImage) ((SwtDevice) DeviceFactory.getDevice()).getOverImage()).getImage(), 
+				gc.drawImage(((SwtImmutableImage) DeviceFactory.getDevice().getOverImage()).getImage(), 
 						rect.x, rect.y, rect.width, rect.height,
 						rect.x, rect.y, rect.width, rect.height);
 			}
 			if (pressedButton != null) {
 				rect = pressedButton.getRectangle();    
-				gc.drawImage(((SwtImmutableImage) ((SwtDevice) DeviceFactory.getDevice()).getPressedImage()).getImage(), 
+				gc.drawImage(((SwtImmutableImage) DeviceFactory.getDevice().getPressedImage()).getImage(), 
 						rect.x, rect.y, rect.width, rect.height,
 						rect.x, rect.y, rect.width, rect.height);
 			}
@@ -237,8 +237,7 @@ public class SwtDeviceComponent extends Canvas
 	{
 		for (Enumeration e = ((SwtDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
 			SwtButton button = (SwtButton) e.nextElement();
-			Rectangle tmp = new Rectangle(button.getRectangle().x, button.getRectangle().y,
-					button.getRectangle().width, button.getRectangle().height);
+			Rectangle tmp = button.getRectangle();
 			if (x >= tmp.x && x < tmp.x + tmp.width && y >= tmp.y && y < tmp.y + tmp.height) {
 				return button;
 			}

@@ -22,7 +22,6 @@ package com.barteo.emulator.app.ui.awt;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Panel;
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -35,12 +34,13 @@ import javax.microedition.lcdui.Command;
 import com.barteo.emulator.CommandManager;
 import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.device.DeviceFactory;
-import com.barteo.emulator.device.SoftButton;
 import com.barteo.emulator.device.applet.AppletButton;
 import com.barteo.emulator.device.applet.AppletDevice;
 import com.barteo.emulator.device.applet.AppletDeviceDisplay;
 import com.barteo.emulator.device.applet.AppletImmutableImage;
 import com.barteo.emulator.device.applet.AppletInputMethod;
+import com.barteo.emulator.device.impl.Rectangle;
+import com.barteo.emulator.device.impl.SoftButton;
 
 
 public class AwtDeviceComponent extends Panel
@@ -188,20 +188,20 @@ public class AwtDeviceComponent extends Panel
 		Rectangle rect;
 		if (prevOverButton != null ) {
 			rect = prevOverButton.getRectangle();    
-			offg.drawImage(((AppletImmutableImage) ((AppletDevice) DeviceFactory.getDevice()).getNormalImage()).getImage(), 
+			offg.drawImage(((AppletImmutableImage) DeviceFactory.getDevice().getNormalImage()).getImage(), 
 					rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
 					rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
 			prevOverButton = null;
 		}
 		if (overButton != null) {
 			rect = overButton.getRectangle();    
-			offg.drawImage(((AppletImmutableImage) ((AppletDevice) DeviceFactory.getDevice()).getOverImage()).getImage(), 
+			offg.drawImage(((AppletImmutableImage) DeviceFactory.getDevice().getOverImage()).getImage(), 
 					rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
 					rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
 		}
 		if (pressedButton != null) {
 			rect = pressedButton.getRectangle();    
-			offg.drawImage(((AppletImmutableImage) ((AppletDevice) DeviceFactory.getDevice()).getPressedImage()).getImage(), 
+			offg.drawImage(((AppletImmutableImage) DeviceFactory.getDevice().getPressedImage()).getImage(), 
 					rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
 					rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
 		}

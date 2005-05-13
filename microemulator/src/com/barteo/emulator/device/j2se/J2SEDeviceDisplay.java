@@ -30,6 +30,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.Vector;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Displayable;
@@ -42,9 +43,11 @@ import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.InputMethod;
 import com.barteo.emulator.device.MutableImage;
+import com.barteo.emulator.device.impl.Button;
 import com.barteo.emulator.device.impl.DeviceDisplayImpl;
 import com.barteo.emulator.device.impl.PositionedImage;
 import com.barteo.emulator.device.impl.Rectangle;
+import com.barteo.emulator.device.impl.SoftButton;
 import com.sixlegs.image.png.PngImage;
 
 public class J2SEDeviceDisplay implements DeviceDisplayImpl 
@@ -410,6 +413,19 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 
 		return new J2SEImmutableImage(Toolkit.getDefaultToolkit().createImage(imageSource));
 	}
+
+
+
+    public Button createButton(String name, Rectangle rectangle, String keyName, char[] chars)
+    {
+        return new J2SEButton(name, rectangle, keyName, chars);
+    }
+
+
+    public SoftButton createSoftButton(String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands)
+    {
+        return new J2SESoftButton(name, rectangle, keyName, paintable, alignmentName, commands);
+    }
 
 
 }

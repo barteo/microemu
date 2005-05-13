@@ -19,11 +19,13 @@
  
 package com.barteo.emulator.device.applet;
 
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
+import com.barteo.emulator.device.impl.Button;
+import com.barteo.emulator.device.impl.Rectangle;
 
-public class AppletButton 
+
+public class AppletButton implements Button
 {
  
   String name;

@@ -30,6 +30,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.Vector;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Displayable;
@@ -42,17 +43,19 @@ import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.InputMethod;
 import com.barteo.emulator.device.MutableImage;
+import com.barteo.emulator.device.impl.Button;
 import com.barteo.emulator.device.impl.DeviceDisplayImpl;
 import com.barteo.emulator.device.impl.PositionedImage;
 import com.barteo.emulator.device.impl.Rectangle;
+import com.barteo.emulator.device.impl.SoftButton;
 import com.sixlegs.image.png.PngImage;
 
 public class AppletDeviceDisplay implements DeviceDisplayImpl 
 {
     EmulatorContext context;
 
-	java.awt.Rectangle displayRectangle;
-	java.awt.Rectangle displayPaintable;
+	Rectangle displayRectangle;
+	Rectangle displayPaintable;
 
 	boolean isColor;
 	int numColors;
@@ -156,7 +159,7 @@ public class AppletDeviceDisplay implements DeviceDisplayImpl
 			if (!(current instanceof Canvas)
 				|| ((Canvas) current).getWidth() != displayRectangle.width
 				|| ((Canvas) current).getHeight() != displayRectangle.height) {
-				g.setClip(displayPaintable);
+				g.setClip(new java.awt.Rectangle(displayPaintable.x, displayPaintable.y, displayPaintable.width, displayPaintable.height));
 				g.translate(displayPaintable.x, displayPaintable.y);
 			}
 			Font f = g.getFont();
@@ -202,7 +205,7 @@ public class AppletDeviceDisplay implements DeviceDisplayImpl
 	}
 
 
-	public java.awt.Rectangle getDisplayRectangle() 
+	public Rectangle getDisplayRectangle() 
 	{
 		return displayRectangle;
 	}
@@ -298,7 +301,7 @@ public class AppletDeviceDisplay implements DeviceDisplayImpl
      */
     public void setDisplayRectangle(Rectangle rectangle)
     {
-        displayRectangle = new java.awt.Rectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+        displayRectangle = rectangle;
     }
 
 
@@ -307,7 +310,7 @@ public class AppletDeviceDisplay implements DeviceDisplayImpl
      */
     public void setDisplayPaintable(Rectangle rectangle)
     {
-        displayPaintable = new java.awt.Rectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+        displayPaintable = rectangle;
     }
 
 
@@ -411,5 +414,17 @@ public class AppletDeviceDisplay implements DeviceDisplayImpl
 		return new AppletImmutableImage(Toolkit.getDefaultToolkit()
 				.createImage(imageSource));
 	}
+
+
+    public Button createButton(String name, Rectangle rectangle, String keyName, char[] chars)
+    {
+        return new AppletButton(name, rectangle, keyName,chars);
+    }
+
+
+    public SoftButton createSoftButton(String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands)
+    {
+        return new AppletSoftButton(name, rectangle, keyName, paintable, alignmentName, commands);
+    }
 
 }

@@ -28,7 +28,7 @@ import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.List;
 import com.barteo.emulator.device.DeviceFactory;
-import com.barteo.emulator.device.SoftButton;
+import com.barteo.emulator.device.impl.SoftButton;
 
 
 public class CommandManager 

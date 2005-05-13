@@ -53,5 +53,5 @@ public interface DeviceDisplay
 	Image createImage(Image source);
 
 	Image createImage(byte[] imageData, int imageOffset, int imageLength);
-
+	
 }

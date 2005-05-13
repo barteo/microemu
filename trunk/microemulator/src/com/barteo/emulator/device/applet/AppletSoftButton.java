@@ -20,14 +20,14 @@
 package com.barteo.emulator.device.applet;
 
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Command;
 
 import com.barteo.emulator.device.DeviceFactory;
-import com.barteo.emulator.device.SoftButton;
+import com.barteo.emulator.device.impl.Rectangle;
+import com.barteo.emulator.device.impl.SoftButton;
 
 
 public class AppletSoftButton extends AppletButton implements SoftButton

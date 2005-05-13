@@ -21,6 +21,7 @@ package com.barteo.emulator.device.swt;
 
 import java.util.Enumeration;
 
+import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.TextField;
 
 import org.eclipse.swt.SWT;
@@ -53,6 +54,94 @@ public class SwtInputMethod extends InputMethod implements Runnable
 	}
 
 	
+	public int getGameAction(int keyCode)
+    {
+        // TODO poprawic KeyEvent
+        switch (keyCode) {
+            case SWT.ARROW_UP:
+                return Canvas.UP;
+
+            case SWT.ARROW_DOWN:
+                return Canvas.DOWN;
+
+            case SWT.ARROW_LEFT:
+                return Canvas.LEFT;
+
+            case SWT.ARROW_RIGHT:
+                return Canvas.RIGHT;
+
+            case SWT.CR:
+                return Canvas.FIRE;
+
+            /*
+             * case KeyEvent.VK_1: case KeyEvent.VK_A: return Canvas.GAME_A;
+             * 
+             * case KeyEvent.VK_3: case KeyEvent.VK_B: return Canvas.GAME_B;
+             * 
+             * case KeyEvent.VK_7: case KeyEvent.VK_C: return Canvas.GAME_C;
+             * 
+             * case KeyEvent.VK_9: case KeyEvent.VK_D: return Canvas.GAME_D;
+             */
+
+            default:
+                return 0;
+        }
+    }
+
+	
+    public int getKeyCode(int gameAction)
+    {
+        // TODO poprawic KeyEvent
+        switch (gameAction) {
+            case Canvas.UP:
+                return SWT.ARROW_UP;
+
+            case Canvas.DOWN:
+                return SWT.ARROW_DOWN;
+
+            case Canvas.LEFT:
+                return SWT.ARROW_LEFT;
+
+            case Canvas.RIGHT:
+                return SWT.ARROW_RIGHT;
+
+            case Canvas.FIRE:
+                return SWT.CR;
+
+            /*
+             * case Canvas.GAME_A: return KeyEvent.VK_1;
+             * 
+             * case Canvas.GAME_B: return KeyEvent.VK_3;
+             * 
+             * case Canvas.GAME_C: return KeyEvent.VK_7;
+             * 
+             * case Canvas.GAME_D: return KeyEvent.VK_9;
+             */
+
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    
+    public boolean hasPointerMotionEvents()
+    {
+        return false;
+    }
+
+    
+    public boolean hasPointerEvents()
+    {
+        return false;
+    }
+
+    
+    public boolean hasRepeatEvents()
+    {
+        return false;
+    }
+
+    
 	private boolean commonKeyPressed(int keyCode) 
 	{
 		String tmp;

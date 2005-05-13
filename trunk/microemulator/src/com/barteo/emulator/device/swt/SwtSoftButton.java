@@ -25,11 +25,11 @@ import java.util.Vector;
 import javax.microedition.lcdui.Command;
 
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.graphics.Rectangle;
 
 import com.barteo.emulator.app.ui.swt.SwtGraphics;
 import com.barteo.emulator.device.DeviceFactory;
-import com.barteo.emulator.device.SoftButton;
+import com.barteo.emulator.device.impl.Rectangle;
+import com.barteo.emulator.device.impl.SoftButton;
 
 
 public class SwtSoftButton extends SwtButton implements SoftButton

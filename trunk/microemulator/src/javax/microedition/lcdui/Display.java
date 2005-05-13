@@ -329,13 +329,13 @@ public class Display
 	
 	static int getGameAction(int keyCode) 
 	{
-		return DeviceFactory.getDevice().getGameAction(keyCode);
+		return DeviceFactory.getDevice().getInputMethod().getGameAction(keyCode);
 	}
 
 	
 	static int getKeyCode(int gameAction) 
 	{
-		return DeviceFactory.getDevice().getKeyCode(gameAction);
+		return DeviceFactory.getDevice().getInputMethod().getKeyCode(gameAction);
 	}
 
 	

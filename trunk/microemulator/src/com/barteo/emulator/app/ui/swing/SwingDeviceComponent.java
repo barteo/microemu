@@ -35,8 +35,8 @@ import javax.swing.UIManager;
 import com.barteo.emulator.CommandManager;
 import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.device.DeviceFactory;
-import com.barteo.emulator.device.SoftButton;
 import com.barteo.emulator.device.impl.Rectangle;
+import com.barteo.emulator.device.impl.SoftButton;
 import com.barteo.emulator.device.j2se.J2SEButton;
 import com.barteo.emulator.device.j2se.J2SEDevice;
 import com.barteo.emulator.device.j2se.J2SEDeviceDisplay;
@@ -186,20 +186,20 @@ public class SwingDeviceComponent extends JPanel
     Rectangle rect;
     if (prevOverButton != null ) {
       rect = prevOverButton.getRectangle();    
-      offg.drawImage(((J2SEImmutableImage) ((J2SEDevice) DeviceFactory.getDevice()).getNormalImage()).getImage(), 
+      offg.drawImage(((J2SEImmutableImage) DeviceFactory.getDevice().getNormalImage()).getImage(), 
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
       prevOverButton = null;
     }
     if (overButton != null) {
       rect = overButton.getRectangle();    
-      offg.drawImage(((J2SEImmutableImage) ((J2SEDevice) DeviceFactory.getDevice()).getOverImage()).getImage(), 
+      offg.drawImage(((J2SEImmutableImage) DeviceFactory.getDevice().getOverImage()).getImage(), 
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
     }
     if (pressedButton != null) {
       rect = pressedButton.getRectangle();    
-      offg.drawImage(((J2SEImmutableImage) ((J2SEDevice) DeviceFactory.getDevice()).getPressedImage()).getImage(), 
+      offg.drawImage(((J2SEImmutableImage) DeviceFactory.getDevice().getPressedImage()).getImage(), 
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
           rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
     }

@@ -35,8 +35,7 @@ import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.device.impl.DeviceDisplayImpl;
 import com.barteo.emulator.device.impl.PositionedImage;
 import com.barteo.emulator.device.impl.Rectangle;
-import com.barteo.emulator.device.j2se.J2SEButton;
-import com.barteo.emulator.device.j2se.J2SESoftButton;
+import com.barteo.emulator.device.impl.SoftButton;
 
 
 public abstract class Device 
@@ -56,17 +55,6 @@ public abstract class Device
 	}
 	
 
-    public abstract int getGameAction(int keyCode);
-
-    public abstract int getKeyCode(int gameAction);
-
-    public abstract boolean hasPointerMotionEvents();
-
-    public abstract boolean hasPointerEvents();
-
-    public abstract boolean hasRepeatEvents();
-    
-    
     public void init(EmulatorContext context)
     {     
         // Here should be device.xml but Netscape security manager doesn't accept this extension
@@ -250,7 +238,7 @@ public abstract class Device
                     charArray[i] = ' ';
                   }
                 }
-                getButtons().addElement(new J2SEButton(tmp_keyboard.getStringAttribute("name"), 
+                getButtons().addElement(deviceDisplay.createButton(tmp_keyboard.getStringAttribute("name"), 
                     rectangle, tmp_keyboard.getStringAttribute("key"), charArray));
               } else if (tmp_keyboard.getName().equals("softbutton")) {
                 Vector commands = new Vector();
@@ -265,7 +253,7 @@ public abstract class Device
                     commands.addElement(tmp_button.getContent());
                   }
                 }
-                J2SESoftButton button = new J2SESoftButton(tmp_keyboard.getStringAttribute("name"),
+                SoftButton button = deviceDisplay.createSoftButton(tmp_keyboard.getStringAttribute("name"),
                     rectangle, tmp_keyboard.getStringAttribute("key"), paintable, 
                     tmp_keyboard.getStringAttribute("alignment"), commands);
                 getButtons().addElement(button);

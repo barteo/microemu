@@ -47,8 +47,6 @@ public class TextField extends Item
 	private int maxSize;
 	private int constraints;
 
-	private TextBox tb = null;
-
 	private InputMethodListener inputMethodListener = new InputMethodListener() 
 	{
 		public void caretPositionChanged(InputMethodEvent event) 

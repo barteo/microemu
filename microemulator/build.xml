@@ -244,19 +244,15 @@
 		</java>
 	</target>
 
-	<target name="compile-device" depends="init,jar"  if="target.app" description="Create devices">
+	<target name="compile-device" depends="init,jar" description="Create devices">
 		<mkdir dir="./build/devices/minimum/classes"/>
-		<javac debug="true" deprecation="true" 
-        srcdir="./devices/minimum/java"
-        destdir="./build/devices/minimum/classes">
+		<javac debug="true" deprecation="true" srcdir="./devices/minimum/java" destdir="./build/devices/minimum/classes">
 			<classpath>
 				<pathelement location="./target/me-${target}.jar"/>
 			</classpath>
 		</javac>
 		<mkdir dir="./build/devices/large/classes"/>
-		<javac debug="true" deprecation="true" 
-        srcdir="./devices/large/java"
-        destdir="./build/devices/large/classes">
+		<javac debug="true" deprecation="true" srcdir="./devices/large/java" destdir="./build/devices/large/classes">
 			<classpath>
 				<pathelement location="./target/me-${target}.jar"/>
 			</classpath>

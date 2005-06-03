@@ -215,8 +215,6 @@ public class SwtInputMethod extends InputMethod implements Runnable
 			return true;
 		}
 
-System.out.println("IM::commonKeyPressed:" + keyCode);
-
 		return false;
 	}
 
@@ -227,12 +225,7 @@ System.out.println("IM::commonKeyPressed:" + keyCode);
 			return;
 		}
 
-		System.out.println("IM::keyboardKeyPressed:" + ev.keyCode + "+" + ev.character);
-		if (text.length() < maxSize /*
-									 * && ev.character !=
-									 * KeyEvent.CHAR_UNDEFINED
-									 */
-			) {
+		if (text.length() < maxSize && (ev.keyCode & SWT.EMBEDDED) == 0) {
 			char[] test = new char[1];
 			test[0] = ev.character;
 			test = filterConstraints(test);

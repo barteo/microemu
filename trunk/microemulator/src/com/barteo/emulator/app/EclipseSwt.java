@@ -186,7 +186,7 @@ public class EclipseSwt extends Common
 		shell.setText("Microemu");
 //		addWindowListener(windowListener);
 		    
-		Config.loadConfig("config-swt.xml");
+		Config.loadConfig("config.xml");
 		shell.addKeyListener(keyListener);
 
 		devicePanel = new SwtDeviceComponent(shell);

@@ -38,7 +38,6 @@ import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.impl.Rectangle;
 import com.barteo.emulator.device.impl.SoftButton;
 import com.barteo.emulator.device.j2se.J2SEButton;
-import com.barteo.emulator.device.j2se.J2SEDevice;
 import com.barteo.emulator.device.j2se.J2SEDeviceDisplay;
 import com.barteo.emulator.device.j2se.J2SEImmutableImage;
 import com.barteo.emulator.device.j2se.J2SEInputMethod;
@@ -174,7 +173,7 @@ public class SwingDeviceComponent extends JPanel
     Dimension size = getSize();
     offg.setColor(UIManager.getColor("text"));
     offg.fillRect(0, 0, size.width, size.height);
-    offg.drawImage(((J2SEImmutableImage) ((J2SEDevice) DeviceFactory.getDevice()).getNormalImage()).getImage(), 
+    offg.drawImage(((J2SEImmutableImage) DeviceFactory.getDevice().getNormalImage()).getImage(), 
             0, 0, this);
     
     Rectangle displayRectangle = 
@@ -216,7 +215,7 @@ public class SwingDeviceComponent extends JPanel
   
   private J2SEButton getButton(int x, int y)
   {
-    for (Enumeration e = ((J2SEDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
+    for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements(); ) {
       J2SEButton button = (J2SEButton) e.nextElement();
       Rectangle tmp = new Rectangle(button.getRectangle());
       if (x >= tmp.x && x < tmp.x + tmp.width && y >= tmp.y && y < tmp.y + tmp.height) {
@@ -229,7 +228,7 @@ public class SwingDeviceComponent extends JPanel
   
   private J2SEButton getButton(KeyEvent ev)
   {
-    for (Enumeration e = ((J2SEDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
+    for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements(); ) {
       J2SEButton button = (J2SEButton) e.nextElement();
       if (ev.getKeyCode() == button.getKey()) {
         return button;

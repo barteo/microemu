@@ -52,11 +52,11 @@ import com.barteo.emulator.app.ui.swt.SwtMessageDialog;
 import com.barteo.emulator.app.ui.swt.SwtSelectDeviceDialog;
 import com.barteo.emulator.app.util.DeviceEntry;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
+import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.FontManager;
 import com.barteo.emulator.device.InputMethod;
-import com.barteo.emulator.device.swt.SwtDevice;
 import com.barteo.emulator.device.swt.SwtDeviceDisplay;
 import com.barteo.emulator.device.swt.SwtFontManager;
 import com.barteo.emulator.device.swt.SwtInputMethod;
@@ -316,7 +316,7 @@ public class Swt extends Common
 		shell.setText("MicroEmulator");
 //		addWindowListener(windowListener);
 		    
-		Config.loadConfig("config-swt.xml");
+		Config.loadConfig("config.xml");
 		shell.addKeyListener(keyListener);
 
 		devicePanel = new SwtDeviceComponent(shell);
@@ -358,7 +358,7 @@ public class Swt extends Common
 			} else {
 				deviceClass = Class.forName(entry.getClassName());
 			}
-			SwtDevice device = (SwtDevice) deviceClass.newInstance();
+			Device device = (Device) deviceClass.newInstance();
 			this.deviceEntry = entry;
 			setDevice(device);
 		} catch (MalformedURLException ex) {
@@ -373,7 +373,7 @@ public class Swt extends Common
 	}
 	
 	
-	protected void setDevice(SwtDevice device)
+	protected void setDevice(Device device)
 	{
 		super.setDevice(device);
 		
@@ -396,7 +396,7 @@ public class Swt extends Common
 					i++;
 					try {
 						Class deviceClass = Class.forName(args[i]);
-						app.setDevice((SwtDevice) deviceClass.newInstance());
+						app.setDevice((Device) deviceClass.newInstance());
 					} catch (ClassNotFoundException ex) {
 						System.err.println(ex);          
 					} catch (InstantiationException ex) {

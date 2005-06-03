@@ -52,11 +52,11 @@ import com.barteo.emulator.app.ui.awt.OptionPane;
 import com.barteo.emulator.app.util.DeviceEntry;
 import com.barteo.emulator.app.util.ExtensionFileFilter;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
+import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.FontManager;
 import com.barteo.emulator.device.InputMethod;
-import com.barteo.emulator.device.applet.AppletDevice;
 import com.barteo.emulator.device.applet.AppletDeviceDisplay;
 import com.barteo.emulator.device.applet.AppletFontManager;
 import com.barteo.emulator.device.applet.AppletInputMethod;
@@ -279,7 +279,7 @@ public class Awt extends Frame
 		addWindowListener(windowListener);
 		
     
-		Config.loadConfig("config-awt.xml");
+		Config.loadConfig("config.xml");
 
 		devicePanel = new AwtDeviceComponent();
 		selectDevicePanel = new AwtSelectDevicePanel();
@@ -319,7 +319,7 @@ public class Awt extends Frame
 			} else {
 				deviceClass = Class.forName(entry.getClassName());
 			}
-			AppletDevice device = (AppletDevice) deviceClass.newInstance();
+			Device device = (Device) deviceClass.newInstance();
 			this.deviceEntry = entry;
 			setDevice(device);
 		} catch (MalformedURLException ex) {
@@ -334,7 +334,7 @@ public class Awt extends Frame
 	}
   
   
-	protected void setDevice(AppletDevice device) 
+	protected void setDevice(Device device) 
 	{
 		common.setDevice(device);
 		

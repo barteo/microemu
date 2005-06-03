@@ -55,11 +55,11 @@ import com.barteo.emulator.app.ui.swing.SwingDialogWindow;
 import com.barteo.emulator.app.ui.swing.SwingSelectDevicePanel;
 import com.barteo.emulator.app.util.DeviceEntry;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
+import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceDisplay;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.FontManager;
 import com.barteo.emulator.device.InputMethod;
-import com.barteo.emulator.device.j2se.J2SEDevice;
 import com.barteo.emulator.device.j2se.J2SEDeviceDisplay;
 import com.barteo.emulator.device.j2se.J2SEFontManager;
 import com.barteo.emulator.device.j2se.J2SEInputMethod;
@@ -339,7 +339,7 @@ public class Main extends JFrame
      	 } else {
         	deviceClass = Class.forName(entry.getClassName());
       	}
-      	J2SEDevice device = (J2SEDevice) deviceClass.newInstance();
+      	Device device = (Device) deviceClass.newInstance();
 		this.deviceEntry = entry;
       	setDevice(device);
     } catch (MalformedURLException ex) {
@@ -354,7 +354,7 @@ public class Main extends JFrame
   }
   
   
-	protected void setDevice(J2SEDevice device) 
+	protected void setDevice(Device device) 
 	{
 		common.setDevice(device);
 		
@@ -441,7 +441,7 @@ public class Main extends JFrame
     			if (i < args.length) {
 					try {
 						Class deviceClass = Class.forName(args[i]);
-						app.setDevice((J2SEDevice) deviceClass.newInstance());
+						app.setDevice((Device) deviceClass.newInstance());
 					} catch (ClassNotFoundException ex) {
 						ex.printStackTrace();
 					} catch (InstantiationException ex) {

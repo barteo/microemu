@@ -35,7 +35,6 @@ import com.barteo.emulator.CommandManager;
 import com.barteo.emulator.DisplayComponent;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.applet.AppletButton;
-import com.barteo.emulator.device.applet.AppletDevice;
 import com.barteo.emulator.device.applet.AppletDeviceDisplay;
 import com.barteo.emulator.device.applet.AppletImmutableImage;
 import com.barteo.emulator.device.applet.AppletInputMethod;
@@ -176,7 +175,7 @@ public class AwtDeviceComponent extends Panel
 			offg = offi.getGraphics();
 		}
 
-		offg.drawImage(((AppletImmutableImage) ((AppletDevice) DeviceFactory.getDevice()).getNormalImage()).getImage(), 
+		offg.drawImage(((AppletImmutableImage) DeviceFactory.getDevice().getNormalImage()).getImage(), 
 		        0, 0, this);
     
 		Rectangle displayRectangle = 
@@ -218,7 +217,7 @@ public class AwtDeviceComponent extends Panel
   
 	private AppletButton getButton(int x, int y)
 	{
-		for (Enumeration e = ((AppletDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
+		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements(); ) {
 			AppletButton button = (AppletButton) e.nextElement();
 			Rectangle tmp = new Rectangle(button.getRectangle());
 			if (x >= tmp.x && x < tmp.x + tmp.width && y >= tmp.y && y < tmp.y + tmp.height) {
@@ -231,7 +230,7 @@ public class AwtDeviceComponent extends Panel
   
 	private AppletButton getButton(KeyEvent ev)
 	{
-		for (Enumeration e = ((AppletDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
+		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements(); ) {
 			AppletButton button = (AppletButton) e.nextElement();
 			if (ev.getKeyCode() == button.getKey()) {
 				return button;

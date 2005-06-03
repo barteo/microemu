@@ -370,7 +370,7 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 	{
 		InputStream is;
 
-		is = getClass().getResourceAsStream(str);
+		is = context.getClassLoader().getResourceAsStream(str);
 		if (is == null) {
 			throw new IOException();
 		}

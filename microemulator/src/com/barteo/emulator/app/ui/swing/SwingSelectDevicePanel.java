@@ -48,7 +48,7 @@ import javax.swing.event.ListSelectionListener;
 import com.barteo.emulator.app.Config;
 import com.barteo.emulator.app.util.DeviceEntry;
 import com.barteo.emulator.app.util.ProgressJarClassLoader;
-import com.barteo.emulator.device.j2se.J2SEDevice;
+import com.barteo.emulator.device.Device;
 
 
 public class SwingSelectDevicePanel extends SwingDialogPanel
@@ -108,10 +108,10 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
           }
           
           jar.close();
-          deviceClassName = deviceClassName.replace('.', '/');
-          if (deviceClassName.charAt(0) == '/') {
-            deviceClassName = deviceClassName.substring(1);
-          }
+//          deviceClassName = deviceClassName.replace('.', '/');
+//          if (deviceClassName.charAt(0) == '/') {
+//            deviceClassName = deviceClassName.substring(1);
+//          }
           for (Enumeration e = lsDevicesModel.elements(); e.hasMoreElements(); ) {
             DeviceEntry entry = (DeviceEntry) e.nextElement();
             if (deviceClassName.equals(entry.getClassName())) {
@@ -140,7 +140,7 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
           return;
         }
           
-        if (!J2SEDevice.class.isAssignableFrom(deviceClass)) {
+        if (!Device.class.isAssignableFrom(deviceClass)) {
           JOptionPane.showMessageDialog(instance, 
               "Cannot find class defined in Device-Class entry in jar manifest.",
               "Error", JOptionPane.ERROR_MESSAGE);

@@ -38,7 +38,7 @@ import com.barteo.emulator.device.impl.Rectangle;
 import com.barteo.emulator.device.impl.SoftButton;
 
 
-public abstract class Device 
+public class Device 
 {
 	private EmulatorContext context; 	
 

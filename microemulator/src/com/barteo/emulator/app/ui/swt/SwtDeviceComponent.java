@@ -52,7 +52,6 @@ import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.impl.Rectangle;
 import com.barteo.emulator.device.impl.SoftButton;
 import com.barteo.emulator.device.swt.SwtButton;
-import com.barteo.emulator.device.swt.SwtDevice;
 import com.barteo.emulator.device.swt.SwtDeviceDisplay;
 import com.barteo.emulator.device.swt.SwtImmutableImage;
 import com.barteo.emulator.device.swt.SwtInputMethod;
@@ -170,7 +169,7 @@ public class SwtDeviceComponent extends Canvas
   
 	public Point computeSize(int wHint, int hHint, boolean changed)
 	{
-		javax.microedition.lcdui.Image tmp = ((SwtDevice) DeviceFactory.getDevice()).getNormalImage();
+		javax.microedition.lcdui.Image tmp = DeviceFactory.getDevice().getNormalImage();
 
 		return new Point(tmp.getWidth(), tmp.getHeight());		
 	}
@@ -196,7 +195,7 @@ public class SwtDeviceComponent extends Canvas
 
 		SwtGraphics gc = new SwtGraphics(new GC(fBuffer));
 		try {
-			gc.drawImage(((SwtImmutableImage) ((SwtDevice) DeviceFactory.getDevice()).getNormalImage()).getImage()
+			gc.drawImage(((SwtImmutableImage) DeviceFactory.getDevice().getNormalImage()).getImage()
 			        , 0, 0);
     
 			Rectangle displayRectangle = 
@@ -235,7 +234,7 @@ public class SwtDeviceComponent extends Canvas
 
 	private SwtButton getButton(int x, int y)
 	{
-		for (Enumeration e = ((SwtDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
+		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements(); ) {
 			SwtButton button = (SwtButton) e.nextElement();
 			Rectangle tmp = button.getRectangle();
 			if (x >= tmp.x && x < tmp.x + tmp.width && y >= tmp.y && y < tmp.y + tmp.height) {
@@ -248,7 +247,7 @@ public class SwtDeviceComponent extends Canvas
   
 	private SwtButton getButton(KeyEvent ev)
 	{
-		for (Enumeration e = ((SwtDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements(); ) {
+		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements(); ) {
 			SwtButton button = (SwtButton) e.nextElement();
 			if (ev.keyCode == button.getKey()) {
 				return button;

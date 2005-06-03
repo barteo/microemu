@@ -45,17 +45,8 @@ public class Config
   {
 		File configFile = new File(configPath, configFileName);
 		
-    DeviceEntry defaultDevice;
-    if (configFileName.equals("config-swt.xml")) { 
-			defaultDevice =
-				  new DeviceEntry("Default device", null, "com.barteo.emulator.device.swt.SwtDevice", true, false);
-    } else if (configFileName.equals("config-awt.xml")) {
-			defaultDevice =
-				  new DeviceEntry("Default device", null, "com.barteo.emulator.device.applet.AppletDevice", true, false);
-  	} else {
-			defaultDevice =
-      	  new DeviceEntry("Default device", null, "com.barteo.emulator.device.j2se.J2SEDevice", true, false);
-    }
+    DeviceEntry defaultDevice = 
+            new DeviceEntry("Default device", null, "com.barteo.emulator.device.Device", true, false);
     devices.add(defaultDevice);
 
     String xml = "";

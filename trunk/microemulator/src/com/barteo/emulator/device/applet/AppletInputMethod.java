@@ -272,7 +272,7 @@ public class AppletInputMethod extends InputMethod implements Runnable
 		}
 
 		if (text.length() < maxSize) {
-			for (Enumeration e = ((AppletDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements();) {
+			for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
 				AppletButton button = (AppletButton) e.nextElement();
 				if (keyCode == button.getKey()) {
 					synchronized (this) {

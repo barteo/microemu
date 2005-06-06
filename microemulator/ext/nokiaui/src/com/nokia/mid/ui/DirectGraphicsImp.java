@@ -50,7 +50,6 @@ public class DirectGraphicsImp implements DirectGraphics{
      * @param manipulation ignored, since manipulations are not supported at the moment
      */
     public void drawImage(Image img, int x, int y, int anchor, int manipulation) {
-        System.out.println("public void drawImage(Image img, int x, int y, int anchor, int manipulation)");
         if(img == null) {
             throw new NullPointerException();
         }

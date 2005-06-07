@@ -264,7 +264,10 @@ public class SwtDisplayGraphics extends javax.microedition.lcdui.Graphics implem
 	
 	public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) 
 	{
+        Color tmp = g.getBackground();
+        g.setBackground(g.getForeground());
 		g.fillArc(x, y, width, height, startAngle, arcAngle);
+        g.setBackground(tmp);
 	}
 
 	

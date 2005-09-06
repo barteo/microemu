@@ -161,6 +161,14 @@ public class Form extends Screen
 
 		return contentHeight;
 	}
+    
+    
+    void fireItemStateListener()
+    {
+        if (itemStateListener != null) {
+            itemStateListener.itemStateChanged(items[focusItemIndex]);
+        }
+    }
 
 	
 	int getHeight() 
@@ -194,9 +202,7 @@ public class Form extends Screen
 		if (focusItemIndex != -1) {
 			if (Display.getGameAction(keyCode) == Canvas.FIRE) {
 				items[focusItemIndex].select();
-				if (itemStateListener != null) {
-					itemStateListener.itemStateChanged(items[focusItemIndex]);
-				}
+                fireItemStateListener();
 			} else {
 				items[focusItemIndex].keyPressed(keyCode);
 			}

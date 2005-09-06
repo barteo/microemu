@@ -49,6 +49,7 @@ public class Connection implements HttpConnection, ClosedConnection
       throw new IOException(ex.toString());
     }
     cn = url.openConnection();
+    cn.setDoOutput(true);
     
     return this;
   }
@@ -374,7 +375,7 @@ public class Connection implements HttpConnection, ClosedConnection
     }
 
     connected = true;
-
+    
     return cn.getOutputStream();
   }
 

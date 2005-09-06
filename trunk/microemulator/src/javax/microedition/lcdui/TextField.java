@@ -61,6 +61,10 @@ public class TextField extends Item
 			setCaretVisible(false);
 			setString(event.getText());
 			repaint();
+            
+            if (owner instanceof Form) {
+                ((Form) owner).fireItemStateListener();
+            }
 		}
 	};
 

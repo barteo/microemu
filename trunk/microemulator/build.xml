@@ -122,6 +122,7 @@
 			<include name="java/util/**"/>
 			<include name="javax/**"/>
 			<include name="com/barteo/emulator/applet/**"/>
+			<include name="com/barteo/emulator/device/applet/**"/>
 			<include name="com/barteo/cldc/**"/>
 			<include name="com/barteo/midp/**"/>
 			<include name="com/sixlegs/image/png/**"/>

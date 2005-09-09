@@ -28,6 +28,7 @@ import java.awt.Font;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Image;
@@ -256,7 +257,13 @@ public class Main extends Applet implements MicroEmulator
     {
         String value = null;
         if (key.equals("microedition.platform")) {
-            value = "microemulator";
+            value = "MIDP-1.0";
+        } else if (key.equals("microedition.configuration")) {
+            value = "CLDC-1.0";
+        } else if (key.equals("microedition.locale")) {
+            value = Locale.getDefault().getLanguage();
+        } else if (key.equals("microedition.encoding")) {
+            value = System.getProperty("file.encoding");
         } else if (getParameter(key) != null) {
             value = getParameter(key);
         } else {

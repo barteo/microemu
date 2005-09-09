@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.Locale;
 
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
@@ -101,8 +102,17 @@ public class Common implements MicroEmulator
 	
 	public String getAppProperty(String key)
 	{
-		String result = jad.getProperty(key);
-		
+        if (key.equals("microedition.platform")) {
+            return "MIDP-1.0";
+        } else if (key.equals("microedition.configuration")) {
+            return "CLDC-1.0";
+        } else if (key.equals("microedition.locale")) {
+            return Locale.getDefault().getLanguage();
+        } else if (key.equals("microedition.encoding")) {
+            return System.getProperty("file.encoding");
+        }
+        
+		String result = jad.getProperty(key);		
 		if (result == null) {
 			result = manifest.getProperty(key);
 		}

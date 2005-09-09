@@ -364,7 +364,7 @@ public class AppletDeviceDisplay implements DeviceDisplayImpl
 	{
 		InputStream is;
 
-		is = context.getClassLoader().getResourceAsStream(str);
+		is = context.getClass().getResourceAsStream(str);
 		if (is == null) {
 			throw new IOException();
 		}
@@ -378,7 +378,7 @@ public class AppletDeviceDisplay implements DeviceDisplayImpl
 	private Image getImage(String str) 
 			throws IOException 
 	{
-		InputStream is = context.getClassLoader().getResourceAsStream(str);
+		InputStream is = context.getClass().getResourceAsStream(str);
 
 		if (is == null) {
 			throw new IOException(str + " could not be found.");

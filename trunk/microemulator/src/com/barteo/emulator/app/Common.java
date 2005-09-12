@@ -103,6 +103,8 @@ public class Common implements MicroEmulator
 	public String getAppProperty(String key)
 	{
         if (key.equals("microedition.platform")) {
+            return  "MicroEmulator";
+        } else if (key.equals("microedition.profile")) {
             return "MIDP-1.0";
         } else if (key.equals("microedition.configuration")) {
             return "CLDC-1.0";

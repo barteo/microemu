@@ -1,7 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@it.pl>
- *  Copyright (C) 2002 3G Lab http://www.3glab.com
+ *  Copyright (C) 2005 Bartek Teodorczyk <barteo@barteo.net>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -17,179 +16,158 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 package com.barteo.emulator;
 
+import java.util.Enumeration;
 import java.util.Vector;
 
-import javax.microedition.lcdui.Choice;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.List;
+
 import com.barteo.emulator.device.DeviceFactory;
-import com.barteo.emulator.device.impl.SoftButton;
+import com.barteo.emulator.device.SoftButton;
 
 
 public class CommandManager 
 {
-  static CommandManager instance = new CommandManager();
+	private static final Command CMD_MENU = new Command("Menu", Command.EXIT, 0);
+	private static final Command CMD_BACK = new Command("Back", Command.BACK, 0);
+	private static final Command CMD_SELECT = new Command("Select", Command.OK, 0);
+	
+	private static CommandManager instance = new CommandManager();
+	
+	private static List menuList = new List("Menu", List.IMPLICIT);
+	private static Vector menuCommands;
+	private static Displayable previous;
+	
+	private static CommandListener menuCommandListener = new CommandListener()
+	{
+		public void commandAction(Command c, Displayable d) 
+		{
+		    Command selection = (Command) menuCommands.elementAt(menuList.getSelectedIndex());
 
-  final static Command MENU_COMMAND = new Command("Menu", Command.SCREEN, 0);
-  final static Command BACK_COMMAND = new Command("Back", Command.BACK, 0);
-  final static Command SELECT_COMMAND = new Command("Select", Command.OK, 0);
-  final static List commandList = new List("Menu", Choice.IMPLICIT);
-  static CommandListener commandManagerListener;
-  static Displayable previous;
+			MIDletBridge.getMIDletAccess().getDisplayAccess().setCurrent(previous);
 
-  static Vector menuCommands = new Vector();
-
-
-  public static CommandManager getInstance() 
-  {
-    return instance;
-  }
-
-
-  public void commandAction(Command cmd) 
-  {
-    if (cmd == MENU_COMMAND) {
-      previous = MIDletBridge.getMIDletAccess().getDisplayAccess().getCurrent();
-      MIDletBridge.getMIDletAccess().getDisplayAccess().setCurrent(commandList);
-    } else {
-      MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(cmd);
-    }
-  }
-
-
-  /**
-   * Updates the commands on the soft buttons.
-   *
-   * Requires that the command vector passed in is in priority order.
-   *
-   * A menu is created if there are more commands than the number of soft
-   * buttons. The function of one of the soft buttons will be to display the
-   * menu. The commands with the highest priorities are mapped to the soft
-   * buttons, while the rest will appear in the menu.
-   */
-  public void updateCommands(Vector commands)
-  {
-    // Verify that the list is ordered
-    // Really an assert condition leave till all working
-    if (commands != null) {
-      for (int i=0; i<commands.size()-1; i++) {
-        Command cmda = (Command)commands.elementAt(i);
-        Command cmdb = (Command)commands.elementAt((i+1));
-        if (cmda.getPriority() > cmdb.getPriority()) {
-          System.err.println("Assert: CommandManager.updateCommands commands out of order");
-        }
-      }
-    }
-
-    // Find all the soft buttons we have
-    Vector devButtons = DeviceFactory.getDevice().getSoftButtons();
-    Vector softButtons = new Vector(3);
-
-    for (int i=0; i < devButtons.size(); i++) {
-      SoftButton button = (SoftButton) devButtons.elementAt(i);
-      if (button instanceof SoftButton) {
-        softButtons.addElement(button);
-        button.setCommand(null);
-      }
-    }
-
-    if (commands == null) {
-      return;
-    }
-
-    Vector cmds = commands;
-
-    // Insert a MENU button if a menu is needed so that all the commands can be
-    // displayed.
-    int nSoftButtons = softButtons.size();
-    if (commands.size() > nSoftButtons) {
-      cmds = (Vector)commands.clone();
-      cmds.insertElementAt(MENU_COMMAND, 0);
-    }
-
-    Vector unmappedCmds = new Vector();
-
-    // First try to map commands to buttons which have the command's type as
-    // one of their preferred types.
-    for (int i = 0; i < nSoftButtons && i < cmds.size(); ++i) {
-      Command cmd = (Command)cmds.elementAt(i);
-
-      boolean commandAssignedToAButton = false;
-      for (int j = 0; j < softButtons.size(); ++j) {
-        SoftButton softButton = (SoftButton)softButtons.elementAt(j);
-        if (softButton.preferredCommandType(cmd)) {
-          // Note: there may be several buttons which cmd could be mapped to. We
-          // take the first one, even though it may be "better" to take another.
-          softButton.setCommand(cmd);
-          softButtons.removeElementAt(j);
-          commandAssignedToAButton = true;
-          break;
-        }
-      }
-      if (!commandAssignedToAButton) {
-        unmappedCmds.addElement(cmd);
-      }
-    }
-
-    // Now map all the unassigned commands to buttons.
-    // Note: at this point softButtons contains only buttons which have no cmd.
-    for (int i = 0; i < unmappedCmds.size(); ++i) {
-      ((SoftButton)softButtons.elementAt(i)).setCommand((Command)
-                                                    unmappedCmds.elementAt(i));
-    }
-
-
-    if (cmds.size() > nSoftButtons) {
-      // Create menu for items that can't be mapped to buttons.
-
-      while (commandList.size() > 0) {
-        commandList.delete(0);
-      }
-      menuCommands.removeAllElements();
-
-      for (int i = nSoftButtons; i < cmds.size(); ++i) {
-        Command cmd = (Command)cmds.elementAt(i);
-        commandList.append(cmd.getLabel(), null);
-        menuCommands.addElement(cmd);
-      }
-    }
-  }
-
-
-  static class CommandManagerListener implements CommandListener 
-  {
-    /**
-     *  Description of the Method
-     *
-     *@param  cmd  Description of Parameter
-     *@param  d    Description of Parameter
-     */
-    public void commandAction(Command cmd, Displayable d) 
-    {
-      // Get the selection. This must be done before calling setCurrent which
-      // recreates the commandList (recreating the commandList makes the
-      // "selection" the "default selection").
-      Command selection = (Command) menuCommands.elementAt(commandList.getSelectedIndex());
-
-      MIDletBridge.getMIDletAccess().getDisplayAccess().setCurrent(previous);
-
-      if ((cmd == SELECT_COMMAND) || cmd == List.SELECT_COMMAND) {
-        MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(selection);
-      }
-    }
-  }
-
-
-  static {
-    commandManagerListener = new CommandManagerListener();
-    commandList.addCommand(BACK_COMMAND);
-    commandList.addCommand(SELECT_COMMAND);
-    commandList.setCommandListener(commandManagerListener);
-  }
-
+			if ((c == CMD_SELECT) || c == List.SELECT_COMMAND) {
+				MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(selection);
+			}
+		}		
+	};
+	
+	static {
+		menuList.addCommand(CMD_BACK);
+		menuList.addCommand(CMD_SELECT);
+		menuList.setCommandListener(menuCommandListener);
+	}
+	
+	
+	private CommandManager()
+	{	
+	}
+	
+	
+	public static CommandManager getInstance()
+	{
+		return instance;
+	}
+	
+	
+	public void commandAction(Command command)
+	{
+		if (command == CMD_MENU) {
+			previous = MIDletBridge.getMIDletAccess().getDisplayAccess().getCurrent();
+			MIDletBridge.getMIDletAccess().getDisplayAccess().setCurrent(menuList);
+		} else {
+			MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(command);
+		}
+	}
+	
+	
+	public void updateCommands(Vector commands)
+	{
+		Vector buttons = DeviceFactory.getDevice().getSoftButtons();
+		Enumeration en = buttons.elements();
+		while (en.hasMoreElements()) {
+			((SoftButton) en.nextElement()).setCommand(null);
+		}
+		
+		if (commands == null) {			
+			return;
+		}
+		
+		Vector commandsTable = new Vector();
+		for (int i = 0; i < commands.size(); i++) {
+			commandsTable.addElement(null);
+		}
+		
+		// Sort commands using priority
+		en = commands.elements();
+		while (en.hasMoreElements()) {
+			Command commandToSort = (Command) en.nextElement();
+			
+			for (int i = 0; i < commandsTable.size(); i++) {
+				if (commandsTable.elementAt(i) == null) {
+					commandsTable.setElementAt(commandToSort, i);
+					break;
+				}
+				if (commandToSort.getPriority() < ((Command) commandsTable.elementAt(i)).getPriority()) {
+					for (int j = commandsTable.size() - 1; j > i; j--) {
+						if (commandsTable.elementAt(j - 1) != null) {
+							commandsTable.setElementAt(commandsTable.elementAt(j - 1), j);
+						}
+					}
+				}
+			}			
+		}
+		
+		if (commandsTable.size() <= buttons.size()) {
+			fillPossibleCommands(buttons, commandsTable);			
+			return;
+		}
+		
+		// Menu is needed
+		commandsTable.insertElementAt(CMD_MENU, 0);
+		fillPossibleCommands(buttons, commandsTable);
+		while (menuList.size() > 0) {
+	        menuList.delete(0);
+	    }
+		for (int i = 0; i < commandsTable.size(); i++) {
+			menuCommands = commandsTable;
+			menuList.append(((Command) commandsTable.elementAt(i)).getLabel(), null);
+		}
+	}
+	
+	
+	private void fillPossibleCommands(Vector buttons, Vector commandsTable)
+	{
+		for (int i = 0; i < commandsTable.size(); i++) {
+			Enumeration en = buttons.elements();
+			while (en.hasMoreElements()) {
+				SoftButton button = (SoftButton) en.nextElement();
+				if (button.getCommand() == null 
+						&& button.preferredCommandType((Command) commandsTable.elementAt(i))) {
+					button.setCommand((Command) commandsTable.elementAt(i));
+					commandsTable.removeElementAt(i);
+					i--;
+					break;
+				}
+			}
+		}
+		for (int i = 0; i < commandsTable.size(); i++) {
+			Enumeration en = buttons.elements();
+			while (en.hasMoreElements()) {
+				SoftButton button = (SoftButton) en.nextElement();
+				if (button.getCommand() == null) {
+					button.setCommand((Command) commandsTable.elementAt(i));
+					commandsTable.removeElementAt(i);
+					i--;
+					break;
+				}
+			}
+		}
+	}
+	
 }

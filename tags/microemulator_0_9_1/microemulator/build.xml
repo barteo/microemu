@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="run" name="microemulator">
+
+	<property file="build.properties"/>
+	<property environment="env"/>
+
+	<target name="init-base">
+		<condition property="target.applet">
+			<equals arg1="${target}" arg2="applet"/>
+		</condition>
+
+		<condition property="target.app">
+			<equals arg1="${target}" arg2="app"/>
+		</condition>
+
+		<condition property="target.app.type.awt">
+			<and>
+				<equals arg1="${target}" arg2="app"/>
+				<equals arg1="${target.app.type}" arg2="awt"/>
+			</and>
+		</condition>
+
+		<condition property="target.app.type.swing">
+			<and>
+				<equals arg1="${target}" arg2="app"/>
+				<equals arg1="${target.app.type}" arg2="swing"/>
+			</and>
+		</condition>
+
+		<condition property="target.app.type.swt">
+			<and>
+				<equals arg1="${target}" arg2="app"/>
+				<equals arg1="${target.app.type}" arg2="swt"/>
+			</and>
+		</condition>
+
+		<condition property="target.applet.obfuscate.true">
+			<and>
+				<equals arg1="${target}" arg2="applet"/>
+				<equals arg1="${target.applet.obfuscate}" arg2="true"/>
+			</and>
+		</condition>
+	</target>
+
+	<target name="init-app" depends="init-base,init-app-awt,init-app-swing,init-app-swt" if="target.app">
+		<property name="target.device.extension" value="dev"/>
+	</target>
+
+	<target name="init-app-awt" depends="init-base" if="target.app.type.awt">
+		<property name="target.device.prefix" value="applet"/>
+		<property name="target.app.classname" value="com.barteo.emulator.app.Awt"/>
+
+		<patternset id="project.src">
+			<include name="javax/**"/>
+			<exclude name="com/barteo/emulator/app/capture/**"/>
+			<include name="com/barteo/emulator/app/**"/>
+			<exclude name="com/barteo/emulator/app/Main*"/>
+			<exclude name="com/barteo/emulator/app/EclipseSwt*"/>
+			<exclude name="com/barteo/emulator/app/Swt*"/>
+			<exclude name="com/barteo/emulator/app/WebStart*"/>
+			<exclude name="com/barteo/emulator/app/ui/swing/**"/>
+			<exclude name="com/barteo/emulator/app/ui/swt/**"/>
+			<include name="com/barteo/emulator/device/**"/>
+			<exclude name="com/barteo/emulator/device/j2se/**"/>
+			<exclude name="com/barteo/emulator/device/swt/**"/>
+			<include name="com/barteo/cldc/**"/>
+			<include name="com/barteo/midp/**"/>
+			<include name="com/sixlegs/image/png/**"/>
+		</patternset>
+	</target>
+
+	<target name="init-app-swing" depends="init-base" if="target.app.type.swing">
+		<property name="target.device.prefix" value="j2se"/>
+		<property name="target.app.classname" value="com.barteo.emulator.app.Main"/>
+
+		<patternset id="project.src">
+			<include name="javax/**"/>
+			<exclude name="com/barteo/emulator/app/capture/**"/>
+			<include name="com/barteo/emulator/app/**"/>
+			<exclude name="com/barteo/emulator/app/Awt*"/>
+			<exclude name="com/barteo/emulator/app/EclipseSwt*"/>
+			<exclude name="com/barteo/emulator/app/Swt*"/>
+			<exclude name="com/barteo/emulator/app/ui/awt/**"/>
+			<exclude name="com/barteo/emulator/app/ui/swt/**"/>
+			<include name="com/barteo/emulator/device/**"/>
+			<exclude name="com/barteo/emulator/device/applet/**"/>
+			<exclude name="com/barteo/emulator/device/swt/**"/>
+			<include name="com/barteo/cldc/**"/>
+			<include name="com/barteo/midp/**"/>
+			<include name="com/sixlegs/image/png/**"/>
+		</patternset>
+	</target>
+
+	<target name="init-app-swt" depends="init-base" if="target.app.type.swt">
+		<property name="target.device.prefix" value="swt"/>
+		<property name="target.app.classname" value="com.barteo.emulator.app.Swt"/>
+
+		<patternset id="project.src">
+			<include name="javax/**"/>
+			<exclude name="com/barteo/emulator/app/capture/**"/>
+			<include name="com/barteo/emulator/app/**"/>
+			<exclude name="com/barteo/emulator/app/Awt*"/>
+			<exclude name="com/barteo/emulator/app/Main*"/>
+			<exclude name="com/barteo/emulator/app/WebStart*"/>
+			<exclude name="com/barteo/emulator/app/ui/awt/**"/>
+			<exclude name="com/barteo/emulator/app/ui/swing/**"/>
+			<include name="com/barteo/emulator/device/**"/>
+			<exclude name="com/barteo/emulator/device/applet/**"/>
+			<exclude name="com/barteo/emulator/device/j2se/**"/>
+			<include name="com/barteo/cldc/**"/>
+			<include name="com/barteo/midp/**"/>
+			<include name="com/sixlegs/image/png/**"/>
+		</patternset>
+	</target>
+
+	<target name="init-applet" depends="init-base" if="target.applet">
+		<property name="target.device.prefix" value="applet"/>
+		<property name="target.device.extension" value="jar"/>
+
+		<patternset id="project.src">
+			<include name="java/util/**"/>
+			<include name="javax/**"/>
+			<include name="com/barteo/emulator/applet/**"/>
+			<include name="com/barteo/emulator/device/applet/**"/>
+			<include name="com/barteo/cldc/**"/>
+			<include name="com/barteo/midp/**"/>
+			<include name="com/sixlegs/image/png/**"/>
+		</patternset>
+	</target>
+
+	<target name="init" depends="init-app,init-applet">
+		<fail message="Valid target definition property in build.properties is missing (allowed only: applet, app)" unless="target.device.prefix"/>
+
+		<mkdir dir="./build/microemulator/classes"/>
+		<mkdir dir="./target"/>
+	</target>
+
+	<target name="compile-app" depends="init" if="target.app">
+		<javac source="1.4" target="1.4" debug="true" deprecation="true" destdir="./build/microemulator/classes" srcdir="./src">
+			<patternset refid="project.src"/>
+			<classpath>
+				<pathelement location="./lib/jnlp.jar"/>
+				<pathelement location="${target.app.type.swt.jar}"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="compile-applet" depends="init" if="target.applet">
+		<javac source="1.2" target="1.1" debug="true" deprecation="true" destdir="./build/microemulator/classes" srcdir="./src">
+			<patternset refid="project.src"/>
+		</javac>
+	</target>
+
+	<target name="compile" depends="init,compile-app,compile-applet">
+	</target>
+
+	<target name="jar-app" depends="init,compile" if="target.app">
+		<jar compress="true" jarfile="./target/me-app.jar">
+			<manifest>
+				<attribute name="Main-Class" value="${target.app.classname}"/>
+			</manifest>
+			<fileset dir="./build/microemulator/classes">
+				<exclude name="com/barteo/midp/examples/**"/>
+				<exclude name="**/.*"/>
+			</fileset>
+			<fileset dir="./res">
+				<exclude name="com/barteo/midp/examples/**"/>
+				<exclude name="**/.*"/>
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="jar-applet" depends="init,compile" if="target.applet">
+		<jar compress="true" jarfile="./target/me-applet.jar">
+			<fileset dir="./build/microemulator/classes">
+				<exclude name="com/barteo/midp/examples/**"/>
+				<exclude name="**/.*"/>
+			</fileset>
+			<fileset dir="./res">
+				<exclude name="com/barteo/midp/examples/**"/>
+				<exclude name="**/.*"/>
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="jar-applet-obfuscate" depends="init,jar-applet" if="target.applet.obfuscate.true">
+		<fail message="Property JAVA_HOME not set! Cannot proceed, please set JAVA_HOME in your system environment" unless="env.JAVA_HOME"/>
+		<java fork="yes" classname="proguard.ProGuard" classpath="${target.applet.proguard.jar}">
+			<arg line="-libraryjars ${env.JAVA_HOME}/jre/lib/rt.jar"/>
+			<arg line="-injars ./target/me-applet.jar"/>
+			<arg line="-outjar ./target/me-applet-obfuscated.jar"/>
+			<arg line="-keep 'class javax.** { *; }'"/>
+			<arg line="-keep 'public class * extends javax.** { *;}'"/>
+			<arg line="-keep 'public class * extends java.applet.Applet { *; }'"/>
+			<arg line="-keep 'public class com.barteo.emulator.EmulatorContext { *; }'"/>
+			<arg line="-keep 'public class com.barteo.emulator.device.** { *; }'"/>
+			<arg line="-keep 'public class * extends com.barteo.emulator.device.** { *; }'"/>
+			<!--<arg line="-keep 'public class com.barteo.emulator.device.applet.** { *; }'"/>-->
+			<!--<arg line="-keep 'public class * extends com.barteo.emulator.device.applet.** { *; }'"/>-->
+			<arg line="-keep 'class * extends com.sixlegs.image.png.BitMover { *; }'"/>
+			<arg line="-keep 'class * extends com.sixlegs.image.png.Chunk { *; }'"/>
+		</java>
+		<move file="./target/me-applet-obfuscated.jar" tofile="./target/me-applet.jar"/>
+	</target>
+
+	<target name="jar" depends="init,jar-app,jar-applet-obfuscate">
+	</target>
+
+	<!--
+  <target name="webstart" depends="init,jar">
+    <copy file="./target/me-app.jar" tofile="./target/me-webstart.jar"/>
+    <signjar jar="./target/me-webstart.jar" alias="secret" storepass="secret"/>
+    <copy file="./misc/webstart.html" todir="./target"/>
+    <copy file="./misc/microemulator.jnlp" todir="./target"/>
+  </target>
+-->
+
+	<target name="simpledemo-applet" depends="init,compile" if="target.applet">
+		<copy file="./misc/simpledemo.html" todir="./target"/>
+	</target>
+
+	<target name="simpledemo" depends="init,compile,simpledemo-applet">
+		<jar compress="true" jarfile="./target/simpledemo.jar">
+			<fileset dir="./build/microemulator/classes">
+				<include name="com/barteo/midp/examples/simpledemo/**"/>
+				<exclude name="**/.*"/>
+			</fileset>
+			<fileset dir="./res">
+				<include name="com/barteo/midp/examples/simpledemo/**"/>
+				<exclude name="**/.*"/>
+			</fileset>
+		</jar>
+		<copy file="./misc/simpledemo.jad" todir="./target"/>
+	</target>
+
+	<target name="run" depends="init,jar,simpledemo" description="Try running it." if="target.app">
+		<java classname="${target.app.classname}" failonerror="true" fork="true">
+			<classpath>
+				<pathelement location="./target/me-app.jar"/>
+				<pathelement location="./target/simpledemo.jar"/>
+				<pathelement location="${target.app.type.swt.jar}"/>
+			</classpath>
+			<arg value="com.barteo.midp.examples.simpledemo.SimpleDemo"/>
+		</java>
+	</target>
+
+	<target name="compile-device" depends="init,jar" description="Create devices">
+		<mkdir dir="./build/devices/minimum/classes"/>
+		<javac source="1.2" target="1.1" debug="true" deprecation="true" srcdir="./devices/minimum/java" destdir="./build/devices/minimum/classes">
+			<classpath>
+				<pathelement location="./target/me-${target}.jar"/>
+			</classpath>
+		</javac>
+		<mkdir dir="./build/devices/large/classes"/>
+		<javac source="1.2" target="1.1" debug="true" deprecation="true" srcdir="./devices/large/java" destdir="./build/devices/large/classes">
+			<classpath>
+				<pathelement location="./target/me-${target}.jar"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="jar-device" depends="compile-device" description="Package devices">
+		<mkdir dir="./target/devices"/>
+		<jar compress="true" jarfile="./target/devices/minimum.${target.device.extension}" 
+        manifest="./devices/minimum/manifest.mf">
+			<fileset dir="./build/devices/minimum/classes">
+				<exclude name="**/.*"/>
+			</fileset>
+			<fileset dir="./devices/minimum/res">
+				<exclude name="**/.*"/>
+			</fileset>
+		</jar>
+		<jar compress="true" jarfile="./target/devices/large.${target.device.extension}" 
+        manifest="./devices/large/manifest.mf">
+			<fileset dir="./build/devices/large/classes">
+				<exclude name="**/.*"/>
+			</fileset>
+			<fileset dir="./devices/large/res">
+				<exclude name="**/.*"/>
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="compile-nokiaui" depends="init,jar">
+		<mkdir dir="./build/nokiaui/classes"/>
+		<javac source="1.4" target="1.4" debug="true" deprecation="true" 
+        srcdir="./ext/nokiaui/src"
+        destdir="./build/nokiaui/classes">
+			<classpath>
+				<pathelement location="./target/me-${target}.jar"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="jar-nokiaui" depends="compile-nokiaui">
+		<jar compress="true" jarfile="./target/nokiaui.jar">
+			<fileset dir="./build/nokiaui/classes" />
+		</jar>
+	</target>
+
+	<target name="compile-siemensapi" depends="init,jar">
+		<mkdir dir="./build/siemensapi/classes"/>
+		<javac source="1.4" target="1.4" debug="true" deprecation="true" 
+        srcdir="./ext/siemensapi/src"
+        destdir="./build/siemensapi/classes">
+			<classpath>
+				<pathelement location="./target/me-${target}.jar"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="jar-siemensapi" depends="compile-siemensapi">
+		<jar compress="true" jarfile="./target/siemensapi.jar">
+			<fileset dir="./build/siemensapi/classes" />
+		</jar>
+	</target>
+
+	<target name="compile-mmapi" depends="init,jar">
+		<mkdir dir="./build/mmapi/classes"/>
+		<javac source="1.4" target="1.4" debug="true" deprecation="true" 
+	        srcdir="./ext/mmapi/src"
+	        destdir="./build/mmapi/classes">
+			<classpath>
+				<pathelement location="./target/me-${target}.jar"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="jar-mmapi" depends="compile-mmapi">
+		<jar compress="true" jarfile="./target/mmapi.jar">
+			<fileset dir="./build/mmapi/classes" />
+		</jar>
+	</target>
+
+	<target name="all" depends="init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-mmapi,simpledemo" description="Build everything.">
+	</target>
+
+	<target name="dist" depends="clean,init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-mmapi,simpledemo" description="Create distribution package">
+		<mkdir dir="dist"/>
+
+		<tar basedir="../." tarfile="dist/microemulator-src.tar" defaultexcludes="yes">
+			<include name="microemulator/build.properties"/>
+			<include name="microemulator/build.xml"/>
+			<include name="microemulator/AUTHORS"/>
+			<include name="microemulator/CHANGES"/>
+			<include name="microemulator/LICENSE"/>
+			<include name="microemulator/README" />
+			<include name="microemulator/TODO" />
+			<include name="microemulator/devices/**" />
+			<include name="microemulator/ext/**" />
+			<include name="microemulator/lib/**" />
+			<include name="microemulator/misc/**" />
+			<include name="microemulator/res/**" />
+			<include name="microemulator/src/**" />
+		</tar>
+		<gzip src="dist/microemulator-src.tar" zipfile="dist/microemulator-src.tar.gz" />
+		<delete file="dist/microemulator-src.tar" />
+
+		<tar basedir="../." tarfile="dist/microemulator-${target}-${target.app.type}.tar" defaultexcludes="yes">
+			<include name="microemulator/AUTHORS"/>
+			<include name="microemulator/CHANGES"/>
+			<include name="microemulator/LICENSE"/>
+			<include name="microemulator/README"/>
+			<include name="microemulator/TODO"/>
+			<include name="microemulator/target/**"/>
+		</tar>
+		<gzip src="dist/microemulator-${target}-${target.app.type}.tar" zipfile="dist/microemulator-${target}-${target.app.type}.tar.gz"/>
+		<delete file="dist/microemulator-${target}-${target.app.type}.tar"/>
+	</target>
+
+	<target description="Clean all build products." name="clean">
+		<delete dir="./build"/>
+		<delete dir="./target"/>
+		<delete dir="apidoc"/>
+		<delete dir="dist"/>
+	</target>
+
+</project>

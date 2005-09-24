@@ -1,5 +1,8 @@
 MicroEmulator
 
+0.9.1 (beta) - 24.09.2005
+- fixed bug with device skin support
+
 0.9 (beta) - 2.06.2005
 - support for MMAPI (only midi, and not 100% compliant) (daniel(at)angrymachine.com.ar)
 - app: persistent RMS

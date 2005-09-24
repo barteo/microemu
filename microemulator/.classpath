@@ -4,8 +4,7 @@
 	<classpathentry kind="src" path="ext/mmapi/src"/>
 	<classpathentry kind="src" path="ext/nokiaui/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/opt/eclipse-3.1RC1/plugins/org.eclipse.swt.gtk.linux.x86_3.1.0.jar"/>
-	<classpathentry kind="lib" path="/usr/share/jmf-bin/lib/jmf.jar"/>
+	<classpathentry kind="lib" path="/opt/eclipse/plugins/org.eclipse.swt.gtk.linux.x86_3.1.0.jar"/>
 	<classpathentry kind="lib" path="res"/>
 	<classpathentry kind="output" path=".bin"/>
 </classpath>

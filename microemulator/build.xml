@@ -137,7 +137,7 @@
 	</target>
 
 	<target name="compile-app" depends="init" if="target.app">
-		<javac debug="true" deprecation="true" destdir="./build/microemulator/classes" srcdir="./src">
+		<javac source="1.4" target="1.4" debug="true" deprecation="true" destdir="./build/microemulator/classes" srcdir="./src">
 			<patternset refid="project.src"/>
 			<classpath>
 				<pathelement location="./lib/jnlp.jar"/>
@@ -147,7 +147,7 @@
 	</target>
 
 	<target name="compile-applet" depends="init" if="target.applet">
-		<javac target="1.1" debug="true" deprecation="true" destdir="./build/microemulator/classes" srcdir="./src">
+		<javac source="1.2" target="1.1" debug="true" deprecation="true" destdir="./build/microemulator/classes" srcdir="./src">
 			<patternset refid="project.src"/>
 		</javac>
 	</target>
@@ -158,7 +158,7 @@
 	<target name="jar-app" depends="init,compile" if="target.app">
 		<jar compress="true" jarfile="./target/me-app.jar">
 			<manifest>
-				<attribute name="Main-Class" value="com.barteo.emulator.app.Main"/>
+				<attribute name="Main-Class" value="${target.app.classname}"/>
 			</manifest>
 			<fileset dir="./build/microemulator/classes">
 				<exclude name="com/barteo/midp/examples/**"/>
@@ -247,13 +247,13 @@
 
 	<target name="compile-device" depends="init,jar" description="Create devices">
 		<mkdir dir="./build/devices/minimum/classes"/>
-		<javac debug="true" deprecation="true" srcdir="./devices/minimum/java" destdir="./build/devices/minimum/classes">
+		<javac source="1.2" target="1.1" debug="true" deprecation="true" srcdir="./devices/minimum/java" destdir="./build/devices/minimum/classes">
 			<classpath>
 				<pathelement location="./target/me-${target}.jar"/>
 			</classpath>
 		</javac>
 		<mkdir dir="./build/devices/large/classes"/>
-		<javac debug="true" deprecation="true" srcdir="./devices/large/java" destdir="./build/devices/large/classes">
+		<javac source="1.2" target="1.1" debug="true" deprecation="true" srcdir="./devices/large/java" destdir="./build/devices/large/classes">
 			<classpath>
 				<pathelement location="./target/me-${target}.jar"/>
 			</classpath>
@@ -284,7 +284,7 @@
 
 	<target name="compile-nokiaui" depends="init,jar">
 		<mkdir dir="./build/nokiaui/classes"/>
-		<javac debug="true" deprecation="true" 
+		<javac source="1.4" target="1.4" debug="true" deprecation="true" 
         srcdir="./ext/nokiaui/src"
         destdir="./build/nokiaui/classes">
 			<classpath>
@@ -301,7 +301,7 @@
 
 	<target name="compile-siemensapi" depends="init,jar">
 		<mkdir dir="./build/siemensapi/classes"/>
-		<javac debug="true" deprecation="true" 
+		<javac source="1.4" target="1.4" debug="true" deprecation="true" 
         srcdir="./ext/siemensapi/src"
         destdir="./build/siemensapi/classes">
 			<classpath>
@@ -318,7 +318,7 @@
 
 	<target name="compile-mmapi" depends="init,jar">
 		<mkdir dir="./build/mmapi/classes"/>
-		<javac debug="true" deprecation="true" 
+		<javac source="1.4" target="1.4" debug="true" deprecation="true" 
 	        srcdir="./ext/mmapi/src"
 	        destdir="./build/mmapi/classes">
 			<classpath>

@@ -278,8 +278,6 @@ public class Main extends Applet implements MicroEmulator
     
     public void notifyDestroyed()
     {
-        // disable the applet
-        super.removeAll();
     }
 
     

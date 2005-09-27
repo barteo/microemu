@@ -18,6 +18,7 @@
  *
  * Contributor(s):
  *   3GLab
+ *   Andres Navarro
  */
 
 package javax.microedition.lcdui;

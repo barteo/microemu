@@ -17,7 +17,8 @@
  * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  * 
  * Contributor(s): 
- * 3GLab
+ *   3GLab
+ *   Andres Navarro
  */
 
 package javax.microedition.lcdui;

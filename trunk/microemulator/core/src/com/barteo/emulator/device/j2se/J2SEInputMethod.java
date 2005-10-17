@@ -272,7 +272,7 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 		}
 
 		if (text.length() < maxSize) {
-			for (Enumeration e = ((J2SEDevice) DeviceFactory.getDevice()).getButtons().elements(); e.hasMoreElements();) {
+			for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
 				J2SEButton button = (J2SEButton) e.nextElement();
 				if (keyCode == button.getKey()) {
 					synchronized (this) {

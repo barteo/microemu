@@ -97,6 +97,9 @@ public abstract class Displayable
 
 	Vector getCommands()
 	{
+		// in Form this is overriden to allow for the inclusion
+		// of item contained commands 
+		// Andres Navarro
 		return commands;
 	}
 

@@ -1,6 +1,7 @@
 /*
  *  MicroEmulator
  *  Copyright (C) 2001 Bartek Teodorczyk <barteo@barteo.net>
+ *  Copyright (C) 2005 Andres Navarro
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -25,26 +26,35 @@ package javax.microedition.lcdui;
 
 public class Alert extends Screen
 {
-
 	public static final int FOREVER = -2;
 
 	ImageStringItem alertContent;
 	AlertType type;
-	static final Command OK = new Command("OK", Command.OK, 0);
+	// XXX actually the label for this should be an empty String
+	// but the implementation is free to show a label
+	// so the label should be set to "" and on the Command render
+	// we should check if it was the dismiss command and
+	// display a predefined label...
+	public static final Command DISMISS_COMMAND = new Command("OK", Command.OK, 0);
 	int time;
+	Gauge indicator;
 
-
-	CommandListener alertListener = new CommandListener()
+	// this is for alertListener
+	static Displayable nextDisplayable;
+	static CommandListener defaultListener = new CommandListener()
 	{
-
 		public void commandAction(Command cmd, Displayable d)
 		{
-			currentDisplay.clearAlert();
+			// XXX if nextDisplayable == null
+			// then it means that this Alert was
+			// setted current when there was not a previous
+			// Displayable (ie immediately after MIDlet start)
+			// in that particular case the initial state should 
+			// be restored
+			((Alert) d).currentDisplay.setCurrent(nextDisplayable);
 		}
-
 	};
-
-
+	
 	public Alert(String title)
 	{
 		this(title, null, null, null);
@@ -57,12 +67,23 @@ public class Alert extends Screen
 		setTimeout(getDefaultTimeout());
 		this.alertContent = new ImageStringItem(null, alertImage, alertText);
 		setType(alertType);
-		super.setCommandListener(alertListener);
+		super.addCommand(Alert.DISMISS_COMMAND);
+		super.setCommandListener(defaultListener);
 	}
 
 
 	public void addCommand(Command cmd)
 	{
+		if (cmd == Alert.DISMISS_COMMAND)
+			return;
+		else {
+			super.addCommand(cmd);
+			super.removeCommand(Alert.DISMISS_COMMAND);
+			if (commands.size() > 1) {
+				// XXX remove timeout
+			}
+		}
+			
 		throw new IllegalStateException("Alert does not accept commands");
 	}
 
@@ -94,28 +115,59 @@ public class Alert extends Screen
   public void setType(AlertType type)
 	{
 		this.type = type;
+		repaint();
 	}
 
 
 	public void setCommandListener(CommandListener l)
 	{
-		throw new IllegalStateException("Alert does not accept listeners");
+		if (l == null)
+			l = defaultListener;
+		super.setCommandListener(l);
 	}
 
 
 	public Image getImage()
 	{
-    return alertContent.getImage();
+		return alertContent.getImage();
 	}
 
 
 	public void setImage(Image img)
 	{
-    if (img.isMutable()) {
-      throw new IllegalArgumentException("Image cannot be mutable");
-    }
-    alertContent.setImage(img);
-    repaint();
+	    if (img.isMutable()) {
+	      img = Image.createImage(img);
+	    }
+	    alertContent.setImage(img);
+	    repaint();
+	}
+	
+	public void setIndicator(Gauge indicator) {
+		if (indicator == null) {
+			if (this.indicator != null)
+				this.indicator.setOwner(null);
+			this.indicator = null;
+			repaint();
+			return;
+		}
+		
+		// validate the gauge against the restrictrions
+		if (indicator.getLayout() != 0 || 
+					indicator.getLabel() != null ||
+					indicator.prefHeight != -1 ||
+					indicator.prefWidth != -1 ||
+					indicator.commandListener != null ||
+					indicator.isInteractive() ||
+					indicator.getOwner() != null ||
+					!indicator.commands.isEmpty()) {
+			// if the command vector is empty then
+			// there is no default command
+			throw new IllegalArgumentException(
+					"This gauge cannot be added to an Alert");
+		}
+		indicator.setOwner(this);
+		this.indicator = indicator;
+		repaint();
 	}
 
 
@@ -128,15 +180,14 @@ public class Alert extends Screen
 
 	public void setTimeout(int time)
 	{
-    if (time != FOREVER && time <= 0) {
-      throw new IllegalArgumentException();
-    }
-		this.time = time;
-    super.removeCommand(OK);
- 		if (getTimeout() == Alert.FOREVER) {
-			super.addCommand(OK);
-		}
-
+	    if (time != FOREVER && time <= 0) {
+	      throw new IllegalArgumentException();
+	    }
+	    // XXX stop timeout thread!
+		if (time != FOREVER && commands.size() > 1)
+			time = FOREVER;
+	    
+	    this.time = time;
 	}
 
 
@@ -155,8 +206,7 @@ public class Alert extends Screen
 	void showNotify()
 	{
 		super.showNotify();
-
-    viewPortY = 0;
+		viewPortY = 0;
 	}
 
 

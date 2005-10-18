@@ -1,6 +1,7 @@
 /*
  *  MicroEmulator
  *  Copyright (C) 2001 Bartek Teodorczyk <barteo@barteo.net>
+ *  Copyright (C) 2005 Andres Navarro
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -35,7 +36,20 @@ public class List extends Screen implements Choice
   {
   	super(title);
   	
-		choiceGroup = new ChoiceGroup(null, listType);
+  		if (listType != Choice.IMPLICIT &&
+  				listType != Choice.MULTIPLE &&
+  				listType != Choice.EXCLUSIVE)
+  			throw new IllegalArgumentException("Illegal list type");
+
+  		if (listType == Choice.IMPLICIT) {
+  			// this is necessary because IMPLICIT is not
+  			// a valid ChoiceGroup type
+  			choiceGroup = new ChoiceGroup(null, Choice.EXCLUSIVE);
+  			choiceGroup.choiceType = Choice.IMPLICIT;
+  		} else {
+  	  		choiceGroup = new ChoiceGroup(null, listType);
+  		}
+  			
 		choiceGroup.setOwner(this);
 		choiceGroup.setFocus(true);
   }
@@ -45,8 +59,17 @@ public class List extends Screen implements Choice
 	{
     super(title);
     
-    choiceGroup = new ChoiceGroup(null, listType, stringElements, imageElements);
-    choiceGroup.setOwner(this);
+	if (listType == Choice.IMPLICIT) {
+		// this is necessary because IMPLICIT is not
+		// a valid ChoiceGroup type,
+		// exlusive is used because it has a default
+		// selected value
+		choiceGroup = new ChoiceGroup(null, Choice.EXCLUSIVE, stringElements, imageElements);
+		choiceGroup.choiceType = Choice.IMPLICIT;
+	} else {
+		choiceGroup = new ChoiceGroup(null, listType, stringElements, imageElements);
+	}
+    	choiceGroup.setOwner(this);
 		choiceGroup.setFocus(true);
 	}
 						
@@ -61,7 +84,21 @@ public class List extends Screen implements Choice
   {
     choiceGroup.delete(elementNum);
   }
-    
+  
+  public void deleteAll()
+  {
+	  choiceGroup.deleteAll();
+  }
+  
+  public int getFitPolicy() 
+  {
+	  return choiceGroup.getFitPolicy();
+  }
+  
+  public Font getFont(int elementNum)
+  {
+	  return choiceGroup.getFont(elementNum);
+  }
 
   public Image getImage(int elementNum) 
   {
@@ -101,6 +138,16 @@ public class List extends Screen implements Choice
   
   public void set(int elementNum, String stringPart, Image imagePart) {
     choiceGroup.set(elementNum, stringPart, imagePart);    
+  }
+  
+  public void setFitPolicy(int policy) 
+  {
+	  choiceGroup.setFitPolicy(policy);
+  }
+  
+  public void setFont(int elementNum, Font font)
+  {
+	choiceGroup.setFont(elementNum, font);  
   }
     
   
@@ -149,5 +196,9 @@ public class List extends Screen implements Choice
 	    return traverse;
 		}
   }
-  
+  void showNotify() {
+	  super.showNotify();
+	  if (choiceGroup.highlightedItemIndex > 0)
+		  choiceGroup.highlightedItemIndex = 0;
+  }
 }

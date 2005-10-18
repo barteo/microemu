@@ -1,6 +1,7 @@
 /*
  *  MicroEmulator
  *  Copyright (C) 2001 Bartek Teodorczyk <barteo@barteo.net>
+ *  Copyright (C) 2005 Andres Navarro
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -36,7 +37,6 @@ public class Command
 	int commandType;
 	int priority;
 
-
 	public Command(String label, int commandType, int priority)
 	{
 		this.label = label;
@@ -61,5 +61,49 @@ public class Command
 	{
 		return priority;
 	}
+	
+	// this is needed to allow for item commands without 
+	// breaking the existing interfaces
+	// (yeah i know it's ugly) 
+	// Andres Navarro
+	private Command originalCommand;
+	private Item focusedItem;
+	private Command itemCommand;
 
+	boolean isRegularCommand() {
+		return originalCommand == null;
+	}
+	
+	Command getItemCommand(Item item) {
+		if (!isRegularCommand()) {
+			throw new IllegalStateException();
+		}
+		if (item == null) {
+			throw new NullPointerException();
+		}
+		// we are allowed by the spec to threat all commands containes
+		// in an Item as of the type ITEM
+		if (itemCommand == null) {
+			itemCommand = new Command(getLabel(), Command.ITEM, getPriority());
+			itemCommand.originalCommand = this;
+		}
+		itemCommand.focusedItem = item;
+		return itemCommand;
+	}
+	
+	Item getFocusedItem() {
+		if (isRegularCommand()) {
+			throw new IllegalStateException();
+		}
+		// can't be null!
+		return focusedItem;
+	}
+
+	Command getOriginalCommand() {
+		if (isRegularCommand()) {
+			throw new IllegalStateException();
+		}
+		// can't be null!
+		return originalCommand;
+	}
 }

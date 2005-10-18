@@ -41,9 +41,9 @@ public class Display
 {
 	private static EventDispatcher eventDispatcher = null;
 	private static TickerPaint tickerPaint = null;
+	private static GaugePaint gaugePaint = null;
 
 	private Displayable current = null;
-	private Displayable nextScreen = null;
 
 	private DisplayAccessor accessor = null;
 
@@ -61,14 +61,26 @@ public class Display
 
 		public void commandAction(Command cmd) 
 		{
-			if (current == null) {
-				return;
+			// Andres Navarro
+			if (cmd.isRegularCommand()) {
+				if (current == null) {
+					return;
+				}
+				CommandListener listener = current.getCommandListener();
+				if (listener == null) {
+					return;
+				}
+				listener.commandAction(cmd, current);
+			} else {
+				// item contained command
+				Item item = cmd.getFocusedItem();
+				
+				ItemCommandListener listener = item.getItemCommandListener();
+				if (listener == null) {
+					return;
+				}
+				listener.commandAction(cmd.getOriginalCommand(), item);
 			}
-			CommandListener listener = current.getCommandListener();
-			if (listener == null) {
-				return;
-			}
-			listener.commandAction(cmd, current);
 		}
 
 		public Display getDisplay() 
@@ -76,38 +88,38 @@ public class Display
 			return display;
 		}
 
-                // Andres Navarro
-                private void processGameCanvasKeyEvent(GameCanvas c, int k, boolean press)
-                {
-                    // TODO Game Canvas keys need more work
-                    // and better integration with the microemulator
-                    // maybe actualKeyState in GameCanvas should be 
-                    // global and should update even while no GameCanvas
-                    // is current
-                    GameCanvasKeyAccess access = MIDletBridge.getMIDletAccess().getGameCanvasKeyAccess();
-                    int gameCode = c.getGameAction(k);
-                    boolean suppress = false;
-                    if (gameCode != 0) {
-                        // valid game key
-                        if(press) 
-                            access.recordKeyPressed(c, gameCode);
-                        else
-                            access.recordKeyReleased(c, gameCode);
-                        suppress = access.suppressedKeyEvents(c);
-                    }
-                    if (!(suppress)) {
-                        if (press)
-                            c.keyPressed(k);
-                        else
-                            c.keyPressed(k);
-                    }
-                }
-                // TODO according to the specification this should be
-                // only between show and hide notify...
-                // check later
-                // Andres Navarro
+        // Andres Navarro
+        private void processGameCanvasKeyEvent(GameCanvas c, int k, boolean press)
+        {
+            // TODO Game Canvas keys need more work
+            // and better integration with the microemulator
+            // maybe actualKeyState in GameCanvas should be 
+            // global and should update even while no GameCanvas
+            // is current
+            GameCanvasKeyAccess access = MIDletBridge.getMIDletAccess().getGameCanvasKeyAccess();
+            int gameCode = c.getGameAction(k);
+            boolean suppress = false;
+            if (gameCode != 0) {
+                // valid game key
+                if(press) 
+                    access.recordKeyPressed(c, gameCode);
+                else
+                    access.recordKeyReleased(c, gameCode);
+                suppress = access.suppressedKeyEvents(c);
+            }
+            if (!(suppress)) {
+                if (press)
+                    c.keyPressed(k);
+                else
+                    c.keyPressed(k);
+            }
+        }
+        // TODO according to the specification this should be
+        // only between show and hide notify...
+        // check later
+        // Andres Navarro
 
-                public void keyPressed(int keyCode) 
+        public void keyPressed(int keyCode) 
 		{
 			if (current != null) {
                             // Andres Navarro
@@ -183,7 +195,14 @@ public class Display
 				ex.printStackTrace();
 			}
 
-			setCurrent(nextScreen);
+			Displayable d = current;
+			if (d != null && d instanceof Alert) {
+				Alert alert = (Alert) d;
+				if (alert.time != Alert.FOREVER) {
+					alert.listener.commandAction(
+						(Command)alert.commands.get(0), alert);
+				}
+			}
 		}
 	}
 
@@ -221,6 +240,59 @@ public class Display
 			}
 		}
 	}
+
+	// Andres Navarro
+	// class to automatically repaint CONTINUOUS_RUNNING gauges
+	// XXX having a whole thread doing this is kinda ridiculous
+	// specially since it is even running when no gauge is in
+	// sight... 
+	private class GaugePaint implements Runnable 
+	{
+		private Display currentDisplay = null;
+
+		public void setCurrentDisplay(Display currentDisplay) 
+		{
+			this.currentDisplay = currentDisplay;
+		}
+
+		public void run() 
+		{
+			while (true) {
+				if (currentDisplay != null && currentDisplay.current != null && 
+						(currentDisplay.current instanceof Alert || 
+							currentDisplay.current instanceof Form)) {
+					if (currentDisplay.current instanceof Alert) {
+						Gauge gauge = ((Alert) currentDisplay.current).indicator;
+						if (gauge != null && gauge.hasIndefiniteRange() &&
+								gauge.getValue() == Gauge.CONTINUOUS_RUNNING) {
+							gauge.updateIndefiniteFrame();
+						}
+					} else if (currentDisplay.current instanceof Form) {
+						Item [] items = ((Form)currentDisplay.current).items;
+						for (int i = 0; i < items.length; i++) {
+							Item it = items[i];
+							if (it != null && it instanceof Gauge) {
+								Gauge gauge = (Gauge) it;
+								
+								if (gauge.hasIndefiniteRange() &&
+										gauge.getValue() == Gauge.CONTINUOUS_RUNNING) {
+									gauge.updateIndefiniteFrame();								
+								}
+							}
+						}
+					}
+				}
+					
+				try {
+					Thread.sleep(Gauge.PAINT_TIMEOUT);
+				} catch (InterruptedException ex) {
+					ex.printStackTrace();
+					gaugePaint = null;
+				}
+			}
+		}
+	}
+	// Andres Navarro
 
 	private class EventDispatcher implements Runnable 
 	{
@@ -282,6 +354,12 @@ public class Display
 			tickerPaint = new TickerPaint();
 			new Thread(tickerPaint, "TickerPaint").start();
 		}
+		// Andres Navarro
+		if (gaugePaint == null) {
+			gaugePaint = new GaugePaint();
+			new Thread(gaugePaint, "GaugePaint").start();
+		}
+		// Andres Navarro
 	}
 
 	
@@ -309,6 +387,7 @@ public class Display
 		}
 
 		tickerPaint.setCurrentDisplay(result);
+		gaugePaint.setCurrentDisplay(result);
 
 		return result;
 	}
@@ -359,7 +438,9 @@ public class Display
 	
 	public void setCurrent(Alert alert, Displayable nextDisplayable) 
 	{
-		nextScreen = nextDisplayable;
+		// XXX check if nextDisplayble is
+		// Alert
+		Alert.nextDisplayable = nextDisplayable;
 
 		current = alert;
 
@@ -375,9 +456,10 @@ public class Display
 	}
 
 	
+	// Who call this?? (Andres Navarro)
 	void clearAlert() 
 	{
-		setCurrent(nextScreen);
+		setCurrent(Alert.nextDisplayable);
 	}
 
 	

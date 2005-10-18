@@ -44,240 +44,345 @@ public class Graphics
 
 	public void clipRect(int x, int y, int width, int height)
 	{
+
 		// Implemented in DisplayGraphics
+
 	}
 
+	public void drawArc(int x, int y, int width, int height, int startAngle,
+			int arcAngle)
 
-	public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle)
 	{
-		// Implemented in DisplayGraphics
-	}
 
+		// Implemented in DisplayGraphics
+
+	}
 
 	public void drawChar(char character, int x, int y, int anchor)
+
 	{
+
 		char[] carr = new char[1];
+
 		carr[0] = character;
 
 		drawString(new String(carr), x, y, anchor);
+
 	}
 
+	public void drawChars(char[] data, int offset, int length, int x, int y,
+			int anchor)
 
-	public void drawChars(char[] data, int offset, int length, int x, int y, int anchor)
 	{
-		drawString(new String(data, offset, length), x, y, anchor);
-	}
 
+		drawString(new String(data, offset, length), x, y, anchor);
+
+	}
 
 	public void drawImage(Image img, int x, int y, int anchor)
-	{
-		// Implemented in DisplayGraphics
-	}
 
+	{
+
+		// Implemented in DisplayGraphics
+
+	}
 
 	public void drawLine(int x1, int y1, int x2, int y2)
-	{
-		// Implemented in DisplayGraphics
-	}
 
+	{
+
+		// Implemented in DisplayGraphics
+
+	}
 
 	public void drawRect(int x, int y, int width, int height)
+
 	{
+
 		// Implemented in DisplayGraphics
+
 	}
 
+	public void drawRoundRect(int x, int y, int width, int height,
+			int arcWidth, int arcHeight) {
 
-	public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
 		// Implemented in DisplayGraphics
-	}
 
+	}
 
 	public void drawString(String str, int x, int y, int anchor)
+
 	{
+
 		// Implemented in DisplayGraphics
+
 	}
 
+	public void drawSubstring(String str, int offset, int len, int x, int y,
+			int anchor)
 
-	public void drawSubstring(String str, int offset, int len, int x, int y, int anchor)
 	{
+
 		drawString(str.substring(offset, offset + len), x, y, anchor);
+
 	}
 
+	public void fillArc(int x, int y, int width, int height, int startAngle,
+			int arcAngle)
 
-	public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle)
 	{
-		// Implemented in DisplayGraphics
-	}
 
+		// Implemented in DisplayGraphics
+
+	}
 
 	public void fillRect(int x, int y, int width, int height)
+
 	{
+
 		// Implemented in DisplayGraphics
+
 	}
 
+	public void fillRoundRect(int x, int y, int width, int height,
+			int arcWidth, int arcHeight)
 
-	public void fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight)
 	{
-		// Implemented in DisplayGraphics
-	}
 
+		// Implemented in DisplayGraphics
+
+	}
 
 	public int getBlueComponent()
-	{
-		return getColor() & 255;
-	}
 
+	{
+
+		return getColor() & 255;
+
+	}
 
 	public int getClipHeight()
-	{
-		// Implemented in DisplayGraphics
-		throw new IllegalStateException();
-	}
 
+	{
+
+		// Implemented in DisplayGraphics
+
+		throw new IllegalStateException();
+
+	}
 
 	public int getClipWidth()
-	{
-		// Implemented in DisplayGraphics
-		throw new IllegalStateException();
-	}
 
+	{
+
+		// Implemented in DisplayGraphics
+
+		throw new IllegalStateException();
+
+	}
 
 	public int getClipX()
-	{
-		// Implemented in DisplayGraphics
-		throw new IllegalStateException();
-	}
 
+	{
+
+		// Implemented in DisplayGraphics
+
+		throw new IllegalStateException();
+
+	}
 
 	public int getClipY()
-	{
-		// Implemented in DisplayGraphics
-		throw new IllegalStateException();
-	}
 
+	{
+
+		// Implemented in DisplayGraphics
+
+		throw new IllegalStateException();
+
+	}
 
 	public int getColor()
-	{
-		// Implemented in DisplayGraphics
-		throw new IllegalStateException();
-	}
 
+	{
+
+		// Implemented in DisplayGraphics
+
+		throw new IllegalStateException();
+
+	}
 
 	public Font getFont()
-	{
-		// Implemented in DisplayGraphics
-		throw new IllegalStateException();
-	}
 
+	{
+
+		// Implemented in DisplayGraphics
+
+		throw new IllegalStateException();
+
+	}
 
 	public int getGrayScale()
-	{
-		return (getRedComponent() + getGreenComponent() + getBlueComponent()) / 3;
-	}
 
+	{
+
+		return (getRedComponent() + getGreenComponent() + getBlueComponent()) / 3;
+
+	}
 
 	public int getGreenComponent()
-	{
-		return (getColor() >> 8) & 255;
-	}
 
+	{
+
+		return (getColor() >> 8) & 255;
+
+	}
 
 	public int getRedComponent()
-	{
-		return (getColor() >> 16) & 255;
-	}
 
+	{
+
+		return (getColor() >> 16) & 255;
+
+	}
 
 	public int getStrokeStyle()
-	{
-		return strokeStyle;
-	}
 
+	{
+
+		return strokeStyle;
+
+	}
 
 	public int getTranslateX()
-	{
-		return translateX;
-	}
 
+	{
+
+		return translateX;
+
+	}
 
 	public int getTranslateY()
-	{
-		return translateY;
-	}
 
+	{
+
+		return translateY;
+
+	}
 
 	public void setClip(int x, int y, int width, int height)
-	{
-		// Implemented in DisplayGraphics
-	}
 
+	{
+
+		// Implemented in DisplayGraphics
+
+	}
 
 	public void setColor(int RGB)
-	{
-		// Implemented in DisplayGraphics
-	}
 
+	{
+
+		// Implemented in DisplayGraphics
+
+	}
 
 	public void setColor(int red, int green, int blue)
-	{
-		int rgb = blue; //0XRRGGBB
-		rgb += green << 8;
-		rgb += red << 16;
-		setColor(rgb);
-	}
 
+	{
+
+		int rgb = blue; //0XRRGGBB
+
+		rgb += green << 8;
+
+		rgb += red << 16;
+
+		setColor(rgb);
+
+	}
 
 	public void setFont(Font font)
-	{
-		// Implemented in DisplayGraphics
-	}
 
+	{
+
+		// Implemented in DisplayGraphics
+
+	}
 
 	public void setGrayScale(int grey)
-	{
-		setColor(grey, grey, grey);
-	}
 
+	{
+
+		setColor(grey, grey, grey);
+
+	}
 
 	public void setStrokeStyle(int style)
-	{
-		if (style != SOLID && style != DOTTED) {
-			throw new IllegalArgumentException();
-		}
-		strokeStyle = style;
-	}
 
+	{
+
+		if (style != SOLID && style != DOTTED) {
+
+			throw new IllegalArgumentException();
+
+		}
+
+		strokeStyle = style;
+
+	}
 
 	public void translate(int x, int y)
+
 	{
+
 		translateX += x;
+
 		translateY += y;
+
 	}
 
 	// Andres Navarro
-        // MIDP2 Methods
+
+	// MIDP2 Methods
+
 	public void drawRegion(Image src, int x_src, int y_src, int width,
-			int height, int transform, int x_dst, int y_dst, int anchor) {
-	// Implemented in DisplayGraphics
-	}
-	
-        public void drawRGB(int[] rgbData, int offset, int scanlength, 
-                int x, int y, int width, int height, boolean processAlpha) {
-	// Implemented in DisplayGraphics
-        }
-        
-        public void fillTriangle(int x1, int y1, int x2,
-			int y2, int x3, int y3) {
-	// Implemented in DisplayGraphics
+
+	int height, int transform, int x_dst, int y_dst, int anchor) {
+
+		// Implemented in DisplayGraphics
+
 	}
 
-        public void copyArea(int x_src, int y_src, int width, int height, 
-                int x_dest, int y_dest, int anchor) {
-	// Implemented in DisplayGraphics
-        }
-        public int getDisplayColor(int color) {
-            // Implemented in DisplayGraphics
-            return 0;
-        } 
+	public void drawRGB(int[] rgbData, int offset, int scanlength,
+
+	int x, int y, int width, int height, boolean processAlpha) {
+
+		// Implemented in DisplayGraphics
+
+	}
+
+	public void fillTriangle(int x1, int y1, int x2,
+
+	int y2, int x3, int y3) {
+
+		// Implemented in DisplayGraphics
+
+	}
+
+	public void copyArea(int x_src, int y_src, int width, int height,
+
+	int x_dest, int y_dest, int anchor) {
+
+		// Implemented in DisplayGraphics
+
+	}
+
+	public int getDisplayColor(int color) {
+
+		// Implemented in DisplayGraphics
+
+		return 0;
+
+	}
+
 	// Andres Navarro
+
 }

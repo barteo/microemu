@@ -19,6 +19,8 @@
  
 package com.barteo.emulator.device.swt;
 
+import javax.microedition.lcdui.Canvas;
+
 import org.eclipse.swt.SWT;
 
 import com.barteo.emulator.device.impl.Button;
@@ -100,6 +102,30 @@ public class SwtButton implements Button
 			return SWT.F1;
 		} else if (keyName.equals("VK_F2")) {
 			return SWT.F2;
+		} else if (keyName.equals("VK_0")) {
+			return Canvas.KEY_NUM0;
+		} else if (keyName.equals("VK_1")) {
+			return Canvas.KEY_NUM1;
+		} else if (keyName.equals("VK_2")) {
+			return Canvas.KEY_NUM2;
+		} else if (keyName.equals("VK_3")) {
+			return Canvas.KEY_NUM3;
+		} else if (keyName.equals("VK_4")) {
+			return Canvas.KEY_NUM4;
+		} else if (keyName.equals("VK_5")) {
+			return Canvas.KEY_NUM5;
+		} else if (keyName.equals("VK_6")) {
+			return Canvas.KEY_NUM6;
+		} else if (keyName.equals("VK_7")) {
+			return Canvas.KEY_NUM7;
+		} else if (keyName.equals("VK_8")) {
+			return Canvas.KEY_NUM8;
+		} else if (keyName.equals("VK_9")) {
+			return Canvas.KEY_NUM9;
+		} else if (keyName.equals("VK_MULTIPLY")) {
+			return Canvas.KEY_STAR;
+		} else if (keyName.equals("VK_MODECHANGE")) {
+			return Canvas.KEY_POUND;
 		} else {
 			return -1;
 		}

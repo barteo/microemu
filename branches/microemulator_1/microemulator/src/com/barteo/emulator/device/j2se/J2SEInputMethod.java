@@ -151,7 +151,18 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 		String tmp;
 
 		if (inputMethodListener == null) {
-			MIDletBridge.getMIDletAccess().getDisplayAccess().keyPressed(keyCode);
+			int midpKeyCode;
+			switch (keyCode) {
+				case KeyEvent.VK_MULTIPLY :
+					midpKeyCode = Canvas.KEY_STAR;
+					break;
+				case KeyEvent.VK_MODECHANGE :
+					midpKeyCode = Canvas.KEY_POUND;
+					break;
+				default :
+					midpKeyCode = keyCode;
+			}
+			MIDletBridge.getMIDletAccess().getDisplayAccess().keyPressed(midpKeyCode);
 			return true;
 		}
 
@@ -228,7 +239,7 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 	
 	public void keyboardKeyPressed(KeyEvent ev) 
 	{
-		if (commonKeyPressed(ev.getKeyCode())) {
+		if (commonKeyPressed(ev.getKeyChar())) {
 			return;
 		}
 

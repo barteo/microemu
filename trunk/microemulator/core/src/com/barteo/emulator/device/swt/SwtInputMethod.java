@@ -221,7 +221,7 @@ public class SwtInputMethod extends InputMethod implements Runnable
 	
 	public void keyboardKeyPressed(KeyEvent ev) 
 	{
-		if (commonKeyPressed(ev.keyCode)) {
+		if (commonKeyPressed(ev.character)) {
 			return;
 		}
 

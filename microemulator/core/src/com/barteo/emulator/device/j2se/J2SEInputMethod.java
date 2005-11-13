@@ -239,8 +239,15 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 	
 	public void keyboardKeyPressed(KeyEvent ev) 
 	{
-		if (commonKeyPressed(ev.getKeyChar())) {
-			return;
+		if (ev.getKeyCode() == KeyEvent.VK_LEFT || ev.getKeyCode() == KeyEvent.VK_RIGHT 
+				|| ev.getKeyCode() == KeyEvent.VK_UP || ev.getKeyCode() == KeyEvent.VK_DOWN) {
+			if (commonKeyPressed(ev.getKeyCode())) {
+				return;
+			}
+		} else {
+			if (commonKeyPressed(ev.getKeyChar())) {
+				return;
+			}
 		}
 
 		if (text.length() < maxSize && ev.getKeyChar() != KeyEvent.CHAR_UNDEFINED) {

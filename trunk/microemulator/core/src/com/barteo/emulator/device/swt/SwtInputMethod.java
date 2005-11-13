@@ -221,8 +221,15 @@ public class SwtInputMethod extends InputMethod implements Runnable
 	
 	public void keyboardKeyPressed(KeyEvent ev) 
 	{
-		if (commonKeyPressed(ev.character)) {
-			return;
+		if (ev.keyCode == SWT.ARROW_LEFT || ev.keyCode == SWT.ARROW_RIGHT 
+				|| ev.keyCode == SWT.ARROW_UP || ev.keyCode == SWT.ARROW_DOWN) {
+			if (commonKeyPressed(ev.keyCode)) {
+				return;
+			}
+		} else {
+			if (commonKeyPressed(ev.character)) {
+				return;
+			}
 		}
 
 		if (text.length() < maxSize && (ev.keyCode & SWT.EMBEDDED) == 0) {

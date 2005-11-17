@@ -37,7 +37,9 @@ public abstract class MIDlet
 
 		public void startApp() throws MIDletStateChangeException 
 		{
-			MIDletBridge.setCurrentMIDlet(midlet);
+            if (MIDletBridge.getCurrentMIDlet() != midlet) {
+                MIDletBridge.setCurrentMIDlet(midlet);
+            }
 			getDisplayAccess().updateCommands();
 			midlet.startApp();
 		}

@@ -65,7 +65,10 @@ public class List extends Screen implements Choice
 		// exlusive is used because it has a default
 		// selected value
 		choiceGroup = new ChoiceGroup(null, Choice.EXCLUSIVE, stringElements, imageElements);
-		choiceGroup.choiceType = Choice.IMPLICIT;
+		choiceGroup.choiceType = Choice.IMPLICIT;        
+        for (int i = 0; i < size(); i++) {
+            set(i, getString(i), null);
+        }
 	} else {
 		choiceGroup = new ChoiceGroup(null, listType, stringElements, imageElements);
 	}

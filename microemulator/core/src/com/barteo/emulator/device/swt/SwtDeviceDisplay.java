@@ -264,6 +264,15 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 		}
 	}
 
+    public Image createImage(InputStream is) throws IOException
+    {
+        if (is == null) {
+            throw new IOException();
+        }
+        
+        return getImage(is);
+    }
+
     /*
 	 * (non-Javadoc)
 	 * 

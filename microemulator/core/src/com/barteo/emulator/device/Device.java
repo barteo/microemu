@@ -19,7 +19,6 @@
  
 package com.barteo.emulator.device;
 
-import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -32,6 +31,7 @@ import nanoxml.XMLElement;
 import nanoxml.XMLParseException;
 
 import com.barteo.emulator.EmulatorContext;
+import com.barteo.emulator.device.impl.Color;
 import com.barteo.emulator.device.impl.DeviceDisplayImpl;
 import com.barteo.emulator.device.impl.PositionedImage;
 import com.barteo.emulator.device.impl.Rectangle;

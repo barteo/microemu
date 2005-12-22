@@ -93,13 +93,13 @@ public class J2SESoftButton extends J2SEButton implements SoftButton
 
         J2SEDeviceDisplay deviceDisplay =
             (J2SEDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
-        g.setColor(deviceDisplay.getBackgroundColor());
+        g.setColor(deviceDisplay.backgroundColor);
         g.fillRect(paintable.x, paintable.y, paintable.width, paintable.height);
         if (command != null) {
             if (alignment == RIGHT) {
                 xoffset = paintable.width - g.getFontMetrics().stringWidth(command.getLabel());
             }
-            g.setColor(deviceDisplay.getForegroundColor());
+            g.setColor(deviceDisplay.foregroundColor);
             g.drawString(command.getLabel(), paintable.x + xoffset, paintable.y + paintable.height);
         }
     }

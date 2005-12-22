@@ -19,7 +19,6 @@
 
 package com.barteo.emulator.device.swt;
 
-import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +43,7 @@ import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.InputMethod;
 import com.barteo.emulator.device.MutableImage;
 import com.barteo.emulator.device.impl.Button;
+import com.barteo.emulator.device.impl.Color;
 import com.barteo.emulator.device.impl.DeviceDisplayImpl;
 import com.barteo.emulator.device.impl.PositionedImage;
 import com.barteo.emulator.device.impl.Rectangle;

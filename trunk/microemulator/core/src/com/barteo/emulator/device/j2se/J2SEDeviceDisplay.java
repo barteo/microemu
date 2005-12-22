@@ -22,7 +22,6 @@
 
 package com.barteo.emulator.device.j2se;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Shape;
@@ -49,6 +48,7 @@ import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.InputMethod;
 import com.barteo.emulator.device.MutableImage;
 import com.barteo.emulator.device.impl.Button;
+import com.barteo.emulator.device.impl.Color;
 import com.barteo.emulator.device.impl.DeviceDisplayImpl;
 import com.barteo.emulator.device.impl.PositionedImage;
 import com.barteo.emulator.device.impl.Rectangle;
@@ -65,8 +65,8 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	boolean isColor;
 	int numColors;
 
-	Color backgroundColor;
-	Color foregroundColor;
+	java.awt.Color backgroundColor;
+	java.awt.Color foregroundColor;
 
 	PositionedImage upImage;
 	PositionedImage downImage;
@@ -218,13 +218,13 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 
 	public Color getBackgroundColor() 
 	{
-		return backgroundColor;
+		return new Color(backgroundColor.getRGB());
 	}
 
 
 	public Color getForegroundColor() 
 	{
-		return foregroundColor;
+		return new Color(backgroundColor.getRGB());
 	}
 	
 	
@@ -436,7 +436,7 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
      */
     public void setBackgroundColor(Color color)
     {
-        backgroundColor = color;
+        backgroundColor = new java.awt.Color(color.getRGB());
     }
 
 
@@ -445,7 +445,7 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
      */
     public void setForegroundColor(Color color)
     {
-        foregroundColor = color;
+        foregroundColor = new java.awt.Color(color.getRGB());
     }
 
 

@@ -19,9 +19,9 @@
  
 package com.barteo.emulator.device.j2se;
 
-import java.awt.Color;
 
 import com.barteo.emulator.device.DeviceFactory;
+import com.barteo.emulator.device.impl.Color;
 
 
 public class RGBImageFilter extends java.awt.image.RGBImageFilter

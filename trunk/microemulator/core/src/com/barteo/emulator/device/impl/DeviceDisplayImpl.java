@@ -19,7 +19,6 @@
 
 package com.barteo.emulator.device.impl;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.util.Vector;
 

@@ -137,7 +137,11 @@
 	</target>
 
 	<target name="compile-app" depends="init" if="target.app">
-		<javac source="1.4" target="1.4" debug="true" deprecation="true" destdir="./build/microemulator/classes" srcdir="./src">
+		<javac source="1.4" target="1.4" debug="true" deprecation="true" destdir="./build/microemulator/classes">
+			<src path="core/src" />
+			<src path="cldc/src" />
+			<src path="midp/common/src" />			
+			<src path="midp/midp2/src" />			
 			<patternset refid="project.src"/>
 			<classpath>
 				<pathelement location="./lib/jnlp.jar"/>
@@ -147,7 +151,11 @@
 	</target>
 
 	<target name="compile-applet" depends="init" if="target.applet">
-		<javac source="1.2" target="1.1" debug="true" deprecation="true" destdir="./build/microemulator/classes" srcdir="./src">
+		<javac source="1.2" target="1.1" debug="true" deprecation="true" destdir="./build/microemulator/classes">
+			<src path="core/src" />
+			<src path="cldc/src" />
+			<src path="midp/common/src" />			
+			<src path="midp/midp2/src" />			
 			<patternset refid="project.src"/>
 		</javac>
 	</target>
@@ -164,7 +172,7 @@
 				<exclude name="com/barteo/midp/examples/**"/>
 				<exclude name="**/.*"/>
 			</fileset>
-			<fileset dir="./res">
+			<fileset dir="./core/res">
 				<exclude name="com/barteo/midp/examples/**"/>
 				<exclude name="**/.*"/>
 			</fileset>
@@ -333,10 +341,27 @@
 		</jar>
 	</target>
 
-	<target name="all" depends="init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-mmapi,simpledemo" description="Build everything.">
+	<target name="compile-jsr-82" depends="init,jar">
+		<mkdir dir="./build/jsr-82/classes"/>
+		<javac source="1.4" target="1.4" debug="true" deprecation="true" 
+		        srcdir="./ext/jsr-82/src"
+        			destdir="./build/jsr-82/classes">
+			<classpath>
+				<pathelement location="./target/me-${target}.jar"/>
+			</classpath>
+		</javac>
 	</target>
 
-	<target name="dist" depends="clean,init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-mmapi,simpledemo" description="Create distribution package">
+	<target name="jar-jsr-82" depends="compile-jsr-82">
+		<jar compress="true" jarfile="./target/jsr-82.jar">
+			<fileset dir="./build/jsr-82/classes" />
+		</jar>
+	</target>
+
+	<target name="all" depends="init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-mmapi,jar-jsr-82,simpledemo" description="Build everything.">
+	</target>
+
+	<target name="dist" depends="clean,init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-mmapi,jar-jsr-82,simpledemo" description="Create distribution package">
 		<mkdir dir="dist"/>
 
 		<tar basedir="../." tarfile="dist/microemulator-src.tar" defaultexcludes="yes">

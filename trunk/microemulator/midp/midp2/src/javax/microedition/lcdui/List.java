@@ -199,9 +199,5 @@ public class List extends Screen implements Choice
 	    return traverse;
 		}
   }
-  void showNotify() {
-	  super.showNotify();
-	  if (choiceGroup.highlightedItemIndex > 0)
-		  choiceGroup.highlightedItemIndex = 0;
-  }
+
 }

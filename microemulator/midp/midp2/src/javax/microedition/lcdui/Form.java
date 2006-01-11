@@ -185,18 +185,6 @@ public class Form extends Screen
     }
 
 	
-	int getHeight() 
-	{
-		int height = 0;
-
-		for (int i = 0; i < numOfItems; i++) {
-			height += items[i].getHeight();
-		}
-
-		return height;
-	}
-
-	
 	void hideNotify() 
 	{
 		super.hideNotify();

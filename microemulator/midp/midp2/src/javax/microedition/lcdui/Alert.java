@@ -191,7 +191,7 @@ public class Alert extends Screen
 	}
 
 
-	int getHeight()
+	private int getContentHeight()
 	{
 		return alertContent.getHeight();
 	}
@@ -217,7 +217,7 @@ public class Alert extends Screen
 		if (gameKeyCode == 1 && top != 0) {
 			return -f.getHeight();
 		}
-		if (gameKeyCode == 6 && bottom < getHeight()) {
+		if (gameKeyCode == 6 && bottom < getContentHeight()) {
 			return f.getHeight();
 		}
 

@@ -39,19 +39,18 @@ public abstract class Canvas extends Displayable
 	public static final int GAME_C = 11;
 	public static final int GAME_D = 12;
 
-  public static final int KEY_NUM0 = 48;
-  public static final int KEY_NUM1 = 49;
-  public static final int KEY_NUM2 = 50;
-  public static final int KEY_NUM3 = 51;
-  public static final int KEY_NUM4 = 52;
-  public static final int KEY_NUM5 = 53;
-  public static final int KEY_NUM6 = 54;
-  public static final int KEY_NUM7 = 55;
-  public static final int KEY_NUM8 = 56;
-  public static final int KEY_NUM9 = 57;
-
-  public static final int KEY_STAR = 42;
-  public static final int KEY_POUND = 35;
+	public static final int KEY_NUM0 = 48;
+    public static final int KEY_NUM1 = 49;
+    public static final int KEY_NUM2 = 50;
+    public static final int KEY_NUM3 = 51;
+    public static final int KEY_NUM4 = 52;
+    public static final int KEY_NUM5 = 53;
+    public static final int KEY_NUM6 = 54;
+    public static final int KEY_NUM7 = 55;
+    public static final int KEY_NUM8 = 56;
+    public static final int KEY_NUM9 = 57;
+    public static final int KEY_STAR = 42;
+    public static final int KEY_POUND = 35;
 
 
 	protected Canvas()
@@ -65,34 +64,34 @@ public abstract class Canvas extends Displayable
 	}
 
 
-  public int getKeyCode(int gameAction)
-  {
-    return Display.getKeyCode(gameAction);
-  }
+	public int getKeyCode(int gameAction)
+    {
+        return Display.getKeyCode(gameAction);
+    }
 
+    
+    public String getKeyName(int keyCode)
+    {
+        return Integer.toString(keyCode);
+    }
 
-  public String getKeyName(int keyCode)
-  {
-    return Integer.toString(keyCode);
-  }
+    
+    public boolean hasPointerEvents()
+    {
+        return DeviceFactory.getDevice().getInputMethod().hasPointerEvents();
+    }
 
+    
+    public boolean hasPointerMotionEvents()
+    {
+        return DeviceFactory.getDevice().getInputMethod().hasPointerMotionEvents();
+    }
 
-  public boolean hasPointerEvents()
-  {
-    return DeviceFactory.getDevice().getInputMethod().hasPointerEvents();
-  }
-
-
-  public boolean hasPointerMotionEvents()
-  {
-    return DeviceFactory.getDevice().getInputMethod().hasPointerMotionEvents();
-  }
-
-
-  public boolean hasRepeatEvents()
-  {
-    return DeviceFactory.getDevice().getInputMethod().hasRepeatEvents();
-  }
+    
+    public boolean hasRepeatEvents()
+    {
+        return DeviceFactory.getDevice().getInputMethod().hasRepeatEvents();
+    }
 
 
 	public int getWidth()
@@ -107,15 +106,15 @@ public abstract class Canvas extends Displayable
 	}
 
 
-  protected void hideNotify()
-  {
-  }
+	protected void hideNotify()
+	{
+	}
 
 
-  public boolean isDoubleBuffered()
-  {
-    return false;
-  }
+	public boolean isDoubleBuffered()
+	{
+	    return false;
+	}
 
 
 	protected void keyPressed(int keyCode)
@@ -136,19 +135,19 @@ public abstract class Canvas extends Displayable
 	protected abstract void paint(Graphics g);
 
 
-  protected void pointerPressed(int x, int y)
-  {
-  }
+	protected void pointerPressed(int x, int y)
+    {
+    }
 
+    
+    protected void pointerReleased(int x, int y)
+    {
+    }
 
-  protected void pointerReleased(int x, int y)
-  {
-  }
-
-
-  protected void pointerDragged(int x, int y)
-  {
-  }
+    
+    protected void pointerDragged(int x, int y)
+    {
+    }
 
 
 	public final void repaint()
@@ -157,19 +156,25 @@ public abstract class Canvas extends Displayable
 	}
 
 
-  public final void repaint(int x, int y, int width, int height)
-  {
-    repaint();
-  }
+	public final void repaint(int x, int y, int width, int height)
+    {
+        repaint();
+    }
 
+    
+    public final void serviceRepaints()
+    {
+    }
+    
+    
+    public void setFullScreenMode(boolean mode)
+    {
+        // TODO Not implemented yet 
+    }
 
-  public final void serviceRepaints()
-  {
-  }
-
-  
-  protected void showNotify()
-  {
-  }
+    
+    protected void showNotify()
+    {
+    }
   
 }

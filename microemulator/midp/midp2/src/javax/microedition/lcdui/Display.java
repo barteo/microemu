@@ -373,6 +373,13 @@ public class Display
 	{
 		return DeviceFactory.getDevice().getDeviceDisplay().numColors();
 	}
+    
+    
+    public boolean flashBacklight(int duration)
+    {
+        // TODO
+        return false;
+    }
 
 	
 	public static Display getDisplay(MIDlet m) 

@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import com.barteo.cldc.ClosedConnection;
+import com.sun.cdc.io.ConnectionBaseInterface;
 
 
 public class Connector
@@ -50,26 +51,38 @@ public class Connector
   }
   
   
-  public static Connection open(String name, int mode, boolean timeouts)
-      throws IOException
-  {
-    ClosedConnection cn;
-    try {
-      Class cl = Class.forName(
-          "com.barteo.cldc." + name.substring(0, name.indexOf(':')) + ".Connection");
-      cn = (ClosedConnection) cl.newInstance();
-    } catch (ClassNotFoundException ex) {
-      System.err.println(ex);
-      throw new ConnectionNotFoundException();
-    } catch (InstantiationException ex) {
-      System.err.println(ex);
-      throw new ConnectionNotFoundException();
-    } catch (IllegalAccessException ex) {
-      System.err.println(ex);
-      throw new ConnectionNotFoundException();
+    public static Connection open(String name, int mode, boolean timeouts) throws IOException
+    {
+        Class cl;
+        try {
+            cl = Class.forName("com.barteo.cldc." + name.substring(0, name.indexOf(':')) + ".Connection");
+            ClosedConnection cn = (ClosedConnection) cl.newInstance();
+
+            return cn.open(name);
+        } catch (ClassNotFoundException ex) {
+            try {
+                cl = Class.forName("com.sun.cdc.io.j2me." + name.substring(0, name.indexOf(':')) + ".Protocol");
+                ConnectionBaseInterface base = (ConnectionBaseInterface) cl.newInstance();                
+            
+                return base.openPrim(name.substring(name.indexOf(':') + 1), mode, timeouts);
+            } catch (ClassNotFoundException ex1) {
+                System.err.println(ex1);
+                throw new ConnectionNotFoundException();
+            } catch (InstantiationException ex1) {
+                System.err.println(ex);
+                throw new ConnectionNotFoundException();
+            } catch (IllegalAccessException ex1) {
+                System.err.println(ex);
+                throw new ConnectionNotFoundException();
+            }
+        } catch (InstantiationException ex) {
+            System.err.println(ex);
+            throw new ConnectionNotFoundException();
+        } catch (IllegalAccessException ex) {
+            System.err.println(ex);
+            throw new ConnectionNotFoundException();
+        }
     }
-    return cn.open(name);
-  }
   
   
   public static DataInputStream openDataInputStream(String name)

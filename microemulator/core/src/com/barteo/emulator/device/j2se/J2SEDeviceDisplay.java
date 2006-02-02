@@ -64,7 +64,8 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 
 	boolean isColor;
 	int numColors;
-
+    int numAlphaLevels;
+    
 	java.awt.Color backgroundColor;
 	java.awt.Color foregroundColor;
 
@@ -121,7 +122,13 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	}
 
 
-	public int numColors() 
+    public int numAlphaLevels() 
+    {
+        return numAlphaLevels;
+    }
+
+    
+    public int numColors() 
 	{
 		return numColors;
 	}
@@ -412,6 +419,11 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 		}
 	}
   
+
+    public void setNumAlphaLevels(int i)
+    {
+        numAlphaLevels = i;
+    }
 
     /* (non-Javadoc)
      * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setNumColors(int)

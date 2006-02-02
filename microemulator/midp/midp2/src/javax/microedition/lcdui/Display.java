@@ -369,7 +369,13 @@ public class Display
 	}
 
 	
-	public int numColors() 
+    public int numAlphaLevels()
+    {
+        return DeviceFactory.getDevice().getDeviceDisplay().numAlphaLevels();
+    }
+
+    
+    public int numColors() 
 	{
 		return DeviceFactory.getDevice().getDeviceDisplay().numColors();
 	}

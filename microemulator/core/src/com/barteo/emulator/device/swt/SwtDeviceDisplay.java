@@ -58,7 +58,8 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 
 	boolean isColor;
 	int numColors;
-
+    int numAlphaLevels;
+    
 	Color backgroundColor;
 	Color foregroundColor;
 
@@ -114,7 +115,13 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 	}
 
 
-	public int numColors() 
+    public int numAlphaLevels() 
+    {
+        return numAlphaLevels;
+    }
+
+    
+    public int numColors() 
 	{
 		return numColors;
 	}
@@ -271,6 +278,12 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
         }
         
         return getImage(is);
+    }
+
+
+    public void setNumAlphaLevels(int i)
+    {
+        numAlphaLevels = i;
     }
 
     /*

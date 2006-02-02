@@ -42,7 +42,9 @@ public interface DeviceDisplay
 
 	boolean isColor();
 
-	int numColors();
+    int numAlphaLevels();
+
+    int numColors();
 
 	void repaint();
 

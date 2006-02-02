@@ -172,6 +172,8 @@ public class Device
                 deviceDisplay.setNumColors(Integer.parseInt(tmp_display.getContent()));
               } else if (tmp_display.getName().equals("iscolor")) {
                 deviceDisplay.setIsColor(parseBoolean(tmp_display.getContent()));
+              } else if (tmp_display.getName().equals("numalphalevels")) {
+                  deviceDisplay.setNumAlphaLevels(Integer.parseInt(tmp_display.getContent()));
               } else if (tmp_display.getName().equals("background")) {
                 deviceDisplay.setBackgroundColor(new Color(Integer.parseInt(tmp_display.getContent(), 16)));
               } else if (tmp_display.getName().equals("foreground")) {

@@ -79,7 +79,7 @@ public class Alert extends Screen
 		else {
 			super.addCommand(cmd);
 			super.removeCommand(Alert.DISMISS_COMMAND);
-			if (commands.size() > 1) {
+			if (getCommands().size() > 1) {
 				// XXX remove timeout
 			}
 		}
@@ -184,7 +184,7 @@ public class Alert extends Screen
 	      throw new IllegalArgumentException();
 	    }
 	    // XXX stop timeout thread!
-		if (time != FOREVER && commands.size() > 1)
+		if (time != FOREVER && getCommands().size() > 1)
 			time = FOREVER;
 	    
 	    this.time = time;

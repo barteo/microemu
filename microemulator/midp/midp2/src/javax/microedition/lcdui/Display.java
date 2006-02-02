@@ -199,8 +199,8 @@ public class Display
 			if (d != null && d instanceof Alert) {
 				Alert alert = (Alert) d;
 				if (alert.time != Alert.FOREVER) {
-					alert.listener.commandAction(
-						(Command)alert.commands.get(0), alert);
+					alert.getCommandListener().commandAction(
+						(Command) alert.getCommands().get(0), alert);
 				}
 			}
 		}
@@ -461,7 +461,12 @@ public class Display
 			t.start();
 		}
 	}
-
+    
+    
+    public boolean vibrate(int duration) 
+    { 
+        return false; 
+    }
 	
 	// Who call this?? (Andres Navarro)
 	void clearAlert() 

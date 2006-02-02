@@ -26,15 +26,31 @@ import com.barteo.emulator.device.DeviceFactory;
 
 public abstract class Displayable
 {
-
 	Display currentDisplay = null;
+    
+    private Ticker ticker;
+    
+    // TODO make private
+    protected StringComponent title;
+    // TODO make private
+    protected int viewPortY;
+    // TODO make private
+    protected int viewPortHeight;
 
     /**
      * @associates Command 
      */
-	Vector commands = new Vector();
-	CommandListener listener = null;
+	private Vector commands = new Vector();
+	private CommandListener listener = null;
 
+    
+    Displayable(String title) 
+    {
+        this.title = new StringComponent(title);
+        viewPortY = 0;
+        viewPortHeight = DeviceFactory.getDevice().getDeviceDisplay().getHeight() - this.title.getHeight() - 1;
+    }
+    
 
 	public void addCommand(Command cmd)
 	{
@@ -98,6 +114,37 @@ public abstract class Displayable
 		return currentDisplay.isShown(this);
 	}
 
+    
+    public Ticker getTicker() 
+    {
+        return ticker;
+    }
+
+    
+    public void setTicker(Ticker ticker) 
+    {
+        if (this.ticker != null) {
+            viewPortHeight += this.ticker.getHeight();
+        }
+        this.ticker = ticker;
+        if (this.ticker != null) {
+            viewPortHeight -= this.ticker.getHeight();
+        }
+        repaint();
+    }
+
+    
+    public String getTitle() 
+    {
+        return title.getText();
+    }
+
+    
+    public void setTitle(String s) 
+    {
+        title.setText(s);
+    }        
+    
 
 	public void setCommandListener(CommandListener l)
 	{

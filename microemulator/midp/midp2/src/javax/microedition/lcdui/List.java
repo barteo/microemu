@@ -152,6 +152,12 @@ public class List extends Screen implements Choice
   {
 	choiceGroup.setFont(elementNum, font);  
   }
+  
+  
+  public void setSelectCommand(Command command)
+  {
+    // TODO
+  }
     
   
   public void setSelectedFlags(boolean[] selectedArray) 
@@ -169,9 +175,9 @@ public class List extends Screen implements Choice
   void keyPressed(int keyCode)
   {
     if(Display.getGameAction(keyCode) == Canvas.FIRE 
-        && choiceGroup.select() && super.listener != null
+        && choiceGroup.select() && super.getCommandListener() != null
         && choiceGroup.choiceType == Choice.IMPLICIT) {
-      super.listener.commandAction(SELECT_COMMAND, this);
+      super.getCommandListener().commandAction(SELECT_COMMAND, this);
     } else {
       super.keyPressed(keyCode);
     }

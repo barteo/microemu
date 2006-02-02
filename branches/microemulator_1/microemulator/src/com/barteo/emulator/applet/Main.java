@@ -115,7 +115,6 @@ public class Main extends Applet implements MicroEmulator
     
     public void init()
     {
-        System.out.println("Applet::init()");
         if (midlet != null) {
             return;
         }

@@ -48,6 +48,9 @@ public interface DeviceDisplayImpl extends DeviceDisplay
      * @param b
      */
     void setIsColor(boolean b);
+    
+    
+    void setNumAlphaLevels(int i); 
 
     /**
      * @param color

@@ -5,6 +5,7 @@
 	<display>
     <numcolors>256</numcolors>
     <iscolor>true</iscolor>
+    <numalphalevels>256</numalphalevels>
 		<foreground>000000</foreground>
 		<background>ffffff</background>
 		<rectangle>

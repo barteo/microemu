@@ -5,8 +5,8 @@
 	<display>
     <numcolors>256</numcolors>
     <iscolor>true</iscolor>
-		<foreground>142924</foreground>
-		<background>d0d0d7</background>
+		<foreground>000000</foreground>
+		<background>ffffff</background>
 		<rectangle>
 			<x>28</x>
 			<y>33</y>

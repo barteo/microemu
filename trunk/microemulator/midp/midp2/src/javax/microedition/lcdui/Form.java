@@ -496,7 +496,7 @@ public class Form extends Screen
 	}
 
 	Vector getCommands() {
-		Vector formCommands = this.commands;
+		Vector formCommands = super.getCommands();
 		if (focusItemIndex < 0)
 			return formCommands;
 		

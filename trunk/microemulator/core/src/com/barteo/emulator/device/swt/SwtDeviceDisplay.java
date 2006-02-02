@@ -430,4 +430,18 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
         return new SwtSoftButton(name, rectangle, keyName, paintable, alignmentName, commands);
     }
 
+
+    public Image createRGBImage(int[] rgb, int width, int height, boolean processAlpha)
+    {
+        // TODO
+        return createImage(width, height);
+    }
+
+
+    public Image createImage(Image image, int x, int y, int width, int height, int transform)
+    {
+        // TODO
+        return createImage(width, height);
+    }
+
 }

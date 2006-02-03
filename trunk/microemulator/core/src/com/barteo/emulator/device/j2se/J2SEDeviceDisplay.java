@@ -231,7 +231,7 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 
 	public Color getForegroundColor() 
 	{
-		return new Color(backgroundColor.getRGB());
+		return new Color(foregroundColor.getRGB());
 	}
 	
 	

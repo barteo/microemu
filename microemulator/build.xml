@@ -142,6 +142,7 @@
 			<src path="cldc/src" />
 			<src path="midp/common/src" />			
 			<src path="midp/midp2/src" />			
+			<src path="example/src" />			
 			<patternset refid="project.src"/>
 			<classpath>
 				<pathelement location="./lib/jnlp.jar"/>
@@ -156,6 +157,7 @@
 			<src path="cldc/src" />
 			<src path="midp/common/src" />			
 			<src path="midp/midp2/src" />			
+			<src path="example/src" />			
 			<patternset refid="project.src"/>
 		</javac>
 	</target>
@@ -234,7 +236,7 @@
 				<include name="com/barteo/midp/examples/simpledemo/**"/>
 				<exclude name="**/.*"/>
 			</fileset>
-			<fileset dir="./res">
+			<fileset dir="./example/res">
 				<include name="com/barteo/midp/examples/simpledemo/**"/>
 				<exclude name="**/.*"/>
 			</fileset>

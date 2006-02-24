@@ -168,8 +168,8 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 			Displayable current = ma.getDisplayAccess().getCurrent();
 			org.eclipse.swt.graphics.Rectangle oldclip = g.getClipping();
 			if (!(current instanceof Canvas) 
-					|| ((Canvas) current).getWidth() != displayRectangle.width
-					|| ((Canvas) current).getHeight() != displayRectangle.height) {
+					|| current.getWidth() != displayRectangle.width
+					|| current.getHeight() != displayRectangle.height) {
 				g.setClipping(new org.eclipse.swt.graphics.Rectangle(displayPaintable.x, displayPaintable.y, displayPaintable.width, displayPaintable.height));
 				g.translate(displayPaintable.x, displayPaintable.y);
 			}
@@ -180,8 +180,8 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 			g.setFont(f);
 			
 			if (!(current instanceof Canvas) 
-					|| ((Canvas) current).getWidth() != displayRectangle.width
-					|| ((Canvas) current).getHeight() != displayRectangle.height) {
+					|| current.getWidth() != displayRectangle.width
+					|| current.getHeight() != displayRectangle.height) {
 				g.translate(-displayPaintable.x, -displayPaintable.y);
 				g.setClipping(oldclip);
 			}

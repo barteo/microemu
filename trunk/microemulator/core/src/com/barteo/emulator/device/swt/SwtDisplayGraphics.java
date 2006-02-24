@@ -30,7 +30,7 @@ import org.eclipse.swt.graphics.Rectangle;
 
 import com.barteo.emulator.app.ui.swt.ImageFilter;
 import com.barteo.emulator.app.ui.swt.SwtGraphics;
-import com.barteo.emulator.device.DeviceDisplay;
+import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.DisplayGraphics;
 import com.barteo.emulator.device.MutableImage;
@@ -42,17 +42,31 @@ public class SwtDisplayGraphics extends javax.microedition.lcdui.Graphics implem
 	private MutableImage image;
 	private int color = 0;
 	private javax.microedition.lcdui.Font currentFont = javax.microedition.lcdui.Font.getDefaultFont();
+	private ImageFilter filter;
 
 	
 	public SwtDisplayGraphics(SwtGraphics a_g, MutableImage a_image) 
 	{
-		g = a_g;
-		image = a_image;
-		g.setBackground(g.getColor(new RGB(
-				((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getRed(), 
-				((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getGreen(), 
-				((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getBackgroundColor().getBlue())));
-		g.setFont(((SwtFontManager) DeviceFactory.getDevice().getFontManager()).getFont(currentFont));
+		this.g = a_g;
+		this.image = a_image;
+		
+		Device device = DeviceFactory.getDevice();
+		
+		this.g.setBackground(g.getColor(new RGB(
+				((SwtDeviceDisplay) device.getDeviceDisplay()).getBackgroundColor().getRed(), 
+				((SwtDeviceDisplay) device.getDeviceDisplay()).getBackgroundColor().getGreen(), 
+				((SwtDeviceDisplay) device.getDeviceDisplay()).getBackgroundColor().getBlue())));
+		this.g.setFont(((SwtFontManager) device.getFontManager()).getFont(currentFont));
+		
+		if (device.getDeviceDisplay().isColor()) {
+			this.filter = new RGBImageFilter();
+		} else {
+			if (device.getDeviceDisplay().numColors() == 2) {
+				this.filter = new BWImageFilter();
+			} else {
+				this.filter = new GrayImageFilter();
+			}
+		}
 	}
 
 	
@@ -70,19 +84,7 @@ public class SwtDisplayGraphics extends javax.microedition.lcdui.Graphics implem
 	
 	public void setColor(int RGB) 
 	{
-		ImageFilter filter = null;
 		color = RGB;
-
-		DeviceDisplay deviceDisplay = DeviceFactory.getDevice().getDeviceDisplay();
-		if (deviceDisplay.isColor()) {
-			filter = new RGBImageFilter();
-		} else {
-			if (deviceDisplay.numColors() == 2) {
-				filter = new BWImageFilter();
-			} else {
-				filter = new GrayImageFilter();
-			}
-		}
 
 		g.setForeground(g.getColor(filter.filterRGB(0, 0, new RGB((color >> 16) % 256, (color >> 8) % 256, color % 256))));
 	}

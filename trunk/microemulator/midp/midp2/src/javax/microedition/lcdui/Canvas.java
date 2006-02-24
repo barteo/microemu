@@ -22,8 +22,6 @@
  
 package javax.microedition.lcdui;
 
-import com.barteo.emulator.device.DeviceFactory;
-
 
 public abstract class Canvas extends Displayable
 {
@@ -51,7 +49,7 @@ public abstract class Canvas extends Displayable
     public static final int KEY_NUM9 = 57;
     public static final int KEY_STAR = 42;
     public static final int KEY_POUND = 35;
-
+    
 
 	protected Canvas()
 	{
@@ -79,31 +77,31 @@ public abstract class Canvas extends Displayable
     
     public boolean hasPointerEvents()
     {
-        return DeviceFactory.getDevice().getInputMethod().hasPointerEvents();
+        return device.getInputMethod().hasPointerEvents();
     }
 
     
     public boolean hasPointerMotionEvents()
     {
-        return DeviceFactory.getDevice().getInputMethod().hasPointerMotionEvents();
+        return device.getInputMethod().hasPointerMotionEvents();
     }
 
     
     public boolean hasRepeatEvents()
     {
-        return DeviceFactory.getDevice().getInputMethod().hasRepeatEvents();
+        return device.getInputMethod().hasRepeatEvents();
     }
 
 
 	public int getWidth()
 	{
-		return DeviceFactory.getDevice().getDeviceDisplay().getWidth();
+		return device.getDeviceDisplay().getWidth();
 	}
 
 
 	public int getHeight()
 	{
-		return DeviceFactory.getDevice().getDeviceDisplay().getHeight();
+		return device.getDeviceDisplay().getHeight();
 	}
 
 

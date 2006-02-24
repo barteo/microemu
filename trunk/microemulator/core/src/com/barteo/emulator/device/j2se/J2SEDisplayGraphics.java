@@ -29,7 +29,7 @@ import java.awt.Rectangle;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
 
-import com.barteo.emulator.device.DeviceDisplay;
+import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceFactory;
 import com.barteo.emulator.device.DisplayGraphics;
 import com.barteo.emulator.device.MutableImage;
@@ -43,15 +43,29 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
 	private MutableImage image;
 	private int color = 0;
 	private javax.microedition.lcdui.Font currentFont = javax.microedition.lcdui.Font.getDefaultFont();
+	private java.awt.image.RGBImageFilter filter;
 
 	
         // Andres Navarro
 	public J2SEDisplayGraphics(java.awt.Graphics2D a_g, MutableImage a_image) 
         // Andres Navarro
 	{
-		g = a_g;
-		image = a_image;
-		g.setFont(((J2SEFontManager) DeviceFactory.getDevice().getFontManager()).getFontMetrics(currentFont).getFont());
+		this.g = a_g;
+		this.image = a_image;
+		
+        Device device = DeviceFactory.getDevice();
+
+        this.g.setFont(((J2SEFontManager) device.getFontManager()).getFontMetrics(currentFont).getFont());
+		
+        if (device.getDeviceDisplay().isColor()) {
+            this.filter = new RGBImageFilter();
+        } else {
+            if (device.getDeviceDisplay().numColors() == 2) {
+                this.filter = new BWImageFilter();
+            } else {
+                this.filter = new GrayImageFilter();
+            }
+        }
 	}
 
 	
@@ -70,10 +84,8 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
 	public void setColor(int RGB) 
 	{
 		color = RGB;
-// Andres Navarro
-    // all the filtering was moved to the MIDP2 method getDisplayColor(int)
-		g.setColor(new Color(getDisplayColor(RGB)));
-// Andres Navarro
+
+		g.setColor(new Color(filter.filterRGB(0, 0, color)));
 	}
 
 	
@@ -493,20 +505,4 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
                 g.copyArea(x_src, y_src, width, height, x_dest-x_src, y_dest-y_src);
         }
 
-        public int getDisplayColor(int color) {
-            java.awt.image.RGBImageFilter filter;
-            DeviceDisplay deviceDisplay = DeviceFactory.getDevice().getDeviceDisplay();
-            if (deviceDisplay.isColor()) {
-                    filter = new RGBImageFilter();
-            } else {
-                    if (deviceDisplay.numColors() == 2) {
-                            filter = new BWImageFilter();
-                    } else {
-                            filter = new GrayImageFilter();
-                    }
-            }
-
-            return filter.filterRGB(0, 0, color);
-        } 
-// Andres Navarro
 }

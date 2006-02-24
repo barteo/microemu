@@ -21,11 +21,14 @@ package javax.microedition.lcdui;
 
 import java.util.Vector;
 
+import com.barteo.emulator.device.Device;
 import com.barteo.emulator.device.DeviceFactory;
 
 
 public abstract class Displayable
 {
+	protected Device device;
+	
 	Display currentDisplay = null;
     
     private Ticker ticker;
@@ -47,8 +50,11 @@ public abstract class Displayable
     Displayable(String title) 
     {
         this.title = new StringComponent(title);
+        
+        device = DeviceFactory.getDevice();
+        
         viewPortY = 0;
-        viewPortHeight = DeviceFactory.getDevice().getDeviceDisplay().getHeight() - this.title.getHeight() - 1;
+        viewPortHeight = device.getDeviceDisplay().getHeight() - this.title.getHeight() - 1;
     }
     
 
@@ -95,14 +101,14 @@ public abstract class Displayable
     public int getWidth()
     {
         // FIXME
-        return DeviceFactory.getDevice().getDeviceDisplay().getWidth();
+        return device.getDeviceDisplay().getWidth();
     }
 
 
     public int getHeight()
     {
         // FIXME
-        return DeviceFactory.getDevice().getDeviceDisplay().getHeight();
+        return device.getDeviceDisplay().getHeight();
     }
 
 

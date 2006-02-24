@@ -43,6 +43,11 @@ public class SwtButton implements Button
 
     this.key = getKeyCode(keyName);
     this.chars = chars;
+    if (chars != null) {
+	    for (int i = 0; i < this.chars.length; i++) {
+	    	this.chars[i] = Character.toLowerCase(this.chars[i]);
+	    }
+    }
   }
   
   
@@ -63,7 +68,7 @@ public class SwtButton implements Button
     c = Character.toLowerCase(c);
     if (chars != null) {
       for (int i = 0; i < chars.length; i++) {
-        if (c == Character.toLowerCase(chars[i])) {
+        if (c == chars[i]) {
           return true;
         } 
       }

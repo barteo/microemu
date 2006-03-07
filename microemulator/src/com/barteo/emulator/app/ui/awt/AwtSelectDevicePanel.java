@@ -292,7 +292,12 @@ public class AwtSelectDevicePanel extends AwtDialogPanel
   
 	public DeviceEntry getSelectedDeviceEntry()
 	{
-		return (DeviceEntry) deviceModel.elementAt(lsDevices.getSelectedIndex());
+		int i = lsDevices.getSelectedIndex();
+		if (i == -1) {
+			i = 0;
+		}
+		
+		return (DeviceEntry) deviceModel.elementAt(i);
 	}
   
   

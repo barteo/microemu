@@ -430,15 +430,17 @@ public class Display
 				return;
 			}
 
-			current = nextDisplayable;
-                        // Andres Navarro
-                        if (nextDisplayable instanceof GameCanvas) {
-                            // clear the keys of the GameCanvas
-                            MIDletBridge.getMIDletAccess().
-                                    getGameCanvasKeyAccess().setActualKeyState(
-                                    (GameCanvas) nextDisplayable, 0);                            
-                        }
-                        // Andres Navarro
+			current = nextDisplayable;			
+            // Andres Navarro
+			// TODO uncomment and test with JBenchmark2
+			/*
+            if (nextDisplayable instanceof GameCanvas) {
+                // clear the keys of the GameCanvas
+                MIDletBridge.getMIDletAccess().getGameCanvasKeyAccess().setActualKeyState(
+                        (GameCanvas) nextDisplayable, 0);                            
+            }
+            */
+            // Andres Navarro
 			current.showNotify(this);
 			setScrollUp(false);
 			setScrollDown(false);

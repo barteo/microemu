@@ -57,8 +57,7 @@ public class Device
 
     public void init(EmulatorContext context)
     {     
-        // Here should be device.xml but Netscape security manager doesn't accept this extension
-        init(context, "/com/barteo/emulator/device/device.txt");
+        init(context, "/com/barteo/emulator/device/device.xml");
     }       
 
     

@@ -17,18 +17,18 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package net.barteo.me.device.large;
+package net.barteo.me.device.small;
 
 import com.barteo.emulator.EmulatorContext;
 import com.barteo.emulator.device.Device;
 
 
-public class LargeDevice extends Device
+public class SmallDevice extends Device
 {
   
   public void init(EmulatorContext context) 
   {
-    super.init(context, "/net/barteo/me/device/large/device.xml");
+    super.init(context, "/net/barteo/me/device/small/device.xml");
   }
   
 }

@@ -30,7 +30,7 @@ import com.barteo.emulator.GameCanvasKeyAccess;
  *
  * @author Andres Navarro
  */
-public class GameCanvas extends Canvas {
+public abstract class GameCanvas extends Canvas {
     // keystate constants
     public static final int UP_PRESSED = 1 << Canvas.UP;
     public static final int DOWN_PRESSED = 1 << Canvas.DOWN;
@@ -82,10 +82,11 @@ public class GameCanvas extends Canvas {
     }
     
     /** Creates a new instance of GameCanvas */
-    public GameCanvas(boolean suppressKeyEvents) {
-        if (MIDletBridge.getMIDletAccess().getGameCanvasKeyAccess() == null)
-            MIDletBridge.getMIDletAccess().setGameCanvasKeyAccess(
-                    new KeyAccess());            
+    protected GameCanvas(boolean suppressKeyEvents) 
+    {
+        if (MIDletBridge.getMIDletAccess().getGameCanvasKeyAccess() == null) {
+            MIDletBridge.getMIDletAccess().setGameCanvasKeyAccess(new KeyAccess());
+        }
         
         this.suppressKeyEvents = suppressKeyEvents;
         // never should the size of the Canvas become greater than this

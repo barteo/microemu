@@ -92,13 +92,17 @@ public class Form extends Screen
 		verifyItemNum(itemNum);
 
 		items[itemNum].setOwner(null);
-		System.arraycopy(
-			items,
-			itemNum + 1,
-			items,
-			itemNum,
-			numOfItems - itemNum - 1);
+		System.arraycopy(items, itemNum + 1, items, itemNum, numOfItems - itemNum - 1);
 		numOfItems--;
+	}
+	
+	
+	public void deleteAll()
+	{
+		for (int i = 0; i < numOfItems; i++) {
+			items[i].setOwner(null);
+		}
+		numOfItems = 0;
 	}
 
 	

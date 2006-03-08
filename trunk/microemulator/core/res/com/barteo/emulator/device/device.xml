@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <device>
-  <img name="normal" src="/net/barteo/me/device/large/normal.png"/>
-  <img name="over" src="/net/barteo/me/device/large/over.png"/>
-  <img name="pressed" src="/net/barteo/me/device/large/pressed.png"/>
+  <img name="normal" src="/com/barteo/emulator/device/normal.png"/>
+  <img name="over" src="/com/barteo/emulator/device/over.png"/>
+  <img name="pressed" src="/com/barteo/emulator/device/pressed.png"/>
 	<display>
     <numcolors>65536</numcolors>
     <iscolor>true</iscolor>
@@ -22,7 +22,7 @@
 			<width>176</width>
 			<height>176</height>
 		</paintable>
-    <img name="up" src="/net/barteo/me/device/large/up.png">
+    <img name="up" src="/com/barteo/emulator/device/up.png">
 		  <paintable>
 			  <x>80</x>
 			  <y>199</y>
@@ -30,7 +30,7 @@
 			  <height>8</height>
 		  </paintable>
     </img>
-    <img name="down" src="/net/barteo/me/device/large/down.png">
+    <img name="down" src="/com/barteo/emulator/device/down.png">
 		  <paintable>
 			  <x>88</x>
 			  <y>199</y>
@@ -38,7 +38,7 @@
 			  <height>8</height>
 		  </paintable>
     </img>
-    <img name="mode" type="123" src="/net/barteo/me/device/large/123.png">
+    <img name="mode" type="123" src="/com/barteo/emulator/device/123.png">
 		  <paintable>
 			  <x>0</x>
 			  <y>0</y>
@@ -46,7 +46,7 @@
 			  <height>7</height>
 		  </paintable>
     </img>
-    <img name="mode" type="ABC" src="/net/barteo/me/device/large/abc_upper.png">
+    <img name="mode" type="ABC" src="/com/barteo/emulator/device/abc_upper.png">
 		  <paintable>
 			  <x>0</x>
 			  <y>0</y>
@@ -54,7 +54,7 @@
 			  <height>7</height>
 		  </paintable>
     </img>
-    <img name="mode" type="abc" src="/net/barteo/me/device/large/abc_lower.png">
+    <img name="mode" type="abc" src="/com/barteo/emulator/device/abc_lower.png">
 		  <paintable>
 			  <x>0</x>
 			  <y>0</y>

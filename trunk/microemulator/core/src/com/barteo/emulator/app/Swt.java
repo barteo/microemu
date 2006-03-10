@@ -68,21 +68,22 @@ public class Swt extends Common
 
 	private static SwtDeviceComponent devicePanel;
 
-	Swt instance = null;
-    
-	boolean initialized = false;
+	protected boolean initialized = false;
   
-	SwtSelectDeviceDialog selectDeviceDialog;
-	FileDialog fileDialog = null;
-	MenuItem menuOpenJADFile;
-	MenuItem menuOpenJADURL;
-	MenuItem menuSelectDevice;
-	    
-	DeviceEntry deviceEntry;
+	protected MenuItem menuOpenJADFile;
+	protected MenuItem menuOpenJADURL;
 
-	Label statusBar;
+	private Swt instance = null;
+    
+	private SwtSelectDeviceDialog selectDeviceDialog;
+	private FileDialog fileDialog = null;
+	private MenuItem menuSelectDevice;
+	    
+	private DeviceEntry deviceEntry;
+
+	private Label statusBar;
   
-	KeyListener keyListener = new KeyListener()
+	private KeyListener keyListener = new KeyListener()
 	{    
 		public void keyTyped(KeyEvent e)
 		{
@@ -99,7 +100,7 @@ public class Swt extends Common
 		}    
 	};
    
-	Listener menuOpenJADFileListener = new Listener()
+	protected Listener menuOpenJADFileListener = new Listener()
 	{
 		public void handleEvent(Event ev)
 		{
@@ -122,7 +123,7 @@ public class Swt extends Common
 		} 
 	};
   
-	Listener menuOpenJADURLListener = new Listener()
+	protected Listener menuOpenJADURLListener = new Listener()
 	{
 		public void handleEvent(Event ev)
 		{
@@ -138,7 +139,7 @@ public class Swt extends Common
 		}    
 	};
   
-	Listener menuExitListener = new Listener()
+	protected Listener menuExitListener = new Listener()
 	{    
 		public void handleEvent(Event e)
 		{
@@ -147,7 +148,7 @@ public class Swt extends Common
 	};
   
   
-	Listener menuSelectDeviceListener = new Listener()
+	private Listener menuSelectDeviceListener = new Listener()
 	{    
 		public void handleEvent(Event e)
 		{
@@ -177,7 +178,7 @@ public class Swt extends Common
 		}    
 	};
 	
-	StatusBarListener statusBarListener = new StatusBarListener()
+	private StatusBarListener statusBarListener = new StatusBarListener()
 	{			
 		public void statusBarChanged(final String text) 
 		{			
@@ -191,7 +192,7 @@ public class Swt extends Common
 		}  
 	};
   
-	ResponseInterfaceListener responseInterfaceListener = new ResponseInterfaceListener()
+	private ResponseInterfaceListener responseInterfaceListener = new ResponseInterfaceListener()
 	{
 		public void stateChanged(final boolean state) 
 		{
@@ -228,10 +229,10 @@ public class Swt extends Common
 				System.err.println(ex);
 			}
 		}
-	};*/  
- 
+	};*/
+	
   
-	Swt(Shell shell)
+	protected Swt(Shell shell)
 	{
 		super(new EmulatorContext()
 		{
@@ -276,6 +277,28 @@ public class Swt extends Common
 
 		instance = this;
     
+		initInterface(shell);
+
+//		addWindowListener(windowListener);
+		    
+		Config.loadConfig("config.xml");
+		shell.addKeyListener(keyListener);
+
+		devicePanel = new SwtDeviceComponent(shell);
+		devicePanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		selectDeviceDialog = new SwtSelectDeviceDialog(shell);
+		setDevice(selectDeviceDialog.getSelectedDeviceEntry());
+    
+		setStatusBarListener(statusBarListener);
+		setResponseInterfaceListener(responseInterfaceListener);
+    
+		initialized = true;
+	}
+	
+	
+	protected void initInterface(Shell shell)
+	{
 		GridLayout layout = new GridLayout(1, false);
 		shell.setLayout(layout);
 		shell.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -314,25 +337,10 @@ public class Swt extends Common
 		menuSelectDevice.addListener(SWT.Selection, menuSelectDeviceListener);
 
 		shell.setText("MicroEmulator");
-//		addWindowListener(windowListener);
-		    
-		Config.loadConfig("config.xml");
-		shell.addKeyListener(keyListener);
-
-		devicePanel = new SwtDeviceComponent(shell);
-		devicePanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		statusBar = new Label(shell, SWT.HORIZONTAL);
 		statusBar.setText("Status");
 		statusBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-		selectDeviceDialog = new SwtSelectDeviceDialog(shell);
-		setDevice(selectDeviceDialog.getSelectedDeviceEntry());
-    
-		setStatusBarListener(statusBarListener);
-		setResponseInterfaceListener(responseInterfaceListener);
-    
-		initialized = true;
 	}
       
   

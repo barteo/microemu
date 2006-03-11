@@ -86,4 +86,10 @@ public class SwtMutableImage extends MutableImage
 		return result;
 	}
 
+
+	public void getRGB(int[] argb, int offset, int scanlenght, int x, int y, int width, int height) {
+		// TODO Auto-generated method stub
+		super.getRGB(argb, offset, scanlenght, x, y, width, height);
+	}
+
 }

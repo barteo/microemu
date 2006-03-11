@@ -27,7 +27,7 @@ public class SwtImmutableImage extends javax.microedition.lcdui.Image
   
 	public SwtImmutableImage(org.eclipse.swt.graphics.Image image)
 	{
-  	img = image;
+		img = image;
 	}
   
   
@@ -54,5 +54,11 @@ public class SwtImmutableImage extends javax.microedition.lcdui.Image
 	{
 		return img.getBounds().width;
 	}  
+	
+	
+	public void getRGB(int[] argb, int offset, int scanlenght, int x, int y, int width, int height) {
+		// TODO Auto-generated method stub
+		super.getRGB(argb, offset, scanlenght, x, y, width, height);
+	}
   
 }

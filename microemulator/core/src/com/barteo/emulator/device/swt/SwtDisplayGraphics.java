@@ -229,7 +229,20 @@ public class SwtDisplayGraphics extends javax.microedition.lcdui.Graphics implem
 		drawLine(x, y + height, x, y);
 	}
 
-	
+
+	public void drawRegion(Image src, int x_src, int y_src, int width, int height, int transform, int x_dst, int y_dst, int anchor) {
+		// TODO Auto-generated method stub
+		super.drawRegion(src, x_src, y_src, width, height, transform, x_dst, y_dst,
+				anchor);
+	}
+
+
+	public void drawRGB(int[] rgbData, int offset, int scanlength, int x, int y, int width, int height, boolean processAlpha) {
+		// TODO Auto-generated method stub
+		super.drawRGB(rgbData, offset, scanlength, x, y, width, height, processAlpha);
+	}
+
+
 	public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) 
 	{
 		g.drawRoundRectangle(x, y, width, height, arcWidth, arcHeight);

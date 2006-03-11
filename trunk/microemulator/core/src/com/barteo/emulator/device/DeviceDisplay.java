@@ -41,6 +41,8 @@ public interface DeviceDisplay
 	int getFullHeight();
 
 	boolean isColor();
+	
+	boolean isFullScreenMode();
 
     int numAlphaLevels();
 

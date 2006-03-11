@@ -99,8 +99,14 @@ public class SwtDeviceComponent extends Canvas
 		public void mouseDown(MouseEvent e) 
 		{
 			pressedButton = getButton(e.x, e.y);
+
+			// if the displayable is in full screen mode, we should not
+			// invoke any associated commands, but send the raw key codes
+			// instead
+			boolean rawSoftKeys = DeviceFactory.getDevice().getDeviceDisplay().isFullScreenMode();
+
 			if (pressedButton != null) {
-				if (pressedButton instanceof SoftButton) {
+				if (pressedButton instanceof SoftButton && !rawSoftKeys) {
 					Command cmd = ((SoftButton) pressedButton).getCommand();
 					if (cmd != null) {
 						CommandManager.getInstance().commandAction(cmd);

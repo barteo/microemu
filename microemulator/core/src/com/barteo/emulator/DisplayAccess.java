@@ -37,12 +37,14 @@ public interface DisplayAccess
 	void keyReleased(int keyCode);
 
 	void paint(Graphics g);
+	
+	boolean isFullScreenMode();
   
-  Displayable getCurrent();
+	Displayable getCurrent();
 
-  void setCurrent(Displayable d);
+	void setCurrent(Displayable d);
   
-  void updateCommands();
+	void updateCommands();
 
 	void clean();
 

@@ -94,13 +94,21 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 
 	public int getHeight() 
 	{
-		return displayPaintable.height;
+		if (isFullScreenMode()) {
+			return getFullHeight();
+		} else {
+			return displayPaintable.height;
+		}
 	}
 
 
 	public int getWidth() 
 	{
-		return displayPaintable.width;
+		if (isFullScreenMode()) {
+			return getFullWidth();
+		} else {
+			return displayPaintable.width;
+		}
 	}
 
 
@@ -120,6 +128,14 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	{
 		return isColor;
 	}
+	
+	
+    public boolean isFullScreenMode() 
+    { 
+    		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+    		
+    		return ma.getDisplayAccess().isFullScreenMode();
+    }
 
 
     public int numAlphaLevels() 

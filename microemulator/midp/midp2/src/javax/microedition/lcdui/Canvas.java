@@ -50,10 +50,14 @@ public abstract class Canvas extends Displayable
     public static final int KEY_STAR = 42;
     public static final int KEY_POUND = 35;
     
+    boolean fullScreenMode;
+    
 
 	protected Canvas()
 	{
         super(null);
+        
+        fullScreenMode = false;
 	}
 
 
@@ -168,7 +172,7 @@ public abstract class Canvas extends Displayable
     
     public void setFullScreenMode(boolean mode)
     {
-        // TODO Not implemented yet 
+    		this.fullScreenMode = mode;
     }
 
     

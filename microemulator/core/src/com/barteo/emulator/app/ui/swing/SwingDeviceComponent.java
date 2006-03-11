@@ -60,21 +60,27 @@ public class SwingDeviceComponent extends JPanel
     
     public void mousePressed(MouseEvent e) 
     {
-      pressedButton = getButton(e.getX(), e.getY());
-      if (pressedButton != null) {
-        if (pressedButton instanceof SoftButton) {
-          Command cmd = ((SoftButton) pressedButton).getCommand();
-          if (cmd != null) {
-            CommandManager.getInstance().commandAction(cmd);
-          }
-        } else {
-          int key = pressedButton.getKey();
-          KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key, KeyEvent.CHAR_UNDEFINED);
-          DeviceFactory.getDevice().getInputMethod().keyPressed(ev.getKeyCode());
-        }
-        repaint();
-      }
-    }
+		pressedButton = getButton(e.getX(), e.getY());
+
+		// if the displayable is in full screen mode, we should not
+		// invoke any associated commands, but send the raw key codes
+		// instead
+		boolean rawSoftKeys = DeviceFactory.getDevice().getDeviceDisplay().isFullScreenMode();
+
+		if (pressedButton != null) {
+			if (pressedButton instanceof SoftButton && !rawSoftKeys) {
+				Command cmd = ((SoftButton) pressedButton).getCommand();
+				if (cmd != null) {
+					CommandManager.getInstance().commandAction(cmd);
+				}
+			} else {
+				int key = pressedButton.getKey();
+				KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key, KeyEvent.CHAR_UNDEFINED);
+				DeviceFactory.getDevice().getInputMethod().keyPressed(ev.getKeyCode());
+			}
+			repaint();
+		}
+	}
 
 
     public void mouseReleased(MouseEvent e) 

@@ -159,6 +159,17 @@ public class Display
 		{
 			return getDisplay().getCurrent();
 		}
+		
+		public boolean isFullScreenMode()
+		{
+			Displayable current = getCurrent();
+			
+			if (current instanceof Canvas) {
+				return ((Canvas) current).fullScreenMode;
+			} else {
+				return false;
+			}
+		}
 
 		public void setCurrent(Displayable d) 
 		{

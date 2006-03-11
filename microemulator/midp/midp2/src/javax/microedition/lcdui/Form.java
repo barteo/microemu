@@ -112,6 +112,18 @@ public class Form extends Screen
 
 		return items[itemNum];
 	}
+	
+	
+	public int getHeight()
+	{
+		return super.getHeight();
+	}
+	
+	
+	public int getWidth()
+	{
+		return super.getWidth();
+	}
 
 	
 	public void insert(int itemNum, Item item) 

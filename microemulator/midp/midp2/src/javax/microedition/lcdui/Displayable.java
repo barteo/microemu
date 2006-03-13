@@ -126,13 +126,8 @@ public abstract class Displayable
     
     public void setTicker(Ticker ticker) 
     {
-        if (this.ticker != null) {
-            viewPortHeight += this.ticker.getHeight();
-        }
         this.ticker = ticker;
-        if (this.ticker != null) {
-            viewPortHeight -= this.ticker.getHeight();
-        }
+
         repaint();
     }
 
@@ -212,6 +207,9 @@ public abstract class Displayable
 		currentDisplay = d;
         viewPortY = 0;
         viewPortHeight = device.getDeviceDisplay().getHeight() - this.title.getHeight() - 1;
+        if (ticker != null) {
+        		viewPortHeight -= this.ticker.getHeight();
+        }
 
 		showNotify();
 	}

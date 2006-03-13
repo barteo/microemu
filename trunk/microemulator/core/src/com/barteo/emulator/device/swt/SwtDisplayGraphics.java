@@ -231,14 +231,14 @@ public class SwtDisplayGraphics extends javax.microedition.lcdui.Graphics implem
 
 
 	public void drawRegion(Image src, int x_src, int y_src, int width, int height, int transform, int x_dst, int y_dst, int anchor) {
-		// TODO Auto-generated method stub
+		// TODO implement drawRegion
 		super.drawRegion(src, x_src, y_src, width, height, transform, x_dst, y_dst,
 				anchor);
 	}
 
 
 	public void drawRGB(int[] rgbData, int offset, int scanlength, int x, int y, int width, int height, boolean processAlpha) {
-		// TODO Auto-generated method stub
+		// TODO implement drawRGB
 		super.drawRGB(rgbData, offset, scanlength, x, y, width, height, processAlpha);
 	}
 

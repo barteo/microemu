@@ -28,8 +28,10 @@ import java.util.Vector;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.game.Sprite;
 
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 
 import com.barteo.emulator.EmulatorContext;
@@ -463,15 +465,146 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 
     public Image createRGBImage(int[] rgb, int width, int height, boolean processAlpha)
     {
-        // TODO
-        return createImage(width, height);
+        if (rgb == null)
+            throw new NullPointerException();
+        if (width <= 0 || height <= 0)
+            throw new IllegalArgumentException();
+        
+        org.eclipse.swt.graphics.Image img = SwtDeviceComponent.createImage(width, height);
+        ImageData imageData = img.getImageData();
+        
+        if (!processAlpha) {
+            // we should eliminate the transparency info
+            // but can't touch the original array
+            // so we just create another
+            int l = rgb.length;
+            
+            int [] rgbAux = new int[l];
+            for (int i = 0; i < l; i++)
+                rgbAux[i] = rgb[i] | 0xff000000;
+            rgb = rgbAux;
+        } 
+        
+        
+
+        for (int y = 0; y < height; y++) {
+        		imageData.setPixels(0, y, width, rgb, y * width);
+        }
+                
+        // TODO now apply the corresponding filter
+		ImageFilter filter = null;
+        if (isColor()) {
+        		filter = new RGBImageFilter();
+        } else {
+        		if (numColors() == 2) {
+        			filter = new BWImageFilter();
+        		} else {
+        			filter = new GrayImageFilter();
+        		}
+        }
+	
+        return new SwtImmutableImage(img);
     }
 
 
     public Image createImage(Image image, int x, int y, int width, int height, int transform)
     {
-        // TODO
-        return createImage(width, height);
+        if (image == null) {
+            throw new NullPointerException();
+        }
+        if (x + width > image.getWidth() || y + height > image.getHeight()
+        			|| width <= 0 || height <= 0 || x < 0 || y < 0) {
+            throw new IllegalArgumentException("Area out of Image");
+        }
+
+
+        int [] rgbData = new int[height * width];
+        int [] rgbTransformedData = new int[height * width];
+        if (image instanceof SwtImmutableImage) {
+        		((SwtImmutableImage) image).getRGB(rgbData, 0, width, x, y, width, height);
+        } else {
+        		((SwtMutableImage) image).getRGB(rgbData, 0, width, x, y, width, height);
+        }
+
+
+        int colIncr, rowIncr, offset;
+
+        switch(transform) {
+            case Sprite.TRANS_NONE: {
+                offset = 0;
+                colIncr = 1;
+                rowIncr = 0;
+                break;
+            }
+            case Sprite.TRANS_ROT90: {
+                offset = (height - 1) * width;
+                colIncr = -width;
+                rowIncr = (height * width) + 1;
+                int temp = width;
+                width = height;
+                height = temp;
+                break;
+            }
+            case Sprite.TRANS_ROT180: {
+                offset = (height * width) - 1;
+                colIncr = -1;
+                rowIncr =  0;
+                break;
+            }
+            case Sprite.TRANS_ROT270: {
+                offset = width - 1;
+                colIncr = width;
+                rowIncr =  -(height * width) - 1;
+                int temp = width;
+                width = height;
+                height = temp;
+                break;
+            }
+            case Sprite.TRANS_MIRROR: {
+                offset = width - 1;
+                colIncr = -1;
+                rowIncr =  width << 1;
+                break;
+            }
+            case Sprite.TRANS_MIRROR_ROT90: {
+                offset = (height * width) - 1;
+                colIncr = -width;
+                rowIncr = (height * width) - 1;
+                int temp = width;
+                width = height;
+                height = temp;
+                break;
+            }
+            case Sprite.TRANS_MIRROR_ROT180: {
+                offset = (height - 1) * width;
+                colIncr = 1;
+                rowIncr =  -(width << 1);
+                break;
+            }
+            case Sprite.TRANS_MIRROR_ROT270: {
+                offset = 0;
+                colIncr = width;
+                rowIncr = -(height * width) + 1;
+                int temp = width;
+                width = height;
+                height = temp;
+                break;
+            }
+            default:
+                throw new IllegalArgumentException("Bad transform");
+        }
+
+        // now the loops!
+        for (int row = 0, i = 0; row < height; row++, offset += rowIncr) {
+            for (int col = 0; col < width; col++, offset += colIncr, i++) {
+                rgbTransformedData[i] = rgbData[offset];
+            }
+        }
+        // to aid gc
+        rgbData = null;
+        image = null;
+        
+        return createRGBImage(rgbTransformedData, width, height, true);
     }
 
 }

@@ -19,8 +19,6 @@
  
 package javax.microedition.lcdui;
 
-import com.barteo.emulator.device.DeviceFactory;
-
 
 class ImageStringItem extends Item
 {
@@ -47,8 +45,7 @@ class ImageStringItem extends Item
 	{
     this.img = img;
 		if (this.img != null) {
-			stringComponent.setWidth(
-          DeviceFactory.getDevice().getDeviceDisplay().getWidth() - img.getWidth() - 2);
+			stringComponent.setWidthDecreaser(img.getWidth() + 2);
 		}
 	}
 
@@ -63,7 +60,7 @@ class ImageStringItem extends Item
 	{
 		stringComponent.setText(text);
 	}
-
+	
 
 	int getHeight()
 	{

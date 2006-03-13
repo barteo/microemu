@@ -83,7 +83,7 @@ public class TextField extends Item
 		} else {
 			setString("");
 		}
-		stringComponent.setWidth(DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 8);
+		stringComponent.setWidthDecreaser(8);
 		setCaretPosition(getString().length());
 		setCaretVisible(false);
 	}

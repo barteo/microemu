@@ -55,7 +55,7 @@ public abstract class Canvas extends Displayable
 
 	protected Canvas()
 	{
-        super(null);
+        super();
 	}
 
 

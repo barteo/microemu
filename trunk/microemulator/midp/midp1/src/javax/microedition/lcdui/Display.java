@@ -97,6 +97,11 @@ public class Display
 			}
 		}
 
+		public boolean isFullScreenMode()
+		{
+			return false;
+		}
+
 		public Displayable getCurrent() 
 		{
 			return getDisplay().getCurrent();

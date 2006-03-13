@@ -115,10 +115,9 @@ public class SwtMutableImage extends MutableImage
             }
         }
         
-        // TODO offset, scanlength         
         ImageData imageData = img.getImageData();
         for (int i = 0; i < height; i++) {
-        		imageData.getPixels(x, y + i, width, argb, i * width);
+        		imageData.getPixels(x, y + i, width, argb, offset + i * scanlength);
         }
 	}
 

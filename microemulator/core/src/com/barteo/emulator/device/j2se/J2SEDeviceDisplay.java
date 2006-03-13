@@ -185,8 +185,8 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 			Displayable current = ma.getDisplayAccess().getCurrent();
 			Shape oldclip = g.getClip();
 			if (!(current instanceof Canvas)
-				|| current.getWidth() != displayRectangle.width
-				|| current.getHeight() != displayRectangle.height) {
+				|| ((Canvas) current).getWidth() != displayRectangle.width
+				|| ((Canvas) current).getHeight() != displayRectangle.height) {
 				g.setClip(displayPaintable);
 				g.translate(displayPaintable.x, displayPaintable.y);
 			}
@@ -197,8 +197,8 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 			g.setFont(f);
 
 			if (!(current instanceof Canvas)
-				|| current.getWidth() != displayRectangle.width
-				|| current.getHeight() != displayRectangle.height) {
+				|| ((Canvas) current).getWidth() != displayRectangle.width
+				|| ((Canvas) current).getHeight() != displayRectangle.height) {
 				g.translate(-displayPaintable.x, -displayPaintable.y);
 				g.setClip(oldclip);
 			}

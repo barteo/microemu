@@ -21,9 +21,13 @@ package javax.microedition.lcdui;
 
 import java.util.Vector;
 
+import com.barteo.emulator.device.Device;
+import com.barteo.emulator.device.DeviceFactory;
+
 
 public abstract class Displayable
 {
+	protected Device device;
 
 	Display currentDisplay = null;
 
@@ -32,6 +36,12 @@ public abstract class Displayable
      */
 	Vector commands = new Vector();
 	CommandListener listener = null;
+	
+	
+	Displayable()
+	{
+		device = DeviceFactory.getDevice();
+	}
 
 
 	public void addCommand(Command cmd)

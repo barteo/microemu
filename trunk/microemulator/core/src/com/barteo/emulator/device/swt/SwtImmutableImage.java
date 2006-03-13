@@ -85,7 +85,6 @@ public class SwtImmutableImage extends javax.microedition.lcdui.Image
             }
         }
                 
-        // TODO offset, scanlength         
         ImageData imageData = img.getImageData();
         for (int i = 0; i < height; i++) {
         		imageData.getPixels(x, y + i, width, argb, offset + i * scanlength);

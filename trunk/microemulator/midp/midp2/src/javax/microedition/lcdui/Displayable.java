@@ -52,9 +52,6 @@ public abstract class Displayable
         this.title = new StringComponent(title);
         
         device = DeviceFactory.getDevice();
-        
-        viewPortY = 0;
-        viewPortHeight = device.getDeviceDisplay().getHeight() - this.title.getHeight() - 1;
     }
     
 
@@ -206,13 +203,16 @@ public abstract class Displayable
 
 
 	void showNotify()
-	{
+	{        
 	}
 
 
 	final void showNotify(Display d)
 	{
 		currentDisplay = d;
+        viewPortY = 0;
+        viewPortHeight = device.getDeviceDisplay().getHeight() - this.title.getHeight() - 1;
+
 		showNotify();
 	}
 

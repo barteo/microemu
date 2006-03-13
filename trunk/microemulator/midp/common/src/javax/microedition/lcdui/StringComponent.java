@@ -23,11 +23,12 @@ import com.barteo.emulator.device.DeviceFactory;
 
 class StringComponent 
 {
-	String text;
-	int breaks[] = new int[4];
-	boolean invertPaint = false;
-	int numOfBreaks;
-	int width;
+	private String text;
+	private int breaks[] = new int[4];
+	private boolean invertPaint = false;
+	private int numOfBreaks;
+	private int width;
+	private int widthDecreaser;
 
 	
 	StringComponent() 
@@ -39,6 +40,7 @@ class StringComponent
 	StringComponent(String text) 
 	{
 		this.width = -1;
+		this.widthDecreaser = 0;
 		setText(text);
 	}
 
@@ -217,10 +219,10 @@ class StringComponent
 	}
 
 	
-	void setWidth(int width) 
+	void setWidthDecreaser(int widthDecreaser)
 	{
-		this.width = width;
-		updateBreaks();
+		this.widthDecreaser = widthDecreaser;
+		numOfBreaks = -1;
 	}
 
 	
@@ -229,9 +231,8 @@ class StringComponent
 		if (text == null) {
 			return;
 		}		
-		if (width == -1) {
-			width = DeviceFactory.getDevice().getDeviceDisplay().getWidth();
-		}
+
+		width = DeviceFactory.getDevice().getDeviceDisplay().getWidth() - widthDecreaser;
 
 		int prevIndex = 0;
 		int canBreak = 0;

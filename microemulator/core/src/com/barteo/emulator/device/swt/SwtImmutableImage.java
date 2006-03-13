@@ -19,6 +19,9 @@
  
 package com.barteo.emulator.device.swt;
 
+import org.eclipse.swt.graphics.ImageData;
+import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
+
 
 public class SwtImmutableImage extends javax.microedition.lcdui.Image
 {
@@ -31,11 +34,10 @@ public class SwtImmutableImage extends javax.microedition.lcdui.Image
 	}
   
   
-  public SwtImmutableImage(SwtMutableImage image)
-  {
-	// TODO poprawic tworzenie image	
-//    img = Toolkit.getDefaultToolkit().createImage(image.getImage().getSource());
-  }
+	public SwtImmutableImage(SwtMutableImage image)
+  	{
+		img = SwtDeviceComponent.createImage(image.getImage());
+  	}
 
 
 	public int getHeight()
@@ -56,9 +58,38 @@ public class SwtImmutableImage extends javax.microedition.lcdui.Image
 	}  
 	
 	
-	public void getRGB(int[] argb, int offset, int scanlenght, int x, int y, int width, int height) {
-		// TODO Auto-generated method stub
-		super.getRGB(argb, offset, scanlenght, x, y, width, height);
+	public void getRGB(int[] argb, int offset, int scanlength, int x, int y, int width, int height) 
+	{
+        if (width <= 0 || height <= 0) {
+            return;
+        }
+        if (x < 0 || y < 0 || x + width > getWidth() || y + height > getHeight()) {
+            throw new IllegalArgumentException("Specified area exceeds bounds of image");
+        }
+        if ((scanlength < 0 ? -scanlength : scanlength) < width) {
+            throw new IllegalArgumentException("abs value of scanlength is less than width");
+        }
+        if (argb == null) { 
+            throw new NullPointerException("null rgbData");
+        }
+        if (offset < 0 || offset + width > argb.length) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+        if (scanlength < 0) { 
+            if (offset + scanlength*(height-1) < 0) {
+                throw new ArrayIndexOutOfBoundsException();
+            }
+        } else {
+            if (offset + scanlength*(height-1) + width > argb.length) {
+                throw new ArrayIndexOutOfBoundsException();
+            }
+        }
+                
+        // TODO offset, scanlength         
+        ImageData imageData = img.getImageData();
+        for (int i = 0; i < height; i++) {
+        		imageData.getPixels(x, y + i, width, argb, offset + i * scanlength);
+        }
 	}
   
 }

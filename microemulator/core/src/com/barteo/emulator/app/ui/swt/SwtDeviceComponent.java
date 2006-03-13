@@ -295,6 +295,12 @@ public class SwtDeviceComponent extends Canvas
 	}
 
 
+	public static Image createImage(Image image)
+	{
+		return new Image(instance.getDisplay(), image, SWT.IMAGE_COPY);
+	}
+
+	
 	public static Image createImage(InputStream is) 
 	{
 		ImageData data = new ImageData(is);

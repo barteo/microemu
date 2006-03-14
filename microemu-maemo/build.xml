@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="jar" name="microemu-maemo">
+
+	<property name="microemu.jar" value="../microemulator/target/me-app.jar"/>
+	
+	<target name="init">
+		<mkdir dir="./build" />
+		<mkdir dir="./target" />
+	</target>
+
+	<target name="compile" depends="init">
+		<javac source="1.4" target="1.4" debug="true" deprecation="true" destdir="./build">
+			<src path="src" />
+			<classpath>
+				<pathelement location="${microemu.jar}"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="jar" depends="init,compile">
+		<jar compress="true" jarfile="./target/microemu-maemo.jar">
+			<fileset dir="./build" />
+			<fileset dir="./res" />
+		</jar>
+	</target>
+
+	<target name="clean">
+		<delete dir="./build"/>
+		<delete dir="./target"/>
+	</target>
+
+</project>

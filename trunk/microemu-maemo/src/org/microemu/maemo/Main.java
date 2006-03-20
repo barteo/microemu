@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.microemu.maemo.device.MaemoDevice;
 
 import com.barteo.emulator.app.Swt;
+import com.barteo.emulator.app.ui.swt.SwtDeviceComponent;
 import com.barteo.emulator.device.Device;
 
 public class Main extends Swt
@@ -68,6 +69,9 @@ public class Main extends Swt
 		menuExit.addListener(SWT.Selection, menuExitListener);
     
 		shell.setText("MicroEmulator");
+		
+		devicePanel = new SwtDeviceComponent(shell);
+		devicePanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 	}
 
 

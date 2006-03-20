@@ -66,15 +66,13 @@ public class Swt extends Common
 {
 	public static Shell shell;
 
-	private static SwtDeviceComponent devicePanel;
+	protected static SwtDeviceComponent devicePanel;
 
 	protected boolean initialized = false;
   
 	protected MenuItem menuOpenJADFile;
 	protected MenuItem menuOpenJADURL;
 
-	private Swt instance = null;
-    
 	private SwtSelectDeviceDialog selectDeviceDialog;
 	private FileDialog fileDialog = null;
 	private MenuItem menuSelectDevice;
@@ -275,17 +273,12 @@ public class Swt extends Common
 			}    
 		});
 
-		instance = this;
-    
 		initInterface(shell);
 
 //		addWindowListener(windowListener);
 		    
 		Config.loadConfig("config.xml");
 		shell.addKeyListener(keyListener);
-
-		devicePanel = new SwtDeviceComponent(shell);
-		devicePanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		selectDeviceDialog = new SwtSelectDeviceDialog(shell);
 		setDevice(selectDeviceDialog.getSelectedDeviceEntry());
@@ -337,6 +330,9 @@ public class Swt extends Common
 		menuSelectDevice.addListener(SWT.Selection, menuSelectDeviceListener);
 
 		shell.setText("MicroEmulator");
+
+		devicePanel = new SwtDeviceComponent(shell);
+		devicePanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		statusBar = new Label(shell, SWT.HORIZONTAL);
 		statusBar.setText("Status");

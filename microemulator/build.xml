@@ -262,8 +262,8 @@
 				<pathelement location="./target/me-${target}.jar"/>
 			</classpath>
 		</javac>
-		<mkdir dir="./build/devices/large/classes"/>
-		<javac source="1.2" target="1.1" debug="true" deprecation="true" srcdir="./devices/large/java" destdir="./build/devices/large/classes">
+		<mkdir dir="./build/devices/small/classes"/>
+		<javac source="1.2" target="1.1" debug="true" deprecation="true" srcdir="./devices/small/java" destdir="./build/devices/small/classes">
 			<classpath>
 				<pathelement location="./target/me-${target}.jar"/>
 			</classpath>
@@ -281,12 +281,12 @@
 				<exclude name="**/.*"/>
 			</fileset>
 		</jar>
-		<jar compress="true" jarfile="./target/devices/large.${target.device.extension}" 
-        manifest="./devices/large/manifest.mf">
-			<fileset dir="./build/devices/large/classes">
+		<jar compress="true" jarfile="./target/devices/small.${target.device.extension}" 
+        manifest="./devices/small/manifest.mf">
+			<fileset dir="./build/devices/small/classes">
 				<exclude name="**/.*"/>
 			</fileset>
-			<fileset dir="./devices/large/res">
+			<fileset dir="./devices/small/res">
 				<exclude name="**/.*"/>
 			</fileset>
 		</jar>

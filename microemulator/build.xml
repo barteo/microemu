@@ -137,12 +137,7 @@
 	</target>
 
 	<target name="compile-app" depends="init" if="target.app">
-		<javac source="1.4" target="1.4" debug="true" deprecation="true" destdir="./build/microemulator/classes">
-			<src path="core/src" />
-			<src path="cldc/src" />
-			<src path="midp/common/src" />			
-			<src path="midp/midp2/src" />			
-			<src path="example/src" />			
+		<javac source="1.4" target="1.4" debug="true" deprecation="true" destdir="./build/microemulator/classes" srcdir="./src">
 			<patternset refid="project.src"/>
 			<classpath>
 				<pathelement location="./lib/jnlp.jar"/>
@@ -152,12 +147,7 @@
 	</target>
 
 	<target name="compile-applet" depends="init" if="target.applet">
-		<javac source="1.2" target="1.1" debug="true" deprecation="true" destdir="./build/microemulator/classes">
-			<src path="core/src" />
-			<src path="cldc/src" />
-			<src path="midp/common/src" />			
-			<src path="midp/midp2/src" />			
-			<src path="example/src" />			
+		<javac source="1.2" target="1.1" debug="true" deprecation="true" destdir="./build/microemulator/classes" srcdir="./src">
 			<patternset refid="project.src"/>
 		</javac>
 	</target>
@@ -174,7 +164,7 @@
 				<exclude name="com/barteo/midp/examples/**"/>
 				<exclude name="**/.*"/>
 			</fileset>
-			<fileset dir="./core/res">
+			<fileset dir="./res">
 				<exclude name="com/barteo/midp/examples/**"/>
 				<exclude name="**/.*"/>
 			</fileset>
@@ -236,7 +226,7 @@
 				<include name="com/barteo/midp/examples/simpledemo/**"/>
 				<exclude name="**/.*"/>
 			</fileset>
-			<fileset dir="./example/res">
+			<fileset dir="./res">
 				<include name="com/barteo/midp/examples/simpledemo/**"/>
 				<exclude name="**/.*"/>
 			</fileset>
@@ -262,8 +252,8 @@
 				<pathelement location="./target/me-${target}.jar"/>
 			</classpath>
 		</javac>
-		<mkdir dir="./build/devices/small/classes"/>
-		<javac source="1.2" target="1.1" debug="true" deprecation="true" srcdir="./devices/small/java" destdir="./build/devices/small/classes">
+		<mkdir dir="./build/devices/large/classes"/>
+		<javac source="1.2" target="1.1" debug="true" deprecation="true" srcdir="./devices/large/java" destdir="./build/devices/large/classes">
 			<classpath>
 				<pathelement location="./target/me-${target}.jar"/>
 			</classpath>
@@ -281,12 +271,12 @@
 				<exclude name="**/.*"/>
 			</fileset>
 		</jar>
-		<jar compress="true" jarfile="./target/devices/small.${target.device.extension}" 
-        manifest="./devices/small/manifest.mf">
-			<fileset dir="./build/devices/small/classes">
+		<jar compress="true" jarfile="./target/devices/large.${target.device.extension}" 
+        manifest="./devices/large/manifest.mf">
+			<fileset dir="./build/devices/large/classes">
 				<exclude name="**/.*"/>
 			</fileset>
-			<fileset dir="./devices/small/res">
+			<fileset dir="./devices/large/res">
 				<exclude name="**/.*"/>
 			</fileset>
 		</jar>
@@ -343,27 +333,10 @@
 		</jar>
 	</target>
 
-	<target name="compile-jsr-82" depends="init,jar">
-		<mkdir dir="./build/jsr-82/classes"/>
-		<javac source="1.4" target="1.4" debug="true" deprecation="true" 
-		        srcdir="./ext/jsr-82/src"
-        			destdir="./build/jsr-82/classes">
-			<classpath>
-				<pathelement location="./target/me-${target}.jar"/>
-			</classpath>
-		</javac>
+	<target name="all" depends="init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-mmapi,simpledemo" description="Build everything.">
 	</target>
 
-	<target name="jar-jsr-82" depends="compile-jsr-82">
-		<jar compress="true" jarfile="./target/jsr-82.jar">
-			<fileset dir="./build/jsr-82/classes" />
-		</jar>
-	</target>
-
-	<target name="all" depends="init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-mmapi,jar-jsr-82,simpledemo" description="Build everything.">
-	</target>
-
-	<target name="dist" depends="clean,init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-mmapi,jar-jsr-82,simpledemo" description="Create distribution package">
+	<target name="dist" depends="clean,init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-mmapi,simpledemo" description="Create distribution package">
 		<mkdir dir="dist"/>
 
 		<tar basedir="../." tarfile="dist/microemulator-src.tar" defaultexcludes="yes">

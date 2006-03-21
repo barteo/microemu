@@ -137,7 +137,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
           
 				if (!Device.class.isAssignableFrom(deviceClass)) {
 					SwtMessageDialog.openError(getShell(),
-							"Error", "Cannot find class defined in Device-Class entry in jar manifest.");
+							"Error", "Class defined in Device-Class entry in jar manifest not superclass of com.barteo.emulator.device.Device.");
 					return;
 				}
         

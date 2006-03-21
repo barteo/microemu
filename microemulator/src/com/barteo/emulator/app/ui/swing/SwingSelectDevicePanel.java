@@ -142,7 +142,7 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
           
         if (!Device.class.isAssignableFrom(deviceClass)) {
           JOptionPane.showMessageDialog(instance, 
-              "Cannot find class defined in Device-Class entry in jar manifest.",
+              "Class defined in Device-Class entry in jar manifest not superclass of com.barteo.emulator.device.Device.",
               "Error", JOptionPane.ERROR_MESSAGE);
           return;
         }

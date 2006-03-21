@@ -189,7 +189,7 @@ public class RecordEnumerationImpl implements RecordEnumeration
             // here should be better sorting
             if (comparator != null) {
                 for (position = 0; position < enumerationRecords.size(); position++) {
-                    if (comparator.compare(tmp_data, (byte[]) enumerationRecords.elementAt(position)) == RecordComparator.FOLLOWS) {
+                    if (comparator.compare(tmp_data, ((EnumerationRecord) enumerationRecords.elementAt(position)).value) == RecordComparator.FOLLOWS) {
                         break;
                     }
                 }

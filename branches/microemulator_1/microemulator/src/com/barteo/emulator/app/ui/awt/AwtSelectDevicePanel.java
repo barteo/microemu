@@ -140,7 +140,7 @@ public class AwtSelectDevicePanel extends AwtDialogPanel
           
 				if (!Device.class.isAssignableFrom(deviceClass)) {
 					OptionPane.showMessageDialog(instance, 
-							"Cannot find class defined in Device-Class entry in jar manifest.",
+							"Class defined in Device-Class entry in jar manifest not superclass of com.barteo.emulator.device.Device.",
 							"Error", OptionPane.ERROR_MESSAGE);
 					return;
 				}

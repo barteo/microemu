@@ -109,4 +109,11 @@ public class MIDletBridge
   {
     emulator.notifySoftkeyLabelsChanged();
   }
+  
+  
+  public static boolean platformRequest(String URL)
+  {
+	return emulator.platformRequest(URL);
+  }
+  
 }

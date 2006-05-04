@@ -274,6 +274,17 @@ public class Main extends Applet implements MicroEmulator
         
         return value;
     }
+    
+    
+    public boolean platformRequest(String url)
+    {
+		try {
+		    getAppletContext().showDocument(new URL(url), "mini");
+		} catch (Exception e) {
+	    }
+		return false;
+    }
+
 
     
     public void notifyDestroyed()

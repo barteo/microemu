@@ -126,6 +126,20 @@ public class J2SEInputMethod extends InputMethod implements Runnable
                 throw new IllegalArgumentException();
         }
     }
+    
+    
+	public String getKeyName(int keyCode)
+    {
+	      if (keyCode == KeyEvent.VK_F1) {
+	    	  return "SOFT1";
+	      } else if (keyCode == KeyEvent.VK_F2) {
+	    	  return "SOFT2";
+	      } else if (keyCode == KeyEvent.VK_ENTER) {
+	    	  return "SELECT";
+	      }
+	          
+          return Integer.toString(keyCode);
+    }
 
     
     public boolean hasPointerMotionEvents()

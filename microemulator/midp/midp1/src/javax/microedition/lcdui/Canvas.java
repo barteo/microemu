@@ -22,6 +22,8 @@
  
 package javax.microedition.lcdui;
 
+import javax.microedition.lcdui.Display;
+
 import com.barteo.emulator.device.DeviceFactory;
 
 
@@ -73,7 +75,7 @@ public abstract class Canvas extends Displayable
     
     public String getKeyName(int keyCode)
     {
-        return Integer.toString(keyCode);
+    	return Display.getKeyName(keyCode);
     }
 
     

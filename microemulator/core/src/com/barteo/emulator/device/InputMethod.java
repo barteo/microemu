@@ -44,6 +44,8 @@ public abstract class InputMethod
 
     public abstract int getKeyCode(int gameAction);
 
+    public abstract String getKeyName(int keyCode);
+
     public abstract boolean hasPointerMotionEvents();
 
     public abstract boolean hasPointerEvents();

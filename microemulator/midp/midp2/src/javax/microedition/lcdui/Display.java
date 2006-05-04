@@ -506,6 +506,12 @@ public class Display
 	}
 
 	
+	static String getKeyName(int keyCode) 
+	{
+		return DeviceFactory.getDevice().getInputMethod().getKeyName(keyCode);
+	}
+
+	
 	boolean isShown(Displayable d) 
 	{
 		if (current == null || current != d) {

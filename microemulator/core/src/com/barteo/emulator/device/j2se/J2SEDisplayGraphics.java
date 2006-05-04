@@ -353,10 +353,13 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
                 // process anchor and correct x and y _dest
                 // vertical
                 boolean badAnchor = false;
+                
+                if (anchor == 0) {
+                	anchor = TOP | LEFT;
+                }
+                
                 if ((anchor & 0x7f) != anchor || (anchor & BASELINE) != 0)
-                    badAnchor = true;
-
-                    
+                    badAnchor = true;                    
                 
                 if ((anchor & TOP) != 0) {
                     if ((anchor & (VCENTER | BOTTOM)) != 0)

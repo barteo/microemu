@@ -195,6 +195,12 @@ public class Common implements MicroEmulator
 	{
 		statusBarListener = listener;
 	}
+	
+	
+    public boolean platformRequest(String URL)
+    {
+    	return false;
+    }
   
 
 	public void setResponseInterfaceListener(ResponseInterfaceListener listener)

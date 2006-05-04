@@ -343,6 +343,12 @@ public class Display
 		return DeviceFactory.getDevice().getInputMethod().getKeyCode(gameAction);
 	}
 
+
+	static String getKeyName(int keyCode) 
+	{
+		return DeviceFactory.getDevice().getInputMethod().getKeyName(keyCode);
+	}
+
 	
 	boolean isShown(Displayable d) 
 	{

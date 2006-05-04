@@ -123,7 +123,21 @@ public class SwtInputMethod extends InputMethod implements Runnable
         }
     }
 
-    
+
+	public String getKeyName(int keyCode)
+    {
+	      if (keyCode == SWT.F1) {
+	    	  return "SOFT1";
+	      } else if (keyCode == SWT.F2) {
+	    	  return "SOFT2";
+	      } else if (keyCode == SWT.CR) {
+	    	  return "SELECT";
+	      }
+	          
+          return Integer.toString(keyCode);
+    }
+
+	
     public boolean hasPointerMotionEvents()
     {
         return false;

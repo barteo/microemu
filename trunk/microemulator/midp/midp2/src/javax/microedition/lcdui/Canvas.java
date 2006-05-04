@@ -75,7 +75,7 @@ public abstract class Canvas extends Displayable
     
     public String getKeyName(int keyCode)
     {
-        return Integer.toString(keyCode);
+    	return Display.getKeyName(keyCode);
     }
 
     

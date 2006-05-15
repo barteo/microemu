@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import com.barteo.emulator.device.DeviceFactory;
+import org.microemu.device.DeviceFactory;
 
 /**
  *

@@ -19,8 +19,8 @@
 
 package net.barteo.me.device.minimum;
 
-import com.barteo.emulator.EmulatorContext;
-import com.barteo.emulator.device.Device;
+import org.microemu.EmulatorContext;
+import org.microemu.device.Device;
 
 
 public class MinimumDevice extends Device

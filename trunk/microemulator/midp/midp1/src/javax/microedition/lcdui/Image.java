@@ -21,7 +21,7 @@ package javax.microedition.lcdui;
 
 import java.io.IOException;
 
-import com.barteo.emulator.device.DeviceFactory;
+import org.microemu.device.DeviceFactory;
 
 
 public class Image

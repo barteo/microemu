@@ -607,7 +607,7 @@ public class ChoiceGroup extends Item implements Choice
 		return 0;
   }
 
-  public void repaint() {
+  protected void repaint() {
 	  // the popup list should be repainted
 	  // in the case it is being shown
 	  if (choiceType == Choice.POPUP)

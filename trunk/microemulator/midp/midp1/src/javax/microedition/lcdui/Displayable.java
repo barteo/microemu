@@ -21,8 +21,8 @@ package javax.microedition.lcdui;
 
 import java.util.Vector;
 
-import com.barteo.emulator.device.Device;
-import com.barteo.emulator.device.DeviceFactory;
+import org.microemu.device.Device;
+import org.microemu.device.DeviceFactory;
 
 
 public abstract class Displayable

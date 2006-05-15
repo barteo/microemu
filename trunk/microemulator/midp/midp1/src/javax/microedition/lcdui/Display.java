@@ -27,13 +27,14 @@ import java.util.Vector;
 
 import javax.microedition.midlet.MIDlet;
 
-import com.barteo.emulator.CommandManager;
-import com.barteo.emulator.DisplayAccess;
-import com.barteo.emulator.MIDletBridge;
-import com.barteo.emulator.device.DeviceFactory;
+import org.microemu.CommandManager;
+import org.microemu.DisplayAccess;
+import org.microemu.MIDletBridge;
+import org.microemu.device.DeviceFactory;
 
 public class Display 
 {
+	private static PaintThread paintThread = null;
 	private static EventDispatcher eventDispatcher = null;
 	private static TickerPaint tickerPaint = null;
 
@@ -168,31 +169,98 @@ public class Display
 							}
 							ticker.textPos -= Ticker.PAINT_MOVE;
 						}
-						currentDisplay.repaint();
+						currentDisplay.repaint(current);
 					}
 				}
 				try {
 					Thread.sleep(Ticker.PAINT_TIMEOUT);
 				} catch (InterruptedException ex) {
-					ex.printStackTrace();
 					tickerPaint = null;
+					return;
 				}
 			}
 		}
 	}
 
+	private class PaintThread implements Runnable
+	{
+		private Object serviceRepaintsLock = new Object();
+
+		public void repaint()
+		{
+			synchronized (paintLock) {
+				repaintPending = true;
+				paintLock.notify();
+			}
+		}
+		
+		public void serviceRepaints()
+		{
+			synchronized (paintLock) {
+				if (!repaintPending) {
+					return;
+				}			
+			}
+			
+			synchronized (serviceRepaintsLock) {
+				try {
+					serviceRepaintsLock.wait();
+				} catch (InterruptedException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+
+		public void run() 
+		{
+			while (true) {
+				if (repaintPending) {
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException ex) {
+					}
+
+					DeviceFactory.getDevice().getDeviceDisplay().repaint();
+					synchronized (paintLock) {
+						repaintPending = false;
+						synchronized (serviceRepaintsLock) {
+							serviceRepaintsLock.notify();
+						}
+					}
+				}
+				
+				synchronized (paintLock) {
+					if (repaintPending) {
+						continue;
+					}
+					try {
+						paintLock.wait();
+					} catch (InterruptedException ex) {
+						paintThread = null;
+						return;
+					}
+				}					
+			}
+		}
+		
+	}
+
 	private class EventDispatcher implements Runnable 
 	{
-		private Vector events = new Vector();
+		private Object dispatcherLock = new Object();
+		
+		private Vector events = new Vector();		
 
 		public void add(Runnable r) 
 		{
 			synchronized (paintLock) {
 				events.addElement(r);
-				paintLock.notify();
+				synchronized (dispatcherLock) {
+					dispatcherLock.notify();
+				}
 			}
 		}
-
+		
 		public void run() 
 		{
 			Vector jobs;
@@ -214,16 +282,17 @@ public class Display
 					}
 				}
 
-				try {
-					synchronized (paintLock) {
-						if (events.size() == 0) {
-							paintLock.wait();
-						}
+				synchronized (dispatcherLock) {
+					if (events.size() > 0 || repaintPending) {
+						continue;
 					}
-				} catch (InterruptedException ex) {
-					ex.printStackTrace();
-					eventDispatcher = null;
-				}
+					try {
+						dispatcherLock.wait();
+					} catch (InterruptedException ex) {
+						eventDispatcher = null;
+						return;
+					}
+				}					
 			}
 		}
 	}
@@ -233,6 +302,10 @@ public class Display
 	{
 		accessor = new DisplayAccessor(this);
 
+		if (paintThread == null) {
+			paintThread = new PaintThread();
+			new Thread(paintThread, "PaintThread").start();
+		}
 		if (eventDispatcher == null) {
 			eventDispatcher = new EventDispatcher();
 			new Thread(eventDispatcher, "EventDispatcher").start();
@@ -363,11 +436,14 @@ public class Display
 	void repaint(Displayable d) 
 	{
 		if (current == d) {
-			synchronized (paintLock) {
-				repaintPending = true;
-			}
-			DeviceFactory.getDevice().getDeviceDisplay().repaint();
+			paintThread.repaint();
 		}
+	}
+	
+	
+	void serviceRepaints()
+	{
+		paintThread.serviceRepaints();
 	}
 
 	
@@ -395,15 +471,7 @@ public class Display
 		 * it has happened.
 		 */
 		MIDletBridge.notifySoftkeyLabelsChanged();
-		repaint();
-	}
-
-	
-	private void repaint() 
-	{
-		if (current != null) {
-			repaint(current);
-		}
+		repaint(current);
 	}
 
 }

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="core/src"/>
+	<classpathentry kind="src" path="midp/midp2/src"/>
 	<classpathentry kind="src" path="cldc/src"/>
 	<classpathentry kind="src" path="midp/common/src"/>
-	<classpathentry kind="src" path="midp/midp2/src"/>
 	<classpathentry kind="src" path="ext/nokiaui/src"/>
 	<classpathentry kind="src" path="example/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/opt/eclipse/plugins/org.eclipse.swt.gtk.linux.x86_3.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/java/eclipse/plugins/org.eclipse.swt.win32.win32.x86_3.1.2.jar"/>
 	<classpathentry kind="lib" path="core/res"/>
 	<classpathentry kind="lib" path="example/res"/>
 	<classpathentry kind="output" path=".bin"/>

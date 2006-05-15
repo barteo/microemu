@@ -21,8 +21,8 @@ package javax.microedition.midlet;
 
 import javax.microedition.lcdui.Display;
 
-import com.barteo.emulator.MIDletAccess;
-import com.barteo.emulator.MIDletBridge;
+import org.microemu.MIDletAccess;
+import org.microemu.MIDletBridge;
 
 public abstract class MIDlet 
 {

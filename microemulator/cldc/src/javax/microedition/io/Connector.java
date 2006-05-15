@@ -25,7 +25,8 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import com.barteo.cldc.ClosedConnection;
+import org.microemu.cldc.ClosedConnection;
+
 import com.sun.cdc.io.ConnectionBaseInterface;
 
 
@@ -55,7 +56,7 @@ public class Connector
     {
         Class cl;
         try {
-            cl = Class.forName("com.barteo.cldc." + name.substring(0, name.indexOf(':')) + ".Connection");
+            cl = Class.forName("org.microemu.cldc." + name.substring(0, name.indexOf(':')) + ".Connection");
             ClosedConnection cn = (ClosedConnection) cl.newInstance();
 
             return cn.open(name);

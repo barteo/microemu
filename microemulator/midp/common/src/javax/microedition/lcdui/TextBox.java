@@ -19,10 +19,10 @@
  
 package javax.microedition.lcdui;
 
-import com.barteo.emulator.device.DeviceFactory;
-import com.barteo.emulator.device.InputMethod;
-import com.barteo.emulator.device.InputMethodEvent;
-import com.barteo.emulator.device.InputMethodListener;
+import org.microemu.device.DeviceFactory;
+import org.microemu.device.InputMethod;
+import org.microemu.device.InputMethodEvent;
+import org.microemu.device.InputMethodListener;
 
 
 public class TextBox extends Screen

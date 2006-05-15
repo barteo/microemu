@@ -23,10 +23,10 @@
 
 package javax.microedition.lcdui;
 
-import com.barteo.emulator.device.DeviceFactory;
-import com.barteo.emulator.device.InputMethod;
-import com.barteo.emulator.device.InputMethodListener;
-import com.barteo.emulator.device.InputMethodEvent;
+import org.microemu.device.DeviceFactory;
+import org.microemu.device.InputMethod;
+import org.microemu.device.InputMethodListener;
+import org.microemu.device.InputMethodEvent;
 
 public class TextField extends Item 
 {

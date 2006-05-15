@@ -21,8 +21,8 @@ package com.siemens.mp.game;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
-import com.barteo.emulator.device.DeviceDisplay;
-import com.barteo.emulator.device.DeviceFactory;
+import org.microemu.device.DeviceDisplay;
+import org.microemu.device.DeviceFactory;
 
 public class ExtendedImage extends com.siemens.mp.misc.NativeMem {
     Image image;

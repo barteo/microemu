@@ -19,7 +19,7 @@
  
 package javax.microedition.rms;
 
-import com.barteo.emulator.MIDletBridge;
+import org.microemu.MIDletBridge;
 
 
 public class RecordStore 

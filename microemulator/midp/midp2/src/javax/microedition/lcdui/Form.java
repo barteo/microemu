@@ -23,8 +23,9 @@
 
 package javax.microedition.lcdui;
 
-import com.barteo.emulator.device.DeviceFactory;
 import java.util.Vector;
+
+import org.microemu.device.DeviceFactory;
 
 public class Form extends Screen 
 {

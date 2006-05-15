@@ -49,67 +49,67 @@
 
 	<target name="init-app-awt" depends="init-base" if="target.app.type.awt">
 		<property name="target.device.prefix" value="applet"/>
-		<property name="target.app.classname" value="com.barteo.emulator.app.Awt"/>
+		<property name="target.app.classname" value="org.microemu.app.Awt"/>
 
 		<patternset id="project.src">
 			<include name="javax/**"/>
-			<exclude name="com/barteo/emulator/app/capture/**"/>
-			<include name="com/barteo/emulator/app/**"/>
-			<exclude name="com/barteo/emulator/app/Main*"/>
-			<exclude name="com/barteo/emulator/app/EclipseSwt*"/>
-			<exclude name="com/barteo/emulator/app/Swt*"/>
-			<exclude name="com/barteo/emulator/app/WebStart*"/>
-			<exclude name="com/barteo/emulator/app/ui/swing/**"/>
-			<exclude name="com/barteo/emulator/app/ui/swt/**"/>
-			<include name="com/barteo/emulator/device/**"/>
-			<exclude name="com/barteo/emulator/device/j2se/**"/>
-			<exclude name="com/barteo/emulator/device/swt/**"/>
-			<include name="com/barteo/cldc/**"/>
-			<include name="com/barteo/midp/**"/>
+			<exclude name="org/microemu/app/capture/**"/>
+			<include name="org/microemu/app/**"/>
+			<exclude name="org/microemu/app/Main*"/>
+			<exclude name="org/microemu/app/EclipseSwt*"/>
+			<exclude name="org/microemu/app/Swt*"/>
+			<exclude name="org/microemu/app/WebStart*"/>
+			<exclude name="org/microemu/app/ui/swing/**"/>
+			<exclude name="org/microemu/app/ui/swt/**"/>
+			<include name="org/microemu/device/**"/>
+			<exclude name="org/microemu/device/j2se/**"/>
+			<exclude name="org/microemu/device/swt/**"/>
+			<include name="org/microemu/cldc/**"/>
+			<include name="org/microemu/midp/**"/>
 			<include name="com/sixlegs/image/png/**"/>
 		</patternset>
 	</target>
 
 	<target name="init-app-swing" depends="init-base" if="target.app.type.swing">
 		<property name="target.device.prefix" value="j2se"/>
-		<property name="target.app.classname" value="com.barteo.emulator.app.Main"/>
+		<property name="target.app.classname" value="org.microemu.app.Main"/>
 
 		<patternset id="project.src">
 			<include name="javax/**"/>
-			<exclude name="com/barteo/emulator/app/capture/**"/>
-			<include name="com/barteo/emulator/app/**"/>
-			<exclude name="com/barteo/emulator/app/Awt*"/>
-			<exclude name="com/barteo/emulator/app/EclipseSwt*"/>
-			<exclude name="com/barteo/emulator/app/Swt*"/>
-			<exclude name="com/barteo/emulator/app/ui/awt/**"/>
-			<exclude name="com/barteo/emulator/app/ui/swt/**"/>
-			<include name="com/barteo/emulator/device/**"/>
-			<exclude name="com/barteo/emulator/device/applet/**"/>
-			<exclude name="com/barteo/emulator/device/swt/**"/>
-			<include name="com/barteo/cldc/**"/>
-			<include name="com/barteo/midp/**"/>
+			<exclude name="org/microemu/app/capture/**"/>
+			<include name="org/microemu/app/**"/>
+			<exclude name="org/microemu/app/Awt*"/>
+			<exclude name="org/microemu/app/EclipseSwt*"/>
+			<exclude name="org/microemu/app/Swt*"/>
+			<exclude name="org/microemu/app/ui/awt/**"/>
+			<exclude name="org/microemu/app/ui/swt/**"/>
+			<include name="org/microemu/device/**"/>
+			<exclude name="org/microemu/device/applet/**"/>
+			<exclude name="org/microemu/device/swt/**"/>
+			<include name="org/microemu/cldc/**"/>
+			<include name="org/microemu/midp/**"/>
 			<include name="com/sixlegs/image/png/**"/>
 		</patternset>
 	</target>
 
 	<target name="init-app-swt" depends="init-base" if="target.app.type.swt">
 		<property name="target.device.prefix" value="swt"/>
-		<property name="target.app.classname" value="com.barteo.emulator.app.Swt"/>
+		<property name="target.app.classname" value="org.microemu.app.Swt"/>
 
 		<patternset id="project.src">
 			<include name="javax/**"/>
-			<exclude name="com/barteo/emulator/app/capture/**"/>
-			<include name="com/barteo/emulator/app/**"/>
-			<exclude name="com/barteo/emulator/app/Awt*"/>
-			<exclude name="com/barteo/emulator/app/Main*"/>
-			<exclude name="com/barteo/emulator/app/WebStart*"/>
-			<exclude name="com/barteo/emulator/app/ui/awt/**"/>
-			<exclude name="com/barteo/emulator/app/ui/swing/**"/>
-			<include name="com/barteo/emulator/device/**"/>
-			<exclude name="com/barteo/emulator/device/applet/**"/>
-			<exclude name="com/barteo/emulator/device/j2se/**"/>
-			<include name="com/barteo/cldc/**"/>
-			<include name="com/barteo/midp/**"/>
+			<exclude name="org/microemu/app/capture/**"/>
+			<include name="org/microemu/app/**"/>
+			<exclude name="org/microemu/app/Awt*"/>
+			<exclude name="org/microemu/app/Main*"/>
+			<exclude name="org/microemu/app/WebStart*"/>
+			<exclude name="org/microemu/app/ui/awt/**"/>
+			<exclude name="org/microemu/app/ui/swing/**"/>
+			<include name="org/microemu/device/**"/>
+			<exclude name="org/microemu/device/applet/**"/>
+			<exclude name="org/microemu/device/j2se/**"/>
+			<include name="org/microemu/cldc/**"/>
+			<include name="org/microemu/midp/**"/>
 			<include name="com/sixlegs/image/png/**"/>
 		</patternset>
 	</target>
@@ -121,10 +121,10 @@
 		<patternset id="project.src">
 			<include name="java/util/**"/>
 			<include name="javax/**"/>
-			<include name="com/barteo/emulator/applet/**"/>
-			<include name="com/barteo/emulator/device/applet/**"/>
-			<include name="com/barteo/cldc/**"/>
-			<include name="com/barteo/midp/**"/>
+			<include name="org/microemu/applet/**"/>
+			<include name="org/microemu/device/applet/**"/>
+			<include name="org/microemu/cldc/**"/>
+			<include name="org/microemu/midp/**"/>
 			<include name="com/sixlegs/image/png/**"/>
 		</patternset>
 	</target>
@@ -171,11 +171,11 @@
 				<attribute name="Main-Class" value="${target.app.classname}"/>
 			</manifest>
 			<fileset dir="./build/microemulator/classes">
-				<exclude name="com/barteo/midp/examples/**"/>
+				<exclude name="org/microemu/midp/examples/**"/>
 				<exclude name="**/.*"/>
 			</fileset>
 			<fileset dir="./core/res">
-				<exclude name="com/barteo/midp/examples/**"/>
+				<exclude name="org/microemu/midp/examples/**"/>
 				<exclude name="**/.*"/>
 			</fileset>
 		</jar>
@@ -184,11 +184,11 @@
 	<target name="jar-applet" depends="init,compile" if="target.applet">
 		<jar compress="true" jarfile="./target/me-applet.jar">
 			<fileset dir="./build/microemulator/classes">
-				<exclude name="com/barteo/midp/examples/**"/>
+				<exclude name="org/microemu/midp/examples/**"/>
 				<exclude name="**/.*"/>
 			</fileset>
 			<fileset dir="./res">
-				<exclude name="com/barteo/midp/examples/**"/>
+				<exclude name="org/microemu/midp/examples/**"/>
 				<exclude name="**/.*"/>
 			</fileset>
 		</jar>
@@ -203,11 +203,11 @@
 			<arg line="-keep 'class javax.** { *; }'"/>
 			<arg line="-keep 'public class * extends javax.** { *;}'"/>
 			<arg line="-keep 'public class * extends java.applet.Applet { *; }'"/>
-			<arg line="-keep 'public class com.barteo.emulator.EmulatorContext { *; }'"/>
-			<arg line="-keep 'public class com.barteo.emulator.device.** { *; }'"/>
-			<arg line="-keep 'public class * extends com.barteo.emulator.device.** { *; }'"/>
-			<!--<arg line="-keep 'public class com.barteo.emulator.device.applet.** { *; }'"/>-->
-			<!--<arg line="-keep 'public class * extends com.barteo.emulator.device.applet.** { *; }'"/>-->
+			<arg line="-keep 'public class org.microemu.EmulatorContext { *; }'"/>
+			<arg line="-keep 'public class org.microemu.device.** { *; }'"/>
+			<arg line="-keep 'public class * extends org.microemu.device.** { *; }'"/>
+			<!--<arg line="-keep 'public class org.microemu.device.applet.** { *; }'"/>-->
+			<!--<arg line="-keep 'public class * extends org.microemu.device.applet.** { *; }'"/>-->
 			<arg line="-keep 'class * extends com.sixlegs.image.png.BitMover { *; }'"/>
 			<arg line="-keep 'class * extends com.sixlegs.image.png.Chunk { *; }'"/>
 		</java>
@@ -233,11 +233,11 @@
 	<target name="simpledemo" depends="init,compile,simpledemo-applet">
 		<jar compress="true" jarfile="./target/simpledemo.jar">
 			<fileset dir="./build/microemulator/classes">
-				<include name="com/barteo/midp/examples/simpledemo/**"/>
+				<include name="org/microemu/midp/examples/simpledemo/**"/>
 				<exclude name="**/.*"/>
 			</fileset>
 			<fileset dir="./example/res">
-				<include name="com/barteo/midp/examples/simpledemo/**"/>
+				<include name="org/microemu/midp/examples/simpledemo/**"/>
 				<exclude name="**/.*"/>
 			</fileset>
 		</jar>
@@ -251,7 +251,7 @@
 				<pathelement location="./target/simpledemo.jar"/>
 				<pathelement location="${target.app.type.swt.jar}"/>
 			</classpath>
-			<arg value="com.barteo.midp.examples.simpledemo.SimpleDemo"/>
+			<arg value="org.microemu.midp.examples.simpledemo.SimpleDemo"/>
 		</java>
 	</target>
 

@@ -20,6 +20,6 @@
     <j2se version="1.2+"/>
     <jar href="me-webstart.jar"/>
   </resources>
-  <application-desc main-class="com.barteo.emulator.app.WebStart"/>
+  <application-desc main-class="org.microemu.app.WebStart"/>
 </jnlp>
 

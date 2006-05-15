@@ -167,6 +167,9 @@ public abstract class Canvas extends Displayable
     
     public final void serviceRepaints()
     {
+    	if (currentDisplay != null) {
+    		currentDisplay.serviceRepaints();
+    	}
     }
     
     

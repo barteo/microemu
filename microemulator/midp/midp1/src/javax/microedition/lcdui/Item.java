@@ -78,7 +78,7 @@ public abstract class Item
 	}
 	
 	
-	void repaint()
+	protected void repaint()
 	{
 		if (owner != null) {
 			owner.repaint();

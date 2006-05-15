@@ -23,8 +23,9 @@ import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
-import com.barteo.emulator.MIDletBridge;
-import com.barteo.emulator.GameCanvasKeyAccess;
+import org.microemu.GameCanvasKeyAccess;
+import org.microemu.MIDletBridge;
+
 
 /**
  *

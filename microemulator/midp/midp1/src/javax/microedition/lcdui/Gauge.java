@@ -22,7 +22,7 @@
  
 package javax.microedition.lcdui;
 
-import com.barteo.emulator.device.DeviceFactory;
+import org.microemu.device.DeviceFactory;
 
 
 public class Gauge extends Item

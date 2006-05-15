@@ -1,5 +1,5 @@
 Created-By: Bartek Teodorczyk
-MIDlet-1: SimpleDemo, , com.barteo.midp.examples.simpledemo.SimpleDemo
+MIDlet-1: SimpleDemo, , org.microemu.midp.examples.simpledemo.SimpleDemo
 MIDlet-Jar-Size: 15283
 MIDlet-Jar-URL: simpledemo.jar
 MIDlet-Name: SimpleDemo

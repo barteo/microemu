@@ -24,7 +24,7 @@ package javax.microedition.lcdui;
 
 import javax.microedition.lcdui.Display;
 
-import com.barteo.emulator.device.DeviceFactory;
+import org.microemu.device.DeviceFactory;
 
 
 public abstract class Canvas extends Displayable
@@ -167,8 +167,11 @@ public abstract class Canvas extends Displayable
     
     public final void serviceRepaints()
     {
+    	if (currentDisplay != null) {
+    		currentDisplay.serviceRepaints();
+    	}
     }
-    
+        
     
     protected void showNotify()
     {

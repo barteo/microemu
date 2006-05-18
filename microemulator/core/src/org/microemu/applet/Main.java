@@ -41,15 +41,15 @@ import org.microemu.MIDletBridge;
 import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
 import org.microemu.app.launcher.Launcher;
-import org.microemu.app.ui.awt.AwtDeviceComponent;
+import org.microemu.app.ui.swing.SwingDeviceComponent;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
-import org.microemu.device.applet.AppletDeviceDisplay;
-import org.microemu.device.applet.AppletFontManager;
-import org.microemu.device.applet.AppletInputMethod;
+import org.microemu.device.j2se.J2SEDeviceDisplay;
+import org.microemu.device.j2se.J2SEFontManager;
+import org.microemu.device.j2se.J2SEInputMethod;
 import org.microemu.util.JadMidletEntry;
 import org.microemu.util.JadProperties;
 
@@ -65,15 +65,15 @@ public class Main extends Applet implements MicroEmulator
 
     Font defaultFont;
 
-    AwtDeviceComponent devicePanel;
+    SwingDeviceComponent devicePanel;
 
     EmulatorContext emulatorContext = new EmulatorContext() 
     {
-        private InputMethod inputMethod = new AppletInputMethod();
+        private InputMethod inputMethod = new J2SEInputMethod();
 
-        private DeviceDisplay deviceDisplay = new AppletDeviceDisplay(this);
+        private DeviceDisplay deviceDisplay = new J2SEDeviceDisplay(this);
 
-        private FontManager fontManager = new AppletFontManager();
+        private FontManager fontManager = new J2SEFontManager();
 
         public ClassLoader getClassLoader()
         {
@@ -110,7 +110,7 @@ public class Main extends Applet implements MicroEmulator
     public Main()
     {
         recordStoreManager = new AppletRecordStoreManager();
-        devicePanel = new AwtDeviceComponent();
+        devicePanel = new SwingDeviceComponent();
     }
 
     

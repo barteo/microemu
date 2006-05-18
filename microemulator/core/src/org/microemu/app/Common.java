@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.Locale;
 
@@ -38,6 +39,7 @@ import org.microemu.RecordStoreManager;
 import org.microemu.app.launcher.Launcher;
 import org.microemu.app.ui.ResponseInterfaceListener;
 import org.microemu.app.ui.StatusBarListener;
+import org.microemu.app.util.Base64Coder;
 import org.microemu.app.util.ProgressEvent;
 import org.microemu.app.util.ProgressJarClassLoader;
 import org.microemu.app.util.ProgressListener;
@@ -168,7 +170,14 @@ public class Common implements MicroEmulator
 		try {
 			setStatusBar("Loading...");
 			jad.clear();
-			jad.load(url.openStream());
+			if (url.getUserInfo() == null) {
+				jad.load(url.openStream());
+			} else {
+				URLConnection cn = url.openConnection();
+				String userInfo = new String(Base64Coder.encode(url.getUserInfo().getBytes("UTF-8")));
+			    cn.setRequestProperty("Authorization", "Basic " + userInfo);
+			    jad.load(cn.getInputStream());
+			}
 			loadFromJad(url);
 		} catch (FileNotFoundException ex) {
 			System.err.println("Cannot found " + url.getPath());

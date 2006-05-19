@@ -28,7 +28,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.microedition.lcdui.Image;
 import javax.microedition.midlet.MIDlet;
@@ -130,16 +129,17 @@ public class Main extends JFrame
   {    
     public void keyTyped(KeyEvent e)
     {
+    	devicePanel.keyTyped(e);
     }
     
     public void keyPressed(KeyEvent e)
     {
-      devicePanel.keyPressed(e);
+    	devicePanel.keyPressed(e);
     }
     
     public void keyReleased(KeyEvent e)
     {
-      devicePanel.keyReleased(e);
+    	devicePanel.keyReleased(e);
     }    
   };
    
@@ -158,7 +158,7 @@ public class Main extends JFrame
       int returnVal = fileChooser.showOpenDialog(instance);
       if (returnVal == JFileChooser.APPROVE_OPTION) {
       	try {
-	      	common.openJadFile(fileChooser.getSelectedFile().toURL());
+	      	common.openJadUrl(fileChooser.getSelectedFile().toURL().toString());
 				} catch (MalformedURLException ex) {
 					System.err.println("Bad URL format " + fileChooser.getSelectedFile().getName());
 				}
@@ -173,8 +173,7 @@ public class Main extends JFrame
       String entered = JOptionPane.showInputDialog(instance, "Enter JAD URL:");
       if (entered != null) {
       	try {
-					URL url = new URL(entered);
-					common.openJadFile(url);
+					common.openJadUrl(entered);
 				} catch (MalformedURLException ex) {
 					System.err.println("Bad URL format " + entered);
       	}
@@ -454,8 +453,8 @@ public class Main extends JFrame
     		} else if (m == null && args[i].endsWith(".jad")) {
 				try {
 					File file = new File(args[i]);
-					URL url = file.exists() ? file.toURL() : new URL(args[0]);
-					app.common.openJadFile(url);
+					String url = file.exists() ? file.toURL().toString() : args[0];
+					app.common.openJadUrl(url);
 				} catch (MalformedURLException exception) {
 					System.out.println("Cannot parse " + args[i] + " URL");
 				}

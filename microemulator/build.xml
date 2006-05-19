@@ -374,12 +374,14 @@
 			<include name="microemulator/LICENSE"/>
 			<include name="microemulator/README" />
 			<include name="microemulator/TODO" />
+			<include name="microemulator/core/**" />
+			<include name="microemulator/cldc/**" />
+			<include name="microemulator/midp/**" />
+			<include name="microemulator/example/**" />
 			<include name="microemulator/devices/**" />
 			<include name="microemulator/ext/**" />
 			<include name="microemulator/lib/**" />
 			<include name="microemulator/misc/**" />
-			<include name="microemulator/res/**" />
-			<include name="microemulator/src/**" />
 		</tar>
 		<gzip src="dist/microemulator-src.tar" zipfile="dist/microemulator-src.tar.gz" />
 		<delete file="dist/microemulator-src.tar" />

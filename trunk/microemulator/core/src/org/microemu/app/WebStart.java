@@ -28,7 +28,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.microedition.lcdui.Image;
 import javax.microedition.midlet.MIDlet;
@@ -161,7 +160,7 @@ public class WebStart extends JFrame
       int returnVal = fileChooser.showOpenDialog(instance);
       if (returnVal == JFileChooser.APPROVE_OPTION) {
 				try {
-					common.openJadFile(fileChooser.getSelectedFile().toURL());
+					common.openJadUrl(fileChooser.getSelectedFile().toURL().toString());
 				} catch (MalformedURLException ex) {
 					System.err.println("Bad URL format " + fileChooser.getSelectedFile().getName());
 				}
@@ -176,8 +175,7 @@ public class WebStart extends JFrame
       String entered = JOptionPane.showInputDialog("Enter JAD URL:");
       if (entered != null) {
 				try {
-					URL url = new URL(entered);
-					common.openJadFile(url);
+					common.openJadUrl(entered);
 				} catch (MalformedURLException ex) {
 					System.err.println("Bad URL format " + entered);
 				}
@@ -441,8 +439,8 @@ public class WebStart extends JFrame
 			if (args[0].endsWith(".jad")) {
 				try {
 					File file = new File(args[0]);
-				  URL url = file.exists() ? file.toURL() : new URL(args[0]);
-				  app.common.openJadFile(url);
+				  String url = file.exists() ? file.toURL().toString() : args[0];
+				  app.common.openJadUrl(url);
 				} catch(MalformedURLException exception) {
 				  System.out.println("Cannot parse " + args[0] + " URL");
 				}

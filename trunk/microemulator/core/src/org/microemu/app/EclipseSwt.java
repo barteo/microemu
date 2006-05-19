@@ -281,7 +281,7 @@ public class EclipseSwt extends Common
 
 		Device device = null;
 		String captureFile = null;
-		URL jadUrl = null;
+		String jadUrl = null;
 		Class midletClass = null;
 
 		if (args.length > 0) {
@@ -304,7 +304,7 @@ public class EclipseSwt extends Common
 				} else if (args[i].endsWith(".jad")) {
 					try {
 						File file = new File(args[i]);
-						jadUrl = file.exists() ? file.toURL() : new URL(args[i]);
+						jadUrl = file.exists() ? file.toURL().toString() : args[i];
 					} catch(MalformedURLException exception) {
 						System.out.println("Cannot parse " + args[0] + " URL");
 					}
@@ -322,7 +322,11 @@ public class EclipseSwt extends Common
 		shell.addShellListener(app.shellListener);
 		
 		if (jadUrl != null) {
-			app.openJadFile(jadUrl);			
+			try {
+				app.openJadUrl(jadUrl);
+			} catch (MalformedURLException ex) {
+				ex.printStackTrace();
+			}			
 		} else if (midletClass != null) {
 			m = app.loadMidlet("MIDlet", midletClass);			
 		} else {

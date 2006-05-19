@@ -53,19 +53,20 @@ import org.microemu.util.JadProperties;
 
 public class Common implements MicroEmulator 
 {
+	private static Common instance;
 	private static Launcher launcher;
-  
+	private static StatusBarListener statusBarListener = null; 
+	
   	protected EmulatorContext emulatorContext;
   
-  	protected String captureFile = null;
-//  	private Capturer capturer = null;
-  	
 	protected JadProperties jad = new JadProperties();
 	protected JadProperties manifest = new JadProperties();
-	
+
+  	protected String captureFile = null;
+//  	private Capturer capturer = null;
+  		
 	private RecordStoreManager recordStoreManager;
 	
-	private StatusBarListener statusBarListener = null; 
 	private ResponseInterfaceListener responseInterfaceListener = null; 
   
 	private ProgressListener progressListener = new ProgressListener()
@@ -86,12 +87,13 @@ public class Common implements MicroEmulator
 	
 	public Common(EmulatorContext context)
 	{
-		emulatorContext = context;
+		instance = this;
+		this.emulatorContext = context;
 		
 		launcher = new Launcher();
 		launcher.setCurrentMIDlet(launcher);     
 
-		recordStoreManager = new AppRecordStoreManager(launcher);
+		this.recordStoreManager = new AppRecordStoreManager(launcher);
 
 		MIDletBridge.setMicroEmulator(this);
 	}
@@ -105,10 +107,6 @@ public class Common implements MicroEmulator
 	
 	public String getAppProperty(String key)
 	{
-	    if (key.equals("applet")) {
-			return "yes";	    	
-	    }
-		
         if (key.equals("microedition.platform")) {
             return  "MicroEmulator";
         } else if (key.equals("microedition.profile")) {
@@ -165,31 +163,34 @@ public class Common implements MicroEmulator
 	}
 
 
-	public void openJadFile(URL url)
+	public static void openJadUrl(String urlString) throws MalformedURLException
 	{
 		try {
+			URL url = new URL(urlString);
 			setStatusBar("Loading...");
-			jad.clear();
+			getInstance().jad.clear();
 			if (url.getUserInfo() == null) {
-				jad.load(url.openStream());
+				getInstance().jad.load(url.openStream());
 			} else {
 				URLConnection cn = url.openConnection();
 				String userInfo = new String(Base64Coder.encode(url.getUserInfo().getBytes("UTF-8")));
 			    cn.setRequestProperty("Authorization", "Basic " + userInfo);
-			    jad.load(cn.getInputStream());
+			    getInstance().jad.load(cn.getInputStream());
 			}
-			loadFromJad(url);
+			getInstance().loadFromJad(url);
+		} catch (MalformedURLException ex) {
+			throw ex;
 		} catch (FileNotFoundException ex) {
-			System.err.println("Cannot found " + url.getPath());
+			System.err.println("Cannot found " + urlString);
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
-			System.err.println("Cannot open jad " + url.getPath());
+			System.err.println("Cannot open jad " + urlString);
 		} catch (IllegalArgumentException ex) {
 			ex.printStackTrace();
-			System.err.println("Cannot open jad " + url.getPath());
+			System.err.println("Cannot open jad " + urlString);
 		} catch (IOException ex) {
 			ex.printStackTrace();
-			System.err.println("Cannot open jad " + url.getPath());
+			System.err.println("Cannot open jad " + urlString);
 		}
 	}
 
@@ -309,9 +310,15 @@ public class Common implements MicroEmulator
 //			capturer.startCapture(emulatorContext.getDisplayComponent(), captureFile);
 		}
 	}
+	
+	
+	private static Common getInstance()
+	{
+		return instance;
+	}
 
 
-	private void setStatusBar(String text)
+	private static void setStatusBar(String text)
 	{
 		if (statusBarListener != null) {
 			statusBarListener.statusBarChanged(text);

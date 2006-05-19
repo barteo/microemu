@@ -21,7 +21,6 @@ package org.microemu.app;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.microedition.midlet.MIDlet;
 
@@ -113,7 +112,7 @@ public class Swt extends Common
 
 			if (fileDialog.getFileName().length() > 0) {
 				try {
-					openJadFile(new File(fileDialog.getFilterPath(), fileDialog.getFileName()).toURL());
+					openJadUrl(new File(fileDialog.getFilterPath(), fileDialog.getFileName()).toURL().toString());
 				} catch (MalformedURLException ex) {
 					System.err.println("Bad URL format " + fileDialog.getFileName());
 				}
@@ -128,8 +127,7 @@ public class Swt extends Common
 			SwtInputDialog inputDialog = new SwtInputDialog(shell, "Open...", "Enter JAD URL:");
 			if (inputDialog.open() == SwtDialog.OK) {
 				try {
-					URL url = new URL(inputDialog.getValue());
-					openJadFile(url);
+					openJadUrl(inputDialog.getValue());
 				} catch (MalformedURLException ex) {
 					System.err.println("Bad URL format " + inputDialog.getValue());
 				}
@@ -412,8 +410,8 @@ public class Swt extends Common
 				} else if (args[i].endsWith(".jad")) {
 					try {
 						File file = new File(args[i]);
-						URL url = file.exists() ? file.toURL() : new URL(args[i]);
-						app.openJadFile(url);
+						String url = file.exists() ? file.toURL().toString() : args[i];
+						app.openJadUrl(url);
 					} catch(MalformedURLException exception) {
 						System.out.println("Cannot parse " + args[0] + " URL");
 					}

@@ -189,24 +189,24 @@ public class Device
               if (tmp_display.getName().equals("img")) {
                 if (tmp_display.getStringAttribute("name").equals("up")) {
                   deviceDisplay.setUpImage(new PositionedImage(
-                      deviceDisplay.createImage(tmp_display.getStringAttribute("src")),
+                      deviceDisplay.createSystemImage(tmp_display.getStringAttribute("src")),
                       getRectangle(getElement(tmp_display, "paintable"))));
                 } else if (tmp_display.getStringAttribute("name").equals("down")) {
                   deviceDisplay.setDownImage(new PositionedImage(
-                  		deviceDisplay.createImage(tmp_display.getStringAttribute("src")),
+                  		deviceDisplay.createSystemImage(tmp_display.getStringAttribute("src")),
                       getRectangle(getElement(tmp_display, "paintable"))));
                 } else if (tmp_display.getStringAttribute("name").equals("mode")) {
                   if (tmp_display.getStringAttribute("type").equals("123")) {
                     deviceDisplay.setMode123Image(new PositionedImage(
-                    	deviceDisplay.createImage(tmp_display.getStringAttribute("src")),
+                    	deviceDisplay.createSystemImage(tmp_display.getStringAttribute("src")),
                         getRectangle(getElement(tmp_display, "paintable"))));
                   } else if (tmp_display.getStringAttribute("type").equals("abc")) {
                     deviceDisplay.setModeAbcLowerImage(new PositionedImage(
-                    	deviceDisplay.createImage(tmp_display.getStringAttribute("src")),
+                    	deviceDisplay.createSystemImage(tmp_display.getStringAttribute("src")),
                         getRectangle(getElement(tmp_display, "paintable"))));
                   } else if (tmp_display.getStringAttribute("type").equals("ABC")) {
                     deviceDisplay.setModeAbcUpperImage(new PositionedImage(
-                    	deviceDisplay.createImage(tmp_display.getStringAttribute("src")),
+                    	deviceDisplay.createSystemImage(tmp_display.getStringAttribute("src")),
                         getRectangle(getElement(tmp_display, "paintable"))));
                   }
                 }

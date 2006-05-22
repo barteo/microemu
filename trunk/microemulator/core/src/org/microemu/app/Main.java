@@ -86,7 +86,7 @@ public class Main extends JFrame
   
   private EmulatorContext emulatorContext = new EmulatorContext()
   {
-    private ProgressJarClassLoader loader = new ProgressJarClassLoader();
+    private ProgressJarClassLoader loader = new ProgressJarClassLoader(this.getClass().getClassLoader());
     
     private InputMethod inputMethod = new J2SEInputMethod();
     

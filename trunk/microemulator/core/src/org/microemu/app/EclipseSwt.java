@@ -140,7 +140,7 @@ public class EclipseSwt extends Common
 	{
 		super(new EmulatorContext()
 		{
-			private ProgressJarClassLoader loader = new ProgressJarClassLoader();
+			private ProgressJarClassLoader loader = new ProgressJarClassLoader(this.getClass().getClassLoader());
 			
 			private InputMethod inputMethod = new SwtInputMethod();
 			

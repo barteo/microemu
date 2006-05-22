@@ -73,7 +73,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 				fileDialog.setFilterExtensions(new String[] {"*.dev"});
 			}
       
-			ProgressJarClassLoader loader = new ProgressJarClassLoader();
+			ProgressJarClassLoader loader = new ProgressJarClassLoader(this.getClass().getClassLoader());
       
 			fileDialog.open();
 			

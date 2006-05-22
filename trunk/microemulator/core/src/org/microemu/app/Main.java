@@ -129,7 +129,6 @@ public class Main extends JFrame
   {    
     public void keyTyped(KeyEvent e)
     {
-    	devicePanel.keyTyped(e);
     }
     
     public void keyPressed(KeyEvent e)

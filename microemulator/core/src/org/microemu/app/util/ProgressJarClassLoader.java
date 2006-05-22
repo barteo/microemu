@@ -42,13 +42,7 @@ public class ProgressJarClassLoader extends SystemClassLoader {
 	private ResURLStreamHandler resUrlStreamHandler;
 	
 	public ProgressJarClassLoader() {
-		super();
-		
-		resUrlStreamHandler = new ResURLStreamHandler(entries);
-	}
-
-	public ProgressJarClassLoader(ClassLoader parent) {
-		super(parent);
+		super(getSystemClassLoader());
 		
 		resUrlStreamHandler = new ResURLStreamHandler(entries);
 	}

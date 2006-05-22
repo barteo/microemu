@@ -28,10 +28,6 @@ public class SystemClassLoader extends ClassLoader {
 	
 	private static List childClassLoaders = new ArrayList(); 
 	
-	protected SystemClassLoader() {
-		this(getSystemClassLoader());
-	}
-
 	public SystemClassLoader(ClassLoader parent) {
 		super(parent);
 		

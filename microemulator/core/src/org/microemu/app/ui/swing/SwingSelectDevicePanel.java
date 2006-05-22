@@ -76,7 +76,7 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
         fileChooser.setFileFilter(fileFilter);
       }
       
-      ProgressJarClassLoader loader = new ProgressJarClassLoader();
+      ProgressJarClassLoader loader = new ProgressJarClassLoader(this.getClass().getClassLoader());
       
       if (fileChooser.showOpenDialog(instance) == JFileChooser.APPROVE_OPTION) {
         String deviceClassName = null;

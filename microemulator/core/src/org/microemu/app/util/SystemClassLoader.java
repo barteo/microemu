@@ -26,25 +26,21 @@ import java.util.List;
 
 public class SystemClassLoader extends ClassLoader {
 	
-	private static List childClassLoaders = new ArrayList(); 
+	private static ProgressJarClassLoader childClassLoader = null; 
 	
 	public SystemClassLoader(ClassLoader parent) {
 		super(parent);
 		
 		if (this instanceof ProgressJarClassLoader) {
-			childClassLoaders.add(this);
+			childClassLoader = (ProgressJarClassLoader) this;
 		}
 	}
 
 	protected URL findResource(String name) {
 		URL result = null;
 		
-		Iterator it = childClassLoaders.iterator();
-		while (it.hasNext()) {
-			result = ((ProgressJarClassLoader) it.next()).findResource(name);
-			if (result != null) {
-				break;
-			}
+		if (childClassLoader != null) {
+			result = childClassLoader.findResource(name);
 		}
 		
 		return result;

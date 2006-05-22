@@ -236,7 +236,7 @@ public class Common implements MicroEmulator
 
 	protected void loadFromJad(URL jadUrl)
 	{
-		final ProgressJarClassLoader loader = (ProgressJarClassLoader) emulatorContext.getClassLoader();
+		final ProgressJarClassLoader loader = new ProgressJarClassLoader(emulatorContext.getClassLoader());
 		
 		setResponseInterface(false);
 		URL url = null;

@@ -146,8 +146,13 @@ public class SwingDeviceComponent extends JPanel
   }
   
   
-  public void keyPressed(KeyEvent ev)
-  {
+  	public void keyTyped(KeyEvent ev) {
+		((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod()).keyboardKeyTyped(ev);
+	}
+  
+  
+  	public void keyPressed(KeyEvent ev)
+  	{
 		// invoke any associated commands, but send the raw key codes instead
 		boolean rawSoftKeys = DeviceFactory.getDevice().getDeviceDisplay().isFullScreenMode();
 		pressedButton = getButton(ev);

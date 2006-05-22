@@ -36,6 +36,7 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 	private int lastButtonCharIndex = -1;
 	private J2SEButton lastButton = null;
 	private boolean resetKey;
+	private boolean eventAlreadyConsumed;
 
 	private Thread t;
 	private boolean cancel = false;
@@ -251,25 +252,22 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 
 		return false;
 	}
-
 	
-	public void keyboardKeyPressed(KeyEvent ev) 
+	
+	public void keyboardKeyTyped(KeyEvent ev)
 	{
-		if (ev.getKeyCode() == KeyEvent.VK_LEFT || ev.getKeyCode() == KeyEvent.VK_RIGHT 
-				|| ev.getKeyCode() == KeyEvent.VK_UP || ev.getKeyCode() == KeyEvent.VK_DOWN
-				|| ev.getKeyCode() == KeyEvent.VK_F1 || ev.getKeyCode() == KeyEvent.VK_F2) {
-			if (commonKeyPressed(ev.getKeyCode())) {
-				return;
-			}
-		} else {
-			if (commonKeyPressed(ev.getKeyChar())) {
-				return;
-			}
+		if (eventAlreadyConsumed) {
+			return;
 		}
 
-		if (text.length() < maxSize && ev.getKeyChar() != KeyEvent.CHAR_UNDEFINED) {
+		char c = ev.getKeyChar();
+		if (c == '\b') {
+			return;
+		}
+
+		if (inputMethodListener != null && text != null && text.length() < maxSize) {			
 			char[] test = new char[1];
-			test[0] = ev.getKeyChar();
+			test[0] = c;
 			test = filterConstraints(test);
 			if (test.length > 0) {
 				synchronized (this) {
@@ -282,7 +280,7 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 					if (caret > 0) {
 						tmp += text.substring(0, caret);
 					}
-					tmp += ev.getKeyChar();
+					tmp += c;
 					if (caret < text.length()) {
 						tmp += text.substring(caret);
 					}
@@ -296,6 +294,27 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 			}
 		}
 	}
+
+	
+	public void keyboardKeyPressed(KeyEvent ev) 
+	{		
+		eventAlreadyConsumed = false;
+		
+		if (ev.getKeyCode() == KeyEvent.VK_LEFT || ev.getKeyCode() == KeyEvent.VK_RIGHT 
+				|| ev.getKeyCode() == KeyEvent.VK_UP || ev.getKeyCode() == KeyEvent.VK_DOWN
+				|| ev.getKeyCode() == KeyEvent.VK_F1 || ev.getKeyCode() == KeyEvent.VK_F2) {
+			if (commonKeyPressed(ev.getKeyCode())) {
+				eventAlreadyConsumed = true;
+				return;
+			}
+		} else {
+			if (commonKeyPressed(ev.getKeyChar())) {
+				eventAlreadyConsumed = true;
+				return;
+			}
+		}
+	}
+
 
 	
 	public void keyPressed(int keyCode) 
@@ -370,6 +389,8 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 	public void keyboardKeyReleased(KeyEvent ev) 
 	{
 		MIDletBridge.getMIDletAccess().getDisplayAccess().keyReleased(ev.getKeyCode());
+		
+		eventAlreadyConsumed = false;
 	}
 
 	

@@ -24,7 +24,10 @@ package org.microemu.applet;
 
 import java.applet.Applet;
 import java.awt.BorderLayout;
-import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -34,6 +37,7 @@ import java.util.Vector;
 import javax.microedition.lcdui.Image;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
+import javax.swing.Timer;
 
 import org.microemu.DisplayComponent;
 import org.microemu.EmulatorContext;
@@ -54,20 +58,17 @@ import org.microemu.util.JadMidletEntry;
 import org.microemu.util.JadProperties;
 
 
-
 public class Main extends Applet implements MicroEmulator
 {
-    MIDlet midlet = null;
+    private MIDlet midlet = null;
 
     private RecordStoreManager recordStoreManager;
 
     private JadProperties manifest = new JadProperties();
 
-    Font defaultFont;
+    private SwingDeviceComponent devicePanel;
 
-    SwingDeviceComponent devicePanel;
-
-    EmulatorContext emulatorContext = new EmulatorContext() 
+    private EmulatorContext emulatorContext = new EmulatorContext() 
     {
         private InputMethod inputMethod = new J2SEInputMethod();
 
@@ -104,6 +105,24 @@ public class Main extends Applet implements MicroEmulator
         {
             return fontManager;
         }
+    };
+    
+    private KeyListener keyListener = new KeyListener()
+    {    
+      public void keyTyped(KeyEvent e)
+      {
+  		devicePanel.keyTyped(e);
+      }
+      
+      public void keyPressed(KeyEvent e)
+      {
+      	devicePanel.keyPressed(e);
+      }
+      
+      public void keyReleased(KeyEvent e)
+      {
+      	devicePanel.keyReleased(e);
+      }    
     };
 
     
@@ -215,20 +234,30 @@ public class Main extends Applet implements MicroEmulator
 
         Image tmpImg = DeviceFactory.getDevice().getNormalImage();
         resize(tmpImg.getWidth(), tmpImg.getHeight());
-
+        
+        devicePanel.setFocusable(true);
+        devicePanel.addKeyListener(keyListener);
+        
         return;
     }
 
     
-    public void start()
-    {
-        devicePanel.requestFocus();
-        try {
-            MIDletBridge.getMIDletAccess(midlet).startApp();
-        } catch (MIDletStateChangeException ex) {
-            System.err.println(ex);
-        }
-    }
+    public void start() {
+		devicePanel.requestFocus();
+		try {
+			MIDletBridge.getMIDletAccess(midlet).startApp();
+		} catch (MIDletStateChangeException ex) {
+			System.err.println(ex);
+		}
+
+		Timer timer = new Timer(1000, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				devicePanel.requestFocusInWindow();
+			}
+		});
+		timer.setRepeats(false);
+		timer.start();
+	}
 
     
     public void stop()

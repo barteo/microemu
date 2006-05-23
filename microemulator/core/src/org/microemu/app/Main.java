@@ -64,25 +64,24 @@ import org.microemu.device.j2se.J2SEFontManager;
 import org.microemu.device.j2se.J2SEInputMethod;
 
 
-
 public class Main extends JFrame
 {
-  Main instance = null;
+  private Main instance = null;
   
   protected Common common;
   
   protected boolean initialized = false;
   
-  SwingSelectDevicePanel selectDevicePanel = null;
-  JFileChooser fileChooser = null;
-  JMenuItem menuOpenJADFile;
-  JMenuItem menuOpenJADURL;
-	JMenuItem menuSelectDevice;
+  private SwingSelectDevicePanel selectDevicePanel = null;
+  private JFileChooser fileChooser = null;
+  private JMenuItem menuOpenJADFile;
+  private JMenuItem menuOpenJADURL;
+  private JMenuItem menuSelectDevice;
 	    
-  SwingDeviceComponent devicePanel;
-  DeviceEntry deviceEntry;
+  private SwingDeviceComponent devicePanel;
+  private DeviceEntry deviceEntry;
 
-  JLabel statusBar = new JLabel("Status");
+  private JLabel statusBar = new JLabel("Status");
   
   private EmulatorContext emulatorContext = new EmulatorContext()
   {
@@ -125,7 +124,7 @@ public class Main extends JFrame
 	}    
   };
   
-  KeyListener keyListener = new KeyListener()
+  private KeyListener keyListener = new KeyListener()
   {    
     public void keyTyped(KeyEvent e)
     {
@@ -143,7 +142,7 @@ public class Main extends JFrame
     }    
   };
    
-  ActionListener menuOpenJADFileListener = new ActionListener()
+  private ActionListener menuOpenJADFileListener = new ActionListener()
   {
     public void actionPerformed(ActionEvent ev)
     {
@@ -166,7 +165,7 @@ public class Main extends JFrame
     } 
   };
   
-  ActionListener menuOpenJADURLListener = new ActionListener()
+  private ActionListener menuOpenJADURLListener = new ActionListener()
   {
     public void actionPerformed(ActionEvent ev)
     {
@@ -181,7 +180,7 @@ public class Main extends JFrame
     }    
   };
   
-  ActionListener menuExitListener = new ActionListener()
+  private ActionListener menuExitListener = new ActionListener()
   {    
     public void actionPerformed(ActionEvent e)
     {
@@ -190,7 +189,7 @@ public class Main extends JFrame
   };
   
   
-  ActionListener menuSelectDeviceListener = new ActionListener()
+  private ActionListener menuSelectDeviceListener = new ActionListener()
   {    
     public void actionPerformed(ActionEvent e)
     {
@@ -221,7 +220,7 @@ public class Main extends JFrame
     }    
   };
   
-  StatusBarListener statusBarListener = new StatusBarListener()
+  private StatusBarListener statusBarListener = new StatusBarListener()
   {
 		public void statusBarChanged(String text) 
 		{
@@ -229,7 +228,7 @@ public class Main extends JFrame
 		}  
   };
   
-	ResponseInterfaceListener responseInterfaceListener = new ResponseInterfaceListener()
+	private ResponseInterfaceListener responseInterfaceListener = new ResponseInterfaceListener()
 	{
 		public void stateChanged(boolean state) 
 		{
@@ -239,7 +238,7 @@ public class Main extends JFrame
 		}  
 	};
   
-	WindowAdapter windowListener = new WindowAdapter()
+	private WindowAdapter windowListener = new WindowAdapter()
 	{
 		public void windowClosing(WindowEvent ev) 
 		{
@@ -360,6 +359,7 @@ public class Main extends JFrame
 		
 		device.init(emulatorContext);
 		devicePanel.init();
+		devicePanel.addKeyListener(keyListener);
 		Image tmpImg = device.getNormalImage();
 		Dimension size = new Dimension(tmpImg.getWidth(), tmpImg.getHeight());
 		size.width += 10;

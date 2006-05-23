@@ -22,8 +22,6 @@ package org.microemu.app;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -123,25 +121,7 @@ public class Main extends JFrame
 		return fontManager;
 	}    
   };
-  
-  private KeyListener keyListener = new KeyListener()
-  {    
-    public void keyTyped(KeyEvent e)
-    {
-		devicePanel.keyTyped(e);
-    }
-    
-    public void keyPressed(KeyEvent e)
-    {
-    	devicePanel.keyPressed(e);
-    }
-    
-    public void keyReleased(KeyEvent e)
-    {
-    	devicePanel.keyReleased(e);
-    }    
-  };
-   
+     
   private ActionListener menuOpenJADFileListener = new ActionListener()
   {
     public void actionPerformed(ActionEvent ev)
@@ -298,9 +278,9 @@ public class Main extends JFrame
     addWindowListener(windowListener);
     
     Config.loadConfig("config.xml");
-    addKeyListener(keyListener);
 
     devicePanel = new SwingDeviceComponent();
+    addKeyListener(devicePanel);
     selectDevicePanel = new SwingSelectDevicePanel();
     
 	common = new Common(emulatorContext);
@@ -359,7 +339,7 @@ public class Main extends JFrame
 		
 		device.init(emulatorContext);
 		devicePanel.init();
-		devicePanel.addKeyListener(keyListener);
+		devicePanel.addKeyListener(devicePanel);
 		Image tmpImg = device.getNormalImage();
 		Dimension size = new Dimension(tmpImg.getWidth(), tmpImg.getHeight());
 		size.width += 10;

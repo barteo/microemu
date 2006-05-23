@@ -23,6 +23,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -43,7 +44,7 @@ import org.microemu.device.j2se.J2SEImmutableImage;
 import org.microemu.device.j2se.J2SEInputMethod;
 
 
-public class SwingDeviceComponent extends JPanel
+public class SwingDeviceComponent extends JPanel implements KeyListener
 {
   SwingDeviceComponent instance;
 	SwingDisplayComponent dc;

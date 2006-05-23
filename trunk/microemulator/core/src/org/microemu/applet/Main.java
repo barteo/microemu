@@ -26,8 +26,6 @@ import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -107,24 +105,6 @@ public class Main extends Applet implements MicroEmulator
         }
     };
     
-    private KeyListener keyListener = new KeyListener()
-    {    
-      public void keyTyped(KeyEvent e)
-      {
-  		devicePanel.keyTyped(e);
-      }
-      
-      public void keyPressed(KeyEvent e)
-      {
-      	devicePanel.keyPressed(e);
-      }
-      
-      public void keyReleased(KeyEvent e)
-      {
-      	devicePanel.keyReleased(e);
-      }    
-    };
-
     
     public Main()
     {
@@ -236,7 +216,7 @@ public class Main extends Applet implements MicroEmulator
         resize(tmpImg.getWidth(), tmpImg.getHeight());
         
         devicePanel.setFocusable(true);
-        devicePanel.addKeyListener(keyListener);
+        devicePanel.addKeyListener(devicePanel);
         
         return;
     }

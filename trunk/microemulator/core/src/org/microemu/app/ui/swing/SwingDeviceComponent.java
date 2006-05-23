@@ -43,7 +43,6 @@ import org.microemu.device.j2se.J2SEImmutableImage;
 import org.microemu.device.j2se.J2SEInputMethod;
 
 
-
 public class SwingDeviceComponent extends JPanel
 {
   SwingDeviceComponent instance;
@@ -61,6 +60,8 @@ public class SwingDeviceComponent extends JPanel
     
     public void mousePressed(MouseEvent e) 
     {
+    	SwingDeviceComponent.this.requestFocusInWindow();
+    	
 		pressedButton = getButton(e.getX(), e.getY());
 
 		// if the displayable is in full screen mode, we should not

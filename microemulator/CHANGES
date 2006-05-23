@@ -1,5 +1,9 @@
 MicroEmulator
 
+1.0 - 21.03.2006
+- fix in keyboard event handling (Canvas.KEY_STAR, Canvas.KEY_POUND)
+- fix in Midlet startApp() that prevents reload MIDlet when not needed
+
 0.9.1 (beta) - 24.09.2005
 - fixed bug with device skin support
 

@@ -14,13 +14,6 @@
 			<equals arg1="${target}" arg2="app"/>
 		</condition>
 
-		<condition property="target.app.type.awt">
-			<and>
-				<equals arg1="${target}" arg2="app"/>
-				<equals arg1="${target.app.type}" arg2="awt"/>
-			</and>
-		</condition>
-
 		<condition property="target.app.type.swing">
 			<and>
 				<equals arg1="${target}" arg2="app"/>
@@ -43,31 +36,8 @@
 		</condition>
 	</target>
 
-	<target name="init-app" depends="init-base,init-app-awt,init-app-swing,init-app-swt" if="target.app">
+	<target name="init-app" depends="init-base,init-app-swing,init-app-swt" if="target.app">
 		<property name="target.device.extension" value="dev"/>
-	</target>
-
-	<target name="init-app-awt" depends="init-base" if="target.app.type.awt">
-		<property name="target.device.prefix" value="applet"/>
-		<property name="target.app.classname" value="org.microemu.app.Awt"/>
-
-		<patternset id="project.src">
-			<include name="javax/**"/>
-			<exclude name="org/microemu/app/capture/**"/>
-			<include name="org/microemu/app/**"/>
-			<exclude name="org/microemu/app/Main*"/>
-			<exclude name="org/microemu/app/EclipseSwt*"/>
-			<exclude name="org/microemu/app/Swt*"/>
-			<exclude name="org/microemu/app/WebStart*"/>
-			<exclude name="org/microemu/app/ui/swing/**"/>
-			<exclude name="org/microemu/app/ui/swt/**"/>
-			<include name="org/microemu/device/**"/>
-			<exclude name="org/microemu/device/j2se/**"/>
-			<exclude name="org/microemu/device/swt/**"/>
-			<include name="org/microemu/cldc/**"/>
-			<include name="org/microemu/midp/**"/>
-			<include name="com/sixlegs/image/png/**"/>
-		</patternset>
 	</target>
 
 	<target name="init-app-swing" depends="init-base" if="target.app.type.swing">
@@ -78,10 +48,8 @@
 			<include name="javax/**"/>
 			<exclude name="org/microemu/app/capture/**"/>
 			<include name="org/microemu/app/**"/>
-			<exclude name="org/microemu/app/Awt*"/>
 			<exclude name="org/microemu/app/EclipseSwt*"/>
 			<exclude name="org/microemu/app/Swt*"/>
-			<exclude name="org/microemu/app/ui/awt/**"/>
 			<exclude name="org/microemu/app/ui/swt/**"/>
 			<include name="org/microemu/device/**"/>
 			<exclude name="org/microemu/device/applet/**"/>
@@ -100,10 +68,8 @@
 			<include name="javax/**"/>
 			<exclude name="org/microemu/app/capture/**"/>
 			<include name="org/microemu/app/**"/>
-			<exclude name="org/microemu/app/Awt*"/>
 			<exclude name="org/microemu/app/Main*"/>
 			<exclude name="org/microemu/app/WebStart*"/>
-			<exclude name="org/microemu/app/ui/awt/**"/>
 			<exclude name="org/microemu/app/ui/swing/**"/>
 			<include name="org/microemu/device/**"/>
 			<exclude name="org/microemu/device/applet/**"/>
@@ -122,7 +88,7 @@
 			<include name="java/util/**"/>
 			<include name="javax/**"/>
 			<include name="org/microemu/applet/**"/>
-			<include name="org/microemu/device/applet/**"/>
+			<include name="org/microemu/device/j2se/**"/>
 			<include name="org/microemu/cldc/**"/>
 			<include name="org/microemu/midp/**"/>
 			<include name="com/sixlegs/image/png/**"/>
@@ -187,7 +153,7 @@
 				<exclude name="org/microemu/midp/examples/**"/>
 				<exclude name="**/.*"/>
 			</fileset>
-			<fileset dir="./res">
+			<fileset dir="./core/res">
 				<exclude name="org/microemu/midp/examples/**"/>
 				<exclude name="**/.*"/>
 			</fileset>

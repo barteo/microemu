@@ -218,24 +218,30 @@ public class SwtDeviceComponent extends Canvas
 			gc.translate(-displayRectangle.x, -displayRectangle.y);
 
 			Rectangle rect;
-			if (prevOverButton != null ) {
-				rect = prevOverButton.getRectangle();    
-				gc.drawImage(((SwtImmutableImage) DeviceFactory.getDevice().getNormalImage()).getImage(), 
-						rect.x, rect.y, rect.width, rect.height,
-						rect.x, rect.y, rect.width, rect.height);
+			if (prevOverButton != null ) {				
+				rect = prevOverButton.getRectangle();
+				if (rect != null) {
+					gc.drawImage(((SwtImmutableImage) DeviceFactory.getDevice().getNormalImage()).getImage(), 
+							rect.x, rect.y, rect.width, rect.height,
+							rect.x, rect.y, rect.width, rect.height);
+				}
 				prevOverButton = null;
 			}
 			if (overButton != null) {
-				rect = overButton.getRectangle();   
-				gc.drawImage(((SwtImmutableImage) DeviceFactory.getDevice().getOverImage()).getImage(), 
-						rect.x, rect.y, rect.width, rect.height,
-						rect.x, rect.y, rect.width, rect.height);
+				rect = overButton.getRectangle();
+				if (rect != null) {
+					gc.drawImage(((SwtImmutableImage) DeviceFactory.getDevice().getOverImage()).getImage(), 
+							rect.x, rect.y, rect.width, rect.height,
+							rect.x, rect.y, rect.width, rect.height);
+				}
 			}
 			if (pressedButton != null) {
-				rect = pressedButton.getRectangle();    
-				gc.drawImage(((SwtImmutableImage) DeviceFactory.getDevice().getPressedImage()).getImage(), 
-						rect.x, rect.y, rect.width, rect.height,
-						rect.x, rect.y, rect.width, rect.height);
+				rect = pressedButton.getRectangle();
+				if (rect != null) {
+					gc.drawImage(((SwtImmutableImage) DeviceFactory.getDevice().getPressedImage()).getImage(), 
+							rect.x, rect.y, rect.width, rect.height,
+							rect.x, rect.y, rect.width, rect.height);
+				}
 			}
 		} finally {
 			gc.dispose();
@@ -249,9 +255,11 @@ public class SwtDeviceComponent extends Canvas
 	{
 		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements(); ) {
 			SwtButton button = (SwtButton) e.nextElement();
-			Rectangle tmp = button.getRectangle();
-			if (x >= tmp.x && x < tmp.x + tmp.width && y >= tmp.y && y < tmp.y + tmp.height) {
-				return button;
+			if (button.getRectangle() != null) {
+				Rectangle tmp = button.getRectangle();
+				if (x >= tmp.x && x < tmp.x + tmp.width && y >= tmp.y && y < tmp.y + tmp.height) {
+					return button;
+				}
 			}
 		}        
 		return null;

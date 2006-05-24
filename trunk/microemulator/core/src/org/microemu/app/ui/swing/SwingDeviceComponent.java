@@ -206,22 +206,28 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
     Rectangle rect;
     if (prevOverButton != null ) {
       rect = prevOverButton.getRectangle();    
-      offg.drawImage(((J2SEImmutableImage) DeviceFactory.getDevice().getNormalImage()).getImage(), 
-          rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
-          rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
+      if (rect != null) {
+    	  offg.drawImage(((J2SEImmutableImage) DeviceFactory.getDevice().getNormalImage()).getImage(), 
+	          rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
+	          rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
+      }
       prevOverButton = null;
     }
     if (overButton != null) {
       rect = overButton.getRectangle();    
-      offg.drawImage(((J2SEImmutableImage) DeviceFactory.getDevice().getOverImage()).getImage(), 
-          rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
-          rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
+      if (rect != null) {
+	      offg.drawImage(((J2SEImmutableImage) DeviceFactory.getDevice().getOverImage()).getImage(), 
+	          rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
+	          rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
+      }
     }
     if (pressedButton != null) {
-      rect = pressedButton.getRectangle();    
-      offg.drawImage(((J2SEImmutableImage) DeviceFactory.getDevice().getPressedImage()).getImage(), 
-          rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
-          rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
+      rect = pressedButton.getRectangle();
+      if (rect != null) {
+	      offg.drawImage(((J2SEImmutableImage) DeviceFactory.getDevice().getPressedImage()).getImage(), 
+	          rect.x, rect.y, rect.x + rect.width, rect.y + rect.height,
+	          rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
+      }
     }
     
  		g.drawImage(offi, 0, 0, null);
@@ -238,9 +244,11 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
   {
     for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements(); ) {
       J2SEButton button = (J2SEButton) e.nextElement();
-      Rectangle tmp = new Rectangle(button.getRectangle());
-      if (x >= tmp.x && x < tmp.x + tmp.width && y >= tmp.y && y < tmp.y + tmp.height) {
-        return button;
+      if (button.getRectangle() != null) {
+	      Rectangle tmp = new Rectangle(button.getRectangle());
+	      if (x >= tmp.x && x < tmp.x + tmp.width && y >= tmp.y && y < tmp.y + tmp.height) {
+	        return button;
+	      }
       }
     }        
     return null;

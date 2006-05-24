@@ -71,8 +71,8 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
     {
       if (fileChooser == null) {
         fileChooser = new JFileChooser();
-        ExtensionFileFilter fileFilter = new ExtensionFileFilter("Device profile (*.dev)");
-        fileFilter.addExtension("dev");
+        ExtensionFileFilter fileFilter = new ExtensionFileFilter("Device profile (*.jar)");
+        fileFilter.addExtension("jar");
         fileChooser.setFileFilter(fileFilter);
       }
       
@@ -86,7 +86,7 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
           Manifest manifest = jar.getManifest();
           if (manifest == null) {
             JOptionPane.showMessageDialog(instance,
-                "Missing manifest in dev file.",
+                "Missing manifest in device file.",
                 "Error", JOptionPane.ERROR_MESSAGE);
             return;
           }          
@@ -149,7 +149,7 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
         }
         
         try {
-          File deviceFile = File.createTempFile("dev", ".dev", Config.getConfigPath());
+          File deviceFile = File.createTempFile("dev", ".jar", Config.getConfigPath());
           FileInputStream fis  = new FileInputStream(fileChooser.getSelectedFile());
           FileOutputStream fos = new FileOutputStream(deviceFile);
           byte[] buf = new byte[1024];

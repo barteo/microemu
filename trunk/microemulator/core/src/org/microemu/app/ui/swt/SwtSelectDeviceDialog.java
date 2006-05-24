@@ -69,8 +69,8 @@ public class SwtSelectDeviceDialog extends SwtDialog
 			if (fileDialog == null) {
 				fileDialog = new FileDialog(getShell(), SWT.OPEN);
 				fileDialog.setText("Open device profile file...");
-				fileDialog.setFilterNames(new String[] {"Device profile (*.dev)"});
-				fileDialog.setFilterExtensions(new String[] {"*.dev"});
+				fileDialog.setFilterNames(new String[] {"Device profile (*.jar)"});
+				fileDialog.setFilterExtensions(new String[] {"*.jar"});
 			}
       
 			ProgressJarClassLoader loader = new ProgressJarClassLoader(this.getClass().getClassLoader());
@@ -86,7 +86,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 					Manifest manifest = jar.getManifest();
 					if (manifest == null) {
 						SwtMessageDialog.openError(getShell(),
-								"Error", "Missing manifest in dev file.");
+								"Error", "Missing manifest in device file.");
 						return;
 					}          
 					Attributes attrs = manifest.getMainAttributes();
@@ -142,7 +142,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 				}
         
 				try {
-					File deviceFile = File.createTempFile("dev", ".dev", Config.getConfigPath());
+					File deviceFile = File.createTempFile("dev", ".jar", Config.getConfigPath());
 					FileInputStream fis  = new FileInputStream(
 							new File(fileDialog.getFilterPath(), fileDialog.getFileName()));
 					FileOutputStream fos = new FileOutputStream(deviceFile);

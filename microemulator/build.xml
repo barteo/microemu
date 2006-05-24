@@ -37,7 +37,6 @@
 	</target>
 
 	<target name="init-app" depends="init-base,init-app-swing,init-app-swt" if="target.app">
-		<property name="target.device.extension" value="dev"/>
 	</target>
 
 	<target name="init-app-swing" depends="init-base" if="target.app.type.swing">
@@ -82,7 +81,6 @@
 
 	<target name="init-applet" depends="init-base" if="target.applet">
 		<property name="target.device.prefix" value="applet"/>
-		<property name="target.device.extension" value="jar"/>
 
 		<patternset id="project.src">
 			<include name="java/util/**"/>
@@ -238,7 +236,7 @@
 
 	<target name="jar-device" depends="compile-device" description="Package devices">
 		<mkdir dir="./target/devices"/>
-		<jar compress="true" jarfile="./target/devices/minimum.${target.device.extension}" 
+		<jar compress="true" jarfile="./target/devices/minimum.jar" 
         manifest="./devices/minimum/manifest.mf">
 			<fileset dir="./build/devices/minimum/classes">
 				<exclude name="**/.*"/>
@@ -247,7 +245,7 @@
 				<exclude name="**/.*"/>
 			</fileset>
 		</jar>
-		<jar compress="true" jarfile="./target/devices/small.${target.device.extension}" 
+		<jar compress="true" jarfile="./target/devices/small.jar" 
         manifest="./devices/small/manifest.mf">
 			<fileset dir="./build/devices/small/classes">
 				<exclude name="**/.*"/>

@@ -168,6 +168,11 @@ public class Display
 				return false;
 			}
 		}
+		
+		public boolean isRepaintPending()
+		{
+			return repaintPending;
+		}
 
 		public void setCurrent(Displayable d) 
 		{
@@ -340,13 +345,14 @@ public class Display
 						Thread.sleep(1);
 					} catch (InterruptedException ex) {
 					}
-					
-					DeviceFactory.getDevice().getDeviceDisplay().repaint();
 					synchronized (paintLock) {
 						repaintPending = false;
-					}
-					synchronized (serviceRepaintsLock) {
-						serviceRepaintsLock.notify();
+					}					
+					DeviceFactory.getDevice().getDeviceDisplay().repaint();
+					if (!repaintPending) {
+						synchronized (serviceRepaintsLock) {
+							serviceRepaintsLock.notify();
+						}
 					}
 				}
 				

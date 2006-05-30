@@ -219,10 +219,11 @@ public class Display
 						Thread.sleep(1);
 					} catch (InterruptedException ex) {
 					}
-
-					DeviceFactory.getDevice().getDeviceDisplay().repaint();
 					synchronized (paintLock) {
 						repaintPending = false;
+					}					
+					DeviceFactory.getDevice().getDeviceDisplay().repaint();
+					if (!repaintPending) {
 						synchronized (serviceRepaintsLock) {
 							serviceRepaintsLock.notify();
 						}

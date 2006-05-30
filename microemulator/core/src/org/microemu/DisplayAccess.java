@@ -39,6 +39,8 @@ public interface DisplayAccess
 	void paint(Graphics g);
 	
 	boolean isFullScreenMode();
+	
+	boolean isRepaintPending();
   
 	Displayable getCurrent();
 

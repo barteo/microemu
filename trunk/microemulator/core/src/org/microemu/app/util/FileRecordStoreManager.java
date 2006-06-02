@@ -17,7 +17,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.microemu.app;
+package org.microemu.app.util;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -35,12 +35,13 @@ import javax.microedition.rms.RecordStoreNotFoundException;
 import javax.microedition.rms.RecordStoreNotOpenException;
 
 import org.microemu.RecordStoreManager;
+import org.microemu.app.Config;
 import org.microemu.app.launcher.Launcher;
 import org.microemu.util.RecordStoreImpl;
 
 
 
-public class AppRecordStoreManager implements RecordStoreManager 
+public class FileRecordStoreManager implements RecordStoreManager 
 {
 	private final static String RECORD_STORE_SUFFIX = ".rs";
 	
@@ -63,7 +64,7 @@ public class AppRecordStoreManager implements RecordStoreManager
 	};
 	
 
-	public AppRecordStoreManager(Launcher launcher) 
+	public FileRecordStoreManager(Launcher launcher) 
 	{
 		this.launcher = launcher;
 	}
@@ -139,10 +140,27 @@ public class AppRecordStoreManager implements RecordStoreManager
 
 		saveToDisk(storeFile, recordStoreImpl);
 	}
-	
-	
+
+    public void deleteStores()
+    {
+        String[] stores = listRecordStores();
+        for (int i = 0; i < stores.length; i++)
+        {
+            String store = stores[i];
+            try
+            {
+                deleteRecordStore(store);
+            }
+            catch (RecordStoreException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
     private RecordStoreImpl loadFromDisk(File recordStoreFile)
-    		throws FileNotFoundException
+            throws FileNotFoundException
     {
         RecordStoreImpl store = null;
 
@@ -151,7 +169,7 @@ public class AppRecordStoreManager implements RecordStoreManager
             store = new RecordStoreImpl(dis);
             dis.close();
         } catch (FileNotFoundException ex) {
-        	throw ex;
+            throw ex;
         } catch (IOException ex) {
             System.out.println("RecordStore.loadFromDisk: ERROR reading " + recordStoreFile.getName());
             ex.printStackTrace();

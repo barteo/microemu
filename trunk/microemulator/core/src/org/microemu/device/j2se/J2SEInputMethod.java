@@ -23,12 +23,15 @@ import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.TextField;
 
+import org.microemu.CommandManager;
 import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.InputMethod;
 import org.microemu.device.InputMethodEvent;
+import org.microemu.device.impl.SoftButton;
 
 
 public class J2SEInputMethod extends InputMethod implements Runnable 
@@ -254,7 +257,7 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 	}
 	
 	
-	public void keyboardKeyTyped(KeyEvent ev)
+	public void keyTyped(KeyEvent ev)
 	{
 		if (eventAlreadyConsumed) {
 			return;
@@ -296,28 +299,33 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 	}
 
 	
-	public void keyboardKeyPressed(KeyEvent ev) 
+	public void keyPressed(KeyEvent ev) 
 	{		
 		eventAlreadyConsumed = false;
 		
-		if (ev.getKeyCode() == KeyEvent.VK_LEFT || ev.getKeyCode() == KeyEvent.VK_RIGHT 
-				|| ev.getKeyCode() == KeyEvent.VK_UP || ev.getKeyCode() == KeyEvent.VK_DOWN
-				|| ev.getKeyCode() == KeyEvent.VK_F1 || ev.getKeyCode() == KeyEvent.VK_F2) {
-			if (commonKeyPressed(ev.getKeyCode())) {
-				eventAlreadyConsumed = true;
-				return;
+		// invoke any associated commands, but send the raw key codes instead
+		boolean rawSoftKeys = DeviceFactory.getDevice().getDeviceDisplay().isFullScreenMode();
+		J2SEButton pressedButton = getButton(ev);
+		if (pressedButton != null) {
+		    if (pressedButton instanceof SoftButton && !rawSoftKeys) {
+			    Command cmd = ((SoftButton) pressedButton).getCommand();
+			    if (cmd != null) {
+					CommandManager.getInstance().commandAction(cmd);
+					eventAlreadyConsumed = true;
+					return;
+			    }
 			}
-		} else {
-			if (commonKeyPressed(ev.getKeyChar())) {
-				eventAlreadyConsumed = true;
-				return;
-			}
+		}
+		
+		if (commonKeyPressed(ev.getKeyCode())) {
+			eventAlreadyConsumed = true;
+			return;
 		}
 	}
 
 
 	
-	public void keyPressed(int keyCode) 
+	public void mousePressed(int keyCode) 
 	{
 		String tmp;
 
@@ -386,7 +394,7 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 	}
 
 	
-	public void keyboardKeyReleased(KeyEvent ev) 
+	public void keyReleased(KeyEvent ev) 
 	{
 		MIDletBridge.getMIDletAccess().getDisplayAccess().keyReleased(ev.getKeyCode());
 		
@@ -394,7 +402,7 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 	}
 
 	
-	public void keyReleased(int keyCode) 
+	public void mouseReleased(int keyCode) 
 	{
 		MIDletBridge.getMIDletAccess().getDisplayAccess().keyReleased(keyCode);
 	}
@@ -479,5 +487,19 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 
 		return result;
 	}
+	
+	  public J2SEButton getButton(KeyEvent ev)
+	  {
+	    for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements(); ) {
+	      J2SEButton button = (J2SEButton) e.nextElement();
+	      if (ev.getKeyCode() == button.getKey()) {
+	        return button;
+	      }
+	      if (button.isChar(ev.getKeyChar())) {
+	        return button;
+	      }
+	    }        
+	    return null;
+	  }	  
 
 }

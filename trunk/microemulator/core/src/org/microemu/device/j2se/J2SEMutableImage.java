@@ -22,7 +22,7 @@
 
 package org.microemu.device.j2se;
 
-import java.awt.Frame;
+import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 
 import org.microemu.device.MutableImage;
@@ -31,7 +31,6 @@ import org.microemu.device.MutableImage;
 public class J2SEMutableImage extends MutableImage 
 {
 	private java.awt.Image img;
-	private Frame f = new Frame();
 	private J2SEDisplayGraphics displayGraphics = null;
 	private PixelGrabber grabber = null;
 	private int[] pixels;
@@ -39,8 +38,7 @@ public class J2SEMutableImage extends MutableImage
 	
 	public J2SEMutableImage(int width, int height) 
 	{
-		f.addNotify();
-		img = f.createImage(width, height);
+		img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 	}
 
 	

@@ -17,7 +17,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.microemu.applet;
+package org.microemu.app.util;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -31,7 +31,7 @@ import org.microemu.util.RecordStoreImpl;
 
 
 
-public class AppletRecordStoreManager implements RecordStoreManager 
+public class MemoryRecordStoreManager implements RecordStoreManager 
 {
 	private Hashtable recordStores = new Hashtable();
 	  

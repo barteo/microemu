@@ -19,12 +19,13 @@
  
 package org.microemu.device.j2se;
 
-import java.awt.Component;
-import java.awt.Label;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.Hashtable;
 
-import org.microemu.device.FontManager;
+import javax.swing.DebugGraphics;
 
+import org.microemu.device.FontManager;
 
 
 public class J2SEFontManager implements FontManager
@@ -38,7 +39,7 @@ public class J2SEFontManager implements FontManager
   static int SIZE_MEDIUM = 11;
   static int SIZE_LARGE = 13;
   
-  Component tmpComponent = new Label();
+  Graphics graphics = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB).getGraphics();
   Hashtable fontsMetrics = new Hashtable();
   
 
@@ -73,7 +74,7 @@ public class J2SEFontManager implements FontManager
       } else if (meFont.getSize() == javax.microedition.lcdui.Font.SIZE_LARGE) {
         size = SIZE_LARGE;
       }
-      tmp = tmpComponent.getFontMetrics(new java.awt.Font(name, style, size));
+      tmp = graphics.getFontMetrics(new java.awt.Font(name, style, size));
       fontsMetrics.put(meFont, tmp);
     }
     

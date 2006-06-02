@@ -24,9 +24,9 @@ import java.io.File;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
 
-import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
 import org.eclipse.swt.SWT;
@@ -64,7 +64,6 @@ import org.microemu.app.ui.swt.SwtDeviceComponent;
 import org.microemu.app.ui.swt.SwtSelectDeviceDialog;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.ProgressJarClassLoader;
-import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.FontManager;
@@ -83,8 +82,6 @@ public class EclipseSwt extends Common
 
 	private static SwtDeviceComponent devicePanel;
 
-	private boolean initialized = false;
-  
 	private SwtSelectDeviceDialog selectDeviceDialog;
 	private DeviceEntry deviceEntry;
   
@@ -136,7 +133,7 @@ public class EclipseSwt extends Common
 	};
  
   
-	EclipseSwt(Shell shell, Device device, String captureFile)
+	EclipseSwt(Shell shell, String captureFile)
 	{
 		super(new EmulatorContext()
 		{
@@ -194,22 +191,10 @@ public class EclipseSwt extends Common
 		
 		this.captureFile = captureFile;
 
-		if (device == null) {
-			selectDeviceDialog = new SwtSelectDeviceDialog(shell);
-			setDevice(selectDeviceDialog.getSelectedDeviceEntry());
-		} else {
-			setDevice(device);
-		}
-    
-		initialized = true;
+		selectDeviceDialog = new SwtSelectDeviceDialog(shell);
+		setDevice(selectDeviceDialog.getSelectedDeviceEntry());
 	}
       
-  
-	public DeviceEntry getDevice()
-	{
-		return deviceEntry;
-	}
-  
   
 	public void setDevice(DeviceEntry entry)
 	{
@@ -230,6 +215,7 @@ public class EclipseSwt extends Common
 			SwtDevice device = (SwtDevice) deviceClass.newInstance();
 			this.deviceEntry = entry;
 			setDevice(device);
+			updateDevice();
 		} catch (MalformedURLException ex) {
 			System.err.println(ex);          
 		} catch (ClassNotFoundException ex) {
@@ -242,11 +228,8 @@ public class EclipseSwt extends Common
 	}
 
 
-	protected void setDevice(SwtDevice device)
+	protected void updateDevice()
 	{
-		super.setDevice(device);
-
-		device.init(emulatorContext);
 		shell.setSize(shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
 	}
   
@@ -273,82 +256,27 @@ public class EclipseSwt extends Common
 		
 		Display display = new Display(data);
 		shell = new Shell(display, SWT.CLOSE | SWT.TITLE | SWT.MIN | SWT.ON_TOP);
-		    
-		MIDlet m = null;
-
-//		Sleak sleak = app.new Sleak (display);
-//		sleak.open ();
-
-		Device device = null;
-		String captureFile = null;
-		String jadUrl = null;
-		Class midletClass = null;
-
-		if (args.length > 0) {
-			for (int i = 0; i < args.length; i++) {
-				if (args[i].equals("--deviceClass")) {
-					i++;
-					try {
-						Class deviceClass = Class.forName(args[i]);
-						device = (Device) deviceClass.newInstance();
-					} catch (ClassNotFoundException ex) {
-						System.err.println(ex);          
-					} catch (InstantiationException ex) {
-						System.err.println(ex);          
-					} catch (IllegalAccessException ex) {
-						System.err.println(ex);          
-					}					
-				} else if (args[i].equals("--captureFile")) {
-					i++;
-					captureFile = args[i];
-				} else if (args[i].endsWith(".jad")) {
-					try {
-						File file = new File(args[i]);
-						jadUrl = file.exists() ? file.toURL().toString() : args[i];
-					} catch(MalformedURLException exception) {
-						System.out.println("Cannot parse " + args[0] + " URL");
-					}
-				} else {
-					try {
-						midletClass = Class.forName(args[i]);
-					} catch (ClassNotFoundException ex) {
-						System.out.println("Cannot find " + args[i] + " MIDlet class");
-					}
-				}
-			}
+		
+		java.util.List params = new ArrayList();
+		for (int i = 0; i < args.length; i++) {
+			params.add(args[i]);
 		}
-
-		EclipseSwt app = new EclipseSwt(shell, device, captureFile);
+		
+		EclipseSwt app = new EclipseSwt(shell, null);
 		shell.addShellListener(app.shellListener);
 		
-		if (jadUrl != null) {
-			try {
-				app.openJadUrl(jadUrl);
-			} catch (MalformedURLException ex) {
-				ex.printStackTrace();
-			}			
-		} else if (midletClass != null) {
-			m = app.loadMidlet("MIDlet", midletClass);			
-		} else {
-			m = app.getLauncher();
-		}
+		app.initDevice(params);
+		app.updateDevice();
 		
-    
-		if (app.initialized) {
-			if (m != null) {
-				app.startMidlet(m);
-			}
-			
-			shell.pack ();
-			shell.open ();
-			while (!shell.isDisposed ()) {
-				if (!display.readAndDispatch ())
-					display.sleep ();
-			}
-			display.dispose ();			
+		app.initMIDlet(params);
+		
+		shell.pack ();
+		shell.open ();
+		while (!shell.isDisposed ()) {
+			if (!display.readAndDispatch ())
+				display.sleep ();
 		}
-
-		System.exit(0);
+		display.dispose ();			
 	}	
 	
 	

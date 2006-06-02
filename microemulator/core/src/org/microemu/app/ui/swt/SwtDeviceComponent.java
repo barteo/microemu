@@ -74,27 +74,16 @@ public class SwtDeviceComponent extends Canvas
   {
 		public void keyPressed(KeyEvent ev)
 		{
-			// invoke any associated commands, but send the raw key codes instead
-			boolean rawSoftKeys = DeviceFactory.getDevice().getDeviceDisplay().isFullScreenMode();
-			pressedButton = getButton(ev);
-			if (pressedButton != null) {
-			    if (pressedButton instanceof SoftButton && !rawSoftKeys) {
-				    Command cmd = ((SoftButton) pressedButton).getCommand();
-				    if (cmd != null) {
-						CommandManager.getInstance().commandAction(cmd);
-						return;
-				    }
-				}
-			}
-
-			((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).keyboardKeyPressed(ev);
-			pressedButton = getButton(ev);
+			((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).keyPressed(ev);
+			
+			pressedButton = ((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).getButton(ev);
 			redraw();
 		}   
 	  
 		public void keyReleased(KeyEvent ev)
 		{
-			((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).keyboardKeyReleased(ev);
+			((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).keyReleased(ev);
+			
 			prevOverButton = pressedButton;
 			pressedButton = null;
 			redraw();      
@@ -119,7 +108,7 @@ public class SwtDeviceComponent extends Canvas
 						CommandManager.getInstance().commandAction(cmd);
 					}
 				} else {
-					DeviceFactory.getDevice().getInputMethod().keyPressed(pressedButton.getKey());
+					((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).mousePressed(pressedButton.getKey());
 				}
 				redraw();
 			}
@@ -129,7 +118,7 @@ public class SwtDeviceComponent extends Canvas
 		{
 			SwtButton prevOverButton = getButton(e.x, e.y);
 			if (prevOverButton != null) {
-				DeviceFactory.getDevice().getInputMethod().keyReleased(prevOverButton.getKey());
+				((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).mouseReleased(prevOverButton.getKey());
 			}
 			pressedButton = null;
 			redraw();      
@@ -266,22 +255,6 @@ public class SwtDeviceComponent extends Canvas
 	}
 
   
-	private SwtButton getButton(KeyEvent ev)
-	{
-		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements(); ) {
-			SwtButton button = (SwtButton) e.nextElement();
-			if (ev.keyCode == button.getKey()) {
-				return button;
-			}
-			if (button.isChar(ev.character)) {
-				return button;
-			}
-		}
-		        
-		return null;
-	}
-	
-	
 	private class CreateImageRunnable implements Runnable
 	{
 		private ImageData data;

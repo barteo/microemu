@@ -153,16 +153,19 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 
 	public void paint(Graphics g) 
 	{
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma == null) {
+			return;
+		}
+		Displayable current = ma.getDisplayAccess().getCurrent();
+		if (current == null) {
+			return;
+		}
+
 		Device device = DeviceFactory.getDevice();
 
 		g.setColor(backgroundColor);
-		g.fillRect(0, 0, displayRectangle.width, displayPaintable.y);
-		g.fillRect(0, displayPaintable.y, 
-				displayPaintable.x, displayPaintable.height);
-		g.fillRect(displayPaintable.x + displayPaintable.width, displayPaintable.y,
-				displayRectangle.width - displayPaintable.x - displayPaintable.width, displayPaintable.height);
-		g.fillRect(0, displayPaintable.y + displayPaintable.height,
-				displayRectangle.width, displayRectangle.height - displayPaintable.y - displayPaintable.height);
+		g.fillRect(0, 0, displayRectangle.width, displayRectangle.height);
 
 		g.setColor(foregroundColor);
 		for (Enumeration s = device.getSoftButtons().elements(); s.hasMoreElements();) {
@@ -181,28 +184,24 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 			        modeAbcLowerImage.getRectangle().x, modeAbcLowerImage.getRectangle().y, null);
 		}
 
-		MIDletAccess ma = MIDletBridge.getMIDletAccess();
-		if (ma != null) {
-			Displayable current = ma.getDisplayAccess().getCurrent();
-			Shape oldclip = g.getClip();
-			if (!(current instanceof Canvas)
-				|| ((Canvas) current).getWidth() != displayRectangle.width
-				|| ((Canvas) current).getHeight() != displayRectangle.height) {
-				g.setClip(displayPaintable);
-				g.translate(displayPaintable.x, displayPaintable.y);
-			}
-			Font f = g.getFont();
-                        // Andres Navarro
-                        ma.getDisplayAccess().paint(new J2SEDisplayGraphics((java.awt.Graphics2D)g, getDisplayImage()));
-                        // Andres Navarro
-			g.setFont(f);
+		Shape oldclip = g.getClip();
+		if (!(current instanceof Canvas)
+			|| ((Canvas) current).getWidth() != displayRectangle.width
+			|| ((Canvas) current).getHeight() != displayRectangle.height) {
+			g.setClip(displayPaintable);
+			g.translate(displayPaintable.x, displayPaintable.y);
+		}
+		Font f = g.getFont();
+                    // Andres Navarro
+                    ma.getDisplayAccess().paint(new J2SEDisplayGraphics((java.awt.Graphics2D)g, getDisplayImage()));
+                    // Andres Navarro
+		g.setFont(f);
 
-			if (!(current instanceof Canvas)
-				|| ((Canvas) current).getWidth() != displayRectangle.width
-				|| ((Canvas) current).getHeight() != displayRectangle.height) {
-				g.translate(-displayPaintable.x, -displayPaintable.y);
-				g.setClip(oldclip);
-			}
+		if (!(current instanceof Canvas)
+			|| ((Canvas) current).getWidth() != displayRectangle.width
+			|| ((Canvas) current).getHeight() != displayRectangle.height) {
+			g.translate(-displayPaintable.x, -displayPaintable.y);
+			g.setClip(oldclip);
 		}
 
 		if (scrollUp) {

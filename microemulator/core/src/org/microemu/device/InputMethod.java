@@ -52,10 +52,6 @@ public abstract class InputMethod
 
     public abstract boolean hasRepeatEvents();
         
-	public abstract void keyPressed(int keyCode);
-
-	public abstract void keyReleased(int keyCode);
-
 
 	public void removeInputMethodListener(InputMethodListener l)
 	{

@@ -21,6 +21,8 @@ package org.microemu.app;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.microedition.midlet.MIDlet;
 
@@ -59,16 +61,12 @@ import org.microemu.device.swt.SwtDeviceDisplay;
 import org.microemu.device.swt.SwtFontManager;
 import org.microemu.device.swt.SwtInputMethod;
 
-
-
 public class Swt extends Common
 {
 	public static Shell shell;
 
 	protected static SwtDeviceComponent devicePanel;
 
-	protected boolean initialized = false;
-  
 	protected MenuItem menuOpenJADFile;
 	protected MenuItem menuOpenJADURL;
 
@@ -283,8 +281,6 @@ public class Swt extends Common
     
 		setStatusBarListener(statusBarListener);
 		setResponseInterfaceListener(responseInterfaceListener);
-    
-		initialized = true;
 	}
 	
 	
@@ -338,12 +334,6 @@ public class Swt extends Common
 	}
       
   
-	public DeviceEntry getDevice()
-	{
-		return deviceEntry;
-	}
-  
-  
 	public void setDevice(DeviceEntry entry)
 	{
 		if (DeviceFactory.getDevice() != null) {
@@ -363,6 +353,7 @@ public class Swt extends Common
 			Device device = (Device) deviceClass.newInstance();
 			this.deviceEntry = entry;
 			setDevice(device);
+			updateDevice();
 		} catch (MalformedURLException ex) {
 			System.err.println(ex);          
 		} catch (ClassNotFoundException ex) {
@@ -375,11 +366,8 @@ public class Swt extends Common
 	}
 	
 	
-	protected void setDevice(Device device)
+	protected void updateDevice()
 	{
-		super.setDevice(device);
-		
-		device.init(emulatorContext);
 		shell.setSize(shell.computeSize(SWT.DEFAULT, SWT.DEFAULT, true));
 	}
   
@@ -389,61 +377,24 @@ public class Swt extends Common
 		Display display = new Display();
 		shell = new Shell(display, SWT.CLOSE | SWT.TITLE | SWT.MIN);
 		    
+		List params = new ArrayList();
+		for (int i = 0; i < args.length; i++) {
+			params.add(args[i]);
+		}
+
 		Swt app = new Swt(shell);
-		MIDlet m = null;
-
-		if (args.length > 0) {
-			for (int i = 0; i < args.length; i++) {
-				if (args[i].equals("--deviceClass")) {
-					i++;
-					try {
-						Class deviceClass = Class.forName(args[i]);
-						app.setDevice((Device) deviceClass.newInstance());
-					} catch (ClassNotFoundException ex) {
-						System.err.println(ex);          
-					} catch (InstantiationException ex) {
-						System.err.println(ex);          
-					} catch (IllegalAccessException ex) {
-						System.err.println(ex);          
-					}
-					
-				} else if (args[i].endsWith(".jad")) {
-					try {
-						File file = new File(args[i]);
-						String url = file.exists() ? file.toURL().toString() : args[i];
-						app.openJadUrl(url);
-					} catch(MalformedURLException exception) {
-						System.out.println("Cannot parse " + args[0] + " URL");
-					}
-				} else {
-					Class midletClass;
-					try {
-						midletClass = Class.forName(args[i]);
-						m = app.loadMidlet("MIDlet", midletClass);
-					} catch (ClassNotFoundException ex) {
-						System.out.println("Cannot find " + args[i] + " MIDlet class");
-					}
-				}
-			}
-		} else {
-			m = app.getLauncher();
+		app.initDevice(params);
+		app.updateDevice();
+		
+		app.initMIDlet(params);
+		
+		shell.pack ();
+		shell.open ();
+		while (!shell.isDisposed ()) {
+			if (!display.readAndDispatch ())
+				display.sleep ();
 		}
-    
-		if (app.initialized) {
-			if (m != null) {
-				app.startMidlet(m);
-			}
-			
-			shell.pack ();
-			shell.open ();
-			while (!shell.isDisposed ()) {
-				if (!display.readAndDispatch ())
-					display.sleep ();
-			}
-			display.dispose ();			
-		}
-
-		System.exit(0);
+		display.dispose ();			
 	}
 
 }

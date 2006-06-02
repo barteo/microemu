@@ -40,6 +40,11 @@ public interface RecordStoreManager
 	String[] listRecordStores();
 	
 	void saveChanges(RecordStoreImpl recordStoreImpl) 
-			throws RecordStoreNotOpenException; 
-	
+			throws RecordStoreNotOpenException;
+
+    /**
+     * Delete all record stores.
+     */
+    void deleteStores();
+    
 }

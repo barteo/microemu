@@ -22,14 +22,17 @@ package org.microemu.device.swt;
 import java.util.Enumeration;
 
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.TextField;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
+import org.microemu.CommandManager;
 import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.InputMethod;
 import org.microemu.device.InputMethodEvent;
+import org.microemu.device.impl.SoftButton;
 
 
 public class SwtInputMethod extends InputMethod implements Runnable 
@@ -233,18 +236,23 @@ public class SwtInputMethod extends InputMethod implements Runnable
 	}
 
 	
-	public void keyboardKeyPressed(KeyEvent ev) 
+	public void keyPressed(KeyEvent ev) 
 	{
-		if (ev.keyCode == SWT.ARROW_LEFT || ev.keyCode == SWT.ARROW_RIGHT 
-				|| ev.keyCode == SWT.ARROW_UP || ev.keyCode == SWT.ARROW_DOWN
-				|| ev.keyCode == SWT.F1 || ev.keyCode == SWT.F2) {
-			if (commonKeyPressed(ev.keyCode)) {
-				return;
+		// invoke any associated commands, but send the raw key codes instead
+		boolean rawSoftKeys = DeviceFactory.getDevice().getDeviceDisplay().isFullScreenMode();
+		SwtButton pressedButton = getButton(ev);
+		if (pressedButton != null) {
+		    if (pressedButton instanceof SoftButton && !rawSoftKeys) {
+			    Command cmd = ((SoftButton) pressedButton).getCommand();
+			    if (cmd != null) {
+					CommandManager.getInstance().commandAction(cmd);
+					return;
+			    }
 			}
-		} else {
-			if (commonKeyPressed(ev.character)) {
-				return;
-			}
+		}
+
+		if (commonKeyPressed(ev.keyCode)) {
+			return;
 		}
 
 		if (text.length() < maxSize && (ev.keyCode & SWT.EMBEDDED) == 0) {
@@ -278,7 +286,7 @@ public class SwtInputMethod extends InputMethod implements Runnable
 	}
 
 	
-	public void keyPressed(int keyCode) 
+	public void mousePressed(int keyCode) 
 	{
 		String tmp;
 
@@ -348,13 +356,13 @@ public class SwtInputMethod extends InputMethod implements Runnable
 	}
 
 	
-	public void keyboardKeyReleased(KeyEvent ev) 
+	public void keyReleased(KeyEvent ev) 
 	{
 		MIDletBridge.getMIDletAccess().getDisplayAccess().keyReleased(ev.keyCode);
 	}
 
 	
-	public void keyReleased(int keyCode) 
+	public void mouseReleased(int keyCode) 
 	{
 		MIDletBridge.getMIDletAccess().getDisplayAccess().keyReleased(keyCode);
 	}
@@ -438,6 +446,22 @@ public class SwtInputMethod extends InputMethod implements Runnable
 		}
 
 		return result;
+	}
+	
+	
+	public SwtButton getButton(KeyEvent ev)
+	{
+		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements(); ) {
+			SwtButton button = (SwtButton) e.nextElement();
+			if (ev.keyCode == button.getKey()) {
+				return button;
+			}
+			if (button.isChar(ev.character)) {
+				return button;
+			}
+		}
+		        
+		return null;
 	}
 
 }

@@ -148,19 +148,22 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 
 	public void paint(SwtGraphics g) 
 	{
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma == null) {
+			return;
+		}
+		Displayable current = ma.getDisplayAccess().getCurrent();
+		if (current == null) {
+			return;
+		}
+
 		Device device = DeviceFactory.getDevice();
 		
 		g.setBackground(g.getColor(new RGB(
 				backgroundColor.getRed(), 
 				backgroundColor.getGreen(), 
 				backgroundColor.getBlue())));
-		g.fillRectangle(0, 0, displayRectangle.width, displayPaintable.y);
-		g.fillRectangle(0, displayPaintable.y,
-				displayPaintable.x, displayPaintable.height);
-		g.fillRectangle(displayPaintable.x + displayPaintable.width, displayPaintable.y,
-				displayRectangle.width - displayPaintable.x - displayPaintable.width, displayPaintable.height);
-		g.fillRectangle(0, displayPaintable.y + displayPaintable.height,
-				displayRectangle.width, displayRectangle.height - displayPaintable.y - displayPaintable.height);
+		g.fillRectangle(0, 0, displayRectangle.width, displayRectangle.height);
 
 		g.setForeground(g.getColor(new RGB(
 				foregroundColor.getRed(), 
@@ -182,28 +185,24 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 			        modeAbcLowerImage.getRectangle().x, modeAbcLowerImage.getRectangle().y);
 		}
 
-		MIDletAccess ma = MIDletBridge.getMIDletAccess();
-		if (ma != null) {
-			Displayable current = ma.getDisplayAccess().getCurrent();
-			org.eclipse.swt.graphics.Rectangle oldclip = g.getClipping();
-			if (!(current instanceof Canvas) 
-					|| ((Canvas) current).getWidth() != displayRectangle.width
-					|| ((Canvas) current).getHeight() != displayRectangle.height) {
-				g.setClipping(new org.eclipse.swt.graphics.Rectangle(displayPaintable.x, displayPaintable.y, displayPaintable.width, displayPaintable.height));
-				g.translate(displayPaintable.x, displayPaintable.y);
-			}
-			Font f = g.getFont();
+		org.eclipse.swt.graphics.Rectangle oldclip = g.getClipping();
+		if (!(current instanceof Canvas) 
+				|| ((Canvas) current).getWidth() != displayRectangle.width
+				|| ((Canvas) current).getHeight() != displayRectangle.height) {
+			g.setClipping(new org.eclipse.swt.graphics.Rectangle(displayPaintable.x, displayPaintable.y, displayPaintable.width, displayPaintable.height));
+			g.translate(displayPaintable.x, displayPaintable.y);
+		}
+		Font f = g.getFont();
 
-			ma.getDisplayAccess().paint(new SwtDisplayGraphics(g, getDisplayImage()));
+		ma.getDisplayAccess().paint(new SwtDisplayGraphics(g, getDisplayImage()));
 
-			g.setFont(f);
-			
-			if (!(current instanceof Canvas) 
-					|| ((Canvas) current).getWidth() != displayRectangle.width
-					|| ((Canvas) current).getHeight() != displayRectangle.height) {
-				g.translate(-displayPaintable.x, -displayPaintable.y);
-				g.setClipping(oldclip);
-			}
+		g.setFont(f);
+		
+		if (!(current instanceof Canvas) 
+				|| ((Canvas) current).getWidth() != displayRectangle.width
+				|| ((Canvas) current).getHeight() != displayRectangle.height) {
+			g.translate(-displayPaintable.x, -displayPaintable.y);
+			g.setClipping(oldclip);
 		}
 
 		if (scrollUp) {

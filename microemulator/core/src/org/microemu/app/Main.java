@@ -26,6 +26,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.microedition.lcdui.Image;
 import javax.microedition.midlet.MIDlet;
@@ -67,8 +69,6 @@ public class Main extends JFrame
   private Main instance = null;
   
   protected Common common;
-  
-  protected boolean initialized = false;
   
   private SwingSelectDevicePanel selectDevicePanel = null;
   private JFileChooser fileChooser = null;
@@ -137,7 +137,7 @@ public class Main extends JFrame
       int returnVal = fileChooser.showOpenDialog(instance);
       if (returnVal == JFileChooser.APPROVE_OPTION) {
       	try {
-	      	common.openJadUrl(fileChooser.getSelectedFile().toURL().toString());
+	      	Common.openJadUrl(fileChooser.getSelectedFile().toURL().toString());
 				} catch (MalformedURLException ex) {
 					System.err.println("Bad URL format " + fileChooser.getSelectedFile().getName());
 				}
@@ -152,7 +152,7 @@ public class Main extends JFrame
       String entered = JOptionPane.showInputDialog(instance, "Enter JAD URL:");
       if (entered != null) {
       	try {
-					common.openJadUrl(entered);
+					Common.openJadUrl(entered);
 				} catch (MalformedURLException ex) {
 					System.err.println("Bad URL format " + entered);
       	}
@@ -174,7 +174,7 @@ public class Main extends JFrame
     public void actionPerformed(ActionEvent e)
     {
       if (SwingDialogWindow.show(instance, "Select device...", selectDevicePanel)) {
-        if (selectDevicePanel.getSelectedDeviceEntry().equals(getDevice())) {
+        if (selectDevicePanel.getSelectedDeviceEntry().equals(deviceEntry)) {
           return;
         }
         if (MIDletBridge.getCurrentMIDlet() != common.getLauncher()) {
@@ -291,14 +291,6 @@ public class Main extends JFrame
 
     getContentPane().add(devicePanel, "Center");
     getContentPane().add(statusBar, "South");    
-
-    initialized = true;
-  }
-  
-  
-  public DeviceEntry getDevice()
-  {
-    return deviceEntry;
   }
   
   
@@ -320,7 +312,8 @@ public class Main extends JFrame
       	}
       	Device device = (Device) deviceClass.newInstance();
 		this.deviceEntry = entry;
-      	setDevice(device);
+		common.setDevice(device);		
+      	updateDevice();
     } catch (MalformedURLException ex) {
       System.err.println(ex);          
     } catch (ClassNotFoundException ex) {
@@ -333,14 +326,11 @@ public class Main extends JFrame
   }
   
   
-	protected void setDevice(Device device) 
+	protected void updateDevice() 
 	{
-		common.setDevice(device);
-		
-		device.init(emulatorContext);
 		devicePanel.init();
 		devicePanel.addKeyListener(devicePanel);
-		Image tmpImg = device.getNormalImage();
+		Image tmpImg = common.getDevice().getNormalImage();
 		Dimension size = new Dimension(tmpImg.getWidth(), tmpImg.getHeight());
 		size.width += 10;
 		size.height += statusBar.getPreferredSize().height + 55;
@@ -412,56 +402,19 @@ public class Main extends JFrame
       UIManager.getDefaults().put ("Tree.font", dialogPlain); 
     }
     
-    Main app = new Main();
-    MIDlet m = null;
+	List params = new ArrayList();
+	for (int i = 0; i < args.length; i++) {
+		params.add(args[i]);
+	}
 
-    	for (int i = 0; i < args.length; i++) {
-    		if (args[i].equals("-d")) {
-    			i++;
-    			if (i < args.length) {
-					try {
-						Class deviceClass = Class.forName(args[i]);
-						app.setDevice((Device) deviceClass.newInstance());
-					} catch (ClassNotFoundException ex) {
-						ex.printStackTrace();
-					} catch (InstantiationException ex) {
-						ex.printStackTrace();
-					} catch (IllegalAccessException ex) {
-						ex.printStackTrace();
-					}
-    			}
-    		} else if (m == null && args[i].endsWith(".jad")) {
-				try {
-					File file = new File(args[i]);
-					String url = file.exists() ? file.toURL().toString() : args[0];
-					app.common.openJadUrl(url);
-				} catch (MalformedURLException exception) {
-					System.out.println("Cannot parse " + args[i] + " URL");
-				}
-			} else {
-				Class midletClass;
-				try {
-					midletClass = Class.forName(args[i]);
-					m = app.common.loadMidlet("MIDlet", midletClass);
-				} catch (ClassNotFoundException ex) {
-					System.out.println("Cannot find " + args[i] + " MIDlet class");
-				}
-			}
-		}
-    	
-    	if (m == null) {
-    		m = app.common.getLauncher();    	
-    	}    	
+    Main app = new Main();
+    app.common.initDevice(params);
+    app.updateDevice();
     
-    if (app.initialized) {
-      if (m != null) {
-        app.common.startMidlet(m);
-      }
-      app.validate();
-      app.setVisible(true);
-    } else {
-      System.exit(0);
-    }
+    app.common.initMIDlet(params);
+    
+    app.validate();
+    app.setVisible(true);
   }
 
 }

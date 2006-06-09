@@ -410,7 +410,7 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 	{
 		InputStream is;
 
-		is = context.getClassLoader().getResourceAsStream(str);
+		is = getClass().getResourceAsStream(str);
 		if (is == null) {
 			throw new IOException();
 		}
@@ -422,7 +422,9 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 	private Image getImage(String str) 
 			throws IOException 
 	{
-		InputStream is = context.getClassLoader().getResourceAsStream(str);
+		// TODO not always true, there could be some loading images before
+		// invoke startApp, right now getCurrentMIDlet returns prevoius MIDlet
+		InputStream is = MIDletBridge.getCurrentMIDlet().getClass().getResourceAsStream(str);
 
 		if (is == null) {
 			throw new IOException(str + " could not be found.");

@@ -166,10 +166,11 @@ public class J2SEInputMethod extends InputMethod implements Runnable
     }
 
 	  
-	protected boolean commonKeyPressed(int keyCode) 
+	protected boolean commonKeyPressed(KeyEvent ev) 
 	{
 		String tmp;
 
+		int keyCode = ev.getKeyCode();
 		if (inputMethodListener == null) {
 			int midpKeyCode;
 			switch (keyCode) {
@@ -181,6 +182,14 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 					break;
 				default :
 					midpKeyCode = keyCode;
+			}
+			switch (ev.getKeyChar()) {
+				case '*' :
+					midpKeyCode = Canvas.KEY_STAR;
+					break;
+				case '#' :
+					midpKeyCode = Canvas.KEY_POUND;
+					break;
 			}
 			MIDletBridge.getMIDletAccess().getDisplayAccess().keyPressed(midpKeyCode);
 			return true;
@@ -317,7 +326,7 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 			}
 		}
 		
-		if (commonKeyPressed(ev.getKeyCode())) {
+		if (commonKeyPressed(ev)) {
 			eventAlreadyConsumed = true;
 			return;
 		}
@@ -325,18 +334,18 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 
 
 	
-	public void mousePressed(int keyCode) 
+	public void mousePressed(KeyEvent ev) 
 	{
 		String tmp;
 
-		if (commonKeyPressed(keyCode)) {
+		if (commonKeyPressed(ev)) {
 			return;
 		}
 
 		if (text.length() < maxSize) {
 			for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
 				J2SEButton button = (J2SEButton) e.nextElement();
-				if (keyCode == button.getKey()) {
+				if (ev.getKeyCode() == button.getKey()) {
 					synchronized (this) {
 						lastButtonCharIndex++;
 						char[] buttonChars = filterConstraints(filterInputMode(button.getChars()));

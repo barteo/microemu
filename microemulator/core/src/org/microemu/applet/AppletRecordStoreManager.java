@@ -87,6 +87,11 @@ public class AppletRecordStoreManager implements RecordStoreManager
 	public void saveChanges(RecordStoreImpl recordStoreImpl) 
 	{
 	}
+	
+	public void init()
+	{
+		deleteStores();
+	}
 
     public void deleteStores()
     {

@@ -26,7 +26,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -48,9 +47,8 @@ import org.microemu.app.ui.noui.NoUiDisplayComponent;
 import org.microemu.app.util.Base64Coder;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.FileRecordStoreManager;
-import org.microemu.app.util.ProgressEvent;
-import org.microemu.app.util.ProgressJarClassLoader;
-import org.microemu.app.util.ProgressListener;
+import org.microemu.app.util.MIDletClassLoader;
+import org.microemu.app.util.MemoryRecordStoreManager;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
@@ -85,28 +83,12 @@ public class Common implements MicroEmulator {
 
 	private ResponseInterfaceListener responseInterfaceListener = null;
 
-	private ProgressListener progressListener = new ProgressListener() {
-		int percent = -1;
-
-		public void stateChanged(ProgressEvent event) {
-			int newpercent = (int) ((float) event.getCurrent()
-					/ (float) event.getMax() * 100);
-
-			if (newpercent != percent) {
-				setStatusBar("Loading... (" + newpercent + " %)");
-				percent = newpercent;
-			}
-		}
-	};
-
 	public Common(EmulatorContext context) {
 		instance = this;
 		this.emulatorContext = context;
 
 		launcher = new Launcher();
 		launcher.setCurrentMIDlet(launcher);
-
-		this.recordStoreManager = new FileRecordStoreManager(launcher);
 
 		MIDletBridge.setMicroEmulator(this);
 	}
@@ -230,9 +212,6 @@ public class Common implements MicroEmulator {
 	}
 
 	protected void loadFromJad(URL jadUrl) {
-		final ProgressJarClassLoader loader = new ProgressJarClassLoader(
-				emulatorContext.getClassLoader());
-
 		setResponseInterface(false);
 		URL url = null;
 		try {
@@ -249,7 +228,7 @@ public class Common implements MicroEmulator {
 			setResponseInterface(true);
 		}
 
-		loader.addRepository(url);
+		final MIDletClassLoader loader = new MIDletClassLoader(url, getClass().getClassLoader());
 		launcher.removeMIDletEntries();
 
 		manifest.clear();
@@ -262,8 +241,6 @@ public class Common implements MicroEmulator {
 		Thread task = new Thread() {
 
 			public void run() {
-				loader.setProgressListener(progressListener);
-
 				launcher.setSuiteName(jad.getSuiteName());
 				try {
 					for (Enumeration e = jad.getMidletEntries().elements(); e
@@ -278,7 +255,6 @@ public class Common implements MicroEmulator {
 				} catch (ClassNotFoundException ex) {
 					System.err.println(ex);
 				}
-				loader.setProgressListener(null);
 				setStatusBar("");
 				setResponseInterface(true);
 			}
@@ -331,18 +307,11 @@ public class Common implements MicroEmulator {
 		Common app = new Common(new EmulatorContext() {
 			private DisplayComponent displayComponent = new NoUiDisplayComponent();
 
-			private ProgressJarClassLoader loader = new ProgressJarClassLoader(
-					this.getClass().getClassLoader());
-
 			private InputMethod inputMethod = new J2SEInputMethod();
 
 			private DeviceDisplay deviceDisplay = new J2SEDeviceDisplay(this);
 
 			private FontManager fontManager = new J2SEFontManager();
-
-			public ClassLoader getClassLoader() {
-				return loader;
-			}
 
 			public DisplayComponent getDisplayComponent() {
 				return displayComponent;
@@ -381,9 +350,12 @@ public class Common implements MicroEmulator {
 	}
 
 	protected void initDevice(List params) {
+		RecordStoreManager paramRecordStoreManager = null;
+		
 		Iterator it = params.iterator();
 		while (it.hasNext()) {
-			if (((String) it.next()).equals("-d")) {
+			String tmp = (String) it.next();
+			if (tmp.equals("-d") || tmp.equals("--device")) {
 				it.remove();
 				if (it.hasNext()) {
 					try {
@@ -399,8 +371,27 @@ public class Common implements MicroEmulator {
 						it.remove();
 					}
 				}
+			} else if (tmp.equals("--rms")) {
+				it.remove();
+				if (it.hasNext()) {
+					String tmpRms = (String) it.next();
+					it.remove();
+					if (tmpRms.equals("file")) {
+						paramRecordStoreManager = new FileRecordStoreManager(launcher);
+					} else if (tmpRms.equals("memory")) {
+						paramRecordStoreManager = new MemoryRecordStoreManager();
+					}
+				}
 			}
 		}
+
+		if (getRecordStoreManager() == null) {
+			if (paramRecordStoreManager == null) {
+				setRecordStoreManager(new FileRecordStoreManager(launcher));
+			} else {
+				setRecordStoreManager(paramRecordStoreManager);
+			}
+		}		
 	}
 	
 	protected void initMIDlet(List params) {
@@ -438,6 +429,15 @@ public class Common implements MicroEmulator {
 			startMidlet(m);
 		}
 
+	}
+	
+	
+	public static String usage()
+	{
+		return
+			"[(-d | --device) {device class name} ] " +
+			"[--rms (file | memory)] " +
+			"{midlet class name | jad file location}";
 	}
 
 }

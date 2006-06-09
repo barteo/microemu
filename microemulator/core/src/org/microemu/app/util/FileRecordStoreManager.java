@@ -140,6 +140,10 @@ public class FileRecordStoreManager implements RecordStoreManager
 
 		saveToDisk(storeFile, recordStoreImpl);
 	}
+	
+	public void init()
+	{
+	}
 
     public void deleteStores()
     {

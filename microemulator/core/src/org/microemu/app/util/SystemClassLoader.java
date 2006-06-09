@@ -20,19 +20,16 @@
 package org.microemu.app.util;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class SystemClassLoader extends ClassLoader {
 	
-	private static ProgressJarClassLoader childClassLoader = null; 
+	private static MIDletClassLoader childClassLoader = null; 
 	
 	public SystemClassLoader(ClassLoader parent) {
 		super(parent);
 		
-		if (this instanceof ProgressJarClassLoader) {
-			childClassLoader = (ProgressJarClassLoader) this;
+		if (this instanceof MIDletClassLoader) {
+			childClassLoader = (MIDletClassLoader) this;
 		}
 	}
 

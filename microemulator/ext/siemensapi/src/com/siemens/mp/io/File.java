@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 
 /**
@@ -59,7 +60,7 @@ public class File {
     public static int exists(java.lang.String fileName) {
         //System.out.println("public static int exists(java.lang.String "+fileName+") "+data.containsKey(fileName));
         if (data.containsKey(fileName.intern())||
-        DeviceFactory.getDevice().getEmulatorContext().getClassLoader().getResourceAsStream(fileName)!=null
+        MIDletBridge.getCurrentMIDlet().getClass().getResourceAsStream(fileName)!=null
         ) return 1; else return -1;
     }
     
@@ -88,7 +89,7 @@ public class File {
         if (!data.containsKey(fileName)) {
             data.put(fileName.intern(), new FileInfo(s));
             try {
-                InputStream is=DeviceFactory.getDevice().getEmulatorContext().getClassLoader().getResourceAsStream(fileName);
+                InputStream is=MIDletBridge.getCurrentMIDlet().getClass().getResourceAsStream(fileName);
 
                 if(is!=null) {
                     BufferedInputStream bis=new BufferedInputStream(is);

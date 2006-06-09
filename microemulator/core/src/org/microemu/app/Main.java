@@ -26,6 +26,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +55,6 @@ import org.microemu.app.ui.swing.SwingDeviceComponent;
 import org.microemu.app.ui.swing.SwingDialogWindow;
 import org.microemu.app.ui.swing.SwingSelectDevicePanel;
 import org.microemu.app.util.DeviceEntry;
-import org.microemu.app.util.ProgressJarClassLoader;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
@@ -83,18 +84,11 @@ public class Main extends JFrame
   
   private EmulatorContext emulatorContext = new EmulatorContext()
   {
-    private ProgressJarClassLoader loader = new ProgressJarClassLoader(this.getClass().getClassLoader());
-    
     private InputMethod inputMethod = new J2SEInputMethod();
     
     private DeviceDisplay deviceDisplay = new J2SEDeviceDisplay(this);
     
     private FontManager fontManager = new J2SEFontManager();
-    
-    public ClassLoader getClassLoader()
-    {
-      return loader;
-    }
     
     public DisplayComponent getDisplayComponent()
     {
@@ -300,13 +294,13 @@ public class Main extends JFrame
 //			((J2SEDevice) DeviceFactory.getDevice()).dispose();
 		}
 
-    ProgressJarClassLoader loader = (ProgressJarClassLoader) emulatorContext.getClassLoader();
     try {
       Class deviceClass = null;
       if (entry.getFileName() != null) {
-        	loader.addRepository(
-            		new File(Config.getConfigPath(), entry.getFileName()).toURL());
-        	deviceClass = loader.findClass(entry.getClassName());
+    	  	URL[] urls = new URL[1];
+    	  	urls[0] = new File(Config.getConfigPath(), entry.getFileName()).toURL();
+    	    URLClassLoader loader = new URLClassLoader(urls);
+        	deviceClass = loader.loadClass(entry.getClassName());
      	 } else {
         	deviceClass = Class.forName(entry.getClassName());
       	}

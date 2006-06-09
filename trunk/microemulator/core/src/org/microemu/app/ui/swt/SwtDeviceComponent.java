@@ -45,8 +45,10 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.microemu.CommandManager;
 import org.microemu.DisplayComponent;
+import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.SoftButton;
@@ -74,7 +76,11 @@ public class SwtDeviceComponent extends Canvas
   {
 		public void keyPressed(KeyEvent ev)
 		{
-			((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).keyPressed(ev);
+	    	if (MIDletBridge.getCurrentMIDlet() == null) {
+	    		return;
+	    	}
+
+	    	((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).keyPressed(ev);
 			
 			pressedButton = ((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).getButton(ev);
 			redraw();
@@ -82,7 +88,11 @@ public class SwtDeviceComponent extends Canvas
 	  
 		public void keyReleased(KeyEvent ev)
 		{
-			((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).keyReleased(ev);
+	    	if (MIDletBridge.getCurrentMIDlet() == null) {
+	    		return;
+	    	}
+
+	    	((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).keyReleased(ev);
 			
 			prevOverButton = pressedButton;
 			pressedButton = null;
@@ -94,7 +104,11 @@ public class SwtDeviceComponent extends Canvas
 	{    
 		public void mouseDown(MouseEvent e) 
 		{
-			pressedButton = getButton(e.x, e.y);
+	    	if (MIDletBridge.getCurrentMIDlet() == null) {
+	    		return;
+	    	}
+
+	    	pressedButton = getButton(e.x, e.y);
 
 			// if the displayable is in full screen mode, we should not
 			// invoke any associated commands, but send the raw key codes
@@ -108,7 +122,11 @@ public class SwtDeviceComponent extends Canvas
 						CommandManager.getInstance().commandAction(cmd);
 					}
 				} else {
-					((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).mousePressed(pressedButton.getKey());
+					Event event = new Event();
+					event.widget = e.widget;
+					KeyEvent ev = new KeyEvent(event);
+					ev.keyCode = pressedButton.getKey();
+					((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).mousePressed(ev);
 				}
 				redraw();
 			}
@@ -116,7 +134,11 @@ public class SwtDeviceComponent extends Canvas
 
 		public void mouseUp(MouseEvent e) 
 		{
-			SwtButton prevOverButton = getButton(e.x, e.y);
+	    	if (MIDletBridge.getCurrentMIDlet() == null) {
+	    		return;
+	    	}
+
+	    	SwtButton prevOverButton = getButton(e.x, e.y);
 			if (prevOverButton != null) {
 				((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).mouseReleased(prevOverButton.getKey());
 			}

@@ -42,6 +42,11 @@ public interface RecordStoreManager
 	void saveChanges(RecordStoreImpl recordStoreImpl) 
 			throws RecordStoreNotOpenException;
 
+	/**
+	 * Initialize RMS Manager before starting MIDlet 
+	 */
+	void init();
+	
     /**
      * Delete all record stores.
      */

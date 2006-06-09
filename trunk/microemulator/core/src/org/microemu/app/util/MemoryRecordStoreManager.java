@@ -88,6 +88,11 @@ public class MemoryRecordStoreManager implements RecordStoreManager
 	{
 	}
 
+	public void init()
+	{
+		deleteStores();
+	}
+
     public void deleteStores()
     {
         if (recordStores != null)

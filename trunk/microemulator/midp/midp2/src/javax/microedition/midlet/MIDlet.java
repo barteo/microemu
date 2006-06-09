@@ -43,6 +43,7 @@ public abstract class MIDlet
                 MIDletBridge.setCurrentMIDlet(midlet);
             }
 			getDisplayAccess().updateCommands();
+			MIDletBridge.getRecordStoreManager().init();
 			midlet.startApp();
 		}
 

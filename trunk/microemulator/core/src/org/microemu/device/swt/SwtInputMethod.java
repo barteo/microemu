@@ -159,12 +159,24 @@ public class SwtInputMethod extends InputMethod implements Runnable
     }
 
     
-	private boolean commonKeyPressed(int keyCode) 
+	private boolean commonKeyPressed(KeyEvent ev) 
 	{
 		String tmp;
 
+		int keyCode = ev.keyCode;
 		if (inputMethodListener == null) {
-			MIDletBridge.getMIDletAccess().getDisplayAccess().keyPressed(keyCode);
+			int midpKeyCode;
+			switch (ev.character) {
+				case '*' :
+					midpKeyCode = Canvas.KEY_STAR;
+					break;
+				case '#' :
+					midpKeyCode = Canvas.KEY_POUND;
+					break;
+				default :
+					midpKeyCode = keyCode;
+			}
+			MIDletBridge.getMIDletAccess().getDisplayAccess().keyPressed(midpKeyCode);
 			return true;
 		}
 
@@ -251,7 +263,7 @@ public class SwtInputMethod extends InputMethod implements Runnable
 			}
 		}
 
-		if (commonKeyPressed(ev.keyCode)) {
+		if (commonKeyPressed(ev)) {
 			return;
 		}
 
@@ -286,18 +298,18 @@ public class SwtInputMethod extends InputMethod implements Runnable
 	}
 
 	
-	public void mousePressed(int keyCode) 
+	public void mousePressed(KeyEvent ev) 
 	{
 		String tmp;
 
-		if (commonKeyPressed(keyCode)) {
+		if (commonKeyPressed(ev)) {
 			return;
 		}
 
 		if (text.length() < maxSize) {
 			for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
 				SwtButton button = (SwtButton) e.nextElement();
-				if (keyCode == button.getKey()) {
+				if (ev.keyCode == button.getKey()) {
 					synchronized (this) {
 						lastButtonCharIndex++;
 						char[] buttonChars = filterConstraints(filterInputMode(button.getChars()));

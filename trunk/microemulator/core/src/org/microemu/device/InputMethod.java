@@ -94,9 +94,14 @@ public abstract class InputMethod
 		this.text = text;
 		caret = text.length();
 	}
+    
+    public String getText()
+    {
+        return text;
+    }
 
 
-	public void setMaxSize(int maxSize)
+    public void setMaxSize(int maxSize)
 	{
 		this.maxSize = maxSize;
 	}

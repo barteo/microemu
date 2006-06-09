@@ -24,21 +24,16 @@ import org.microemu.device.DeviceDisplay;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 
+public interface EmulatorContext {
 
+	Launcher getLauncher();
 
-public interface EmulatorContext 
-{
-  
-  ClassLoader getClassLoader();
+	DisplayComponent getDisplayComponent();
 
-    Launcher getLauncher();
+	InputMethod getDeviceInputMethod();
 
-    DisplayComponent getDisplayComponent();
+	DeviceDisplay getDeviceDisplay();
 
-    InputMethod getDeviceInputMethod();
+	FontManager getDeviceFontManager();
 
-    DeviceDisplay getDeviceDisplay();
-    
-    FontManager getDeviceFontManager();
-  
 }

@@ -35,6 +35,7 @@ import javax.swing.UIManager;
 
 import org.microemu.CommandManager;
 import org.microemu.DisplayComponent;
+import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.Device;
 import org.microemu.device.impl.Rectangle;
@@ -64,6 +65,10 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
     {
     	SwingDeviceComponent.this.requestFocusInWindow();
     	
+    	if (MIDletBridge.getCurrentMIDlet() == null) {
+    		return;
+    	}
+    	
 		pressedButton = getButton(e.getX(), e.getY());
 
 		// if the displayable is in full screen mode, we should not
@@ -80,7 +85,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 			} else {
 				int key = pressedButton.getKey();
 				KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key, KeyEvent.CHAR_UNDEFINED);
-				((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod()).mousePressed(ev.getKeyCode());
+				((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod()).mousePressed(ev);
 			}
 			repaint();
 		}
@@ -89,15 +94,21 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 
     public void mouseReleased(MouseEvent e) 
     {
-      J2SEButton prevOverButton = getButton(e.getX(), e.getY());
-      if (prevOverButton != null) {
-        int key = prevOverButton.getKey();
-        KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key, KeyEvent.CHAR_UNDEFINED);
+    	if (MIDletBridge.getCurrentMIDlet() == null) {
+				return;
+			}
 
-        ((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod()).mouseReleased(ev.getKeyCode());
-      }
-      pressedButton = null;
-      repaint();      
+			J2SEButton prevOverButton = getButton(e.getX(), e.getY());
+			if (prevOverButton != null) {
+				int key = prevOverButton.getKey();
+				KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key,
+						KeyEvent.CHAR_UNDEFINED);
+
+				((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod())
+						.mouseReleased(ev.getKeyCode());
+			}
+			pressedButton = null;
+			repaint();      
     }
 
   };
@@ -149,28 +160,42 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
   }
   
   
-  	public void keyTyped(KeyEvent ev) {
-		((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod()).keyTyped(ev);
+  	public void keyTyped(KeyEvent ev) 
+  	{
+    	if (MIDletBridge.getCurrentMIDlet() == null) {
+    		return;
+    	}
+
+    	((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod()).keyTyped(ev);
 	}
   
   
   	public void keyPressed(KeyEvent ev)
   	{
-		((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod()).keyPressed(ev);
+    	if (MIDletBridge.getCurrentMIDlet() == null) {
+    		return;
+    	}
+
+    	((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod()).keyPressed(ev);
 		
 		pressedButton = ((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod()).getButton(ev);
 		repaint();
-  }
+  	}
    
   
-  public void keyReleased(KeyEvent ev)
-  {
-    ((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod()).keyReleased(ev);
-    
-    prevOverButton = pressedButton;
-    pressedButton = null;
-    repaint();      
-  }
+  	public void keyReleased(KeyEvent ev) 
+  	{
+    	if (MIDletBridge.getCurrentMIDlet() == null) {
+    		return;
+    	}
+
+		((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod())
+				.keyReleased(ev);
+
+		prevOverButton = pressedButton;
+		pressedButton = null;
+		repaint();
+	}
    
   
   public void paint(Graphics g) 

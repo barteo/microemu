@@ -21,6 +21,8 @@ package org.microemu.app;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +53,6 @@ import org.microemu.app.ui.swt.SwtInputDialog;
 import org.microemu.app.ui.swt.SwtMessageDialog;
 import org.microemu.app.ui.swt.SwtSelectDeviceDialog;
 import org.microemu.app.util.DeviceEntry;
-import org.microemu.app.util.ProgressJarClassLoader;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
@@ -230,19 +231,12 @@ public class Swt extends Common
 	{
 		super(new EmulatorContext()
 		{
-			private ProgressJarClassLoader loader = new ProgressJarClassLoader(this.getClass().getClassLoader());
-    
 			private InputMethod inputMethod = new SwtInputMethod();
 			
 			private DeviceDisplay deviceDisplay = new SwtDeviceDisplay(this);
 
 			private FontManager fontManager = new SwtFontManager();
-			
-			public ClassLoader getClassLoader()
-			{
-				return loader;
-			}
-    
+			    
 			public DisplayComponent getDisplayComponent()
 			{
 				return devicePanel.getDisplayComponent();
@@ -340,13 +334,13 @@ public class Swt extends Common
 //			((SwtDevice) DeviceFactory.getDevice()).dispose();
 		}
 		
-		ProgressJarClassLoader loader = (ProgressJarClassLoader) emulatorContext.getClassLoader();
 		try {
 			Class deviceClass = null;
 			if (entry.getFileName() != null) {
-				loader.addRepository(
-						new File(Config.getConfigPath(), entry.getFileName()).toURL());
-				deviceClass = loader.findClass(entry.getClassName());
+	    	  	URL[] urls = new URL[1];
+	    	  	urls[0] = new File(Config.getConfigPath(), entry.getFileName()).toURL();
+	    	    URLClassLoader loader = new URLClassLoader(urls);
+	        	deviceClass = loader.loadClass(entry.getClassName());
 			} else {
 				deviceClass = Class.forName(entry.getClassName());
 			}

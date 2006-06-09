@@ -150,7 +150,7 @@ public class Main extends Applet implements MicroEmulator
 
         manifest.clear();
         try {
-            URL url = emulatorContext.getClassLoader().getResource(
+            URL url = getClass().getClassLoader().getResource(
                     "META-INF/MANIFEST.MF");
             manifest.load(url.openStream());
             if (manifest.getProperty("MIDlet-Name") == null) {

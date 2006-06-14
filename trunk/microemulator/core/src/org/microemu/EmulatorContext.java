@@ -19,14 +19,11 @@
 
 package org.microemu;
 
-import org.microemu.app.launcher.Launcher;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 
 public interface EmulatorContext {
-
-	Launcher getLauncher();
 
 	DisplayComponent getDisplayComponent();
 

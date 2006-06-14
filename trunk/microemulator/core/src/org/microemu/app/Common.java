@@ -149,6 +149,17 @@ public class Common implements MicroEmulator {
 
 		return result;
 	}
+	
+	public static void dispose()
+	{
+		try {
+			MIDletBridge.getMIDletAccess().destroyApp(true);
+		} catch (MIDletStateChangeException ex) {
+			ex.printStackTrace();
+		}
+		// TODO to be removed when event dispatcher will run input method task
+		DeviceFactory.getDevice().getInputMethod().dispose();
+	}
 
 	public static void openJadUrl(String urlString)
 			throws MalformedURLException {
@@ -160,6 +171,7 @@ public class Common implements MicroEmulator {
 				getInstance().jad.load(url.openStream());
 			} else {
 				URLConnection cn = url.openConnection();
+				cn.setReadTimeout(10000);
 				String userInfo = new String(Base64Coder.encode(url
 						.getUserInfo().getBytes("UTF-8")));
 				cn.setRequestProperty("Authorization", "Basic " + userInfo);
@@ -315,10 +327,6 @@ public class Common implements MicroEmulator {
 
 			public DisplayComponent getDisplayComponent() {
 				return displayComponent;
-			}
-
-			public Launcher getLauncher() {
-				return getLauncher();
 			}
 
 			public InputMethod getDeviceInputMethod() {

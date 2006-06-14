@@ -42,7 +42,6 @@ import org.microemu.EmulatorContext;
 import org.microemu.MIDletBridge;
 import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
-import org.microemu.app.launcher.Launcher;
 import org.microemu.app.ui.swing.SwingDeviceComponent;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
@@ -74,19 +73,9 @@ public class Main extends Applet implements MicroEmulator
 
         private FontManager fontManager = new J2SEFontManager();
 
-        public ClassLoader getClassLoader()
-        {
-            return getClass().getClassLoader();
-        }
-
         public DisplayComponent getDisplayComponent()
         {
             return devicePanel.getDisplayComponent();
-        }
-
-        public Launcher getLauncher()
-        {
-            return null;
         }
 
         public InputMethod getDeviceInputMethod()

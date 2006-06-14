@@ -75,7 +75,9 @@ public class SwtSoftButton extends SwtButton implements SoftButton
      *@param  cmd  The new command value
      */
     public void setCommand(Command cmd) {
-        command = cmd;
+    	synchronized (this) {
+    		command = cmd;
+    	}
     }
 
 
@@ -100,16 +102,18 @@ public class SwtSoftButton extends SwtButton implements SoftButton
 				deviceDisplay.getBackgroundColor().getGreen(), 
 				deviceDisplay.getBackgroundColor().getBlue())));
         g.fillRectangle(paintable.x, paintable.y, paintable.width, paintable.height);
-        if (command != null) {
-            if (alignment == RIGHT) {
-                xoffset = paintable.width - g.stringWidth(command.getLabel());
-            }
-    		g.setForeground(g.getColor(new RGB(
-    				deviceDisplay.getForegroundColor().getRed(), 
-					deviceDisplay.getForegroundColor().getGreen(), 
-					deviceDisplay.getForegroundColor().getBlue())));
-            g.drawString(command.getLabel(), 
-            		paintable.x + xoffset, paintable.y + (paintable.height - g.getFontMetrics().getHeight()), true);
+        synchronized (this) {
+	        if (command != null) {
+	            if (alignment == RIGHT) {
+	                xoffset = paintable.width - g.stringWidth(command.getLabel());
+	            }
+	    		g.setForeground(g.getColor(new RGB(
+	    				deviceDisplay.getForegroundColor().getRed(), 
+						deviceDisplay.getForegroundColor().getGreen(), 
+						deviceDisplay.getForegroundColor().getBlue())));
+	            g.drawString(command.getLabel(), 
+	            		paintable.x + xoffset, paintable.y + (paintable.height - g.getFontMetrics().getHeight()), true);
+	        }
         }
     }
 

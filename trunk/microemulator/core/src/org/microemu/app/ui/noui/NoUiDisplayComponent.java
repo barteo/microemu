@@ -21,7 +21,11 @@ package org.microemu.app.ui.noui;
 
 import java.awt.Graphics;
 
+import javax.microedition.lcdui.Displayable;
+
 import org.microemu.DisplayComponent;
+import org.microemu.MIDletAccess;
+import org.microemu.MIDletBridge;
 import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
@@ -48,8 +52,17 @@ public class NoUiDisplayComponent implements DisplayComponent {
 		return displayImage;
 	}
 
-	public void repaint() 
+	public void repaint(int x, int y, int width, int height) 
 	{
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma == null) {
+			return;
+		}
+		Displayable current = ma.getDisplayAccess().getCurrent();
+		if (current == null) {
+			return;
+		}
+
 		Device device = DeviceFactory.getDevice();
 
 		if (device != null) {
@@ -59,7 +72,12 @@ public class NoUiDisplayComponent implements DisplayComponent {
 			}
 					
 			Graphics gc = displayImage.getImage().getGraphics();
-			((J2SEDeviceDisplay) device.getDeviceDisplay()).paint(gc);
+
+			J2SEDeviceDisplay deviceDisplay = (J2SEDeviceDisplay) device.getDeviceDisplay();				
+			if (!ma.getDisplayAccess().isFullScreenMode()) {
+				deviceDisplay.paintControls(gc);
+			}
+			deviceDisplay.paintDisplayable(gc, x, y, width, height);
 
 			fireDisplayRepaint(displayImage);
 		}	

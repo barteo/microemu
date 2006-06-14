@@ -44,7 +44,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.microemu.DisplayComponent;
 import org.microemu.EmulatorContext;
 import org.microemu.MIDletBridge;
-import org.microemu.app.launcher.Launcher;
 import org.microemu.app.ui.ResponseInterfaceListener;
 import org.microemu.app.ui.StatusBarListener;
 import org.microemu.app.ui.swt.SwtDeviceComponent;
@@ -240,11 +239,6 @@ public class Swt extends Common
 			public DisplayComponent getDisplayComponent()
 			{
 				return devicePanel.getDisplayComponent();
-			}
-
-			public Launcher getLauncher() 
-			{
-				return getLauncher();
 			}
 
             public InputMethod getDeviceInputMethod()

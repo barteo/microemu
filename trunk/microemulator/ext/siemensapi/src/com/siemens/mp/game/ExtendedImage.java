@@ -39,7 +39,7 @@ public class ExtendedImage extends com.siemens.mp.misc.NativeMem {
         Graphics g=image.getGraphics();
         g.drawImage(this.image,x,y,Graphics.LEFT|Graphics.TOP);
 
-        dd.repaint();
+        dd.repaint(0, 0, image.getWidth(), image.getHeight());
     }
     
     public void clear(byte color) {

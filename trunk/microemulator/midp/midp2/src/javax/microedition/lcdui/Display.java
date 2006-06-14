@@ -40,10 +40,10 @@ import org.microemu.device.DeviceFactory;
 
 public class Display 
 {
-	private static PaintThread paintThread = null;
-	private static EventDispatcher eventDispatcher = null;
-	private static TickerPaint tickerPaint = null;
-	private static GaugePaint gaugePaint = null;
+	private PaintThread paintThread = null;
+	private EventDispatcher eventDispatcher = null;
+	private TickerPaint tickerPaint = null;
+	private GaugePaint gaugePaint = null;
 	
 	private Displayable current = null;
 
@@ -189,6 +189,10 @@ public class Display
 			if (current != null) {
 				current.hideNotify();
 			}
+			eventDispatcher.cancel();
+			paintThread.cancel();
+			tickerPaint.cancel();
+			gaugePaint.cancel();
 		}
 	}
 
@@ -222,16 +226,25 @@ public class Display
 
 	private class TickerPaint implements Runnable 
 	{
+		private boolean canceled;
+		
 		private Display currentDisplay = null;
 
 		public void setCurrentDisplay(Display currentDisplay) 
 		{
 			this.currentDisplay = currentDisplay;
 		}
+		
+		public void cancel()
+		{
+			canceled = true;
+		}
 
 		public void run() 
 		{
-			while (true) {
+			canceled = false;
+			
+			while (!canceled) {
 				if (currentDisplay != null && currentDisplay.current != null && currentDisplay.current instanceof Screen) {
 					Ticker ticker = ((Screen) currentDisplay.current).getTicker();
 					if (ticker != null) {
@@ -242,7 +255,7 @@ public class Display
 							}
 							ticker.textPos -= Ticker.PAINT_MOVE;
 						}
-						currentDisplay.repaint(current);
+						currentDisplay.repaint(current, 0, 0, current.getWidth(), current.getHeight());
 					}
 				}
 				try {
@@ -262,16 +275,25 @@ public class Display
 	// sight... 
 	private class GaugePaint implements Runnable 
 	{
+		private boolean canceled;
+		
 		private Display currentDisplay = null;
 
 		public void setCurrentDisplay(Display currentDisplay) 
 		{
 			this.currentDisplay = currentDisplay;
 		}
-
-		public void run() 
+		
+		public void cancel()
 		{
-			while (true) {
+			canceled = true;
+		}
+
+		public void run() 		
+		{
+			canceled = false;
+			
+			while (!canceled) {
 				if (currentDisplay != null && currentDisplay.current != null && 
 						(currentDisplay.current instanceof Alert || 
 							currentDisplay.current instanceof Form)) {
@@ -310,16 +332,35 @@ public class Display
 	
 	private class PaintThread implements Runnable
 	{
+		private boolean canceled;
+		
 		private Object serviceRepaintsLock = new Object();
-
-		public void repaint()
+		
+		private int x = 0;
+		private int y = 0;
+		private int width = 0;
+		private int height = 0;			
+		
+		public void repaint(int x, int y, int width, int height)
 		{
 			synchronized (paintLock) {
-				repaintPending = true;
+				repaintPending = true;				
+				if (x != 0 && y != 0 && width != 0 && height != 0) {
+					// TODO analyze and update clipping, currently repaints the whole displayable
+					this.x = 0;
+					this.y = 0;
+					this.width = current.getWidth();
+					this.height = current.getHeight();
+				} else {
+					this.x = x;
+					this.y = y;
+					this.width = width;
+					this.height = height;
+				}
 				paintLock.notify();
 			}
 		}
-		
+
 		public void serviceRepaints()
 		{
 			synchronized (paintLock) {
@@ -337,18 +378,37 @@ public class Display
 			}
 		}
 
+		public void cancel()
+		{
+			canceled = true;
+			synchronized (paintLock) {
+				paintLock.notify();
+			}
+		}
+
 		public void run() 
 		{
-			while (true) {
+			canceled = false;
+			
+			while (!canceled) {
 				if (repaintPending) {
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException ex) {
 					}
+					int repaintX, repaintY, repaintWidth, repaintHeight;
 					synchronized (paintLock) {
 						repaintPending = false;
+						repaintX = x;
+						repaintY = y;
+						repaintWidth = width;
+						repaintHeight = height;
+						x = 0;
+						y = 0;
+						width = 0;
+						height = 0;
 					}					
-					DeviceFactory.getDevice().getDeviceDisplay().repaint();
+					DeviceFactory.getDevice().getDeviceDisplay().repaint(repaintX, repaintY, repaintWidth, repaintHeight);
 					if (!repaintPending) {
 						synchronized (serviceRepaintsLock) {
 							serviceRepaintsLock.notify();
@@ -368,12 +428,13 @@ public class Display
 					}
 				}					
 			}
-		}
-		
+		}		
 	}
 
 	private class EventDispatcher implements Runnable 
-	{
+	{		
+		private boolean canceled;
+		
 		private Object dispatcherLock = new Object();
 		
 		private Vector events = new Vector();		
@@ -388,11 +449,21 @@ public class Display
 			}
 		}
 		
+		public void cancel()
+		{
+			canceled = true;
+			synchronized (dispatcherLock) {
+				dispatcherLock.notify();
+			}
+		}
+		
 		public void run() 
 		{
+			canceled = false;
+			
 			Vector jobs;
-
-			while (true) {
+			
+			while (!canceled) {
 				jobs = null;
 				synchronized (paintLock) {
 					if (!repaintPending) {
@@ -441,11 +512,13 @@ public class Display
 			tickerPaint = new TickerPaint();
 			new Thread(tickerPaint, "TickerPaint").start();
 		}
+		tickerPaint.setCurrentDisplay(this);
 		// Andres Navarro
 		if (gaugePaint == null) {
 			gaugePaint = new GaugePaint();
 			new Thread(gaugePaint, "GaugePaint").start();
 		}
+		gaugePaint.setCurrentDisplay(this);
 		// Andres Navarro
 	}
 
@@ -485,9 +558,6 @@ public class Display
 		} else {
 			result = MIDletBridge.getMIDletAccess(m).getDisplayAccess().getDisplay();
 		}
-
-		tickerPaint.setCurrentDisplay(result);
-		gaugePaint.setCurrentDisplay(result);
 
 		return result;
 	}
@@ -598,14 +668,14 @@ public class Display
 	}
 
 	
-	void repaint(Displayable d) 
-	{
+	void repaint(Displayable d, int x, int y, int width, int height)
+    {
 		if (current == d) {
-			paintThread.repaint();
+			paintThread.repaint(x, y, width, height);
 		}
-	}
-	
-	
+    }
+
+		
 	void serviceRepaints()
 	{
 		paintThread.serviceRepaints();
@@ -636,7 +706,7 @@ public class Display
 		 * it has happened.
 		 */
 		MIDletBridge.notifySoftkeyLabelsChanged();
-		repaint(current);
+		repaint(current, 0, 0, current.getWidth(), current.getHeight());
 	}
 
 }

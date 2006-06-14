@@ -151,21 +151,18 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	}
 
 
-	public void paint(Graphics g) 
+	public void paintControls(Graphics g) 
 	{
-		MIDletAccess ma = MIDletBridge.getMIDletAccess();
-		if (ma == null) {
-			return;
-		}
-		Displayable current = ma.getDisplayAccess().getCurrent();
-		if (current == null) {
-			return;
-		}
-
 		Device device = DeviceFactory.getDevice();
-
+		
 		g.setColor(backgroundColor);
-		g.fillRect(0, 0, displayRectangle.width, displayRectangle.height);
+		g.fillRect(0, 0, displayRectangle.width, displayPaintable.y);
+		g.fillRect(0, displayPaintable.y, 
+				displayPaintable.x, displayPaintable.height);
+		g.fillRect(displayPaintable.x + displayPaintable.width, displayPaintable.y,
+				displayRectangle.width - displayPaintable.x - displayPaintable.width, displayPaintable.height);
+		g.fillRect(0, displayPaintable.y + displayPaintable.height,
+				displayRectangle.width, displayRectangle.height - displayPaintable.y - displayPaintable.height);
 
 		g.setColor(foregroundColor);
 		for (Enumeration s = device.getSoftButtons().elements(); s.hasMoreElements();) {
@@ -184,26 +181,6 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 			        modeAbcLowerImage.getRectangle().x, modeAbcLowerImage.getRectangle().y, null);
 		}
 
-		Shape oldclip = g.getClip();
-		if (!(current instanceof Canvas)
-			|| ((Canvas) current).getWidth() != displayRectangle.width
-			|| ((Canvas) current).getHeight() != displayRectangle.height) {
-			g.setClip(displayPaintable);
-			g.translate(displayPaintable.x, displayPaintable.y);
-		}
-		Font f = g.getFont();
-                    // Andres Navarro
-                    ma.getDisplayAccess().paint(new J2SEDisplayGraphics((java.awt.Graphics2D)g, getDisplayImage()));
-                    // Andres Navarro
-		g.setFont(f);
-
-		if (!(current instanceof Canvas)
-			|| ((Canvas) current).getWidth() != displayRectangle.width
-			|| ((Canvas) current).getHeight() != displayRectangle.height) {
-			g.translate(-displayPaintable.x, -displayPaintable.y);
-			g.setClip(oldclip);
-		}
-
 		if (scrollUp) {
 			g.drawImage(((J2SEImmutableImage) upImage.getImage()).getImage(), 
 			        upImage.getRectangle().x, upImage.getRectangle().y, null);
@@ -214,10 +191,42 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 		}
 	}
 
-
-	public void repaint() 
+	
+	public void paintDisplayable(Graphics g, int x, int y, int width, int height) 
 	{
-		context.getDisplayComponent().repaint();
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma == null) {
+			return;
+		}
+		Displayable current = ma.getDisplayAccess().getCurrent();
+		if (current == null) {
+			return;
+		}
+
+		g.setColor(foregroundColor);
+
+		Shape oldclip = g.getClip();
+		if (!(current instanceof Canvas)
+			|| ((Canvas) current).getWidth() != displayRectangle.width
+			|| ((Canvas) current).getHeight() != displayRectangle.height) {
+			g.translate(displayPaintable.x, displayPaintable.y);
+		}		
+		g.setClip(x, y, width, height);
+		Font oldf = g.getFont();
+        ma.getDisplayAccess().paint(new J2SEDisplayGraphics((java.awt.Graphics2D)g, getDisplayImage()));
+		g.setFont(oldf);
+		if (!(current instanceof Canvas)
+			|| ((Canvas) current).getWidth() != displayRectangle.width
+			|| ((Canvas) current).getHeight() != displayRectangle.height) {
+			g.translate(-displayPaintable.x, -displayPaintable.y);
+		}
+		g.setClip(oldclip);
+	}
+
+	
+	public void repaint(int x, int y, int width, int height) 
+	{
+		context.getDisplayComponent().repaint(x, y, width, height);
 	}
 
 
@@ -560,7 +569,11 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	{
 		// TODO not always true, there could be some loading images before
 		// invoke startApp, right now getCurrentMIDlet returns prevoius MIDlet
-		InputStream is = MIDletBridge.getCurrentMIDlet().getClass().getResourceAsStream(str);
+		Object midlet = MIDletBridge.getCurrentMIDlet();
+		if (midlet == null) {
+			midlet = getClass();
+		}
+		InputStream is = midlet.getClass().getResourceAsStream(str);
 
 		if (is == null) {
 			throw new IOException(str + " could not be found.");

@@ -22,7 +22,11 @@ package org.microemu.app.ui.swing;
 import java.awt.Component;
 import java.awt.Graphics;
 
+import javax.microedition.lcdui.Displayable;
+
 import org.microemu.DisplayComponent;
+import org.microemu.MIDletAccess;
+import org.microemu.MIDletBridge;
 import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
@@ -73,13 +77,24 @@ public class SwingDisplayComponent implements DisplayComponent
 	public void paint(Graphics g) 
 	{
 		if (displayImage != null) {
-			g.drawImage(displayImage.getImage(), 0, 0, null);
+			synchronized (displayImage) {
+				g.drawImage(displayImage.getImage(), 0, 0, null);
+			}
 		}
 	}
 
 
-	public void repaint() 
+	public void repaint(int x, int y, int width, int height) 
 	{
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma == null) {
+			return;
+		}
+		Displayable current = ma.getDisplayAccess().getCurrent();
+		if (current == null) {
+			return;
+		}
+
 		Device device = DeviceFactory.getDevice();
 
 		if (device != null) {
@@ -87,10 +102,17 @@ public class SwingDisplayComponent implements DisplayComponent
 				displayImage = new J2SEMutableImage(
 						device.getDeviceDisplay().getFullWidth(), device.getDeviceDisplay().getFullHeight());
 			}
-					
-			Graphics gc = displayImage.getImage().getGraphics();
-			((J2SEDeviceDisplay) device.getDeviceDisplay()).paint(gc);
+			
+			synchronized (displayImage) {
+				Graphics gc = displayImage.getImage().getGraphics();
 
+				J2SEDeviceDisplay deviceDisplay = (J2SEDeviceDisplay) device.getDeviceDisplay();
+				if (!ma.getDisplayAccess().isFullScreenMode()) {
+					deviceDisplay.paintControls(gc);
+				}
+				deviceDisplay.paintDisplayable(gc, x, y, width, height);
+			}
+				
 			fireDisplayRepaint(displayImage);
 		}	
 

@@ -146,24 +146,21 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 	}
 
 
-	public void paint(SwtGraphics g) 
+	public void paintControls(SwtGraphics g) 
 	{
-		MIDletAccess ma = MIDletBridge.getMIDletAccess();
-		if (ma == null) {
-			return;
-		}
-		Displayable current = ma.getDisplayAccess().getCurrent();
-		if (current == null) {
-			return;
-		}
-
 		Device device = DeviceFactory.getDevice();
 		
 		g.setBackground(g.getColor(new RGB(
 				backgroundColor.getRed(), 
 				backgroundColor.getGreen(), 
 				backgroundColor.getBlue())));
-		g.fillRectangle(0, 0, displayRectangle.width, displayRectangle.height);
+		g.fillRectangle(0, 0, displayRectangle.width, displayPaintable.y);
+		g.fillRectangle(0, displayPaintable.y, 
+				displayPaintable.x, displayPaintable.height);
+		g.fillRectangle(displayPaintable.x + displayPaintable.width, displayPaintable.y,
+				displayRectangle.width - displayPaintable.x - displayPaintable.width, displayPaintable.height);
+		g.fillRectangle(0, displayPaintable.y + displayPaintable.height,
+				displayRectangle.width, displayRectangle.height - displayPaintable.y - displayPaintable.height);
 
 		g.setForeground(g.getColor(new RGB(
 				foregroundColor.getRed(), 
@@ -185,26 +182,6 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 			        modeAbcLowerImage.getRectangle().x, modeAbcLowerImage.getRectangle().y);
 		}
 
-		org.eclipse.swt.graphics.Rectangle oldclip = g.getClipping();
-		if (!(current instanceof Canvas) 
-				|| ((Canvas) current).getWidth() != displayRectangle.width
-				|| ((Canvas) current).getHeight() != displayRectangle.height) {
-			g.setClipping(new org.eclipse.swt.graphics.Rectangle(displayPaintable.x, displayPaintable.y, displayPaintable.width, displayPaintable.height));
-			g.translate(displayPaintable.x, displayPaintable.y);
-		}
-		Font f = g.getFont();
-
-		ma.getDisplayAccess().paint(new SwtDisplayGraphics(g, getDisplayImage()));
-
-		g.setFont(f);
-		
-		if (!(current instanceof Canvas) 
-				|| ((Canvas) current).getWidth() != displayRectangle.width
-				|| ((Canvas) current).getHeight() != displayRectangle.height) {
-			g.translate(-displayPaintable.x, -displayPaintable.y);
-			g.setClipping(oldclip);
-		}
-
 		if (scrollUp) {
 			g.drawImage(((SwtImmutableImage) upImage.getImage()).getImage(), 
 			        upImage.getRectangle().x, upImage.getRectangle().y);
@@ -215,10 +192,45 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 		}
 	}
 
-
-	public void repaint() 
+	
+	public void paintDisplayable(SwtGraphics g, int x, int y, int width, int height) 
 	{
-		context.getDisplayComponent().repaint();
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma == null) {
+			return;
+		}
+		Displayable current = ma.getDisplayAccess().getCurrent();
+		if (current == null) {
+			return;
+		}
+
+		g.setForeground(g.getColor(new RGB(
+				foregroundColor.getRed(), 
+				foregroundColor.getGreen(), 
+				foregroundColor.getBlue())));
+
+		org.eclipse.swt.graphics.Rectangle oldclip = g.getClipping();
+		if (!(current instanceof Canvas) 
+				|| ((Canvas) current).getWidth() != displayRectangle.width
+				|| ((Canvas) current).getHeight() != displayRectangle.height) {
+			g.translate(displayPaintable.x, displayPaintable.y);
+		}
+		g.setClipping(new org.eclipse.swt.graphics.Rectangle(x, y, width, height));
+		Font oldf = g.getFont();
+		ma.getDisplayAccess().paint(new SwtDisplayGraphics(g, getDisplayImage()));
+		g.setFont(oldf);		
+		if (!(current instanceof Canvas) 
+				|| ((Canvas) current).getWidth() != displayRectangle.width
+				|| ((Canvas) current).getHeight() != displayRectangle.height) {
+			g.translate(-displayPaintable.x, -displayPaintable.y);
+		}
+		g.setClipping(oldclip);
+	}
+
+	
+	public void repaint(int x, int y, int width, int height) 
+	{
+		context.getDisplayComponent().repaint(x, y, width, height);
 	}
 
 
@@ -424,7 +436,11 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 	{
 		// TODO not always true, there could be some loading images before
 		// invoke startApp, right now getCurrentMIDlet returns prevoius MIDlet
-		InputStream is = MIDletBridge.getCurrentMIDlet().getClass().getResourceAsStream(str);
+		Object midlet = MIDletBridge.getCurrentMIDlet();
+		if (midlet == null) {
+			midlet = getClass();
+		}
+		InputStream is = midlet.getClass().getResourceAsStream(str);
 
 		if (is == null) {
 			throw new IOException(str + " could not be found.");

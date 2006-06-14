@@ -48,7 +48,7 @@ public interface DeviceDisplay
 
     int numColors();
 
-	void repaint();
+	void repaint(int x, int y, int width, int height);
 
 	void setScrollDown(boolean state);
 

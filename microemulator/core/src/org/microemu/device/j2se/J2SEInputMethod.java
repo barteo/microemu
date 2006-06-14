@@ -52,9 +52,13 @@ public class J2SEInputMethod extends InputMethod implements Runnable
 	}
 
 	
-	void dispose() 
+	// TODO to be removed when event dispatcher will run input method task
+	public void dispose() 
 	{
 		cancel = true;
+		synchronized (this) {
+			notify();
+		}
 	}
 
 	

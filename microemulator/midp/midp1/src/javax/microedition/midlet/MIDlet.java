@@ -40,7 +40,6 @@ public abstract class MIDlet
             if (MIDletBridge.getCurrentMIDlet() != midlet) {
                 MIDletBridge.setCurrentMIDlet(midlet);
             }
-			getDisplayAccess().updateCommands();
 			MIDletBridge.getRecordStoreManager().init();
 			midlet.startApp();
 		}
@@ -56,6 +55,7 @@ public abstract class MIDlet
 				midlet.destroyApp(unconditional);
 			}
 			getDisplayAccess().clean();
+			setDisplayAccess(null);
 		}
 	}
 
@@ -64,8 +64,6 @@ public abstract class MIDlet
 	{
 		MIDletBridge.setAccess(this, new MIDletAccessor(this));
 
-		// initialize display
-		Display.getDisplay(this);
 		destroyed = false;
 	}
 

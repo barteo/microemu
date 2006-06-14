@@ -47,7 +47,7 @@ import javax.swing.UIManager;
 import org.microemu.DisplayComponent;
 import org.microemu.EmulatorContext;
 import org.microemu.MIDletBridge;
-import org.microemu.app.launcher.Launcher;
+//import org.microemu.app.launcher.Launcher;
 import org.microemu.app.ui.ResponseInterfaceListener;
 import org.microemu.app.ui.StatusBarListener;
 import org.microemu.app.ui.swing.ExtensionFileFilter;
@@ -94,11 +94,6 @@ public class Main extends JFrame
     {
       return devicePanel.getDisplayComponent();
     }
-
-	public Launcher getLauncher() 
-	{
-		return common.getLauncher();
-	}
 
     public InputMethod getDeviceInputMethod()
     {
@@ -222,13 +217,13 @@ public class Main extends JFrame
 
 		public void windowIconified(WindowEvent ev) 
 		{
-			MIDletBridge.getMIDletAccess(common.getLauncher().getCurrentMIDlet()).pauseApp();
+			MIDletBridge.getMIDletAccess(MIDletBridge.getCurrentMIDlet()).pauseApp();
 		}
 		
 		public void windowDeiconified(WindowEvent ev) 
 		{
 			try {
-				MIDletBridge.getMIDletAccess(common.getLauncher().getCurrentMIDlet()).startApp();
+				MIDletBridge.getMIDletAccess(MIDletBridge.getCurrentMIDlet()).startApp();
 			} catch (MIDletStateChangeException ex) {
 				System.err.println(ex);
 			}

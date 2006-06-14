@@ -19,8 +19,12 @@
  
 package org.microemu.app.ui.swt;
 
+import javax.microedition.lcdui.Displayable;
+
 import org.eclipse.swt.widgets.Canvas;
 import org.microemu.DisplayComponent;
+import org.microemu.MIDletAccess;
+import org.microemu.MIDletBridge;
 import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
@@ -84,9 +88,18 @@ public class SwtDisplayComponent implements DisplayComponent
 	}
 
   
-	public void repaint() 
+	public void repaint(int x, int y, int width, int height) 
 	{
 		if (!deviceCanvas.isDisposed()) {			
+			MIDletAccess ma = MIDletBridge.getMIDletAccess();
+			if (ma == null) {
+				return;
+			}
+			Displayable current = ma.getDisplayAccess().getCurrent();
+			if (current == null) {
+				return;
+			}
+
 			Device device = DeviceFactory.getDevice();
 
 			SwtMutableImage image = new SwtMutableImage(
@@ -94,7 +107,11 @@ public class SwtDisplayComponent implements DisplayComponent
 						
 			SwtGraphics gc = ((SwtDisplayGraphics) image.getGraphics()).g;
 			try {
-				((SwtDeviceDisplay) device.getDeviceDisplay()).paint(gc);
+				SwtDeviceDisplay deviceDisplay = (SwtDeviceDisplay) device.getDeviceDisplay();
+				if (!ma.getDisplayAccess().isFullScreenMode()) {
+					deviceDisplay.paintControls(gc);
+				}
+				deviceDisplay.paintDisplayable(gc, x, y, width, height);
 			} finally {
 				gc.dispose();
 			}

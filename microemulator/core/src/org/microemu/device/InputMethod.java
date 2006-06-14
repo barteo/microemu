@@ -40,7 +40,10 @@ public abstract class InputMethod
 	protected int maxSize;
 
 
-    public abstract int getGameAction(int keyCode);
+	// TODO to be removed when event dispatcher will run input method task
+	public abstract void dispose();
+	
+	public abstract int getGameAction(int keyCode);
 
     public abstract int getKeyCode(int gameAction);
 

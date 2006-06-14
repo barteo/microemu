@@ -161,7 +161,7 @@ public abstract class Canvas extends Displayable
 
 	public final void repaint(int x, int y, int width, int height)
     {
-        repaint();
+        super.repaint(x, y, width, height);
     }
 
     

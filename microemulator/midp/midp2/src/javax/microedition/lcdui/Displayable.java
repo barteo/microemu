@@ -193,11 +193,19 @@ public abstract class Displayable
 	void repaint()
 	{
 		if (currentDisplay != null) {
-			currentDisplay.repaint(this);
+			repaint(0, 0, getWidth(), getHeight());
 		}
 	}
 
 
+	void repaint(int x, int y, int width, int height)
+    {
+		if (currentDisplay != null) {
+			currentDisplay.repaint(this, x, y, width, height);
+		}
+    }
+	
+	
 	void showNotify()
 	{        
 	}

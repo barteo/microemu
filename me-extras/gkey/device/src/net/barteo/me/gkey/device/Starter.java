@@ -27,7 +27,7 @@ import javax.microedition.midlet.MIDlet;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 
-import com.barteo.emulator.app.Main;
+import org.microemu.app.Main;
 
 
 public class Starter extends Main

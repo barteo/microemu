@@ -4,7 +4,8 @@
 	<classpathentry kind="src" path="gkey/test/src"/>
 	<classpathentry kind="src" path="gkey/interface/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/microemulator"/>
 	<classpathentry kind="lib" path="gkey/device/res"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/me-2"/>
+	<classpathentry kind="src" path="lwjglplayer/src"/>
 	<classpathentry kind="output" path=".bin"/>
 </classpath>

@@ -23,7 +23,7 @@ import java.awt.event.KeyEvent;
 
 import net.barteo.me.gkey.GetKeyHandler;
 
-import com.barteo.emulator.device.j2se.J2SEInputMethod;
+import org.microemu.device.j2se.J2SEInputMethod;
 
 
 public class GKeyJ2SEInputMethod extends J2SEInputMethod 

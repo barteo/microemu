@@ -23,10 +23,10 @@ import javax.microedition.midlet.MIDlet;
 
 import net.barteo.me.gkey.GetKeyHandler;
 
-import com.barteo.emulator.EmulatorContext;
-import com.barteo.emulator.app.launcher.Launcher;
-import com.barteo.emulator.device.InputMethod;
-import com.barteo.emulator.device.j2se.J2SEDevice;
+import org.microemu.EmulatorContext;
+import org.microemu.app.launcher.Launcher;
+import org.microemu.device.InputMethod;
+import org.microemu.device.j2se.J2SEDevice;
 
 
 public class GKeyJ2SEDevice extends J2SEDevice implements GetKeyHandler

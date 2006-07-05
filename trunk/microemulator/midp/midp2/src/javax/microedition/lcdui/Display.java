@@ -188,11 +188,11 @@ public class Display
 		{
 			if (current != null) {
 				current.hideNotify();
-			}
-			eventDispatcher.cancel();
-			paintThread.cancel();
+			}			
 			tickerPaint.cancel();
 			gaugePaint.cancel();
+			eventDispatcher.cancel();
+			paintThread.cancel();
 		}
 	}
 
@@ -332,7 +332,7 @@ public class Display
 	
 	private class PaintThread implements Runnable
 	{
-		private boolean canceled;
+		private boolean canceled = false;
 		
 		private Object serviceRepaintsLock = new Object();
 		
@@ -388,8 +388,6 @@ public class Display
 
 		public void run() 
 		{
-			canceled = false;
-			
 			while (!canceled) {
 				if (repaintPending) {
 					try {
@@ -421,7 +419,8 @@ public class Display
 						continue;
 					}
 					try {
-						paintLock.wait();
+						// TODO remove timeout, currently there is somotimes problem with notify on cancel
+						paintLock.wait(1000);
 					} catch (InterruptedException ex) {
 						paintThread = null;
 						return;
@@ -433,7 +432,7 @@ public class Display
 
 	private class EventDispatcher implements Runnable 
 	{		
-		private boolean canceled;
+		private boolean canceled = false;
 		
 		private Object dispatcherLock = new Object();
 		
@@ -459,8 +458,6 @@ public class Display
 		
 		public void run() 
 		{
-			canceled = false;
-			
 			Vector jobs;
 			
 			while (!canceled) {
@@ -485,7 +482,8 @@ public class Display
 						continue;
 					}
 					try {
-						dispatcherLock.wait();
+						// TODO remove timeout, currently there is somotimes problem with notify on cancel
+						dispatcherLock.wait(1000);
 					} catch (InterruptedException ex) {
 						eventDispatcher = null;
 						return;
@@ -510,13 +508,15 @@ public class Display
 		}
 		if (tickerPaint == null) {
 			tickerPaint = new TickerPaint();
-			new Thread(tickerPaint, "TickerPaint").start();
+			// TODO refactor into eventDispatcher
+			//new Thread(tickerPaint, "TickerPaint").start();
 		}
 		tickerPaint.setCurrentDisplay(this);
 		// Andres Navarro
 		if (gaugePaint == null) {
 			gaugePaint = new GaugePaint();
-			new Thread(gaugePaint, "GaugePaint").start();
+			// TODO refactor into eventDispatcher
+			//new Thread(gaugePaint, "GaugePaint").start();
 		}
 		gaugePaint.setCurrentDisplay(this);
 		// Andres Navarro

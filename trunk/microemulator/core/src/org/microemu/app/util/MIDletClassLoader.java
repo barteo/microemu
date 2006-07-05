@@ -36,12 +36,15 @@ public class MIDletClassLoader extends SystemClassLoader {
 	private ResURLStreamHandler resUrlStreamHandler;
 	
 	
-	public MIDletClassLoader(URL midletSource, ClassLoader parent) {
+	public MIDletClassLoader(ClassLoader parent) {
 		super(parent);
 		
 		entries = new Hashtable();
 		resUrlStreamHandler = new ResURLStreamHandler(entries);
+	}
 
+	
+	public void addURL(URL midletSource) {
 		byte[] cache = new byte[1024];
 		try {
 			URLConnection conn = midletSource.openConnection();

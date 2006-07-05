@@ -220,7 +220,7 @@ public class Main extends Applet implements MicroEmulator
 
 		Timer timer = new Timer(1000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				devicePanel.requestFocusInWindow();
+				devicePanel.requestFocus();
 			}
 		});
 		timer.setRepeats(false);

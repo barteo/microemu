@@ -40,8 +40,6 @@ public class Graphics
 
 	int translateX = 0;
 	int translateY = 0;
-
-
 	public void clipRect(int x, int y, int width, int height)
 	{
 

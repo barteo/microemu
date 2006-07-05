@@ -137,7 +137,7 @@
 	</target>
 
 	<target name="compile-app" depends="init" if="target.app">
-		<javac source="1.4" target="1.4" debug="true" deprecation="true" destdir="./build/microemulator/classes" srcdir="./src">
+		<javac source="1.2" target="1.1" debug="true" deprecation="true" destdir="./build/microemulator/classes" srcdir="./src">
 			<patternset refid="project.src"/>
 			<classpath>
 				<pathelement location="./lib/jnlp.jar"/>
@@ -284,7 +284,7 @@
 
 	<target name="compile-nokiaui" depends="init,jar">
 		<mkdir dir="./build/nokiaui/classes"/>
-		<javac source="1.4" target="1.4" debug="true" deprecation="true" 
+		<javac source="1.2" target="1.1" debug="true" deprecation="true" 
         srcdir="./ext/nokiaui/src"
         destdir="./build/nokiaui/classes">
 			<classpath>
@@ -301,7 +301,7 @@
 
 	<target name="compile-siemensapi" depends="init,jar">
 		<mkdir dir="./build/siemensapi/classes"/>
-		<javac source="1.4" target="1.4" debug="true" deprecation="true" 
+		<javac source="1.2" target="1.1" debug="true" deprecation="true" 
         srcdir="./ext/siemensapi/src"
         destdir="./build/siemensapi/classes">
 			<classpath>
@@ -318,7 +318,7 @@
 
 	<target name="compile-mmapi" depends="init,jar">
 		<mkdir dir="./build/mmapi/classes"/>
-		<javac source="1.4" target="1.4" debug="true" deprecation="true" 
+		<javac source="1.2" target="1.1" debug="true" deprecation="true" 
 	        srcdir="./ext/mmapi/src"
 	        destdir="./build/mmapi/classes">
 			<classpath>

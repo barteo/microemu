@@ -25,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -127,8 +128,8 @@ public class Main extends JFrame
       if (returnVal == JFileChooser.APPROVE_OPTION) {
       	try {
 	      	Common.openJadUrl(fileChooser.getSelectedFile().toURL().toString());
-				} catch (MalformedURLException ex) {
-					System.err.println("Bad URL format " + fileChooser.getSelectedFile().getName());
+				} catch (IOException ex) {
+					System.err.println("Cannot load " + fileChooser.getSelectedFile().getName());
 				}
       }
     } 
@@ -142,8 +143,8 @@ public class Main extends JFrame
       if (entered != null) {
       	try {
 					Common.openJadUrl(entered);
-				} catch (MalformedURLException ex) {
-					System.err.println("Bad URL format " + entered);
+				} catch (IOException ex) {
+					System.err.println("Cannot load " + entered);
       	}
       }
     }    

@@ -160,9 +160,15 @@ public class Common implements MicroEmulator {
 		// TODO to be removed when event dispatcher will run input method task
 		DeviceFactory.getDevice().getInputMethod().dispose();
 	}
-
+	
+	
 	public static void openJadUrl(String urlString)
-			throws MalformedURLException {
+			throws IOException {
+		openJadUrl(urlString, new MIDletClassLoader(instance.getClass().getClassLoader()));
+	}
+
+	public static void openJadUrl(String urlString, MIDletClassLoader midletClassLoader)
+			throws IOException {
 		try {
 			URL url = new URL(urlString);
 			setStatusBar("Loading...");
@@ -177,7 +183,7 @@ public class Common implements MicroEmulator {
 				cn.setRequestProperty("Authorization", "Basic " + userInfo);
 				getInstance().jad.load(cn.getInputStream());
 			}
-			getInstance().loadFromJad(url);
+			getInstance().loadFromJad(url, midletClassLoader);
 		} catch (MalformedURLException ex) {
 			throw ex;
 		} catch (FileNotFoundException ex) {
@@ -186,9 +192,6 @@ public class Common implements MicroEmulator {
 			ex.printStackTrace();
 			System.err.println("Cannot open jad " + urlString);
 		} catch (IllegalArgumentException ex) {
-			ex.printStackTrace();
-			System.err.println("Cannot open jad " + urlString);
-		} catch (IOException ex) {
 			ex.printStackTrace();
 			System.err.println("Cannot open jad " + urlString);
 		}
@@ -223,60 +226,50 @@ public class Common implements MicroEmulator {
 		}
 	}
 
-	protected void loadFromJad(URL jadUrl) {
+	protected void loadFromJad(URL jadUrl, final MIDletClassLoader midletClassLoader) {
 		setResponseInterface(false);
 		URL url = null;
 		try {
-			if (jadUrl.getProtocol().equals("file")) {
-				String tmp = jadUrl.getFile();
-				File f = new File(tmp.substring(0, tmp.lastIndexOf('/')), jad
-						.getJarURL());
-				url = f.toURL();
-			} else {
-				url = new URL(jad.getJarURL());
-			}
+			url = new URL(jad.getJarURL());
 		} catch (MalformedURLException ex) {
-			System.err.println(ex);
-			setResponseInterface(true);
+			try {
+				String urlFullPath = jadUrl.toExternalForm();
+				url = new URL(urlFullPath.substring(0, urlFullPath.lastIndexOf('/') + 1) + jad.getJarURL());
+			} catch (MalformedURLException ex1) {
+				ex1.printStackTrace();
+				setResponseInterface(true);
+			}
 		}
-
-		final MIDletClassLoader loader = new MIDletClassLoader(url, getClass().getClassLoader());
+		
+		midletClassLoader.addURL(url);
 		launcher.removeMIDletEntries();
 
 		manifest.clear();
 		try {
-			manifest.load(loader.getResourceAsStream("/META-INF/MANIFEST.MF"));
+			manifest.load(midletClassLoader.getResourceAsStream("/META-INF/MANIFEST.MF"));
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
 
-		Thread task = new Thread() {
-
-			public void run() {
-				launcher.setSuiteName(jad.getSuiteName());
-				try {
-					for (Enumeration e = jad.getMidletEntries().elements(); e
-							.hasMoreElements();) {
-						JadMidletEntry jadEntry = (JadMidletEntry) e
-								.nextElement();
-						Class midletClass = loader.loadClass(jadEntry
-								.getClassName());
-						loadMidlet(jadEntry.getName(), midletClass);
-					}
-					notifyDestroyed();
-				} catch (ClassNotFoundException ex) {
-					System.err.println(ex);
-				}
-				setStatusBar("");
-				setResponseInterface(true);
+		launcher.setSuiteName(jad.getSuiteName());
+		try {
+			for (Enumeration e = jad.getMidletEntries().elements(); e
+					.hasMoreElements();) {
+				JadMidletEntry jadEntry = (JadMidletEntry) e
+						.nextElement();
+				Class midletClass = midletClassLoader.loadClass(jadEntry
+						.getClassName());
+				loadMidlet(jadEntry.getName(), midletClass);
 			}
-
-		};
-
-		task.start();
+			notifyDestroyed();
+		} catch (ClassNotFoundException ex) {
+			System.err.println(ex);
+		}
+		setStatusBar("");
+		setResponseInterface(true);
 	}
 	
-	protected Device getDevice() {
+	public Device getDevice() {
 		return DeviceFactory.getDevice();
 	}
 
@@ -357,7 +350,7 @@ public class Common implements MicroEmulator {
 		app.initMIDlet(params);
 	}
 
-	protected void initDevice(List params) {
+	public void initDevice(List params) {
 		RecordStoreManager paramRecordStoreManager = null;
 		
 		Iterator it = params.iterator();
@@ -402,7 +395,7 @@ public class Common implements MicroEmulator {
 		}		
 	}
 	
-	protected void initMIDlet(List params) {
+	public void initMIDlet(List params) {
 		MIDlet m = null;
 		Iterator it = params.iterator();
 		while (it.hasNext()) {
@@ -414,8 +407,8 @@ public class Common implements MicroEmulator {
 					String url = file.exists() ? file.toURL().toString()
 							: test;
 					openJadUrl(url);
-				} catch (MalformedURLException exception) {
-					System.out.println("Cannot parse " + test + " URL");
+				} catch (IOException exception) {
+					System.out.println("Cannot load " + test + " URL");
 				}
 			} else {
 				Class midletClass;

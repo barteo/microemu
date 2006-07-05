@@ -63,7 +63,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
     
     public void mousePressed(MouseEvent e) 
     {
-    	SwingDeviceComponent.this.requestFocusInWindow();
+    	requestFocus();
     	
     	if (MIDletBridge.getCurrentMIDlet() == null) {
     		return;

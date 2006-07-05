@@ -20,6 +20,7 @@
 package org.microemu.app;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -111,8 +112,8 @@ public class Swt extends Common
 			if (fileDialog.getFileName().length() > 0) {
 				try {
 					openJadUrl(new File(fileDialog.getFilterPath(), fileDialog.getFileName()).toURL().toString());
-				} catch (MalformedURLException ex) {
-					System.err.println("Bad URL format " + fileDialog.getFileName());
+				} catch (IOException ex) {
+					System.err.println("Cannot load " + fileDialog.getFileName());
 				}
 			}
 		} 
@@ -126,8 +127,8 @@ public class Swt extends Common
 			if (inputDialog.open() == SwtDialog.OK) {
 				try {
 					openJadUrl(inputDialog.getValue());
-				} catch (MalformedURLException ex) {
-					System.err.println("Bad URL format " + inputDialog.getValue());
+				} catch (IOException ex) {
+					System.err.println("Cannot load " + inputDialog.getValue());
 				}
 			}
 		}    

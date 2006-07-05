@@ -22,6 +22,7 @@ package org.microemu.app.ui.swt;
 import javax.microedition.lcdui.Displayable;
 
 import org.eclipse.swt.widgets.Canvas;
+import org.microemu.DisplayAccess;
 import org.microemu.DisplayComponent;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
@@ -95,7 +96,11 @@ public class SwtDisplayComponent implements DisplayComponent
 			if (ma == null) {
 				return;
 			}
-			Displayable current = ma.getDisplayAccess().getCurrent();
+			DisplayAccess da = ma.getDisplayAccess();
+			if (da == null) {
+				return;
+			}
+			Displayable current = da.getCurrent();
 			if (current == null) {
 				return;
 			}

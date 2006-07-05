@@ -21,6 +21,7 @@ package javax.microedition.midlet;
 
 import javax.microedition.lcdui.Display;
 
+import org.microemu.DisplayAccess;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 
@@ -54,8 +55,11 @@ public abstract class MIDlet
 			if (!destroyed) {
 				midlet.destroyApp(unconditional);
 			}
-			getDisplayAccess().clean();
-			setDisplayAccess(null);
+			DisplayAccess da = getDisplayAccess();
+			if (da != null) {
+				getDisplayAccess().clean();
+				setDisplayAccess(null);
+			}
 		}
 	}
 

@@ -47,7 +47,7 @@ public class Config
 		
     DeviceEntry defaultDevice = 
             new DeviceEntry("Default device", null, "com.barteo.emulator.device.Device", true, false);
-    devices.add(defaultDevice);
+    devices.addElement(defaultDevice);
 
     String xml = "";
     try {

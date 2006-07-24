@@ -40,6 +40,7 @@ import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
 
+import org.microemu.DisplayAccess;
 import org.microemu.EmulatorContext;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
@@ -133,9 +134,12 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	
     public boolean isFullScreenMode() 
     { 
-    		MIDletAccess ma = MIDletBridge.getMIDletAccess();
-    		
-    		return ma.getDisplayAccess().isFullScreenMode();
+    	DisplayAccess da = MIDletBridge.getMIDletAccess().getDisplayAccess();
+    	if (da != null) {    		
+    		return da.isFullScreenMode();
+    	} else {
+    		return false;
+    	}
     }
 
 

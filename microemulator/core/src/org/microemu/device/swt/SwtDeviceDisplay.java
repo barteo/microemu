@@ -33,6 +33,7 @@ import javax.microedition.lcdui.game.Sprite;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
+import org.microemu.DisplayAccess;
 import org.microemu.EmulatorContext;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
@@ -128,9 +129,12 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 	
     public boolean isFullScreenMode() 
     { 
-    		MIDletAccess ma = MIDletBridge.getMIDletAccess();
-    		
-    		return ma.getDisplayAccess().isFullScreenMode();
+    	DisplayAccess da = MIDletBridge.getMIDletAccess().getDisplayAccess();
+    	if (da != null) {    		
+    		return da.isFullScreenMode();
+    	} else {
+    		return false;
+    	}
     }
 
 

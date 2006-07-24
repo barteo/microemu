@@ -255,7 +255,7 @@ public abstract class Item
 	}
 	
 	
-	protected void repaint()
+	void repaint()
 	{
 		if (owner != null) {
 			owner.repaint();

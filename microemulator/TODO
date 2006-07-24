@@ -14,8 +14,5 @@
   - https
   - file
   
-* two classes from java.util.* are from GNU Classpath which is GPL with exception
-(i'm not sure if can be used in LGPL MicroEmulator)
-
 * (?) applet loader - during loading applet code progress bar should be visible
 

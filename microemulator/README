@@ -35,7 +35,7 @@ There is additional parameter in applet definition tag if you want start applet
 with another device than default:
   <param name="device" value="(device main class)">
     eg. minimum phone included in distribution has 
-        net.barteo.me.appletdevice.minimum.MinimumDevice
+        net.barteo.me.device.minimum.MinimumDevice
 
 and remember to include new device jar into applet archive tag
     eg. minimum phone included in distribution has
@@ -45,7 +45,7 @@ Example for SimpleDemo MIDlet, Nokia UI support and Minimum device:
 <applet code="org.microemu.applet.Main" 
 		width=170 height=445 archive="me-applet.jar,nokiaui.jar,minimum.jar,simpledemo.jar">
 	<param name="midlet" value="org.microemu.midp.examples.simpledemo.SimpleDemo">
-	<param name="device" value="net.barteo.me.appletdevice.minimum.MinimumDevice">
+	<param name="device" value="net.barteo.me.device.minimum.MinimumDevice">
 </applet>
 
 

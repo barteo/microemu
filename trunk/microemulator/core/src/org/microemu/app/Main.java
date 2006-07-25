@@ -270,7 +270,7 @@ public class Main extends JFrame
     Config.loadConfig("config.xml");
 
     devicePanel = new SwingDeviceComponent();
-    addKeyListener(devicePanel);
+    devicePanel.addKeyListener(devicePanel);
     selectDevicePanel = new SwingSelectDevicePanel();
     
 	common = new Common(emulatorContext);
@@ -319,7 +319,6 @@ public class Main extends JFrame
 	protected void updateDevice() 
 	{
 		devicePanel.init();
-		devicePanel.addKeyListener(devicePanel);
 		Image tmpImg = common.getDevice().getNormalImage();
 		Dimension size = new Dimension(tmpImg.getWidth(), tmpImg.getHeight());
 		size.width += 10;

@@ -91,8 +91,6 @@ public class TextField extends Item
 			setString("");
 		}
 		stringComponent.setWidthDecreaser(8);
-		setCaretPosition(getString().length());
-		setCaretVisible(false);
 	}
 
 	
@@ -123,6 +121,8 @@ public class TextField extends Item
 				stringComponent.setText(sb.toString());
 			}
 		}
+		setCaretPosition(getString().length());
+		setCaretVisible(false);
 		repaint();
 	}
 

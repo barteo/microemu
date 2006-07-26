@@ -24,6 +24,7 @@ package org.microemu.device.j2se;
 
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.MediaTracker;
 import java.awt.Shape;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
@@ -32,6 +33,7 @@ import java.awt.image.ImageFilter;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -53,8 +55,6 @@ import org.microemu.device.impl.DeviceDisplayImpl;
 import org.microemu.device.impl.PositionedImage;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.SoftButton;
-
-import com.sixlegs.image.png.PngImage;
 
 public class J2SEDeviceDisplay implements DeviceDisplayImpl 
 {
@@ -538,15 +538,26 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
     public Image createSystemImage(String str)
 			throws IOException
 	{
-    	InputStream is;
-
-		is = getClass().getResourceAsStream(str);
-		if (is == null) {
+		URL url = getClass().getResource(str);
+		if (url == null) {
 			throw new IOException();
 		}
-		PngImage png = new PngImage(is);
 
-		return new J2SEImmutableImage(Toolkit.getDefaultToolkit().createImage(png));
+		java.awt.Image resultImage = Toolkit.getDefaultToolkit().createImage(url);
+
+		// TODO not elegant solution, maybe use ImageObserver in image.getWitdth(..) instead
+		MediaTracker mediaTracker = new MediaTracker(new java.awt.Canvas());
+		mediaTracker.addImage(resultImage, 0);
+		try {
+			mediaTracker.waitForID(0);
+		} catch (InterruptedException ex) {
+			ex.printStackTrace();
+		}
+		if (mediaTracker.isErrorID(0)) {
+			throw new IOException();
+		}
+		
+		return new J2SEImmutableImage(resultImage);
 	}
     
     
@@ -572,15 +583,25 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	private Image getImage(InputStream is)
 			throws IOException
 	{
-		ImageFilter filter = null;
-		PngImage png = new PngImage(is);
-
-		try {
-			png.getWidth();
-		} catch (IOException ex) {
-			throw new IOException("Error decoding PNG image: " + ex.toString());
+		final int EXTEND = 1024;
+		byte[] imageBytes = new byte[1024];
+		int num;
+		int start = 0;
+		while ((num = is.read(imageBytes, start, imageBytes.length - start)) == EXTEND) {
+			byte[] newImageBytes = new byte[imageBytes.length + EXTEND];
+			System.arraycopy(imageBytes, 0, newImageBytes, 0, imageBytes.length);
+			imageBytes = newImageBytes;
+			start += EXTEND;
 		}
+		if (num != 0) {
+			byte[] newImageBytes = new byte[imageBytes.length - EXTEND + num];
+			System.arraycopy(imageBytes, 0, newImageBytes, 0, imageBytes.length - EXTEND + num);
+			imageBytes = newImageBytes;
+		}
+		
+		java.awt.Image image = Toolkit.getDefaultToolkit().createImage(imageBytes);
 
+		ImageFilter filter;
 		if (isColor()) {
 			filter = new RGBImageFilter();
 		} else {
@@ -590,9 +611,22 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 				filter = new GrayImageFilter();
 			}
 		}
-		FilteredImageSource imageSource = new FilteredImageSource(png, filter);
+		FilteredImageSource imageSource = new FilteredImageSource(image.getSource(), filter);
+		java.awt.Image resultImage = Toolkit.getDefaultToolkit().createImage(imageSource);
 
-		return new J2SEImmutableImage(Toolkit.getDefaultToolkit().createImage(imageSource));
+		// TODO not elegant solution, maybe use ImageObserver in image.getWitdth(..) instead
+		MediaTracker mediaTracker = new MediaTracker(new java.awt.Canvas());
+		mediaTracker.addImage(resultImage, 0);
+		try {
+			mediaTracker.waitForID(0);
+		} catch (InterruptedException ex) {
+			ex.printStackTrace();
+		}
+		if (mediaTracker.isErrorID(0)) {
+			throw new IOException();
+		}
+		
+		return new J2SEImmutableImage(resultImage);
 	}
 
 

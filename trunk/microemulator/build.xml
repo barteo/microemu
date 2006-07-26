@@ -55,7 +55,6 @@
 			<exclude name="org/microemu/device/swt/**"/>
 			<include name="org/microemu/cldc/**"/>
 			<include name="org/microemu/midp/**"/>
-			<include name="com/sixlegs/image/png/**"/>
 			<include name="com/barteo/emulator/app/**"/>
 		</patternset>
 	</target>
@@ -76,7 +75,6 @@
 			<exclude name="org/microemu/device/j2se/**"/>
 			<include name="org/microemu/cldc/**"/>
 			<include name="org/microemu/midp/**"/>
-			<include name="com/sixlegs/image/png/**"/>
 			<include name="com/barteo/emulator/app/**"/>
 		</patternset>
 	</target>
@@ -91,7 +89,6 @@
 			<include name="org/microemu/device/j2se/**"/>
 			<include name="org/microemu/cldc/**"/>
 			<include name="org/microemu/midp/**"/>
-			<include name="com/sixlegs/image/png/**"/>
 			<include name="com/barteo/emulator/applet/**"/>
 		</patternset>
 	</target>
@@ -174,8 +171,6 @@
 			<arg line="-keep 'public class * extends org.microemu.device.** { *; }'"/>
 			<!--<arg line="-keep 'public class org.microemu.device.applet.** { *; }'"/>-->
 			<!--<arg line="-keep 'public class * extends org.microemu.device.applet.** { *; }'"/>-->
-			<arg line="-keep 'class * extends com.sixlegs.image.png.BitMover { *; }'"/>
-			<arg line="-keep 'class * extends com.sixlegs.image.png.Chunk { *; }'"/>
 		</java>
 		<move file="./target/me-applet-obfuscated.jar" tofile="./target/me-applet.jar"/>
 	</target>

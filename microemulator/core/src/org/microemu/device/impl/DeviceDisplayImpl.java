@@ -39,6 +39,8 @@ public interface DeviceDisplayImpl extends DeviceDisplay
 	SoftButton createSoftButton(
 	        String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands);
 
+	SoftButton createSoftButton(
+			String name, Rectangle paintable, Image normalImage, Image pressedImage);
 
     /**
      * @param i
@@ -72,16 +74,6 @@ public interface DeviceDisplayImpl extends DeviceDisplay
      * @param rectangle
      */
     void setDisplayPaintable(Rectangle rectangle);
-
-    /**
-     * @param object
-     */
-    void setUpImage(PositionedImage object);
-
-    /**
-     * @param object
-     */
-    void setDownImage(PositionedImage object);
 
     /**
      * @param object

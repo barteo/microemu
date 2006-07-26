@@ -23,44 +23,19 @@ import java.util.Enumeration;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.TextField;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.microemu.CommandManager;
 import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
-import org.microemu.device.InputMethod;
 import org.microemu.device.InputMethodEvent;
+import org.microemu.device.impl.InputMethodImpl;
 import org.microemu.device.impl.SoftButton;
 
 
-public class SwtInputMethod extends InputMethod implements Runnable 
+public class SwtInputMethod extends InputMethodImpl 
 {
-	private int lastButtonCharIndex = -1;
-	private SwtButton lastButton = null;
-	private boolean resetKey;
-
-	private Thread t;
-	private boolean cancel = false;
-
-	public SwtInputMethod() 
-	{
-		t = new Thread(this, "InputMethodThread");
-		t.start();
-	}
-
-	
-	// TODO to be removed when event dispatcher will run input method task
-	public void dispose() 
-	{
-		cancel = true;
-		synchronized (this) {
-			notify();
-		}
-	}
-
-	
 	public int getGameAction(int keyCode)
     {
         // TODO poprawic KeyEvent
@@ -145,24 +120,6 @@ public class SwtInputMethod extends InputMethod implements Runnable
     }
 
 	
-    public boolean hasPointerMotionEvents()
-    {
-        return false;
-    }
-
-    
-    public boolean hasPointerEvents()
-    {
-        return false;
-    }
-
-    
-    public boolean hasRepeatEvents()
-    {
-        return false;
-    }
-
-    
 	private boolean commonKeyPressed(KeyEvent ev) 
 	{
 		String tmp;
@@ -383,87 +340,6 @@ public class SwtInputMethod extends InputMethod implements Runnable
 		MIDletBridge.getMIDletAccess().getDisplayAccess().keyReleased(keyCode);
 	}
 
-	
-	public void run() 
-	{
-		while (!cancel) {
-			try {
-				resetKey = true;
-				synchronized (this) {
-					wait(1500);
-				}
-			} catch (InterruptedException ex) {
-			}
-			synchronized (this) {
-				if (resetKey && lastButton != null) {
-					caret++;
-					lastButton = null;
-					lastButtonCharIndex = -1;
-					if (inputMethodListener != null) {
-						InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
-						inputMethodListener.caretPositionChanged(event);
-					}
-				}
-			}
-		}
-	}
-
-	
-	private char[] filterConstraints(char[] chars) 
-	{
-		char[] result = new char[chars.length];
-		int i, j;
-
-		for (i = 0, j = 0; i < chars.length; i++) {
-			if (constraints == TextField.NUMERIC) {
-				if (Character.isDigit(chars[i]) || chars[i] == '.') {
-					result[j] = chars[i];
-					j++;
-				}
-			} else {
-				result[j] = chars[i];
-				j++;
-			}
-		}
-		if (i != j) {
-			char[] newresult = new char[j];
-			System.arraycopy(result, 0, newresult, 0, j);
-			result = newresult;
-		}
-
-		return result;
-	}
-
-	
-	private char[] filterInputMode(char[] chars) 
-	{
-		int inputMode = getInputMode();
-		char[] result = new char[chars.length];
-		int i, j;
-
-		for (i = 0, j = 0; i < chars.length; i++) {
-			if (inputMode == InputMethod.INPUT_ABC_UPPER) {
-				result[j] = Character.toUpperCase(chars[i]);
-				j++;
-			} else if (inputMode == InputMethod.INPUT_ABC_LOWER) {
-				result[j] = Character.toLowerCase(chars[i]);
-				j++;
-			} else if (inputMode == InputMethod.INPUT_123) {
-				if (Character.isDigit(chars[i])) {
-					result[j] = chars[i];
-					j++;
-				}
-			}
-		}
-		if (i != j) {
-			char[] newresult = new char[j];
-			System.arraycopy(result, 0, newresult, 0, j);
-			result = newresult;
-		}
-
-		return result;
-	}
-	
 	
 	public SwtButton getButton(KeyEvent ev)
 	{

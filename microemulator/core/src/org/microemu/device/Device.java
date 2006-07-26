@@ -27,9 +27,11 @@ import java.util.Vector;
 
 import javax.microedition.lcdui.Image;
 
+import org.microemu.CommandManager;
 import org.microemu.EmulatorContext;
 import org.microemu.device.impl.Color;
 import org.microemu.device.impl.DeviceDisplayImpl;
+import org.microemu.device.impl.InputMethodImpl;
 import org.microemu.device.impl.PositionedImage;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.SoftButton;
@@ -41,6 +43,8 @@ import nanoxml.XMLParseException;
 
 public class Device 
 {
+	private String name;
+	
 	private EmulatorContext context; 	
 
 	private Image normalImage;
@@ -53,6 +57,7 @@ public class Device
 	
 	public Device()
 	{	    
+		name = getClass().getName();
 	}
 	
 
@@ -74,6 +79,12 @@ public class Device
         } catch (IOException ex) {
             System.out.println("Cannot load config: " + ex);
         }
+    }
+    
+    
+    public String getName()
+    {
+    	return name;
     }
     
     
@@ -148,8 +159,14 @@ public class Device
         } catch (XMLParseException ex) {
         	throw new IOException(ex.toString());
         }
+        
+        String deviceName = doc.getStringAttribute("name");
+        if (deviceName != null) {
+        	name = deviceName;
+        }
 
         DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) getDeviceDisplay();
+        InputMethodImpl inputMethod = (InputMethodImpl) getInputMethod();
         for (Enumeration e = doc.enumerateChildren(); e.hasMoreElements(); ) {
           XMLElement tmp = (XMLElement) e.nextElement();
           if (tmp.getName().equals("img")) {
@@ -187,14 +204,14 @@ public class Device
             for (Enumeration e_display = tmp.enumerateChildren(); e_display.hasMoreElements(); ) {
               XMLElement tmp_display = (XMLElement) e_display.nextElement();          
               if (tmp_display.getName().equals("img")) {
-                if (tmp_display.getStringAttribute("name").equals("up")) {
-                  deviceDisplay.setUpImage(new PositionedImage(
-                      deviceDisplay.createSystemImage(tmp_display.getStringAttribute("src")),
-                      getRectangle(getElement(tmp_display, "paintable"))));
-                } else if (tmp_display.getStringAttribute("name").equals("down")) {
-                  deviceDisplay.setDownImage(new PositionedImage(
-                  		deviceDisplay.createSystemImage(tmp_display.getStringAttribute("src")),
-                      getRectangle(getElement(tmp_display, "paintable"))));
+                if (tmp_display.getStringAttribute("name").equals("up")
+                		|| tmp_display.getStringAttribute("name").equals("down")) {
+                	SoftButton icon = deviceDisplay.createSoftButton(
+                			tmp_display.getStringAttribute("name"),
+                			getRectangle(getElement(tmp_display, "paintable")),
+                			deviceDisplay.createSystemImage(tmp_display.getStringAttribute("src")),
+                			deviceDisplay.createSystemImage(tmp_display.getStringAttribute("src")));
+                	getSoftButtons().addElement(icon);
                 } else if (tmp_display.getStringAttribute("name").equals("mode")) {
                   if (tmp_display.getStringAttribute("type").equals("123")) {
                     deviceDisplay.setMode123Image(new PositionedImage(
@@ -210,12 +227,43 @@ public class Device
                         getRectangle(getElement(tmp_display, "paintable"))));
                   }
                 }
+              } else if (tmp_display.getName().equals("icon")) {
+            	  Image iconNormalImage = null;
+            	  Image iconPressedImage = null;
+            	  for (Enumeration e_icon = tmp_display.enumerateChildren(); e_icon.hasMoreElements(); ) {
+            		  XMLElement tmp_icon = (XMLElement) e_icon.nextElement();
+            		  if (tmp_icon.getName().equals("img")) {
+            			  if (tmp_icon.getStringAttribute("name").equals("normal")) {
+            				  iconNormalImage = deviceDisplay.createSystemImage(tmp_icon.getStringAttribute("src"));
+            			  } else if (tmp_icon.getStringAttribute("name").equals("pressed")) {
+            				  iconPressedImage = deviceDisplay.createSystemImage(tmp_icon.getStringAttribute("src"));
+            			  }
+            		  }
+            	  }
+            	  SoftButton icon = deviceDisplay.createSoftButton(
+            			  tmp_display.getStringAttribute("name"), 
+            			  getRectangle(getElement(tmp_display, "paintable")), 
+            			  iconNormalImage, 
+            			  iconPressedImage);
+            	  if (icon.getName().equals("up")) {
+            		  icon.setCommand(CommandManager.CMD_SCREEN_UP);
+            	  } else if (icon.getName().equals("down")) {
+            		  icon.setCommand(CommandManager.CMD_SCREEN_DOWN);
+            	  }
+            	  getSoftButtons().addElement(icon);
               }
             }
-          } else if (tmp.getName().equals("keyboard")) {
+          } else if (tmp.getName().equals("input") || tmp.getName().equals("keyboard")) {
+        	// "keyboard" is for backward compatibility  
             for (Enumeration e_keyboard = tmp.enumerateChildren(); e_keyboard.hasMoreElements(); ) {
               XMLElement tmp_keyboard = (XMLElement) e_keyboard.nextElement();
-              if (tmp_keyboard.getName().equals("button")) {
+              if (tmp_keyboard.getName().equals("haspointerevents")) {
+                inputMethod.setHasPointerEvents(parseBoolean(tmp_keyboard.getContent()));
+              } else if (tmp_keyboard.getName().equals("haspointermotionevents")) {
+                inputMethod.setHasPointerMotionEvents(parseBoolean(tmp_keyboard.getContent()));
+              } else if (tmp_keyboard.getName().equals("hasrepeatevents")) {
+                inputMethod.setHasRepeatEvents(parseBoolean(tmp_keyboard.getContent()));
+              } else if (tmp_keyboard.getName().equals("button")) {
                 Rectangle rectangle = null;
                 Vector stringArray = new Vector();
                 for (Enumeration e_button = tmp_keyboard.enumerateChildren(); e_button.hasMoreElements(); ) {

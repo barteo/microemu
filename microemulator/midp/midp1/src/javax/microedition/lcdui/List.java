@@ -22,6 +22,9 @@
  
 package javax.microedition.lcdui;
 
+import javax.microedition.lcdui.Choice;
+import javax.microedition.lcdui.Ticker;
+
 
 public class List extends Screen implements Choice
 {
@@ -30,6 +33,8 @@ public class List extends Screen implements Choice
   
   ChoiceGroup choiceGroup;
   
+  private int initialPressedItem;
+
   
   public List(String title, int listType)
   {
@@ -38,6 +43,8 @@ public class List extends Screen implements Choice
 		choiceGroup = new ChoiceGroup(null, listType);
 		choiceGroup.setOwner(this);
 		choiceGroup.setFocus(true);
+
+		this.initialPressedItem = -1;
   }
   
   
@@ -48,6 +55,8 @@ public class List extends Screen implements Choice
     choiceGroup = new ChoiceGroup(null, listType, stringElements, imageElements);
     choiceGroup.setOwner(this);
 		choiceGroup.setFocus(true);
+		
+		this.initialPressedItem = -1;
 	}
 						
 
@@ -128,6 +137,45 @@ public class List extends Screen implements Choice
   }
 
   
+	void pointerPressed(int x, int y) {
+		// TODO currently only IMPLICIT type is implemented
+  		Ticker ticker = getTicker();
+  		if (ticker != null) {
+  			y -= ticker.getHeight();
+  		}
+  		y -= title.getHeight();
+  		y -= 1;
+  		if (y >= 0 && y < viewPortHeight) {
+	  		int pressedItem = choiceGroup.getItemIndexAt(x, y + viewPortY);
+	  		if (pressedItem != -1) {
+	  			setSelectedIndex(pressedItem, true);  	
+	  			initialPressedItem = pressedItem;
+	  		}
+  		}
+  	}
+
+
+	void pointerReleased(int x, int y) {
+		// TODO currently only IMPLICIT type is implemented
+  		Ticker ticker = getTicker();
+  		if (ticker != null) {
+  			y -= ticker.getHeight();
+  		}
+  		y -= title.getHeight();
+  		y -= 1;
+  		if (y >= 0 && y < viewPortHeight) {
+	  		int releasedItem = choiceGroup.getItemIndexAt(x, y + viewPortY);
+	  		if (releasedItem != -1) {
+	  			if (releasedItem == initialPressedItem
+	  					&& super.getCommandListener() != null
+	  					&& choiceGroup.choiceType == Choice.IMPLICIT) { 
+	  				super.getCommandListener().commandAction(SELECT_COMMAND, this);
+	  			}
+	  		}
+  		}
+	}
+
+	
   int paintContent(Graphics g)
   {
     return choiceGroup.paint(g);

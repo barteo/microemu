@@ -22,6 +22,8 @@
  
 package javax.microedition.lcdui;
 
+import javax.microedition.lcdui.Choice;
+
 
 public class ChoiceGroup extends Item implements Choice
 {
@@ -357,6 +359,7 @@ public class ChoiceGroup extends Item implements Choice
 		} else if (choiceType == Choice.IMPLICIT) {
 		    if (selected) {
 		        highlightedItemIndex = elementNum;
+		        repaint();
 		    }
 		}
   }
@@ -384,7 +387,27 @@ public class ChoiceGroup extends Item implements Choice
 		return super.getHeight() + height;
 	}
 
+	/*
+	 * Get item index from coordinates
+	 */
+	int getItemIndexAt(int x, int y)
+	{
+		// TODO currently only IMPLICIT type is implemented
+		x -= super.getHeight();
+		if (choiceType == Choice.IMPLICIT) {
+			int testY = 0;
+			for (int i = 0; i < numOfItems; i++) {
+				testY += items[i].getHeight();
+				if (y < testY) {
+					return i;
+				}
+			}
+		}
+		
+		return -1;
+	}
 
+	
   int paint(Graphics g)
   {
 		super.paintContent(g);

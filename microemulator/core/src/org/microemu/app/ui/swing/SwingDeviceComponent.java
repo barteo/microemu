@@ -28,6 +28,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.microedition.lcdui.Command;
 import javax.swing.JPanel;
@@ -38,6 +39,7 @@ import org.microemu.DisplayComponent;
 import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.Device;
+import org.microemu.device.impl.InputMethodImpl;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.SoftButton;
 import org.microemu.device.j2se.J2SEButton;
@@ -55,61 +57,119 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
   J2SEButton overButton;
   J2SEButton pressedButton;
   
+  private SoftButton initialPressedSoftButton;
+  
 	Image offi;
 	Graphics offg;
       
   MouseAdapter mouseListener = new MouseAdapter() 
   {
     
-    public void mousePressed(MouseEvent e) 
-    {
-    	requestFocus();
-    	
-    	if (MIDletBridge.getCurrentMIDlet() == null) {
-    		return;
-    	}
-    	
-		pressedButton = getButton(e.getX(), e.getY());
+	  	public void mousePressed(MouseEvent e) {
+			requestFocus();
 
-		// if the displayable is in full screen mode, we should not
-		// invoke any associated commands, but send the raw key codes
-		// instead
-		boolean rawSoftKeys = DeviceFactory.getDevice().getDeviceDisplay().isFullScreenMode();
-
-		if (pressedButton != null) {
-			if (pressedButton instanceof SoftButton && !rawSoftKeys) {
-				Command cmd = ((SoftButton) pressedButton).getCommand();
-				if (cmd != null) {
-					CommandManager.getInstance().commandAction(cmd);
-				}
-			} else {
-				int key = pressedButton.getKey();
-				KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key, KeyEvent.CHAR_UNDEFINED);
-				((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod()).mousePressed(ev);
-			}
-			repaint();
-		}
-	}
-
-
-    public void mouseReleased(MouseEvent e) 
-    {
-    	if (MIDletBridge.getCurrentMIDlet() == null) {
+			if (MIDletBridge.getCurrentMIDlet() == null) {
 				return;
 			}
 
-			J2SEButton prevOverButton = getButton(e.getX(), e.getY());
-			if (prevOverButton != null) {
-				int key = prevOverButton.getKey();
-				KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key,
-						KeyEvent.CHAR_UNDEFINED);
+			Device device = DeviceFactory.getDevice();
+			Rectangle rect = ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
+			J2SEInputMethod inputMethod = (J2SEInputMethod) device.getInputMethod();
+			// if the displayable is in full screen mode, we should not
+			// invoke any associated commands, but send the raw key codes
+			// instead
+			boolean fullScreenMode = device.getDeviceDisplay().isFullScreenMode();
 
-				((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod())
-						.mouseReleased(ev.getKeyCode());
+			if (rect.x <= e.getX() && (rect.x + rect.width) > e.getX()
+					&& rect.y <= e.getY() && (rect.y + rect.height) > e.getY()) {
+				if (inputMethod.hasPointerEvents()) {
+					if (!fullScreenMode) {
+						Iterator it = device.getSoftButtons().iterator();
+						while (it.hasNext()) {
+							SoftButton button = (SoftButton) it.next();
+							if (button.isVisible()
+									&& button.getPaintable().contains(e.getX() - rect.x, e.getY() - rect.y)) {
+								initialPressedSoftButton = button;
+								button.setPressed(true);
+								Rectangle pb = button.getPaintable();
+								dc.repaint(pb.x, pb.y, pb.width, pb.height);
+								break;
+							}
+						}
+					}
+					if (fullScreenMode) {
+						inputMethod.pointerPressed(e.getX() - rect.x, e.getY() - rect.y);
+					} else {
+						Rectangle pb = ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayPaintable();
+						inputMethod.pointerPressed(e.getX() - rect.x - pb.x, e.getY() - rect.y - pb.y);
+					}
+				}
+			} else {
+				pressedButton = getButton(e.getX(), e.getY());
+				if (pressedButton != null) {
+					if (pressedButton instanceof SoftButton && !fullScreenMode) {
+						Command cmd = ((SoftButton) pressedButton).getCommand();
+						if (cmd != null) {
+							CommandManager.getInstance().commandAction(cmd);
+						}
+					} else {
+						int key = pressedButton.getKey();
+						KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key,
+								KeyEvent.CHAR_UNDEFINED);
+						inputMethod.mousePressed(ev);
+					}
+					repaint();
+				}
 			}
-			pressedButton = null;
-			repaint();      
-    }
+		}
+
+
+	public void mouseReleased(MouseEvent e) {
+			if (MIDletBridge.getCurrentMIDlet() == null) {
+				return;
+			}
+
+			Device device = DeviceFactory.getDevice();
+			Rectangle rect = ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
+			J2SEInputMethod inputMethod = (J2SEInputMethod) device.getInputMethod();
+			boolean fullScreenMode = device.getDeviceDisplay().isFullScreenMode();
+			if (rect.x <= e.getX() && (rect.x + rect.width) > e.getX()
+					&& rect.y <= e.getY() && (rect.y + rect.height) > e.getY()) {
+				if (inputMethod.hasPointerEvents()) {
+					if (!fullScreenMode) {
+						if (initialPressedSoftButton != null && initialPressedSoftButton.isPressed()) {
+							initialPressedSoftButton.setPressed(false);
+							Rectangle pb = initialPressedSoftButton.getPaintable();
+							dc.repaint(pb.x, pb.y, pb.width, pb.height);
+							if (pb.contains(e.getX() - rect.x, e.getY() - rect.y)) {
+								Command cmd = initialPressedSoftButton.getCommand();
+								if (cmd != null) {
+									CommandManager.getInstance().commandAction(cmd);
+								}
+							}
+						}
+						initialPressedSoftButton = null;
+					}
+					if (fullScreenMode) {
+						inputMethod.pointerReleased(e.getX() - rect.x, e.getY() - rect.y);
+					} else {
+						Rectangle pb = ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayPaintable();
+						inputMethod.pointerReleased(e.getX() - rect.x - pb.x, e.getY() - rect.y - pb.y);
+					}
+				}
+			} else {
+				J2SEButton prevOverButton = getButton(e.getX(), e.getY());
+				if (prevOverButton != null) {
+					int key = prevOverButton.getKey();
+					KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key,
+							KeyEvent.CHAR_UNDEFINED);
+
+					inputMethod.mouseReleased(ev.getKeyCode());
+				}
+				pressedButton = null;
+				repaint();
+			}
+		}
 
   };
   
@@ -119,17 +179,49 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 
     public void mouseDragged(MouseEvent e)
     {
-      overButton = getButton(e.getX(), e.getY());
+    	overButton = getButton(e.getX(), e.getY());
+    	
+		Device device = DeviceFactory.getDevice();
+		Rectangle rect = ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
+		InputMethodImpl inputMethod = (InputMethodImpl) device.getInputMethod();
+		boolean fullScreenMode = device.getDeviceDisplay().isFullScreenMode();
+		if (rect.x <= e.getX() && (rect.x + rect.width) > e.getX()
+				&& rect.y <= e.getY() && (rect.y + rect.height) > e.getY()) {
+			if (inputMethod.hasPointerMotionEvents()) {
+				if (!fullScreenMode) {
+					if (initialPressedSoftButton != null) {
+						Rectangle pb = initialPressedSoftButton.getPaintable();
+						if (pb.contains(e.getX() - rect.x, e.getY() - rect.y)) {
+							if (!initialPressedSoftButton.isPressed()) {
+								initialPressedSoftButton.setPressed(true);
+								dc.repaint(pb.x, pb.y, pb.width, pb.height);
+							}
+						} else {
+							if (initialPressedSoftButton.isPressed()) {
+								initialPressedSoftButton.setPressed(false);
+								dc.repaint(pb.x, pb.y, pb.width, pb.height);
+							}
+						}
+					}
+				}
+				if (fullScreenMode) {
+					inputMethod.pointerDragged(e.getX() - rect.x, e.getY() - rect.y);
+				} else {
+					Rectangle pb = ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayPaintable();
+					inputMethod.pointerDragged(e.getX() - rect.x - pb.x, e.getY() - rect.y - pb.y);
+				}
+			}
+		}
     }
 
     
     public void mouseMoved(MouseEvent e)
     {
-      prevOverButton = overButton;
-      overButton = getButton(e.getX(), e.getY());
-      if (overButton != prevOverButton) {
-        repaint();
-      }
+    	prevOverButton = overButton;
+    	overButton = getButton(e.getX(), e.getY());
+      	if (overButton != prevOverButton) {
+        	repaint();
+      	}
     }
     
   };
@@ -140,6 +232,8 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
     instance = this;
     
     dc = new SwingDisplayComponent(this);    
+    
+    this.initialPressedSoftButton = null;
     
     addMouseListener(mouseListener);
     addMouseMotionListener(mouseMotionListener);

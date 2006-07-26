@@ -21,7 +21,7 @@ package javax.microedition.lcdui;
 
 import org.microemu.device.DeviceFactory;
 
-
+// TODO implement pointer events
 public abstract class Screen extends Displayable
 {
 	
@@ -30,6 +30,12 @@ public abstract class Screen extends Displayable
         super(title);
     }
 
+    
+    void scroll(int gameKeyCode) {
+    	viewPortY += traverse(gameKeyCode, viewPortY, viewPortY + viewPortHeight);
+    	repaint();
+    }
+    
 	
 	abstract int traverse(int gameKeyCode, int top, int bottom);
 

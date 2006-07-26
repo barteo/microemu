@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@barteo.net>
+ *  Copyright (C) 2001-2006 Bartek Teodorczyk <barteo@barteo.net>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -16,44 +16,25 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
-package org.microemu;
 
-import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.Display;
-import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.Graphics;
+package javax.microedition.pki;
 
+public interface Certificate {
 
-public interface DisplayAccess
-{
-
-	void commandAction(Command cmd);
-
-	Display getDisplay();
-
-	void keyPressed(int keyCode);
-
-	void keyReleased(int keyCode);
-
-	void pointerPressed(int x, int y);
-
-	void pointerReleased(int x, int y);
-
-	void pointerDragged(int x, int y);
-
-	void paint(Graphics g);
+	public String getSubject();
 	
-	boolean isFullScreenMode();
+	public String getIssuer();
 	
-	boolean isRepaintPending();
-  
-	Displayable getCurrent();
-
-	void setCurrent(Displayable d);
-  
-	void updateCommands();
-
-	void clean();
-
+	public String getType();
+	
+	public String getVersion();
+	
+	public String getSigAlgName();
+	
+	public long getNotBefore();
+	
+	public long getNotAfter();
+	
+	public String getSerialNumber();
+	
 }

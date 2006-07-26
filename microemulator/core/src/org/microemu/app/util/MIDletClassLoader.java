@@ -31,7 +31,7 @@ import java.util.jar.JarInputStream;
 
 public class MIDletClassLoader extends SystemClassLoader {
 
-	private Hashtable entries;
+	protected Hashtable entries;
 	
 	private ResURLStreamHandler resUrlStreamHandler;
 	

@@ -112,10 +112,10 @@ public class SwingDisplayComponent implements DisplayComponent
 				Graphics gc = displayImage.getImage().getGraphics();
 
 				J2SEDeviceDisplay deviceDisplay = (J2SEDeviceDisplay) device.getDeviceDisplay();
+				deviceDisplay.paintDisplayable(gc, x, y, width, height);
 				if (!ma.getDisplayAccess().isFullScreenMode()) {
 					deviceDisplay.paintControls(gc);
 				}
-				deviceDisplay.paintDisplayable(gc, x, y, width, height);
 			}
 				
 			fireDisplayRepaint(displayImage);

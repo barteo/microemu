@@ -37,8 +37,9 @@ import org.microemu.cldc.ClosedConnection;
 
 public class Connection implements HttpConnection, ClosedConnection
 {
-  URLConnection cn;
-  boolean connected = false;
+  protected URLConnection cn;
+  
+  protected boolean connected = false;
 
   public javax.microedition.io.Connection open(String name)
       throws IOException

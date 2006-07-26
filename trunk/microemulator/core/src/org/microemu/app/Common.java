@@ -186,6 +186,8 @@ public class Common implements MicroEmulator {
 			getInstance().loadFromJad(url, midletClassLoader);
 		} catch (MalformedURLException ex) {
 			throw ex;
+		} catch (ClassNotFoundException ex) {
+			throw new IOException(ex.getMessage());
 		} catch (FileNotFoundException ex) {
 			System.err.println("Cannot found " + urlString);
 		} catch (NullPointerException ex) {
@@ -226,7 +228,7 @@ public class Common implements MicroEmulator {
 		}
 	}
 
-	protected void loadFromJad(URL jadUrl, final MIDletClassLoader midletClassLoader) {
+	protected void loadFromJad(URL jadUrl, MIDletClassLoader midletClassLoader) throws ClassNotFoundException{
 		setResponseInterface(false);
 		URL url = null;
 		try {
@@ -252,19 +254,15 @@ public class Common implements MicroEmulator {
 		}
 
 		launcher.setSuiteName(jad.getSuiteName());
-		try {
-			for (Enumeration e = jad.getMidletEntries().elements(); e
-					.hasMoreElements();) {
-				JadMidletEntry jadEntry = (JadMidletEntry) e
-						.nextElement();
-				Class midletClass = midletClassLoader.loadClass(jadEntry
-						.getClassName());
-				loadMidlet(jadEntry.getName(), midletClass);
-			}
-			notifyDestroyed();
-		} catch (ClassNotFoundException ex) {
-			System.err.println(ex);
+
+		for (Enumeration e = jad.getMidletEntries().elements(); e
+				.hasMoreElements();) {
+			JadMidletEntry jadEntry = (JadMidletEntry) e.nextElement();
+			Class midletClass = midletClassLoader.loadClass(jadEntry.getClassName());
+			loadMidlet(jadEntry.getName(), midletClass);
 		}
+		notifyDestroyed();
+
 		setStatusBar("");
 		setResponseInterface(true);
 	}

@@ -23,13 +23,15 @@
  
 package javax.microedition.lcdui;
 
-
+//TODO implement pointer events
 public class List extends Screen implements Choice
 {
 
   public static final Command SELECT_COMMAND = new Command("", Command.SCREEN, 0);
   
   ChoiceGroup choiceGroup;
+  
+  private int initialPressedItem;
   
   
   public List(String title, int listType)
@@ -52,6 +54,8 @@ public class List extends Screen implements Choice
   			
 		choiceGroup.setOwner(this);
 		choiceGroup.setFocus(true);
+		
+		this.initialPressedItem = -1;
   }
   
   
@@ -74,6 +78,8 @@ public class List extends Screen implements Choice
 	}
     	choiceGroup.setOwner(this);
 		choiceGroup.setFocus(true);
+		
+		this.initialPressedItem = -1;
 	}
 						
 
@@ -182,9 +188,48 @@ public class List extends Screen implements Choice
       super.keyPressed(keyCode);
     }
   }
-
   
-  int paintContent(Graphics g)
+    
+  	void pointerPressed(int x, int y) {
+		// TODO currently only IMPLICIT type is implemented
+  		Ticker ticker = getTicker();
+  		if (ticker != null) {
+  			y -= ticker.getHeight();
+  		}
+  		y -= title.getHeight();
+  		y -= 1;
+  		if (y >= 0 && y < viewPortHeight) {
+	  		int pressedItem = choiceGroup.getItemIndexAt(x, y + viewPortY);
+	  		if (pressedItem != -1) {
+	  			setSelectedIndex(pressedItem, true);  	
+	  			initialPressedItem = pressedItem;
+	  		}
+  		}
+  	}
+
+
+	void pointerReleased(int x, int y) {
+		// TODO currently only IMPLICIT type is implemented
+  		Ticker ticker = getTicker();
+  		if (ticker != null) {
+  			y -= ticker.getHeight();
+  		}
+  		y -= title.getHeight();
+  		y -= 1;
+  		if (y >= 0 && y < viewPortHeight) {
+	  		int releasedItem = choiceGroup.getItemIndexAt(x, y + viewPortY);
+	  		if (releasedItem != -1) {
+	  			if (releasedItem == initialPressedItem
+	  					&& super.getCommandListener() != null
+	  					&& choiceGroup.choiceType == Choice.IMPLICIT) { 
+	  				super.getCommandListener().commandAction(SELECT_COMMAND, this);
+	  			}
+	  		}
+  		}
+	}
+
+
+int paintContent(Graphics g)
   {
     return choiceGroup.paint(g);
   }

@@ -25,6 +25,8 @@ package javax.microedition.lcdui;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Screen;
 import javax.microedition.midlet.MIDlet;
 
 import org.microemu.CommandManager;
@@ -57,14 +59,24 @@ public class Display
 
 		public void commandAction(Command cmd) 
 		{
-			if (current == null) {
-				return;
+			if (cmd.equals(CommandManager.CMD_SCREEN_UP)) {
+				if (current != null && current instanceof Screen) {
+					((Screen) current).scroll(Canvas.UP);
+				}
+			} else if (cmd.equals(CommandManager.CMD_SCREEN_DOWN)) {
+				if (current != null && current instanceof Screen) {
+					((Screen) current).scroll(Canvas.DOWN);
+				}
+			} else {
+				if (current == null) {
+					return;
+				}
+				CommandListener listener = current.getCommandListener();
+				if (listener == null) {
+					return;
+				}
+				listener.commandAction(cmd, current);
 			}
-			CommandListener listener = current.getCommandListener();
-			if (listener == null) {
-				return;
-			}
-			listener.commandAction(cmd, current);
 		}
 
 		public Display getDisplay() 
@@ -83,6 +95,27 @@ public class Display
 		{
 			if (current != null) {
 				current.keyReleased(keyCode);
+			}
+		}
+
+		public void pointerPressed(int x, int y)
+		{
+			if (current != null) {
+				current.pointerPressed(x, y);
+			}
+		}
+
+		public void pointerReleased(int x, int y)
+		{
+			if (current != null) {
+				current.pointerReleased(x, y);
+			}
+		}
+
+		public void pointerDragged(int x, int y)
+		{
+			if (current != null) {
+				current.pointerDragged(x, y);
 			}
 		}
 
@@ -205,26 +238,26 @@ public class Display
 		
 		private Object serviceRepaintsLock = new Object();
 
-		private int x = 0;
-		private int y = 0;
-		private int width = 0;
-		private int height = 0;			
+		private int x = -1;
+		private int y = -1;
+		private int width = -1;
+		private int height = -1;			
 		
 		public void repaint(int x, int y, int width, int height)
 		{
 			synchronized (paintLock) {
 				repaintPending = true;				
-				if (x != 0 && y != 0 && width != 0 && height != 0) {
+				if (this.x == -1 && this.y == -1 && this.width == -1 && this.height == -1) {
+					this.x = x;
+					this.y = y;
+					this.width = width;
+					this.height = height;
+				} else {
 					// TODO analyze and update clipping, currently repaints the whole displayable
 					this.x = 0;
 					this.y = 0;
 					this.width = current.getWidth();
 					this.height = current.getHeight();
-				} else {
-					this.x = x;
-					this.y = y;
-					this.width = width;
-					this.height = height;
 				}
 				paintLock.notify();
 			}
@@ -272,10 +305,10 @@ public class Display
 						repaintY = y;
 						repaintWidth = width;
 						repaintHeight = height;
-						x = 0;
-						y = 0;
-						width = 0;
-						height = 0;
+						x = -1;
+						y = -1;
+						width = -1;
+						height = -1;
 					}					
 					DeviceFactory.getDevice().getDeviceDisplay().repaint(repaintX, repaintY, repaintWidth, repaintHeight);
 					if (!repaintPending) {

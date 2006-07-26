@@ -69,7 +69,13 @@ public abstract class Screen extends Displayable
 	}
 
 	
-	abstract int traverse(int gameKeyCode, int top, int bottom);
+    void scroll(int gameKeyCode) {
+    	viewPortY += traverse(gameKeyCode, viewPortY, viewPortY + viewPortHeight);
+    	repaint();
+    }
+
+    
+    abstract int traverse(int gameKeyCode, int top, int bottom);
 
 	
 	void keyPressed(int keyCode) 

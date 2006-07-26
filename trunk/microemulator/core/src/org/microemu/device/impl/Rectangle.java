@@ -20,5 +20,15 @@ public class Rectangle
         this.width = rect.width;
         this.height = rect.height;
     }
+
+
+	public boolean contains(int testX, int testY) {
+		if (testX >= x && testX < x + width 
+				&& testY >= y && testY < y + height) {
+			return true;
+		} else {
+			return false;
+		}
+	}
     
 }

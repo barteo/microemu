@@ -27,6 +27,7 @@ import java.util.Vector;
 
 import org.microemu.device.DeviceFactory;
 
+//TODO implement pointer events
 public class Form extends Screen 
 {
 	Item items[] = new Item[4];

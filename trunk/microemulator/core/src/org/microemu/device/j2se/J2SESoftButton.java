@@ -16,112 +16,185 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 package org.microemu.device.j2se;
 
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Shape;
 import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.Image;
 
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.SoftButton;
 
+public class J2SESoftButton extends J2SEButton implements SoftButton {
 
+	public static int LEFT = 1;
+	public static int RIGHT = 2;
+	
+	private int type;
+	
+	private Image normalImage;
+	private Image pressedImage;
 
-public class J2SESoftButton extends J2SEButton implements SoftButton
-{
+	private Vector commandTypes = new Vector();
 
-  public static int LEFT = 1;
-  public static int RIGHT = 2;
+	private Command command = null;
 
-  Vector commandTypes = new Vector();
+	private Rectangle paintable;
 
-  Command command = null;
+	private int alignment;
+	
+	private boolean visible;
 
-  Rectangle paintable;
-  int alignment;
+	private boolean pressed;
 
+	public J2SESoftButton(String name, Rectangle rectangle, String keyName,
+			Rectangle paintable, String alignmentName, Vector commands) {
+		super(name, rectangle, keyName, null);
+		
+		this.type = TYPE_COMMAND;
 
-  public J2SESoftButton(String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands)
-  {
-    super(name, rectangle, keyName, null);
-      
-    this.paintable = paintable;
-    
-    try {
-      alignment = J2SESoftButton.class.getField(alignmentName).getInt(null);
-    } catch (Exception ex) {
-      System.err.println(ex);
-    }
-    
-    for (Enumeration e = commands.elements(); e.hasMoreElements(); ) {
-      String tmp = (String) e.nextElement();
-      try {
-        addCommandType(Command.class.getField(tmp).getInt(null));
-      } catch (Exception ex) {
-        System.err.println("a3" + ex);
-      }
-    }
-  }
+		this.paintable = paintable;
+		this.visible = true;
+		this.pressed = false;
 
+		try {
+			alignment = J2SESoftButton.class.getField(alignmentName).getInt(
+					null);
+		} catch (Exception ex) {
+			System.err.println(ex);
+		}
 
-    /**
-     *  Sets the command attribute of the SoftButton object
-     *
-     *@param  cmd  The new command value
-     */
-    public void setCommand(Command cmd) {
-    	synchronized (this) {
-    		command = cmd;
-    	}
-    }
+		for (Enumeration e = commands.elements(); e.hasMoreElements();) {
+			String tmp = (String) e.nextElement();
+			try {
+				addCommandType(Command.class.getField(tmp).getInt(null));
+			} catch (Exception ex) {
+				System.err.println("a3" + ex);
+			}
+		}
+	}
+	
+	public J2SESoftButton(String name, Rectangle paintable, Image normalImage, Image pressedImage) {
+		super(name, null, null, null);
+		
+		this.type = TYPE_ICON;
+		
+		this.paintable = paintable;
+		this.normalImage = normalImage;
+		this.pressedImage = pressedImage;
+		
+		this.visible = true;
+		this.pressed = false;
+	}
+	
+	public int getType() {
+		return type;
+	}
 
+	/**
+	 * Sets the command attribute of the SoftButton object
+	 * 
+	 * @param cmd
+	 *            The new command value
+	 */
+	public void setCommand(Command cmd) {
+		synchronized (this) {
+			command = cmd;
+		}
+	}
 
-    /**
-     *  Gets the command attribute of the SoftButton object
-     *
-     *@return    The command value
-     */
-    public Command getCommand() {
-        return command;
-    }
+	/**
+	 * Gets the command attribute of the SoftButton object
+	 * 
+	 * @return The command value
+	 */
+	public Command getCommand() {
+		return command;
+	}
 
+	public Rectangle getPaintable() {
+		return paintable;
+	}
 
-    public void paint(Graphics g) 
-    {
-        int xoffset = 0;
+	public boolean isVisible() {
+		return visible;
+	}
 
-        J2SEDeviceDisplay deviceDisplay =
-            (J2SEDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
-        g.setColor(deviceDisplay.backgroundColor);
-        g.fillRect(paintable.x, paintable.y, paintable.width, paintable.height);
-        synchronized (this) {
-	        if (command != null) {
-	            if (alignment == RIGHT) {
-	                xoffset = paintable.width - g.getFontMetrics().stringWidth(command.getLabel());
-	            }
-	            g.setColor(deviceDisplay.foregroundColor);
-	            g.drawString(command.getLabel(), paintable.x + xoffset, paintable.y + paintable.height);
-	        }
-        }
-    }
+	public void setVisible(boolean state) {
+		visible = state;
+	}
 
+	public boolean isPressed() {
+		return pressed;
+	}
 
-    public boolean preferredCommandType(Command cmd) {
-        for (Enumeration ct = commandTypes.elements(); ct.hasMoreElements(); ) {
-            if (cmd.getCommandType() == ((Integer) ct.nextElement()).intValue()) {
-                return true;
-            }
-        }
-        return false;
-    }
+	public void setPressed(boolean state) {
+		pressed = state;
+	}
 
+	public void paint(Graphics g) {
+		if (!visible) {
+			return;
+		}
+		
+		Shape clip = g.getClip();
+		
+		g.setClip(paintable.x, paintable.y, paintable.width, paintable.height);
+		if (type == TYPE_COMMAND) {
+			int xoffset = 0;		
+			J2SEDeviceDisplay deviceDisplay = (J2SEDeviceDisplay) DeviceFactory
+					.getDevice().getDeviceDisplay();		
+			if (pressed) {
+				g.setColor(deviceDisplay.foregroundColor);
+			} else {
+				g.setColor(deviceDisplay.backgroundColor);
+			}
+			g.fillRect(paintable.x, paintable.y, paintable.width, paintable.height);
+			synchronized (this) {
+				if (command != null) {
+					FontMetrics metrics = g.getFontMetrics();
+					if (alignment == RIGHT) {
+						xoffset = paintable.width
+								- metrics.stringWidth(command.getLabel()) - 1;
+					}
+					if (pressed) {
+						g.setColor(deviceDisplay.backgroundColor);
+					} else {
+						g.setColor(deviceDisplay.foregroundColor);
+					}
+					g.drawString(command.getLabel(), paintable.x + xoffset,
+							paintable.y + paintable.height - metrics.getDescent());
+				}
+			}
+		} else if (type == TYPE_ICON) {
+			if (pressed) {
+				g.drawImage(((J2SEImmutableImage) pressedImage).getImage(), paintable.x, paintable.y, null);
+			} else {
+				g.drawImage(((J2SEImmutableImage) normalImage).getImage(), paintable.x, paintable.y, null);
+			}
+		}
+		
+		g.setClip(clip);
+	}
 
-    public void addCommandType(int commandType) {
-        commandTypes.addElement(new Integer(commandType));
-    }
+	public boolean preferredCommandType(Command cmd) {
+		for (Enumeration ct = commandTypes.elements(); ct.hasMoreElements();) {
+			if (cmd.getCommandType() == ((Integer) ct.nextElement()).intValue()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void addCommandType(int commandType) {
+		commandTypes.addElement(new Integer(commandType));
+	}
 
 }

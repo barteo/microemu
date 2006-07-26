@@ -113,10 +113,10 @@ public class SwtDisplayComponent implements DisplayComponent
 			SwtGraphics gc = ((SwtDisplayGraphics) image.getGraphics()).g;
 			try {
 				SwtDeviceDisplay deviceDisplay = (SwtDeviceDisplay) device.getDeviceDisplay();
+				deviceDisplay.paintDisplayable(gc, x, y, width, height);
 				if (!ma.getDisplayAccess().isFullScreenMode()) {
 					deviceDisplay.paintControls(gc);
 				}
-				deviceDisplay.paintDisplayable(gc, x, y, width, height);
 			} finally {
 				gc.dispose();
 			}

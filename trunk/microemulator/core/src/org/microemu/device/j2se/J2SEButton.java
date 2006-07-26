@@ -40,7 +40,11 @@ public class J2SEButton implements Button
     this.name = name;
     this.rectangle = rectangle;
 
-    this.key = getKeyCode(keyName);
+    if (keyName != null) {
+    	this.key = getKeyCode(keyName);
+    } else {
+    	this.key = -1;
+    }
     this.chars = chars;
     if (chars != null) {
 	    for (int i = 0; i < this.chars.length; i++) {

@@ -34,6 +34,9 @@ import org.microemu.device.impl.SoftButton;
 
 public class CommandManager 
 {
+	public static final Command CMD_SCREEN_UP = new Command("", Command.SCREEN, 0);
+	public static final Command CMD_SCREEN_DOWN = new Command("", Command.SCREEN, 0);
+	
 	private static final Command CMD_MENU = new Command("Menu", Command.EXIT, 0);
 	private static final Command CMD_BACK = new Command("Back", Command.BACK, 0);
 	private static final Command CMD_SELECT = new Command("Select", Command.OK, 0);
@@ -90,9 +93,14 @@ public class CommandManager
 	public void updateCommands(Vector commands)
 	{
 		Vector buttons = DeviceFactory.getDevice().getSoftButtons();
+		int numOfButtons = 0;
 		Enumeration en = buttons.elements();
 		while (en.hasMoreElements()) {
-			((SoftButton) en.nextElement()).setCommand(null);
+			SoftButton button = (SoftButton) en.nextElement();
+			if (button.getType() == SoftButton.TYPE_COMMAND) {
+				button.setCommand(null);
+				numOfButtons++;
+			}
 		}
 		
 		if (commands == null) {			
@@ -124,7 +132,7 @@ public class CommandManager
 			}			
 		}
 		
-		if (commandsTable.size() <= buttons.size()) {
+		if (commandsTable.size() <= numOfButtons) {
 			fillPossibleCommands(buttons, commandsTable);			
 			return;
 		}
@@ -148,7 +156,8 @@ public class CommandManager
 			Enumeration en = buttons.elements();
 			while (en.hasMoreElements()) {
 				SoftButton button = (SoftButton) en.nextElement();
-				if (button.getCommand() == null 
+				if (button.getType() == SoftButton.TYPE_COMMAND
+						&& button.getCommand() == null 
 						&& button.preferredCommandType((Command) commandsTable.elementAt(i))) {
 					button.setCommand((Command) commandsTable.elementAt(i));
 					commandsTable.removeElementAt(i);
@@ -161,7 +170,8 @@ public class CommandManager
 			Enumeration en = buttons.elements();
 			while (en.hasMoreElements()) {
 				SoftButton button = (SoftButton) en.nextElement();
-				if (button.getCommand() == null) {
+				if (button.getType() == SoftButton.TYPE_COMMAND
+						&& button.getCommand() == null) {
 					button.setCommand((Command) commandsTable.elementAt(i));
 					commandsTable.removeElementAt(i);
 					i--;

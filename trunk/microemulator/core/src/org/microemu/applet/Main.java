@@ -99,6 +99,7 @@ public class Main extends Applet implements MicroEmulator
     {
         recordStoreManager = new AppletRecordStoreManager();
         devicePanel = new SwingDeviceComponent();
+        devicePanel.addKeyListener(devicePanel);
     }
 
     
@@ -204,7 +205,6 @@ public class Main extends Applet implements MicroEmulator
         resize(tmpImg.getWidth(), tmpImg.getHeight());
         
         devicePanel.setFocusable(true);
-        devicePanel.addKeyListener(devicePanel);
         
         return;
     }

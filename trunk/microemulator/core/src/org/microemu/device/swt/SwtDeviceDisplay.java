@@ -33,7 +33,6 @@ import javax.microedition.lcdui.game.Sprite;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
-import org.microemu.DisplayAccess;
 import org.microemu.EmulatorContext;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
@@ -66,16 +65,9 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 	Color backgroundColor;
 	Color foregroundColor;
 
-	PositionedImage upImage;
-	PositionedImage downImage;
-
 	PositionedImage mode123Image;
 	PositionedImage modeAbcUpperImage;
 	PositionedImage modeAbcLowerImage;
-
-	boolean scrollUp = false;
-	boolean scrollDown = false;
-
 
 	public SwtDeviceDisplay(EmulatorContext context) 
 	{
@@ -129,12 +121,9 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 	
     public boolean isFullScreenMode() 
     { 
-    	DisplayAccess da = MIDletBridge.getMIDletAccess().getDisplayAccess();
-    	if (da != null) {    		
-    		return da.isFullScreenMode();
-    	} else {
-    		return false;
-    	}
+    		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+    		
+    		return ma.getDisplayAccess().isFullScreenMode();
     }
 
 
@@ -185,15 +174,6 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 			g.drawImage(((SwtImmutableImage) modeAbcLowerImage.getImage()).getImage(), 
 			        modeAbcLowerImage.getRectangle().x, modeAbcLowerImage.getRectangle().y);
 		}
-
-		if (scrollUp) {
-			g.drawImage(((SwtImmutableImage) upImage.getImage()).getImage(), 
-			        upImage.getRectangle().x, upImage.getRectangle().y);
-		}
-		if (scrollDown) {
-			g.drawImage(((SwtImmutableImage) downImage.getImage()).getImage(), 
-			        downImage.getRectangle().x, downImage.getRectangle().y);
-		}
 	}
 
 	
@@ -240,13 +220,27 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 
 	public void setScrollDown(boolean state) 
 	{
-		scrollDown = state;
+		Enumeration en = DeviceFactory.getDevice().getSoftButtons().elements();
+		while (en.hasMoreElements()) {
+			SoftButton button = (SoftButton) en.nextElement();
+			if (button.getType() == SoftButton.TYPE_ICON
+					&& button.getName().equals("down")) {
+				button.setVisible(state);
+			}
+		}
 	}
 
 
 	public void setScrollUp(boolean state) 
 	{
-		scrollUp = state;
+		Enumeration en = DeviceFactory.getDevice().getSoftButtons().elements();
+		while (en.hasMoreElements()) {
+			SoftButton button = (SoftButton) en.nextElement();
+			if (button.getType() == SoftButton.TYPE_ICON
+					&& button.getName().equals("up")) {
+				button.setVisible(state);
+			}
+		}
 	}
 
 
@@ -256,6 +250,12 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 	}
 
 
+	public Rectangle getDisplayPaintable()
+	{
+		return displayPaintable;
+	}
+
+	
 	public Color getBackgroundColor() 
 	{
 		return backgroundColor;
@@ -375,25 +375,6 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
         displayPaintable = rectangle;
     }
 
-
-    /* (non-Javadoc)
-     * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setUpImage(com.barteo.emulator.device.impl.PositionedImage)
-     */
-    public void setUpImage(PositionedImage object)
-    {
-        upImage = object;
-    }
-
-
-    /* (non-Javadoc)
-     * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setDownImage(com.barteo.emulator.device.impl.PositionedImage)
-     */
-    public void setDownImage(PositionedImage object)
-    {
-        downImage = object;
-    }
-
-
     /* (non-Javadoc)
      * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setMode123Image(com.barteo.emulator.device.impl.PositionedImage)
      */
@@ -481,6 +462,12 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
     public SoftButton createSoftButton(String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands)
     {
         return new SwtSoftButton(name, rectangle, keyName, paintable, alignmentName, commands);
+    }
+
+
+    public SoftButton createSoftButton(String name, Rectangle paintable, Image normalImage, Image pressedImage)
+    {
+        return new SwtSoftButton(name, paintable, normalImage, pressedImage);
     }
 
 

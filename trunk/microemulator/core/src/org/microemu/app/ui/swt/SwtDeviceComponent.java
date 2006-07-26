@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.microedition.lcdui.Command;
 
@@ -49,6 +50,7 @@ import org.eclipse.swt.widgets.Event;
 import org.microemu.CommandManager;
 import org.microemu.DisplayComponent;
 import org.microemu.MIDletBridge;
+import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.SoftButton;
@@ -71,6 +73,10 @@ public class SwtDeviceComponent extends Canvas
 	private SwtButton prevOverButton;
 	private SwtButton overButton;
 	private SwtButton pressedButton;
+	
+	private SoftButton initialPressedSoftButton;
+
+	private boolean mousePressed;
   
   KeyListener keyListener = new KeyListener()
   {
@@ -107,29 +113,59 @@ public class SwtDeviceComponent extends Canvas
 	    	if (MIDletBridge.getCurrentMIDlet() == null) {
 	    		return;
 	    	}
-
-	    	pressedButton = getButton(e.x, e.y);
-
+	    	
+			Device device = DeviceFactory.getDevice();
+			Rectangle rect = ((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
+			SwtInputMethod inputMethod = (SwtInputMethod) device.getInputMethod();
 			// if the displayable is in full screen mode, we should not
 			// invoke any associated commands, but send the raw key codes
 			// instead
-			boolean rawSoftKeys = DeviceFactory.getDevice().getDeviceDisplay().isFullScreenMode();
+			boolean fullScreenMode = device.getDeviceDisplay().isFullScreenMode();
 
-			if (pressedButton != null) {
-				if (pressedButton instanceof SoftButton && !rawSoftKeys) {
-					Command cmd = ((SoftButton) pressedButton).getCommand();
-					if (cmd != null) {
-						CommandManager.getInstance().commandAction(cmd);
+			if (rect.x <= e.x && (rect.x + rect.width) > e.x
+					&& rect.y <= e.y && (rect.y + rect.height) > e.y) {
+				if (inputMethod.hasPointerEvents()) {
+					if (!fullScreenMode) {
+						Iterator it = device.getSoftButtons().iterator();
+						while (it.hasNext()) {
+							SoftButton button = (SoftButton) it.next();
+							if (button.isVisible()
+									&& button.getPaintable().contains(e.x - rect.x, e.y - rect.y)) {
+								initialPressedSoftButton = button;
+								button.setPressed(true);
+								Rectangle pb = button.getPaintable();
+								dc.repaint(pb.x, pb.y, pb.width, pb.height);
+								break;
+							}
+						}
 					}
-				} else {
-					Event event = new Event();
-					event.widget = e.widget;
-					KeyEvent ev = new KeyEvent(event);
-					ev.keyCode = pressedButton.getKey();
-					((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).mousePressed(ev);
+					if (fullScreenMode) {
+						inputMethod.pointerPressed(e.x - rect.x, e.y - rect.y);
+					} else {
+						Rectangle pb = ((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayPaintable();
+						inputMethod.pointerPressed(e.x - rect.x - pb.x, e.y - rect.y - pb.y);
+					}
 				}
-				redraw();
+			} else {
+		    	pressedButton = getButton(e.x, e.y);	
+				if (pressedButton != null) {
+					if (pressedButton instanceof SoftButton && !fullScreenMode) {
+						Command cmd = ((SoftButton) pressedButton).getCommand();
+						if (cmd != null) {
+							CommandManager.getInstance().commandAction(cmd);
+						}
+					} else {
+						Event event = new Event();
+						event.widget = e.widget;
+						KeyEvent ev = new KeyEvent(event);
+						ev.keyCode = pressedButton.getKey();
+						inputMethod.mousePressed(ev);
+					}
+					redraw();
+				}
 			}
+			
+			mousePressed = true;
 		}
 
 		public void mouseUp(MouseEvent e) 
@@ -138,28 +174,90 @@ public class SwtDeviceComponent extends Canvas
 	    		return;
 	    	}
 
-	    	SwtButton prevOverButton = getButton(e.x, e.y);
-			if (prevOverButton != null) {
-				((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).mouseReleased(prevOverButton.getKey());
+			Device device = DeviceFactory.getDevice();
+			Rectangle rect = ((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
+			SwtInputMethod inputMethod = (SwtInputMethod) device.getInputMethod();
+			boolean fullScreenMode = device.getDeviceDisplay().isFullScreenMode();
+			if (rect.x <= e.x && (rect.x + rect.width) > e.x
+					&& rect.y <= e.y && (rect.y + rect.height) > e.y) {
+				if (inputMethod.hasPointerEvents()) {
+					if (!fullScreenMode) {
+						if (initialPressedSoftButton != null && initialPressedSoftButton.isPressed()) {
+							initialPressedSoftButton.setPressed(false);
+							Rectangle pb = initialPressedSoftButton.getPaintable();
+							dc.repaint(pb.x, pb.y, pb.width, pb.height);
+							if (pb.contains(e.x - rect.x, e.y - rect.y)) {
+								Command cmd = initialPressedSoftButton.getCommand();
+								if (cmd != null) {
+									CommandManager.getInstance().commandAction(cmd);
+								}
+							}
+						}
+						initialPressedSoftButton = null;
+					}
+					if (fullScreenMode) {
+						inputMethod.pointerReleased(e.x - rect.x, e.y - rect.y);
+					} else {
+						Rectangle pb = ((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayPaintable();
+						inputMethod.pointerReleased(e.x - rect.x - pb.x, e.y - rect.y - pb.y);
+					}
+				}
+			} else {
+		    	SwtButton prevOverButton = getButton(e.x, e.y);
+				if (prevOverButton != null) {
+					inputMethod.mouseReleased(prevOverButton.getKey());
+				}
+				pressedButton = null;
+				redraw();
 			}
-			pressedButton = null;
-			redraw();      
+			
+			mousePressed = false;
 		}
 	};
   
 
 	MouseMoveListener mouseMoveListener = new MouseMoveListener() 
 	{
-		public void mouseDragged(MouseEvent e)
-		{
-		}
-
 		public void mouseMove(MouseEvent e)
 		{
 			prevOverButton = overButton;
 			overButton = getButton(e.x, e.y);
 			if (overButton != prevOverButton) {
 				redraw();
+			}
+			
+			if (mousePressed) {
+				Device device = DeviceFactory.getDevice();
+				Rectangle rect = ((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
+				SwtInputMethod inputMethod = (SwtInputMethod) device.getInputMethod();
+				boolean fullScreenMode = device.getDeviceDisplay().isFullScreenMode();
+				if (rect.x <= e.x && (rect.x + rect.width) > e.x
+						&& rect.y <= e.y && (rect.y + rect.height) > e.y) {
+					if (inputMethod.hasPointerMotionEvents()) {
+						if (!fullScreenMode) {
+							if (initialPressedSoftButton != null) {
+								Rectangle pb = initialPressedSoftButton.getPaintable();
+								if (pb.contains(e.x - rect.x, e.y - rect.y)) {
+									if (!initialPressedSoftButton.isPressed()) {
+										initialPressedSoftButton.setPressed(true);
+										dc.repaint(pb.x, pb.y, pb.width, pb.height);
+									}
+								} else {
+									if (initialPressedSoftButton.isPressed()) {
+										initialPressedSoftButton.setPressed(false);
+										dc.repaint(pb.x, pb.y, pb.width, pb.height);
+									}
+								}
+							}
+						}
+						if (fullScreenMode) {
+							inputMethod.pointerDragged(e.x - rect.x, e.y - rect.y);
+						} else {
+							Rectangle pb = ((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayPaintable();
+							inputMethod.pointerDragged(e.x - rect.x - pb.x, e.y - rect.y - pb.y);
+						}
+					}
+				}
 			}
 		}    
 	};
@@ -169,10 +267,13 @@ public class SwtDeviceComponent extends Canvas
 	{
 		super(parent, SWT.NO_BACKGROUND);
 		instance = this;
+		mousePressed = false;
     
 		dc = new SwtDisplayComponent(this);    
     
-		addKeyListener(keyListener);
+	    this.initialPressedSoftButton = null;
+
+	    addKeyListener(keyListener);
 		addMouseListener(mouseListener);
 		addMouseMoveListener(mouseMoveListener);
 		addPaintListener(new PaintListener() 

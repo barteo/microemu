@@ -40,7 +40,6 @@ import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
 
-import org.microemu.DisplayAccess;
 import org.microemu.EmulatorContext;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
@@ -62,7 +61,7 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
     EmulatorContext context;
 	
 	Rectangle displayRectangle;
-	java.awt.Rectangle displayPaintable;
+	Rectangle displayPaintable;
 
 	boolean isColor;
 	int numColors;
@@ -71,16 +70,9 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	java.awt.Color backgroundColor;
 	java.awt.Color foregroundColor;
 
-	PositionedImage upImage;
-	PositionedImage downImage;
-
 	PositionedImage mode123Image;
 	PositionedImage modeAbcUpperImage;
 	PositionedImage modeAbcLowerImage;
-
-	boolean scrollUp = false;
-	boolean scrollDown = false;
-
 
 	public J2SEDeviceDisplay(EmulatorContext context) 
 	{
@@ -134,12 +126,9 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	
     public boolean isFullScreenMode() 
     { 
-    	DisplayAccess da = MIDletBridge.getMIDletAccess().getDisplayAccess();
-    	if (da != null) {    		
-    		return da.isFullScreenMode();
-    	} else {
-    		return false;
-    	}
+    		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+    		
+    		return ma.getDisplayAccess().isFullScreenMode();
     }
 
 
@@ -184,15 +173,6 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 			g.drawImage(((J2SEImmutableImage) modeAbcLowerImage.getImage()).getImage(), 
 			        modeAbcLowerImage.getRectangle().x, modeAbcLowerImage.getRectangle().y, null);
 		}
-
-		if (scrollUp) {
-			g.drawImage(((J2SEImmutableImage) upImage.getImage()).getImage(), 
-			        upImage.getRectangle().x, upImage.getRectangle().y, null);
-		}
-		if (scrollDown) {
-			g.drawImage(((J2SEImmutableImage) downImage.getImage()).getImage(), 
-			        downImage.getRectangle().x, downImage.getRectangle().y, null);
-		}
 	}
 
 	
@@ -236,19 +216,39 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 
 	public void setScrollDown(boolean state) 
 	{
-		scrollDown = state;
+		Enumeration en = DeviceFactory.getDevice().getSoftButtons().elements();
+		while (en.hasMoreElements()) {
+			SoftButton button = (SoftButton) en.nextElement();
+			if (button.getType() == SoftButton.TYPE_ICON
+					&& button.getName().equals("down")) {
+				button.setVisible(state);
+			}
+		}
 	}
 
 
 	public void setScrollUp(boolean state) 
 	{
-		scrollUp = state;
+		Enumeration en = DeviceFactory.getDevice().getSoftButtons().elements();
+		while (en.hasMoreElements()) {
+			SoftButton button = (SoftButton) en.nextElement();
+			if (button.getType() == SoftButton.TYPE_ICON
+					&& button.getName().equals("up")) {
+				button.setVisible(state);
+			}
+		}
 	}
 
 
 	public Rectangle getDisplayRectangle() 
 	{
 		return displayRectangle;
+	}
+	
+	
+	public Rectangle getDisplayPaintable()
+	{
+		return displayPaintable;
 	}
 
 
@@ -504,25 +504,7 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
      */
     public void setDisplayPaintable(Rectangle rectangle)
     {
-        displayPaintable = new java.awt.Rectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-    }
-
-
-    /* (non-Javadoc)
-     * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setUpImage(com.barteo.emulator.device.impl.PositionedImage)
-     */
-    public void setUpImage(PositionedImage object)
-    {
-        upImage = object;
-    }
-
-
-    /* (non-Javadoc)
-     * @see com.barteo.emulator.device.impl.DeviceDisplayImpl#setDownImage(com.barteo.emulator.device.impl.PositionedImage)
-     */
-    public void setDownImage(PositionedImage object)
-    {
-        downImage = object;
+        displayPaintable = rectangle;
     }
 
 
@@ -626,5 +608,10 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
         return new J2SESoftButton(name, rectangle, keyName, paintable, alignmentName, commands);
     }
 
+
+    public SoftButton createSoftButton(String name, Rectangle paintable, Image normalImage, Image pressedImage)
+    {
+        return new J2SESoftButton(name, paintable, normalImage, pressedImage);
+    }
 
 }

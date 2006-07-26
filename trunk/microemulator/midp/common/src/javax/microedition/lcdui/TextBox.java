@@ -24,7 +24,7 @@ import org.microemu.device.InputMethod;
 import org.microemu.device.InputMethodEvent;
 import org.microemu.device.InputMethodListener;
 
-
+//TODO implement pointer events
 public class TextBox extends Screen
 {
 

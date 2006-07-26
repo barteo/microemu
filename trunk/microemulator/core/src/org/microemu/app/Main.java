@@ -271,6 +271,7 @@ public class Main extends JFrame
 
     devicePanel = new SwingDeviceComponent();
     devicePanel.addKeyListener(devicePanel);
+    addKeyListener(devicePanel);
     selectDevicePanel = new SwingSelectDevicePanel();
     
 	common = new Common(emulatorContext);

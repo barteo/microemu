@@ -56,8 +56,10 @@ public final class Manager
     	if (stream == null) {
     		throw new IllegalArgumentException();
     	}
-        if(type.indexOf("audio/midi") != -1) {
+        if (type.indexOf("audio/midi") != -1) {
             return new MidiPlayer(stream);
+        } else if (type.indexOf("audio/x-wav") != -1) {
+        	return new WavPlayer(stream);
         }
         
         throw new MediaException("Unsupported Format");

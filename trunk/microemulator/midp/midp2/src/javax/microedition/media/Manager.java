@@ -53,8 +53,14 @@ public final class Manager
     public static Player createPlayer(InputStream stream, String type)
             throws IOException, MediaException
     {
-        // TODO
-        return null;
+    	if (stream == null) {
+    		throw new IllegalArgumentException();
+    	}
+        if(type.indexOf("audio/midi") != -1) {
+            return new MidiPlayer(stream);
+        }
+        
+        throw new MediaException("Unsupported Format");
     }
     
     

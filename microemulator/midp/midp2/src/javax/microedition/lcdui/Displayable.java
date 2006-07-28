@@ -149,6 +149,11 @@ public abstract class Displayable
 	{
 		listener = l;
 	}
+	
+	
+	protected void sizeChanged(int w, int h)
+	{		
+	}
 
 
 	CommandListener getCommandListener()

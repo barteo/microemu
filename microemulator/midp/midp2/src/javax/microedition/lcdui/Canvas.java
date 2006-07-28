@@ -177,6 +177,13 @@ public abstract class Canvas extends Displayable
     {
     		this.fullScreenMode = mode;
     }
+    
+    
+    protected void sizeChanged(int w, int h)
+    {
+    	// TODO
+    	throw new RuntimeException("not implemented");
+    }
 
     
     protected void showNotify()

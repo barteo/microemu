@@ -262,6 +262,16 @@ public class Sprite extends Layer {
         this.frame = 0;
     }
     
+    public final int getFrame() {
+		// TODO
+		throw new RuntimeException("not implemented");
+    }
+    
+    public int getFrameSequenceLength() {
+		// TODO
+		throw new RuntimeException("not implemented");
+    }
+    
     public void setFrame(int frame) {
         int l = (sequence == null)? rows*cols : sequence.length; 
         if (frame < 0 || frame >= l)
@@ -282,83 +292,84 @@ public class Sprite extends Layer {
             frame--;
     }
  
-    public synchronized void setImage(Image img, int frameWidth, int frameHeight) {
-        int oldW = getWidth();
-        int oldH = getHeight();
-        int newW = img.getWidth();
-        int newH = img.getHeight();
-        
-        // implicit size check
-        setSize(frameWidth, frameHeight);
-
-        if (img.getWidth() % frameWidth != 0 ||
-                img.getHeight() % frameHeight != 0)
-            throw new IllegalArgumentException();
-        this.img = img;
-        
-        int oldFrames = cols*rows;
-        cols = img.getWidth() / frameWidth;
-        rows = img.getHeight() / frameHeight;
-        
-        if (rows*cols < oldFrames) {
-            // there are fewer frames
-            // reset frame number and sequence
-            sequence = null;
-            frame = 0;
-        }
-        
-        if (frameWidth != getWidth() || frameHeight != getHeight()) {
-            // size changed
-            // reset collision rectangle and collision detection array
-            defineCollisionRectangle(0, 0, frameWidth, frameHeight);
-            rgbData = rgbDataAux = null;
-            
-            // if necessary change position to keep the reference pixel in place
-            
-            if (transform != TRANS_NONE) {
-                int dx, dy;
-                switch(transform) {
-                    case TRANS_MIRROR_ROT180:
-                        dx = newW - oldW;
-                        dy = newH - oldH;
-                        break;
-                    case TRANS_MIRROR:
-                        dx = newW - oldW;
-                        dy = 0;
-                        break;
-                    case TRANS_ROT180:
-                        dx = 0;
-                        dy = newH - oldH;
-                        break;
-                    case TRANS_MIRROR_ROT270:
-                        dx = newH - oldH;
-                        dy = 0;
-                        break;
-                    case TRANS_ROT90:
-                        dx = newH - oldH;
-                        dy = newW - oldW;
-                        break;
-                    case TRANS_ROT270:
-                        dx = 0;
-                        dy = 0;
-                        break;
-                    case TRANS_MIRROR_ROT90:
-                        dx = 0;
-                        dy = newW - oldW;
-                        break;
-                    default: // cant really happen, but the return keeps the
-                            // compiler happy (otherwise it'll report variable
-                            // may not be initialized)
-                        return;
-                }
-                // now change position to keep the refPixel in place
-                move(dx, dy);
-            }
-                
-        }
+    public void setImage(Image img, int frameWidth, int frameHeight) {
+    	synchronized (this) {
+	        int oldW = getWidth();
+	        int oldH = getHeight();
+	        int newW = img.getWidth();
+	        int newH = img.getHeight();
+	        
+	        // implicit size check
+	        setSize(frameWidth, frameHeight);
+	
+	        if (img.getWidth() % frameWidth != 0 ||
+	                img.getHeight() % frameHeight != 0)
+	            throw new IllegalArgumentException();
+	        this.img = img;
+	        
+	        int oldFrames = cols*rows;
+	        cols = img.getWidth() / frameWidth;
+	        rows = img.getHeight() / frameHeight;
+	        
+	        if (rows*cols < oldFrames) {
+	            // there are fewer frames
+	            // reset frame number and sequence
+	            sequence = null;
+	            frame = 0;
+	        }
+	        
+	        if (frameWidth != getWidth() || frameHeight != getHeight()) {
+	            // size changed
+	            // reset collision rectangle and collision detection array
+	            defineCollisionRectangle(0, 0, frameWidth, frameHeight);
+	            rgbData = rgbDataAux = null;
+	            
+	            // if necessary change position to keep the reference pixel in place
+	            
+	            if (transform != TRANS_NONE) {
+	                int dx, dy;
+	                switch(transform) {
+	                    case TRANS_MIRROR_ROT180:
+	                        dx = newW - oldW;
+	                        dy = newH - oldH;
+	                        break;
+	                    case TRANS_MIRROR:
+	                        dx = newW - oldW;
+	                        dy = 0;
+	                        break;
+	                    case TRANS_ROT180:
+	                        dx = 0;
+	                        dy = newH - oldH;
+	                        break;
+	                    case TRANS_MIRROR_ROT270:
+	                        dx = newH - oldH;
+	                        dy = 0;
+	                        break;
+	                    case TRANS_ROT90:
+	                        dx = newH - oldH;
+	                        dy = newW - oldW;
+	                        break;
+	                    case TRANS_ROT270:
+	                        dx = 0;
+	                        dy = 0;
+	                        break;
+	                    case TRANS_MIRROR_ROT90:
+	                        dx = 0;
+	                        dy = newW - oldW;
+	                        break;
+	                    default: // cant really happen, but the return keeps the
+	                            // compiler happy (otherwise it'll report variable
+	                            // may not be initialized)
+	                        return;
+	                }
+	                // now change position to keep the refPixel in place
+	                move(dx, dy);
+	            }	                
+	        }
+    	}
     }
     
-    public void paint(Graphics g) {
+    public final void paint(Graphics g) {
         if (!isVisible())
             return;
         

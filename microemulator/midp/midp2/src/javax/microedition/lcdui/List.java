@@ -143,6 +143,13 @@ public class List extends Screen implements Choice
   {
     return choiceGroup.isSelected(elementNum);
   }
+  
+  
+  public void removeCommand(Command cmd)
+  {
+	  // TODO
+	  throw new RuntimeException("not implemented");
+  }
     
   
   public void set(int elementNum, String stringPart, Image imagePart) {
@@ -162,7 +169,8 @@ public class List extends Screen implements Choice
   
   public void setSelectCommand(Command command)
   {
-    // TODO
+	  // TODO
+	  throw new RuntimeException("not implemented");
   }
     
   
@@ -175,6 +183,20 @@ public class List extends Screen implements Choice
   public void setSelectedIndex(int elementNum, boolean selected) 
   {
     choiceGroup.setSelectedIndex(elementNum, selected);    
+  }
+  
+  
+  public void setTicker(Ticker ticker)
+  {
+	  // TODO
+	  throw new RuntimeException("not implemented");
+  }
+  
+  
+  public void setTitle(String s)
+  {
+	  // TODO
+	  throw new RuntimeException("not implemented");
   }
     
   

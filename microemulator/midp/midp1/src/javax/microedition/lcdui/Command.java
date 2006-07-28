@@ -17,63 +17,65 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 package javax.microedition.lcdui;
 
-
-public class Command
-{
+public class Command {
 
 	public static final int SCREEN = 1;
+
 	public static final int BACK = 2;
+
 	public static final int CANCEL = 3;
+
 	public static final int OK = 4;
+
 	public static final int HELP = 5;
+
 	public static final int STOP = 6;
+
 	public static final int EXIT = 7;
+
 	public static final int ITEM = 8;
-	
+
 	String label;
+
 	int commandType;
+
 	int priority;
 
-	public Command(String label, int commandType, int priority)
-	{
+	public Command(String label, int commandType, int priority) {
 		this.label = label;
 		this.commandType = commandType;
 		this.priority = priority;
 	}
 
-
-	public int getCommandType()
-	{
+	public int getCommandType() {
 		return commandType;
 	}
 
-
-	public String getLabel()
-	{
+	public String getLabel() {
 		return label;
 	}
 
-
-	public int getPriority()
-	{
+	public int getPriority() {
 		return priority;
 	}
-	
-	// this is needed to allow for item commands without 
+
+	// this is needed to allow for item commands without
 	// breaking the existing interfaces
-	// (yeah i know it's ugly) 
+	// (yeah i know it's ugly)
 	// Andres Navarro
 	private Command originalCommand;
+
 	private Item focusedItem;
+
 	private Command itemCommand;
 
 	boolean isRegularCommand() {
 		return originalCommand == null;
 	}
-	
+
 	Command getItemCommand(Item item) {
 		if (!isRegularCommand()) {
 			throw new IllegalStateException();
@@ -90,7 +92,7 @@ public class Command
 		itemCommand.focusedItem = item;
 		return itemCommand;
 	}
-	
+
 	Item getFocusedItem() {
 		if (isRegularCommand()) {
 			throw new IllegalStateException();

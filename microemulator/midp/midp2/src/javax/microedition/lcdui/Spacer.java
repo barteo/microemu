@@ -20,7 +20,6 @@
 package javax.microedition.lcdui;
 
 public class Spacer extends Item {
-	private int minWidth, minHeight;
 	
 	public Spacer(int minWidth, int minHeight) {
 		super(null);
@@ -43,8 +42,8 @@ public class Spacer extends Item {
 		if (minWidth < 0 || minHeight < 0)
 			throw new IllegalArgumentException();
 		
-		this.minWidth = minWidth;
-		this.minHeight = minHeight;
+		  // TODO
+		  throw new RuntimeException("not implemented");
 	}
 	
 	// Item methods
@@ -52,11 +51,4 @@ public class Spacer extends Item {
 		return 0;
 	}
 
-	public int getMinimumHeight() {
-		return this.minHeight;
-	}
-
-	public int getMinimumWidth() {
-		return this.minWidth;
-	}
 }

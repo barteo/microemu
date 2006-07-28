@@ -97,7 +97,7 @@ public abstract class GameCanvas extends Canvas {
         this.offscreenBuffer = Image.createImage(this.getWidth(), this.getHeight());
     }
     
-    public Graphics getGraphics() {
+    protected Graphics getGraphics() {
         return offscreenBuffer.getGraphics();
     }
     
@@ -120,10 +120,12 @@ public abstract class GameCanvas extends Canvas {
         serviceRepaints();
     }
 
-    public synchronized int getKeyStates() {
-        int ret = latchedKeyState;
-        latchedKeyState = actualKeyState;
-        return ret;
+    public int getKeyStates() {
+    	synchronized(this) {
+	        int ret = latchedKeyState;
+	        latchedKeyState = actualKeyState;
+	        return ret;
+    	}
     }
     
     // TODO

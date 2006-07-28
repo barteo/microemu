@@ -40,6 +40,24 @@ import org.microemu.device.DeviceFactory;
 
 public class Display 
 {
+	public static final int LIST_ELEMENT = 1;
+	
+	public static final int CHOICE_GROUP_ELEMENT = 2;
+	
+	public static final int ALERT = 3;
+	
+	public static final int COLOR_BACKGROUND = 0;
+	
+	public static final int COLOR_FOREGROUND = 1;
+	
+	public static final int COLOR_HIGHLIGHTED_BACKGROUND = 2;
+	
+	public static final int COLOR_HIGHLIGHTED_FOREGROUND = 3;
+	
+	public static final int COLOR_BORDER = 4;
+	
+	public static final int COLOR_HIGHLIGHTED_BORDER = 5;
+	
 	private PaintThread paintThread = null;
 	private EventDispatcher eventDispatcher = null;
 	private TickerPaint tickerPaint = null;
@@ -591,7 +609,35 @@ public class Display
 
 		return result;
 	}
+	
+	
+	public int getColor(int colorSpecifier)
+	{
+		// TODO
+		throw new RuntimeException("not implemented");
+	}
+	
+	
+	public int getBorderStyle(boolean highlighted)
+	{
+		// TODO
+		throw new RuntimeException("not implemented");
+	}
 
+
+	public int getBestImageWidth(int imageType)
+	{
+		// TODO
+		throw new RuntimeException("not implemented");
+	}
+	
+	
+	public int getBestImageHeight(int imageType)
+	{
+		// TODO
+		throw new RuntimeException("not implemented");
+	}
+	
 	
 	public Displayable getCurrent() 
 	{
@@ -655,6 +701,13 @@ public class Display
 			Thread t = new Thread(at);
 			t.start();
 		}
+	}
+	
+	
+	public void setCurrentItem(Item item)
+	{
+		// TODO
+		throw new RuntimeException("not implemented");
 	}
     
     

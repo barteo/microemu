@@ -82,63 +82,111 @@ public class TiledLayer extends Layer {
     }
     
     // it is synchronized to avoid problems with the animatedTiles array and count
-    public synchronized int createAnimatedTile(int staticTileIndex) {
-        if (staticTileIndex < 0 || staticTileIndex > numStaticTiles)
-            throw new IndexOutOfBoundsException();
-        
-        if (numAnimatedTiles == animatedTiles.length) {
-            int [] temp = new int [numAnimatedTiles + 6];
-            System.arraycopy(animatedTiles, 0, temp, 0, numAnimatedTiles);
-            animatedTiles = temp;
-        }
-        
-        animatedTiles[numAnimatedTiles] = staticTileIndex; 
-        numAnimatedTiles++;
-        return -numAnimatedTiles;
+    public int createAnimatedTile(int staticTileIndex) {
+    	synchronized (this) {
+	        if (staticTileIndex < 0 || staticTileIndex > numStaticTiles)
+	            throw new IndexOutOfBoundsException();
+	        
+	        if (numAnimatedTiles == animatedTiles.length) {
+	            int [] temp = new int [numAnimatedTiles + 6];
+	            System.arraycopy(animatedTiles, 0, temp, 0, numAnimatedTiles);
+	            animatedTiles = temp;
+	        }
+	        
+	        animatedTiles[numAnimatedTiles] = staticTileIndex; 
+	        numAnimatedTiles++;
+	        return -numAnimatedTiles;
+    	}
     }
     
-    public synchronized int getAnimatedTile(int index) {
-        index = -index-1;
-        if (index < 0 || index >= numAnimatedTiles)
-            throw new IndexOutOfBoundsException();
-        return animatedTiles[index];
+    public int getAnimatedTile(int index) {
+    	synchronized (this) {
+	        index = -index-1;
+	        if (index < 0 || index >= numAnimatedTiles)
+	            throw new IndexOutOfBoundsException();
+	        return animatedTiles[index];
+    	}
     }
     
-    public synchronized void setAnimatedTile(int index, int staticTileIndex) {
-        index = -index-1;
-        if (index < 0 || index >= numAnimatedTiles)
-            throw new IndexOutOfBoundsException();
-        if (staticTileIndex < 0 || staticTileIndex > numStaticTiles)
-            throw new IndexOutOfBoundsException();
-        
-        animatedTiles[index] = staticTileIndex;
+    public void setAnimatedTile(int index, int staticTileIndex) {
+    	synchronized (this) {
+	        index = -index-1;
+	        if (index < 0 || index >= numAnimatedTiles)
+	            throw new IndexOutOfBoundsException();
+	        if (staticTileIndex < 0 || staticTileIndex > numStaticTiles)
+	            throw new IndexOutOfBoundsException();
+	        
+	        animatedTiles[index] = staticTileIndex;
+    	}
     }
     
-    public synchronized int getCell(int col, int row) {
+    public int getCell(int col, int row) {
         return this.tiles[row][col];
     }
 
-    public synchronized void setCell(int col, int row, int index) {
-        if (-index-1 >= numAnimatedTiles || index > numStaticTiles)
-            throw new IndexOutOfBoundsException();
-        tiles[row][col] = index; 
+    public void setCell(int col, int row, int index) {
+    	synchronized (this) {
+	        if (-index-1 >= numAnimatedTiles || index > numStaticTiles)
+	            throw new IndexOutOfBoundsException();
+	        tiles[row][col] = index;
+    	}
+    }
+    
+    public void setStaticTileSet(Image image, int tileWidth, int tileHeight) {
+    	synchronized (this) {
+	        if (img == null)
+	            throw new NullPointerException();
+	        if (tileHeight <= 0 || tileWidth <= 0)
+	            throw new IllegalArgumentException();
+	        if (img.getWidth() % tileWidth != 0 || img.getHeight() % tileHeight != 0)
+	            throw new IllegalArgumentException();
+	
+	        int newNumStaticTiles = (img.getWidth() / getCellWidth()) * 
+	                                    (img.getHeight() / getCellHeight());
+	        
+	        
+	        // recalculate size
+	        int w = cols * tileWidth;
+	        int h = rows * tileHeight;
+	        
+	        setSize(w, h);
+	        
+	        this.img = img;
+	        this.tileWidth = tileWidth;
+	        this.tileHeight = tileHeight;
+	        
+	        if (newNumStaticTiles >= numStaticTiles) {
+	            this.numStaticTiles = newNumStaticTiles;
+	            return;
+	        }
+	        // if there are less static tiles
+	        // all animated tiles are discarded and
+	        // the tiledLayer is filled with tiles with index 0
+	
+	        this.numStaticTiles = newNumStaticTiles;
+	        this.animatedTiles = new int[5];
+	        this.numAnimatedTiles = 0;
+	        this.fillCells(0, 0, getColumns(), getRows(), 0);
+    	}
     }
 
-    public synchronized void fillCells(int col, int row, int numCols, int numRows, int index) {
-        if (numCols < 0 || numRows < 0)
-            throw new IllegalArgumentException();
-        if (row < 0 || col < 0 || col + numCols > this.cols || row + numRows > this.rows)    
-            throw new IndexOutOfBoundsException();
-        if (-index-1 >= numAnimatedTiles || index > numStaticTiles)
-            throw new IndexOutOfBoundsException();
-        
-        int rMax = row + numRows;
-        int cMax = col + numCols;
-        for (int r = row; r < rMax; r++) {
-            for (int c = col; c < cMax; c++) {
-                tiles[r][c] = index; 
-            }
-        }
+    public void fillCells(int col, int row, int numCols, int numRows, int index) {
+    	synchronized (this) {
+	        if (numCols < 0 || numRows < 0)
+	            throw new IllegalArgumentException();
+	        if (row < 0 || col < 0 || col + numCols > this.cols || row + numRows > this.rows)    
+	            throw new IndexOutOfBoundsException();
+	        if (-index-1 >= numAnimatedTiles || index > numStaticTiles)
+	            throw new IndexOutOfBoundsException();
+	        
+	        int rMax = row + numRows;
+	        int cMax = col + numCols;
+	        for (int r = row; r < rMax; r++) {
+	            for (int c = col; c < cMax; c++) {
+	                tiles[r][c] = index; 
+	            }
+	        }
+    	}
     }
     
     // dont need for synch here as columns are a constant
@@ -153,111 +201,77 @@ public class TiledLayer extends Layer {
         return rows;
     }
     
-    public synchronized int getCellWidth() {
+    public int getCellWidth() {
         return tileWidth;
     }
     
-    public synchronized int getCellHeight() {
+    public int getCellHeight() {
         return tileHeight;
     }
     
-    public synchronized void setAnimatedTileSet(Image img, int tileWidth, int tileHeight) {
-        if (img == null)
-            throw new NullPointerException();
-        if (tileHeight <= 0 || tileWidth <= 0)
-            throw new IllegalArgumentException();
-        if (img.getWidth() % tileWidth != 0 || img.getHeight() % tileHeight != 0)
-            throw new IllegalArgumentException();
-
-        int newNumStaticTiles = (img.getWidth() / getCellWidth()) * 
-                                    (img.getHeight() / getCellHeight());
-        
-        
-        // recalculate size
-        int w = cols * tileWidth;
-        int h = rows * tileHeight;
-        
-        setSize(w, h);
-        
-        this.img = img;
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
-        
-        if (newNumStaticTiles >= numStaticTiles) {
-            this.numStaticTiles = newNumStaticTiles;
-            return;
-        }
-        // if there are less static tiles
-        // all animated tiles are discarded and
-        // the tiledLayer is filled with tiles with index 0
-
-        this.numStaticTiles = newNumStaticTiles;
-        this.animatedTiles = new int[5];
-        this.numAnimatedTiles = 0;
-        this.fillCells(0, 0, getColumns(), getRows(), 0);
-    }
-
-    public synchronized void paint(Graphics g) {
-        if (!this.isVisible())
-            return;
-        
-        int x = getX();
-        int y = getY();
-
-        int c0 = 0;
-        int r0 = 0;
-        int cMax = getColumns();
-        int rMax = getRows();
-        
-        int tW = getCellWidth();
-        int tH = getCellHeight();
-        
-        int cX = g.getClipX();
-        int cY = g.getClipY();
-        int cW = g.getClipWidth();
-        int cH = g.getClipHeight();
-        
-        // take out the columns and rows that are outside of
-        // the clip area, this should speed things up a bit
-        
-        int diff = cX - x;
-        if (diff > 0)
-            c0 += diff / tW;
-        
-        diff = cX + cW - (x + cMax*tW);
-        if (diff > 0)
-            cMax -= diff / tW;
-
-        diff = cY - y;
-        if (diff > 0)
-            r0 += diff / tH;
-        
-        diff = cY + cH - (x + rMax*tH);
-        if (diff > 0)
-            rMax -= diff / tH;
-        
-        int x0 = x;
-        int anchor = Graphics.LEFT | Graphics.TOP;
-        
-        int imgCols = img.getWidth() / tW;
-        int imgRows = img.getHeight() / tH;
-                
-        for (int r = r0; r < rMax; r++, y += tH) {
-            x = x0;
-            for (int c = c0; c < cMax; c++, x += tW) {
-                int tile = getCell(c, r);
-                if (tile < 0)
-                    tile = getAnimatedTile(tile);
-                if (tile == 0)
-                    continue;
-                
-                tile--;
-                
-                int xSrc = tW * (tile % imgCols);
-                int ySrc = (tile / imgCols) * tH;
-                
-                g.drawRegion(img, xSrc, ySrc, tW, tH, Sprite.TRANS_NONE, x, y, anchor);
-            }
-        }
+    public final void paint(Graphics g) {
+    	synchronized (this) {
+	        if (!this.isVisible())
+	            return;
+	        
+	        int x = getX();
+	        int y = getY();
+	
+	        int c0 = 0;
+	        int r0 = 0;
+	        int cMax = getColumns();
+	        int rMax = getRows();
+	        
+	        int tW = getCellWidth();
+	        int tH = getCellHeight();
+	        
+	        int cX = g.getClipX();
+	        int cY = g.getClipY();
+	        int cW = g.getClipWidth();
+	        int cH = g.getClipHeight();
+	        
+	        // take out the columns and rows that are outside of
+	        // the clip area, this should speed things up a bit
+	        
+	        int diff = cX - x;
+	        if (diff > 0)
+	            c0 += diff / tW;
+	        
+	        diff = cX + cW - (x + cMax*tW);
+	        if (diff > 0)
+	            cMax -= diff / tW;
+	
+	        diff = cY - y;
+	        if (diff > 0)
+	            r0 += diff / tH;
+	        
+	        diff = cY + cH - (x + rMax*tH);
+	        if (diff > 0)
+	            rMax -= diff / tH;
+	        
+	        int x0 = x;
+	        int anchor = Graphics.LEFT | Graphics.TOP;
+	        
+	        int imgCols = img.getWidth() / tW;
+	        int imgRows = img.getHeight() / tH;
+	                
+	        for (int r = r0; r < rMax; r++, y += tH) {
+	            x = x0;
+	            for (int c = c0; c < cMax; c++, x += tW) {
+	                int tile = getCell(c, r);
+	                if (tile < 0)
+	                    tile = getAnimatedTile(tile);
+	                if (tile == 0)
+	                    continue;
+	                
+	                tile--;
+	                
+	                int xSrc = tW * (tile % imgCols);
+	                int ySrc = (tile / imgCols) * tH;
+	                
+	                g.drawRegion(img, xSrc, ySrc, tW, tH, Sprite.TRANS_NONE, x, y, anchor);
+	            }
+	        }
+    	}
     }
 }

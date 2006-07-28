@@ -69,19 +69,23 @@ public abstract class Layer {
         return visible;
     }
     
-    public final synchronized void move(int dx, int dy) {
-        x += dx;
-        y += dy;
+    public void move(int dx, int dy) {
+    	synchronized (this) {
+	        x += dx;
+	        y += dy;
+    	}
     }
     
     public abstract void paint(Graphics g);
     
-    public final synchronized void setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public void setPosition(int x, int y) {
+    	synchronized (this) {
+	        this.x = x;
+	        this.y = y;
+    	}
     }
     
-    public final synchronized void setVisible(boolean visible) {
+    public void setVisible(boolean visible) {
         this.visible = visible;
     }
 }

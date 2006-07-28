@@ -142,6 +142,10 @@ public class Alert extends Screen
 	    repaint();
 	}
 	
+	public Gauge getIndicator() {
+		return indicator;
+	}
+	
 	public void setIndicator(Gauge indicator) {
 		if (indicator == null) {
 			if (this.indicator != null)

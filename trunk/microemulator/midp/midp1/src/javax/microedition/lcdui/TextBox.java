@@ -16,7 +16,7 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 package javax.microedition.lcdui;
 
 import org.microemu.device.DeviceFactory;
@@ -25,129 +25,95 @@ import org.microemu.device.InputMethodEvent;
 import org.microemu.device.InputMethodListener;
 
 //TODO implement pointer events
-public class TextBox extends Screen
-{
+public class TextBox extends Screen {
 
 	TextField tf;
 
-	InputMethodListener inputMethodListener = new InputMethodListener()
-	{
+	InputMethodListener inputMethodListener = new InputMethodListener() {
 
-		public void caretPositionChanged(InputMethodEvent event)
-		{
+		public void caretPositionChanged(InputMethodEvent event) {
 			setCaretPosition(event.getCaret());
 			tf.setCaretVisible(true);
 			repaint();
 		}
 
-		public void inputMethodTextChanged(InputMethodEvent event)
-		{
+		public void inputMethodTextChanged(InputMethodEvent event) {
 			tf.setCaretVisible(false);
 			tf.setString(event.getText());
 			repaint();
 		}
 	};
 
-
-	public TextBox(String title, String text, int maxSize, int constraints)
-	{
+	public TextBox(String title, String text, int maxSize, int constraints) {
 		super(title);
 		tf = new TextField(null, text, maxSize, constraints);
 	}
 
-
-	public String getString()
-	{
+	public String getString() {
 		return tf.getString();
 	}
 
-
-	public void setString(String text)
-	{
+	public void setString(String text) {
 		tf.setString(text);
 	}
 
-
-	public int getChars(char[] data)
-	{
+	public int getChars(char[] data) {
 		return tf.getChars(data);
 	}
 
-
-	public void setChars(char[] data, int offset, int length)
-	{
+	public void setChars(char[] data, int offset, int length) {
 		tf.setChars(data, offset, length);
 	}
 
-
-	public void insert(String src, int position)
-	{
+	public void insert(String src, int position) {
 		tf.insert(src, position);
 	}
 
-
-	public void insert(char[] data, int offset, int length, int position)
-	{
+	public void insert(char[] data, int offset, int length, int position) {
 		tf.insert(data, offset, length, position);
 	}
 
-
-	public void delete(int offset, int length)
-	{
+	public void delete(int offset, int length) {
 		tf.delete(offset, length);
 	}
 
-
-	public int getMaxSize()
-	{
+	public int getMaxSize() {
 		return tf.getMaxSize();
 	}
 
-
-	public int setMaxSize(int maxSize)
-	{
+	public int setMaxSize(int maxSize) {
 		return tf.setMaxSize(maxSize);
 	}
 
-
-	public int size()
-	{
+	public int size() {
 		return tf.size();
 	}
 
-
-	public int getCaretPosition()
-	{
+	public int getCaretPosition() {
 		return tf.getCaretPosition();
 	}
 
-
-	public void setConstraints(int constraints)
-	{
+	public void setConstraints(int constraints) {
 		tf.setConstraints(constraints);
 	}
 
-
-	public int getConstraints()
-	{
+	public int getConstraints() {
 		return tf.getConstraints();
 	}
 
-
-	void hideNotify()
-	{
-		DeviceFactory.getDevice().getInputMethod().removeInputMethodListener(inputMethodListener);
+	void hideNotify() {
+		DeviceFactory.getDevice().getInputMethod().removeInputMethodListener(
+				inputMethodListener);
 		super.hideNotify();
 	}
 
-
-	int paintContent(Graphics g)
-	{
+	int paintContent(Graphics g) {
 		g.translate(0, viewPortY);
-		g.drawRect(1, 1, 
-        DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 3, viewPortHeight - 3);
-		g.setClip(3, 3, 
-        DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 6, viewPortHeight - 6);
+		g.drawRect(1, 1, DeviceFactory.getDevice().getDeviceDisplay()
+				.getWidth() - 3, viewPortHeight - 3);
+		g.setClip(3, 3,
+				DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 6,
+				viewPortHeight - 6);
 		g.translate(3, 3);
 		g.translate(0, -viewPortY);
 		tf.paintContent(g);
@@ -155,37 +121,33 @@ public class TextBox extends Screen
 		return tf.stringComponent.getHeight() + 6;
 	}
 
-
-	void setCaretPosition(int position)
-	{
+	void setCaretPosition(int position) {
 		tf.setCaretPosition(position);
-		
+
 		StringComponent tmp = tf.stringComponent;
 		if (tmp.getCharPositionY(position) < viewPortY) {
 			viewPortY = tmp.getCharPositionY(position);
-		} else if (tmp.getCharPositionY(position) + tmp.getCharHeight() > viewPortY + viewPortHeight - 6) {
-			viewPortY = tmp.getCharPositionY(position) + tmp.getCharHeight() - (viewPortHeight - 6);
+		} else if (tmp.getCharPositionY(position) + tmp.getCharHeight() > viewPortY
+				+ viewPortHeight - 6) {
+			viewPortY = tmp.getCharPositionY(position) + tmp.getCharHeight()
+					- (viewPortHeight - 6);
 		}
 	}
 
-
-	int traverse(int gameKeyCode, int top, int bottom)
-	{
+	int traverse(int gameKeyCode, int top, int bottom) {
 		int traverse = tf.traverse(gameKeyCode, top, bottom, true);
 		if (traverse == Item.OUTOFITEM) {
 			return 0;
 		} else {
-	    return traverse;
+			return traverse;
 		}
 	}
 
-
-	void showNotify()
-	{
+	void showNotify() {
 		super.showNotify();
-    InputMethod inputMethod = DeviceFactory.getDevice().getInputMethod();
+		InputMethod inputMethod = DeviceFactory.getDevice().getInputMethod();
 		inputMethod.setInputMethodListener(inputMethodListener);
-    inputMethod.setConstraints(getConstraints());
+		inputMethod.setConstraints(getConstraints());
 		inputMethod.setText(getString());
 		inputMethod.setMaxSize(getMaxSize());
 		setCaretPosition(getString().length());

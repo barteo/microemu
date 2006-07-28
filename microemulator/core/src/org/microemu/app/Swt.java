@@ -266,7 +266,6 @@ public class Swt extends Common
 		shell.addKeyListener(keyListener);
 
 		selectDeviceDialog = new SwtSelectDeviceDialog(shell);
-		setDevice(selectDeviceDialog.getSelectedDeviceEntry());
     
 		setStatusBarListener(statusBarListener);
 		setResponseInterfaceListener(responseInterfaceListener);
@@ -372,7 +371,7 @@ public class Swt extends Common
 		}
 
 		Swt app = new Swt(shell);
-		app.initDevice(params);
+		app.initDevice(params, app.selectDeviceDialog.getSelectedDeviceEntry());
 		app.updateDevice();
 		
 		app.initMIDlet(params);

@@ -336,21 +336,17 @@ public class Common implements MicroEmulator {
 		List params = new ArrayList();
 		for (int i = 0; i < args.length; i++) {
 			params.add(args[i]);
-		}
-		app.initDevice(params);
-		if (app.getDevice() == null) {
-			DeviceEntry entry = new DeviceEntry("Default device", null, "org.microemu.device.Device", true, false);
-			List deviceParams = new ArrayList();
-			deviceParams.add("-d");
-			deviceParams.add(entry.getClassName());
-			app.initDevice(deviceParams);
-		}
+		}		
+		DeviceEntry defaultDevice = new DeviceEntry("Default device", null, "org.microemu.device.Device", true, false);
+		app.initDevice(params, defaultDevice);
+
 		app.initMIDlet(params);
 	}
 
-	public void initDevice(List params) {
+	public void initDevice(List params, DeviceEntry defaultDevice) {
 		RecordStoreManager paramRecordStoreManager = null;
 		
+		Class deviceClass = null;
 		Iterator it = params.iterator();
 		while (it.hasNext()) {
 			String tmp = (String) it.next();
@@ -358,13 +354,8 @@ public class Common implements MicroEmulator {
 				it.remove();
 				if (it.hasNext()) {
 					try {
-						Class deviceClass = Class.forName((String) it.next());
-						setDevice((Device) deviceClass.newInstance());
+						deviceClass = Class.forName((String) it.next());
 					} catch (ClassNotFoundException ex) {
-						ex.printStackTrace();
-					} catch (InstantiationException ex) {
-						ex.printStackTrace();
-					} catch (IllegalAccessException ex) {
 						ex.printStackTrace();
 					} finally {
 						it.remove();
@@ -382,6 +373,18 @@ public class Common implements MicroEmulator {
 					}
 				}
 			}
+		}
+		try {
+			if (deviceClass == null) {
+				deviceClass = Class.forName(defaultDevice.getClassName());
+			}
+			setDevice((Device) deviceClass.newInstance());
+		} catch (ClassNotFoundException ex) {
+			ex.printStackTrace();
+		} catch (InstantiationException ex) {
+			ex.printStackTrace();
+		} catch (IllegalAccessException ex) {
+			ex.printStackTrace();
 		}
 
 		if (getRecordStoreManager() == null) {

@@ -278,8 +278,6 @@ public class Main extends JFrame
 	common.setStatusBarListener(statusBarListener);
 	common.setResponseInterfaceListener(responseInterfaceListener);
 
-	setDevice(selectDevicePanel.getSelectedDeviceEntry());
-
     getContentPane().add(devicePanel, "Center");
     getContentPane().add(statusBar, "South");    
   }
@@ -398,7 +396,7 @@ public class Main extends JFrame
 	}
 
     Main app = new Main();
-    app.common.initDevice(params);
+    app.common.initDevice(params, app.selectDevicePanel.getSelectedDeviceEntry());
     app.updateDevice();
     
     app.common.initMIDlet(params);

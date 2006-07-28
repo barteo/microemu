@@ -19,56 +19,51 @@
  *  Contributor(s):
  *    Andres Navarro
  */
- 
+
 package org.microemu.device.j2se;
 
 import java.awt.Toolkit;
 
+public class J2SEImmutableImage extends javax.microedition.lcdui.Image {
+	private java.awt.Image img;
+	private int width;
+	private int height;
 
-public class J2SEImmutableImage extends javax.microedition.lcdui.Image
-{
-	java.awt.Image img;
-
-  
-	public J2SEImmutableImage(java.awt.Image image)
-	{
-  	img = image;
-	}
-  
-  
-  public J2SEImmutableImage(J2SEMutableImage image)
-  {
-    img = Toolkit.getDefaultToolkit().createImage(image.getImage().getSource());
-  }
-
-
-	public int getHeight()
-	{
-		return img.getHeight(null);
+	public J2SEImmutableImage(java.awt.Image image) {
+		img = image;
+		width = image.getWidth(null);
+		height = image.getHeight(null);
 	}
 
+	public J2SEImmutableImage(J2SEMutableImage image) {
+		img = Toolkit.getDefaultToolkit().createImage(
+				image.getImage().getSource());
+	}
 
-	public java.awt.Image getImage()
-	{
+	public int getHeight() {
+		return height;
+	}
+
+	public java.awt.Image getImage() {
 		return img;
 	}
 
+	public int getWidth() {
+		return width;
+	}
 
-	public int getWidth()
-	{
-		return img.getWidth(null);
-	}  
-
-    public void getRGB(int[] argb, int offset, int scanlength, int x, int y,
+	public void getRGB(int[] argb, int offset, int scanlength, int x, int y,
 			int width, int height) {
 
 		if (width <= 0 || height <= 0)
 			return;
 		if (x < 0 || y < 0 || x + width > getWidth()
 				|| y + height > getHeight())
-			throw new IllegalArgumentException("Specified area exceeds bounds of image");
+			throw new IllegalArgumentException(
+					"Specified area exceeds bounds of image");
 		if ((scanlength < 0 ? -scanlength : scanlength) < width)
-			throw new IllegalArgumentException("abs value of scanlength is less than width");
+			throw new IllegalArgumentException(
+					"abs value of scanlength is less than width");
 		if (argb == null)
 			throw new NullPointerException("null rgbData");
 		if (offset < 0 || offset + width > argb.length)
@@ -88,5 +83,5 @@ public class J2SEImmutableImage extends javax.microedition.lcdui.Image
 			e.printStackTrace();
 		}
 	}
-    
+
 }

@@ -167,6 +167,7 @@
 			<arg line="-keep 'public class * extends javax.** { *;}'"/>
 			<arg line="-keep 'public class * extends java.applet.Applet { *; }'"/>
 			<arg line="-keep 'public class org.microemu.EmulatorContext { *; }'"/>
+			<arg line="-keep 'public class org.microemu.MIDletBridge { *; }'"/>
 			<arg line="-keep 'public class org.microemu.device.** { *; }'"/>
 			<arg line="-keep 'public class * extends org.microemu.device.** { *; }'"/>
 			<!--<arg line="-keep 'public class org.microemu.device.applet.** { *; }'"/>-->
@@ -287,23 +288,6 @@
 		</jar>
 	</target>
 
-	<target name="compile-mmapi" depends="init,jar">
-		<mkdir dir="./build/mmapi/classes"/>
-		<javac source="1.4" target="1.4" debug="true" deprecation="true" 
-	        srcdir="./ext/mmapi/src"
-	        destdir="./build/mmapi/classes">
-			<classpath>
-				<pathelement location="./target/me-${target}.jar"/>
-			</classpath>
-		</javac>
-	</target>
-
-	<target name="jar-mmapi" depends="compile-mmapi">
-		<jar compress="true" jarfile="./target/mmapi.jar">
-			<fileset dir="./build/mmapi/classes" />
-		</jar>
-	</target>
-
 	<target name="compile-jsr-82" depends="init,jar">
 		<mkdir dir="./build/jsr-82/classes"/>
 		<javac source="1.4" target="1.4" debug="true" deprecation="true" 
@@ -321,10 +305,10 @@
 		</jar>
 	</target>
 
-	<target name="all" depends="init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-mmapi,jar-jsr-82,simpledemo" description="Build everything.">
+	<target name="all" depends="init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-jsr-82,simpledemo" description="Build everything.">
 	</target>
 
-	<target name="dist" depends="clean,init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-mmapi,jar-jsr-82,simpledemo" description="Create distribution package">
+	<target name="dist" depends="clean,init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-jsr-82,simpledemo" description="Create distribution package">
 		<mkdir dir="dist"/>
 
 		<tar basedir="../." tarfile="dist/microemulator-src.tar" defaultexcludes="yes">

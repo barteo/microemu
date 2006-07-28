@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2005 daniel(at)angrymachine.com.ar
+ *  Copyright (C) 2006 Bartek Teodorczyk <barteo@barteo.net>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -17,18 +17,19 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package javax.microedition.media;
+package javax.microedition.media.control;
 
-import java.io.InputStream;
+import javax.microedition.media.Control;
 
-public class Manager
+public interface VolumeControl extends Control
 {
-    public static Player createPlayer(InputStream is, String contentType) throws MediaException
-    {
-        if(contentType.indexOf("mid") != -1)
-        {
-            return new MidiPlayer(is);
-        }
-        throw new MediaException("Unsupported Format");
-    }
+
+	public void setMute(boolean mute);
+	
+	public boolean isMuted();
+	
+	public int setLevel(int level);
+	
+	public int getLevel();
+	
 }

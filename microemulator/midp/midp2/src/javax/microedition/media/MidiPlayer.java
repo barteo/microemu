@@ -31,7 +31,7 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 
-public class MidiPlayer implements Player, MetaEventListener
+class MidiPlayer implements Player, MetaEventListener
 {
     Sequencer sequencer;
     int state = Player.UNREALIZED;
@@ -124,14 +124,14 @@ public class MidiPlayer implements Player, MetaEventListener
     public long setMediaTime(long l) throws MediaException
     {
         //TODO
-        return 0;
+		throw new RuntimeException("not implemented");
     }
 
 
     public long getMediaTime()
     {
         //TODO
-        return 0;
+		throw new RuntimeException("not implemented");
     }
 
 
@@ -144,7 +144,7 @@ public class MidiPlayer implements Player, MetaEventListener
     public long getDuration()
     {
         //TODO
-        return 0;
+		throw new RuntimeException("not implemented");
     }
 
 
@@ -157,6 +157,7 @@ public class MidiPlayer implements Player, MetaEventListener
     public void setLoopCount(int i)
     {
         //TODO
+		throw new RuntimeException("not implemented");
     }
 
     public void addPlayerListener(PlayerListener playerlistener)
@@ -173,15 +174,14 @@ public class MidiPlayer implements Player, MetaEventListener
         listeners.remove(playerlistener);
     }
 
+	public Control getControl(String controlType) {
+		// TODO
+		throw new RuntimeException("not implemented");
+	}
 
-    public void setTimeBase(TimeBase timebase) throws MediaException
-    {
-    }
-
-
-    public TimeBase getTimeBase()
-    {
-        return null;
-    }
+	public Control[] getControls() {
+		// TODO
+		throw new RuntimeException("not implemented");
+	}
 
 }

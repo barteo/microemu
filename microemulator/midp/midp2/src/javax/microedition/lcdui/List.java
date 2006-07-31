@@ -31,6 +31,7 @@ public class List extends Screen implements Choice
   
   ChoiceGroup choiceGroup;
   
+  private Command selCommand;  
   private int initialPressedItem;
   
   
@@ -55,6 +56,7 @@ public class List extends Screen implements Choice
 		choiceGroup.setOwner(this);
 		choiceGroup.setFocus(true);
 		
+		this.selCommand = SELECT_COMMAND;
 		this.initialPressedItem = -1;
   }
   
@@ -79,6 +81,7 @@ public class List extends Screen implements Choice
     	choiceGroup.setOwner(this);
 		choiceGroup.setFocus(true);
 		
+		this.selCommand = SELECT_COMMAND;
 		this.initialPressedItem = -1;
 	}
 						
@@ -169,8 +172,7 @@ public class List extends Screen implements Choice
   
   public void setSelectCommand(Command command)
   {
-	  // TODO
-	  throw new RuntimeException("not implemented");
+	  selCommand = command;
   }
     
   
@@ -205,7 +207,7 @@ public class List extends Screen implements Choice
     if(Display.getGameAction(keyCode) == Canvas.FIRE 
         && choiceGroup.select() && super.getCommandListener() != null
         && choiceGroup.choiceType == Choice.IMPLICIT) {
-      super.getCommandListener().commandAction(SELECT_COMMAND, this);
+      super.getCommandListener().commandAction(selCommand, this);
     } else {
       super.keyPressed(keyCode);
     }
@@ -251,26 +253,25 @@ public class List extends Screen implements Choice
 	}
 
 
-int paintContent(Graphics g)
-  {
-    return choiceGroup.paint(g);
-  }
-  
-  
-  public int size() 
-  {
-    return choiceGroup.size();
-  }
+	int paintContent(Graphics g) 
+	{
+		return choiceGroup.paint(g);
+	}
 
-  
-  int traverse(int gameKeyCode, int top, int bottom)
-  {
+	
+	public int size() 
+	{
+		return choiceGroup.size();
+	}
+
+	int traverse(int gameKeyCode, int top, int bottom) 
+	{
 		int traverse = choiceGroup.traverse(gameKeyCode, top, bottom, true);
 		if (traverse == Item.OUTOFITEM) {
 			return 0;
 		} else {
-	    return traverse;
+			return traverse;
 		}
-  }
+	}
 
 }

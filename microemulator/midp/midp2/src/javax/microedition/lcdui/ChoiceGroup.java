@@ -446,7 +446,8 @@ public class ChoiceGroup extends Item implements Choice
 		} else if (choiceType == Choice.IMPLICIT) {
 		    if (selected) {
 		        highlightedItemIndex = elementNum;
-		        repaint();
+				items[elementNum].setSelectedState(selected);
+				repaint();
 		    }
 		}
   }

@@ -229,6 +229,10 @@ public class Common implements MicroEmulator {
 	}
 
 	protected void loadFromJad(URL jadUrl, MIDletClassLoader midletClassLoader) throws ClassNotFoundException{
+		if (jad.getJarURL() == null) {
+			throw new ClassNotFoundException("Cannot find MIDlet-Jar-URL property in jad");
+		}
+		
 		setResponseInterface(false);
 		URL url = null;
 		try {
@@ -243,7 +247,11 @@ public class Common implements MicroEmulator {
 			}
 		}
 		
-		midletClassLoader.addURL(url);
+		try {
+			midletClassLoader.addURL(url);
+		} catch (IOException ex) {
+			throw new ClassNotFoundException(ex.getMessage());
+		}
 		launcher.removeMIDletEntries();
 
 		manifest.clear();

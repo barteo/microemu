@@ -127,12 +127,16 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	
     public boolean isFullScreenMode() 
     { 
-    	DisplayAccess da = MIDletBridge.getMIDletAccess().getDisplayAccess();
-    	
-    	if (da != null) {
-    		return da.isFullScreenMode();
-    	} else {
+    	MIDletAccess ma = MIDletBridge.getMIDletAccess();
+    	if (ma == null) {
     		return false;
+    	} else {
+    		DisplayAccess da = ma.getDisplayAccess();
+    		if (da == null) {
+    			return false;
+    		} else {
+    			return da.isFullScreenMode();
+    		}
     	}
     }
 

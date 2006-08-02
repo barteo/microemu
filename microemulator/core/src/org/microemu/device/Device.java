@@ -167,6 +167,9 @@ public class Device
 
         DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) getDeviceDisplay();
         InputMethodImpl inputMethod = (InputMethodImpl) getInputMethod();
+        inputMethod.setHasPointerEvents(false);
+        inputMethod.setHasPointerMotionEvents(false);
+        inputMethod.setHasRepeatEvents(false);
         for (Enumeration e = doc.enumerateChildren(); e.hasMoreElements(); ) {
           XMLElement tmp = (XMLElement) e.nextElement();
           if (tmp.getName().equals("img")) {

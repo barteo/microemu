@@ -44,38 +44,34 @@ public class MIDletClassLoader extends SystemClassLoader {
 	}
 
 	
-	public void addURL(URL midletSource) {
+	public void addURL(URL midletSource) throws IOException {
 		byte[] cache = new byte[1024];
-		try {
-			URLConnection conn = midletSource.openConnection();
-			JarInputStream jis = new JarInputStream(conn.getInputStream());
-			while (true) {
-				JarEntry entry = jis.getNextJarEntry();
-				if (entry != null) {
-					if (!entry.isDirectory()) {
-						int offset = 0;
-						int i = 0;
-						while ((i = jis.read(cache, offset, cache.length
-								- offset)) != -1) {
-							offset += i;
-							if (offset >= cache.length) {
-								byte newcache[] = new byte[cache.length + 1024];
-								System.arraycopy(cache, 0, newcache, 0,
-										cache.length);
-								cache = newcache;
-							}
+
+		URLConnection conn = midletSource.openConnection();
+		JarInputStream jis = new JarInputStream(conn.getInputStream());
+		while (true) {
+			JarEntry entry = jis.getNextJarEntry();
+			if (entry != null) {
+				if (!entry.isDirectory()) {
+					int offset = 0;
+					int i = 0;
+					while ((i = jis.read(cache, offset, cache.length
+							- offset)) != -1) {
+						offset += i;
+						if (offset >= cache.length) {
+							byte newcache[] = new byte[cache.length + 1024];
+							System.arraycopy(cache, 0, newcache, 0,
+									cache.length);
+							cache = newcache;
 						}
-						byte[] tmp = new byte[offset];
-						System.arraycopy(cache, 0, tmp, 0, offset);
-						entries.put(entry.getName(), tmp);
 					}
-				} else {
-					break;
+					byte[] tmp = new byte[offset];
+					System.arraycopy(cache, 0, tmp, 0, offset);
+					entries.put(entry.getName(), tmp);
 				}
+			} else {
+				break;
 			}
-		} catch (IOException ex) {
-			System.err.println(ex);
-			ex.printStackTrace();
 		}
 	}
 

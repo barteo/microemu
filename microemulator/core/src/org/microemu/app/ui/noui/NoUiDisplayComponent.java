@@ -79,7 +79,7 @@ public class NoUiDisplayComponent implements DisplayComponent {
 			Graphics gc = displayImage.getImage().getGraphics();
 
 			J2SEDeviceDisplay deviceDisplay = (J2SEDeviceDisplay) device.getDeviceDisplay();				
-			if (!ma.getDisplayAccess().isFullScreenMode()) {
+			if (!deviceDisplay.isFullScreenMode()) {
 				deviceDisplay.paintControls(gc);
 			}
 			deviceDisplay.paintDisplayable(gc, x, y, width, height);

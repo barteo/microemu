@@ -114,7 +114,7 @@ public class SwtDisplayComponent implements DisplayComponent
 			try {
 				SwtDeviceDisplay deviceDisplay = (SwtDeviceDisplay) device.getDeviceDisplay();
 				deviceDisplay.paintDisplayable(gc, x, y, width, height);
-				if (!ma.getDisplayAccess().isFullScreenMode()) {
+				if (!deviceDisplay.isFullScreenMode()) {
 					deviceDisplay.paintControls(gc);
 				}
 			} finally {

@@ -113,7 +113,7 @@ public class SwingDisplayComponent implements DisplayComponent
 
 				J2SEDeviceDisplay deviceDisplay = (J2SEDeviceDisplay) device.getDeviceDisplay();
 				deviceDisplay.paintDisplayable(gc, x, y, width, height);
-				if (!ma.getDisplayAccess().isFullScreenMode()) {
+				if (!deviceDisplay.isFullScreenMode()) {
 					deviceDisplay.paintControls(gc);
 				}
 			}

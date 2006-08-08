@@ -21,12 +21,13 @@ package javax.microedition.media;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Vector;
 
 public final class Manager
 {
 
     public static final String TONE_DEVICE_LOCATOR = "device://tone";
-    
+    static Vector vMedia = null;
     
     public static String[] getSupportedContentTypes(String protocol)
     {
@@ -53,23 +54,68 @@ public final class Manager
     public static Player createPlayer(InputStream stream, String type)
             throws IOException, MediaException
     {
-    	if (stream == null) {
-    		throw new IllegalArgumentException();
-    	}
-        if (type.indexOf("audio/midi") != -1) {
-            return new MidiPlayer(stream);
-        } else if (type.indexOf("audio/x-wav") != -1) {
-        	return new WavPlayer(stream);
+        // TODO add all types, for now just simpleaudio
+    	if( type.equals( "audio/x-wav" ) || type.equals( "audio/basic" ) || 
+    		type.equals( "audio/mpeg" )  )
+    	{
+    	  	SampledAudioPlayer audPlayer = new SampledAudioPlayer();
+        	audPlayer.open( stream, type );
+        	
+        	if( vMedia == null )
+        		vMedia = new Vector();
+        	vMedia.add( audPlayer );
+            return audPlayer;
         }
-        
-        throw new MediaException("Unsupported Format");
+    	else if( type.equals( "audio/midi" ) )
+    	{
+    	  	MidiAudioPlayer midiPlayer = new MidiAudioPlayer();
+        	midiPlayer.open( stream, type );
+        	
+        	if( vMedia == null )
+        		vMedia = new Vector();
+        	vMedia.add( midiPlayer );
+            return midiPlayer;
+    	}
+    	
+    	return null;
     }
     
     
     public static void playTone(int note, int duration, int volume)
-            throws MediaException
-    {
-        // TODO
-    }
+    		throws MediaException
+	{
+    	// TODO
+	}
+
+    static void mediaDone( Object objMedia )
+	{
+    	//remove the media from our list of media to cleanup
+    	try 
+    	{
+	    	for( int index=0; vMedia != null && index<vMedia.size(); index++ )
+	    	{
+	    		if( objMedia == vMedia.elementAt( index ) )
+	    			vMedia.removeElementAt( index );
+	    	}
+    	}
+    	catch( ArrayIndexOutOfBoundsException e ) { return; };
+	}
     
+    static void cleanupMedia()
+	{
+    	try 
+    	{
+	    	while( vMedia != null && vMedia.size() > 0 )
+	    	{
+	    		Player play = (Player) vMedia.elementAt( 0 );
+	    		play.close();
+	    		vMedia.removeElementAt( 0 );
+	    	}
+    	}
+    	catch( ArrayIndexOutOfBoundsException e ) { return; };
+	}
+
 }
+
+
+

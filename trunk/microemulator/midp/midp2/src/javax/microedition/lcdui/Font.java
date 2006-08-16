@@ -54,7 +54,7 @@ public final class Font
 		if ((face != FACE_SYSTEM) && (face != FACE_MONOSPACE) && (face != FACE_PROPORTIONAL)) {
 			throw new IllegalArgumentException();
 		}
-		if ((style != STYLE_PLAIN) && (style != STYLE_BOLD) && (style != STYLE_ITALIC) && (style != STYLE_UNDERLINED)) {
+		if ((style & (STYLE_PLAIN | STYLE_BOLD | STYLE_ITALIC | STYLE_UNDERLINED)) != style) {
 			throw new IllegalArgumentException();
 		}
 		if ((size != SIZE_SMALL) && (size != SIZE_MEDIUM) && (size != SIZE_LARGE)) {

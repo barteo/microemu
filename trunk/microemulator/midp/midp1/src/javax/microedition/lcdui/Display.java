@@ -32,6 +32,7 @@ import javax.microedition.midlet.MIDlet;
 import org.microemu.CommandManager;
 import org.microemu.DisplayAccess;
 import org.microemu.MIDletBridge;
+import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 
 public class Display 
@@ -254,10 +255,11 @@ public class Display
 					this.height = height;
 				} else {
 					// TODO analyze and update clipping, currently repaints the whole displayable
+					DeviceDisplay deviceDisplay = DeviceFactory.getDevice().getDeviceDisplay();					
 					this.x = 0;
 					this.y = 0;
-					this.width = current.getWidth();
-					this.height = current.getHeight();
+					this.width = deviceDisplay.getWidth();
+					this.height = deviceDisplay.getHeight();
 				}
 				paintLock.notify();
 			}
@@ -570,7 +572,8 @@ public class Display
 		 * it has happened.
 		 */
 		MIDletBridge.notifySoftkeyLabelsChanged();
-		repaint(current, 0, 0, current.getWidth(), current.getHeight());
+		DeviceDisplay deviceDisplay = DeviceFactory.getDevice().getDeviceDisplay();
+		repaint(current, 0, 0, deviceDisplay.getWidth(), deviceDisplay.getHeight());
 	}
 
 }

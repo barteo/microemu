@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001-2003 Bartek Teodorczyk <barteo@barteo.net>
+ *  Copyright (C) 2006 Bartek Teodorczyk <barteo@barteo.net>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -17,25 +17,37 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+
 package org.microemu.cldc.socket;
 
 import java.io.IOException;
+import java.net.ServerSocket;
 
-import org.microemu.cldc.ClosedConnection;
+import javax.microedition.io.StreamConnection;
 
-public class Connection implements ClosedConnection {
+public class ServerSocketConnection implements
+		javax.microedition.io.ServerSocketConnection {
+	
+	private ServerSocket serverSocket;
+	
+	public ServerSocketConnection(int port) throws IOException {
+		serverSocket = new ServerSocket(port);
+	}
 
-	public javax.microedition.io.Connection open(String name)
-			throws IOException {
-		int portSepIndex = name.lastIndexOf(':');
-		int port = Integer.parseInt(name.substring(portSepIndex + 1));
-		String host = name.substring("socket://".length(), portSepIndex);
+	public String getLocalAddress() throws IOException {
+		return serverSocket.getInetAddress().toString();
+	}
 
-		if (host.length() > 0) {
-			return new SocketConnection(host, port);
-		} else {
-			return new ServerSocketConnection(port);
-		}
+	public int getLocalPort() throws IOException {
+		return serverSocket.getLocalPort();
+	}
+
+	public StreamConnection acceptAndOpen() throws IOException {
+		return new SocketConnection(serverSocket.accept());
+	}
+
+	public void close() throws IOException {
+		serverSocket.close();
 	}
 
 }

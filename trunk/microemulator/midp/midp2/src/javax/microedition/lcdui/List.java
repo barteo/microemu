@@ -190,8 +190,7 @@ public class List extends Screen implements Choice
   
   public void setTicker(Ticker ticker)
   {
-	  // TODO
-	  throw new RuntimeException("not implemented");
+	  super.setTicker(ticker);
   }
   
   

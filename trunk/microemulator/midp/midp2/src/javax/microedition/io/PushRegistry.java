@@ -26,33 +26,63 @@ public class PushRegistry {
 	public static void registerConnection(String connection, String midlet, String filter)
     		throws ClassNotFoundException, IOException {
 		// TODO implement
-		throw new RuntimeException();
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
 	}
 	
 	public static boolean unregisterConnection(String connection) {
 		// TODO implement
-		throw new RuntimeException();
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
 	}
 	
 	public static String[] listConnections(boolean available) {
 		// TODO implement
-		throw new RuntimeException();
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
 	}
 	
 	public static String getMIDlet(String connection) {
 		// TODO implement
-		throw new RuntimeException();
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
 	}
 	
 	public static String getFilter(String connection) {
 		// TODO implement
-		throw new RuntimeException();
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
 	}
 	
 	public static long registerAlarm(String midlet, long time)
 			throws ClassNotFoundException, ConnectionNotFoundException {
 		// TODO implement
-		throw new RuntimeException();
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
 	}
 
 }

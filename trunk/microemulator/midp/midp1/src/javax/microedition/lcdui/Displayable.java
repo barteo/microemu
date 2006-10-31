@@ -22,7 +22,6 @@ package javax.microedition.lcdui;
 import java.util.Vector;
 
 import org.microemu.device.Device;
-import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 
 
@@ -171,8 +170,7 @@ public abstract class Displayable
 	void repaint()
 	{
 		if (currentDisplay != null) {
-			DeviceDisplay deviceDisplay = DeviceFactory.getDevice().getDeviceDisplay();
-			repaint(0, 0, deviceDisplay.getWidth(), deviceDisplay.getHeight());
+			repaint(0, 0, getWidth(), getHeight());
 		}
 	}
 

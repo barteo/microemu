@@ -427,7 +427,7 @@ public class Form extends Screen
 	}
 
 	
-	int getTopVisibleIndex(int top) 
+	private int getTopVisibleIndex(int top) 
 	{
 		int height = 0;
 
@@ -442,7 +442,7 @@ public class Form extends Screen
 	}
 
 	
-	int getBottomVisibleIndex(int bottom) 
+	private int getBottomVisibleIndex(int bottom) 
 	{
 		int height = 0;
 
@@ -457,7 +457,7 @@ public class Form extends Screen
 	}
 
 	
-	int getHeightToItem(int itemIndex) 
+	private int getHeightToItem(int itemIndex) 
 	{
 		int height = 0;
 

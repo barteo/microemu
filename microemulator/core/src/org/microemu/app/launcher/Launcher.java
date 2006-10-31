@@ -16,7 +16,7 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 package org.microemu.app.launcher;
 
 import java.util.Vector;
@@ -32,102 +32,82 @@ import javax.microedition.midlet.MIDletStateChangeException;
 import org.microemu.MIDletBridge;
 import org.microemu.MIDletEntry;
 
+public class Launcher extends MIDlet implements CommandListener {
 
+	private static final Command CMD_LAUNCH = new Command("Start", Command.ITEM, 0);;
+	
+	private static final String NOMIDLETS = "[no midlets]";
 
-public class Launcher extends MIDlet implements CommandListener
-{
-	private static String nomidlets = "[no midlets]";
-  
 	private List menuList;
-  
+
 	private String midletSuiteName = null;
+
 	private Vector midletEntries = new Vector();
-  
+
 	private MIDlet currentMIDlet = null;
-  
-  
-  public Launcher()
-  {
-  }
-  
-  
-  public String getSuiteName()
-  {
-  	return midletSuiteName;
-  }
-  
-  
-  public void setSuiteName(String midletSuiteName)
-  {
-  	this.midletSuiteName = midletSuiteName;
-  }
 
+	public Launcher() {
+	}
 
-  public void addMIDletEntry(MIDletEntry entry)
-  {
-    midletEntries.addElement(entry);
-  }
-  
-  
-  public void removeMIDletEntries()
-  {
-    midletEntries.removeAllElements();
-  }
-  
-  
-  public MIDlet getCurrentMIDlet()
-  {
-    return currentMIDlet;
-  }
-  
-  
-  public void setCurrentMIDlet(MIDlet midlet)
-  {
-    currentMIDlet = midlet;
-  }
-  
-  
-  public void destroyApp(boolean unconditional) 
-  {
-  }
+	public String getSuiteName() {
+		return midletSuiteName;
+	}
 
+	public void setSuiteName(String midletSuiteName) {
+		this.midletSuiteName = midletSuiteName;
+	}
 
-  public void pauseApp() 
-  {
-  }
+	public void addMIDletEntry(MIDletEntry entry) {
+		midletEntries.addElement(entry);
+	}
 
-  
-  public void startApp() 
-  {
+	public void removeMIDletEntries() {
+		midletEntries.removeAllElements();
+	}
+
+	public MIDlet getCurrentMIDlet() {
+		return currentMIDlet;
+	}
+
+	public void setCurrentMIDlet(MIDlet midlet) {
+		currentMIDlet = midlet;
+	}
+
+	public void destroyApp(boolean unconditional) {
+	}
+
+	public void pauseApp() {
+	}
+
+	public void startApp() {
 		menuList = new List("Launcher", List.IMPLICIT);
+		menuList.addCommand(CMD_LAUNCH);
 		menuList.setCommandListener(this);
 
-    if (midletEntries.size() == 0) {
-      menuList.append(nomidlets, null);
-    } else {
-      for (int i = 0; i < midletEntries.size(); i++) {
-        menuList.append(((MIDletEntry) midletEntries.elementAt(i)).getName(), null);
-      }
-    }
-    
-    Display.getDisplay(this).setCurrent(menuList);
-  }
+		if (midletEntries.size() == 0) {
+			menuList.append(NOMIDLETS, null);
+		} else {
+			for (int i = 0; i < midletEntries.size(); i++) {
+				menuList.append(((MIDletEntry) midletEntries.elementAt(i))
+						.getName(), null);
+			}
+		}
 
-  
-  public void commandAction(Command c, Displayable d)
-  {
-    if (d == menuList) {
-      if (c == List.SELECT_COMMAND) {
-      	startSelectedMIDlet();
-      }
-    }
-  }
+		Display.getDisplay(this).setCurrent(menuList);
+	}
 
+	public void commandAction(Command c, Displayable d) {
+		if (d == menuList) {
+			if (c == List.SELECT_COMMAND || c == CMD_LAUNCH) {
+				startSelectedMIDlet();
+			}
+		}
+	}
 
-	public MIDlet startSelectedMIDlet() 
-	{
-        if (!menuList.getString(menuList.getSelectedIndex()).equals(nomidlets)) {
-			currentMIDlet = ((MIDletEntry) midletEntries.elementAt(menuList.getSelectedIndex())).getMIDlet();
+	public MIDlet startSelectedMIDlet() {
+		if (!menuList.getString(menuList.getSelectedIndex()).equals(NOMIDLETS)) {
+			currentMIDlet = ((MIDletEntry) midletEntries.elementAt(menuList
+					.getSelectedIndex())).getMIDlet();
 			try {
 				MIDletBridge.getMIDletAccess(currentMIDlet).startApp();
 			} catch (MIDletStateChangeException ex) {
@@ -137,5 +117,5 @@ public class Launcher extends MIDlet implements CommandListener
 
 		return currentMIDlet;
 	}
-  
+
 }

@@ -408,6 +408,18 @@ public class ChoiceGroup extends Item implements Choice
 	}
 
 	
+	int getHeightToItem(int itemIndex) 
+	{
+		int height = 0;
+
+		for (int i = 0; i < itemIndex; i++) {
+			height += items[i].getHeight();
+		}
+
+		return height;
+	}
+
+	
   int paint(Graphics g)
   {
 		super.paintContent(g);

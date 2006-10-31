@@ -91,7 +91,12 @@ public class TextBox extends Screen {
 
 	public void setInitialInputMode(String characterSubset) {
 		// TODO
-		throw new RuntimeException("not implemented");
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
 	}
 
 	public int setMaxSize(int maxSize) {
@@ -104,12 +109,16 @@ public class TextBox extends Screen {
 
 	public void setTicker(Ticker ticker) {
 		// TODO
-		throw new RuntimeException("not implemented");
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
 	}
 	
 	public void setTitle(String s) {
-		// TODO
-		throw new RuntimeException("not implemented");
+		super.setTitle(s);
 	}
 
 	public int size() {

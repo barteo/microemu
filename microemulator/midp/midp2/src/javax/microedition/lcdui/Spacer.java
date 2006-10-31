@@ -43,7 +43,12 @@ public class Spacer extends Item {
 			throw new IllegalArgumentException();
 		
 		  // TODO
-		  throw new RuntimeException("not implemented");
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
 	}
 	
 	// Item methods

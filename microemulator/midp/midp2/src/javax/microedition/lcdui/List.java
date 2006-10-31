@@ -151,7 +151,12 @@ public class List extends Screen implements Choice
   public void removeCommand(Command cmd)
   {
 	  // TODO
-	  throw new RuntimeException("not implemented");
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
   }
     
   
@@ -191,13 +196,19 @@ public class List extends Screen implements Choice
   public void setTicker(Ticker ticker)
   {
 	  super.setTicker(ticker);
+	  // TODO size of changed probably
   }
   
   
   public void setTitle(String s)
   {
 	  // TODO
-	  throw new RuntimeException("not implemented");
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
   }
     
   
@@ -262,6 +273,13 @@ public class List extends Screen implements Choice
 	{
 		return choiceGroup.size();
 	}
+
+	void showNotify() {
+		super.showNotify();
+
+		viewPortY = choiceGroup.getHeightToItem(getSelectedIndex());
+	}
+
 
 	int traverse(int gameKeyCode, int top, int bottom) 
 	{

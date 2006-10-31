@@ -21,119 +21,179 @@ package javax.microedition.lcdui;
 
 import org.microemu.device.DeviceFactory;
 
-class StringComponent 
-{
+class StringComponent {
 	private String text;
+
 	private int breaks[] = new int[4];
+
 	private boolean invertPaint = false;
+
 	private int numOfBreaks;
+
 	private int width;
+
 	private int widthDecreaser;
 
-	
-	StringComponent() 
-	{
+	public StringComponent() {
 		this(null);
 	}
 
-	
-	StringComponent(String text) 
-	{
-		this.width = -1;
-		this.widthDecreaser = 0;
-		setText(text);
-	}
-
-	
-	String getText() 
-	{
-		return text;
-	}
-
-	
-	void setText(String text) 
-	{
-		this.text = text;
-		this.numOfBreaks = -1;
-	}
-
-	
-	int getCharPositionX(int num) 
-	{
-		if (numOfBreaks == -1) {
-			updateBreaks();
+	public StringComponent(String text) {
+		synchronized (this) {
+			this.width = -1;
+			this.widthDecreaser = 0;
+			setText(text);
 		}
-		
-		int i, prevIndex = 0;
-		Font f = Font.getDefaultFont();
+	}
 
-		for (i = 0; i < numOfBreaks; i++) {
-			if (num < breaks[i]) {
-				break;
+	public int getCharHeight() {
+		return Font.getDefaultFont().getHeight();
+	}
+
+	public int getCharPositionX(int num) {
+		synchronized (this) {
+			if (numOfBreaks == -1) {
+				updateBreaks();
 			}
-			prevIndex = breaks[i];
+	
+			int i, prevIndex = 0;
+			Font f = Font.getDefaultFont();
+	
+			for (i = 0; i < numOfBreaks; i++) {
+				if (num < breaks[i]) {
+					break;
+				}
+				prevIndex = breaks[i];
+			}
+			
+			return f.substringWidth(text, prevIndex, num - prevIndex);
 		}
-		return f.substringWidth(text, prevIndex, num - prevIndex);
 	}
 
-	
-	int getCharPositionY(int num) 
-	{
-		if (numOfBreaks == -1) {
-			updateBreaks();
-		}
-		
+	public int getCharPositionY(int num) {
 		int y = 0;
-		Font f = Font.getDefaultFont();
-
-		for (int i = 0; i < numOfBreaks; i++) {
-			if (num < breaks[i]) {
-				break;
+		synchronized (this) {
+			if (numOfBreaks == -1) {
+				updateBreaks();
 			}
-			y += f.getHeight();
+	
+			Font f = Font.getDefaultFont();
+	
+			for (int i = 0; i < numOfBreaks; i++) {
+				if (num < breaks[i]) {
+					break;
+				}
+				y += f.getHeight();
+			}
 		}
 
 		return y;
 	}
 
-	
-	int getCharHeight() 
-	{
-		return Font.getDefaultFont().getHeight();
-	}
-
-	
-	int getHeight() 
-	{
-		if (numOfBreaks == -1) {
-			updateBreaks();
-		}
-		
+	public int getHeight() {
 		int height;
-		Font f = Font.getDefaultFont();
+		synchronized (this) {
+			if (numOfBreaks == -1) {
+				updateBreaks();
+			}
 
-		if (text == null) {
-			return 0;
-		}
+			Font f = Font.getDefaultFont();
 
-		if (numOfBreaks == 0) {
-			return f.getHeight();
-		}
+			if (text == null) {
+				return 0;
+			}
 
-		height = numOfBreaks * f.getHeight();
+			if (numOfBreaks == 0) {
+				return f.getHeight();
+			}
 
-		if (breaks[numOfBreaks - 1] == text.length() - 1
-			&& text.charAt(text.length() - 1) == '\n') {
-		} else {
-			height += f.getHeight();
+			height = numOfBreaks * f.getHeight();
+
+			if (breaks[numOfBreaks - 1] == text.length() - 1
+					&& text.charAt(text.length() - 1) == '\n') {
+			} else {
+				height += f.getHeight();
+			}
 		}
 
 		return height;
 	}
 
+	public String getText() {
+		return text;
+	}
+
+	public void invertPaint(boolean state) {
+		synchronized (this) {
+			invertPaint = state;
+		}
+	}
+
+	public int paint(Graphics g) {
+		if (text == null) {
+			return 0;
+		}
+
+		int y;
+		synchronized (this) {
+			if (numOfBreaks == -1) {
+				updateBreaks();
+			}
 	
-	private void insertBreak(int pos) 
-	{
+			int i, prevIndex;
+			Font f = Font.getDefaultFont();
+	
+			for (i = prevIndex = y = 0; i < numOfBreaks; i++) {
+				if (invertPaint) {
+					g.setGrayScale(0);
+				} else {
+					g.setGrayScale(255);
+				}
+				g.fillRect(0, y, width, f.getHeight());
+				if (invertPaint) {
+					g.setGrayScale(255);
+				} else {
+					g.setGrayScale(0);
+				}
+				g.drawSubstring(text, prevIndex, breaks[i] - prevIndex, 0, y, 0);
+				prevIndex = breaks[i];
+				y += f.getHeight();
+			}
+			if (prevIndex != text.length()) {
+				if (invertPaint) {
+					g.setGrayScale(0);
+				} else {
+					g.setGrayScale(255);
+				}
+				g.fillRect(0, y, width, f.getHeight());
+				if (invertPaint) {
+					g.setGrayScale(255);
+				} else {
+					g.setGrayScale(0);
+				}
+				g.drawSubstring(text, prevIndex, text.length() - prevIndex, 0, y, 0);
+				y += f.getHeight();
+			}
+		}
+
+		return y;
+	}
+
+	public void setText(String text) {
+		synchronized (this) {
+			this.text = text;
+			this.numOfBreaks = -1;
+		}
+	}
+
+	public void setWidthDecreaser(int widthDecreaser) {
+		synchronized (this) {
+			this.widthDecreaser = widthDecreaser;
+			numOfBreaks = -1;
+		}
+	}
+
+	private void insertBreak(int pos) {
 		int i;
 
 		for (i = 0; i < numOfBreaks; i++) {
@@ -151,88 +211,13 @@ class StringComponent
 		numOfBreaks++;
 	}
 
-	
-	void invertPaint(boolean state) 
-	{
-		invertPaint = state;
-	}
-
-	
-	int length() 
-	{
-		return text.length();
-	}
-
-	
-	int paint(Graphics g) 
-	{
-		if (text == null) {
-			return 0;
-		}
-
-		if (numOfBreaks == -1) {
-			updateBreaks();
-		}
-		
-		int i, prevIndex, y;
-		Font f = Font.getDefaultFont();
-
-		for (i = prevIndex = y = 0; i < numOfBreaks; i++) {
-			if (invertPaint) {
-				g.setGrayScale(0);
-			} else {
-				g.setGrayScale(255);
-			}
-			g.fillRect(0, y, width, f.getHeight());
-			if (invertPaint) {
-				g.setGrayScale(255);
-			} else {
-				g.setGrayScale(0);
-			}
-			g.drawSubstring(text, prevIndex, breaks[i] - prevIndex, 0, y, 0);
-			prevIndex = breaks[i];
-			y += f.getHeight();
-		}
-		if (prevIndex != text.length()) {
-			if (invertPaint) {
-				g.setGrayScale(0);
-			} else {
-				g.setGrayScale(255);
-			}
-			g.fillRect(0, y, width, f.getHeight());
-			if (invertPaint) {
-				g.setGrayScale(255);
-			} else {
-				g.setGrayScale(0);
-			}
-			g.drawSubstring(
-				text,
-				prevIndex,
-				text.length() - prevIndex,
-				0,
-				y,
-				0);
-			y += f.getHeight();
-		}
-
-		return y;
-	}
-
-	
-	void setWidthDecreaser(int widthDecreaser)
-	{
-		this.widthDecreaser = widthDecreaser;
-		numOfBreaks = -1;
-	}
-
-	
-	void updateBreaks() 
-	{
+	private void updateBreaks() {
 		if (text == null) {
 			return;
-		}		
+		}
 
-		width = DeviceFactory.getDevice().getDeviceDisplay().getWidth() - widthDecreaser;
+		width = DeviceFactory.getDevice().getDeviceDisplay().getWidth()
+				- widthDecreaser;
 
 		int prevIndex = 0;
 		int canBreak = 0;

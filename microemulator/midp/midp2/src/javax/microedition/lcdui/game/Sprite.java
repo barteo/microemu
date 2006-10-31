@@ -264,12 +264,22 @@ public class Sprite extends Layer {
     
     public final int getFrame() {
 		// TODO
-		throw new RuntimeException("not implemented");
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
     }
     
     public int getFrameSequenceLength() {
 		// TODO
-		throw new RuntimeException("not implemented");
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
     }
     
     public void setFrame(int frame) {

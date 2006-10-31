@@ -108,5 +108,24 @@ public class JadProperties extends Properties
     
     return midletEntries;
   }
-    
+
+
+	public String getProperty(String key, String defaultValue) {
+		String result = super.getProperty(key, defaultValue);
+		if (result != null) {
+			return result.trim();
+		} else {
+			return null;
+		}
+	}
+
+	public String getProperty(String key) {
+		String result = super.getProperty(key);
+		if (result != null) {
+			return result.trim();
+		} else {
+			return null;
+		}
+	}      
+  
 }

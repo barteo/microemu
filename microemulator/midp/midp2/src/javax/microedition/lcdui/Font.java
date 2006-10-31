@@ -20,6 +20,8 @@
 
 package javax.microedition.lcdui;
 
+import java.util.Hashtable;
+
 import org.microemu.device.DeviceFactory;
 
 
@@ -43,18 +45,20 @@ public final class Font
 	
 	private static final Font DEFAULT_FONT = new Font(Font.FACE_SYSTEM, Font.STYLE_PLAIN, Font.SIZE_MEDIUM);
 	
+	private static Font []fontsBySpecifier = {DEFAULT_FONT, DEFAULT_FONT};
+	
+	private static Hashtable fonts = new Hashtable();
+	
 	private int face;
 	private int style;
 	private int size;
 
-	private static Font []fontsBySpecifier = {DEFAULT_FONT, DEFAULT_FONT};
-	
 	private Font(int face, int style, int size)
 	{
 		if ((face != FACE_SYSTEM) && (face != FACE_MONOSPACE) && (face != FACE_PROPORTIONAL)) {
 			throw new IllegalArgumentException();
 		}
-		if ((style & (STYLE_PLAIN | STYLE_BOLD | STYLE_ITALIC | STYLE_UNDERLINED)) != style) {
+		if ((style != STYLE_PLAIN) && (style != STYLE_BOLD) && (style != STYLE_ITALIC) && (style != STYLE_UNDERLINED)) {
 			throw new IllegalArgumentException();
 		}
 		if ((size != SIZE_SMALL) && (size != SIZE_MEDIUM) && (size != SIZE_LARGE)) {
@@ -80,9 +84,16 @@ public final class Font
 		return fontsBySpecifier[specifier];
 	}
 
+	
 	public static Font getFont(int face, int style, int size)
 	{
-		return new Font(face, style, size);
+		String key = face + "-" + style + "-" + size;
+		Font result = (Font) fonts.get(key);
+		if (result == null) {
+			result = new Font(face, style, size);
+			fonts.put(key, result);
+		}
+		return result;
 	}
 
 	

@@ -22,24 +22,22 @@
 
 package javax.microedition.lcdui;
 
-import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Screen;
+import javax.microedition.lcdui.Ticker;
 import javax.microedition.midlet.MIDlet;
 
 import org.microemu.CommandManager;
 import org.microemu.DisplayAccess;
 import org.microemu.MIDletBridge;
-import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 
 public class Display 
 {
 	private PaintThread paintThread = null;
 	private EventDispatcher eventDispatcher = null;
-	private TickerPaint tickerPaint = null;
 
 	private Displayable current = null;
 	private Displayable nextScreen = null;
@@ -142,6 +140,11 @@ public class Display
 			return repaintPending;
 		}
 
+		public void serviceRepaints()
+		{
+			getDisplay().serviceRepaints();
+		}
+
 		public Displayable getCurrent() 
 		{
 			return getDisplay().getCurrent();
@@ -164,7 +167,6 @@ public class Display
 			}
 			eventDispatcher.cancel();
 			paintThread.cancel();
-			tickerPaint.cancel();
 		}
 	}
 
@@ -189,50 +191,7 @@ public class Display
 		}
 	}
 
-	private class TickerPaint implements Runnable 
-	{
-		private boolean canceled;
-		
-		private Display currentDisplay = null;
-
-		public void setCurrentDisplay(Display currentDisplay) 
-		{
-			this.currentDisplay = currentDisplay;
-		}
-
-		public void cancel()
-		{
-			canceled = true;
-		}
-
-		public void run() 
-		{
-			canceled = false;
-			
-			while (!canceled) {
-				if (currentDisplay != null && currentDisplay.current != null && currentDisplay.current instanceof Screen) {
-					Ticker ticker = ((Screen) currentDisplay.current).getTicker();
-					if (ticker != null) {
-						synchronized (ticker) {
-							if (ticker.resetTextPosTo != -1) {
-								ticker.textPos = ticker.resetTextPosTo;
-								ticker.resetTextPosTo = -1;
-							}
-							ticker.textPos -= Ticker.PAINT_MOVE;
-						}
-						currentDisplay.repaint(current, 0, 0, current.getWidth(), current.getHeight());
-					}
-				}
-				try {
-					Thread.sleep(Ticker.PAINT_TIMEOUT);
-				} catch (InterruptedException ex) {
-					tickerPaint = null;
-					return;
-				}
-			}
-		}
-	}
-
+	
 	private class PaintThread implements Runnable
 	{
 		private boolean canceled;
@@ -255,11 +214,10 @@ public class Display
 					this.height = height;
 				} else {
 					// TODO analyze and update clipping, currently repaints the whole displayable
-					DeviceDisplay deviceDisplay = DeviceFactory.getDevice().getDeviceDisplay();					
 					this.x = 0;
 					this.y = 0;
-					this.width = deviceDisplay.getWidth();
-					this.height = deviceDisplay.getHeight();
+					this.width = current.getWidth();
+					this.height = current.getHeight();
 				}
 				paintLock.notify();
 			}
@@ -336,16 +294,18 @@ public class Display
 	}
 
 	private class EventDispatcher implements Runnable 
-	{
-		private boolean canceled;
+	{		
+		private boolean canceled = false;
 		
 		private Object dispatcherLock = new Object();
 		
+		private Vector times = new Vector();
 		private Vector events = new Vector();		
 
-		public void add(Runnable r) 
+		public void schedule(Runnable r, long delay)
 		{
 			synchronized (paintLock) {
+				times.addElement(new Long(System.currentTimeMillis() + delay));
 				events.addElement(r);
 				synchronized (dispatcherLock) {
 					dispatcherLock.notify();
@@ -363,24 +323,30 @@ public class Display
 		
 		public void run() 
 		{
-			canceled = false;
-			
-			Vector jobs;
-			
 			while (!canceled) {
-				jobs = null;
+				Runnable job = null;
 				synchronized (paintLock) {
 					if (!repaintPending) {
-						if (events.size() > 0) {
-							jobs = (Vector) events.clone();
-							events.removeAllElements();
+						long now = System.currentTimeMillis();
+						for (int i = 0; i < events.size(); i++) {
+							if (((Long) times.elementAt(i)).longValue() < now) {
+								job = (Runnable) events.elementAt(i);
+								times.removeElementAt(i);
+								events.removeElementAt(i);
+								break;
+							}
 						}
 					}
 				}
 
-				if (jobs != null) {
-					for (Enumeration en = jobs.elements(); en.hasMoreElements();) {
-						((Runnable) en.nextElement()).run();
+				if (job != null) {
+					job.run();
+				} else {
+					synchronized (dispatcherLock) {
+						try {
+							dispatcherLock.wait(10);
+						} catch (InterruptedException ex) {
+						}
 					}
 				}
 
@@ -389,7 +355,8 @@ public class Display
 						continue;
 					}
 					try {
-						dispatcherLock.wait();
+						// TODO remove timeout, currently there is somotimes problem with notify on cancel
+						dispatcherLock.wait(1000);
 					} catch (InterruptedException ex) {
 						eventDispatcher = null;
 						return;
@@ -412,17 +379,32 @@ public class Display
 			eventDispatcher = new EventDispatcher();
 			new Thread(eventDispatcher, "EventDispatcher").start();
 		}
-		if (tickerPaint == null) {
-			tickerPaint = new TickerPaint();
-			new Thread(tickerPaint, "TickerPaint").start();
-		}
-		tickerPaint.setCurrentDisplay(this);
+		
+		Runnable tickerPaint = new Runnable() {
+			public void run() {
+				if (current != null) {
+					Ticker ticker = current.getTicker();
+					if (ticker != null) {
+						synchronized (ticker) {
+							if (ticker.resetTextPosTo != -1) {
+								ticker.textPos = ticker.resetTextPosTo;
+								ticker.resetTextPosTo = -1;
+							}
+							ticker.textPos -= Ticker.PAINT_MOVE;
+						}
+						repaint(current, 0, 0, current.getWidth(), current.getHeight());
+					}
+				}
+				eventDispatcher.schedule(this, Ticker.PAINT_TIMEOUT);
+			}
+		};
+		eventDispatcher.schedule(tickerPaint, Ticker.PAINT_TIMEOUT);
 	}
 
 	
 	public void callSerially(Runnable r) 
 	{
-		eventDispatcher.add(r);
+		eventDispatcher.schedule(r, 0);
 	}
 
 	
@@ -567,13 +549,7 @@ public class Display
 		} else {
 			CommandManager.getInstance().updateCommands(current.getCommands());
 		}
-		/**
-		 * updateCommands has changed the softkey labels tell the outside world
-		 * it has happened.
-		 */
-		MIDletBridge.notifySoftkeyLabelsChanged();
-		DeviceDisplay deviceDisplay = DeviceFactory.getDevice().getDeviceDisplay();
-		repaint(current, 0, 0, deviceDisplay.getWidth(), deviceDisplay.getHeight());
+		repaint(current, 0, 0, current.getWidth(), current.getHeight());
 	}
 
 }

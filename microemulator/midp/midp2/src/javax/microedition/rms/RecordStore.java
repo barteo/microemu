@@ -49,7 +49,12 @@ public class RecordStore
     		throws RecordStoreException, RecordStoreFullException, RecordStoreNotFoundException
     {
 		// TODO
-		throw new RuntimeException("not implemented");
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
     }
 	
     
@@ -57,7 +62,12 @@ public class RecordStore
     		throws RecordStoreException, RecordStoreNotFoundException
 	{
 		// TODO
-		throw new RuntimeException("not implemented");
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
 	}
 	
     public void closeRecordStore() 
@@ -189,7 +199,12 @@ public class RecordStore
     		throws RecordStoreException
 	{
 		// TODO
-		throw new RuntimeException("not implemented");
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
 	}
 	
     public void setRecord(int recordId, byte[] newData, int offset, int numBytes)

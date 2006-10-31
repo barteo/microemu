@@ -188,6 +188,13 @@ public class List extends Screen implements Choice
   }
 
   
+	void showNotify() {
+		super.showNotify();
+
+		viewPortY = choiceGroup.getHeightToItem(getSelectedIndex());
+	}
+
+
   int traverse(int gameKeyCode, int top, int bottom)
   {
 		int traverse = choiceGroup.traverse(gameKeyCode, top, bottom, true);

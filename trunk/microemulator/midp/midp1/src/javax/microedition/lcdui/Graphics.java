@@ -22,235 +22,200 @@
 
 package javax.microedition.lcdui;
 
+import javax.microedition.lcdui.Font;
+import javax.microedition.lcdui.Image;
+
 public class Graphics 
 {
 	public static final int SOLID = 0;
+
 	public static final int DOTTED = 1;
 
 	public static final int LEFT = 4;
+
 	public static final int RIGHT = 8;
+
 	public static final int TOP = 16;
+
 	public static final int BASELINE = 64;
+
 	public static final int BOTTOM = 32;
+
 	public static final int HCENTER = 1;
+
 	public static final int VCENTER = 2;
 
 	int strokeStyle = SOLID;
 
 	int translateX = 0;
+
 	int translateY = 0;
 
-	
-	public void clipRect(int x, int y, int width, int height) 
-	{
-		// Implemented in DisplayGraphics
+	public void clipRect(int x, int y, int width, int height) {
+		implementationError();
 	}
 
-	
-	public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) 
-	{
-		// Implemented in DisplayGraphics
+	public void drawArc(int x, int y, int width, int height, int startAngle,
+			int arcAngle) {
+		implementationError();
 	}
 
-	
-	public void drawChar(char character, int x, int y, int anchor) 
-	{
+	public void drawChar(char character, int x, int y, int anchor) {
 		char[] carr = new char[1];
 		carr[0] = character;
-
 		drawString(new String(carr), x, y, anchor);
 	}
 
-	
-	public void drawChars(char[] data, int offset, int length, int x, int y, int anchor) 
-	{
+	public void drawChars(char[] data, int offset, int length, int x, int y,
+			int anchor) {
 		drawString(new String(data, offset, length), x, y, anchor);
 	}
 
-	
-	public void drawImage(Image img, int x, int y, int anchor) 
-	{
-		// Implemented in DisplayGraphics
+	public void drawImage(Image img, int x, int y, int anchor) {
+		implementationError();
 	}
 
-	
-	public void drawLine(int x1, int y1, int x2, int y2) 
-	{
-		// Implemented in DisplayGraphics
+	public void drawLine(int x1, int y1, int x2, int y2) {
+		implementationError();
 	}
 
-	
-	public void drawRect(int x, int y, int width, int height) 
-	{
-		// Implemented in DisplayGraphics
+	public void drawRect(int x, int y, int width, int height) {
+		implementationError();
 	}
 
-	
-	public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
-		// Implemented in DisplayGraphics
+	public void drawRoundRect(int x, int y, int width, int height,
+			int arcWidth, int arcHeight) {
+		implementationError();
 	}
 
-	
-	public void drawString(String str, int x, int y, int anchor) 
-	{
-		// Implemented in DisplayGraphics
+	public void drawString(String str, int x, int y, int anchor) {
+		implementationError();
 	}
 
-	
-	public void drawSubstring(String str, int offset, int len, int x, int y, int anchor) 
-	{
+	public void drawSubstring(String str, int offset, int len, int x, int y,
+			int anchor) {
 		drawString(str.substring(offset, offset + len), x, y, anchor);
 	}
 
-	
-	public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) 
-	{
-		// Implemented in DisplayGraphics
+	public void fillArc(int x, int y, int width, int height, int startAngle,
+			int arcAngle) {
+		implementationError();
 	}
 
-	
-	public void fillRect(int x, int y, int width, int height) 
-	{
-		// Implemented in DisplayGraphics
+	public void fillRect(int x, int y, int width, int height) {
+		implementationError();
 	}
 
-	
-	public void fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) 
-	{
-		// Implemented in DisplayGraphics
+	public void fillRoundRect(int x, int y, int width, int height,
+			int arcWidth, int arcHeight) {
+		implementationError();
 	}
 
-	
-	public int getBlueComponent() 
-	{
+	public int getBlueComponent() {
 		return getColor() & 255;
 	}
 
-	
-	public int getClipHeight() 
-	{
-		// Implemented in DisplayGraphics
-		throw new IllegalStateException();
+	public int getClipHeight() {
+		implementationError();
+
+		return -1;
 	}
 
-	
-	public int getClipWidth() 
-	{
-		// Implemented in DisplayGraphics
-		throw new IllegalStateException();
+	public int getClipWidth() {
+		implementationError();
+
+		return -1;
 	}
 
-	
-	public int getClipX() 
-	{
-		// Implemented in DisplayGraphics
-		throw new IllegalStateException();
+	public int getClipX() {
+		implementationError();
+
+		return -1;
 	}
 
-	
-	public int getClipY() 
-	{
-		// Implemented in DisplayGraphics
-		throw new IllegalStateException();
+	public int getClipY() {
+		implementationError();
+
+		return -1;
 	}
 
-	
-	public int getColor() 
-	{
-		// Implemented in DisplayGraphics
-		throw new IllegalStateException();
+	public int getColor() {
+		implementationError();
+
+		return -1;
 	}
 
-	
-	public Font getFont() 
-	{
-		// Implemented in DisplayGraphics
-		throw new IllegalStateException();
+	public Font getFont() {
+		implementationError();
+
+		return null;
 	}
 
-	
-	public int getGrayScale() 
-	{
+	public int getGrayScale() {
 		return (getRedComponent() + getGreenComponent() + getBlueComponent()) / 3;
 	}
 
-	
-	public int getGreenComponent() 
-	{
+	public int getGreenComponent() {
 		return (getColor() >> 8) & 255;
 	}
 
-	
-	public int getRedComponent() 
-	{
+	public int getRedComponent() {
 		return (getColor() >> 16) & 255;
 	}
 
-	
-	public int getStrokeStyle() 
-	{
+	public int getStrokeStyle() {
 		return strokeStyle;
 	}
 
-	
-	public int getTranslateX() 
-	{
+	public int getTranslateX() {
 		return translateX;
 	}
 
-	
-	public int getTranslateY() 
-	{
+	public int getTranslateY() {
 		return translateY;
 	}
 
-	
-	public void setClip(int x, int y, int width, int height) 
-	{
-		// Implemented in DisplayGraphics
+	public void setClip(int x, int y, int width, int height) {
+		implementationError();
 	}
 
-	
-	public void setColor(int RGB) 
-	{
-		// Implemented in DisplayGraphics
+	public void setColor(int RGB) {
+		implementationError();
 	}
 
-	
-	public void setColor(int red, int green, int blue) 
-	{
-		int rgb = blue; //0XRRGGBB
+	public void setColor(int red, int green, int blue) {
+		int rgb = blue; // 0XRRGGBB
 		rgb += green << 8;
 		rgb += red << 16;
 		setColor(rgb);
 	}
 
-	
-	public void setFont(Font font) 
-	{
-		// Implemented in DisplayGraphics
+	public void setFont(Font font) {
+		implementationError();
 	}
 
-	
-	public void setGrayScale(int grey) 
-	{
+	public void setGrayScale(int grey) {
 		setColor(grey, grey, grey);
 	}
 
-	
-	public void setStrokeStyle(int style) 
-	{
+	public void setStrokeStyle(int style) {
 		if (style != SOLID && style != DOTTED) {
 			throw new IllegalArgumentException();
 		}
 		strokeStyle = style;
 	}
 
-	
-	public void translate(int x, int y) 
-	{
+	public void translate(int x, int y) {
 		translateX += x;
 		translateY += y;
+	}
+
+	private void implementationError() {
+		try {
+			throw new RuntimeException("Must be implemented in DisplayGraphics");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 }

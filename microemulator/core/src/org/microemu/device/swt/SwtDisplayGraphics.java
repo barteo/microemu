@@ -306,5 +306,20 @@ public class SwtDisplayGraphics extends javax.microedition.lcdui.Graphics implem
 		super.translate(x, y);
 		g.translate(x, y);
 	}
+	
+
+    public void fillTriangle(int x1, int y1, int x2,
+			int y2, int x3, int y3) {
+		// TODO fillTriangle
+	}
+
+    public void copyArea(int x_src, int y_src, int width, int height, 
+            int x_dest, int y_dest, int anchor) {
+    }
+    
+	public int getDisplayColor(int color) {
+		// TODO fix it using device capabilities
+		return color;
+	}
 
 }

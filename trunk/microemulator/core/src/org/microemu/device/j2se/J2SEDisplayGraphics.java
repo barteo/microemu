@@ -509,4 +509,10 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
                 g.copyArea(x_src, y_src, width, height, x_dest-x_src, y_dest-y_src);
         }
 
+        
+	public int getDisplayColor(int color) {
+		// TODO fix it using device capabilities
+		return color;
+	}
+
 }

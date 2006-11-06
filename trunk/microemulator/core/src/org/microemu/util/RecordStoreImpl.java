@@ -333,7 +333,7 @@ public class RecordStoreImpl extends RecordStore
 		    getRecord(recordId, data, 0);
 		}
 		
-		return data;
+		return data.length < 1 ? null : data;
 	}
 
 

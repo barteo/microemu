@@ -131,11 +131,12 @@ public class Display
                     access.recordKeyReleased(c, gameCode);
                 suppress = access.suppressedKeyEvents(c);
             }
-            if (!(suppress)) {
-                if (press)
-                    c.keyPressed(k);
-                else
-                    c.keyPressed(k);
+            if (!suppress) {
+                if (press) {
+                	c.keyPressed(k);
+                } else {
+                    c.keyReleased(k);
+                }        
             }
         }
         // TODO according to the specification this should be

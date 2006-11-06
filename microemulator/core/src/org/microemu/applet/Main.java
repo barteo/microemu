@@ -212,12 +212,17 @@ public class Main extends Applet implements MicroEmulator
     
     public void start() {
 		devicePanel.requestFocus();
-		try {
-			MIDletBridge.getMIDletAccess(midlet).startApp();
-		} catch (MIDletStateChangeException ex) {
-			System.err.println(ex);
-		}
-
+		
+		new Thread("midlet_starter") {
+			public void run() {
+				try {
+					MIDletBridge.getMIDletAccess(midlet).startApp();
+				} catch (MIDletStateChangeException ex) {
+					System.err.println(ex);
+				}
+			}
+		}.start();
+		
 		Timer timer = new Timer(1000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				devicePanel.requestFocus();

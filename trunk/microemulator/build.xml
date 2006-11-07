@@ -323,24 +323,7 @@
 		</jar>
 	</target>
 
-	<target name="compile-jsr-135" depends="init,jar">
-		<mkdir dir="./build/jsr-135/classes"/>
-		<javac source="1.4" target="1.4" debug="true" deprecation="true" 
-		        srcdir="./ext/jsr-135/src"
-        			destdir="./build/jsr-135/classes">
-			<classpath>
-				<pathelement location="./target/me-${target}.jar"/>
-			</classpath>
-		</javac>
-	</target>
-
-	<target name="jar-jsr-135" depends="compile-jsr-135">
-		<jar compress="true" jarfile="./target/me-jsr-135.jar">
-			<fileset dir="./build/jsr-135/classes" />
-		</jar>
-	</target>
-
-	<target name="all" depends="init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-jsr-82,jar-jsr-120,jar-jsr-135,simpledemo" description="Build everything.">
+	<target name="all" depends="init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-jsr-82,jar-jsr-120,simpledemo" description="Build everything.">
 	</target>
 
 	<target name="dist" depends="clean,init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-jsr-82,simpledemo" description="Create distribution package">

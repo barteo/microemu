@@ -13,19 +13,19 @@
 		<rectangle>
 			<x>28</x>
 			<y>33</y>
-			<width>176</width>
-			<height>208</height>
+			<width>352</width>
+			<height>416</height>
 		</rectangle>
 		<paintable>
 			<x>0</x>
 			<y>10</y>
-			<width>176</width>
-			<height>176</height>
+			<width>352</width>
+			<height>384</height>
 		</paintable>
 		<icon name="up">
 			<paintable>
-				<x>78</x>
-				<y>194</y>
+				<x>166</x>
+				<y>402</y>
 				<width>12</width>
 				<height>12</height>
 			</paintable>
@@ -34,8 +34,8 @@
 		</icon>
 		<icon name="down">	
 			<paintable>
-				<x>88</x>
-				<y>194</y>
+				<x>176</x>
+				<y>402</y>
 				<width>12</width>
 				<height>12</height>
 			</paintable>
@@ -72,112 +72,112 @@
 	</display>
 	<fonts hint="antialiasing">
 		<font face="system" style="plain" size="small">
-			<system name="SansSerif" style="plain" size="9" />
+			<system name="SansSerif" style="plain" size="10" />
 		</font>
 		<font face="system" style="plain" size="medium">
-			<system name="SansSerif" style="plain" size="11" />
+			<system name="SansSerif" style="plain" size="12" />
 		</font>
 		<font face="system" style="plain" size="large">
-			<system name="SansSerif" style="plain" size="13" />
+			<system name="SansSerif" style="plain" size="14" />
 		</font>
 		<font face="system" style="bold" size="small">
-			<system name="SansSerif" style="bold" size="9" />
+			<system name="SansSerif" style="bold" size="10" />
 		</font>
 		<font face="system" style="bold" size="medium">
-			<system name="SansSerif" style="bold" size="11" />
+			<system name="SansSerif" style="bold" size="12" />
 		</font>
 		<font face="system" style="bold" size="large">
-			<system name="SansSerif" style="bold" size="13" />
+			<system name="SansSerif" style="bold" size="14" />
 		</font>
 		<font face="system" style="italic" size="small">
-			<system name="SansSerif" style="italic" size="9" />		
+			<system name="SansSerif" style="italic" size="10" />		
 		</font>
 		<font face="system" style="italic" size="medium">
-			<system name="SansSerif" style="italic" size="11" />		
+			<system name="SansSerif" style="italic" size="12" />		
 		</font>
 		<font face="system" style="italic" size="large">
-			<system name="SansSerif" style="italic" size="13" />		
+			<system name="SansSerif" style="italic" size="14" />		
 		</font>
 		<font face="system" style="bold,italic" size="small">
-			<system name="SansSerif" style="bold,italic" size="9" />		
+			<system name="SansSerif" style="bold,italic" size="10" />		
 		</font>
 		<font face="system" style="bold,italic" size="medium">
-			<system name="SansSerif" style="bold,italic" size="11" />		
+			<system name="SansSerif" style="bold,italic" size="12" />		
 		</font>
 		<font face="system" style="bold,italic" size="large">
-			<system name="SansSerif" style="bold,italic" size="13" />		
+			<system name="SansSerif" style="bold,italic" size="14" />		
 		</font>
 		<font face="monospace" style="plain" size="small">
-			<system name="Monospaced" style="plain" size="9" />
+			<system name="Monospaced" style="plain" size="10" />
 		</font>
 		<font face="monospace" style="plain" size="medium">
-			<system name="Monospaced" style="plain" size="11" />
+			<system name="Monospaced" style="plain" size="12" />
 		</font>
 		<font face="monospace" style="plain" size="large">
-			<system name="Monospaced" style="plain" size="13" />
+			<system name="Monospaced" style="plain" size="14" />
 		</font>
 		<font face="monospace" style="bold" size="small">
-			<system name="Monospaced" style="bold" size="9" />
+			<system name="Monospaced" style="bold" size="10" />
 		</font>
 		<font face="monospace" style="bold" size="medium">
-			<system name="Monospaced" style="bold" size="11" />		
+			<system name="Monospaced" style="bold" size="12" />		
 		</font>
 		<font face="monospace" style="bold" size="large">
-			<system name="Monospaced" style="bold" size="13" />
+			<system name="Monospaced" style="bold" size="14" />
 		</font>
 		<font face="monospace" style="italic" size="small">
-			<system name="Monospaced" style="italic" size="9" />
+			<system name="Monospaced" style="italic" size="10" />
 		</font>
 		<font face="monospace" style="italic" size="medium">
-			<system name="Monospaced" style="italic" size="11" />
+			<system name="Monospaced" style="italic" size="12" />
 		</font>
 		<font face="monospace" style="italic" size="large">
-			<system name="Monospaced" style="italic" size="13" />
+			<system name="Monospaced" style="italic" size="14" />
 		</font>
 		<font face="monospace" style="bold,italic" size="small">
-			<system name="Monospaced" style="bold,italic" size="9" />
+			<system name="Monospaced" style="bold,italic" size="10" />
 		</font>
 		<font face="monospace" style="bold,italic" size="medium">
-			<system name="Monospaced" style="bold,italic" size="11" />
+			<system name="Monospaced" style="bold,italic" size="12" />
 		</font>
 		<font face="monospace" style="bold,italic" size="large">
-			<system name="Monospaced" style="bold,italic" size="13" />
+			<system name="Monospaced" style="bold,italic" size="14" />
 		</font>
 		<font face="proportional" style="plain" size="small">
-			<system name="SansSerif" style="plain" size="9" />
+			<system name="SansSerif" style="plain" size="10" />
 		</font>
 		<font face="proportional" style="plain" size="medium">
-			<system name="SansSerif" style="plain" size="11" />
+			<system name="SansSerif" style="plain" size="12" />
 		</font>
 		<font face="proportional" style="plain" size="large">
-			<system name="SansSerif" style="plain" size="13" />
+			<system name="SansSerif" style="plain" size="14" />
 		</font>
 		<font face="proportional" style="bold" size="small">
-			<system name="SansSerif" style="bold" size="9" />
+			<system name="SansSerif" style="bold" size="10" />
 		</font>
 		<font face="proportional" style="bold" size="medium">
-			<system name="SansSerif" style="bold" size="11" />
+			<system name="SansSerif" style="bold" size="12" />
 		</font>
 		<font face="proportional" style="bold" size="large">
-			<system name="SansSerif" style="bold" size="13" />
+			<system name="SansSerif" style="bold" size="14" />
 		</font>
 		<font face="proportional" style="italic" size="small">
-			<system name="SansSerif" style="italic" size="9" />		
+			<system name="SansSerif" style="italic" size="10" />		
 		</font>
 		<font face="proportional" style="italic" size="medium">
-			<system name="SansSerif" style="italic" size="11" />		
+			<system name="SansSerif" style="italic" size="12" />		
 		</font>
 		<font face="proportional" style="italic" size="large">
-			<system name="SansSerif" style="italic" size="13" />		
+			<system name="SansSerif" style="italic" size="14" />		
 		</font>
 		<font face="proportional" style="bold,italic" size="small">
-			<system name="SansSerif" style="bold,italic" size="9" />		
+			<system name="SansSerif" style="bold,italic" size="10" />		
 		</font>
 		<font face="proportional" style="bold,italic" size="medium">
-			<system name="SansSerif" style="bold,italic" size="11" />		
+			<system name="SansSerif" style="bold,italic" size="12" />		
 		</font>
 		<font face="proportional" style="bold,italic" size="large">
-			<system name="SansSerif" style="bold,italic" size="13" />		
+			<system name="SansSerif" style="bold,italic" size="14" />		
 		</font>
 	</fonts>
 	<input>
@@ -186,14 +186,14 @@
 		<hasrepeatevents>true</hasrepeatevents>
 		<softbutton name="" key="VK_F1" alignment="LEFT">
 			<rectangle>
-				<x>61</x>
-				<y>248</y>
+				<x>149</x>
+				<y>456</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
 			<paintable>
 				<x>1</x>
-				<y>191</y>
+				<y>399</y>
 				<width>69</width>
 				<height>16</height>
 			</paintable>
@@ -205,14 +205,14 @@
 		</softbutton>
 		<softbutton name="" key="VK_F2" alignment="RIGHT">
 			<rectangle>
-				<x>134</x>
-				<y>248</y>
+				<x>222</x>
+				<y>456</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
 			<paintable>
-				<x>107</x>
-				<y>191</y>
+				<x>283</x>
+				<y>399</y>
 				<width>69</width>
 				<height>16</height>
 			</paintable>
@@ -224,40 +224,40 @@
 		</softbutton>
 		<button name="l" key="VK_LEFT">
 			<rectangle>
-				<x>61</x>
-				<y>304</y>
+				<x>149</x>
+				<y>512</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
 		</button>
 		<button name="r" key="VK_RIGHT">
 			<rectangle>
-				<x>134</x>
-				<y>304</y>
+				<x>222</x>
+				<y>512</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
 		</button>
 		<button name="u" key="VK_UP">
 			<rectangle>
-				<x>99</x>
-				<y>277</y>
+				<x>187</x>
+				<y>485</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
 		</button>
 		<button name="d" key="VK_DOWN">
 			<rectangle>
-				<x>99</x>
-				<y>331</y>
+				<x>187</x>
+				<y>539</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
 		</button>
 		<button name="sel" key="VK_ENTER">
 			<rectangle>
-				<x>99</x>
-				<y>304</y>
+				<x>187</x>
+				<y>512</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -268,8 +268,8 @@
 				<char>0</char>
 			</chars>
 			<rectangle>
-				<x>99</x>
-				<y>455</y>
+				<x>187</x>
+				<y>663</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -302,8 +302,8 @@
 				<char>1</char>
 			</chars>
 			<rectangle>
-				<x>61</x>
-				<y>373</y>
+				<x>149</x>
+				<y>581</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -316,8 +316,8 @@
 				<char>2</char>
 			</chars>
 			<rectangle>
-				<x>99</x>
-				<y>373</y>
+				<x>187</x>
+				<y>581</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -330,8 +330,8 @@
 				<char>3</char>
 			</chars>
 			<rectangle>
-				<x>134</x>
-				<y>373</y>
+				<x>222</x>
+				<y>581</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -344,8 +344,8 @@
 				<char>4</char>
 			</chars>
 			<rectangle>
-				<x>61</x>
-				<y>401</y>
+				<x>149</x>
+				<y>609</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -358,8 +358,8 @@
 				<char>5</char>
 			</chars>
 			<rectangle>
-				<x>99</x>
-				<y>401</y>
+				<x>187</x>
+				<y>609</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -372,8 +372,8 @@
 				<char>6</char>
 			</chars>
 			<rectangle>
-				<x>134</x>
-				<y>401</y>
+				<x>222</x>
+				<y>609</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -387,8 +387,8 @@
 				<char>7</char>
 			</chars>
 			<rectangle>
-				<x>61</x>
-				<y>428</y>
+				<x>149</x>
+				<y>636</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -401,8 +401,8 @@
 				<char>8</char>
 			</chars>
 			<rectangle>
-				<x>99</x>
-				<y>428</y>
+				<x>187</x>
+				<y>636</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -416,8 +416,8 @@
 				<char>9</char>
 			</chars>
 			<rectangle>
-				<x>134</x>
-				<y>428</y>
+				<x>222</x>
+				<y>636</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
@@ -428,16 +428,16 @@
 				<char>+</char>
 			</chars>
 			<rectangle>
-				<x>61</x>
-				<y>455</y>
+				<x>149</x>
+				<y>663</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>
 		</button>
 		<button name="#" key="VK_MODECHANGE">
 			<rectangle>
-				<x>134</x>
-				<y>455</y>
+				<x>222</x>
+				<y>663</y>
 				<width>37</width>
 				<height>27</height>
 			</rectangle>

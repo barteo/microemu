@@ -25,6 +25,7 @@ package org.microemu.device.j2se;
 
 import java.awt.Color;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
@@ -55,8 +56,15 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
 		this.image = a_image;
 		
         Device device = DeviceFactory.getDevice();
+        J2SEFontManager fontManager = (J2SEFontManager) device.getFontManager();
 
-        this.g.setFont(((J2SEFontManager) device.getFontManager()).getFontMetrics(currentFont).getFont());
+        J2SEFont tmpFont = (J2SEFont) fontManager.getFont(currentFont);
+        this.g.setFont(tmpFont.getFont());
+        if (fontManager.getAntialiasing()) {
+			this.g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        } else {
+			this.g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+        }
 		
         if (device.getDeviceDisplay().isColor()) {
             this.filter = new RGBImageFilter();
@@ -99,7 +107,8 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
 	public void setFont(javax.microedition.lcdui.Font font) 
 	{
 		currentFont = font;
-		g.setFont(((J2SEFontManager) DeviceFactory.getDevice().getFontManager()).getFontMetrics(currentFont).getFont());
+		J2SEFont tmpFont = (J2SEFont) ((J2SEFontManager) DeviceFactory.getDevice().getFontManager()).getFont(currentFont);
+		g.setFont(tmpFont.getFont());
 	}
 
 	
@@ -508,11 +517,5 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
                 
                 g.copyArea(x_src, y_src, width, height, x_dest-x_src, y_dest-y_src);
         }
-
-        
-	public int getDisplayColor(int color) {
-		// TODO fix it using device capabilities
-		return color;
-	}
 
 }

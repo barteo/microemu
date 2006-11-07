@@ -36,6 +36,7 @@ import javax.microedition.midlet.MIDletStateChangeException;
 
 import org.microemu.DisplayComponent;
 import org.microemu.EmulatorContext;
+import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.MIDletEntry;
 import org.microemu.MicroEmulator;
@@ -122,11 +123,8 @@ public class Common implements MicroEmulator {
         return result; 
 	}
 
-	public void notifyDestroyed() {
-		startMidlet(launcher);
-	}
-
-	public void notifySoftkeyLabelsChanged() {
+	public void notifyDestroyed(MIDletAccess previousMidletAccess) {
+		startMidlet(launcher, previousMidletAccess);
 	}
 
 	public Launcher getLauncher() {
@@ -199,8 +197,11 @@ public class Common implements MicroEmulator {
 		}
 	}
 
-	public void startMidlet(MIDlet m) {
+	public void startMidlet(MIDlet m, MIDletAccess previousMidletAccess) {
 		try {
+			if (previousMidletAccess != null) {
+				previousMidletAccess.destroyApp(true);
+			}
 			launcher.setCurrentMIDlet(m);
 			MIDletBridge.getMIDletAccess(m).startApp();
 		} catch (MIDletStateChangeException ex) {
@@ -233,6 +234,10 @@ public class Common implements MicroEmulator {
 			throw new ClassNotFoundException("Cannot find MIDlet-Jar-URL property in jad");
 		}
 		
+		MIDletAccess previousMidletAccess = MIDletBridge.getMIDletAccess();
+		
+		MIDletBridge.clear();
+
 		setResponseInterface(false);
 		URL url = null;
 		try {
@@ -269,7 +274,7 @@ public class Common implements MicroEmulator {
 			Class midletClass = midletClassLoader.loadClass(jadEntry.getClassName());
 			loadMidlet(jadEntry.getName(), midletClass);
 		}
-		notifyDestroyed();
+		notifyDestroyed(previousMidletAccess);
 
 		setStatusBar("");
 		setResponseInterface(true);
@@ -436,7 +441,7 @@ public class Common implements MicroEmulator {
 		}
 
 		if (m != null) {
-			startMidlet(m);
+			startMidlet(m, null);
 		}
 
 	}

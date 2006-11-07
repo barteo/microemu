@@ -454,11 +454,15 @@ public class Display
 		
 		if (paintThread == null) {
 			paintThread = new PaintThread();
-			new Thread(paintThread, "PaintThread").start();
+			Thread t = new Thread(paintThread, "PaintThread");
+			t.setDaemon(true);
+			t.start();
 		}
 		if (eventDispatcher == null) {
 			eventDispatcher = new EventDispatcher();
-			new Thread(eventDispatcher, "EventDispatcher").start();
+			Thread t = new Thread(eventDispatcher, "EventDispatcher");
+			t.setDaemon(true);
+			t.start();
 		}
 
 		Runnable tickerPaint = new Runnable() {

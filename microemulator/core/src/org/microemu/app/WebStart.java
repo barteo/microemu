@@ -179,12 +179,12 @@ public class WebStart extends JFrame
         if (MIDletBridge.getCurrentMIDlet() != common.getLauncher()) {
           try {
             MIDlet result = (MIDlet) MIDletBridge.getCurrentMIDlet().getClass().newInstance();
-            common.startMidlet(result);
+            common.startMidlet(result, MIDletBridge.getMIDletAccess());
           } catch (Exception ex) {
             System.err.println(ex);
           }
         } else {
-          common.startMidlet(common.getLauncher());
+          common.startMidlet(common.getLauncher(), MIDletBridge.getMIDletAccess());
         }
       }
     }    

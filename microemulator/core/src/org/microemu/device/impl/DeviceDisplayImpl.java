@@ -20,24 +20,25 @@
 package org.microemu.device.impl;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Vector;
 
+import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Image;
 
 import org.microemu.device.DeviceDisplay;
 
 
-
 public interface DeviceDisplayImpl extends DeviceDisplay
 {
 	
-	Image createSystemImage(String name) throws IOException;  
+	Image createSystemImage(URL url) throws IOException;  
 	
 	Button createButton(
-	        String name, Rectangle rectangle, String keyName, char[] chars);
+	        String name, Shape shape, String keyName, char[] chars);
 	
 	SoftButton createSoftButton(
-	        String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands);
+	        String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands, Font font);
 
 	SoftButton createSoftButton(
 			String name, Rectangle paintable, Image normalImage, Image pressedImage);

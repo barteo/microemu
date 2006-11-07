@@ -44,6 +44,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -52,7 +53,6 @@ import org.microemu.DisplayComponent;
 import org.microemu.MIDletBridge;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
-import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.SoftButton;
 import org.microemu.device.swt.SwtButton;
 import org.microemu.device.swt.SwtDeviceDisplay;
@@ -115,7 +115,7 @@ public class SwtDeviceComponent extends Canvas
 	    	}
 	    	
 			Device device = DeviceFactory.getDevice();
-			Rectangle rect = ((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
+			org.microemu.device.impl.Rectangle rect = ((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
 			SwtInputMethod inputMethod = (SwtInputMethod) device.getInputMethod();
 			// if the displayable is in full screen mode, we should not
 			// invoke any associated commands, but send the raw key codes
@@ -124,25 +124,26 @@ public class SwtDeviceComponent extends Canvas
 
 			if (rect.x <= e.x && (rect.x + rect.width) > e.x
 					&& rect.y <= e.y && (rect.y + rect.height) > e.y) {
-				if (inputMethod.hasPointerEvents()) {
+				if (device.hasPointerEvents()) {
 					if (!fullScreenMode) {
 						Iterator it = device.getSoftButtons().iterator();
 						while (it.hasNext()) {
 							SoftButton button = (SoftButton) it.next();
-							if (button.isVisible()
-									&& button.getPaintable().contains(e.x - rect.x, e.y - rect.y)) {
-								initialPressedSoftButton = button;
-								button.setPressed(true);
-								Rectangle pb = button.getPaintable();
-								dc.repaint(pb.x, pb.y, pb.width, pb.height);
-								break;
+							if (button.isVisible()) {
+								org.microemu.device.impl.Rectangle pb = button.getPaintable();
+								if (pb != null && pb.contains(e.x - rect.x, e.y - rect.y)) {
+									initialPressedSoftButton = button;
+									button.setPressed(true);
+									dc.repaint(pb.x, pb.y, pb.width, pb.height);
+									break;
+								}
 							}
 						}
 					}
 					if (fullScreenMode) {
 						inputMethod.pointerPressed(e.x - rect.x, e.y - rect.y);
 					} else {
-						Rectangle pb = ((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayPaintable();
+						org.microemu.device.impl.Rectangle pb = ((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayPaintable();
 						inputMethod.pointerPressed(e.x - rect.x - pb.x, e.y - rect.y - pb.y);
 					}
 				}
@@ -175,21 +176,23 @@ public class SwtDeviceComponent extends Canvas
 	    	}
 
 			Device device = DeviceFactory.getDevice();
-			Rectangle rect = ((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
+			org.microemu.device.impl.Rectangle rect = ((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
 			SwtInputMethod inputMethod = (SwtInputMethod) device.getInputMethod();
 			boolean fullScreenMode = device.getDeviceDisplay().isFullScreenMode();
 			if (rect.x <= e.x && (rect.x + rect.width) > e.x
 					&& rect.y <= e.y && (rect.y + rect.height) > e.y) {
-				if (inputMethod.hasPointerEvents()) {
+				if (device.hasPointerEvents()) {
 					if (!fullScreenMode) {
 						if (initialPressedSoftButton != null && initialPressedSoftButton.isPressed()) {
 							initialPressedSoftButton.setPressed(false);
-							Rectangle pb = initialPressedSoftButton.getPaintable();
-							dc.repaint(pb.x, pb.y, pb.width, pb.height);
-							if (pb.contains(e.x - rect.x, e.y - rect.y)) {
-								Command cmd = initialPressedSoftButton.getCommand();
-								if (cmd != null) {
-									CommandManager.getInstance().commandAction(cmd);
+							org.microemu.device.impl.Rectangle pb = initialPressedSoftButton.getPaintable();
+							if (pb != null) {
+								dc.repaint(pb.x, pb.y, pb.width, pb.height);
+								if (pb.contains(e.x - rect.x, e.y - rect.y)) {
+									Command cmd = initialPressedSoftButton.getCommand();
+									if (cmd != null) {
+										CommandManager.getInstance().commandAction(cmd);
+									}
 								}
 							}
 						}
@@ -198,7 +201,7 @@ public class SwtDeviceComponent extends Canvas
 					if (fullScreenMode) {
 						inputMethod.pointerReleased(e.x - rect.x, e.y - rect.y);
 					} else {
-						Rectangle pb = ((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayPaintable();
+						org.microemu.device.impl.Rectangle pb = ((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayPaintable();
 						inputMethod.pointerReleased(e.x - rect.x - pb.x, e.y - rect.y - pb.y);
 					}
 				}
@@ -228,24 +231,26 @@ public class SwtDeviceComponent extends Canvas
 			
 			if (mousePressed) {
 				Device device = DeviceFactory.getDevice();
-				Rectangle rect = ((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
+				org.microemu.device.impl.Rectangle rect = ((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
 				SwtInputMethod inputMethod = (SwtInputMethod) device.getInputMethod();
 				boolean fullScreenMode = device.getDeviceDisplay().isFullScreenMode();
 				if (rect.x <= e.x && (rect.x + rect.width) > e.x
 						&& rect.y <= e.y && (rect.y + rect.height) > e.y) {
-					if (inputMethod.hasPointerMotionEvents()) {
+					if (device.hasPointerMotionEvents()) {
 						if (!fullScreenMode) {
 							if (initialPressedSoftButton != null) {
-								Rectangle pb = initialPressedSoftButton.getPaintable();
-								if (pb.contains(e.x - rect.x, e.y - rect.y)) {
-									if (!initialPressedSoftButton.isPressed()) {
-										initialPressedSoftButton.setPressed(true);
-										dc.repaint(pb.x, pb.y, pb.width, pb.height);
-									}
-								} else {
-									if (initialPressedSoftButton.isPressed()) {
-										initialPressedSoftButton.setPressed(false);
-										dc.repaint(pb.x, pb.y, pb.width, pb.height);
+								org.microemu.device.impl.Rectangle pb = initialPressedSoftButton.getPaintable();
+								if (pb != null) {
+									if (pb.contains(e.x - rect.x, e.y - rect.y)) {
+										if (!initialPressedSoftButton.isPressed()) {
+											initialPressedSoftButton.setPressed(true);
+											dc.repaint(pb.x, pb.y, pb.width, pb.height);
+										}
+									} else {
+										if (initialPressedSoftButton.isPressed()) {
+											initialPressedSoftButton.setPressed(false);
+											dc.repaint(pb.x, pb.y, pb.width, pb.height);
+										}
 									}
 								}
 							}
@@ -253,7 +258,7 @@ public class SwtDeviceComponent extends Canvas
 						if (fullScreenMode) {
 							inputMethod.pointerDragged(e.x - rect.x, e.y - rect.y);
 						} else {
-							Rectangle pb = ((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayPaintable();
+							org.microemu.device.impl.Rectangle pb = ((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayPaintable();
 							inputMethod.pointerDragged(e.x - rect.x - pb.x, e.y - rect.y - pb.y);
 						}
 					}
@@ -320,18 +325,49 @@ public class SwtDeviceComponent extends Canvas
 
 		SwtGraphics gc = new SwtGraphics(new GC(fBuffer));
 		try {
-			gc.drawImage(((SwtImmutableImage) DeviceFactory.getDevice().getNormalImage()).getImage()
+			Device device = DeviceFactory.getDevice();
+			
+			gc.drawImage(((SwtImmutableImage) device.getNormalImage()).getImage()
 			        , 0, 0);
     
-			Rectangle displayRectangle = 
-					((SwtDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle();
+			org.microemu.device.impl.Rectangle displayRectangle = 
+					((SwtDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
 			gc.translate(displayRectangle.x, displayRectangle.y);
 			dc.paint(gc);
 			gc.translate(-displayRectangle.x, -displayRectangle.y);
 
-			Rectangle rect;
+	    	if (prevOverButton != null) {
+				org.microemu.device.impl.Shape shape = prevOverButton.getShape();
+				if (shape != null) {
+					drawImageInShape(
+							gc, 
+							((SwtImmutableImage) device.getNormalImage()).getImage(), 
+							shape);
+				}
+				prevOverButton = null;
+			}
+			if (overButton != null) {
+				org.microemu.device.impl.Shape shape = overButton.getShape();
+				if (shape != null) {
+					drawImageInShape(
+							gc, 
+							((SwtImmutableImage) device.getOverImage()).getImage(), 
+							shape);
+				}
+			}
+			if (pressedButton != null) {
+				org.microemu.device.impl.Shape shape = pressedButton.getShape();
+				if (shape != null) {
+					drawImageInShape(
+							gc, 
+							((SwtImmutableImage) device.getPressedImage()).getImage(), 
+							shape);
+				}
+			}
+
+			org.microemu.device.impl.Rectangle rect;
 			if (prevOverButton != null ) {				
-				rect = prevOverButton.getRectangle();
+				rect = prevOverButton.getShape().getBounds();
 				if (rect != null) {
 					gc.drawImage(((SwtImmutableImage) DeviceFactory.getDevice().getNormalImage()).getImage(), 
 							rect.x, rect.y, rect.width, rect.height,
@@ -340,7 +376,7 @@ public class SwtDeviceComponent extends Canvas
 				prevOverButton = null;
 			}
 			if (overButton != null) {
-				rect = overButton.getRectangle();
+				rect = overButton.getShape().getBounds();
 				if (rect != null) {
 					gc.drawImage(((SwtImmutableImage) DeviceFactory.getDevice().getOverImage()).getImage(), 
 							rect.x, rect.y, rect.width, rect.height,
@@ -348,7 +384,7 @@ public class SwtDeviceComponent extends Canvas
 				}
 			}
 			if (pressedButton != null) {
-				rect = pressedButton.getRectangle();
+				rect = pressedButton.getShape().getBounds();
 				if (rect != null) {
 					gc.drawImage(((SwtImmutableImage) DeviceFactory.getDevice().getPressedImage()).getImage(), 
 							rect.x, rect.y, rect.width, rect.height,
@@ -363,14 +399,32 @@ public class SwtDeviceComponent extends Canvas
 	}
 
 
+  	private void drawImageInShape(SwtGraphics g, Image image, org.microemu.device.impl.Shape shape) {
+  		Rectangle clipSave = g.getClipping();
+		if (shape instanceof org.microemu.device.impl.Polygon) {
+			// TODO not implemented yet
+//			g.setCliping(region);
+		}
+		org.microemu.device.impl.Rectangle r = shape.getBounds();
+		g.drawImage(image, 
+				r.x, r.y, r.width, r.height,
+				r.x, r.y, r.width, r.height);
+		g.setClipping(clipSave);
+	}
+  	
+  	
 	private SwtButton getButton(int x, int y)
 	{
 		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements(); ) {
 			SwtButton button = (SwtButton) e.nextElement();
-			if (button.getRectangle() != null) {
-				Rectangle tmp = button.getRectangle();
-				if (x >= tmp.x && x < tmp.x + tmp.width && y >= tmp.y && y < tmp.y + tmp.height) {
-					return button;
+			if (button.getShape() != null) {
+				try {
+					org.microemu.device.impl.Shape tmp = (org.microemu.device.impl.Shape) button.getShape().clone();
+				      if (tmp.contains(x, y)) {
+				    	  return button;
+				      }
+				} catch (CloneNotSupportedException ex) {
+					ex.printStackTrace();
 				}
 			}
 		}        
@@ -533,9 +587,10 @@ public class SwtDeviceComponent extends Canvas
 		private String name;
 		private int size;
 		private int style;
+		private boolean antialiasing;
 		private Font font;
 		
-		GetFontRunnable(String name, int size, int style)
+		GetFontRunnable(String name, int size, int style, boolean antialiasing)
 		{
 			this.name = name;
 			this.size = size;
@@ -550,6 +605,7 @@ public class SwtDeviceComponent extends Canvas
 		public void run() 
 		{
 			SwtGraphics gc = new SwtGraphics(instance.getParent().getDisplay());
+			gc.setAntialias(antialiasing);
 			gc.setFont(new Font(instance.getParent().getDisplay(), name, size, style));
 			font = gc.getFont();
 			gc.dispose();
@@ -584,9 +640,9 @@ public class SwtDeviceComponent extends Canvas
 	}
 
 
-	public static Font getFont(String name, int size, int style) 
+	public static Font getFont(String name, int size, int style, boolean antialiasing) 
 	{
-		GetFontRunnable getFontRunnable = instance.new GetFontRunnable(name, size, style);
+		GetFontRunnable getFontRunnable = instance.new GetFontRunnable(name, size, style, antialiasing);
 		
 		instance.getDisplay().syncExec(getFontRunnable); 
 		

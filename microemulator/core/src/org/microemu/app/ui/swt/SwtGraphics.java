@@ -22,6 +22,7 @@ package org.microemu.app.ui.swt;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
@@ -208,6 +209,26 @@ public class SwtGraphics
 	{
 		Rectangle tmp = new Rectangle(rect.x + transX, rect.y + transY, rect.width, rect.height);
 		gc.setClipping(tmp);
+	}
+	
+	
+	public boolean getAntialias()
+	{
+		if (gc.getAntialias() == SWT.ON) {
+			return  true;
+		} else {
+			return false;
+		}
+	}
+	
+	
+	public void setAntialias(boolean antialias)
+	{
+		if (antialias) {
+			gc.setAntialias(SWT.ON);
+		} else {
+			gc.setAntialias(SWT.OFF);
+		}
 	}
 
 }

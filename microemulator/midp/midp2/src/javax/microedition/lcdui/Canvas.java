@@ -81,19 +81,19 @@ public abstract class Canvas extends Displayable
     
     public boolean hasPointerEvents()
     {
-        return device.getInputMethod().hasPointerEvents();
+        return device.hasPointerEvents();
     }
 
     
     public boolean hasPointerMotionEvents()
     {
-        return device.getInputMethod().hasPointerMotionEvents();
+        return device.hasPointerMotionEvents();
     }
 
     
     public boolean hasRepeatEvents()
     {
-        return device.getInputMethod().hasRepeatEvents();
+        return device.hasRepeatEvents();
     }
 
 
@@ -182,7 +182,12 @@ public abstract class Canvas extends Displayable
     protected void sizeChanged(int w, int h)
     {
     	// TODO
-    	throw new RuntimeException("not implemented");
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
     }
 
     

@@ -22,6 +22,7 @@ package org.microemu.device.swt;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -49,6 +50,7 @@ import org.microemu.device.impl.Color;
 import org.microemu.device.impl.DeviceDisplayImpl;
 import org.microemu.device.impl.PositionedImage;
 import org.microemu.device.impl.Rectangle;
+import org.microemu.device.impl.Shape;
 import org.microemu.device.impl.SoftButton;
 
 
@@ -411,17 +413,10 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
     }
 
     
-    public Image createSystemImage(String str) 
+    public Image createSystemImage(URL url) 
     		throws IOException 
 	{
-		InputStream is;
-
-		is = getClass().getResourceAsStream(str);
-		if (is == null) {
-			throw new IOException();
-		}
-
-		return new SwtImmutableImage(SwtDeviceComponent.createImage(is));
+		return new SwtImmutableImage(SwtDeviceComponent.createImage(url.openStream()));
 	}
 
     
@@ -462,15 +457,15 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 	}
 
 
-    public Button createButton(String name, Rectangle rectangle, String keyName, char[] chars)
+    public Button createButton(String name, Shape shape, String keyName, char[] chars)
     {
-        return new SwtButton(name, rectangle, keyName, chars);
+        return new SwtButton(name, shape, keyName, chars);
     }
 
 
-    public SoftButton createSoftButton(String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands)
+    public SoftButton createSoftButton(String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands, javax.microedition.lcdui.Font font)
     {
-        return new SwtSoftButton(name, rectangle, keyName, paintable, alignmentName, commands);
+        return new SwtSoftButton(name, rectangle, keyName, paintable, alignmentName, commands, font);
     }
 
 

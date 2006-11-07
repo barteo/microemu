@@ -22,23 +22,23 @@ package org.microemu.device.j2se;
 import java.awt.event.KeyEvent;
 
 import org.microemu.device.impl.Button;
-import org.microemu.device.impl.Rectangle;
+import org.microemu.device.impl.Shape;
 
 
 
 public class J2SEButton implements Button
 {
  
-  String name;
-  Rectangle rectangle;
-  int key;
-  char[] chars;
+  private String name;
+  private Shape shape;
+  private int key;
+  private char[] chars;
 
 
-  public J2SEButton(String name, Rectangle rectangle, String keyName, char[] chars)
+  public J2SEButton(String name, Shape shape, String keyName, char[] chars)
   {
     this.name = name;
-    this.rectangle = rectangle;
+    this.shape = shape;
 
     if (keyName != null) {
     	this.key = getKeyCode(keyName);
@@ -87,23 +87,27 @@ public class J2SEButton implements Button
   }
 
   
-  public Rectangle getRectangle()
+  public Shape getShape()
   {
-    return rectangle;
+    return shape;
   }
   
   
-  private int getKeyCode(String keyName)
-  {
-    int key = -1;
-    
-    try {
-      key = KeyEvent.class.getField(keyName).getInt(null);
-    } catch (Exception ex) {
-      System.err.println(ex);
-    }
-    
-    return key;
-  }
+  	private int getKeyCode(String keyName) 
+  	{
+		int key;
+
+		try {
+			key = KeyEvent.class.getField(keyName).getInt(null);
+		} catch (Exception ex) {
+			try {
+				key = Integer.parseInt(keyName);
+			} catch (NumberFormatException ex1) {
+				key = -1;
+			}
+		}
+
+		return key;
+	}
 
 }

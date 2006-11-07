@@ -30,13 +30,8 @@ public interface MicroEmulator
 	
   String getAppProperty(String key);
   
-  void notifyDestroyed();
+  void notifyDestroyed(MIDletAccess previousMidletAccess);
 
-  /**
-   * Allows notification when softkeys have changed
-   */
-  void notifySoftkeyLabelsChanged();
-  
   boolean platformRequest(String URL);
     
 }

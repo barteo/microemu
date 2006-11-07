@@ -49,12 +49,6 @@ public abstract class InputMethod
 
     public abstract String getKeyName(int keyCode);
 
-    public abstract boolean hasPointerMotionEvents();
-
-    public abstract boolean hasPointerEvents();
-
-    public abstract boolean hasRepeatEvents();
-        
 
 	public void removeInputMethodListener(InputMethodListener l)
 	{

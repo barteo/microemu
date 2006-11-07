@@ -56,7 +56,8 @@ public class SwtDisplayGraphics extends javax.microedition.lcdui.Graphics implem
 				((SwtDeviceDisplay) device.getDeviceDisplay()).getBackgroundColor().getRed(), 
 				((SwtDeviceDisplay) device.getDeviceDisplay()).getBackgroundColor().getGreen(), 
 				((SwtDeviceDisplay) device.getDeviceDisplay()).getBackgroundColor().getBlue())));
-		this.g.setFont(((SwtFontManager) device.getFontManager()).getFont(currentFont));
+		SwtFont tmpFont = (SwtFont) ((SwtFontManager) device.getFontManager()).getFont(currentFont);
+		this.g.setFont(tmpFont.getFont());
 		
 		if (device.getDeviceDisplay().isColor()) {
 			this.filter = new RGBImageFilter();
@@ -99,7 +100,8 @@ public class SwtDisplayGraphics extends javax.microedition.lcdui.Graphics implem
 	public void setFont(javax.microedition.lcdui.Font font) 
 	{
 		currentFont = font;
-		g.setFont(((SwtFontManager) DeviceFactory.getDevice().getFontManager()).getFont(currentFont));
+		SwtFont tmpFont = (SwtFont)((SwtFontManager) DeviceFactory.getDevice().getFontManager()).getFont(currentFont);
+		g.setFont(tmpFont.getFont());
 	}
 
 	
@@ -269,7 +271,17 @@ public class SwtDisplayGraphics extends javax.microedition.lcdui.Graphics implem
 			newx -= g.stringWidth(str);
 		}
 
+		boolean textAntialiasing = ((SwtFontManager) DeviceFactory.getDevice().getFontManager()).getAntialiasing();
+		boolean graphicsAntialiasing = g.getAntialias();
+		if (textAntialiasing != graphicsAntialiasing) {
+			g.setAntialias(textAntialiasing);
+		}
+		
 		g.drawString(str, newx, newy, true);
+		
+		if (textAntialiasing != graphicsAntialiasing) {
+			g.setAntialias(graphicsAntialiasing);
+		}
 
 		if ((currentFont.getStyle() & javax.microedition.lcdui.Font.STYLE_UNDERLINED) != 0) {
 			g.drawLine(newx, newy + 1, newx + g.stringWidth(str), newy + 1);
@@ -305,21 +317,6 @@ public class SwtDisplayGraphics extends javax.microedition.lcdui.Graphics implem
 	{
 		super.translate(x, y);
 		g.translate(x, y);
-	}
-	
-
-    public void fillTriangle(int x1, int y1, int x2,
-			int y2, int x3, int y3) {
-		// TODO fillTriangle
-	}
-
-    public void copyArea(int x_src, int y_src, int width, int height, 
-            int x_dest, int y_dest, int anchor) {
-    }
-    
-	public int getDisplayColor(int color) {
-		// TODO fix it using device capabilities
-		return color;
 	}
 
 }

@@ -26,8 +26,10 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Image;
 
+import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.SoftButton;
@@ -53,9 +55,11 @@ public class J2SESoftButton extends J2SEButton implements SoftButton {
 	private boolean visible;
 
 	private boolean pressed;
+	
+	private Font font;
 
 	public J2SESoftButton(String name, Rectangle rectangle, String keyName,
-			Rectangle paintable, String alignmentName, Vector commands) {
+			Rectangle paintable, String alignmentName, Vector commands, Font font) {
 		super(name, rectangle, keyName, null);
 		
 		this.type = TYPE_COMMAND;
@@ -63,12 +67,14 @@ public class J2SESoftButton extends J2SEButton implements SoftButton {
 		this.paintable = paintable;
 		this.visible = true;
 		this.pressed = false;
+		this.font = font;
 
-		try {
-			alignment = J2SESoftButton.class.getField(alignmentName).getInt(
-					null);
-		} catch (Exception ex) {
-			System.err.println(ex);
+		if (alignmentName != null) {
+			try {
+				alignment = J2SESoftButton.class.getField(alignmentName).getInt(null);
+			} catch (Exception ex) {
+				System.err.println(ex);
+			}
 		}
 
 		for (Enumeration e = commands.elements(); e.hasMoreElements();) {
@@ -140,7 +146,7 @@ public class J2SESoftButton extends J2SEButton implements SoftButton {
 	}
 
 	public void paint(Graphics g) {
-		if (!visible) {
+		if (!visible || paintable == null) {
 			return;
 		}
 		
@@ -149,8 +155,8 @@ public class J2SESoftButton extends J2SEButton implements SoftButton {
 		g.setClip(paintable.x, paintable.y, paintable.width, paintable.height);
 		if (type == TYPE_COMMAND) {
 			int xoffset = 0;		
-			J2SEDeviceDisplay deviceDisplay = (J2SEDeviceDisplay) DeviceFactory
-					.getDevice().getDeviceDisplay();		
+			Device device = DeviceFactory.getDevice();
+			J2SEDeviceDisplay deviceDisplay = (J2SEDeviceDisplay) device.getDeviceDisplay();		
 			if (pressed) {
 				g.setColor(deviceDisplay.foregroundColor);
 			} else {
@@ -159,6 +165,11 @@ public class J2SESoftButton extends J2SEButton implements SoftButton {
 			g.fillRect(paintable.x, paintable.y, paintable.width, paintable.height);
 			synchronized (this) {
 				if (command != null) {
+					if (font != null) {
+						J2SEFontManager fontManager = (J2SEFontManager) device.getFontManager();
+						J2SEFont buttonFont = (J2SEFont) fontManager.getFont(font);
+						g.setFont(buttonFont.getFont());
+					}
 					FontMetrics metrics = g.getFontMetrics();
 					if (alignment == RIGHT) {
 						xoffset = paintable.width

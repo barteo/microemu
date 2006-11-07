@@ -81,19 +81,19 @@ public abstract class Canvas extends Displayable
     
     public boolean hasPointerEvents()
     {
-        return DeviceFactory.getDevice().getInputMethod().hasPointerEvents();
+        return DeviceFactory.getDevice().hasPointerEvents();
     }
 
     
     public boolean hasPointerMotionEvents()
     {
-        return DeviceFactory.getDevice().getInputMethod().hasPointerMotionEvents();
+        return DeviceFactory.getDevice().hasPointerMotionEvents();
     }
 
     
     public boolean hasRepeatEvents()
     {
-        return DeviceFactory.getDevice().getInputMethod().hasRepeatEvents();
+        return DeviceFactory.getDevice().hasRepeatEvents();
     }
 
 

@@ -127,6 +127,12 @@ public class SwtInputMethod extends InputMethodImpl
 		int keyCode = ev.keyCode;
 		if (inputMethodListener == null) {
 			int midpKeyCode;
+			switch (ev.keyCode) {
+				case SWT.BS :
+					return true;
+				default :
+					midpKeyCode = keyCode;
+			}
 			switch (ev.character) {
 				case '*' :
 					midpKeyCode = Canvas.KEY_STAR;
@@ -201,6 +207,23 @@ public class SwtInputMethod extends InputMethodImpl
 			return true;
 		}
 		
+		if (keyCode == SWT.DEL) {
+			synchronized (this) {
+				if (lastButton != null) {
+					lastButton = null;
+					lastButtonCharIndex = -1;
+				}
+				if (caret != text.length()) {
+					text = text.substring(0, caret) + text.substring(caret + 1);
+				}
+			}
+			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, text);
+			inputMethodListener.inputMethodTextChanged(event);
+			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
+			inputMethodListener.caretPositionChanged(event);
+			return true;
+		}
+		
 		if (keyCode == SWT.SHIFT || keyCode == SWT.CTRL || keyCode == SWT.ALT) {
 			return true;
 		}
@@ -229,32 +252,7 @@ public class SwtInputMethod extends InputMethodImpl
 		}
 
 		if (text.length() < maxSize && (ev.keyCode & SWT.EMBEDDED) == 0) {
-			char[] test = new char[1];
-			test[0] = ev.character;
-			test = filterConstraints(test);
-			if (test.length > 0) {
-				synchronized (this) {
-					if (lastButton != null) {
-						caret++;
-						lastButton = null;
-						lastButtonCharIndex = -1;
-					}
-					String tmp = "";
-					if (caret > 0) {
-						tmp += text.substring(0, caret);
-					}
-					tmp += ev.character;
-					if (caret < text.length()) {
-						tmp += text.substring(caret);
-					}
-					text = tmp;
-					caret++;
-				}
-				InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, text);
-				inputMethodListener.inputMethodTextChanged(event);
-				event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
-				inputMethodListener.caretPositionChanged(event);
-			}
+			insertText(Character.toString(ev.character));
 		}
 	}
 

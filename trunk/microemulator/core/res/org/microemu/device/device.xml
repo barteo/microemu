@@ -70,6 +70,116 @@
 			</paintable>
 		</img>
 	</display>
+	<fonts hint="antialiasing">
+		<font face="system" style="plain" size="small">
+			<system name="SansSerif" style="plain" size="9" />
+		</font>
+		<font face="system" style="plain" size="medium">
+			<system name="SansSerif" style="plain" size="11" />
+		</font>
+		<font face="system" style="plain" size="large">
+			<system name="SansSerif" style="plain" size="13" />
+		</font>
+		<font face="system" style="bold" size="small">
+			<system name="SansSerif" style="bold" size="9" />
+		</font>
+		<font face="system" style="bold" size="medium">
+			<system name="SansSerif" style="bold" size="11" />
+		</font>
+		<font face="system" style="bold" size="large">
+			<system name="SansSerif" style="bold" size="13" />
+		</font>
+		<font face="system" style="italic" size="small">
+			<system name="SansSerif" style="italic" size="9" />		
+		</font>
+		<font face="system" style="italic" size="medium">
+			<system name="SansSerif" style="italic" size="11" />		
+		</font>
+		<font face="system" style="italic" size="large">
+			<system name="SansSerif" style="italic" size="13" />		
+		</font>
+		<font face="system" style="bold,italic" size="small">
+			<system name="SansSerif" style="bold,italic" size="9" />		
+		</font>
+		<font face="system" style="bold,italic" size="medium">
+			<system name="SansSerif" style="bold,italic" size="11" />		
+		</font>
+		<font face="system" style="bold,italic" size="large">
+			<system name="SansSerif" style="bold,italic" size="13" />		
+		</font>
+		<font face="monospace" style="plain" size="small">
+			<system name="Monospaced" style="plain" size="9" />
+		</font>
+		<font face="monospace" style="plain" size="medium">
+			<system name="Monospaced" style="plain" size="11" />
+		</font>
+		<font face="monospace" style="plain" size="large">
+			<system name="Monospaced" style="plain" size="13" />
+		</font>
+		<font face="monospace" style="bold" size="small">
+			<system name="Monospaced" style="bold" size="9" />
+		</font>
+		<font face="monospace" style="bold" size="medium">
+			<system name="Monospaced" style="bold" size="11" />		
+		</font>
+		<font face="monospace" style="bold" size="large">
+			<system name="Monospaced" style="bold" size="13" />
+		</font>
+		<font face="monospace" style="italic" size="small">
+			<system name="Monospaced" style="italic" size="9" />
+		</font>
+		<font face="monospace" style="italic" size="medium">
+			<system name="Monospaced" style="italic" size="11" />
+		</font>
+		<font face="monospace" style="italic" size="large">
+			<system name="Monospaced" style="italic" size="13" />
+		</font>
+		<font face="monospace" style="bold,italic" size="small">
+			<system name="Monospaced" style="bold,italic" size="9" />
+		</font>
+		<font face="monospace" style="bold,italic" size="medium">
+			<system name="Monospaced" style="bold,italic" size="11" />
+		</font>
+		<font face="monospace" style="bold,italic" size="large">
+			<system name="Monospaced" style="bold,italic" size="13" />
+		</font>
+		<font face="proportional" style="plain" size="small">
+			<system name="SansSerif" style="plain" size="9" />
+		</font>
+		<font face="proportional" style="plain" size="medium">
+			<system name="SansSerif" style="plain" size="11" />
+		</font>
+		<font face="proportional" style="plain" size="large">
+			<system name="SansSerif" style="plain" size="13" />
+		</font>
+		<font face="proportional" style="bold" size="small">
+			<system name="SansSerif" style="bold" size="9" />
+		</font>
+		<font face="proportional" style="bold" size="medium">
+			<system name="SansSerif" style="bold" size="11" />
+		</font>
+		<font face="proportional" style="bold" size="large">
+			<system name="SansSerif" style="bold" size="13" />
+		</font>
+		<font face="proportional" style="italic" size="small">
+			<system name="SansSerif" style="italic" size="9" />		
+		</font>
+		<font face="proportional" style="italic" size="medium">
+			<system name="SansSerif" style="italic" size="11" />		
+		</font>
+		<font face="proportional" style="italic" size="large">
+			<system name="SansSerif" style="italic" size="13" />		
+		</font>
+		<font face="proportional" style="bold,italic" size="small">
+			<system name="SansSerif" style="bold,italic" size="9" />		
+		</font>
+		<font face="proportional" style="bold,italic" size="medium">
+			<system name="SansSerif" style="bold,italic" size="11" />		
+		</font>
+		<font face="proportional" style="bold,italic" size="large">
+			<system name="SansSerif" style="bold,italic" size="13" />		
+		</font>
+	</fonts>
 	<input>
 		<haspointerevents>true</haspointerevents>
 		<haspointermotionevents>true</haspointermotionevents>
@@ -87,6 +197,7 @@
 				<width>69</width>
 				<height>16</height>
 			</paintable>
+			<font face="system" style="plain" size="medium" />
 			<command>BACK</command>
 			<command>EXIT</command>
 			<command>CANCEL</command>
@@ -105,6 +216,7 @@
 				<width>69</width>
 				<height>16</height>
 			</paintable>
+			<font face="system" style="plain" size="medium" />
 			<command>OK</command>
 			<command>SCREEN</command>
 			<command>ITEM</command>

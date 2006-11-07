@@ -23,7 +23,7 @@ import javax.microedition.lcdui.Canvas;
 
 import org.eclipse.swt.SWT;
 import org.microemu.device.impl.Button;
-import org.microemu.device.impl.Rectangle;
+import org.microemu.device.impl.Shape;
 
 
 
@@ -31,15 +31,15 @@ public class SwtButton implements Button
 {
  
   String name;
-  Rectangle rectangle;
+  Shape shape;
   int key;
   char[] chars;
 
 
-  public SwtButton(String name, Rectangle rectangle, String keyName, char[] chars)
+  public SwtButton(String name, Shape shape, String keyName, char[] chars)
   {
     this.name = name;
-    this.rectangle = rectangle;
+    this.shape = shape;
 
     if (keyName != null) {
     	this.key = getKeyCode(keyName);
@@ -88,9 +88,9 @@ public class SwtButton implements Button
   }
 
   
-  public Rectangle getRectangle()
+  public Shape getShape()
   {
-    return rectangle;
+    return shape;
   }
   
   
@@ -136,7 +136,11 @@ public class SwtButton implements Button
 		} else if (keyName.equals("VK_MODECHANGE")) {
 			return Canvas.KEY_POUND;
 		} else {
-			return -1;
+			try {
+				return Integer.parseInt(keyName);
+			} catch (NumberFormatException ex) {
+				return -1;
+			}
 		}
   }
 

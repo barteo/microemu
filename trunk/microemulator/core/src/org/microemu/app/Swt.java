@@ -162,12 +162,12 @@ public class Swt extends Common
 				if (MIDletBridge.getCurrentMIDlet() != getLauncher()) {
 					try {
 						MIDlet result = (MIDlet) MIDletBridge.getCurrentMIDlet().getClass().newInstance();
-						startMidlet(result);
+						startMidlet(result, MIDletBridge.getMIDletAccess());
 					} catch (Exception ex) {
 						System.err.println(ex);
 					}
 				} else {
-					startMidlet(getLauncher());
+					startMidlet(getLauncher(), MIDletBridge.getMIDletAccess());
 				}
 			}
 		}    

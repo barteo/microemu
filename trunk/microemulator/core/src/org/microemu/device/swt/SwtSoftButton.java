@@ -23,10 +23,12 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Image;
 
 import org.eclipse.swt.graphics.RGB;
 import org.microemu.app.ui.swt.SwtGraphics;
+import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.SoftButton;
@@ -52,9 +54,11 @@ public class SwtSoftButton extends SwtButton implements SoftButton {
 	private boolean visible;
 
 	private boolean pressed;
+	
+	private Font font;
 
 	public SwtSoftButton(String name, Rectangle rectangle, String keyName,
-			Rectangle paintable, String alignmentName, Vector commands) {
+			Rectangle paintable, String alignmentName, Vector commands, Font font) {
 		super(name, rectangle, keyName, null);
 
 		this.type = TYPE_COMMAND;
@@ -62,12 +66,14 @@ public class SwtSoftButton extends SwtButton implements SoftButton {
 		this.paintable = paintable;
 		this.visible = true;
 		this.pressed = false;
+		this.font = font;
 
-		try {
-			alignment = SwtSoftButton.class.getField(alignmentName)
-					.getInt(null);
-		} catch (Exception ex) {
-			System.err.println(ex);
+		if (alignmentName != null) {
+			try {
+				alignment = SwtSoftButton.class.getField(alignmentName).getInt(null);
+			} catch (Exception ex) {
+				System.err.println(ex);
+			}
 		}
 
 		for (Enumeration e = commands.elements(); e.hasMoreElements();) {
@@ -140,7 +146,7 @@ public class SwtSoftButton extends SwtButton implements SoftButton {
 	}
 
 	public void paint(SwtGraphics g) {
-		if (!visible) {
+		if (!visible  || paintable == null) {
 			return;
 		}
 
@@ -149,8 +155,8 @@ public class SwtSoftButton extends SwtButton implements SoftButton {
 		g.setClipping(paintable.x, paintable.y, paintable.width, paintable.height);
 		if (type == TYPE_COMMAND) {
 			int xoffset = 0;
-			SwtDeviceDisplay deviceDisplay = (SwtDeviceDisplay) DeviceFactory
-					.getDevice().getDeviceDisplay();
+			Device device = DeviceFactory.getDevice();
+			SwtDeviceDisplay deviceDisplay = (SwtDeviceDisplay) device.getDeviceDisplay();
 			if (pressed) {
 				g.setForeground(g.getColor(new RGB(deviceDisplay
 						.getForegroundColor().getRed(), deviceDisplay
@@ -166,6 +172,11 @@ public class SwtSoftButton extends SwtButton implements SoftButton {
 					paintable.height);
 			synchronized (this) {
 				if (command != null) {
+					if (font != null) {
+						SwtFontManager fontManager = (SwtFontManager) device.getFontManager();
+						SwtFont buttonFont = (SwtFont) fontManager.getFont(font);
+						g.setFont(buttonFont.getFont());
+					}
 					if (alignment == RIGHT) {
 						xoffset = paintable.width
 								- g.stringWidth(command.getLabel());

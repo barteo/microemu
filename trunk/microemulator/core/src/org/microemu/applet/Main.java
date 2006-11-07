@@ -39,6 +39,7 @@ import javax.swing.Timer;
 
 import org.microemu.DisplayComponent;
 import org.microemu.EmulatorContext;
+import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
@@ -243,7 +244,6 @@ public class Main extends Applet implements MicroEmulator
     {
         try {
             MIDletBridge.getMIDletAccess(midlet).destroyApp(true);
-            notifyDestroyed();
         } catch (MIDletStateChangeException ex) {
             System.err.println(ex);
         }
@@ -294,12 +294,7 @@ public class Main extends Applet implements MicroEmulator
 
 
     
-    public void notifyDestroyed()
-    {
-    }
-
-    
-    public void notifySoftkeyLabelsChanged()
+    public void notifyDestroyed(MIDletAccess previousMidletAccess)
     {
     }
 

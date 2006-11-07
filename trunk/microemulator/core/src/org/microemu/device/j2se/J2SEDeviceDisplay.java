@@ -544,14 +544,9 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
     }
     
     
-    public Image createSystemImage(String str)
+    public Image createSystemImage(URL url)
 			throws IOException
 	{
-		URL url = getClass().getResource(str);
-		if (url == null) {
-			throw new IOException();
-		}
-
 		java.awt.Image resultImage = Toolkit.getDefaultToolkit().createImage(url);
 
 		// TODO not elegant solution, maybe use ImageObserver in image.getWitdth(..) instead
@@ -640,15 +635,15 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 
 
 
-    public Button createButton(String name, Rectangle rectangle, String keyName, char[] chars)
+    public Button createButton(String name, org.microemu.device.impl.Shape shape, String keyName, char[] chars)
     {
-        return new J2SEButton(name, rectangle, keyName, chars);
+        return new J2SEButton(name, shape, keyName, chars);
     }
 
 
-    public SoftButton createSoftButton(String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands)
+    public SoftButton createSoftButton(String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands, javax.microedition.lcdui.Font font)
     {
-        return new J2SESoftButton(name, rectangle, keyName, paintable, alignmentName, commands);
+        return new J2SESoftButton(name, rectangle, keyName, paintable, alignmentName, commands, font);
     }
 
 

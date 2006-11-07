@@ -137,6 +137,8 @@ public class J2SEInputMethod extends InputMethodImpl
 		if (inputMethodListener == null) {
 			int midpKeyCode;
 			switch (keyCode) {
+				case KeyEvent.VK_BACK_SPACE :
+					return true;
 				case KeyEvent.VK_MULTIPLY :
 					midpKeyCode = Canvas.KEY_STAR;
 					break;
@@ -224,6 +226,23 @@ public class J2SEInputMethod extends InputMethodImpl
 			inputMethodListener.caretPositionChanged(event);
 			return true;
 		}
+		
+		if (keyCode == KeyEvent.VK_DELETE) {
+			synchronized (this) {
+				if (lastButton != null) {
+					lastButton = null;
+					lastButtonCharIndex = -1;
+				}
+				if (caret != text.length()) {
+					text = text.substring(0, caret) + text.substring(caret + 1);
+				}
+			}
+			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, text);
+			inputMethodListener.inputMethodTextChanged(event);
+			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
+			inputMethodListener.caretPositionChanged(event);
+			return true;
+		}
 
 		return false;
 	}
@@ -240,36 +259,22 @@ public class J2SEInputMethod extends InputMethodImpl
 			return;
 		}
 
-		if (inputMethodListener != null && text != null && text.length() < maxSize) {			
-			char[] test = new char[1];
-			test[0] = c;
-			test = filterConstraints(test);
-			if (test.length > 0) {
-				synchronized (this) {
-					if (lastButton != null) {
-						caret++;
-						lastButton = null;
-						lastButtonCharIndex = -1;
-					}
-					String tmp = "";
-					if (caret > 0) {
-						tmp += text.substring(0, caret);
-					}
-					tmp += c;
-					if (caret < text.length()) {
-						tmp += text.substring(caret);
-					}
-					text = tmp;
-					caret++;
-				}
-				InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, text);
-				inputMethodListener.inputMethodTextChanged(event);
-				event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
-				inputMethodListener.caretPositionChanged(event);
-			}
+		if (inputMethodListener != null && text != null && text.length() < maxSize) {
+			insertText(Character.toString(c));
 		}
 	}
 
+	
+	public void clipboardPaste(String str) 
+	{
+		if (inputMethodListener != null && text != null
+				&& ((text.length() + str.length()) <= maxSize)) {
+			insertText(str);
+		}
+
+		eventAlreadyConsumed = true;
+	}
+	
 	
 	public void keyPressed(KeyEvent ev) 
 	{		
@@ -380,18 +385,18 @@ public class J2SEInputMethod extends InputMethodImpl
 	}
 
 	
-	  public J2SEButton getButton(KeyEvent ev)
-	  {
-	    for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements(); ) {
-	      J2SEButton button = (J2SEButton) e.nextElement();
-	      if (ev.getKeyCode() == button.getKey()) {
-	        return button;
-	      }
-	      if (button.isChar(ev.getKeyChar())) {
-	        return button;
-	      }
-	    }        
-	    return null;
-	  }	  
+    public J2SEButton getButton(KeyEvent ev) {
+		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e
+				.hasMoreElements();) {
+			J2SEButton button = (J2SEButton) e.nextElement();
+			if (ev.getKeyCode() == button.getKey()) {
+				return button;
+			}
+			if (button.isChar(ev.getKeyChar())) {
+				return button;
+			}
+		}
+		return null;
+	}
 
 }

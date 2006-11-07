@@ -16,104 +16,160 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 package org.microemu.device.swt;
 
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.Hashtable;
 
-import org.eclipse.swt.SWT;
+import javax.microedition.lcdui.Font;
+
+import org.eclipse.swt.graphics.FontMetrics;
 import org.microemu.app.ui.swt.SwtDeviceComponent;
-import org.microemu.device.FontManager;
+import org.microemu.device.impl.FontManagerImpl;
 
+public class SwtFontManager implements FontManagerImpl {
 
+	static String FACE_SYSTEM_NAME = "SansSerif";
 
-public class SwtFontManager implements FontManager
-{
-  
-  static String FACE_SYSTEM_NAME = "SansSerif";
-  static String FACE_MONOSPACE_NAME = "Monospaced";
-  static String FACE_PROPORTIONAL_NAME = "SansSerif";
-  
-  static int SIZE_SMALL = 6;
-  static int SIZE_MEDIUM = 8;
-  static int SIZE_LARGE = 10;
-  
-  Hashtable fonts = new Hashtable();
-  
+	static String FACE_MONOSPACE_NAME = "Monospaced";
 
-  org.eclipse.swt.graphics.Font getFont(javax.microedition.lcdui.Font meFont)
-  {
-		org.eclipse.swt.graphics.Font tmp = (org.eclipse.swt.graphics.Font) fonts.get(meFont);
-    
-		if (tmp == null) {
-		  String name = null;
-		  if (meFont.getFace() == javax.microedition.lcdui.Font.FACE_SYSTEM) {
-			name = FACE_SYSTEM_NAME;
-		  } else if (meFont.getFace() == javax.microedition.lcdui.Font.FACE_MONOSPACE) {
-			name = FACE_MONOSPACE_NAME;
-		  } else if (meFont.getFace() == javax.microedition.lcdui.Font.FACE_PROPORTIONAL) {
-			name = FACE_PROPORTIONAL_NAME;
-		  }
-		  int style = 0;
-		  if ((meFont.getStyle() & javax.microedition.lcdui.Font.STYLE_PLAIN) != 0) {
-			style |= SWT.NORMAL;
-		  }
-		  if ((meFont.getStyle() & javax.microedition.lcdui.Font.STYLE_BOLD) != 0) {
-			style |= SWT.BOLD;
-		  }
-		  if ((meFont.getStyle() & javax.microedition.lcdui.Font.STYLE_ITALIC) != 0) {
-			style |= SWT.ITALIC;
-		  }
-		  int size = 0;
-		  if (meFont.getSize() == javax.microedition.lcdui.Font.SIZE_SMALL) {
-			size = SIZE_SMALL;
-		  } else if (meFont.getSize() == javax.microedition.lcdui.Font.SIZE_MEDIUM) {
-			size = SIZE_MEDIUM;
-		  } else if (meFont.getSize() == javax.microedition.lcdui.Font.SIZE_LARGE) {
-			size = SIZE_LARGE;
-		  }
-	
-		  tmp =	SwtDeviceComponent.getFont(name, size, style);
-		  fonts.put(meFont, tmp);
-		}
+	static String FACE_PROPORTIONAL_NAME = "SansSerif";
+
+	static int SIZE_SMALL = 6;
+
+	static int SIZE_MEDIUM = 8;
+
+	static int SIZE_LARGE = 10;
+
+	private Hashtable fonts = new Hashtable();
+
+	private boolean antialiasing;
+
+	org.microemu.device.impl.Font getFont(Font meFont) {
+    	int key = 0;
+    	key |= meFont.getFace();
+    	key |= meFont.getStyle();
+    	key |= meFont.getSize();
+    	
+    	org.microemu.device.impl.Font result = (org.microemu.device.impl.Font) fonts.get(new Integer(key));
 	    
-		return tmp;
-  }
-  
-
-  org.eclipse.swt.graphics.FontMetrics getFontMetrics(javax.microedition.lcdui.Font meFont)
-  {    
-    return SwtDeviceComponent.getFontMetrics(getFont(meFont));
-  }
-  
-
-	public int charWidth(javax.microedition.lcdui.Font f, char ch)
-	{
-		return charsWidth(f, new char[] {ch}, 0, 1);
+	    if (result == null) {
+	    	String name = null;
+	    	if (meFont.getFace() == Font.FACE_SYSTEM) {
+	    		name = FACE_SYSTEM_NAME;
+	    	} else if (meFont.getFace() == Font.FACE_MONOSPACE) {
+	    		name = FACE_MONOSPACE_NAME;
+	    	} else if (meFont.getFace() == Font.FACE_PROPORTIONAL) {
+	    		name = FACE_PROPORTIONAL_NAME;
+	    	}
+	    	String style = ",";
+	    	if ((meFont.getStyle() & Font.STYLE_PLAIN) != 0) {
+	    		style += "plain,";
+	    	}
+	    	if ((meFont.getStyle() & Font.STYLE_BOLD) != 0) {
+	    		style += "bold,";
+	    	}
+	    	if ((meFont.getStyle() & Font.STYLE_ITALIC) != 0) {
+	    		style += "italic,";
+	    	}
+	    	if ((meFont.getStyle() & Font.STYLE_ITALIC) != 0) {
+	    		style += "underlined,";
+	    	}
+	    	style = style.substring(0, style.length() - 1);
+	    	int size = 0;
+	    	if (meFont.getSize() == Font.SIZE_SMALL) {
+	    		size = SIZE_SMALL;
+	    	} else if (meFont.getSize() == Font.SIZE_MEDIUM) {
+	    		size = SIZE_MEDIUM;
+	    	} else if (meFont.getSize() == Font.SIZE_LARGE) {
+	    		size = SIZE_LARGE;
+	    	}
+	    	result = new SwtSystemFont(name, style, size, antialiasing);
+	    	fonts.put(new Integer(key), result);
+	    }
+	    
+	    return result;
 	}
 
-
-  public int charsWidth(javax.microedition.lcdui.Font f, char[] ch, int offset, int length)
-  {
-		return SwtDeviceComponent.stringWidth(getFont(f), new String(ch, offset, length));
-  }
-
-
-  public int getBaselinePosition(javax.microedition.lcdui.Font f)
-  {
-    return getFontMetrics(f).getAscent();
-  }
-
-
-	public int getHeight(javax.microedition.lcdui.Font f)
-	{
-		return getFontMetrics(f).getHeight();
+	public int charWidth(Font f, char ch) {
+		return getFont(f).charWidth(ch);
 	}
 
-
-	public int stringWidth(javax.microedition.lcdui.Font f, String str)
-	{
-		return SwtDeviceComponent.stringWidth(getFont(f), str);
+	public int charsWidth(Font f, char[] ch, int offset, int length) {
+		return getFont(f).charsWidth(ch, offset, length);
 	}
 
+	public int getBaselinePosition(Font f) {
+		return getFont(f).getBaselinePosition();
+	}
+
+	public int getHeight(Font f) {
+		return getFont(f).getHeight();
+	}
+
+	public int stringWidth(Font f, String str) {
+		return getFont(f).stringWidth(str);
+	}
+
+	public boolean getAntialiasing() {
+		return antialiasing;
+	}
+
+	public void setAntialiasing(boolean antialiasing) 
+	{
+		this.antialiasing = antialiasing;
+		
+		Enumeration en = fonts.elements();
+		while (en.hasMoreElements()) {
+			SwtFont font = (SwtFont) en.nextElement();
+			font.setAntialiasing(antialiasing);
+		}
+	}
+
+	public void setFont(String face, String style, String size, org.microemu.device.impl.Font font) {
+		int key = 0;
+		
+		if (face.equalsIgnoreCase("system")) {
+			key |= Font.FACE_SYSTEM;
+		} else if (face.equalsIgnoreCase("monospace")) {
+			key |= Font.FACE_MONOSPACE;
+		} else if (face.equalsIgnoreCase("proportional")) {
+			key |= Font.FACE_PROPORTIONAL;
+		}
+		
+		String testStyle = style.toLowerCase();
+		if (testStyle.indexOf("plain") != -1) {
+			key |= Font.STYLE_PLAIN;
+		} 
+		if (testStyle.indexOf("bold") != -1) {
+			key |= Font.STYLE_BOLD;
+		} 
+		if (testStyle.indexOf("italic") != -1) {
+			key |= Font.STYLE_ITALIC;
+		} 
+		if (testStyle.indexOf("underlined") != -1) {
+			key |= Font.STYLE_UNDERLINED;
+		}
+		
+		if (size.equalsIgnoreCase("small")) {
+			key |= Font.SIZE_SMALL;
+		} else if (size.equalsIgnoreCase("medium")) {
+			key |= Font.SIZE_MEDIUM;
+		} else if (size.equalsIgnoreCase("large")) {
+			key |= Font.SIZE_LARGE;
+		}
+		
+		fonts.put(new Integer(key), font);
+	}
+
+	public org.microemu.device.impl.Font createSystemFont(String defName, String defStyle, int defSize, boolean antialiasing) {
+		return new SwtSystemFont(defName, defStyle, defSize, antialiasing);
+	}
+
+	public org.microemu.device.impl.Font createTrueTypeFont(URL defUrl, String defStyle, int defSize, boolean antialiasing) {
+		return new SwtTrueTypeFont(defUrl, defStyle, defSize, antialiasing);
+	}
+	
 }

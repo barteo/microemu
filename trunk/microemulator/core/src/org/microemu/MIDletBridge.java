@@ -22,10 +22,12 @@
  
 package org.microemu;
 
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 import javax.microedition.midlet.MIDlet;
-import javax.microedition.midlet.MIDletStateChangeException;
+
+import org.microemu.app.launcher.Launcher;
 
 
 public class MIDletBridge 
@@ -58,13 +60,6 @@ public class MIDletBridge
   
   public static void setCurrentMIDlet(MIDlet a_midlet)
   {
-  	if (currentMIDlet != null) {
-			try {
-				MIDletBridge.getMIDletAccess(currentMIDlet).destroyApp(true);
-			} catch (MIDletStateChangeException ex) {
-				System.err.println(ex);
-			}
-  	}
     currentMIDlet = a_midlet;   
   }
 
@@ -99,21 +94,22 @@ public class MIDletBridge
     
   public static void notifyDestroyed()
   {
-    emulator.notifyDestroyed();
+    emulator.notifyDestroyed(getMIDletAccess());
   }
   
-  /**
-   *  Pass out changes to softkeys
-   */
-  public static void notifySoftkeyLabelsChanged() 
-  {
-    emulator.notifySoftkeyLabelsChanged();
-  }
-  
-  
+
   public static boolean platformRequest(String URL)
   {
 	return emulator.platformRequest(URL);
   }
   
+  public static void clear() {
+	  for (Enumeration keys = midletAccess.keys(); keys.hasMoreElements(); ) {
+		  MIDlet test = (MIDlet) keys.nextElement();
+		  if (!(test instanceof Launcher)) {
+			  midletAccess.remove(test);
+		  }
+	  }
+  }
+
 }

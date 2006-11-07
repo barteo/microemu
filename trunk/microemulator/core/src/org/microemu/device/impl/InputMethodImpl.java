@@ -1,8 +1,28 @@
+/*
+ *  MicroEmulator
+ *  Copyright (C) 2006 Bartek Teodorczyk <barteo@barteo.net>
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
 package org.microemu.device.impl;
 
 import javax.microedition.lcdui.TextField;
 
 import org.microemu.MIDletBridge;
+import org.microemu.device.DeviceFactory;
 import org.microemu.device.InputMethod;
 import org.microemu.device.InputMethodEvent;
 
@@ -14,53 +34,18 @@ public abstract class InputMethodImpl extends InputMethod implements Runnable {
 	
 	protected int lastButtonCharIndex;
 
-	private boolean hasPointerEvents;
-
-	private boolean hasPointerMotionEvents;
-
-	// TODO not implemented yet
-	private boolean hasRepeatEvents;
-
 	private boolean cancel;
 	
 	private Thread t;
 
 	public InputMethodImpl() {
-		this.hasPointerEvents = false;
-		this.hasPointerMotionEvents = false;
-		this.hasRepeatEvents = false;
-
 		this.lastButton = null;
 		this.lastButtonCharIndex = -1;
 		
 		this.cancel = false;
 		this.t = new Thread(this, "InputMethodThread");
+		this.t.setDaemon(true);
 		this.t.start();
-	}
-
-	// InputMethod
-	public boolean hasPointerEvents() {
-		return hasPointerEvents;
-	}
-
-	public boolean hasPointerMotionEvents() {
-		return hasPointerMotionEvents;
-	}
-
-	public boolean hasRepeatEvents() {
-		return hasRepeatEvents;
-	}
-
-	public void setHasPointerEvents(boolean state) {
-		this.hasPointerEvents = state;
-	}
-
-	public void setHasPointerMotionEvents(boolean state) {
-		this.hasPointerMotionEvents = state;
-	}
-
-	public void setHasRepeatEvents(boolean state) {
-		this.hasRepeatEvents = state;
 	}
 
 	// TODO to be removed when event dispatcher will run input method task
@@ -96,21 +81,49 @@ public abstract class InputMethodImpl extends InputMethod implements Runnable {
 		}
 	}
 	
-	public void pointerPressed(int x, int y) {
-		if (hasPointerEvents) {
+	public void pointerPressed(int x, int y) {		
+		if (DeviceFactory.getDevice().hasPointerEvents()) {
 			MIDletBridge.getMIDletAccess().getDisplayAccess().pointerPressed(x, y);
 		}
 	}
 
 	public void pointerReleased(int x, int y) {
-		if (hasPointerEvents) {
+		if (DeviceFactory.getDevice().hasPointerEvents()) {
 			MIDletBridge.getMIDletAccess().getDisplayAccess().pointerReleased(x, y);
 		}
 	}
 
 	public void pointerDragged(int x, int y) {
-		if (hasPointerMotionEvents) {
+		if (DeviceFactory.getDevice().hasPointerMotionEvents()) {
 			MIDletBridge.getMIDletAccess().getDisplayAccess().pointerDragged(x, y);
+		}
+	}
+	
+	protected void insertText(String str) {
+		char[] test = new char[str.length()];
+		test = filterConstraints(str.toCharArray());
+		if (test.length > 0) {
+			synchronized (this) {
+				if (lastButton != null) {
+					caret++;
+					lastButton = null;
+					lastButtonCharIndex = -1;
+				}
+				String tmp = "";
+				if (caret > 0) {
+					tmp += text.substring(0, caret);
+				}
+				tmp += new String(test);
+				if (caret < text.length()) {
+					tmp += text.substring(caret);
+				}
+				text = tmp;
+				caret += test.length;
+			}
+			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, text);
+			inputMethodListener.inputMethodTextChanged(event);
+			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
+			inputMethodListener.caretPositionChanged(event);
 		}
 	}
 

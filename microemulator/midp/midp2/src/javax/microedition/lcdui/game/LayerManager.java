@@ -86,64 +86,25 @@ public class LayerManager {
     }
     
     public void paint(Graphics g, int x, int y) {
-    	synchronized (this) {
-	        if (g == null)
-	            throw new NullPointerException();
-	        
-	        int clipX = g.getClipX();
-	        int clipY = g.getClipY();
-	        int clipW = g.getClipWidth();
-	        int clipH = g.getClipHeight();
-	        
-	        // save the clip rect
-	        int sClipX = clipX;
-	        int sClipY = clipY;
-	        int sClipW = clipW;
-	        int sClipH = clipH;
-	        
-	        // if the entire viewWindow is out of the clip area
-	        // there is nothing to draw!
-	        if ((x + viewX < clipX && x + viewX + viewW < clipX) ||
-	                (x + viewX >= clipX + clipW) ||
-	                (y + viewY < clipY && y + viewY + viewH < clipY) ||
-	                (y + viewY >= clipY + clipH))
-	            return;
-	
-	        if (x + viewX > clipX) {
-	            clipX = x + viewX;
-	            clipW -= x + viewX - clipX;
-	        }
-	        if (x + viewX + viewW < clipX + clipW)
-	            clipW -= clipX + clipW - (x + viewX + viewW);
-	        
-	        if (y + viewY > clipY) {
-	            clipY = y + viewY;
-	            clipH -= y + viewY - clipY;
-	        }
-	        if (y + viewY + viewH < clipY + clipH)
-	            clipH -= clipY + clipH - (y + viewY + viewH);
-	        
-	        // set new calculated clip area and 
-	        // translation
-	        g.clipRect(clipX, clipY, clipW, clipH);
-	        g.translate(x, y);        
-	
-	        // draw all the tiles, from background
-	        // to foreground
-	        for (int i = getSize() - 1; i >= 0; i--) {
-	            Layer layer = getLayerAt(i);
-	            try {
-	                if (layer.isVisible())
-	                    layer.paint(g);
-	            } catch (Throwable t) {
-	                // it does nothing, but at least prevents
-	                // the method from aborting
-	            }
-	        }
-	
-	        // restore old clip rect and translation
-	        g.clipRect(sClipX, sClipY, sClipW, sClipH);
-	        g.translate(-x, -y);
-    	}
-    }
+		synchronized (this) {
+			if (g == null)
+				throw new NullPointerException();
+
+			int clipX = g.getClipX();
+			int clipY = g.getClipY();
+			int clipW = g.getClipWidth();
+			int clipH = g.getClipHeight();
+			g.translate(x - viewX, y - viewY);
+			g.clipRect(viewX, viewY, viewW, viewH);
+			for (int i = getSize(); --i >= 0;) {
+				Layer comp = getLayerAt(i);
+				if (comp.isVisible()) {
+					comp.paint(g);
+				}
+			}
+			g.translate(-x + viewX, -y + viewY);
+			g.setClip(clipX, clipY, clipW, clipH);
+		}
+	}
+    
 }

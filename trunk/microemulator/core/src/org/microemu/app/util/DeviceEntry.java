@@ -83,6 +83,9 @@ public class DeviceEntry
   
   public boolean equals(DeviceEntry test)
   {
+	if (test == null) {
+      return false;
+	}
     if (test.getClassName().equals(getClassName())) {
       return true;
     }

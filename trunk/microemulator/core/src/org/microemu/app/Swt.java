@@ -138,6 +138,10 @@ public class Swt extends Common
 	{    
 		public void handleEvent(Event e)
 		{
+			Config.setWindowX(shell.getLocation().x);
+			Config.setWindowY(shell.getLocation().x);
+			Config.saveConfig("config.xml");
+
 			System.exit(0);
 		}    
 	};
@@ -263,6 +267,9 @@ public class Swt extends Common
 //		addWindowListener(windowListener);
 		    
 		Config.loadConfig("config.xml");
+		
+		shell.setLocation(Config.getWindowX(), Config.getWindowY());
+		
 		shell.addKeyListener(keyListener);
 
 		selectDeviceDialog = new SwtSelectDeviceDialog(shell);

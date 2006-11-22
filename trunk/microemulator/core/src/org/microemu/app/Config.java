@@ -41,6 +41,8 @@ public class Config
   private static File configPath = new File(System.getProperty("user.home") + "/.microemulator/");
   private static Vector devices = new Vector();
   
+  private static int windowX;
+  private static int windowY;
   
   public static void loadConfig(String configFileName)
   {
@@ -103,6 +105,23 @@ public class Config
             devices.add(new DeviceEntry(devName, devFile, devClass, devDefault));
           }
         }
+      } else if (tmp.getName().equals("window")) {
+    	  for (Enumeration ew = tmp.enumerateChildren(); ew.hasMoreElements(); ) {
+              XMLElement tmp_propety = (XMLElement) ew.nextElement();
+              if (tmp_propety.getName().equals("x")) {
+            	  try {
+					windowX = Integer.parseInt(tmp_propety.getContent());
+				} catch (NumberFormatException e1) {
+					windowX = 0;
+				}
+              } else if (tmp_propety.getName().equals("y")) {
+            	  try {
+  					windowY = Integer.parseInt(tmp_propety.getContent());
+  				} catch (NumberFormatException e1) {
+  					windowY = 0;
+  				}
+                }
+    	  }
       }
     }
   }
@@ -120,6 +139,14 @@ public class Config
     XMLElement xmlTmp;
     XMLElement xmlRoot = new XMLElement();
     xmlRoot.setName("config");
+
+    XMLElement xmlWindow = new XMLElement();
+    xmlWindow.setName("window");
+    xmlRoot.addChild(xmlWindow);
+    
+    addXMLChild(xmlWindow, "x", String.valueOf(windowX));
+    addXMLChild(xmlWindow, "y", String.valueOf(windowY));
+    
     XMLElement xmlDevices = new XMLElement();
     xmlDevices.setName("devices");
     xmlRoot.addChild(xmlDevices);
@@ -172,4 +199,30 @@ public class Config
     return devices;
   }
   
+  public static int getWindowX() {
+	  return windowX;
+  }
+
+
+  public static void setWindowX(int windowX) {
+		Config.windowX = windowX;
+  }
+
+
+  public static int getWindowY() {
+	  return windowY;
+  }
+
+
+  public static void setWindowY(int windowY) {
+		Config.windowY = windowY;
+  }
+  
+  private static void addXMLChild(XMLElement parent, String name, String value) {
+		XMLElement xml = new XMLElement();
+		xml.setName(name);
+		xml.setContent(value);
+		parent.addChild(xml);
+	}
+
 }

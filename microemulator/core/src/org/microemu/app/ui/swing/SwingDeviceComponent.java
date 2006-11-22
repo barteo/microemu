@@ -432,4 +432,10 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
     return null;
   }
   
+  	public Dimension getPreferredSize() {
+  		javax.microedition.lcdui.Image img = DeviceFactory.getDevice().getNormalImage();
+  		
+  		return new Dimension(img.getWidth(), img.getHeight());
+	}
+
 }

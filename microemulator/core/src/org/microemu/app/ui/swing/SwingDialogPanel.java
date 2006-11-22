@@ -33,6 +33,8 @@ public class SwingDialogPanel extends JPanel
   public JButton btCancel = new JButton("Cancel");
 
   boolean state;
+  
+  boolean extra;
 
   /**
    * Walidacja panelu
@@ -53,6 +55,15 @@ public class SwingDialogPanel extends JPanel
   
   protected void showNotify()
   {
+  }
+  
+  protected JButton getExtraButton()
+  {
+	return null;  
+  }
+  
+  public boolean isExtraButtonPressed() {
+	  return extra;
   }
 
 }

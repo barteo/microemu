@@ -44,13 +44,16 @@ public class Config
   private static int windowX;
   private static int windowY;
   
-  public static void loadConfig(String configFileName)
+  public static void loadConfig(String configFileName, DeviceEntry defaultDevice)
   {
 		File configFile = new File(configPath, configFileName);
 		
-    DeviceEntry defaultDevice = 
-            new DeviceEntry("Default device", null, "org.microemu.device.Device", true, false);
-    devices.add(defaultDevice);
+		if (defaultDevice == null) {
+		    defaultDevice = 
+	            new DeviceEntry("Default device", null, "org.microemu.device.Device", true, false);
+		}
+    	defaultDevice.setDefaultDevice(true);
+    	devices.add(defaultDevice);
 
     String xml = "";
     try {

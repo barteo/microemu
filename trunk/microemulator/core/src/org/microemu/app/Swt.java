@@ -123,6 +123,7 @@ public class Swt extends Common
 	{
 		public void handleEvent(Event ev)
 		{
+			// TODO change to JadUrlPanel
 			SwtInputDialog inputDialog = new SwtInputDialog(shell, "Open...", "Enter JAD URL:");
 			if (inputDialog.open() == SwtDialog.OK) {
 				try {
@@ -230,8 +231,12 @@ public class Swt extends Common
 		}
 	};*/
 	
-  
 	protected Swt(Shell shell)
+	{
+		this(shell, null);
+	}
+  
+	protected Swt(Shell shell, DeviceEntry defaultDevice)
 	{
 		super(new EmulatorContext()
 		{
@@ -266,7 +271,7 @@ public class Swt extends Common
 
 //		addWindowListener(windowListener);
 		    
-		Config.loadConfig("config.xml");
+		Config.loadConfig("config.xml", null);
 		
 		shell.setLocation(Config.getWindowX(), Config.getWindowY());
 		

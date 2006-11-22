@@ -235,8 +235,12 @@ public class WebStart extends JFrame
 		}
 	};  
 
+	public WebStart()
+	{
+		this(null);
+	}
 
-  public WebStart()
+  public WebStart(DeviceEntry defaultDevice)
   {
     instance = this;
         
@@ -271,7 +275,7 @@ public class WebStart extends JFrame
     setTitle("MicroEmulator");
     addWindowListener(windowListener);
     
-    Config.loadConfig("config.xml");
+    Config.loadConfig("config.xml", defaultDevice);
 
     this.setLocation(Config.getWindowX(), Config.getWindowY());
 

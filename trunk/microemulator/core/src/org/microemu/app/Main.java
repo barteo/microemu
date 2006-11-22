@@ -19,6 +19,8 @@
  
 package org.microemu.app;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,10 +50,10 @@ import javax.swing.UIManager;
 import org.microemu.DisplayComponent;
 import org.microemu.EmulatorContext;
 import org.microemu.MIDletBridge;
-//import org.microemu.app.launcher.Launcher;
 import org.microemu.app.ui.ResponseInterfaceListener;
 import org.microemu.app.ui.StatusBarListener;
 import org.microemu.app.ui.swing.ExtensionFileFilter;
+import org.microemu.app.ui.swing.JadUrlPanel;
 import org.microemu.app.ui.swing.SwingDeviceComponent;
 import org.microemu.app.ui.swing.SwingDialogWindow;
 import org.microemu.app.ui.swing.SwingSelectDevicePanel;
@@ -72,7 +74,10 @@ public class Main extends JFrame
   
   protected Common common;
   
-  private SwingSelectDevicePanel selectDevicePanel = null;
+  protected SwingSelectDevicePanel selectDevicePanel = null;
+  
+  private JadUrlPanel jadUrlPanel;
+  
   private JFileChooser fileChooser = null;
   private JMenuItem menuOpenJADFile;
   private JMenuItem menuOpenJADURL;
@@ -135,20 +140,17 @@ public class Main extends JFrame
     } 
   };
   
-  private ActionListener menuOpenJADURLListener = new ActionListener()
-  {
-    public void actionPerformed(ActionEvent ev)
-    {
-      String entered = JOptionPane.showInputDialog(instance, "Enter JAD URL:");
-      if (entered != null) {
-      	try {
-					Common.openJadUrl(entered);
+  private ActionListener menuOpenJADURLListener = new ActionListener() {
+		public void actionPerformed(ActionEvent ev) {
+			if (SwingDialogWindow.show(Main.this, "Enter JAD URL:", jadUrlPanel)) {
+				try {
+					Common.openJadUrl(jadUrlPanel.getText());
 				} catch (IOException ex) {
-					System.err.println("Cannot load " + entered);
-      	}
-      }
-    }    
-  };
+					System.err.println("Cannot load " + jadUrlPanel.getText());
+				}
+			}
+		}
+	};
   
   private ActionListener menuExitListener = new ActionListener()
   {    
@@ -235,8 +237,12 @@ public class Main extends JFrame
 		}
 	};  
 
+	public Main()
+	{
+		this(null);
+	}
 
-  public Main()
+  public Main(DeviceEntry defaultDevice)
   {
     instance = this;
         
@@ -271,24 +277,32 @@ public class Main extends JFrame
     setTitle("MicroEmulator");
     addWindowListener(windowListener);
     
-    Config.loadConfig("config.xml");
-
+    Config.loadConfig("config.xml", defaultDevice);
+    
     this.setLocation(Config.getWindowX(), Config.getWindowY());
 
-    devicePanel = new SwingDeviceComponent();
-    devicePanel.addKeyListener(devicePanel);
-    addKeyListener(devicePanel);
+    getContentPane().add(createContents(getContentPane()), "Center");
+
     selectDevicePanel = new SwingSelectDevicePanel();
+    jadUrlPanel = new JadUrlPanel();
     
 	common = new Common(emulatorContext);
 	common.setStatusBarListener(statusBarListener);
 	common.setResponseInterfaceListener(responseInterfaceListener);
 
-    getContentPane().add(devicePanel, "Center");
     getContentPane().add(statusBar, "South");    
   }
   
   
+  protected Component createContents(Container parent) {
+    devicePanel = new SwingDeviceComponent();
+    devicePanel.addKeyListener(devicePanel);
+    addKeyListener(devicePanel);
+	    
+    return devicePanel;
+  }
+
+
   public void setDevice(DeviceEntry entry)
   {
 		if (DeviceFactory.getDevice() != null) {
@@ -324,12 +338,7 @@ public class Main extends JFrame
 	protected void updateDevice() 
 	{
 		devicePanel.init();
-		Image tmpImg = common.getDevice().getNormalImage();
-		Dimension size = new Dimension(tmpImg.getWidth(), tmpImg.getHeight());
-		size.width += 10;
-		size.height += statusBar.getPreferredSize().height + 55;
-		setSize(size);
-		doLayout();
+		pack();
 	}
 
 

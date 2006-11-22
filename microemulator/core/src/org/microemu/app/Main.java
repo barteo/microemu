@@ -154,7 +154,11 @@ public class Main extends JFrame
   {    
     public void actionPerformed(ActionEvent e)
     {
-      System.exit(0);
+		Config.setWindowX(Main.this.getX());
+		Config.setWindowY(Main.this.getY());
+		Config.saveConfig("config.xml");
+
+		System.exit(0);
     }    
   };
   
@@ -268,6 +272,8 @@ public class Main extends JFrame
     addWindowListener(windowListener);
     
     Config.loadConfig("config.xml");
+
+    this.setLocation(Config.getWindowX(), Config.getWindowY());
 
     devicePanel = new SwingDeviceComponent();
     devicePanel.addKeyListener(devicePanel);

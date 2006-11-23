@@ -27,6 +27,8 @@ import javax.microedition.lcdui.Command;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.microemu.CommandManager;
+import org.microemu.DisplayAccess;
+import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.InputMethodEvent;
@@ -329,13 +331,33 @@ public class SwtInputMethod extends InputMethodImpl
 	
 	public void keyReleased(KeyEvent ev) 
 	{
-		MIDletBridge.getMIDletAccess().getDisplayAccess().keyReleased(ev.keyCode);
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma == null) {
+			return;
+		}
+		
+		DisplayAccess da = ma.getDisplayAccess();
+		if (da == null) {
+			return;
+		}
+
+		da.keyReleased(ev.keyCode);
 	}
 
 	
 	public void mouseReleased(int keyCode) 
 	{
-		MIDletBridge.getMIDletAccess().getDisplayAccess().keyReleased(keyCode);
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma == null) {
+			return;
+		}
+		
+		DisplayAccess da = ma.getDisplayAccess();
+		if (da == null) {
+			return;
+		}
+
+		da.keyReleased(keyCode);
 	}
 
 	

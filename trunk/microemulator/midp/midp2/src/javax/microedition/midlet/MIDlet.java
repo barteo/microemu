@@ -43,7 +43,11 @@ public abstract class MIDlet
                 MIDletBridge.setCurrentMIDlet(midlet);
             }
 			MIDletBridge.getRecordStoreManager().init();
-			midlet.startApp();
+			try {
+				midlet.startApp();
+			} catch (Error er) {
+				throw new MIDletStateChangeException(er.getMessage());
+			}
 		}
 
 		public void pauseApp() 
@@ -54,7 +58,11 @@ public abstract class MIDlet
 		public void destroyApp(boolean unconditional) throws MIDletStateChangeException 
 		{
 			if (!destroyed) {
-				midlet.destroyApp(unconditional);
+				try {
+					midlet.destroyApp(unconditional);
+				} catch (Error er) {
+					System.out.println(er.getMessage());
+				}
 			}
 			DisplayAccess da = getDisplayAccess();
 			if (da != null) {

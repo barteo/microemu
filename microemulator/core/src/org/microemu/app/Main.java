@@ -88,7 +88,7 @@ public class Main extends JFrame
 
   private JLabel statusBar = new JLabel("Status");
   
-  private EmulatorContext emulatorContext = new EmulatorContext()
+  protected EmulatorContext emulatorContext = new EmulatorContext()
   {
     private InputMethod inputMethod = new J2SEInputMethod();
     
@@ -286,9 +286,9 @@ public class Main extends JFrame
     selectDevicePanel = new SwingSelectDevicePanel();
     jadUrlPanel = new JadUrlPanel();
     
-	common = new Common(emulatorContext);
-	common.setStatusBarListener(statusBarListener);
-	common.setResponseInterfaceListener(responseInterfaceListener);
+   	this.common = new Common(emulatorContext);
+	this.common.setStatusBarListener(statusBarListener);
+	this.common.setResponseInterfaceListener(responseInterfaceListener);
 
     getContentPane().add(statusBar, "South");    
   }

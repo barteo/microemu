@@ -31,12 +31,15 @@ import javax.microedition.midlet.MIDletStateChangeException;
 
 import org.microemu.MIDletBridge;
 import org.microemu.MIDletEntry;
+import org.microemu.app.Common;
 
 public class Launcher extends MIDlet implements CommandListener {
 
 	private static final Command CMD_LAUNCH = new Command("Start", Command.ITEM, 0);;
 	
 	private static final String NOMIDLETS = "[no midlets]";
+	
+	private Common common;
 
 	private List menuList;
 
@@ -46,7 +49,8 @@ public class Launcher extends MIDlet implements CommandListener {
 
 	private MIDlet currentMIDlet = null;
 
-	public Launcher() {
+	public Launcher(Common common) {
+		this.common = common;
 	}
 
 	public String getSuiteName() {
@@ -99,23 +103,14 @@ public class Launcher extends MIDlet implements CommandListener {
 	public void commandAction(Command c, Displayable d) {
 		if (d == menuList) {
 			if (c == List.SELECT_COMMAND || c == CMD_LAUNCH) {
-				startSelectedMIDlet();
+				int idx = menuList.getSelectedIndex();
+				if (!menuList.getString(idx).equals(NOMIDLETS)) {
+					common.startMidlet(
+							((MIDletEntry) midletEntries.elementAt(idx)).getMIDlet(), 
+							null);
+				}
 			}
 		}
-	}
-
-	public MIDlet startSelectedMIDlet() {
-		if (!menuList.getString(menuList.getSelectedIndex()).equals(NOMIDLETS)) {
-			currentMIDlet = ((MIDletEntry) midletEntries.elementAt(menuList
-					.getSelectedIndex())).getMIDlet();
-			try {
-				MIDletBridge.getMIDletAccess(currentMIDlet).startApp();
-			} catch (MIDletStateChangeException ex) {
-				ex.printStackTrace();
-			}
-		}
-
-		return currentMIDlet;
 	}
 
 }

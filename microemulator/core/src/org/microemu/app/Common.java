@@ -88,7 +88,7 @@ public class Common implements MicroEmulator {
 		instance = this;
 		this.emulatorContext = context;
 
-		launcher = new Launcher();
+		launcher = new Launcher(this);
 		launcher.setCurrentMIDlet(launcher);
 
 		MIDletBridge.setMicroEmulator(this);
@@ -202,10 +202,10 @@ public class Common implements MicroEmulator {
 			if (previousMidletAccess != null) {
 				previousMidletAccess.destroyApp(true);
 			}
-			launcher.setCurrentMIDlet(m);
 			MIDletBridge.getMIDletAccess(m).startApp();
+			launcher.setCurrentMIDlet(m);
 		} catch (MIDletStateChangeException ex) {
-			System.err.println(ex);
+			handleStartMidletException(ex);
 		}
 	}
 
@@ -219,6 +219,10 @@ public class Common implements MicroEmulator {
 
 	public void setResponseInterfaceListener(ResponseInterfaceListener listener) {
 		responseInterfaceListener = listener;
+	}
+	
+	protected void handleStartMidletException(MIDletStateChangeException ex) {
+		System.err.println(ex);
 	}
 
 	protected void close() {

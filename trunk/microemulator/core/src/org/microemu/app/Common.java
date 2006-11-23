@@ -45,11 +45,9 @@ import org.microemu.app.launcher.Launcher;
 import org.microemu.app.ui.ResponseInterfaceListener;
 import org.microemu.app.ui.StatusBarListener;
 import org.microemu.app.ui.noui.NoUiDisplayComponent;
-import org.microemu.app.util.Base64Coder;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.FileRecordStoreManager;
 import org.microemu.app.util.MIDletClassLoader;
-import org.microemu.app.util.MemoryRecordStoreManager;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
@@ -58,8 +56,10 @@ import org.microemu.device.InputMethod;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEFontManager;
 import org.microemu.device.j2se.J2SEInputMethod;
+import org.microemu.util.Base64Coder;
 import org.microemu.util.JadMidletEntry;
 import org.microemu.util.JadProperties;
+import org.microemu.util.MemoryRecordStoreManager;
 
 //import com.barteo.emulator.app.capture.Capturer;
 

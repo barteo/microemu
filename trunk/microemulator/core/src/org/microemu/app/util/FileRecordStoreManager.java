@@ -100,7 +100,6 @@ public class FileRecordStoreManager implements RecordStoreManager
         RecordStoreImpl recordStoreImpl;
 		try {
 			recordStoreImpl = loadFromDisk(storeFile);
-			recordStoreImpl.setRecordStoreManager(this);
 		} catch (FileNotFoundException e) {
             if (!createIfNecessary) { 
                 throw new RecordStoreNotFoundException(); 
@@ -170,7 +169,7 @@ public class FileRecordStoreManager implements RecordStoreManager
 
         try {
             DataInputStream dis = new DataInputStream(new FileInputStream(recordStoreFile));
-            store = new RecordStoreImpl(dis);
+            store = new RecordStoreImpl(this, dis);
             dis.close();
         } catch (FileNotFoundException ex) {
             throw ex;
@@ -194,5 +193,11 @@ public class FileRecordStoreManager implements RecordStoreManager
             ex.printStackTrace();
         }
     }
+
+
+	public int getSizeAvailable(RecordStoreImpl recordStoreImpl) {
+		// FIXME should return free space on device
+		return 1024 * 1024;
+	}
 
 }

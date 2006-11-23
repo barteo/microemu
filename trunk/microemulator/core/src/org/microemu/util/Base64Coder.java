@@ -18,7 +18,7 @@
  *
  **************************************************************************/
 
-package org.microemu.app.util;
+package org.microemu.util;
 
 public class Base64Coder {
 

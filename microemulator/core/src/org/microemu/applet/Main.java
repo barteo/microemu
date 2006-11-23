@@ -98,7 +98,6 @@ public class Main extends Applet implements MicroEmulator
     
     public Main()
     {
-        recordStoreManager = new AppletRecordStoreManager();
         devicePanel = new SwingDeviceComponent();
         devicePanel.addKeyListener(devicePanel);
     }
@@ -111,6 +110,8 @@ public class Main extends Applet implements MicroEmulator
         }
 
         MIDletBridge.setMicroEmulator(this);
+
+        recordStoreManager = new CookieRecordStoreManager(this);
 
         setLayout(new BorderLayout());
         add(devicePanel, "Center");

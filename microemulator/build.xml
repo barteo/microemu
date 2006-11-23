@@ -122,6 +122,9 @@
 			<src path="midp/midp2/src" />			
 			<src path="example/src" />			
 			<patternset refid="project.src"/>
+			<classpath>
+				<pathelement location="${target.applet.jsobject.jar}"/>
+			</classpath>
 		</javac>
 	</target>
 

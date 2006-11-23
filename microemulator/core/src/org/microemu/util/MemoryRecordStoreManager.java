@@ -17,7 +17,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.microemu.applet;
+package org.microemu.util;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -27,11 +27,10 @@ import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreNotFoundException;
 
 import org.microemu.RecordStoreManager;
-import org.microemu.util.RecordStoreImpl;
 
 
 
-public class AppletRecordStoreManager implements RecordStoreManager 
+public class MemoryRecordStoreManager implements RecordStoreManager 
 {
 	private Hashtable recordStores = new Hashtable();
 	  
@@ -87,7 +86,7 @@ public class AppletRecordStoreManager implements RecordStoreManager
 	public void saveChanges(RecordStoreImpl recordStoreImpl) 
 	{
 	}
-	
+
 	public void init()
 	{
 		deleteStores();
@@ -98,5 +97,11 @@ public class AppletRecordStoreManager implements RecordStoreManager
         if (recordStores != null)
             recordStores.clear();
     }
+
+
+	public int getSizeAvailable(RecordStoreImpl recordStoreImpl) {
+		// FIXME returns too much
+		return (int) Runtime.getRuntime().freeMemory();
+	}
 
 }

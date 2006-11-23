@@ -59,27 +59,32 @@ public class RecordStoreImpl extends RecordStore
 
 	public RecordStoreImpl(RecordStoreManager recordStoreManager, String recordStoreName) 
 	{
-		this.recordStoreName = recordStoreName;
+		this.recordStoreManager = recordStoreManager;
+		if (recordStoreName.length() <= 32) {
+			this.recordStoreName = recordStoreName;			
+		} else {
+			this.recordStoreName = recordStoreName.substring(0, 32);			
+		}
 		this.open = false;
-		
-		setRecordStoreManager(recordStoreManager);
 	}
 	
 	
-	public RecordStoreImpl(DataInputStream dis) 
+	public RecordStoreImpl(RecordStoreManager recordStoreManager, DataInputStream dis) 
 			throws IOException
 	{
-		recordStoreName = dis.readUTF();
-		version = dis.readInt();
-		lastModified = dis.readLong();
-		nextRecordID = dis.readInt();
+		this.recordStoreManager = recordStoreManager;
+
+		this.recordStoreName = dis.readUTF();
+		this.version = dis.readInt();
+		this.lastModified = dis.readLong();
+		this.nextRecordID = dis.readInt();
 		
 		try {
 			while (true) {
 				int recordId = dis.readInt();
 				byte[] data = new byte[dis.readInt()];
 				dis.read(data, 0, data.length);
-			    records.put(new Integer(recordId), data);
+				this.records.put(new Integer(recordId), data);
 			}
 		} catch (EOFException ex) {			
 		}
@@ -102,12 +107,6 @@ public class RecordStoreImpl extends RecordStore
 			dos.writeInt(data.length);
 			dos.write(data);			
 		}
-	}
-
-
-	public void setRecordStoreManager(RecordStoreManager recordStoreManager)
-	{
-		this.recordStoreManager = recordStoreManager;
 	}
 
 
@@ -193,8 +192,7 @@ public class RecordStoreImpl extends RecordStore
 		    throw new RecordStoreNotOpenException();
 		}
 		
-		// FIXME invalid size 
-		return (int) Runtime.getRuntime().freeMemory();
+		return recordStoreManager.getSizeAvailable(this); 
 	}
 
 
@@ -247,6 +245,9 @@ public class RecordStoreImpl extends RecordStore
 		if (data == null && numBytes > 0) {
 		    throw new NullPointerException();
 		}
+		if (numBytes > recordStoreManager.getSizeAvailable(this)) {
+			throw new RecordStoreFullException();
+		}		
 		
 		byte[] recordData = new byte[numBytes];
 		if (data != null) {
@@ -344,6 +345,11 @@ public class RecordStoreImpl extends RecordStore
 		    throw new RecordStoreNotOpenException();
 		}
 		
+		// FIXME fixit
+		if (numBytes > recordStoreManager.getSizeAvailable(this)) {
+			throw new RecordStoreFullException();
+		}		
+
 		byte[] recordData = new byte[numBytes];
 		System.arraycopy(newData, offset, recordData, 0, numBytes);
 		
@@ -372,6 +378,19 @@ public class RecordStoreImpl extends RecordStore
 		
 		return new RecordEnumerationImpl(this, filter, comparator, keepUpdated);
 	}
+    
+    
+    public int getHeaderSize() 
+    {
+    	// TODO fixit
+    	return recordStoreName.length() + 4 + 8 + 4;
+    }
+    
+    
+    public int getRecordHeaderSize()
+    {
+    	return 4 + 4;
+    }
 
 
     private void fireAddedRecordListener(int recordId)

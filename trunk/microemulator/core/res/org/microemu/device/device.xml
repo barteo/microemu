@@ -42,33 +42,17 @@
 			<img name="normal" src="down.png" />
 			<img name="pressed" src="down-pressed.png" />
 		</icon>	
-		<img name="mode" type="123"
-			src="123.png">
+		<status name="input">
 			<paintable>
 				<x>0</x>
 				<y>0</y>
 				<width>14</width>
 				<height>7</height>
 			</paintable>
-		</img>
-		<img name="mode" type="ABC"
-			src="abc_upper.png">
-			<paintable>
-				<x>0</x>
-				<y>0</y>
-				<width>14</width>
-				<height>7</height>
-			</paintable>
-		</img>
-		<img name="mode" type="abc"
-			src="abc_lower.png">
-			<paintable>
-				<x>0</x>
-				<y>0</y>
-				<width>14</width>
-				<height>7</height>
-			</paintable>
-		</img>
+			<img name="123" src="123.png" />
+			<img name="ABC" src="abc_upper.png" />
+			<img name="abc" src="abc_lower.png" />
+		</status>
 	</display>
 	<fonts hint="antialiasing">
 		<font face="system" style="plain" size="small">

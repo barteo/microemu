@@ -183,7 +183,9 @@ public class Device
         
         for (Enumeration e = doc.enumerateChildren(); e.hasMoreElements(); ) {
           XMLElement tmp = (XMLElement) e.nextElement();
-          if (tmp.getName().equals("img")) {
+          if (tmp.getName().equals("system-properties")) {
+        	  parseSystemProperties(tmp);
+          } else if (tmp.getName().equals("img")) {
             try {
               if (tmp.getStringAttribute("name").equals("normal")) {
                 normalImage = loadImage(base, tmp.getStringAttribute("src"));
@@ -414,6 +416,15 @@ public class Device
               getSoftButtons().addElement(button);
             }
           }    	
+    }
+    
+    
+    private void parseSystemProperties(XMLElement tmp)
+    {
+        for (Enumeration e_prop = tmp.enumerateChildren(); e_prop.hasMoreElements(); ) {
+            XMLElement tmp_prop = (XMLElement) e_prop.nextElement();
+            System.setProperty(tmp_prop.getName(), tmp_prop.getContent());
+        }
     }
     
     

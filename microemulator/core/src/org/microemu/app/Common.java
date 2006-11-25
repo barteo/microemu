@@ -305,6 +305,9 @@ public class Common implements MicroEmulator {
 		}
 		
 		device.init(emulatorContext);
+		
+		System.setProperty("microedition.configuration", "CLDC-1.0");
+		System.setProperty("microedition.profiles", "MIDP-2.0");
 	}
 
 	private static Common getInstance() {

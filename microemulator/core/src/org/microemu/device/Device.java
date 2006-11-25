@@ -235,13 +235,15 @@ public class Device
             if (tmp_display.getName().equals("img")) {
               if (tmp_display.getStringAttribute("name").equals("up")
               		|| tmp_display.getStringAttribute("name").equals("down")) {
+            	// deprecated, moved to icon  
               	SoftButton icon = deviceDisplay.createSoftButton(
               			tmp_display.getStringAttribute("name"),
               			getRectangle(getElement(tmp_display, "paintable")),
               			loadImage(base, tmp_display.getStringAttribute("src")),
               			loadImage(base, tmp_display.getStringAttribute("src")));
-              	getSoftButtons().addElement(icon);
+              	getSoftButtons().addElement(icon);              	
               } else if (tmp_display.getStringAttribute("name").equals("mode")) {
+            	// deprecated, moved to status
                 if (tmp_display.getStringAttribute("type").equals("123")) {
                   deviceDisplay.setMode123Image(new PositionedImage(
                 	loadImage(base, tmp_display.getStringAttribute("src")),
@@ -280,7 +282,26 @@ public class Device
           		  icon.setCommand(CommandManager.CMD_SCREEN_DOWN);
           	  }
           	  getSoftButtons().addElement(icon);
-            }
+            } else if (tmp_display.getName().equals("status")) {
+				if (tmp_display.getStringAttribute("name").equals("input")) {
+					Rectangle paintable = getRectangle(getElement(tmp_display, "paintable"));
+					for (Enumeration e_status = tmp_display.enumerateChildren(); e_status.hasMoreElements();) {
+						XMLElement tmp_status = (XMLElement) e_status.nextElement();
+						if (tmp_status.getName().equals("img")) {
+							if (tmp_status.getStringAttribute("name").equals("123")) {
+								deviceDisplay.setMode123Image(new PositionedImage(
+										loadImage(base, tmp_status.getStringAttribute("src")), paintable));
+							} else if (tmp_status.getStringAttribute("name").equals("abc")) {
+								deviceDisplay.setModeAbcLowerImage(new PositionedImage(
+										loadImage(base, tmp_status.getStringAttribute("src")), paintable));
+							} else if (tmp_status.getStringAttribute("name").equals("ABC")) {
+								deviceDisplay.setModeAbcUpperImage(new PositionedImage(
+										loadImage(base, tmp_status.getStringAttribute("src")), paintable));
+							}
+						}
+					}
+				}
+			}
           }
     }
     

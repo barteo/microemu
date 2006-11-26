@@ -110,20 +110,25 @@ public class Config
         }
       } else if (tmp.getName().equals("window")) {
     	  for (Enumeration ew = tmp.enumerateChildren(); ew.hasMoreElements(); ) {
-              XMLElement tmp_propety = (XMLElement) ew.nextElement();
-              if (tmp_propety.getName().equals("x")) {
-            	  try {
-					windowX = Integer.parseInt(tmp_propety.getContent());
-				} catch (NumberFormatException e1) {
-					windowX = 0;
-				}
-              } else if (tmp_propety.getName().equals("y")) {
-            	  try {
-  					windowY = Integer.parseInt(tmp_propety.getContent());
-  				} catch (NumberFormatException e1) {
-  					windowY = 0;
-  				}
-                }
+    		  XMLElement tmp_window = (XMLElement) ew.nextElement();
+    		  if (tmp_window.getName().equals("main")) {
+    	    	  for (Enumeration em = tmp_window.enumerateChildren(); em.hasMoreElements(); ) {
+		    		  XMLElement tmp_propety = (XMLElement) em.nextElement();
+		              if (tmp_propety.getName().equals("x")) {
+		            	  try {
+							windowX = Integer.parseInt(tmp_propety.getContent());
+						} catch (NumberFormatException e1) {
+							windowX = 0;
+						}
+		              } else if (tmp_propety.getName().equals("y")) {
+		            	  try {
+		  					windowY = Integer.parseInt(tmp_propety.getContent());
+		  				} catch (NumberFormatException e1) {
+		  					windowY = 0;
+		  				}
+	                  }
+    	    	  }
+    		  }
     	  }
       }
     }
@@ -147,8 +152,12 @@ public class Config
     xmlWindow.setName("window");
     xmlRoot.addChild(xmlWindow);
     
-    addXMLChild(xmlWindow, "x", String.valueOf(windowX));
-    addXMLChild(xmlWindow, "y", String.valueOf(windowY));
+    XMLElement xmlMain = new XMLElement();
+    xmlMain.setName("main");
+    xmlWindow.addChild(xmlMain);
+    
+    addXMLChild(xmlMain, "x", String.valueOf(windowX));
+    addXMLChild(xmlMain, "y", String.valueOf(windowY));
     
     XMLElement xmlDevices = new XMLElement();
     xmlDevices.setName("devices");

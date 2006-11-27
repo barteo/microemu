@@ -1,3 +1,6 @@
+* Errors that are produced by user action should result in message dialog!
+  (Main/Swt/WebStart)
+
 * Open URL dialog should have Editable DropDown instead of Input box.
   There should be the list of recently opened URLS this list should
   be stored in config.xml

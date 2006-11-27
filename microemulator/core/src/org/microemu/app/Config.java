@@ -108,7 +108,7 @@ public class Config
             devices.add(new DeviceEntry(devName, devFile, devClass, devDefault));
           }
         }
-      } else if (tmp.getName().equals("window")) {
+      } else if (tmp.getName().equals("windows")) {
     	  for (Enumeration ew = tmp.enumerateChildren(); ew.hasMoreElements(); ) {
     		  XMLElement tmp_window = (XMLElement) ew.nextElement();
     		  if (tmp_window.getName().equals("main")) {
@@ -149,7 +149,7 @@ public class Config
     xmlRoot.setName("config");
 
     XMLElement xmlWindow = new XMLElement();
-    xmlWindow.setName("window");
+    xmlWindow.setName("windows");
     xmlRoot.addChild(xmlWindow);
     
     XMLElement xmlMain = new XMLElement();

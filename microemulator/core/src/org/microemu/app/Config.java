@@ -44,6 +44,8 @@ public class Config
   private static int windowX;
   private static int windowY;
   
+  private static String recentJadDirectory = ".";
+  
   public static void loadConfig(String configFileName, DeviceEntry defaultDevice)
   {
 		File configFile = new File(configPath, configFileName);
@@ -108,6 +110,15 @@ public class Config
             devices.add(new DeviceEntry(devName, devFile, devClass, devDefault));
           }
         }
+      } else if (tmp.getName().equals("files")) {
+    	  
+    	  for (Enumeration ew = tmp.enumerateChildren(); ew.hasMoreElements(); ) {
+    		  XMLElement fe = (XMLElement) ew.nextElement();
+    		  if (fe.getName().equals("recentJadDirectory")) {
+    			  recentJadDirectory = fe.getContent();
+    		  }
+    	  }
+    	  
       } else if (tmp.getName().equals("windows")) {
     	  for (Enumeration ew = tmp.enumerateChildren(); ew.hasMoreElements(); ) {
     		  XMLElement tmp_window = (XMLElement) ew.nextElement();
@@ -148,6 +159,11 @@ public class Config
     XMLElement xmlRoot = new XMLElement();
     xmlRoot.setName("config");
 
+    XMLElement xmlFiles = new XMLElement();
+    xmlFiles.setName("files");
+    xmlRoot.addChild(xmlFiles);
+    addXMLChild(xmlFiles, "recentJadDirectory", recentJadDirectory);
+    
     XMLElement xmlWindow = new XMLElement();
     xmlWindow.setName("windows");
     xmlRoot.addChild(xmlWindow);
@@ -235,6 +251,15 @@ public class Config
 		xml.setName(name);
 		xml.setContent(value);
 		parent.addChild(xml);
+	}
+
+  	public static String getRecentJadDirectory() {
+		return recentJadDirectory;
+	}
+
+
+	public static void setRecentJadDirectory(String recentJadDirectory) {
+		Config.recentJadDirectory = recentJadDirectory;
 	}
 
 }

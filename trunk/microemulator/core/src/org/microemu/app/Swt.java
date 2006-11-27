@@ -105,6 +105,7 @@ public class Swt extends Common
 				fileDialog.setText("Open JAD File...");
 				fileDialog.setFilterNames(new String[] {"JAD files"});
 				fileDialog.setFilterExtensions(new String[] {"*.jad"});
+				// TODO folder saved in config
 			}
       
 			fileDialog.open();

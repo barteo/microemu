@@ -2,9 +2,6 @@
   There should be the list of recently opened URLS this list should
   be stored in config.xml
 
-* Open file dialog from menu Should remember the last directory it
-  opened the jad from. Dir name persistent between restarts. config.xml
-
 * In File dialog we need to have recently opened files. Add the list
   to config.xml
 

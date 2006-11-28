@@ -191,21 +191,21 @@ public class TiledLayer extends Layer {
     
     // dont need for synch here as columns are a constant
     // after creation
-    public int getColumns() {
+    public final int getColumns() {
         return cols;
     }
     
     // dont need for synch here as rows are a constant
     // after creation
-    public int getRows() {
+    public final int getRows() {
         return rows;
     }
     
-    public int getCellWidth() {
+    public final int getCellWidth() {
         return tileWidth;
     }
     
-    public int getCellHeight() {
+    public final int getCellHeight() {
         return tileHeight;
     }
     

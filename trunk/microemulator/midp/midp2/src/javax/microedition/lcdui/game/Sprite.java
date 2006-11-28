@@ -112,7 +112,7 @@ public class Sprite extends Layer {
         this.collHeight = otherSprite.collHeight;
     }
     
-    public boolean collidesWith(Image image, int iX, int iY, boolean pixelLevel) {
+    public final boolean collidesWith(Image image, int iX, int iY, boolean pixelLevel) {
         if (image == null)
             throw new IllegalArgumentException();
         
@@ -128,7 +128,7 @@ public class Sprite extends Layer {
 
 
     
-    public boolean collidesWith(TiledLayer layer, boolean pixelLevel) {
+    public final boolean collidesWith(TiledLayer layer, boolean pixelLevel) {
         int sX, sY;
         int sW, sH;
 
@@ -150,7 +150,7 @@ public class Sprite extends Layer {
             return collidesWith(layer, 0, 0);
     }
 
-    public boolean collidesWith(Sprite otherSprite, boolean pixelLevel) {
+    public final boolean collidesWith(Sprite otherSprite, boolean pixelLevel) {
         int sX, sY;
         int sW, sH;
 

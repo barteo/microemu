@@ -113,10 +113,20 @@ public abstract class MIDlet
 	}
 	
 	
-    public boolean platformRequest(String URL) 
+    public final boolean platformRequest(String URL) 
     		throws ConnectionNotFoundException
     {
     	return MIDletBridge.platformRequest(URL);
+    }
+    
+    public final void resumeRequest() {
+    	// TODO
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
     }
 
 }

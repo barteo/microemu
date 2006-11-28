@@ -32,7 +32,47 @@ public class StringItem extends Item {
 		stringComponent = new StringComponent(text);
 		// TODO apperanceMode
 	}
+	
+	public int getAppearanceMode() {
+    	// TODO
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
+	}
+	
+	public Font getFont() {
+    	// TODO
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
+	}
+	
+	public void setFont(Font font) {
+    	// TODO
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
+	}
 
+	public void setPreferredSize(int width, int height) {
+    	// TODO
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
+	}
+	
 	public String getText() {
 		return stringComponent.getText();
 	}

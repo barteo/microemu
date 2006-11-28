@@ -25,6 +25,11 @@ import org.microemu.MIDletBridge;
 public class RecordStore 
 {  
 	
+	public static final int AUTHMODE_PRIVATE = 0;
+	
+	public static final int AUTHMODE_ANY = 1;
+	
+	
 	public static void deleteRecordStore(String recordStoreName)
 			throws RecordStoreException, RecordStoreNotFoundException
 	{

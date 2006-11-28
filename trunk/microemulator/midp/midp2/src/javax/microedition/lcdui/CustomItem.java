@@ -39,7 +39,7 @@ public abstract class CustomItem extends Item {
 		return 0;
 	}
 	
-	protected int getInteractionModes() {
+	protected final int getInteractionModes() {
 		// TODO add support for aditional interaction modes
 		return NONE;
 	}

@@ -275,7 +275,7 @@ public class Gauge extends Item
 			super.addCommand(cmd);
 	}
 	
-	public void setDefaultcommand(Command cmd) {
+	public void setDefaultCommand(Command cmd) {
 		if (owner != null && owner instanceof Alert)
 			return;
 		else

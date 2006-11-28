@@ -30,7 +30,7 @@ public class Spacer extends Item {
 		throw new IllegalStateException("Spacer items can't have labels");
 	}
 
-	public void addCommmand(Command cmd) {
+	public void addCommand(Command cmd) {
 		throw new IllegalStateException("Spacer items can't have commands");
 	}
 	

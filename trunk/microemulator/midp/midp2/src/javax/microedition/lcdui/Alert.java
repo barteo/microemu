@@ -87,6 +87,15 @@ public class Alert extends Screen
 		throw new IllegalStateException("Alert does not accept commands");
 	}
 
+	public void removeCommand(Command cmd) {
+    	// TODO
+		try {
+			throw new RuntimeException("Not implemented");
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
+	}
 
 	public int getDefaultTimeout()
 	{

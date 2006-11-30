@@ -135,7 +135,11 @@ public class Connection implements HttpConnection, ClosedConnection
       return -1;
     }
     
-    return cn.getURL().getPort();
+    int port = cn.getURL().getPort();  
+	if (port == -1) {
+		return 80;
+	}
+	return port;
   }
   
 	

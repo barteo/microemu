@@ -2,7 +2,7 @@
 
 <device name="Default device">
     <system-properties>
-        <microedition.platform>MicroEmulator-2.0</microedition.platform>
+        <system-property name="microedition.platform" value="MicroEmulator-2.0" />
     </system-properties>      
 	<img name="normal" src="normal.png" />
 	<img name="over" src="over.png" />

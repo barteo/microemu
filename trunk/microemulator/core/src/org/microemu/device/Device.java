@@ -423,7 +423,9 @@ public class Device
     {
         for (Enumeration e_prop = tmp.enumerateChildren(); e_prop.hasMoreElements(); ) {
             XMLElement tmp_prop = (XMLElement) e_prop.nextElement();
-            System.setProperty(tmp_prop.getName(), tmp_prop.getContent());
+            if (tmp_prop.getName().equals("system-property")) {
+            	System.setProperty(tmp_prop.getStringAttribute("name"), tmp_prop.getStringAttribute("value"));
+            }
         }
     }
     

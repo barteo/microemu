@@ -92,6 +92,11 @@ public class SwtFontManager implements FontManagerImpl {
 	    
 	    return result;
 	}
+	
+	public void init() {
+		fonts.clear();
+	}
+
 
 	public int charWidth(Font f, char ch) {
 		return getFont(f).charWidth(ch);

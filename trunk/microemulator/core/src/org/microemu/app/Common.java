@@ -296,6 +296,8 @@ public class Common implements MicroEmulator {
 		}
 
 		DeviceFactory.setDevice(device);
+		
+		emulatorContext.getDeviceFontManager().init();
 
 		if (captureFile != null) {
 			//			if (capturer == null) {

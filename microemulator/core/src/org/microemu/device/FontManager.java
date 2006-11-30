@@ -24,6 +24,7 @@ import javax.microedition.lcdui.Font;
 
 public interface FontManager 
 {
+  void init();
   
   int charWidth(Font f, char ch);
   

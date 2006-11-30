@@ -88,6 +88,12 @@ public class J2SEFontManager implements FontManagerImpl
 	    
 	    return result;
 	}
+	
+	
+	public void init()
+	{
+		fonts.clear();
+	}
   
 
 	public int charWidth(Font f, char ch)

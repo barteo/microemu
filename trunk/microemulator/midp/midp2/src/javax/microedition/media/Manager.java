@@ -15,6 +15,9 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *  
+ *  Contributor(s):
+ *    Travis Berthelot
  */
 
 package javax.microedition.media;
@@ -22,6 +25,8 @@ package javax.microedition.media;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
+
+import org.microemu.midp.media.audio.PCTone;
 
 public final class Manager
 {
@@ -81,11 +86,13 @@ public final class Manager
     }
     
     
-    public static void playTone(int note, int duration, int volume)
-    		throws MediaException
-	{
-    	// TODO
-	}
+   private static final PCTone pcTone = new PCTone();
+   
+   public synchronized static void playTone(int frequency, int time, int volume)
+   throws MediaException
+   {
+      pcTone.play(frequency, time, volume);
+   }
 
     static void mediaDone( Object objMedia )
 	{

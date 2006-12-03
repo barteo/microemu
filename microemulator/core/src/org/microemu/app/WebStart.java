@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.microedition.lcdui.Image;
-import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -48,7 +47,6 @@ import javax.swing.UIManager;
 import org.microemu.DisplayComponent;
 import org.microemu.EmulatorContext;
 import org.microemu.MIDletBridge;
-//import org.microemu.app.launcher.Launcher;
 import org.microemu.app.ui.ResponseInterfaceListener;
 import org.microemu.app.ui.StatusBarListener;
 import org.microemu.app.ui.swing.ExtensionFileFilter;
@@ -182,13 +180,12 @@ public class WebStart extends JFrame
 
         if (MIDletBridge.getCurrentMIDlet() != common.getLauncher()) {
           try {
-            MIDlet result = (MIDlet) MIDletBridge.getCurrentMIDlet().getClass().newInstance();
-            common.startMidlet(result, MIDletBridge.getMIDletAccess());
+            common.startMidlet(MIDletBridge.getCurrentMIDlet().getClass(), MIDletBridge.getMIDletAccess());
           } catch (Exception ex) {
             System.err.println(ex);
           }
         } else {
-          common.startMidlet(common.getLauncher(), MIDletBridge.getMIDletAccess());
+          common.startLauncher(MIDletBridge.getMIDletAccess());
         }
       }
     }    

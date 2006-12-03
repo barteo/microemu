@@ -485,10 +485,10 @@ public class XMLElement
       this.entities = entities;
       this.lineNr = 0;
 
-      Enumeration enum = this.entities.keys();
+      Enumeration en = this.entities.keys();
 
-      while (enum.hasMoreElements()) {
-         Object key = enum.nextElement();
+      while (en.hasMoreElements()) {
+         Object key = en.nextElement();
          Object value = this.entities.get(key);
 
          if (value instanceof String) {
@@ -2208,11 +2208,11 @@ public class XMLElement
       writer.write(this.name);
 
       if (! this.attributes.isEmpty()) {
-         Enumeration enum = this.attributes.keys();
+         Enumeration en = this.attributes.keys();
 
-         while (enum.hasMoreElements()) {
+         while (en.hasMoreElements()) {
             writer.write(' ');
-            String key = (String) enum.nextElement();
+            String key = (String) en.nextElement();
             String value = (String) this.attributes.get(key);
             writer.write(key);
             writer.write('='); writer.write('"');
@@ -2231,10 +2231,10 @@ public class XMLElement
          writer.write('/'); writer.write('>');
       } else {
          writer.write('>');
-         Enumeration enum = this.enumerateChildren();
+         Enumeration en = this.enumerateChildren();
 
-         while (enum.hasMoreElements()) {
-            XMLElement child = (XMLElement) enum.nextElement();
+         while (en.hasMoreElements()) {
+            XMLElement child = (XMLElement) en.nextElement();
             child.write(writer);
          }
 

@@ -22,8 +22,6 @@ package org.microemu.device;
 
 public class DeviceFactory 
 {
-  private static DeviceFactory instance = new DeviceFactory();
-  
   private static Device device;
   
   
@@ -33,9 +31,12 @@ public class DeviceFactory
   }
   
   
-  public static void setDevice(Device adevice)
+  public static void setDevice(Device device)
   {
-    device = adevice;
+	  if (DeviceFactory.device != null) {
+		  DeviceFactory.device.destroy();
+	  }
+	  DeviceFactory.device = device;
   }
   
 }

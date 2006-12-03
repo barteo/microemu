@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Font;
@@ -62,10 +65,14 @@ public class Device
 	// TODO not implemented yet
 	private boolean hasRepeatEvents;
 
+	private Properties systemProperties;
+	private Properties systemPropertiesPreserve;
 
 	public Device()
 	{	    
 		name = getClass().getName();
+		systemProperties = new Properties();
+		systemPropertiesPreserve = new Properties();
 	}
 	
 
@@ -87,8 +94,30 @@ public class Device
         } catch (IOException ex) {
             System.out.println("Cannot load config: " + ex);
         }
+        initSystemProperties();
     }
     
+    private void initSystemProperties() {
+        for(Iterator i = systemProperties.entrySet().iterator(); i.hasNext(); ) {
+        	Map.Entry e = (Map.Entry)i.next();
+        	String orig = System.setProperty((String)e.getKey(), (String)e.getValue());
+        	if (orig != null) {
+        		systemPropertiesPreserve.put(e.getKey(), orig);
+        	}
+        }
+    }
+    
+    public void destroy() {
+    	// Restore System Properties.
+    	for(Iterator i = systemProperties.entrySet().iterator(); i.hasNext(); ) {
+        	Map.Entry e = (Map.Entry)i.next();
+        	System.clearProperty((String)e.getKey());
+    	}
+    	for(Iterator i = systemPropertiesPreserve.entrySet().iterator(); i.hasNext(); ) {
+        	Map.Entry e = (Map.Entry)i.next();
+        	System.setProperty((String)e.getKey(), (String)e.getValue());
+        }
+    }
     
     public String getName()
     {
@@ -424,7 +453,7 @@ public class Device
         for (Enumeration e_prop = tmp.enumerateChildren(); e_prop.hasMoreElements(); ) {
             XMLElement tmp_prop = (XMLElement) e_prop.nextElement();
             if (tmp_prop.getName().equals("system-property")) {
-            	System.setProperty(tmp_prop.getStringAttribute("name"), tmp_prop.getStringAttribute("value"));
+            	systemProperties.put(tmp_prop.getStringAttribute("name"), tmp_prop.getStringAttribute("value"));
             }
         }
     }

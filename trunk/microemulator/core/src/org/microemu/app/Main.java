@@ -33,7 +33,6 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -188,13 +187,12 @@ public class Main extends JFrame
 
         if (MIDletBridge.getCurrentMIDlet() != common.getLauncher()) {
           try {
-            MIDlet result = (MIDlet) MIDletBridge.getCurrentMIDlet().getClass().newInstance();
-            common.startMidlet(result, MIDletBridge.getMIDletAccess());
+            common.startMidlet(MIDletBridge.getCurrentMIDlet().getClass(), MIDletBridge.getMIDletAccess());
           } catch (Exception ex) {
             System.err.println(ex);
           }
         } else {
-          common.startMidlet(common.getLauncher(), MIDletBridge.getMIDletAccess());
+          common.startLauncher(MIDletBridge.getMIDletAccess());
         }
       }
     }    

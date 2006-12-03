@@ -25,14 +25,14 @@ import javax.microedition.midlet.MIDlet;
 public class MIDletEntry 
 {
 
-  String name;
-  MIDlet midlet;
+  private String name;
+  private Class midletClass;
   
   
-  public MIDletEntry(String name, MIDlet midlet)
+  public MIDletEntry(String name, Class midletClass)
   {
     this.name = name;
-    this.midlet = midlet;
+    this.midletClass = midletClass;
   }
   
   
@@ -42,9 +42,9 @@ public class MIDletEntry
   }
   
   
-  public MIDlet getMIDlet()
+  public Class getMIDletClass()
   {
-    return midlet;
+    return midletClass;
   }
 
 }

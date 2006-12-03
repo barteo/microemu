@@ -27,8 +27,6 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.microedition.midlet.MIDlet;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -167,13 +165,12 @@ public class Swt extends Common
 
 				if (MIDletBridge.getCurrentMIDlet() != getLauncher()) {
 					try {
-						MIDlet result = (MIDlet) MIDletBridge.getCurrentMIDlet().getClass().newInstance();
-						startMidlet(result, MIDletBridge.getMIDletAccess());
+						startMidlet(MIDletBridge.getCurrentMIDlet().getClass(), MIDletBridge.getMIDletAccess());
 					} catch (Exception ex) {
 						System.err.println(ex);
 					}
 				} else {
-					startMidlet(getLauncher(), MIDletBridge.getMIDletAccess());
+					startLauncher(MIDletBridge.getMIDletAccess());
 				}
 			}
 		}    

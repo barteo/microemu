@@ -27,9 +27,7 @@ import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.List;
 import javax.microedition.midlet.MIDlet;
-import javax.microedition.midlet.MIDletStateChangeException;
 
-import org.microemu.MIDletBridge;
 import org.microemu.MIDletEntry;
 import org.microemu.app.Common;
 
@@ -106,7 +104,7 @@ public class Launcher extends MIDlet implements CommandListener {
 				int idx = menuList.getSelectedIndex();
 				if (!menuList.getString(idx).equals(NOMIDLETS)) {
 					common.startMidlet(
-							((MIDletEntry) midletEntries.elementAt(idx)).getMIDlet(), 
+							((MIDletEntry) midletEntries.elementAt(idx)).getMIDletClass(), 
 							null);
 				}
 			}

@@ -124,28 +124,15 @@ public class Common implements MicroEmulator {
 	}
 
 	public void notifyDestroyed(MIDletAccess previousMidletAccess) {
-		startMidlet(launcher, previousMidletAccess);
+		startLauncher(previousMidletAccess);
 	}
 
 	public Launcher getLauncher() {
 		return launcher;
 	}
 
-	public MIDlet loadMidlet(String name, Class midletClass) {
-		MIDlet result;
-
-		try {
-			result = (MIDlet) midletClass.newInstance();
-			launcher.addMIDletEntry(new MIDletEntry(name, result));
-		} catch (Exception ex) {
-			System.out.println("Cannot initialize " + midletClass
-					+ " MIDlet class");
-			System.out.println(ex);
-			ex.printStackTrace();
-			return null;
-		}
-
-		return result;
+	public void loadMidlet(String name, Class midletClass) {
+		launcher.addMIDletEntry(new MIDletEntry(name, midletClass));
 	}
 	
 	public static void dispose()
@@ -197,13 +184,30 @@ public class Common implements MicroEmulator {
 		}
 	}
 
-	public void startMidlet(MIDlet m, MIDletAccess previousMidletAccess) {
+	public void startMidlet(Class midletClass, MIDletAccess previousMidletAccess) {
 		try {
+			MIDlet m = (MIDlet) midletClass.newInstance();
 			if (previousMidletAccess != null) {
 				previousMidletAccess.destroyApp(true);
 			}
 			MIDletBridge.getMIDletAccess(m).startApp();
 			launcher.setCurrentMIDlet(m);
+		} catch (InstantiationException ex) {
+			handleStartMidletException(new MIDletStateChangeException(ex.getMessage()));
+		} catch (IllegalAccessException ex) {
+			handleStartMidletException(new MIDletStateChangeException(ex.getMessage()));
+		} catch (MIDletStateChangeException ex) {
+			handleStartMidletException(ex);
+		}
+	}
+
+	protected void startLauncher(MIDletAccess previousMidletAccess) {
+		try {
+			if (previousMidletAccess != null) {
+				previousMidletAccess.destroyApp(true);
+			}
+			MIDletBridge.getMIDletAccess(launcher).startApp();
+			launcher.setCurrentMIDlet(launcher);
 		} catch (MIDletStateChangeException ex) {
 			handleStartMidletException(ex);
 		}
@@ -222,7 +226,7 @@ public class Common implements MicroEmulator {
 	}
 	
 	protected void handleStartMidletException(MIDletStateChangeException ex) {
-		System.err.println(ex);
+		ex.printStackTrace();
 	}
 
 	protected void close() {
@@ -419,12 +423,12 @@ public class Common implements MicroEmulator {
 	}
 	
 	public void initMIDlet(List params) {
-		MIDlet m = null;
+		Class midletClass = null;
 		Iterator it = params.iterator();
 		while (it.hasNext()) {
 			String test = (String) it.next();
 			it.remove();
-			if (m == null && test.endsWith(".jad")) {
+			if (midletClass == null && test.endsWith(".jad")) {
 				try {
 					File file = new File(test);
 					String url = file.exists() ? file.toURL().toString()
@@ -434,10 +438,8 @@ public class Common implements MicroEmulator {
 					System.out.println("Cannot load " + test + " URL");
 				}
 			} else {
-				Class midletClass;
 				try {
 					midletClass = Class.forName(test);
-					m = loadMidlet("MIDlet", midletClass);
 				} catch (ClassNotFoundException ex) {
 					System.out.println("Cannot find " + test
 							+ " MIDlet class");
@@ -445,12 +447,10 @@ public class Common implements MicroEmulator {
 			}
 		}
 
-		if (m == null) {
-			m = getLauncher();
-		}
-
-		if (m != null) {
-			startMidlet(m, null);
+		if (midletClass == null) {
+			startLauncher(null);
+		} else {
+			startMidlet(midletClass, null);
 		}
 
 	}

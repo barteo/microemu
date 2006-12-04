@@ -23,8 +23,8 @@
 
 * ConnectionFramework - currently only http connection is supported, implement other:
   - udp
-  - https
+  - https - done
   - file
-  
+
 * (?) applet loader - during loading applet code progress bar should be visible
 

@@ -23,30 +23,9 @@ package org.microemu.device.impl;
  * This class is intended for storing georaphical polygons such as boundary data
  * for wards, coastlines etc.<p>
  *
- * $Log$
- * Revision 1.1  2006/11/07 15:40:35  barteo
- * *** empty log message ***
- *
- * Revision 1.2  2006/11/07 14:16:38  bartekt
- * copyright update
- *
- * Revision 1.1  2006/09/27 09:07:21  bartekt
- * skin buttons can be also polygons
- *
- * Revision 1.22  2002/03/15 15:04:15  jmacgill
- * removed debug statements from calculateArea method
- *
- * Revision 1.21  2002/03/15 14:36:44  jmacgill
- * area calculations now itterate though all parts
- * area caluclation call removed from one of the constructors
- *
- * Revision 1.20  2002/01/19 17:40:30  loxnard
- * Fixed JavaDoc comments.
- *
  *
  * @author James Macgill
  * @author Mathieu Van Loon - getPointsAsArrayX, getPointsAsArrayY, dropVector
- * @version $Revision$ $Date$
  * @since 0.5.0
  */
 public class Polygon extends Shape {

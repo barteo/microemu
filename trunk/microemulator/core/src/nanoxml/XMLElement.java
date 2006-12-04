@@ -94,7 +94,6 @@ import java.util.Vector;
  *
  * @author Marc De Scheemaecker
  *         &lt;<A href="mailto:cyberelf@mac.com">cyberelf@mac.com</A>&gt;
- * @version $Name$, $Revision$
  */
 public class XMLElement
 {

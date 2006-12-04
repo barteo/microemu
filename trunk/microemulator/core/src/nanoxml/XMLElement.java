@@ -1,9 +1,5 @@
 /* XMLElement.java                                                 NanoXML/Lite
  *
- * $Revision$
- * $Date$
- * $Name$
- *
  * This file is part of NanoXML 2 Lite.
  * Copyright (C) 2000-2002 Marc De Scheemaecker, All Rights Reserved.
  *

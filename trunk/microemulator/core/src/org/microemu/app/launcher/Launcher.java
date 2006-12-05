@@ -66,6 +66,16 @@ public class Launcher extends MIDlet implements CommandListener {
 	public void removeMIDletEntries() {
 		midletEntries.removeAllElements();
 	}
+	
+	public MIDletEntry getSelectedMidletEntry()
+	{
+		int idx = menuList.getSelectedIndex();
+		if (!menuList.getString(idx).equals(NOMIDLETS)) {
+			return (MIDletEntry) midletEntries.elementAt(idx);
+		} else {
+			return null;
+		}
+	}
 
 	public MIDlet getCurrentMIDlet() {
 		return currentMIDlet;
@@ -101,11 +111,9 @@ public class Launcher extends MIDlet implements CommandListener {
 	public void commandAction(Command c, Displayable d) {
 		if (d == menuList) {
 			if (c == List.SELECT_COMMAND || c == CMD_LAUNCH) {
-				int idx = menuList.getSelectedIndex();
-				if (!menuList.getString(idx).equals(NOMIDLETS)) {
-					common.startMidlet(
-							((MIDletEntry) midletEntries.elementAt(idx)).getMIDletClass(), 
-							null);
+				MIDletEntry entry = getSelectedMidletEntry();
+				if (entry != null) {
+					common.startMidlet(entry.getMIDletClass(), null);
 				}
 			}
 		}

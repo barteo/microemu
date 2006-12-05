@@ -366,7 +366,7 @@ public class Common implements MicroEmulator {
 		DeviceEntry defaultDevice = new DeviceEntry("Default device", null, "org.microemu.device.Device", true, false);
 		app.initDevice(params, defaultDevice);
 
-		app.initMIDlet(params);
+		app.initMIDlet(params, false);
 	}
 
 	public void initDevice(List params, DeviceEntry defaultDevice) {
@@ -423,6 +423,10 @@ public class Common implements MicroEmulator {
 	}
 	
 	public void initMIDlet(List params) {
+		initMIDlet(params, false);
+	}
+	
+	public void initMIDlet(List params, boolean startMidlet) {
 		Class midletClass = null;
 		Iterator it = params.iterator();
 		while (it.hasNext()) {
@@ -448,7 +452,12 @@ public class Common implements MicroEmulator {
 		}
 
 		if (midletClass == null) {
-			startLauncher(null);
+			MIDletEntry entry = launcher.getSelectedMidletEntry();
+			if (startMidlet && entry != null) {
+				startMidlet(entry.getMIDletClass(), null);
+			} else {
+				startLauncher(null);
+			}
 		} else {
 			startMidlet(midletClass, null);
 		}

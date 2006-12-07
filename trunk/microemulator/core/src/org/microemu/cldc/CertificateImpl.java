@@ -36,53 +36,27 @@ public class CertificateImpl implements Certificate {
 	}
 
 	public long getNotAfter() {
-		// TODO Auto-generated method stub
-		try {
-			throw new RuntimeException();
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		long current = System.currentTimeMillis();
+		
+		return (cert.getNotAfter().getTime() - current);
 	}
 
 	public long getNotBefore() {
-		// TODO Auto-generated method stub
-		try {
-			throw new RuntimeException();
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		long current = System.currentTimeMillis();
+		
+		return (cert.getNotBefore().getTime() - current);
 	}
 
 	public String getSerialNumber() {
-		// TODO Auto-generated method stub
-		try {
-			throw new RuntimeException();
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		return cert.getSerialNumber().toString();
 	}
 
 	public String getSigAlgName() {
-		// TODO Auto-generated method stub
-		try {
-			throw new RuntimeException();
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		return cert.getSigAlgName();
 	}
 
 	public String getSubject() {
-		// TODO Auto-generated method stub
-		try {
-			throw new RuntimeException();
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		return cert.getSubjectDN().getName();
 	}
 
 	public String getType() {

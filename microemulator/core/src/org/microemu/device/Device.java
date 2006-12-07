@@ -351,9 +351,19 @@ public class Device
         for (Enumeration e_fonts = tmp.enumerateChildren(); e_fonts.hasMoreElements(); ) {
             XMLElement tmp_font = (XMLElement) e_fonts.nextElement();
             if (tmp_font.getName().equals("font")) {
-            	String face = tmp_font.getStringAttribute("face");
-            	String style = tmp_font.getStringAttribute("style");
-            	String size = tmp_font.getStringAttribute("size");
+            	String face = tmp_font.getStringAttribute("face").toLowerCase();
+            	String style = tmp_font.getStringAttribute("style").toLowerCase();
+            	String size = tmp_font.getStringAttribute("size").toLowerCase();
+            	
+            	if (face.startsWith("face_")) {
+            		face = face.substring("face_".length());
+            	}
+            	if (style.startsWith("style_")) {
+            		style = style.substring("style_".length());
+            	}
+            	if (size.startsWith("size_")) {
+            		size = size.substring("size_".length());
+            	}
             	
                 for (Enumeration e_defs = tmp_font.enumerateChildren(); e_defs.hasMoreElements(); ) {
                 	XMLElement tmp_def = (XMLElement) e_defs.nextElement();

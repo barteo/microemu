@@ -258,12 +258,6 @@ public class TextField extends Item
 	}
 
 	
-	public void setLabel(String label) 
-	{
-		super.setLabel(label);
-	}
-
-	
 	boolean isFocusable() 
 	{
 		return true;

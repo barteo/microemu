@@ -20,6 +20,7 @@
 package org.microemu.cldc.https;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 
@@ -36,6 +37,16 @@ public class Connection extends org.microemu.cldc.http.Connection implements Htt
 	private SSLContext sslContext;
 	
 	private SecurityInfo securityInfo;
+	
+	public Connection() {
+	    try {
+			sslContext = SSLContext.getInstance("SSL");			
+		} catch (NoSuchAlgorithmException ex) {
+			ex.printStackTrace();
+		}
+				
+		securityInfo = null;
+	}
 
 	public SecurityInfo getSecurityInfo() throws IOException {
 		if (securityInfo == null) {

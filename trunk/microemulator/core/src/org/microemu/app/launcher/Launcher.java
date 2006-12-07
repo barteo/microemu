@@ -69,12 +69,14 @@ public class Launcher extends MIDlet implements CommandListener {
 	
 	public MIDletEntry getSelectedMidletEntry()
 	{
-		int idx = menuList.getSelectedIndex();
-		if (!menuList.getString(idx).equals(NOMIDLETS)) {
-			return (MIDletEntry) midletEntries.elementAt(idx);
-		} else {
-			return null;
+		if (menuList != null) {
+			int idx = menuList.getSelectedIndex();
+			if (!menuList.getString(idx).equals(NOMIDLETS)) {
+				return (MIDletEntry) midletEntries.elementAt(idx);
+			}
 		}
+
+		return null;
 	}
 
 	public MIDlet getCurrentMIDlet() {

@@ -144,6 +144,14 @@ public class DateField extends Item
   }
 
 
+  public void setLabel(String label)
+  {
+    this.label = label;
+    
+    dateTime.setLabel(label);
+  }
+
+
 	boolean isFocusable()
 	{
 		return true;

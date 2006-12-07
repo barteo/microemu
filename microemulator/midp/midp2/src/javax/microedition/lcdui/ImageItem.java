@@ -102,12 +102,6 @@ public class ImageItem extends Item
   	}
 
 
-  public void setLabel(String label)
-  {
-    super.setLabel(label);
-  }
-
-
   	public void setLayout(int layout)
   	{
   		super.setLayout(layout);

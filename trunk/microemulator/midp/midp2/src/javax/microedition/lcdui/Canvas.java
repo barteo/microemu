@@ -97,18 +97,6 @@ public abstract class Canvas extends Displayable
     }
 
 
-	public int getWidth()
-	{
-		return device.getDeviceDisplay().getWidth();
-	}
-
-
-	public int getHeight()
-	{
-		return device.getDeviceDisplay().getHeight();
-	}
-
-
 	protected void hideNotify()
 	{
 	}

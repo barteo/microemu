@@ -77,10 +77,6 @@ public class StringItem extends Item {
 		return stringComponent.getText();
 	}
 
-	public void setLabel(String label) {
-		super.setLabel(label);
-	}
-
 	public void setText(String text) {
 		stringComponent.setText(text);
 		repaint();

@@ -379,14 +379,6 @@ public class ChoiceGroup extends Item implements Choice
 		}
   }
 
-  public void setLabel(String label)
-  {
-    super.setLabel(label);
-	if (choiceType == Choice.POPUP) {
-		  popupList.setTitle(label);
-	}
-  }
-
 
   public void setSelectedFlags(boolean[] selectedArray)
   {
@@ -641,7 +633,7 @@ public class ChoiceGroup extends Item implements Choice
 		return 0;
   }
 
-  protected void repaint() {
+  void repaint() {
 	  // the popup list should be repainted
 	  // in the case it is being shown
 	  if (choiceType == Choice.POPUP)

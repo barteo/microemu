@@ -94,7 +94,11 @@ public class Device
         } catch (IOException ex) {
             System.out.println("Cannot load config: " + ex);
         }
-        initSystemProperties();
+        try {
+			initSystemProperties();
+		} catch (SecurityException e) {
+			System.out.println("Cannot load SystemProperties: " + e);
+		}
     }
     
     private void initSystemProperties() {
@@ -109,14 +113,18 @@ public class Device
     
     public void destroy() {
     	// Restore System Properties.
-    	for(Iterator i = systemProperties.entrySet().iterator(); i.hasNext(); ) {
-        	Map.Entry e = (Map.Entry)i.next();
-        	System.clearProperty((String)e.getKey());
-    	}
-    	for(Iterator i = systemPropertiesPreserve.entrySet().iterator(); i.hasNext(); ) {
-        	Map.Entry e = (Map.Entry)i.next();
-        	System.setProperty((String)e.getKey(), (String)e.getValue());
-        }
+    	try {
+			for (Iterator i = systemProperties.entrySet().iterator(); i.hasNext();) {
+				Map.Entry e = (Map.Entry) i.next();
+				System.clearProperty((String) e.getKey());
+			}
+			for (Iterator i = systemPropertiesPreserve.entrySet().iterator(); i.hasNext();) {
+				Map.Entry e = (Map.Entry) i.next();
+				System.setProperty((String) e.getKey(), (String) e.getValue());
+			}
+		} catch (SecurityException e) {
+			System.out.println("Cannot restore SystemProperties: " + e);
+		}
     }
     
     public String getName()

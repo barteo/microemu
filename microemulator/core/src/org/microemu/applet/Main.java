@@ -54,6 +54,7 @@ import org.microemu.device.j2se.J2SEFontManager;
 import org.microemu.device.j2se.J2SEInputMethod;
 import org.microemu.util.JadMidletEntry;
 import org.microemu.util.JadProperties;
+import org.microemu.util.MemoryRecordStoreManager;
 
 
 public class Main extends Applet implements MicroEmulator 
@@ -114,7 +115,7 @@ public class Main extends Applet implements MicroEmulator
 
         MIDletBridge.setMicroEmulator(this);
 
-        recordStoreManager = new CookieRecordStoreManager(this);
+        recordStoreManager = new MemoryRecordStoreManager();
 
         setLayout(new BorderLayout());
         add(devicePanel, "Center");

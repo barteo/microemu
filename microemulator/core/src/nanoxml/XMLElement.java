@@ -2191,69 +2191,106 @@ public class XMLElement
     *
     * @see nanoxml.XMLElement#toString()
     */
-   public void write(Writer writer)
-      throws IOException
-   {
-      if (this.name == null) {
-         this.writeEncoded(writer, this.contents);
-         return;
-      }
+	public void write(Writer writer) throws IOException {
+		writeIdented(writer, 0);
+	}
+   
+	private void writeTabs(Writer writer, int level) throws IOException {
+		for(int i = 0 ; i< level; i ++) {
+			writer.write('\t');
+		}
+	}
 
-      writer.write('<');
-      writer.write(this.name);
+	private void writeIdented(Writer writer, int level) throws IOException {
+		if (this.name == null) {
+			this.writeEncoded(writer, this.contents);
+			return;
+		}
 
-      if (! this.attributes.isEmpty()) {
-         Enumeration en = this.attributes.keys();
+		final boolean ident = true;
 
-         while (en.hasMoreElements()) {
-            writer.write(' ');
-            String key = (String) en.nextElement();
-            String value = (String) this.attributes.get(key);
-            writer.write(key);
-            writer.write('='); writer.write('"');
-            this.writeEncoded(writer, value);
-            writer.write('"');
-         }
-      }
+		if (ident) {
+			writeTabs(writer, level);
+		}
 
-      if ((this.contents != null) && (this.contents.length() > 0)) {
-         writer.write('>');
-         this.writeEncoded(writer, this.contents);
-         writer.write('<'); writer.write('/');
-         writer.write(this.name);
-         writer.write('>');
-      } else if (this.children.isEmpty()) {
-         writer.write('/'); writer.write('>');
-      } else {
-         writer.write('>');
-         Enumeration en = this.enumerateChildren();
+		writer.write('<');
+		writer.write(this.name);
 
-         while (en.hasMoreElements()) {
-            XMLElement child = (XMLElement) en.nextElement();
-            child.write(writer);
-         }
+		if (!this.attributes.isEmpty()) {
+			Enumeration en = this.attributes.keys();
 
-         writer.write('<'); writer.write('/');
-         writer.write(this.name);
-         writer.write('>');
-      }
-   }
+			while (en.hasMoreElements()) {
+				writer.write(' ');
+				String key = (String) en.nextElement();
+				String value = (String) this.attributes.get(key);
+				writer.write(key);
+				writer.write('=');
+				writer.write('"');
+				this.writeEncoded(writer, value);
+				writer.write('"');
+			}
+		}
+
+		if ((this.contents != null) && (this.contents.length() > 0)) {
+			writer.write('>');
+			this.writeEncoded(writer, this.contents);
+			writer.write('<');
+			writer.write('/');
+			writer.write(this.name);
+			writer.write('>');
+			if (ident) {
+				writer.write('\n');
+			}
+		} else if (this.children.isEmpty()) {
+			writer.write('/');
+			writer.write('>');
+			if (ident) {
+				writer.write('\n');
+			}
+		} else {
+			writer.write('>');
+			if (ident) {
+				writer.write('\n');
+			}
+			Enumeration en = this.enumerateChildren();
+			while (en.hasMoreElements()) {
+				XMLElement child = (XMLElement) en.nextElement();
+				child.writeIdented(writer, level +1);
+			}
+			if (ident) {
+				writeTabs(writer, level);
+			}
+			writer.write('<');
+			writer.write('/');
+			writer.write(this.name);
+			writer.write('>');
+			if (ident) {
+				writer.write('\n');
+			}
+		}
+	}
 
 
    /**
-    * Writes a string encoded to a writer.
-    *
-    * @param writer
-    *     The writer to write the XML data to.
-    * @param str
-    *     The string to write encoded.
-    *
-    * </dl><dl><dt><b>Preconditions:</b></dt><dd>
-    * <ul><li><code>writer != null</code>
-    *     <li><code>writer</code> is not closed
-    *     <li><code>str != null</code>
-    * </ul></dd></dl>
-    */
+	 * Writes a string encoded to a writer.
+	 * 
+	 * @param writer
+	 *            The writer to write the XML data to.
+	 * @param str
+	 *            The string to write encoded.
+	 * 
+	 * </dl>
+	 * <dl>
+	 * <dt><b>Preconditions:</b></dt>
+	 * <dd>
+	 * <ul>
+	 * <li><code>writer != null</code>
+	 * <li><code>writer</code> is not closed
+	 * <li><code>str != null</code>
+	 * </ul>
+	 * </dd>
+	 * </dl>
+	 */
    protected void writeEncoded(Writer writer,
                                String str)
       throws IOException
@@ -2475,7 +2512,7 @@ public class XMLElement
       throws IOException
    {
       char ch = this.readChar();
-      
+
       if (ch != '[') {
          this.unreadChar(ch);
          this.skipSpecialTag(0);
@@ -2485,7 +2522,7 @@ public class XMLElement
          return false;
       } else {
            int delimiterCharsSkipped = 0;
-           
+
            while (delimiterCharsSkipped < 3) {
               ch = this.readChar();
               switch (ch) {
@@ -2636,7 +2673,7 @@ public class XMLElement
       throws IOException
    {
       int length = literal.length();
-      
+
       for (int i = 0; i < length; i += 1) {
          if (this.readChar() != literal.charAt(i)) {
             return false;
@@ -2969,5 +3006,5 @@ public class XMLElement
       String msg = "Unknown or invalid entity: &" + name + ";";
       return new XMLParseException(this.getName(), this.parserLineNr, msg);
    }
-   
+
 }

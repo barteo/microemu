@@ -56,9 +56,12 @@ import org.microemu.util.JadMidletEntry;
 import org.microemu.util.JadProperties;
 
 
-public class Main extends Applet implements MicroEmulator
+public class Main extends Applet implements MicroEmulator 
 {
-    private MIDlet midlet = null;
+
+	private static final long serialVersionUID = 1L;
+
+	private MIDlet midlet = null;
 
     private RecordStoreManager recordStoreManager;
 
@@ -139,8 +142,12 @@ public class Main extends Applet implements MicroEmulator
         DeviceFactory.setDevice(device);
         device.init(emulatorContext);
         
-		System.setProperty("microedition.configuration", "CLDC-1.0");
-		System.setProperty("microedition.profiles", "MIDP-2.0");
+        try {
+        	System.setProperty("microedition.configuration", "CLDC-1.0");
+        	System.setProperty("microedition.profiles", "MIDP-2.0");
+        } catch (RuntimeException e) {
+			System.out.println("Cannot load SystemProperties: " + e);
+		}	
         
         devicePanel.init();
 

@@ -130,7 +130,13 @@ System.out.println("init: " + cookies.size());
 
 	public String[] listRecordStores() {
 System.out.println("listRecordStores:");
-		return (String[]) cookies.keySet().toArray();
+		String[] result = (String[]) cookies.keySet().toArray();
+		
+		if (result.length == 0) {
+			result = null;
+		}
+		
+		return result;
 	}
 
 	public RecordStore openRecordStore(String recordStoreName,

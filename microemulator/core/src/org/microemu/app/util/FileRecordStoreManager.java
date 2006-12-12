@@ -122,8 +122,12 @@ public class FileRecordStoreManager implements RecordStoreManager
 		String[] result = suiteFolder.list(filter);
 		
 		if (result != null) {
-			for (int i = 0; i < result.length; i++) {
-				result[i] = result[i].substring(0, result[i].length() - RECORD_STORE_SUFFIX.length());
+			if (result.length == 0) {
+				result = null;
+			} else {
+				for (int i = 0; i < result.length; i++) {
+					result[i] = result[i].substring(0, result[i].length() - RECORD_STORE_SUFFIX.length());
+				}
 			}
 		}
 		

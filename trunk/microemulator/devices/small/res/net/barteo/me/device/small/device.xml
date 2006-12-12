@@ -28,7 +28,7 @@
 			  <height>8</height>
 		  </paintable>
     </img>
-    <img name="down" src="/net/barteo/me/device/small//down.png">
+    <img name="down" src="/net/barteo/me/device/small/down.png">
 		  <paintable>
 			  <x>57</x>
 			  <y>135</y>

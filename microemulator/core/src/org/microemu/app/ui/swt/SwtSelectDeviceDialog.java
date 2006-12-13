@@ -23,9 +23,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.jar.Attributes;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
@@ -44,15 +50,17 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.microemu.EmulatorContext;
 import org.microemu.app.Config;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.ProgressJarClassLoader;
 import org.microemu.device.Device;
 
 
-
 public class SwtSelectDeviceDialog extends SwtDialog
 {
+	private EmulatorContext emulatorContext;
+	  
 	private Button btAdd;
 	private Button btRemove;
 	private Button btDefault;
@@ -78,12 +86,114 @@ public class SwtSelectDeviceDialog extends SwtDialog
 			fileDialog.open();
 			
 			if (fileDialog.getFileName() != null) {
-				String deviceClassName = null;
-				String deviceName = null;
+				File file;
+				String manifestDeviceName = null;
+				URL[] urls = new URL[1];
+				ArrayList descriptorEntries = new ArrayList();
 				try {
-					JarFile jar = new JarFile(
-							new File(fileDialog.getFilterPath(), fileDialog.getFileName()));
+					file = new File(fileDialog.getFilterPath(), fileDialog.getFileName());
+					JarFile jar = new JarFile(file);
+					
 					Manifest manifest = jar.getManifest();
+					if (manifest != null) {
+						Attributes attrs = manifest.getMainAttributes();
+						manifestDeviceName = attrs.getValue("Device-Name");
+					}
+
+					for (Enumeration en = jar.entries(); en.hasMoreElements();) {
+						JarEntry entry = (JarEntry) en.nextElement();
+						if (entry.getName().toLowerCase().endsWith(".xml")) {
+							descriptorEntries.add(entry);
+						}
+					}
+					jar.close();
+					urls[0] = file.toURL();
+				} catch (IOException ex) {
+					SwtMessageDialog.openError(getShell(),
+							"Error", 
+							"Error reading file: " + fileDialog.getFileName());
+					return;
+				}
+					
+				if (descriptorEntries.size() == 0) {
+					SwtMessageDialog.openError(getShell(),
+							"Error",
+							"Cannot find any device profile in file: " + fileDialog.getFileName());
+					return;
+				}
+				
+				if (descriptorEntries.size() > 1) {
+					manifestDeviceName = null;
+				}
+
+				URLClassLoader classLoader = new URLClassLoader(urls);
+				HashMap devices = new HashMap();
+				for (Iterator it = descriptorEntries.iterator(); it.hasNext();) {
+					JarEntry entry = (JarEntry) it.next();
+					try {
+						devices.put(
+								entry.getName(),
+								Device.create(emulatorContext, classLoader, entry.getName()));
+					} catch (IOException ex) {
+						SwtMessageDialog.openError(getShell(),
+								"Error",
+								"Error parsing device profile: " + ex.getMessage());
+						return;
+					}
+				}
+
+				for (int i = 0; i < deviceModel.size(); i++) {
+					DeviceEntry entry = (DeviceEntry) deviceModel.elementAt(i);
+					if (devices.containsKey(entry.getDescriptorLocation())) {
+						devices.remove(entry.getDescriptorLocation());
+					}
+				}
+				if (devices.size() == 0) {
+					SwtMessageDialog.openError(getShell(),
+							"Info", 
+							"Device profile already added");
+					return;
+				}
+
+				try { 
+					File deviceFile = File.createTempFile("dev", ".jar", Config.getConfigPath()); 
+					FileInputStream fis = new FileInputStream(file);
+					FileOutputStream fos = new FileOutputStream(deviceFile);
+					byte[] buf = new byte[1024]; 
+					int i = 0;
+					while ((i = fis.read(buf)) != -1) { 
+						fos.write(buf, 0, i);
+					}
+					fis.close(); 
+					fos.close();
+
+				
+					DeviceEntry entry = null;
+					for (Iterator it = devices.keySet().iterator(); it.hasNext();) {
+						String descriptorLocation = (String) it.next();
+						Device device = (Device) devices.get(descriptorLocation);
+						if (manifestDeviceName != null) {
+							entry = new DeviceEntry(manifestDeviceName, deviceFile.getName(), descriptorLocation, false);
+						} else {
+							entry = new DeviceEntry(device.getName(), deviceFile.getName(), descriptorLocation, false);
+						}
+						deviceModel.addElement(entry);
+						for (i = 0; i < deviceModel.size(); i++) {
+							if (deviceModel.elementAt(i) == entry) {
+								lsDevices.add(entry.getName());
+								lsDevices.select(i);
+							}
+						}
+					}
+					lsDevicesListener.widgetSelected(null);
+				} catch (IOException ex) {
+					SwtMessageDialog.openError(getShell(),
+							"Error",
+							"Error adding device profile: " + ex.getMessage());
+					return;
+				}				
+				
+/*					Manifest manifest = jar.getManifest();
 					if (manifest == null) {
 						SwtMessageDialog.openError(getShell(),
 								"Error", "Missing manifest in device file.");
@@ -103,16 +213,15 @@ public class SwtSelectDeviceDialog extends SwtDialog
 						SwtMessageDialog.openError(getShell(),
 								"Error", "Missing Device-Class entry in jar manifest.");
 						return;
-					}
+					}*/
           
-					jar.close();
 //					deviceClassName = deviceClassName.replace('.', '/');
 //					if (deviceClassName.charAt(0) == '/') {
 //						deviceClassName = deviceClassName.substring(1);
 //					}
-					for (Enumeration e = deviceModel.elements(); e.hasMoreElements(); ) {
+/*					for (Enumeration e = deviceModel.elements(); e.hasMoreElements(); ) {
 						DeviceEntry entry = (DeviceEntry) e.nextElement();
-						if (deviceClassName.equals(entry.getClassName())) {
+						if (deviceClassName.equals(entry.getDescriptorLocation())) {
 							SwtMessageDialog.openInformation(getShell(),
 									"Info", "Device is already added.");
 							return;
@@ -166,7 +275,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 					lsDevicesListener.widgetSelected(null);
 				} catch (IOException ex) {
 					System.err.println(ex);
-				}
+				}*/
 			}
 		}
 	};
@@ -176,8 +285,21 @@ public class SwtSelectDeviceDialog extends SwtDialog
 		public void handleEvent(Event event)
 		{
 			DeviceEntry entry = (DeviceEntry) deviceModel.elementAt(lsDevices.getSelectionIndex());
-			File deviceFile = new File(Config.getConfigPath(), entry.getFileName());
-			deviceFile.delete();
+		      
+		    boolean canDeleteFile = true;
+			for (int i = 0; i < deviceModel.size(); i++) {
+				DeviceEntry test = (DeviceEntry) deviceModel.elementAt(i);
+				if (test != entry && test.getFileName() != null
+						&& test.getFileName().equals(entry.getFileName())) {
+					canDeleteFile = false;
+					break;
+				}
+			}
+			if (canDeleteFile) {
+				File deviceFile = new File(Config.getConfigPath(), entry.getFileName());
+				deviceFile.delete();
+			}		      
+
 			if (entry.isDefaultDevice()) {
 				for (int i = 0; i < deviceModel.size(); i++) {
 					DeviceEntry tmp = (DeviceEntry) deviceModel.elementAt(i);
@@ -246,11 +368,13 @@ public class SwtSelectDeviceDialog extends SwtDialog
 	};
 
 
-	public SwtSelectDeviceDialog(Shell parent)
+	public SwtSelectDeviceDialog(Shell parent, EmulatorContext emulatorContext)
 	{
 		super(parent);
 
-    Vector devs = Config.getDevices();
+		this.emulatorContext = emulatorContext;  
+		  
+		Vector devs = Config.getDevices();
 		for (int i = 0; i < devs.size(); i++) {
 			DeviceEntry entry = (DeviceEntry) devs.elementAt(i);
 			if (entry.isDefaultDevice()) {

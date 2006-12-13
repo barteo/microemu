@@ -19,29 +19,60 @@
 
 package org.microemu.app.util;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+
+import org.microemu.EmulatorContext;
+import org.microemu.app.Config;
+import org.microemu.device.Device;
+
 
 public class DeviceEntry
 {
   private String name;
   private String fileName;
-  private String className;
+  private String descriptorLocation;
   private boolean defaultDevice;
   private boolean canRemove;
   
+  /**
+   * @deprecated
+   */
+  private String className;
+
+  /**
+   * @deprecated
+   */
+  private EmulatorContext emulatorContext;
   
-  public DeviceEntry(String name, String fileName, String className, boolean defaultDevice)
+  
+  public DeviceEntry(String name, String fileName, String descriptorLocation, boolean defaultDevice)
   {
-    this(name, fileName, className, defaultDevice, true);
+    this(name, fileName, descriptorLocation, defaultDevice, true);
   }
   
   
-  public DeviceEntry(String name, String fileName, String className, boolean defaultDevice, boolean canRemove)
+  public DeviceEntry(String name, String fileName, String descriptorLocation, boolean defaultDevice, boolean canRemove)
   {
     this.name = name;
     this.fileName = fileName;
-    this.className = className;
+    this.descriptorLocation = descriptorLocation;
     this.defaultDevice = defaultDevice;
     this.canRemove = canRemove;
+  }
+  
+  
+  /**
+   * @deprecated use new DeviceEntry(String name, String fileName, String descriptorLocation, boolean defaultDevice);
+   */
+  public DeviceEntry(String name, String fileName, boolean defaultDevice, String className, EmulatorContext emulatorContext)
+  {
+    this(name, fileName, null, defaultDevice, true);
+    
+    this.className = className;
+    this.emulatorContext = emulatorContext;
   }
   
   
@@ -51,9 +82,30 @@ public class DeviceEntry
   }
   
   
-  public String getClassName()
+  public String getDescriptorLocation()
   {
-    return className;
+	  if (descriptorLocation == null) {
+			URL[] urls = new URL[1];
+			try {
+				urls[0] = new File(Config.getConfigPath(), fileName).toURL();
+				URLClassLoader classLoader = new URLClassLoader(urls);
+				Class deviceClass = Class.forName(className, true, classLoader);
+				Device device = (Device) deviceClass.newInstance();
+				device.init(emulatorContext);
+				descriptorLocation = device.getDescriptorLocation();
+			} catch (MalformedURLException ex) {
+				ex.printStackTrace();
+			} catch (ClassNotFoundException ex) {
+				ex.printStackTrace();
+			} catch (InstantiationException ex) {
+				ex.printStackTrace();
+			} catch (IllegalAccessException ex) {
+				ex.printStackTrace();
+			}
+
+	  }
+	  
+	  return descriptorLocation;
   }
   
   
@@ -86,7 +138,7 @@ public class DeviceEntry
 	if (test == null) {
       return false;
 	}
-    if (test.getClassName().equals(getClassName())) {
+    if (test.getDescriptorLocation().equals(getDescriptorLocation())) {
       return true;
     }
     

@@ -44,7 +44,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -53,6 +52,7 @@ import org.microemu.DisplayComponent;
 import org.microemu.MIDletBridge;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
+import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.SoftButton;
 import org.microemu.device.swt.SwtButton;
 import org.microemu.device.swt.SwtDeviceDisplay;
@@ -162,7 +162,9 @@ public class SwtDeviceComponent extends Canvas
 						ev.keyCode = pressedButton.getKey();
 						inputMethod.mousePressed(ev);
 					}
-					redraw();
+					// optimize for some video cards.
+					Rectangle r = pressedButton.getShape().getBounds();
+					redraw(r.x, r.y, r.width, r.height, true);
 				}
 			}
 			
@@ -211,7 +213,13 @@ public class SwtDeviceComponent extends Canvas
 					inputMethod.mouseReleased(prevOverButton.getKey());
 				}
 				pressedButton = null;
-				redraw();
+				//	optimize for some video cards.
+				if (prevOverButton != null) {
+					Rectangle r = prevOverButton.getShape().getBounds();
+					redraw(r.x, r.y, r.width, r.height, true);
+				} else {
+					redraw();
+				}
 			}
 			
 			mousePressed = false;
@@ -226,7 +234,15 @@ public class SwtDeviceComponent extends Canvas
 			prevOverButton = overButton;
 			overButton = getButton(e.x, e.y);
 			if (overButton != prevOverButton) {
-				redraw();
+	      		// optimize for some video cards.
+	      		if (prevOverButton != null) {
+	      			Rectangle r = prevOverButton.getShape().getBounds();
+	      			redraw(r.x, r.y, r.width, r.height, true);
+	      		}
+	      		if (overButton != null) {
+	      			Rectangle r = overButton.getShape().getBounds();
+	      			redraw(r.x, r.y, r.width, r.height, true);
+	      		}
 			}
 			
 			if (mousePressed) {
@@ -400,7 +416,7 @@ public class SwtDeviceComponent extends Canvas
 
 
   	private void drawImageInShape(SwtGraphics g, Image image, org.microemu.device.impl.Shape shape) {
-  		Rectangle clipSave = g.getClipping();
+  		org.eclipse.swt.graphics.Rectangle clipSave = g.getClipping();
 		if (shape instanceof org.microemu.device.impl.Polygon) {
 			// TODO not implemented yet
 //			g.setCliping(region);

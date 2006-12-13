@@ -21,6 +21,7 @@ package org.microemu.device;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Enumeration;
@@ -67,30 +68,95 @@ public class Device
 
 	private Properties systemProperties;
 	private Properties systemPropertiesPreserve;
+	
+	/**
+	 * @deprecated
+	 */
+	private String descriptorLocation;
 
 	public Device()
 	{	    
-		name = getClass().getName();
 		systemProperties = new Properties();
 		systemPropertiesPreserve = new Properties();
+        buttons = new Vector();
+        softButtons = new Vector();
+	}
+	
+	
+	public static Device create(EmulatorContext context, ClassLoader classLoader, String descriptorLocation) throws IOException
+	{
+		InputStream descriptor = classLoader.getResourceAsStream(descriptorLocation);
+		if (descriptor == null) {
+			throw new IOException("Cannot find descriptor at: " + descriptorLocation);
+		}
+		
+		XMLElement doc = loadDocument(descriptor);
+		
+		Device device = null;
+        for (Enumeration e = doc.enumerateChildren(); e.hasMoreElements(); ) {
+			XMLElement tmp = (XMLElement) e.nextElement();
+			if (tmp.getName().equals("class-name")) {
+				try {
+					Class deviceClass = Class.forName(tmp.getContent(), true, classLoader);
+					device = (Device) deviceClass.newInstance();
+				} catch (ClassNotFoundException ex) {
+					throw new IOException(ex.getMessage());
+				} catch (InstantiationException ex) {
+					throw new IOException(ex.getMessage());
+				} catch (IllegalAccessException ex) {
+					throw new IOException(ex.getMessage());
+				}
+				break;
+			}
+		}
+        
+        if (device == null) {
+        	device = new Device();
+        }
+        device.context = context;
+        
+    	String base = descriptorLocation.substring(0, descriptorLocation.lastIndexOf("/"));    	
+        device.loadConfig(classLoader, base, doc);
+		
+        try {
+        	device.initSystemProperties();
+		} catch (SecurityException e) {
+			System.out.println("Cannot load SystemProperties: " + e);
+		}
+
+		return device;
 	}
 	
 
-    public void init(EmulatorContext context)
+    /**
+     * @deprecated use Device.create(EmulatorContext context, ClassLoader classLoader, String descriptorLocation);
+     */
+	public void init(EmulatorContext context)
     {     
         init(context, "/org/microemu/device/device.xml");
     }       
 
     
-    public void init(EmulatorContext context, String config)
+    /**
+     * @deprecated use Device.create(EmulatorContext context, ClassLoader classLoader, String descriptorLocation);
+     */
+    public void init(EmulatorContext context, String descriptorLocation)
     {
     	this.context = context;
-
-        buttons = new Vector();
-        softButtons = new Vector();
+    	if (descriptorLocation.startsWith("/")) {
+    		this.descriptorLocation = descriptorLocation.substring(1);
+    	} else {
+    		this.descriptorLocation = descriptorLocation;
+    	}
 
         try {
-            loadConfig(config);
+        	String base = descriptorLocation.substring(0, descriptorLocation.lastIndexOf("/"));   
+        	InputStream descriptor = getClass().getResourceAsStream(descriptorLocation);
+        	if (descriptor == null) {
+    			throw new IOException("Cannot find descriptor at: " + descriptorLocation);
+        	}
+        	XMLElement doc = loadDocument(descriptor);
+            loadConfig(getClass().getClassLoader(), base, doc);
         } catch (IOException ex) {
             System.out.println("Cannot load config: " + ex);
         }
@@ -99,6 +165,13 @@ public class Device
 		} catch (SecurityException e) {
 			System.out.println("Cannot load SystemProperties: " + e);
 		}
+    }
+    
+    /**
+     * @deprecated
+     */
+    public String getDescriptorLocation() {
+    	return descriptorLocation;
     }
     
     private void initSystemProperties() {
@@ -187,29 +260,14 @@ public class Device
     }
 
     
-    protected void loadConfig(String config)
+    protected void loadConfig(ClassLoader classLoader, String base, XMLElement doc)
 		throws IOException
     {
-    	String readLine;
-    	StringBuffer xmlBuffer = new StringBuffer();
-    	BufferedReader dis = new BufferedReader(
-    			new InputStreamReader(getClass().getResourceAsStream(config)));
-    	while ((readLine = dis.readLine()) != null) {
-    		xmlBuffer.append(readLine);
-    	}
-    	
-    	String base = config.substring(0, config.lastIndexOf("/"));
-    		
-        XMLElement doc = new XMLElement();
-        try {
-          doc.parseString(xmlBuffer.toString());
-        } catch (XMLParseException ex) {
-        	throw new IOException(ex.toString());
-        }
-        
         String deviceName = doc.getStringAttribute("name");
         if (deviceName != null) {
         	name = deviceName;
+        } else {
+        	name = base;
         }
 
         hasPointerEvents = false;
@@ -225,20 +283,20 @@ public class Device
           } else if (tmp.getName().equals("img")) {
             try {
               if (tmp.getStringAttribute("name").equals("normal")) {
-                normalImage = loadImage(base, tmp.getStringAttribute("src"));
+                normalImage = loadImage(classLoader, base, tmp.getStringAttribute("src"));
               } else if (tmp.getStringAttribute("name").equals("over")) {
-                overImage = loadImage(base, tmp.getStringAttribute("src"));
+                overImage = loadImage(classLoader, base, tmp.getStringAttribute("src"));
               } else if (tmp.getStringAttribute("name").equals("pressed")) {
-                pressedImage = loadImage(base, tmp.getStringAttribute("src"));
+                pressedImage = loadImage(classLoader, base, tmp.getStringAttribute("src"));
               }
             } catch (IOException ex) {
               System.out.println("Cannot load " + tmp.getStringAttribute("src"));
               return;
             }
           } else if (tmp.getName().equals("display")) {
-        	  parseDisplay(base, tmp);
+        	  parseDisplay(classLoader, base, tmp);
           } else if (tmp.getName().equals("fonts")) {
-        	  parseFonts(base, tmp);
+        	  parseFonts(classLoader, base, tmp);
           } else if (tmp.getName().equals("input") || tmp.getName().equals("keyboard")) {
         	// "keyboard" is for backward compatibility 
         	  parseInput(tmp);
@@ -247,7 +305,7 @@ public class Device
     }
     
     
-    private void parseDisplay(String base, XMLElement tmp) throws IOException
+    private void parseDisplay(ClassLoader classLoader, String base, XMLElement tmp) throws IOException
     {
         DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) getDeviceDisplay();
 
@@ -278,22 +336,22 @@ public class Device
               	SoftButton icon = deviceDisplay.createSoftButton(
               			tmp_display.getStringAttribute("name"),
               			getRectangle(getElement(tmp_display, "paintable")),
-              			loadImage(base, tmp_display.getStringAttribute("src")),
-              			loadImage(base, tmp_display.getStringAttribute("src")));
+              			loadImage(classLoader, base, tmp_display.getStringAttribute("src")),
+              			loadImage(classLoader, base, tmp_display.getStringAttribute("src")));
               	getSoftButtons().addElement(icon);              	
               } else if (tmp_display.getStringAttribute("name").equals("mode")) {
             	// deprecated, moved to status
                 if (tmp_display.getStringAttribute("type").equals("123")) {
                   deviceDisplay.setMode123Image(new PositionedImage(
-                	loadImage(base, tmp_display.getStringAttribute("src")),
+                	loadImage(classLoader, base, tmp_display.getStringAttribute("src")),
                       getRectangle(getElement(tmp_display, "paintable"))));
                 } else if (tmp_display.getStringAttribute("type").equals("abc")) {
                   deviceDisplay.setModeAbcLowerImage(new PositionedImage(
-                	loadImage(base, tmp_display.getStringAttribute("src")),
+                	loadImage(classLoader, base, tmp_display.getStringAttribute("src")),
                       getRectangle(getElement(tmp_display, "paintable"))));
                 } else if (tmp_display.getStringAttribute("type").equals("ABC")) {
                   deviceDisplay.setModeAbcUpperImage(new PositionedImage(
-                	loadImage(base, tmp_display.getStringAttribute("src")),
+                	loadImage(classLoader, base, tmp_display.getStringAttribute("src")),
                       getRectangle(getElement(tmp_display, "paintable"))));
                 }
               }
@@ -304,9 +362,9 @@ public class Device
           		  XMLElement tmp_icon = (XMLElement) e_icon.nextElement();
           		  if (tmp_icon.getName().equals("img")) {
           			  if (tmp_icon.getStringAttribute("name").equals("normal")) {
-          				  iconNormalImage = loadImage(base, tmp_icon.getStringAttribute("src"));
+          				  iconNormalImage = loadImage(classLoader, base, tmp_icon.getStringAttribute("src"));
           			  } else if (tmp_icon.getStringAttribute("name").equals("pressed")) {
-          				  iconPressedImage = loadImage(base, tmp_icon.getStringAttribute("src"));
+          				  iconPressedImage = loadImage(classLoader, base, tmp_icon.getStringAttribute("src"));
           			  }
           		  }
           	  }
@@ -329,13 +387,13 @@ public class Device
 						if (tmp_status.getName().equals("img")) {
 							if (tmp_status.getStringAttribute("name").equals("123")) {
 								deviceDisplay.setMode123Image(new PositionedImage(
-										loadImage(base, tmp_status.getStringAttribute("src")), paintable));
+										loadImage(classLoader, base, tmp_status.getStringAttribute("src")), paintable));
 							} else if (tmp_status.getStringAttribute("name").equals("abc")) {
 								deviceDisplay.setModeAbcLowerImage(new PositionedImage(
-										loadImage(base, tmp_status.getStringAttribute("src")), paintable));
+										loadImage(classLoader, base, tmp_status.getStringAttribute("src")), paintable));
 							} else if (tmp_status.getStringAttribute("name").equals("ABC")) {
 								deviceDisplay.setModeAbcUpperImage(new PositionedImage(
-										loadImage(base, tmp_status.getStringAttribute("src")), paintable));
+										loadImage(classLoader, base, tmp_status.getStringAttribute("src")), paintable));
 							}
 						}
 					}
@@ -345,7 +403,7 @@ public class Device
     }
     
     
-    private void parseFonts(String base, XMLElement tmp)
+    private void parseFonts(ClassLoader classLoader, String base, XMLElement tmp) throws IOException
     {
         FontManagerImpl fontManager = (FontManagerImpl) getFontManager();
         
@@ -388,7 +446,7 @@ public class Device
                 		int defSize = Integer.parseInt(tmp_def.getStringAttribute("size"));
                 		
                 		fontManager.setFont(face, style, size, 
-                				fontManager.createTrueTypeFont(getResourceUrl(base, defSrc), defStyle, defSize, antialiasing));
+                				fontManager.createTrueTypeFont(getResourceUrl(classLoader, base, defSrc), defStyle, defSize, antialiasing));
                 	}
                 }
             }
@@ -590,21 +648,49 @@ public class Device
 		return hasRepeatEvents;
 	}
 	
+
+	private static XMLElement loadDocument(InputStream descriptor) throws IOException {
+    	String readLine;
+    	StringBuffer xmlBuffer = new StringBuffer();
+    	BufferedReader dis = new BufferedReader(new InputStreamReader(descriptor));
+    	while ((readLine = dis.readLine()) != null) {
+    		xmlBuffer.append(readLine);
+    	}
+    	
+        XMLElement doc = new XMLElement();
+        try {
+          doc.parseString(xmlBuffer.toString());
+        } catch (XMLParseException ex) {
+        	throw new IOException(ex.toString());
+        }
+        
+        return doc;
+	}
 	
-	private URL getResourceUrl(String base, String src) {
+	
+	private URL getResourceUrl(ClassLoader classLoader, String base, String src) throws IOException {
 		String expandedSource;
 		if (src.startsWith("/")) {
 			expandedSource = src;
 		} else {
 			expandedSource = base + "/" + src;
 		}
+		if (expandedSource.startsWith("/")) {
+			expandedSource = expandedSource.substring(1);
+		}
 		
-		return getClass().getResource(expandedSource);
+		URL result = classLoader.getResource(expandedSource);
+		
+		if (result == null) {
+			throw new IOException("Cannot find resource: " + expandedSource);
+		}
+		
+		return result; 
 	}
 	
 	
-	private Image loadImage(String base, String src) throws IOException {
-		URL url = getResourceUrl(base, src);
+	private Image loadImage(ClassLoader classLoader, String base, String src) throws IOException {
+		URL url = getResourceUrl(classLoader, base, src);
 		
 		return ((DeviceDisplayImpl) getDeviceDisplay()).createSystemImage(url);
 	}

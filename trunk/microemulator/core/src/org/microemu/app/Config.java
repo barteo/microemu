@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import org.microemu.EmulatorContext;
 import org.microemu.app.util.DeviceEntry;
 
 
@@ -46,13 +47,13 @@ public class Config
   
   private static String recentJadDirectory = ".";
   
-  public static void loadConfig(String configFileName, DeviceEntry defaultDevice)
+  public static void loadConfig(String configFileName, DeviceEntry defaultDevice, EmulatorContext emulatorContext)
   {
 		File configFile = new File(configPath, configFileName);
 		
 		if (defaultDevice == null) {
 		    defaultDevice = 
-	            new DeviceEntry("Default device", null, "org.microemu.device.Device", true, false);
+	            new DeviceEntry("Default device", null, "org/microemu/device/device.xml", true, false);
 		}
     	defaultDevice.setDefaultDevice(true);
     	devices.add(defaultDevice);
@@ -97,6 +98,7 @@ public class Config
             String devName = null;
             String devFile = null;
             String devClass = null;
+            String devDescriptor = null;
             for (Enumeration e_cont = tmp_device.enumerateChildren(); e_cont.hasMoreElements(); ) {
               XMLElement tmp_cont = (XMLElement) e_cont.nextElement();
               if (tmp_cont.getName().equals("name")) {
@@ -105,9 +107,15 @@ public class Config
                 devFile = tmp_cont.getContent();
               } else if (tmp_cont.getName().equals("class")) {
                 devClass = tmp_cont.getContent();
+              } else if (tmp_cont.getName().equals("descriptor")) {
+            	  devDescriptor = tmp_cont.getContent();
               }
             }
-            devices.add(new DeviceEntry(devName, devFile, devClass, devDefault));
+            if (devDescriptor == null) {
+            	devices.add(new DeviceEntry(devName, devFile, devDefault, devClass, emulatorContext));
+            } else {
+            	devices.add(new DeviceEntry(devName, devFile, devDescriptor, devDefault));
+            }
           }
         }
       } else if (tmp.getName().equals("files")) {
@@ -200,8 +208,8 @@ public class Config
       xmlTmp.setContent(entry.getFileName());
       xmlDevice.addChild(xmlTmp);
       xmlTmp = new XMLElement();
-      xmlTmp.setName("class");
-      xmlTmp.setContent(entry.getClassName());
+      xmlTmp.setName("descriptor");
+      xmlTmp.setContent(entry.getDescriptorLocation());
       xmlDevice.addChild(xmlTmp);      
     }
     

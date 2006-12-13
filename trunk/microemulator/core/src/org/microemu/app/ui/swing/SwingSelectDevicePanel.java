@@ -26,9 +26,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.jar.Attributes;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
@@ -45,16 +51,15 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.microemu.EmulatorContext;
 import org.microemu.app.Config;
 import org.microemu.app.util.DeviceEntry;
-import org.microemu.app.util.ProgressJarClassLoader;
 import org.microemu.device.Device;
-
 
 
 public class SwingSelectDevicePanel extends SwingDialogPanel
 {
-  private SwingSelectDevicePanel instance;
+  private EmulatorContext emulatorContext;
   
   private JScrollPane spDevices;
   private JButton btAdd;
@@ -63,121 +68,139 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
   private DefaultListModel lsDevicesModel;
   private JList lsDevices;
   
-  private ActionListener btAddListener = new ActionListener()
-  {
-    private JFileChooser fileChooser = null;
-        
-    public void actionPerformed(ActionEvent ev)
-    {
-      if (fileChooser == null) {
-        fileChooser = new JFileChooser();
-        ExtensionFileFilter fileFilter = new ExtensionFileFilter("Device profile (*.jar)");
-        fileFilter.addExtension("jar");
-        fileChooser.setFileFilter(fileFilter);
-      }
-      
-      ProgressJarClassLoader loader = new ProgressJarClassLoader(this.getClass().getClassLoader());
-      
-      if (fileChooser.showOpenDialog(instance) == JFileChooser.APPROVE_OPTION) {
-        String deviceClassName = null;
-        String deviceName = null;
-        try {
-          JarFile jar = new JarFile(fileChooser.getSelectedFile());
-          Manifest manifest = jar.getManifest();
-          if (manifest == null) {
-            JOptionPane.showMessageDialog(instance,
-                "Missing manifest in device file.",
-                "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-          }          
-          Attributes attrs = manifest.getMainAttributes();
-          
-          deviceName = attrs.getValue("Device-Name");
-          if (deviceName == null) {
-            JOptionPane.showMessageDialog(instance, 
-                "Missing Device-Name entry in jar manifest.",
-                "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-          }
-          
-          deviceClassName = attrs.getValue("Device-Class");
-          if (deviceClassName == null) {
-            JOptionPane.showMessageDialog(instance, 
-                "Missing Device-Class entry in jar manifest.",
-                "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-          }
-          
-          jar.close();
-//          deviceClassName = deviceClassName.replace('.', '/');
-//          if (deviceClassName.charAt(0) == '/') {
-//            deviceClassName = deviceClassName.substring(1);
-//          }
-          for (Enumeration e = lsDevicesModel.elements(); e.hasMoreElements(); ) {
-            DeviceEntry entry = (DeviceEntry) e.nextElement();
-            if (deviceClassName.equals(entry.getClassName())) {
-              JOptionPane.showMessageDialog(instance, 
-                  "Device is already added.",
-                  "Info", JOptionPane.INFORMATION_MESSAGE);
-              return;
-            }
-          }
-          
-          loader.addRepository(fileChooser.getSelectedFile().toURL());
-        } catch (IOException ex) {
-          JOptionPane.showMessageDialog(instance, 
-              "Error reading " + fileChooser.getSelectedFile().getName() + " file.",
-              "Error", JOptionPane.ERROR_MESSAGE);
-          return;
-        }
-        
-        Class deviceClass = null;
-        try {
-          deviceClass = loader.findClass(deviceClassName);
-        } catch (ClassNotFoundException ex) {
-          JOptionPane.showMessageDialog(instance, 
-              "Cannot find class defined in Device-Class entry in jar manifest.",
-              "Error", JOptionPane.ERROR_MESSAGE);
-          return;
-        }
-          
-        if (!Device.class.isAssignableFrom(deviceClass)) {
-          JOptionPane.showMessageDialog(instance, 
-              "Cannot find class defined in Device-Class entry in jar manifest.",
-              "Error", JOptionPane.ERROR_MESSAGE);
-          return;
-        }
-        
-        try {
-          File deviceFile = File.createTempFile("dev", ".jar", Config.getConfigPath());
-          FileInputStream fis  = new FileInputStream(fileChooser.getSelectedFile());
-          FileOutputStream fos = new FileOutputStream(deviceFile);
-          byte[] buf = new byte[1024];
-            int i = 0;
-            while((i=fis.read(buf))!=-1) {
-              fos.write(buf, 0, i);
-            }
-          fis.close();
-          fos.close();
-        
-          DeviceEntry entry = 
-              new DeviceEntry(deviceName, deviceFile.getName(), deviceClassName, false);
-          lsDevicesModel.addElement(entry);
-          lsDevices.setSelectedValue(entry, true);
-        } catch (IOException ex) {
-          System.err.println(ex);
-        }
-      }
-    }    
-  };
+  private ActionListener btAddListener = new ActionListener() {
+		private JFileChooser fileChooser = null;
+
+		public void actionPerformed(ActionEvent ev) {
+			if (fileChooser == null) {
+				fileChooser = new JFileChooser();
+				ExtensionFileFilter fileFilter = new ExtensionFileFilter("Device profile (*.jar)");
+				fileFilter.addExtension("jar");
+				fileChooser.setFileFilter(fileFilter);
+			}
+
+			if (fileChooser.showOpenDialog(SwingSelectDevicePanel.this) == JFileChooser.APPROVE_OPTION) {
+				String manifestDeviceName = null;
+				URL[] urls = new URL[1];
+				ArrayList descriptorEntries = new ArrayList();
+				try {
+					JarFile jar = new JarFile(fileChooser.getSelectedFile());
+					
+					Manifest manifest = jar.getManifest();
+					if (manifest != null) {
+						Attributes attrs = manifest.getMainAttributes();
+						manifestDeviceName = attrs.getValue("Device-Name");
+					}
+
+					for (Enumeration en = jar.entries(); en.hasMoreElements();) {
+						JarEntry entry = (JarEntry) en.nextElement();
+						if (entry.getName().toLowerCase().endsWith(".xml")) {
+							descriptorEntries.add(entry);
+						}
+					}
+					jar.close();
+					urls[0] = fileChooser.getSelectedFile().toURL();
+				} catch (IOException ex) {
+					JOptionPane.showMessageDialog(SwingSelectDevicePanel.this,
+							"Error reading file: " + fileChooser.getSelectedFile().getName(),
+							"Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				if (descriptorEntries.size() == 0) {
+					JOptionPane.showMessageDialog(SwingSelectDevicePanel.this,
+							"Cannot find any device profile in file: " + fileChooser.getSelectedFile().getName(),
+							"Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				if (descriptorEntries.size() > 1) {
+					manifestDeviceName = null;
+				}
+
+				URLClassLoader classLoader = new URLClassLoader(urls);
+				HashMap devices = new HashMap();
+				for (Iterator it = descriptorEntries.iterator(); it.hasNext();) {
+					JarEntry entry = (JarEntry) it.next();
+					try {
+						devices.put(
+								entry.getName(),
+								Device.create(emulatorContext, classLoader, entry.getName()));
+					} catch (IOException ex) {
+						JOptionPane.showMessageDialog(SwingSelectDevicePanel.this,
+								"Error parsing device profile: " + ex.getMessage(), 
+								"Error", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+				}
+				
+				for (Enumeration en = lsDevicesModel.elements(); en.hasMoreElements(); ) {
+					DeviceEntry entry = (DeviceEntry) en.nextElement();
+					if (devices.containsKey(entry.getDescriptorLocation())) {
+						devices.remove(entry.getDescriptorLocation());
+					}
+				}
+				if (devices.size() == 0) {
+					JOptionPane.showMessageDialog(SwingSelectDevicePanel.this,
+							"Device profile already added", 
+							"Info", JOptionPane.INFORMATION_MESSAGE);
+					return;
+				}
+				
+				try { 
+					File deviceFile = File.createTempFile("dev", ".jar", Config.getConfigPath()); 
+					FileInputStream fis = new FileInputStream(fileChooser.getSelectedFile());
+					FileOutputStream fos = new FileOutputStream(deviceFile);
+					byte[] buf = new byte[1024]; 
+					int i = 0;
+					while ((i = fis.read(buf)) != -1) { 
+						fos.write(buf, 0, i);
+					}
+					fis.close(); 
+					fos.close();
+
+				
+					DeviceEntry entry = null;
+					for (Iterator it = devices.keySet().iterator(); it.hasNext();) {
+						String descriptorLocation = (String) it.next();
+						Device device = (Device) devices.get(descriptorLocation);
+						if (manifestDeviceName != null) {
+							entry = new DeviceEntry(manifestDeviceName, deviceFile.getName(), descriptorLocation, false);
+						} else {
+							entry = new DeviceEntry(device.getName(), deviceFile.getName(), descriptorLocation, false);
+						}
+						lsDevicesModel.addElement(entry);
+					}
+					lsDevices.setSelectedValue(entry, true);
+				} catch (IOException ex) {
+					JOptionPane.showMessageDialog(SwingSelectDevicePanel.this,
+							"Error adding device profile: " + ex.getMessage(),
+							"Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}				
+			}
+		}
+	};
   
   private ActionListener btRemoveListener = new ActionListener()
   {
     public void actionPerformed(ActionEvent ev)
     {
       DeviceEntry entry = (DeviceEntry) lsDevices.getSelectedValue();
-      File deviceFile = new File(Config.getConfigPath(), entry.getFileName());
-      deviceFile.delete();
+      
+      boolean canDeleteFile = true;
+      for (Enumeration en = lsDevicesModel.elements(); en.hasMoreElements(); ) {
+          DeviceEntry test = (DeviceEntry) en.nextElement();
+          if (test != entry && test.getFileName() != null && test.getFileName().equals(entry.getFileName())) {
+        	  canDeleteFile = false;
+        	  break;
+          }
+      }      
+      if (canDeleteFile) {
+	      File deviceFile = new File(Config.getConfigPath(), entry.getFileName());
+	      deviceFile.delete();
+      }
+      
       if (entry.isDefaultDevice()) {
         for (Enumeration en = lsDevicesModel.elements(); en.hasMoreElements(); ) {
           DeviceEntry tmp = (DeviceEntry) en.nextElement();
@@ -235,10 +258,10 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
   };
   
   
-  public SwingSelectDevicePanel() 
+  public SwingSelectDevicePanel(EmulatorContext emulatorContext) 
   {
-    instance = this;
-    
+	this.emulatorContext = emulatorContext;  
+	  
     setLayout(new BorderLayout());
     setBorder(new TitledBorder(new EtchedBorder(), "Installed devices"));
 

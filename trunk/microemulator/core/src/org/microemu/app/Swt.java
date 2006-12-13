@@ -269,13 +269,13 @@ public class Swt extends Common
 
 //		addWindowListener(windowListener);
 		    
-		Config.loadConfig("config.xml", null);
+		Config.loadConfig("config.xml", null, emulatorContext);
 		
 		shell.setLocation(Config.getWindowX(), Config.getWindowY());
 		
 		shell.addKeyListener(keyListener);
 
-		selectDeviceDialog = new SwtSelectDeviceDialog(shell);
+		selectDeviceDialog = new SwtSelectDeviceDialog(shell, emulatorContext);
     
 		setStatusBarListener(statusBarListener);
 		setResponseInterfaceListener(responseInterfaceListener);
@@ -339,27 +339,23 @@ public class Swt extends Common
 		}
 		
 		try {
-			Class deviceClass = null;
+			ClassLoader classLoader = getClass().getClassLoader();
 			if (entry.getFileName() != null) {
-	    	  	URL[] urls = new URL[1];
-	    	  	urls[0] = new File(Config.getConfigPath(), entry.getFileName()).toURL();
-	    	    URLClassLoader loader = new URLClassLoader(urls);
-	        	deviceClass = loader.loadClass(entry.getClassName());
-			} else {
-				deviceClass = Class.forName(entry.getClassName());
+				URL[] urls = new URL[1];
+				urls[0] = new File(Config.getConfigPath(), entry.getFileName()).toURL();
+				classLoader = new URLClassLoader(urls);
 			}
-			Device device = (Device) deviceClass.newInstance();
+			Device device = Device.create(
+					emulatorContext, 
+					classLoader, 
+					entry.getDescriptorLocation());
 			this.deviceEntry = entry;
 			setDevice(device);
 			updateDevice();
 		} catch (MalformedURLException ex) {
-			System.err.println(ex);          
-		} catch (ClassNotFoundException ex) {
-			System.err.println(ex);          
-		} catch (InstantiationException ex) {
-			System.err.println(ex);          
-		} catch (IllegalAccessException ex) {
-			System.err.println(ex);          
+			System.err.println(ex);
+		} catch (IOException ex) {
+			System.err.println(ex);
 		}
 	}
 	

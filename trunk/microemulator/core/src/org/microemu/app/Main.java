@@ -279,13 +279,13 @@ public class Main extends JFrame
     setTitle("MicroEmulator");
     addWindowListener(windowListener);
     
-    Config.loadConfig("config.xml", defaultDevice);
+    Config.loadConfig("config.xml", defaultDevice, emulatorContext);
     
     this.setLocation(Config.getWindowX(), Config.getWindowY());
 
     getContentPane().add(createContents(getContentPane()), "Center");
 
-    selectDevicePanel = new SwingSelectDevicePanel();
+    selectDevicePanel = new SwingSelectDevicePanel(emulatorContext);
     jadUrlPanel = new JadUrlPanel();
     
    	this.common = new Common(emulatorContext);
@@ -311,29 +311,25 @@ public class Main extends JFrame
 //			((J2SEDevice) DeviceFactory.getDevice()).dispose();
 		}
 
-    try {
-      Class deviceClass = null;
-      if (entry.getFileName() != null) {
-    	  	URL[] urls = new URL[1];
-    	  	urls[0] = new File(Config.getConfigPath(), entry.getFileName()).toURL();
-    	    URLClassLoader loader = new URLClassLoader(urls);
-        	deviceClass = loader.loadClass(entry.getClassName());
-     	 } else {
-        	deviceClass = Class.forName(entry.getClassName());
-      	}
-      	Device device = (Device) deviceClass.newInstance();
-		this.deviceEntry = entry;
-		common.setDevice(device);		
-      	updateDevice();
-    } catch (MalformedURLException ex) {
-      System.err.println(ex);          
-    } catch (ClassNotFoundException ex) {
-      System.err.println(ex);          
-    } catch (InstantiationException ex) {
-      System.err.println(ex);          
-    } catch (IllegalAccessException ex) {
-      System.err.println(ex);          
-    }
+		try {
+			ClassLoader classLoader = getClass().getClassLoader();
+			if (entry.getFileName() != null) {
+				URL[] urls = new URL[1];
+				urls[0] = new File(Config.getConfigPath(), entry.getFileName()).toURL();
+				classLoader = new URLClassLoader(urls);
+			}
+			Device device = Device.create(
+					emulatorContext, 
+					classLoader, 
+					entry.getDescriptorLocation());
+			this.deviceEntry = entry;
+			common.setDevice(device);
+			updateDevice();
+		} catch (MalformedURLException ex) {
+			System.err.println(ex);
+		} catch (IOException ex) {
+			System.err.println(ex);
+		}
   }
   
   

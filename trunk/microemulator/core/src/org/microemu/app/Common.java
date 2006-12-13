@@ -76,10 +76,6 @@ public class Common implements MicroEmulator {
 
 	protected JadProperties manifest = new JadProperties();
 
-	protected String captureFile = null;
-
-	//  	private Capturer capturer = null;
-
 	private RecordStoreManager recordStoreManager;
 
 	private ResponseInterfaceListener responseInterfaceListener = null;
@@ -229,14 +225,6 @@ public class Common implements MicroEmulator {
 		ex.printStackTrace();
 	}
 
-	protected void close() {
-		if (captureFile != null) {
-			//			if (capturer != null) {
-			//				capturer.stopCapture(emulatorContext.getDisplayComponent());
-			//			}
-		}
-	}
-
 	protected void loadFromJad(URL jadUrl, MIDletClassLoader midletClassLoader) throws ClassNotFoundException{
 		if (jad.getJarURL() == null) {
 			throw new ClassNotFoundException("Cannot find MIDlet-Jar-URL property in jad");
@@ -291,26 +279,15 @@ public class Common implements MicroEmulator {
 	public Device getDevice() {
 		return DeviceFactory.getDevice();
 	}
+	
+	protected void setDevice() {
+		
+	}
 
 	protected void setDevice(Device device) {
-		if (captureFile != null) {
-			//			if (capturer != null) {
-			//				capturer.stopCapture(emulatorContext.getDisplayComponent());
-			//			}
-		}
-
 		DeviceFactory.setDevice(device);
 		
 		emulatorContext.getDeviceFontManager().init();
-
-		if (captureFile != null) {
-			//			if (capturer == null) {
-			//				capturer = new Capturer();
-			//			}
-			//			capturer.startCapture(emulatorContext.getDisplayComponent(), captureFile);
-		}
-		
-		device.init(emulatorContext);
 		
 		System.setProperty("microedition.configuration", "CLDC-1.0");
 		System.setProperty("microedition.profiles", "MIDP-2.0");
@@ -363,28 +340,33 @@ public class Common implements MicroEmulator {
 		for (int i = 0; i < args.length; i++) {
 			params.add(args[i]);
 		}		
-		DeviceEntry defaultDevice = new DeviceEntry("Default device", null, "org.microemu.device.Device", true, false);
+		DeviceEntry defaultDevice = new DeviceEntry("Default device", null, "org/microemu/device/device.xml", true, false);
 		app.initDevice(params, defaultDevice);
 
 		app.initMIDlet(params, false);
 	}
 
 	public void initDevice(List params, DeviceEntry defaultDevice) {
-		RecordStoreManager paramRecordStoreManager = null;
-		
+		RecordStoreManager paramRecordStoreManager = null;		
 		Class deviceClass = null;
+		String deviceDescriptorLocation = null;
+		
 		Iterator it = params.iterator();
 		while (it.hasNext()) {
 			String tmp = (String) it.next();
 			if (tmp.equals("-d") || tmp.equals("--device")) {
 				it.remove();
 				if (it.hasNext()) {
-					try {
-						deviceClass = Class.forName((String) it.next());
-					} catch (ClassNotFoundException ex) {
-						ex.printStackTrace();
-					} finally {
-						it.remove();
+					String tmpDevice = (String) it.next();
+					it.remove();
+					if (!tmpDevice.toLowerCase().endsWith(".xml")) {
+						try {
+							deviceClass = Class.forName(tmpDevice);
+						} catch (ClassNotFoundException ex) {
+						}
+					}
+					if (deviceClass == null) {
+						deviceDescriptorLocation = tmpDevice;
 					}
 				}
 			} else if (tmp.equals("--rms")) {
@@ -400,17 +382,35 @@ public class Common implements MicroEmulator {
 				}
 			}
 		}
-		try {
-			if (deviceClass == null) {
-				deviceClass = Class.forName(defaultDevice.getClassName());
+		if (deviceDescriptorLocation != null) {
+			try {
+				setDevice(Device.create(
+						emulatorContext, 
+						getClass().getClassLoader(), 
+						deviceDescriptorLocation));
+			} catch (IOException ex) {
+				ex.printStackTrace();
 			}
-			setDevice((Device) deviceClass.newInstance());
-		} catch (ClassNotFoundException ex) {
-			ex.printStackTrace();
-		} catch (InstantiationException ex) {
-			ex.printStackTrace();
-		} catch (IllegalAccessException ex) {
-			ex.printStackTrace();
+		}
+		if (DeviceFactory.getDevice() == null) {
+			try {
+				if (deviceClass == null) {
+					setDevice(Device.create(
+							emulatorContext, 
+							getClass().getClassLoader(), 
+							defaultDevice.getDescriptorLocation()));
+				} else {
+					Device device = (Device) deviceClass.newInstance();
+					device.init(emulatorContext);
+					setDevice(device);
+				}
+			} catch (InstantiationException ex) {
+				ex.printStackTrace();
+			} catch (IllegalAccessException ex) {
+				ex.printStackTrace();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
 		}
 
 		if (getRecordStoreManager() == null) {
@@ -468,7 +468,7 @@ public class Common implements MicroEmulator {
 	public static String usage()
 	{
 		return
-			"[(-d | --device) {device class name} ] " +
+			"[(-d | --device) ({device descriptor} | {device class name}) ] " +
 			"[--rms (file | memory)] " +
 			"{midlet class name | jad file location}";
 	}

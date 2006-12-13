@@ -53,26 +53,16 @@ public class RecordStore
     public static RecordStore openRecordStore(String recordStoreName, boolean createIfNecessary, int authmode, boolean writable)
     		throws RecordStoreException, RecordStoreFullException, RecordStoreNotFoundException
     {
-		// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		// TODO Not yet implemented
+    	return openRecordStore(recordStoreName, createIfNecessary);
     }
 	
     
     public static RecordStore openRecordStore(String recordStoreName, String vendorName, String suiteName)
     		throws RecordStoreException, RecordStoreNotFoundException
 	{
-		// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		// TODO Not yet implemented
+    	return openRecordStore(recordStoreName, false);
 	}
 	
     public void closeRecordStore() 
@@ -203,13 +193,7 @@ public class RecordStore
     public void setMode(int authmode, boolean writable)
     		throws RecordStoreException
 	{
-		// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		// TODO Not yet implemented
 	}
 	
     public void setRecord(int recordId, byte[] newData, int offset, int numBytes)

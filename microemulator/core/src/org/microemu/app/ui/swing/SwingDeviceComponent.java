@@ -48,6 +48,7 @@ import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.Device;
 import org.microemu.device.impl.InputMethodImpl;
+import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.SoftButton;
 import org.microemu.device.j2se.J2SEButton;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
@@ -126,7 +127,9 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 								KeyEvent.CHAR_UNDEFINED);
 						inputMethod.mousePressed(ev);
 					}
-					repaint();
+					// optimize for some video cards.
+					Rectangle r = pressedButton.getShape().getBounds();
+	      			repaint(r.x, r.y, r.width, r.height);
 				}
 			}
 		}
@@ -177,7 +180,13 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 					inputMethod.mouseReleased(ev.getKeyCode());
 				}
 				pressedButton = null;
-				repaint();
+				//	optimize for some video cards.
+				if (prevOverButton != null) {
+					Rectangle r = prevOverButton.getShape().getBounds();
+	      			repaint(r.x, r.y, r.width, r.height);
+	      		} else {
+	      			repaint();
+	      		}
 			}
 		}
 
@@ -232,7 +241,15 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
     	prevOverButton = overButton;
     	overButton = getButton(e.getX(), e.getY());
       	if (overButton != prevOverButton) {
-        	repaint();
+      		// optimize for some video cards.
+      		if (prevOverButton != null) {
+      			Rectangle r = prevOverButton.getShape().getBounds();
+      			repaint(r.x, r.y, r.width, r.height);
+      		}
+      		if (overButton != null) {
+      			Rectangle r = overButton.getShape().getBounds();
+      			repaint(r.x, r.y, r.width, r.height);
+      		}
       	}
     }
     

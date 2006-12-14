@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -395,9 +396,15 @@ public class Common implements MicroEmulator {
 		if (DeviceFactory.getDevice() == null) {
 			try {
 				if (deviceClass == null) {
+					ClassLoader classLoader = getClass().getClassLoader();
+					if (defaultDevice.getFileName() != null) {
+						URL[] urls = new URL[1];					
+						urls[0] = new File(Config.getConfigPath(), defaultDevice.getFileName()).toURL();
+						classLoader = new URLClassLoader(urls);
+					}
 					setDevice(Device.create(
 							emulatorContext, 
-							getClass().getClassLoader(), 
+							classLoader, 
 							defaultDevice.getDescriptorLocation()));
 				} else {
 					Device device = (Device) deviceClass.newInstance();

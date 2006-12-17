@@ -143,13 +143,6 @@ public class Main extends Applet implements MicroEmulator
         DeviceFactory.setDevice(device);
         device.init(emulatorContext);
         
-        try {
-        	System.setProperty("microedition.configuration", "CLDC-1.0");
-        	System.setProperty("microedition.profiles", "MIDP-2.0");
-        } catch (RuntimeException e) {
-			System.out.println("Cannot load SystemProperties: " + e);
-		}	
-        
         devicePanel.init();
 
         manifest.clear();

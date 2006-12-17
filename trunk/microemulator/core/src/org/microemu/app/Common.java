@@ -289,9 +289,6 @@ public class Common implements MicroEmulator {
 		DeviceFactory.setDevice(device);
 		
 		emulatorContext.getDeviceFontManager().init();
-		
-		System.setProperty("microedition.configuration", "CLDC-1.0");
-		System.setProperty("microedition.profiles", "MIDP-2.0");
 	}
 
 	private static Common getInstance() {

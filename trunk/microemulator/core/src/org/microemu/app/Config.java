@@ -16,7 +16,7 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 package org.microemu.app;
 
 import java.io.BufferedInputStream;
@@ -27,6 +27,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
 import java.util.Vector;
 
 import org.microemu.EmulatorContext;
@@ -37,18 +40,21 @@ import nanoxml.XMLElement;
 import nanoxml.XMLParseException;
 
 
-public class Config 
-{
-  private static File configPath = new File(System.getProperty("user.home") + "/.microemulator/");
-  private static Vector devices = new Vector();
+public class Config {
+
+	private static File configPath = new File(System.getProperty("user.home") + "/.microemulator/");
+
+	private static Vector devices = new Vector();
+
+	private static int windowX;
+
+	private static int windowY;
   
-  private static int windowX;
-  private static int windowY;
-  
-  private static String recentJadDirectory = ".";
-  
-  public static void loadConfig(String configFileName, DeviceEntry defaultDevice, EmulatorContext emulatorContext)
-  {
+	private static String recentJadDirectory = ".";
+
+	private static Properties systemProperties;
+
+	public static void loadConfig(String configFileName, DeviceEntry defaultDevice, EmulatorContext emulatorContext) {
 		File configFile = new File(configPath, configFileName);
 		
 		if (defaultDevice == null) {
@@ -58,213 +64,179 @@ public class Config
     	defaultDevice.setDefaultDevice(true);
     	devices.add(defaultDevice);
 
-    String xml = "";
-    try {
-      InputStream dis = new BufferedInputStream(new FileInputStream(configFile));
-      while (dis.available() > 0) {
-        byte[] b = new byte[dis.available()];
-        dis.read(b);
-        xml += new String(b);
-      }
-    } catch (FileNotFoundException ex) {
-      loadDefaultConfig();
-      return;
-    } catch (IOException ex) {
-      System.out.println(ex);
-      loadDefaultConfig();
-      return;
-    }
+		String xml = "";
+		try {
+			InputStream dis = new BufferedInputStream(new FileInputStream(configFile));
+			while (dis.available() > 0) {
+				byte[] b = new byte[dis.available()];
+				dis.read(b);
+				xml += new String(b);
+			}
+			parseConfigXML(xml, defaultDevice, emulatorContext);
+		} catch (FileNotFoundException ex) {
+			loadDefaultConfig();
+		} catch (XMLParseException e) {
+			System.out.println(e);
+			loadDefaultConfig();
+		} catch (IOException ex) {
+			System.out.println(ex);
+			loadDefaultConfig();
+		}
+		initSystemProperties();
+	}
 
-    XMLElement configRoot = new XMLElement();
-    try {
-      configRoot.parseString(xml);
-    } catch (XMLParseException ex) {
-      System.err.println(ex);
-      loadDefaultConfig();
-      return;
-    }
-    
-    for (Enumeration e = configRoot.enumerateChildren(); e.hasMoreElements(); ) {
-      XMLElement tmp = (XMLElement) e.nextElement();
-      if (tmp.getName().equals("devices")) {
-        for (Enumeration e_device = tmp.enumerateChildren(); e_device.hasMoreElements(); ) {
-          XMLElement tmp_device = (XMLElement) e_device.nextElement();
-          if (tmp_device.getName().equals("device")) {            
-            boolean devDefault = false;
-            if (tmp_device.getStringAttribute("default") != null && tmp_device.getStringAttribute("default").equals("true")) {
-              devDefault = true;
-              defaultDevice.setDefaultDevice(false);
-            }
-            String devName = null;
-            String devFile = null;
-            String devClass = null;
-            String devDescriptor = null;
-            for (Enumeration e_cont = tmp_device.enumerateChildren(); e_cont.hasMoreElements(); ) {
-              XMLElement tmp_cont = (XMLElement) e_cont.nextElement();
-              if (tmp_cont.getName().equals("name")) {
-                devName = tmp_cont.getContent();
-              } else if (tmp_cont.getName().equals("filename")) {
-                devFile = tmp_cont.getContent();
-              } else if (tmp_cont.getName().equals("class")) {
-                devClass = tmp_cont.getContent();
-              } else if (tmp_cont.getName().equals("descriptor")) {
-            	  devDescriptor = tmp_cont.getContent();
-              }
-            }
-            if (devDescriptor == null) {
-            	devices.add(new DeviceEntry(devName, devFile, devDefault, devClass, emulatorContext));
-            } else {
-            	devices.add(new DeviceEntry(devName, devFile, devDescriptor, devDefault));
-            }
-          }
-        }
-      } else if (tmp.getName().equals("files")) {
-    	  
-    	  for (Enumeration ew = tmp.enumerateChildren(); ew.hasMoreElements(); ) {
-    		  XMLElement fe = (XMLElement) ew.nextElement();
-    		  if (fe.getName().equals("recentJadDirectory")) {
-    			  recentJadDirectory = fe.getContent();
-    		  }
-    	  }
-    	  
-      } else if (tmp.getName().equals("windows")) {
-    	  for (Enumeration ew = tmp.enumerateChildren(); ew.hasMoreElements(); ) {
-    		  XMLElement tmp_window = (XMLElement) ew.nextElement();
-    		  if (tmp_window.getName().equals("main")) {
-    	    	  for (Enumeration em = tmp_window.enumerateChildren(); em.hasMoreElements(); ) {
-		    		  XMLElement tmp_propety = (XMLElement) em.nextElement();
-		              if (tmp_propety.getName().equals("x")) {
-		            	  try {
-							windowX = Integer.parseInt(tmp_propety.getContent());
-						} catch (NumberFormatException e1) {
-							windowX = 0;
+	private static void parseConfigXML(String xml, DeviceEntry defaultDevice, EmulatorContext emulatorContext) throws XMLParseException {
+
+		XMLElement configRoot = new XMLElement();
+
+		configRoot.parseString(xml);
+	
+		for (Enumeration e = configRoot.enumerateChildren(); e.hasMoreElements();) {
+			XMLElement tmp = (XMLElement) e.nextElement();
+			if (tmp.getName().equals("devices")) {
+				for (Enumeration e_device = tmp.enumerateChildren(); e_device.hasMoreElements();) {
+					XMLElement tmp_device = (XMLElement) e_device.nextElement();
+					if (tmp_device.getName().equals("device")) {
+						boolean devDefault = false;
+						if (tmp_device.getStringAttribute("default") != null
+								&& tmp_device.getStringAttribute("default").equals("true")) {
+							devDefault = true;
+							defaultDevice.setDefaultDevice(false);
 						}
-		              } else if (tmp_propety.getName().equals("y")) {
-		            	  try {
-		  					windowY = Integer.parseInt(tmp_propety.getContent());
-		  				} catch (NumberFormatException e1) {
-		  					windowY = 0;
-		  				}
-	                  }
-    	    	  }
-    		  }
-    	  }
-      }
-    }
-  }
+						String devName = tmp_device.getChildString("name", null);
+						String devFile = tmp_device.getChildString("filename", null);
+						String devClass = tmp_device.getChildString("class", null);
+						String devDescriptor = tmp_device.getChildString("descriptor", null);;
+			            if (devDescriptor == null) {
+			            	devices.add(new DeviceEntry(devName, devFile, devDefault, devClass, emulatorContext));
+			            } else {
+			            	devices.add(new DeviceEntry(devName, devFile, devDescriptor, devDefault));
+			            }
+					}
+				}
+			} else if (tmp.getName().equals("files")) {
+				recentJadDirectory = tmp.getChildString("recentJadDirectory", ".");
+			} else if (tmp.getName().equals("windows")) {
+				XMLElement main_window = tmp.getChild("main");
+				if (main_window != null) {
+					windowX = main_window.getChildInteger("x", 0);
+					windowY = main_window.getChildInteger("y", 0);
+				}
+			} else if (tmp.getName().equals("system-properties")) {
+				systemProperties = new Properties();
+				for (Enumeration e_prop = tmp.enumerateChildren(); e_prop.hasMoreElements(); ) {
+		            XMLElement tmp_prop = (XMLElement) e_prop.nextElement();
+		            if (tmp_prop.getName().equals("system-property")) {
+		            	systemProperties.put(tmp_prop.getStringAttribute("name"), tmp_prop.getStringAttribute("value"));
+		            }
+		        }
+			}
+		}
+	}				  
+  
+	private static void loadDefaultConfig() {
+	}
   
   
-  private static void loadDefaultConfig()
-  {
-  }
-  
-  
-  public static void saveConfig(String configFileName)
-  {
+	public static void saveConfig(String configFileName) {
 		File configFile = new File(configPath, configFileName);
 
-    XMLElement xmlTmp;
-    XMLElement xmlRoot = new XMLElement();
-    xmlRoot.setName("config");
+		XMLElement xmlRoot = new XMLElement();
+		xmlRoot.setName("config");
 
-    XMLElement xmlFiles = new XMLElement();
-    xmlFiles.setName("files");
-    xmlRoot.addChild(xmlFiles);
-    addXMLChild(xmlFiles, "recentJadDirectory", recentJadDirectory);
-    
-    XMLElement xmlWindow = new XMLElement();
-    xmlWindow.setName("windows");
-    xmlRoot.addChild(xmlWindow);
-    
-    XMLElement xmlMain = new XMLElement();
-    xmlMain.setName("main");
-    xmlWindow.addChild(xmlMain);
-    
-    addXMLChild(xmlMain, "x", String.valueOf(windowX));
-    addXMLChild(xmlMain, "y", String.valueOf(windowY));
-    
-    XMLElement xmlDevices = new XMLElement();
-    xmlDevices.setName("devices");
-    xmlRoot.addChild(xmlDevices);
-    
-    for (Enumeration e = devices.elements(); e.hasMoreElements(); ) {
-      DeviceEntry entry = (DeviceEntry) e.nextElement();
-      if (!entry.canRemove()) {
-        continue;
-      }
-      
-      XMLElement xmlDevice = new XMLElement(false, false);
-      xmlDevice.setName("device");
-      xmlDevices.addChild(xmlDevice);
-      if (entry.isDefaultDevice()) {
-        xmlDevice.setAttribute("default", "true");
-      }
-      xmlTmp = new XMLElement();
-      xmlTmp.setName("name");
-      xmlTmp.setContent(entry.getName());
-      xmlDevice.addChild(xmlTmp);
-      xmlTmp = new XMLElement();
-      xmlTmp.setName("filename");
-      xmlTmp.setContent(entry.getFileName());
-      xmlDevice.addChild(xmlTmp);
-      xmlTmp = new XMLElement();
-      xmlTmp.setName("descriptor");
-      xmlTmp.setContent(entry.getDescriptorLocation());
-      xmlDevice.addChild(xmlTmp);      
-    }
-    
-    configPath.mkdirs();
-    try {
-      FileWriter fw = new FileWriter(configFile);
-      xmlRoot.write(fw);
-      fw.close();
-    } catch (IOException ex) {
-      System.out.println(ex);
-    }
-  }  
+		XMLElement xmlFiles = xmlRoot.addChild("files");
+		xmlFiles.addChild("recentJadDirectory", recentJadDirectory);
+
+		XMLElement xmlWindows = xmlRoot.addChild("windows");
+		XMLElement xmlMainWindow = xmlWindows.addChild("main");
+		xmlMainWindow.addChild("x", String.valueOf(windowX));
+		xmlMainWindow.addChild("y", String.valueOf(windowY));
+
+		XMLElement xmlSystemProperties = xmlRoot.addChild("system-properties");
+		if (systemProperties != null) {
+			for (Iterator i = systemProperties.entrySet().iterator(); i.hasNext();) {
+				Map.Entry e = (Map.Entry) i.next();
+				XMLElement xmlProperty = xmlSystemProperties.addChild("system-property");
+				xmlProperty.setAttribute("value", (String) e.getValue());
+				xmlProperty.setAttribute("name", (String) e.getKey());
+			}
+		}
+		
+		XMLElement xmlDevices = xmlRoot.addChild("devices");
+
+		for (Enumeration e = devices.elements(); e.hasMoreElements();) {
+			DeviceEntry entry = (DeviceEntry) e.nextElement();
+			if (!entry.canRemove()) {
+				continue;
+			}
+
+			XMLElement xmlDevice = new XMLElement(false, false);
+			xmlDevice.setName("device");
+			xmlDevices.addChild(xmlDevice);
+			if (entry.isDefaultDevice()) {
+				xmlDevice.setAttribute("default", "true");
+			}
+			xmlDevice.addChild("name", entry.getName());
+			xmlDevice.addChild("filename", entry.getFileName());
+			xmlDevice.addChild("descriptor", entry.getDescriptorLocation());
+		}
+
+		configPath.mkdirs();
+		try {
+			FileWriter fw = new FileWriter(configFile);
+			xmlRoot.write(fw);
+			fw.close();
+		} catch (IOException ex) {
+			System.out.println(ex);
+		}
+	}
+	
+    private static void initSystemProperties() {
+    	// No <system-properties> in config.xml
+    	if (systemProperties == null) {
+    		systemProperties = new Properties();
+    		systemProperties.put("microedition.configuration", "CLDC-1.0");
+    		systemProperties.put("microedition.profiles", "MIDP-2.0");
+    		// Ask avetana to ignore MIDP profiles and load JSR-82 implementation dll or so
+    		systemProperties.put("avetana.forceNativeLibrary", Boolean.TRUE.toString());
+    	}
+        try {
+			for (Iterator i = systemProperties.entrySet().iterator(); i.hasNext(); ) {
+				Map.Entry e = (Map.Entry)i.next();
+				System.setProperty((String)e.getKey(), (String)e.getValue());
+			}
+        } catch (SecurityException e) {
+			System.out.println("Cannot set SystemProperties: " + e);
+		}	
+	}  
   
-  
-  public static File getConfigPath()
-  {
-    return configPath;
-  }
-
-  
-  public static Vector getDevices()
-  {
-    return devices;
-  }
-  
-  public static int getWindowX() {
-	  return windowX;
-  }
-
-
-  public static void setWindowX(int windowX) {
-		Config.windowX = windowX;
-  }
-
-
-  public static int getWindowY() {
-	  return windowY;
-  }
-
-
-  public static void setWindowY(int windowY) {
-		Config.windowY = windowY;
-  }
-  
-  private static void addXMLChild(XMLElement parent, String name, String value) {
-		XMLElement xml = new XMLElement();
-		xml.setName(name);
-		xml.setContent(value);
-		parent.addChild(xml);
+  	public static File getConfigPath() {
+		return configPath;
 	}
 
-  	public static String getRecentJadDirectory() {
+	public static Vector getDevices() {
+		return devices;
+	}
+
+	public static int getWindowX() {
+		return windowX;
+	}
+
+	public static void setWindowX(int windowX) {
+		Config.windowX = windowX;
+	}
+
+	public static int getWindowY() {
+		return windowY;
+	}
+
+	public static void setWindowY(int windowY) {
+		Config.windowY = windowY;
+	}
+
+	public static String getRecentJadDirectory() {
 		return recentJadDirectory;
 	}
-
 
 	public static void setRecentJadDirectory(String recentJadDirectory) {
 		Config.recentJadDirectory = recentJadDirectory;

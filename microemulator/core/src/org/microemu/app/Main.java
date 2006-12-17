@@ -67,6 +67,8 @@ import org.microemu.device.j2se.J2SEInputMethod;
 
 public class Main extends JFrame
 {
+  private static final long serialVersionUID = 1L;
+
   private Main instance = null;
   
   protected Common common;

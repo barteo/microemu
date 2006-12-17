@@ -532,6 +532,21 @@ public class XMLElement
    }
 
 
+   public XMLElement addChild(String name)
+   {
+		XMLElement xml = new XMLElement(true, false);
+		xml.setName(name);
+		this.addChild(xml);
+		return xml;
+   }
+
+   public XMLElement addChild(String name, String value)
+   {
+		XMLElement xml = addChild(name);
+		xml.setContent(value);
+		return xml;
+   }
+   
    /**
     * Adds or modifies an attribute.
     *
@@ -869,6 +884,42 @@ public class XMLElement
       }
    }
 
+	/**
+	 * Returns the first child element by name .
+	 */
+	public XMLElement getChild(String name) {
+		for (Enumeration en = this.children.elements(); en.hasMoreElements();) {
+			XMLElement el = (XMLElement) en.nextElement();
+			if (el.getName().equals(name)) {
+				return el;
+			}
+		}
+		return null;
+	}
+
+	public int getChildInteger(String name, int defaultValue) {
+		XMLElement xml = this.getChild(name);
+		if (xml == null) {
+			return defaultValue;
+		}
+		try {
+			return Integer.parseInt(xml.getContent());
+		} catch (NumberFormatException e) {
+			return defaultValue;
+		}
+	}
+
+	public String getChildString(String name, String defaultValue) {
+		XMLElement xml = this.getChild(name);
+		if (xml == null) {
+			return defaultValue;
+		}
+		String v = xml.getContent();
+		if ((v == null) || (v.length() == 0)) {
+			return defaultValue;
+		}
+		return v;
+	}
 
    /**
     * Returns the PCDATA content of the object. If there is no such content,

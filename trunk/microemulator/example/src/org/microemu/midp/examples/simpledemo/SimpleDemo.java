@@ -30,17 +30,8 @@ public class SimpleDemo extends MIDlet implements CommandListener
   CanvasPanel canvasPanel = new CanvasPanel();
   GaugePanel gaugePanel = new GaugePanel();
 
-  List menuList;
-  ScreenPanel screenPanels[] = {
-      new AlertPanel(),
-      canvasPanel,
-      new DateFieldPanel(),
-      gaugePanel,
-      new ImageItemPanel(),
-      new ListPanel(),
-      new TextFieldPanel(),
-      new TextBoxPanel()
-  };
+  List menuList = null;
+  ScreenPanel screenPanels[];
   
   Command exitCommand = new Command("Exit", Command.EXIT, 1);
 
@@ -48,19 +39,6 @@ public class SimpleDemo extends MIDlet implements CommandListener
   public SimpleDemo()
   {
     instance = this;
-    
-    Ticker ticker = new Ticker("This is SimpleDemo ticker");
-    
-    menuList = new List("SimpleDemo", List.IMPLICIT);
-      
-    for (int i = 0; i < screenPanels.length; i++) {
-      menuList.append(screenPanels[i].getName(), null);
-      if (screenPanels[i] instanceof Screen) {
-        ((Screen) screenPanels[i]).setTicker(ticker);
-      }
-    }
-    menuList.addCommand(exitCommand);
-    menuList.setCommandListener(this);
   }
     
 
@@ -76,10 +54,35 @@ public class SimpleDemo extends MIDlet implements CommandListener
   }
 
   
-  public void startApp() 
-  {
-    Display.getDisplay(this).setCurrent(menuList);
-  }
+  	public void startApp() {
+		if (menuList == null) {
+			screenPanels = new ScreenPanel[] { 
+					new AlertPanel(), 
+					canvasPanel, 
+					new DateFieldPanel(),
+					gaugePanel, 
+					new ImageItemPanel(), 
+					new ListPanel(), 
+					new TextFieldPanel(),
+					new TextBoxPanel() 
+			};
+
+			Ticker ticker = new Ticker("This is SimpleDemo ticker");
+
+			menuList = new List("SimpleDemo", List.IMPLICIT);
+
+			for (int i = 0; i < screenPanels.length; i++) {
+				menuList.append(screenPanels[i].getName(), null);
+				if (screenPanels[i] instanceof Screen) {
+					((Screen) screenPanels[i]).setTicker(ticker);
+				}
+			}
+			menuList.addCommand(exitCommand);
+			menuList.setCommandListener(this);
+		}
+
+		Display.getDisplay(this).setCurrent(menuList);
+	}
   
  
   public static SimpleDemo getInstance()

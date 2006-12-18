@@ -191,7 +191,11 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 		if (ma == null) {
 			return;
 		}
-		Displayable current = ma.getDisplayAccess().getCurrent();
+		DisplayAccess da = ma.getDisplayAccess();
+		if (da == null) {
+			return;
+		}
+		Displayable current = da.getCurrent();
 		if (current == null) {
 			return;
 		}

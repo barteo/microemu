@@ -347,33 +347,39 @@
 	<target name="dist" depends="clean,init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-jsr-82,simpledemo" description="Create distribution package">
 		<mkdir dir="dist"/>
 
-		<tar basedir="../." tarfile="dist/microemulator-src.tar" defaultexcludes="yes">
-			<include name="microemulator/build.properties"/>
-			<include name="microemulator/build.xml"/>
-			<include name="microemulator/AUTHORS"/>
-			<include name="microemulator/CHANGES"/>
-			<include name="microemulator/LICENSE"/>
-			<include name="microemulator/README" />
-			<include name="microemulator/TODO" />
-			<include name="microemulator/core/**" />
-			<include name="microemulator/cldc/**" />
-			<include name="microemulator/midp/**" />
-			<include name="microemulator/example/**" />
-			<include name="microemulator/devices/**" />
-			<include name="microemulator/ext/**" />
-			<include name="microemulator/lib/**" />
-			<include name="microemulator/misc/**" />
+		<tar tarfile="dist/microemulator-src.tar" defaultexcludes="yes">
+			<tarfileset dir="." prefix="/microemulator">
+				<include name="build.properties"/>
+				<include name="build.xml"/>
+				<include name="CREDITS"/>
+				<include name="CHANGES"/>
+				<include name="LICENSE"/>
+				<include name="README" />
+				<include name="TODO" />
+				<include name="core/**" />
+				<include name="cldc/**" />
+				<include name="midp/**" />
+				<include name="example/**" />
+				<include name="devices/**" />
+				<include name="ext/**" />
+				<include name="lib/**" />
+				<include name="misc/**" />
+			</tarfileset>
 		</tar>
 		<gzip src="dist/microemulator-src.tar" zipfile="dist/microemulator-src.tar.gz" />
 		<delete file="dist/microemulator-src.tar" />
 
-		<tar basedir="../." tarfile="dist/microemulator-${target}-${target.app.type}.tar" defaultexcludes="yes">
-			<include name="microemulator/AUTHORS"/>
-			<include name="microemulator/CHANGES"/>
-			<include name="microemulator/LICENSE"/>
-			<include name="microemulator/README"/>
-			<include name="microemulator/TODO"/>
-			<include name="microemulator/target/**"/>
+		<tar tarfile="dist/microemulator-${target}-${target.app.type}.tar" defaultexcludes="yes">
+			<tarfileset dir="." prefix="/microemulator">
+				<include name="CREDITS"/>
+				<include name="CHANGES"/>
+				<include name="LICENSE"/>
+				<include name="README"/>
+				<include name="TODO"/>
+			</tarfileset>
+			<tarfileset dir="./target" prefix="/microemulator">
+				<include name="**"/>
+			</tarfileset>
 		</tar>
 		<gzip src="dist/microemulator-${target}-${target.app.type}.tar" zipfile="dist/microemulator-${target}-${target.app.type}.tar.gz"/>
 		<delete file="dist/microemulator-${target}-${target.app.type}.tar"/>

@@ -26,7 +26,8 @@ import java.net.URLClassLoader;
 
 import org.microemu.EmulatorContext;
 import org.microemu.app.Config;
-import org.microemu.device.Device;
+
+import com.barteo.emulator.device.Device;
 
 
 public class DeviceEntry
@@ -91,7 +92,10 @@ public class DeviceEntry
 				URLClassLoader classLoader = new URLClassLoader(urls);
 				Class deviceClass = Class.forName(className, true, classLoader);
 				Device device = (Device) deviceClass.newInstance();
-				device.init(emulatorContext);
+				
+				com.barteo.emulator.EmulatorContext oldContext = new com.barteo.emulator.EmulatorContext(emulatorContext);
+				
+				device.init(oldContext);
 				descriptorLocation = device.getDescriptorLocation();
 			} catch (MalformedURLException ex) {
 				ex.printStackTrace();
@@ -114,6 +118,14 @@ public class DeviceEntry
     return fileName;
   }
   
+  
+  /**
+   * @deprecated
+   */
+  public void setFileName(String fileName)
+  {
+	this.fileName = fileName;  
+  }
   
   public String getName()
   {

@@ -22,7 +22,7 @@ package org.microemu.app;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,12 +32,11 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 
-import org.microemu.EmulatorContext;
-import org.microemu.app.util.DeviceEntry;
-
-
 import nanoxml.XMLElement;
 import nanoxml.XMLParseException;
+
+import org.microemu.EmulatorContext;
+import org.microemu.app.util.DeviceEntry;
 
 
 public class Config {
@@ -53,10 +52,8 @@ public class Config {
 	private static String recentJadDirectory = ".";
 
 	private static Properties systemProperties;
-
-	public static void loadConfig(String configFileName, DeviceEntry defaultDevice, EmulatorContext emulatorContext) {
-		File configFile = new File(configPath, configFileName);
-		
+	
+	public static void loadConfig(DeviceEntry defaultDevice, EmulatorContext emulatorContext) {
 		if (defaultDevice == null) {
 		    defaultDevice = 
 	            new DeviceEntry("Default device", null, "org/microemu/device/device.xml", true, false);
@@ -64,6 +61,39 @@ public class Config {
     	defaultDevice.setDefaultDevice(true);
     	devices.add(defaultDevice);
 
+    	File configFile = new File(configPath, "config2.xml");
+		try {
+	    	if (configFile.exists()) {
+				loadConfig("config2.xml", defaultDevice, emulatorContext);
+			} else {
+				// migrate from config.xml
+				loadConfig("config.xml", defaultDevice, emulatorContext);
+				
+				for (Enumeration e = devices.elements(); e.hasMoreElements();) {
+					DeviceEntry entry = (DeviceEntry) e.nextElement();
+					if (!entry.canRemove()) {
+						continue;
+					}
+					
+					File src = new File(configPath, entry.getFileName());					
+					File dst = File.createTempFile("dev", ".jar", configPath);
+					copyFile(src, dst);
+					entry.setFileName(dst.getName());
+				}
+				
+				saveConfig();
+			}
+		} catch (IOException ex1) {
+			System.out.println(ex1);
+			loadDefaultConfig();
+		}
+
+		initSystemProperties();
+	}
+
+	private static void loadConfig(String configFileName, DeviceEntry defaultDevice, EmulatorContext emulatorContext) throws IOException {
+		File configFile = new File(configPath, configFileName);
+		
 		String xml = "";
 		try {
 			InputStream dis = new BufferedInputStream(new FileInputStream(configFile));
@@ -73,16 +103,10 @@ public class Config {
 				xml += new String(b);
 			}
 			parseConfigXML(xml, defaultDevice, emulatorContext);
-		} catch (FileNotFoundException ex) {
-			loadDefaultConfig();
 		} catch (XMLParseException e) {
 			System.out.println(e);
 			loadDefaultConfig();
-		} catch (IOException ex) {
-			System.out.println(ex);
-			loadDefaultConfig();
 		}
-		initSystemProperties();
 	}
 
 	private static void parseConfigXML(String xml, DeviceEntry defaultDevice, EmulatorContext emulatorContext) throws XMLParseException {
@@ -138,8 +162,8 @@ public class Config {
 	}
   
   
-	public static void saveConfig(String configFileName) {
-		File configFile = new File(configPath, configFileName);
+	public static void saveConfig() {
+		File configFile = new File(configPath, "config2.xml");
 
 		XMLElement xmlRoot = new XMLElement();
 		xmlRoot.setName("config");
@@ -192,7 +216,7 @@ public class Config {
 	}
 	
     private static void initSystemProperties() {
-    	// No <system-properties> in config.xml
+    	// No <system-properties> in config2.xml
     	if (systemProperties == null) {
     		systemProperties = new Properties();
     		systemProperties.put("microedition.configuration", "CLDC-1.0");
@@ -240,6 +264,18 @@ public class Config {
 
 	public static void setRecentJadDirectory(String recentJadDirectory) {
 		Config.recentJadDirectory = recentJadDirectory;
+	}
+
+	public static void copyFile(File src, File dst) throws IOException {
+		FileInputStream fis = new FileInputStream(src);
+		FileOutputStream fos = new FileOutputStream(dst);
+		byte[] buf = new byte[1024]; 
+		int i = 0;
+		while ((i = fis.read(buf)) != -1) { 
+			fos.write(buf, 0, i);
+		}
+		fis.close(); 
+		fos.close();	
 	}
 
 }

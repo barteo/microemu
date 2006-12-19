@@ -17,13 +17,29 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package com.barteo.emulator.device.swt;
+package com.barteo.emulator.device;
 
-import com.barteo.emulator.device.Device;
+import com.barteo.emulator.EmulatorContext;
 
 /*
  * @deprecated use org.microemu.device.Device
  */ 
-public class SwtDevice extends Device {
+public class Device extends org.microemu.device.Device {
+	
+    /**
+     * @deprecated
+     */
+	public void init(EmulatorContext context)
+    {     
+        super.init(context);
+    }       
+	
+    /**
+     * @deprecated
+     */
+    public void init(EmulatorContext context, String config)
+    {
+    	super.init(context, config);
+    }
 
 }

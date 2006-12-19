@@ -156,18 +156,9 @@ public class SwtSelectDeviceDialog extends SwtDialog
 				}
 
 				try { 
-					File deviceFile = File.createTempFile("dev", ".jar", Config.getConfigPath()); 
-					FileInputStream fis = new FileInputStream(file);
-					FileOutputStream fos = new FileOutputStream(deviceFile);
-					byte[] buf = new byte[1024]; 
-					int i = 0;
-					while ((i = fis.read(buf)) != -1) { 
-						fos.write(buf, 0, i);
-					}
-					fis.close(); 
-					fos.close();
+					File deviceFile = File.createTempFile("dev", ".jar", Config.getConfigPath());
+					Config.copyFile(file, deviceFile);
 
-				
 					DeviceEntry entry = null;
 					for (Iterator it = devices.keySet().iterator(); it.hasNext();) {
 						String descriptorLocation = (String) it.next();
@@ -178,7 +169,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 							entry = new DeviceEntry(device.getName(), deviceFile.getName(), descriptorLocation, false);
 						}
 						deviceModel.addElement(entry);
-						for (i = 0; i < deviceModel.size(); i++) {
+						for (int i = 0; i < deviceModel.size(); i++) {
 							if (deviceModel.elementAt(i) == entry) {
 								lsDevices.add(entry.getName());
 								lsDevices.select(i);
@@ -193,89 +184,6 @@ public class SwtSelectDeviceDialog extends SwtDialog
 					return;
 				}				
 				
-/*					Manifest manifest = jar.getManifest();
-					if (manifest == null) {
-						SwtMessageDialog.openError(getShell(),
-								"Error", "Missing manifest in device file.");
-						return;
-					}          
-					Attributes attrs = manifest.getMainAttributes();
-          
-					deviceName = attrs.getValue("Device-Name");
-					if (deviceName == null) {
-						SwtMessageDialog.openError(getShell(),
-								"Error", "Missing Device-Name entry in jar manifest.");
-						return;
-					}
-          
-					deviceClassName = attrs.getValue("Device-Class");
-					if (deviceClassName == null) {
-						SwtMessageDialog.openError(getShell(),
-								"Error", "Missing Device-Class entry in jar manifest.");
-						return;
-					}*/
-          
-//					deviceClassName = deviceClassName.replace('.', '/');
-//					if (deviceClassName.charAt(0) == '/') {
-//						deviceClassName = deviceClassName.substring(1);
-//					}
-/*					for (Enumeration e = deviceModel.elements(); e.hasMoreElements(); ) {
-						DeviceEntry entry = (DeviceEntry) e.nextElement();
-						if (deviceClassName.equals(entry.getDescriptorLocation())) {
-							SwtMessageDialog.openInformation(getShell(),
-									"Info", "Device is already added.");
-							return;
-						}
-					}
-          
-					loader.addRepository(new File(fileDialog.getFilterPath(), fileDialog.getFileName()).toURL());
-				} catch (IOException ex) {
-					SwtMessageDialog.openError(getShell(),
-							"Error", "Error reading " + fileDialog.getFileName() + " file.");
-					return;
-				}
-        
-				Class deviceClass = null;
-				try {
-					deviceClass = loader.findClass(deviceClassName);
-				} catch (ClassNotFoundException ex) {
-					SwtMessageDialog.openError(getShell(),
-							"Error", "Cannot find class defined in Device-Class entry in jar manifest.");
-					return;
-				}
-          
-				if (!Device.class.isAssignableFrom(deviceClass)) {
-					SwtMessageDialog.openError(getShell(),
-							"Error", "Cannot find class defined in Device-Class entry in jar manifest.");
-					return;
-				}
-        
-				try {
-					File deviceFile = File.createTempFile("dev", ".jar", Config.getConfigPath());
-					FileInputStream fis  = new FileInputStream(
-							new File(fileDialog.getFilterPath(), fileDialog.getFileName()));
-					FileOutputStream fos = new FileOutputStream(deviceFile);
-					byte[] buf = new byte[1024];
-						int i = 0;
-						while((i=fis.read(buf))!=-1) {
-							fos.write(buf, 0, i);
-						}
-					fis.close();
-					fos.close();
-        
-					DeviceEntry entry = 
-							new DeviceEntry(deviceName, deviceFile.getName(), deviceClassName, false);
-					deviceModel.addElement(entry);
-					for (i = 0; i < deviceModel.size(); i++) {
-						if (deviceModel.elementAt(i) == entry) {
-							lsDevices.add(entry.getName());
-							lsDevices.select(i);
-						}
-					}
-					lsDevicesListener.widgetSelected(null);
-				} catch (IOException ex) {
-					System.err.println(ex);
-				}*/
 			}
 		}
 	};
@@ -479,7 +387,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 			devices.add(e.nextElement());
 		}
     
-		Config.saveConfig("config.xml");
+		Config.saveConfig();
 		
 		return true;
 	}

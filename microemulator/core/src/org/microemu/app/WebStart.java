@@ -154,7 +154,7 @@ public class WebStart extends JFrame
     {
 		Config.setWindowX(WebStart.this.getX());
 		Config.setWindowY(WebStart.this.getY());
-		Config.saveConfig("config.xml");
+		Config.saveConfig();
 
 		System.exit(0);
     }    
@@ -272,7 +272,7 @@ public class WebStart extends JFrame
     setTitle("MicroEmulator");
     addWindowListener(windowListener);
     
-    Config.loadConfig("config.xml", defaultDevice, emulatorContext);
+    Config.loadConfig(defaultDevice, emulatorContext);
 
     this.setLocation(Config.getWindowX(), Config.getWindowY());
 

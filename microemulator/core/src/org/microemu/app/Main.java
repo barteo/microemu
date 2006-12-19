@@ -23,6 +23,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -41,9 +42,11 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 
+import org.microemu.DisplayAccess;
 import org.microemu.DisplayComponent;
 import org.microemu.EmulatorContext;
 import org.microemu.MIDletBridge;
@@ -157,6 +160,17 @@ public class Main extends JFrame
 		}
 	};
   
+	  private ActionListener menuCloseMidletListener = new ActionListener()
+	  {    
+	    public void actionPerformed(ActionEvent e)
+	    {
+	        if (MIDletBridge.getCurrentMIDlet() != common.getLauncher()) {
+	        	common.startLauncher(MIDletBridge.getMIDletAccess());
+	        }
+	    }    
+	  };
+	  
+	  
   private ActionListener menuExitListener = new ActionListener()
   {    
     public void actionPerformed(ActionEvent e)
@@ -178,23 +192,28 @@ public class Main extends JFrame
         if (selectDevicePanel.getSelectedDeviceEntry().equals(deviceEntry)) {
           return;
         }
+        int restartMidlet = 1;
         if (MIDletBridge.getCurrentMIDlet() != common.getLauncher()) {
-          if (JOptionPane.showConfirmDialog(instance, 
-              "Changing device needs MIDlet to be restarted. All MIDlet data will be lost. Are you sure?", 
-              "Question?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != 0) {
-            return;
-          }
+        	restartMidlet = JOptionPane.showConfirmDialog(instance, 
+              "Changing device may trigger MIDlet to the unpredictable state and restart of MIDlet is recommended. \n" +
+              "Do you want to restart the MIDlet? All MIDlet data will be lost.", 
+              "Question?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         }
         setDevice(selectDevicePanel.getSelectedDeviceEntry());
 
-        if (MIDletBridge.getCurrentMIDlet() != common.getLauncher()) {
+        if (restartMidlet == 0) {
           try {
             common.startMidlet(MIDletBridge.getCurrentMIDlet().getClass(), MIDletBridge.getMIDletAccess());
           } catch (Exception ex) {
             System.err.println(ex);
           }
         } else {
-          common.startLauncher(MIDletBridge.getMIDletAccess());
+        	DeviceDisplay deviceDisplay = DeviceFactory.getDevice().getDeviceDisplay();
+        	DisplayAccess da = MIDletBridge.getMIDletAccess().getDisplayAccess();
+        	if (da != null) {
+        		da.sizeChanged(deviceDisplay.getWidth(), deviceDisplay.getHeight());
+        		deviceDisplay.repaint(0, 0, deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
+        	}
         }
       }
     }    
@@ -262,9 +281,15 @@ public class Main extends JFrame
     menuOpenJADURL.addActionListener(menuOpenJADURLListener);
     menuFile.add(menuOpenJADURL);
     
+    JMenuItem menuItemTmp = new JMenuItem("Close MIDlet");
+    menuItemTmp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
+    menuItemTmp.addActionListener(menuCloseMidletListener);
+    menuFile.add(menuItemTmp);
+
     menuFile.addSeparator();
     
     JMenuItem menuItem = new JMenuItem("Exit");
+    menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
     menuItem.addActionListener(menuExitListener);
     menuFile.add(menuItem);
     
@@ -320,6 +345,10 @@ public class Main extends JFrame
 				urls[0] = new File(Config.getConfigPath(), entry.getFileName()).toURL();
 				classLoader = new URLClassLoader(urls);
 			}
+			
+			// TODO font manager have to be moved from emulatorContext into device
+			emulatorContext.getDeviceFontManager().init();		
+			
 			Device device = Device.create(
 					emulatorContext, 
 					classLoader, 

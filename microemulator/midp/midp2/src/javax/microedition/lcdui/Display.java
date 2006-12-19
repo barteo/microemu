@@ -229,6 +229,14 @@ public class Display
 		{
 			getDisplay().setCurrent(d);
 		}
+		
+		public void sizeChanged(int width, int height)
+		{
+			if (current != null) {
+				current.sizeChanged(width, height);
+				updateCommands();
+			}
+		}
 
 		public void updateCommands() 
 		{

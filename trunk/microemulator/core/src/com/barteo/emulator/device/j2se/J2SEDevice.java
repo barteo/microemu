@@ -19,7 +19,7 @@
 
 package com.barteo.emulator.device.j2se;
 
-import org.microemu.device.Device;
+import com.barteo.emulator.device.Device;
 
 /*
  * @deprecated use org.microemu.device.Device

@@ -140,7 +140,7 @@ public class Swt extends Common
 		{
 			Config.setWindowX(shell.getLocation().x);
 			Config.setWindowY(shell.getLocation().x);
-			Config.saveConfig("config.xml");
+			Config.saveConfig();
 
 			System.exit(0);
 		}    
@@ -269,7 +269,7 @@ public class Swt extends Common
 
 //		addWindowListener(windowListener);
 		    
-		Config.loadConfig("config.xml", null, emulatorContext);
+		Config.loadConfig(null, emulatorContext);
 		
 		shell.setLocation(Config.getWindowX(), Config.getWindowY());
 		

@@ -147,19 +147,10 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
 					return;
 				}
 				
-				try { 
+				try {
 					File deviceFile = File.createTempFile("dev", ".jar", Config.getConfigPath()); 
-					FileInputStream fis = new FileInputStream(fileChooser.getSelectedFile());
-					FileOutputStream fos = new FileOutputStream(deviceFile);
-					byte[] buf = new byte[1024]; 
-					int i = 0;
-					while ((i = fis.read(buf)) != -1) { 
-						fos.write(buf, 0, i);
-					}
-					fis.close(); 
-					fos.close();
-
-				
+					Config.copyFile(fileChooser.getSelectedFile(), deviceFile);
+					
 					DeviceEntry entry = null;
 					for (Iterator it = devices.keySet().iterator(); it.hasNext();) {
 						String descriptorLocation = (String) it.next();
@@ -310,7 +301,7 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
       devices.add(e.nextElement());
     }
     
-    Config.saveConfig("config.xml");
+    Config.saveConfig();
   }
     
 }

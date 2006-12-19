@@ -138,7 +138,7 @@ public class Main extends JFrame
       if (returnVal == JFileChooser.APPROVE_OPTION) {
       	try {
       		Config.setRecentJadDirectory(fileChooser.getCurrentDirectory().getAbsolutePath());
-      		Config.saveConfig("config.xml");
+      		Config.saveConfig();
       		
 	      	Common.openJadUrl(fileChooser.getSelectedFile().toURL().toString());
 				} catch (IOException ex) {
@@ -177,7 +177,7 @@ public class Main extends JFrame
     {
 		Config.setWindowX(Main.this.getX());
 		Config.setWindowY(Main.this.getY());
-		Config.saveConfig("config.xml");
+		Config.saveConfig();
 
 		System.exit(0);
     }    
@@ -306,7 +306,7 @@ public class Main extends JFrame
     setTitle("MicroEmulator");
     addWindowListener(windowListener);
     
-    Config.loadConfig("config.xml", defaultDevice, emulatorContext);
+    Config.loadConfig(defaultDevice, emulatorContext);
     
     this.setLocation(Config.getWindowX(), Config.getWindowY());
 

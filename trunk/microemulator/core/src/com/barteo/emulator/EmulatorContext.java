@@ -17,13 +17,38 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package com.barteo.emulator.device.swt;
+package com.barteo.emulator;
 
-import com.barteo.emulator.device.Device;
+import org.microemu.DisplayComponent;
+import org.microemu.device.DeviceDisplay;
+import org.microemu.device.FontManager;
+import org.microemu.device.InputMethod;
 
 /*
- * @deprecated use org.microemu.device.Device
+ * @deprecated use org.microemu.EmulatorContext
  */ 
-public class SwtDevice extends Device {
+public class EmulatorContext implements org.microemu.EmulatorContext {
+	
+	private org.microemu.EmulatorContext context;
+	 
+	public EmulatorContext(org.microemu.EmulatorContext context) {
+		this.context = context;
+	}
 
+	public DeviceDisplay getDeviceDisplay() {
+		return context.getDeviceDisplay();
+	}
+
+	public FontManager getDeviceFontManager() {
+		return context.getDeviceFontManager();
+	}
+
+	public InputMethod getDeviceInputMethod() {
+		return context.getDeviceInputMethod();
+	}
+
+	public DisplayComponent getDisplayComponent() {
+		return context.getDisplayComponent();
+	}
+	
 }

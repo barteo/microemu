@@ -101,7 +101,7 @@ public class MIDletClassLoader extends SystemClassLoader {
 		return getClass().getResourceAsStream(name);
 	}
 
-	private byte[] loadClassData(String name) throws ClassNotFoundException {
+	protected byte[] loadClassData(String name) throws ClassNotFoundException {
 		name = name.replace('.', '/') + ".class";
 		byte[] result = (byte[]) entries.get(name);
 		if (result == null) {

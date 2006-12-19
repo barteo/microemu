@@ -169,13 +169,6 @@ public abstract class Canvas extends Displayable
     
     protected void sizeChanged(int w, int h)
     {
-    	// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
     }
 
     

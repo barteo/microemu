@@ -345,6 +345,10 @@ public class Swt extends Common
 				urls[0] = new File(Config.getConfigPath(), entry.getFileName()).toURL();
 				classLoader = new URLClassLoader(urls);
 			}
+
+			// TODO font manager have to be moved from emulatorContext into device
+			emulatorContext.getDeviceFontManager().init();		
+			
 			Device device = Device.create(
 					emulatorContext, 
 					classLoader, 

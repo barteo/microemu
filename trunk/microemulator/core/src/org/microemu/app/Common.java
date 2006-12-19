@@ -281,14 +281,8 @@ public class Common implements MicroEmulator {
 		return DeviceFactory.getDevice();
 	}
 	
-	protected void setDevice() {
-		
-	}
-
 	protected void setDevice(Device device) {
 		DeviceFactory.setDevice(device);
-		
-		emulatorContext.getDeviceFontManager().init();
 	}
 
 	private static Common getInstance() {
@@ -347,7 +341,7 @@ public class Common implements MicroEmulator {
 	public void initDevice(List params, DeviceEntry defaultDevice) {
 		RecordStoreManager paramRecordStoreManager = null;		
 		Class deviceClass = null;
-		String deviceDescriptorLocation = null;
+		String deviceDescriptorLocation = null;		
 		
 		Iterator it = params.iterator();
 		while (it.hasNext()) {
@@ -394,6 +388,9 @@ public class Common implements MicroEmulator {
 			try {
 				if (deviceClass == null) {
 					ClassLoader classLoader = getClass().getClassLoader();
+					if (classLoader == null) {
+						classLoader = ClassLoader.getSystemClassLoader();
+					}
 					if (defaultDevice.getFileName() != null) {
 						URL[] urls = new URL[1];					
 						urls[0] = new File(Config.getConfigPath(), defaultDevice.getFileName()).toURL();

@@ -1,4 +1,4 @@
-<device>
+<device name="Small device">
   <img name="normal" src="/net/barteo/me/device/small/normal.png"/>
   <img name="over" src="/net/barteo/me/device/small/over.png"/>
   <img name="pressed" src="/net/barteo/me/device/small/pressed.png"/>

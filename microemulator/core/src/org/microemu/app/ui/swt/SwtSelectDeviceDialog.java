@@ -20,8 +20,6 @@
 package org.microemu.app.ui.swt;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -53,7 +51,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.microemu.EmulatorContext;
 import org.microemu.app.Config;
 import org.microemu.app.util.DeviceEntry;
-import org.microemu.app.util.ProgressJarClassLoader;
 import org.microemu.device.Device;
 
 
@@ -80,8 +77,6 @@ public class SwtSelectDeviceDialog extends SwtDialog
 				fileDialog.setFilterNames(new String[] {"Device profile (*.jar)"});
 				fileDialog.setFilterExtensions(new String[] {"*.jar"});
 			}
-      
-			ProgressJarClassLoader loader = new ProgressJarClassLoader(this.getClass().getClassLoader());
       
 			fileDialog.open();
 			
@@ -175,6 +170,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 								lsDevices.select(i);
 							}
 						}
+						Config.addDeviceEntry(entry);
 					}
 					lsDevicesListener.widgetSelected(null);
 				} catch (IOException ex) {
@@ -226,6 +222,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 				}
 			}
 			lsDevicesListener.widgetSelected(null);
+			Config.removeDeviceEntry(entry);
 		}
 	};
   
@@ -243,6 +240,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 					tmp.setDefaultDevice(false);
 					lsDevices.setItem(i, tmp.getName());
 				}
+				Config.changeDeviceEntry(tmp);
 			}
 			btDefault.setEnabled(false);
 		}
@@ -282,7 +280,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 
 		this.emulatorContext = emulatorContext;  
 		  
-		Vector devs = Config.getDevices();
+		Vector devs = Config.getDeviceEntries();
 		for (int i = 0; i < devs.size(); i++) {
 			DeviceEntry entry = (DeviceEntry) devs.elementAt(i);
 			if (entry.isDefaultDevice()) {
@@ -343,7 +341,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 		btDefault.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_CENTER));
 		btDefault.addListener(SWT.Selection, btDefaultListener);
     
-    Vector devs = Config.getDevices();
+		Vector devs = Config.getDeviceEntries();
 		deviceModel = new Vector();
 		for (int i = 0; i < devs.size(); i++) {
 			DeviceEntry entry = (DeviceEntry) devs.elementAt(i);
@@ -373,23 +371,6 @@ public class SwtSelectDeviceDialog extends SwtDialog
 	public DeviceEntry getSelectedDeviceEntry()
 	{
 		return selectedEntry;
-	}
-  
-  
-	public boolean close()
-	{
-		super.close();
-		
-		Vector devices = Config.getDevices();
-		devices.removeAllElements();
-    
-		for (Enumeration e = deviceModel.elements(); e.hasMoreElements(); ) {
-			devices.add(e.nextElement());
-		}
-    
-		Config.saveConfig();
-		
-		return true;
 	}
     
 }

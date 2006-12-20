@@ -23,8 +23,6 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -32,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Vector;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -161,6 +158,7 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
 							entry = new DeviceEntry(device.getName(), deviceFile.getName(), descriptorLocation, false);
 						}
 						lsDevicesModel.addElement(entry);
+						Config.addDeviceEntry(entry);
 					}
 					lsDevices.setSelectedValue(entry, true);
 				} catch (IOException ex) {
@@ -202,6 +200,7 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
         }
       }
       lsDevicesModel.removeElement(entry);
+      Config.removeDeviceEntry(entry);
     }
   };
   
@@ -217,6 +216,7 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
         } else {
           tmp.setDefaultDevice(false);
         }
+        Config.changeDeviceEntry(tmp);
       }
       lsDevices.repaint();
       btDefault.setEnabled(false);
@@ -276,7 +276,7 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
     
     add(panel, BorderLayout.SOUTH);
     
-    for (Enumeration e = Config.getDevices().elements(); e.hasMoreElements(); ) {
+    for (Enumeration e = Config.getDeviceEntries().elements(); e.hasMoreElements(); ) {
       DeviceEntry entry = (DeviceEntry) e.nextElement();
       lsDevicesModel.addElement(entry);
       if (entry.isDefaultDevice()) {
@@ -289,19 +289,6 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
   public DeviceEntry getSelectedDeviceEntry()
   {
     return (DeviceEntry) lsDevices.getSelectedValue();
-  }
-  
-  
-  public void hideNotify()
-  {
-    Vector devices = Config.getDevices();
-    devices.removeAllElements();
-    
-    for (Enumeration e = lsDevicesModel.elements(); e.hasMoreElements(); ) {
-      devices.add(e.nextElement());
-    }
-    
-    Config.saveConfig();
   }
     
 }

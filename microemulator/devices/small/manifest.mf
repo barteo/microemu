@@ -1,2 +1,0 @@
-Device-Name: Small Device
-Device-Class: net.barteo.me.device.small.SmallDevice

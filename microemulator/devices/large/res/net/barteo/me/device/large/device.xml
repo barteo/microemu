@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<device name="Default device">
+<device name="Large device">
 	<img name="normal" src="normal.png" />
 	<img name="over" src="over.png" />
 	<img name="pressed" src="pressed.png" />

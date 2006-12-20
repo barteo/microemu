@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<device>
+<device name="Minimum device">
   <img name="normal" src="/net/barteo/me/device/minimum/normal.png"/>
   <img name="over" src="/net/barteo/me/device/minimum/over.png"/>
   <img name="pressed" src="/net/barteo/me/device/minimum/pressed.png"/>

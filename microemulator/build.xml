@@ -221,52 +221,19 @@
 		</java>
 	</target>
 
-	<target name="compile-device" depends="init,jar" description="Create devices">
-		<mkdir dir="./build/devices/minimum/classes"/>
-		<javac source="1.2" target="1.1" debug="true" deprecation="true" srcdir="./devices/minimum/java" destdir="./build/devices/minimum/classes">
-			<classpath>
-				<pathelement location="./target/me-${target}.jar"/>
-			</classpath>
-		</javac>
-		<mkdir dir="./build/devices/small/classes"/>
-		<javac source="1.2" target="1.1" debug="true" deprecation="true" srcdir="./devices/small/java" destdir="./build/devices/small/classes">
-			<classpath>
-				<pathelement location="./target/me-${target}.jar"/>
-			</classpath>
-		</javac>
-		<mkdir dir="./build/devices/large/classes"/>
-		<javac source="1.2" target="1.1" debug="true" deprecation="true" srcdir="./devices/large/java" destdir="./build/devices/large/classes">
-			<classpath>
-				<pathelement location="./target/me-${target}.jar"/>
-			</classpath>
-		</javac>
-	</target>
-
-	<target name="jar-device" depends="compile-device" description="Package devices">
+	<target name="jar-device" depends="init,jar" description="Package devices">
 		<mkdir dir="./target/devices"/>
-		<jar compress="true" jarfile="./target/devices/minimum.jar" 
-        manifest="./devices/minimum/manifest.mf">
-			<fileset dir="./build/devices/minimum/classes">
-				<exclude name="**/.*"/>
-			</fileset>
+		<jar compress="true" jarfile="./target/devices/minimum.jar">
 			<fileset dir="./devices/minimum/res">
 				<exclude name="**/.*"/>
 			</fileset>
 		</jar>
-		<jar compress="true" jarfile="./target/devices/small.jar" 
-        manifest="./devices/small/manifest.mf">
-			<fileset dir="./build/devices/small/classes">
-				<exclude name="**/.*"/>
-			</fileset>
+		<jar compress="true" jarfile="./target/devices/small.jar">
 			<fileset dir="./devices/small/res">
 				<exclude name="**/.*"/>
 			</fileset>
 		</jar>
-		<jar compress="true" jarfile="./target/devices/large.jar" 
-        manifest="./devices/large/manifest.mf">
-			<fileset dir="./build/devices/large/classes">
-				<exclude name="**/.*"/>
-			</fileset>
+		<jar compress="true" jarfile="./target/devices/large.jar">
 			<fileset dir="./devices/large/res">
 				<exclude name="**/.*"/>
 			</fileset>

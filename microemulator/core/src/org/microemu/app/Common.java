@@ -374,11 +374,15 @@ public class Common implements MicroEmulator {
 				}
 			}
 		}
+		ClassLoader classLoader = getClass().getClassLoader();
+		if (classLoader == null) {
+			classLoader = ClassLoader.getSystemClassLoader();
+		}
 		if (deviceDescriptorLocation != null) {
 			try {
 				setDevice(Device.create(
 						emulatorContext, 
-						getClass().getClassLoader(), 
+						classLoader, 
 						deviceDescriptorLocation));
 			} catch (IOException ex) {
 				ex.printStackTrace();
@@ -387,10 +391,6 @@ public class Common implements MicroEmulator {
 		if (DeviceFactory.getDevice() == null) {
 			try {
 				if (deviceClass == null) {
-					ClassLoader classLoader = getClass().getClassLoader();
-					if (classLoader == null) {
-						classLoader = ClassLoader.getSystemClassLoader();
-					}
 					if (defaultDevice.getFileName() != null) {
 						URL[] urls = new URL[1];					
 						urls[0] = new File(Config.getConfigPath(), defaultDevice.getFileName()).toURL();
@@ -443,11 +443,40 @@ public class Common implements MicroEmulator {
 					System.out.println("Cannot load " + test + " URL");
 				}
 			} else {
-				try {
-					midletClass = Class.forName(test);
-				} catch (ClassNotFoundException ex) {
-					System.out.println("Cannot find " + test
-							+ " MIDlet class");
+				// Find if we can load Midlet using MIDletClassLoader
+				String resource = "/" + test.replace('.', '/') + ".class";
+				URL url = this.getClass().getResource(resource); 
+			    if (url != null) {
+			    	String path = url.toExternalForm();
+			    	String basePath = path.substring(0, path.length() - resource.length());
+			    	MIDletClassLoader classLoader = new MIDletClassLoader(instance.getClass().getClassLoader());
+			    	try {
+			    		classLoader.addURL(new URL(basePath));
+				    	midletClass = classLoader.loadClass(test);
+				    	if (MIDletClassLoader.debug) {
+				    		System.out.println("Use " + basePath + " to load MIDlets");
+				    	}
+			    	} catch (ClassNotFoundException ignore) {
+			    		if (MIDletClassLoader.debug) {
+			    			ignore.printStackTrace();
+			    		}
+			    	} catch (MalformedURLException ignore) {
+			    		if (MIDletClassLoader.debug) {
+			    			ignore.printStackTrace();
+			    		}
+					} catch (IOException ignore) {
+						if (MIDletClassLoader.debug) {
+							ignore.printStackTrace();
+						}
+					}
+			    }
+			    
+			    if (midletClass == null) {
+					try {
+						midletClass = Class.forName(test);
+					} catch (ClassNotFoundException ex) {
+						System.out.println("Cannot find " + test + " MIDlet class");
+					}
 				}
 			}
 		}

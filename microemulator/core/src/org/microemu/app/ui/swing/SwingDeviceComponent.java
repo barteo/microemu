@@ -58,8 +58,11 @@ import org.microemu.device.j2se.J2SEInputMethod;
 
 public class SwingDeviceComponent extends JPanel implements KeyListener
 {
+  private static final long serialVersionUID = 1L;
+  
   SwingDeviceComponent instance;
-	SwingDisplayComponent dc;
+  
+  SwingDisplayComponent dc;
 
   J2SEButton prevOverButton;
   J2SEButton overButton;
@@ -319,7 +322,12 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 		inputMethod.keyPressed(ev);
 		
 		pressedButton = inputMethod.getButton(ev);
-		repaint();
+		if (pressedButton != null) {
+			Rectangle r = pressedButton.getShape().getBounds();
+  			repaint(r.x, r.y, r.width, r.height);
+		} else {
+			repaint();
+		}
   	}
    
   
@@ -334,7 +342,12 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 
 		prevOverButton = pressedButton;
 		pressedButton = null;
-		repaint();
+		if (prevOverButton != null) {
+			Rectangle r = prevOverButton.getShape().getBounds();
+  			repaint(r.x, r.y, r.width, r.height);
+		} else {
+			repaint();
+		}
 	}
   	
   	

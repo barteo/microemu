@@ -272,7 +272,11 @@ public class WebStart extends JFrame
     setTitle("MicroEmulator");
     addWindowListener(windowListener);
     
-    Config.loadConfig(defaultDevice, emulatorContext);
+    try {
+		Config.loadConfig(defaultDevice, emulatorContext);
+	} catch (SecurityException e) {
+		System.out.println("Cannot load config in webstart untrusted environment:" + e);
+	}
 
     this.setLocation(Config.getWindowX(), Config.getWindowY());
 

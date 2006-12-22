@@ -41,7 +41,7 @@ import org.microemu.app.util.IOUtils;
 
 public class Config {
 
-	private static File configPath = new File(System.getProperty("user.home") + "/.microemulator/");
+	private static File configPath = initConfigPath();
 	
 	private static XMLElement configXml;
 	
@@ -49,6 +49,15 @@ public class Config {
 	
 	private static EmulatorContext emulatorContext;
 
+	private static File initConfigPath() {
+		try {
+			return new File(System.getProperty("user.home") + "/.microemulator/");
+		} catch (SecurityException e) {
+			System.out.println("Cannot access user.home in webstart: " + e);
+			return null;
+		}
+	}
+	
 	public static void loadConfig(DeviceEntry defaultDevice, EmulatorContext emulatorContext) {
 		Config.defaultDevice = defaultDevice;
 		Config.emulatorContext = emulatorContext;
@@ -80,6 +89,11 @@ public class Config {
 		} catch (IOException ex1) {
 			System.out.println(ex1);
 			loadDefaultConfig();
+		} finally {
+			// Happens in webstart untrusted environment
+			if (configXml == null) {
+				loadDefaultConfig();	
+			}
 		}
 
 		initSystemProperties();
@@ -303,7 +317,7 @@ public class Config {
 
 	public static int getWindowX() {
 		int defaultResult = 0;
-		
+
 		XMLElement windowsXml = configXml.getChild("windows");
 		if (windowsXml == null) {
 			return defaultResult;

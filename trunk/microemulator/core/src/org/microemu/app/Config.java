@@ -87,10 +87,10 @@ public class Config {
 
 	private static void loadConfig(String configFileName, DeviceEntry defaultDevice, EmulatorContext emulatorContext) throws IOException {
 		File configFile = new File(configPath, configFileName);
-		
+		InputStream is = null;
 		String xml = "";
 		try {
-			InputStream dis = new BufferedInputStream(new FileInputStream(configFile));
+			InputStream dis = new BufferedInputStream(is = new FileInputStream(configFile));
 			while (dis.available() > 0) {
 				byte[] b = new byte[dis.available()];
 				dis.read(b);
@@ -100,6 +100,10 @@ public class Config {
 		} catch (XMLParseException e) {
 			System.out.println(e);
 			loadDefaultConfig();
+		} finally {
+			if (is != null) {
+				is.close();
+			}
 		}
 	}
 
@@ -111,6 +115,8 @@ public class Config {
 	}				  
   
 	private static void loadDefaultConfig() {
+		configXml = new XMLElement();
+		configXml.setName("config");
 	}
   
   
@@ -118,12 +124,20 @@ public class Config {
 		File configFile = new File(configPath, "config2.xml");
 		
 		configPath.mkdirs();
+		FileWriter fw = null;
 		try {
-			FileWriter fw = new FileWriter(configFile);
+			fw = new FileWriter(configFile);
 			configXml.write(fw);
 			fw.close();
 		} catch (IOException ex) {
 			System.out.println(ex);
+		} finally {
+			if (fw != null) {
+				try {
+					fw.close();
+				} catch (IOException ignore) {
+				}
+			}
 		}
 	}
 	

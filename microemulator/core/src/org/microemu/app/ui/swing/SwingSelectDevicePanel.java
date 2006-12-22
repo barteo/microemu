@@ -51,11 +51,14 @@ import javax.swing.event.ListSelectionListener;
 import org.microemu.EmulatorContext;
 import org.microemu.app.Config;
 import org.microemu.app.util.DeviceEntry;
+import org.microemu.app.util.IOUtils;
 import org.microemu.device.Device;
 
 
 public class SwingSelectDevicePanel extends SwingDialogPanel
 {
+  private static final long serialVersionUID = 1L;
+
   private EmulatorContext emulatorContext;
   
   private JScrollPane spDevices;
@@ -71,8 +74,9 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
 		public void actionPerformed(ActionEvent ev) {
 			if (fileChooser == null) {
 				fileChooser = new JFileChooser();
-				ExtensionFileFilter fileFilter = new ExtensionFileFilter("Device profile (*.jar)");
+				ExtensionFileFilter fileFilter = new ExtensionFileFilter("Device profile (*.jar, *.zip)");
 				fileFilter.addExtension("jar");
+				fileFilter.addExtension("zip");
 				fileChooser.setFileFilter(fileFilter);
 			}
 
@@ -80,8 +84,9 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
 				String manifestDeviceName = null;
 				URL[] urls = new URL[1];
 				ArrayList descriptorEntries = new ArrayList();
+				JarFile jar = null;
 				try {
-					JarFile jar = new JarFile(fileChooser.getSelectedFile());
+					jar = new JarFile(fileChooser.getSelectedFile());
 					
 					Manifest manifest = jar.getManifest();
 					if (manifest != null) {
@@ -92,16 +97,22 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
 					for (Enumeration en = jar.entries(); en.hasMoreElements();) {
 						JarEntry entry = (JarEntry) en.nextElement();
 						if (entry.getName().toLowerCase().endsWith(".xml")) {
-							descriptorEntries.add(entry);
+							descriptorEntries.add(entry.getName());
 						}
 					}
-					jar.close();
 					urls[0] = fileChooser.getSelectedFile().toURL();
 				} catch (IOException ex) {
 					JOptionPane.showMessageDialog(SwingSelectDevicePanel.this,
 							"Error reading file: " + fileChooser.getSelectedFile().getName(),
 							"Error", JOptionPane.ERROR_MESSAGE);
 					return;
+				} finally {
+					if (jar != null) {
+						try {
+							jar.close();
+						} catch (IOException ignore) {
+						}
+					}
 				}
 				
 				if (descriptorEntries.size() == 0) {
@@ -118,11 +129,10 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
 				URLClassLoader classLoader = new URLClassLoader(urls);
 				HashMap devices = new HashMap();
 				for (Iterator it = descriptorEntries.iterator(); it.hasNext();) {
-					JarEntry entry = (JarEntry) it.next();
+					String entryName = (String) it.next();
 					try {
-						devices.put(
-								entry.getName(),
-								Device.create(emulatorContext, classLoader, entry.getName()));
+						devices.put(entryName,
+								Device.create(emulatorContext, classLoader, entryName));
 					} catch (IOException ex) {
 						JOptionPane.showMessageDialog(SwingSelectDevicePanel.this,
 								"Error parsing device profile: " + ex.getMessage(), 
@@ -146,7 +156,7 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
 				
 				try {
 					File deviceFile = File.createTempFile("dev", ".jar", Config.getConfigPath()); 
-					Config.copyFile(fileChooser.getSelectedFile(), deviceFile);
+					IOUtils.copyFile(fileChooser.getSelectedFile(), deviceFile);
 					
 					DeviceEntry entry = null;
 					for (Iterator it = devices.keySet().iterator(); it.hasNext();) {

@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.microemu.EmulatorContext;
 import org.microemu.app.Config;
 import org.microemu.app.util.DeviceEntry;
+import org.microemu.app.util.IOUtils;
 import org.microemu.device.Device;
 
 
@@ -152,7 +153,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 
 				try { 
 					File deviceFile = File.createTempFile("dev", ".jar", Config.getConfigPath());
-					Config.copyFile(file, deviceFile);
+					IOUtils.copyFile(file, deviceFile);
 
 					DeviceEntry entry = null;
 					for (Iterator it = devices.keySet().iterator(); it.hasNext();) {

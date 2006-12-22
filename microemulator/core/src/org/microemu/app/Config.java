@@ -22,7 +22,6 @@ package org.microemu.app;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +36,7 @@ import nanoxml.XMLParseException;
 
 import org.microemu.EmulatorContext;
 import org.microemu.app.util.DeviceEntry;
+import org.microemu.app.util.IOUtils;
 
 
 public class Config {
@@ -70,7 +70,7 @@ public class Config {
 					removeDeviceEntry(entry);					
 					File src = new File(configPath, entry.getFileName());					
 					File dst = File.createTempFile("dev", ".jar", configPath);
-					copyFile(src, dst);
+					IOUtils.copyFile(src, dst);
 					entry.setFileName(dst.getName());					
 					addDeviceEntry(entry);
 				}
@@ -101,9 +101,7 @@ public class Config {
 			System.out.println(e);
 			loadDefaultConfig();
 		} finally {
-			if (is != null) {
-				is.close();
-			}
+			IOUtils.closeQuietly(is);
 		}
 	}
 
@@ -132,12 +130,7 @@ public class Config {
 		} catch (IOException ex) {
 			System.out.println(ex);
 		} finally {
-			if (fw != null) {
-				try {
-					fw.close();
-				} catch (IOException ignore) {
-				}
-			}
+			IOUtils.closeQuietly(fw);
 		}
 	}
 	
@@ -407,18 +400,6 @@ public class Config {
 		recentJadDirectoryXml.setContent(recentJadDirectory);
 		
 		saveConfig();
-	}
-
-	public static void copyFile(File src, File dst) throws IOException {
-		FileInputStream fis = new FileInputStream(src);
-		FileOutputStream fos = new FileOutputStream(dst);
-		byte[] buf = new byte[1024]; 
-		int i = 0;
-		while ((i = fis.read(buf)) != -1) { 
-			fos.write(buf, 0, i);
-		}
-		fis.close(); 
-		fos.close();	
 	}
 
 }

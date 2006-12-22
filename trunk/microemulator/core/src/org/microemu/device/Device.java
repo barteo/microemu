@@ -35,6 +35,7 @@ import javax.microedition.lcdui.Image;
 
 import org.microemu.CommandManager;
 import org.microemu.EmulatorContext;
+import org.microemu.app.util.IOUtils;
 import org.microemu.device.impl.Color;
 import org.microemu.device.impl.DeviceDisplayImpl;
 import org.microemu.device.impl.FontManagerImpl;
@@ -90,7 +91,12 @@ public class Device
 			throw new IOException("Cannot find descriptor at: " + descriptorLocation);
 		}
 		
-		XMLElement doc = loadDocument(descriptor);
+		XMLElement doc;
+		try {
+			doc = loadDocument(descriptor);
+		} finally {
+			IOUtils.closeQuietly(descriptor);
+		}
 		
 		Device device = null;
         for (Enumeration e = doc.enumerateChildren(); e.hasMoreElements(); ) {

@@ -46,6 +46,7 @@ import org.microemu.DisplayAccess;
 import org.microemu.EmulatorContext;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
+import org.microemu.app.util.IOUtils;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.InputMethod;
@@ -583,8 +584,11 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 		if (is == null) {
 			throw new IOException(str + " could not be found.");
 		}
-
-		return getImage(is);			
+		try {
+			return getImage(is);
+		} finally {
+			IOUtils.closeQuietly(is);
+		}
 	}
 
 

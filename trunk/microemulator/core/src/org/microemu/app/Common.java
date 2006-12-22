@@ -22,6 +22,7 @@ package org.microemu.app;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -48,6 +49,7 @@ import org.microemu.app.ui.StatusBarListener;
 import org.microemu.app.ui.noui.NoUiDisplayComponent;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.FileRecordStoreManager;
+import org.microemu.app.util.IOUtils;
 import org.microemu.app.util.MIDletClassLoader;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
@@ -257,10 +259,13 @@ public class Common implements MicroEmulator {
 		launcher.removeMIDletEntries();
 
 		manifest.clear();
+		InputStream is = null;
 		try {
-			manifest.load(midletClassLoader.getResourceAsStream("/META-INF/MANIFEST.MF"));
+			manifest.load(is = midletClassLoader.getResourceAsStream("/META-INF/MANIFEST.MF"));
 		} catch (IOException ex) {
 			ex.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(is);
 		}
 
 		launcher.setSuiteName(jad.getSuiteName());

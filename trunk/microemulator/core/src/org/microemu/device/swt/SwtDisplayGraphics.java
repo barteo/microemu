@@ -243,6 +243,19 @@ public class SwtDisplayGraphics extends javax.microedition.lcdui.Graphics implem
 		// TODO implement drawRGB
 		super.drawRGB(rgbData, offset, scanlength, x, y, width, height, processAlpha);
 	}
+	
+	
+    public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {
+		int[] points = new int[6];
+		points[0] = x1;
+		points[1] = y1;
+		points[2] = x2;
+		points[3] = y2;
+		points[4] = x3;
+		points[5] = y3;
+
+		g.fillPolygon(points);
+	}
 
 
 	public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) 

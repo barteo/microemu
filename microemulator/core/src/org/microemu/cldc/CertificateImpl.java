@@ -32,7 +32,7 @@ public class CertificateImpl implements Certificate {
 	}
 
 	public String getIssuer() {
-		return cert.getIssuerX500Principal().getName();
+		return cert.getIssuerDN().getName();
 	}
 
 	public long getNotAfter() {

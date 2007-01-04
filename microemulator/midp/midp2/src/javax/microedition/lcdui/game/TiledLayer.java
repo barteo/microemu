@@ -232,7 +232,7 @@ public class TiledLayer extends Layer {
 	        
 	        // take out the columns and rows that are outside of
 	        // the clip area, this should speed things up a bit
-	        
+/*	        
 	        int diff = cX - x;
 	        if (diff > 0)
 	            c0 += diff / tW;
@@ -248,7 +248,7 @@ public class TiledLayer extends Layer {
 	        diff = cY + cH - (x + rMax*tH);
 	        if (diff > 0)
 	            rMax -= diff / tH;
-	        
+*/	        
 	        int x0 = x;
 	        int anchor = Graphics.LEFT | Graphics.TOP;
 	        

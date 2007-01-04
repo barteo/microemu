@@ -386,8 +386,8 @@ public class Sprite extends Layer {
         int f = (sequence == null)? frame : sequence[frame];
         int w = getWidth();
         int h = getHeight();
-        int fx = w * (f / rows);
-        int fy = h * (f % rows);        
+        int fx = w * (f % cols);
+        int fy = h * (f / cols);        
         
         g.drawRegion(img, fx, fy, w, h, transform, getX(), getY(), Graphics.TOP | Graphics.LEFT);
     }

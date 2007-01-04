@@ -52,16 +52,16 @@ public class DateField extends Item
       } else if (c == saveCommand) {
 			Calendar from = Calendar.getInstance();
 			Calendar to = Calendar.getInstance();
-			to.setTimeInMillis(0L);
+			to.setTime(new Date(0L));
 			
 			if (d == dateCanvas) {
-				from.setTimeInMillis(dateCanvas.getMillis());
+				from.setTime(dateCanvas.getTime());
 	            to.set(Calendar.DAY_OF_MONTH, from.get(Calendar.DAY_OF_MONTH));
 	            to.set(Calendar.MONTH, from.get(Calendar.MONTH));
 	            to.set(Calendar.YEAR, from.get(Calendar.YEAR));
 				date = to.getTime();
 			} else {
-				from.setTimeInMillis(timeCanvas.getMillis());
+				from.setTime(timeCanvas.getTime());
 				to.set(Calendar.HOUR_OF_DAY, from.get(Calendar.HOUR_OF_DAY));
 	            to.set(Calendar.MINUTE, from.get(Calendar.MINUTE));
 				time = to.getTime();
@@ -183,14 +183,14 @@ public class DateField extends Item
 
     if (dateTime.getSelectedIndex() == 0 && (mode & DATE) != 0) {
       if (date != null) {
-          dateCanvas.setMillis(date.getTime());
+          dateCanvas.setTime(date);
       } else {
-          dateCanvas.setMillis(System.currentTimeMillis());
+          dateCanvas.setTime(new Date());
       }
       getOwner().currentDisplay.setCurrent(dateCanvas);
     } else {
       if (time != null) {
-          timeCanvas.setMillis(time.getTime());
+          timeCanvas.setTime(time);
       } else {
     	  Calendar cal = Calendar.getInstance();
     	  cal.set(Calendar.YEAR, 1970);
@@ -199,7 +199,7 @@ public class DateField extends Item
     	  cal.set(Calendar.HOUR_OF_DAY, 12);
     	  cal.set(Calendar.MINUTE, 0);
     	  cal.set(Calendar.SECOND, 0);
-          timeCanvas.setMillis(cal.getTimeInMillis());
+          timeCanvas.setTime(cal.getTime());
       }
       getOwner().currentDisplay.setCurrent(timeCanvas);
     }
@@ -255,21 +255,20 @@ class DateCanvas extends Canvas {
 
     private int month, day, year;
     private int selected;
-    private long oneDay = 1000L * 3600 * 24;
 	
 	public DateCanvas() {
 		cal = Calendar.getInstance();
 	}
 
-	public long getMillis() {
+	public Date getTime() {
 		cal.set(Calendar.YEAR, year);
 		cal.set(Calendar.MONTH, month);
 		cal.set(Calendar.DAY_OF_MONTH, day);
-		return cal.getTimeInMillis();
+		return cal.getTime();
 	}
 
-	public void setMillis(long millis) {
-		this.cal.setTimeInMillis(millis);
+	public void setTime(Date time) {
+		this.cal.setTime(time);
 		year = cal.get(Calendar.YEAR);
 		month = cal.get(Calendar.MONTH);
 		day = cal.get(Calendar.DAY_OF_MONTH);
@@ -380,7 +379,8 @@ class DateCanvas extends Canvas {
                 	cal.set(Calendar.DAY_OF_MONTH, day);
                 	cal.set(Calendar.HOUR_OF_DAY, 1);
                 	
-                	cal.setTimeInMillis(cal.getTimeInMillis() + oneDay);
+                	cal.setTime(cal.getTime());
+                	cal.add(Calendar.DAY_OF_MONTH, 1);
                 	if(cal.get(Calendar.MONTH) == month)
                 		day++;
                 	else 
@@ -397,7 +397,8 @@ class DateCanvas extends Canvas {
                 	cal.set(Calendar.DAY_OF_MONTH, 28);
                 	cal.set(Calendar.HOUR_OF_DAY, 1);
                 	
-                	cal.setTimeInMillis(cal.getTimeInMillis() + oneDay*4);
+                	cal.setTime(cal.getTime());
+                	cal.add(Calendar.DAY_OF_MONTH, 4);
                 	int daysInMonth = 28+(4-cal.get(Calendar.DAY_OF_MONTH));
                 	
                 	if (day > daysInMonth)
@@ -430,7 +431,8 @@ class DateCanvas extends Canvas {
                     	cal.set(Calendar.DAY_OF_MONTH, 28);
                     	cal.set(Calendar.HOUR_OF_DAY, 1);
                     	
-                    	cal.setTimeInMillis(cal.getTimeInMillis() + oneDay*4);
+                    	cal.setTime(cal.getTime());
+                    	cal.add(Calendar.DAY_OF_MONTH, 4);
                     	int daysInMonth = 28+(4-cal.get(Calendar.DAY_OF_MONTH));
                     	day = daysInMonth;
                 	}
@@ -446,7 +448,8 @@ class DateCanvas extends Canvas {
                 	cal.set(Calendar.DAY_OF_MONTH, 28);
                 	cal.set(Calendar.HOUR_OF_DAY, 1);
                 	
-                	cal.setTimeInMillis(cal.getTimeInMillis() + oneDay*4);
+                	cal.setTime(cal.getTime());
+                	cal.add(Calendar.DAY_OF_MONTH, 1);
                 	int daysInMonth = 28+(4-cal.get(Calendar.DAY_OF_MONTH));
                 	
                 	if (day > daysInMonth)
@@ -470,7 +473,6 @@ class DateCanvas extends Canvas {
 }
 
 class TimeCanvas extends Canvas {
-	private long millis;
 	Calendar cal;
 	private int minutes, hours;
 	private int selected;
@@ -479,16 +481,14 @@ class TimeCanvas extends Canvas {
 		cal = Calendar.getInstance();
 	}
 
-	public long getMillis() {
+	public Date getTime() {
 		this.cal.set(Calendar.HOUR_OF_DAY, hours);
 		this.cal.set(Calendar.MINUTE, minutes);
-		millis = cal.getTimeInMillis();
-		return millis;
+		return cal.getTime();
 	}
 
-	public void setMillis(long millis) {
-		this.millis = millis;
-		this.cal.setTimeInMillis(millis);
+	public void setTime(Date time) {
+		this.cal.setTime(time);
 		this.hours = cal.get(Calendar.HOUR_OF_DAY);
 		this.minutes = cal.get(Calendar.MINUTE);
 		repaint();

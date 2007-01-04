@@ -189,7 +189,7 @@ public class FileRecordStoreManager implements RecordStoreManager
     private static void saveToDisk(File recordStoreFile, RecordStoreImpl recordStore) 
     {
         try {
-            DataOutputStream dos = new DataOutputStream(new FileOutputStream(recordStoreFile, false));
+            DataOutputStream dos = new DataOutputStream(new FileOutputStream(recordStoreFile));
             recordStore.write(dos);
             dos.close();
         } catch (IOException ex) {

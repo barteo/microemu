@@ -27,6 +27,7 @@ import java.awt.Shape;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -306,15 +307,18 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 		
 		if (ev.getKeyCode() == KeyEvent.VK_V && (ev.getModifiers() & KeyEvent.CTRL_MASK) != 0) {
 			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-			try {
-				Object data = clipboard.getData(DataFlavor.stringFlavor);
-				if (data instanceof String) {
-					inputMethod.clipboardPaste((String) data);
+			Transferable transferable = clipboard.getContents(null);
+			if (transferable != null) {				
+				try {
+					Object data = transferable.getTransferData(DataFlavor.stringFlavor);
+					if (data instanceof String) {
+						inputMethod.clipboardPaste((String) data);
+					}
+				} catch (UnsupportedFlavorException ex) {
+					ex.printStackTrace();
+				} catch (IOException ex) {
+					ex.printStackTrace();
 				}
-			} catch (UnsupportedFlavorException ex) {
-				ex.printStackTrace();
-			} catch (IOException ex) {
-				ex.printStackTrace();
 			}
 			return;
 		}

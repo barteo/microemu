@@ -89,7 +89,12 @@ public class SwtDeviceComponent extends Canvas
 	    	((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).keyPressed(ev);
 			
 			pressedButton = ((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).getButton(ev);
-			redraw();
+			if (pressedButton != null) {
+				Rectangle r = pressedButton.getShape().getBounds();
+	  			redraw(r.x, r.y, r.width, r.height, true);
+			} else {
+				redraw();
+			}
 		}   
 	  
 		public void keyReleased(KeyEvent ev)
@@ -102,7 +107,12 @@ public class SwtDeviceComponent extends Canvas
 			
 			prevOverButton = pressedButton;
 			pressedButton = null;
-			redraw();      
+			if (prevOverButton != null) {
+				Rectangle r = prevOverButton.getShape().getBounds();
+	  			redraw(r.x, r.y, r.width, r.height, true);
+			} else {
+				redraw();
+			}
 		}   
   };
   

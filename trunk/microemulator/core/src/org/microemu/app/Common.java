@@ -161,7 +161,6 @@ public class Common implements MicroEmulator {
 				getInstance().jad.load(url.openStream());
 			} else {
 				URLConnection cn = url.openConnection();
-				cn.setReadTimeout(10000);
 				String userInfo = new String(Base64Coder.encode(url
 						.getUserInfo().getBytes("UTF-8")));
 				cn.setRequestProperty("Authorization", "Basic " + userInfo);

@@ -262,7 +262,7 @@ public class J2SEInputMethod extends InputMethodImpl
 		}
 
 		if (inputMethodListener != null && text != null && text.length() < maxSize) {
-			insertText(Character.toString(c));
+			insertText(new Character(c).toString());
 		}
 	}
 

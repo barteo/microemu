@@ -254,7 +254,7 @@ public class SwtInputMethod extends InputMethodImpl
 		}
 
 		if (text.length() < maxSize && (ev.keyCode & SWT.EMBEDDED) == 0) {
-			insertText(Character.toString(ev.character));
+			insertText(new Character(ev.character).toString());
 		}
 	}
 

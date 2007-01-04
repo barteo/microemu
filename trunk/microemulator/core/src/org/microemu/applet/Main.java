@@ -211,8 +211,6 @@ public class Main extends Applet implements MicroEmulator
         Image tmpImg = DeviceFactory.getDevice().getNormalImage();
         resize(tmpImg.getWidth(), tmpImg.getHeight());
         
-        devicePanel.setFocusable(true);
-        
         return;
     }
 

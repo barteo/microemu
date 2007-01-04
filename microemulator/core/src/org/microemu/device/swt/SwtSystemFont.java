@@ -80,48 +80,31 @@ public class SwtSystemFont implements SwtFont {
 	}
 
 	public int charWidth(char ch) {
-		try {
-			throw new RuntimeException("not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		return charsWidth(new char[] {ch}, 0, 1);
 	}
 
 	public int charsWidth(char[] ch, int offset, int length) {
-		try {
-			throw new RuntimeException("not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		checkInitialized();
+
+		return SwtDeviceComponent.stringWidth(font, new String(ch, offset, length));
 	}
 
 	public int getBaselinePosition() {
-		try {
-			throw new RuntimeException("not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		checkInitialized();
+		
+		return SwtDeviceComponent.getFontMetrics(font).getAscent();
 	}
 
 	public int getHeight() {
-		try {
-			throw new RuntimeException("not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		checkInitialized();
+		
+		return SwtDeviceComponent.getFontMetrics(font).getHeight();
 	}
 
 	public int stringWidth(String str) {
-		try {
-			throw new RuntimeException("not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		checkInitialized();
+		
+		return SwtDeviceComponent.stringWidth(font, str);
 	}
 
 }

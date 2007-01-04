@@ -181,6 +181,12 @@ public class SwtGraphics
 	}
 
 
+	public void fillPolygon(int[] pointArray) 
+	{
+		gc.fillPolygon(pointArray);
+	}
+
+
 	public void fillRectangle(int x, int y, int width, int height) 
 	{
 		gc.fillRectangle(x + transX, y + transY, width, height);

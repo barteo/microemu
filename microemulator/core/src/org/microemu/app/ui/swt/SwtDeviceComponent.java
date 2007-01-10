@@ -90,8 +90,11 @@ public class SwtDeviceComponent extends Canvas
 			
 			pressedButton = ((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).getButton(ev);
 			if (pressedButton != null) {
-				Rectangle r = pressedButton.getShape().getBounds();
-	  			redraw(r.x, r.y, r.width, r.height, true);
+				org.microemu.device.impl.Shape shape = pressedButton.getShape();
+				if (shape != null) {
+					Rectangle r = shape.getBounds();
+		  			redraw(r.x, r.y, r.width, r.height, true);
+				}
 			} else {
 				redraw();
 			}
@@ -108,8 +111,11 @@ public class SwtDeviceComponent extends Canvas
 			prevOverButton = pressedButton;
 			pressedButton = null;
 			if (prevOverButton != null) {
-				Rectangle r = prevOverButton.getShape().getBounds();
-	  			redraw(r.x, r.y, r.width, r.height, true);
+				org.microemu.device.impl.Shape shape = prevOverButton.getShape();
+				if (shape != null) {
+					Rectangle r = shape.getBounds();
+		  			redraw(r.x, r.y, r.width, r.height, true);
+				}
 			} else {
 				redraw();
 			}

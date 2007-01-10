@@ -327,8 +327,11 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 		
 		pressedButton = inputMethod.getButton(ev);
 		if (pressedButton != null) {
-			Rectangle r = pressedButton.getShape().getBounds();
-  			repaint(r.x, r.y, r.width, r.height);
+			org.microemu.device.impl.Shape shape = pressedButton.getShape();
+			if (shape != null) {
+				Rectangle r = shape.getBounds();
+	  			repaint(r.x, r.y, r.width, r.height);
+			}
 		} else {
 			repaint();
 		}
@@ -347,8 +350,11 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 		prevOverButton = pressedButton;
 		pressedButton = null;
 		if (prevOverButton != null) {
-			Rectangle r = prevOverButton.getShape().getBounds();
-  			repaint(r.x, r.y, r.width, r.height);
+			org.microemu.device.impl.Shape shape = prevOverButton.getShape();
+			if (shape != null) {
+				Rectangle r = shape.getBounds();
+	  			repaint(r.x, r.y, r.width, r.height);
+			}
 		} else {
 			repaint();
 		}

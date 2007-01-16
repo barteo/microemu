@@ -70,6 +70,7 @@ public class Device
 	private Properties systemProperties;
 	private Properties systemPropertiesPreserve;
 	
+	public static final String DEFAULT_LOCATION = "org/microemu/device/default/device.xml";
 	/**
 	 * @deprecated
 	 */
@@ -139,7 +140,7 @@ public class Device
      */
 	public void init(EmulatorContext context)
     {     
-        init(context, "/org/microemu/device/device.xml");
+        init(context, "/" + DEFAULT_LOCATION);
     }       
 
     

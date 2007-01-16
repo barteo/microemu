@@ -336,7 +336,7 @@ public class Common implements MicroEmulator {
 		for (int i = 0; i < args.length; i++) {
 			params.add(args[i]);
 		}		
-		DeviceEntry defaultDevice = new DeviceEntry("Default device", null, "org/microemu/device/device.xml", true, false);
+		DeviceEntry defaultDevice = new DeviceEntry("Default device", null, Device.DEFAULT_LOCATION, true, false);
 		app.initDevice(params, defaultDevice);
 
 		app.initMIDlet(params, false);

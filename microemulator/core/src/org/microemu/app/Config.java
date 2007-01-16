@@ -38,6 +38,8 @@ import org.microemu.EmulatorContext;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.IOUtils;
 
+import com.barteo.emulator.device.Device;
+
 
 public class Config {
 
@@ -206,7 +208,7 @@ public class Config {
 		
 		if (defaultDevice == null) {
 		    defaultDevice = 
-	            new DeviceEntry("Default device", null, "org/microemu/device/device.xml", true, false);
+	            new DeviceEntry("Default device", null, Device.DEFAULT_LOCATION, true, false);
 		}
     	defaultDevice.setDefaultDevice(true);
     	result.add(defaultDevice);

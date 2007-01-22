@@ -15,7 +15,13 @@
 * extended web site with overview, api docs, faq section, instalation instructions, etc.
   (app requires Java 2, applet can be run in JVM 1.1)
 
-* try to run application in WebStart environment
+* Prepare WebStart environment to be part of standard distribution not just our demo.
+
+* Untrusted webstart
+
+* decide what to do with JSObject.  create stub class  or use  USER_LIBRARY in .classpath ro eclipse.
+
+* JUnit / HeadlessEmulator
 
 * rebuild InputMethod to extend functionality:
   - switching between modes (numeric, password, URL, etc.)
@@ -28,3 +34,21 @@
 
 * (?) applet loader - during loading applet code progress bar should be visible
 
+* Replace all System.err.println with proper log infrastructure
+
+* midlet bytcode instrumentation to replace calls to System.getProperty (not avalable in Webstart and Applet env)
+
+* Use maven for build. now maven build is here: https://pyx4j.com/svn/contrib/www.microemu.org
+
+* refactor subproject dependency. Idea in module microemu-stubs
+
+* Create eclipseme.core.model.impl for Microemulator as described
+  http://eclipseme.org/docs/developer/extending.html
+  Contribute this to eclipseme
+
+* MOVE to SVN
+
+* Consider hosting project at http://code.google.com/
+    pros:  SVN, nice issues management, Wiki
+
+* Create Microemulator CruiseControl taks at https://pyx4j.com/cruisecontrol/

@@ -225,6 +225,20 @@
 		</java>
 	</target>
 
+	<target name="run.large" depends="init,jar,simpledemo,jar-device" description="Try running it with different skin.">
+		<java classname="${target.app.classname}" failonerror="true" fork="true">
+			<classpath>
+				<pathelement location="./target/me-app.jar"/>
+				<pathelement location="./target/simpledemo.jar"/>
+				<pathelement location="${target.app.type.swt.jar}"/>
+				<pathelement location="./target/devices/large.jar"/>
+			</classpath>
+			<arg value="--device"/>
+			<arg value="net/barteo/me/device/large/device.xml"/>
+			<arg value="org.microemu.midp.examples.simpledemo.SimpleDemo"/>
+		</java>
+	</target>
+
 	<target name="jar-device" depends="init,jar" description="Package devices">
 		<mkdir dir="./target/devices"/>
 		<jar compress="true" jarfile="./target/devices/minimum.jar">

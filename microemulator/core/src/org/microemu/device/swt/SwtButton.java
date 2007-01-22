@@ -36,15 +36,26 @@ public class SwtButton implements Button
   char[] chars;
 
 
-  public SwtButton(String name, Shape shape, String keyName, char[] chars)
+  /**
+ * @param name
+ * @param shape
+ * @param keyCode - Integer.MIN_VALUE when unspecified
+ * @param keyName
+ * @param chars
+ */
+  public SwtButton(String name, Shape shape, int keyCode, String keyName, char[] chars)
   {
     this.name = name;
     this.shape = shape;
 
-    if (keyName != null) {
-    	this.key = getKeyCode(keyName);
+    if (keyCode == Integer.MIN_VALUE) {
+	    if (keyName != null) {
+	    	this.key = getKeyCode(keyName);
+	    } else {
+	    	this.key = -1;
+	    }
     } else {
-    	this.key = -1;
+    	this.key = keyCode;
     }
     this.chars = chars;
     if (chars != null) {

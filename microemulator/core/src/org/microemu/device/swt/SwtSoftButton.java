@@ -57,9 +57,19 @@ public class SwtSoftButton extends SwtButton implements SoftButton {
 	
 	private Font font;
 
-	public SwtSoftButton(String name, Rectangle rectangle, String keyName,
+	/**
+	 * @param name
+	 * @param rectangle
+	 * @param keyCode - Integer.MIN_VALUE when unspecified
+	 * @param keyName
+	 * @param paintable
+	 * @param alignmentName
+	 * @param commands
+	 * @param font
+	 */
+	public SwtSoftButton(String name, Rectangle rectangle, int keyCode, String keyName,
 			Rectangle paintable, String alignmentName, Vector commands, Font font) {
-		super(name, rectangle, keyName, null);
+		super(name, rectangle, keyCode, keyName, null);
 
 		this.type = TYPE_COMMAND;
 
@@ -87,7 +97,7 @@ public class SwtSoftButton extends SwtButton implements SoftButton {
 	}
 
 	public SwtSoftButton(String name, Rectangle paintable, Image normalImage, Image pressedImage) {
-		super(name, null, null, null);
+		super(name, null, Integer.MIN_VALUE, null, null);
 		
 		this.type = TYPE_ICON;
 		

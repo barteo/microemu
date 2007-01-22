@@ -22,6 +22,7 @@ package org.microemu.app;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -88,8 +89,10 @@ public class Config {
 				
 				saveConfig();
 			}
-		} catch (IOException ex1) {
-			System.out.println(ex1);
+		} catch (FileNotFoundException ex) {
+			loadDefaultConfig();
+		} catch (IOException ex) {
+			System.out.println(ex);
 			loadDefaultConfig();
 		} finally {
 			// Happens in webstart untrusted environment

@@ -110,28 +110,29 @@ public class WebStart extends JFrame
 	}    
   };
      
-  private ActionListener menuOpenJADFileListener = new ActionListener()
-  {
-    public void actionPerformed(ActionEvent ev)
-    {
-      if (fileChooser == null) {
-        ExtensionFileFilter fileFilter = new ExtensionFileFilter("JAD files");
-        fileFilter.addExtension("jad");
-        fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(fileFilter);
-        fileChooser.setDialogTitle("Open JAD File...");
-      }
-      
-      int returnVal = fileChooser.showOpenDialog(instance);
-      if (returnVal == JFileChooser.APPROVE_OPTION) {
-      	try {
-	      	Common.openJadUrl(fileChooser.getSelectedFile().toURL().toString());
+  private ActionListener menuOpenJADFileListener = new ActionListener() {
+		public void actionPerformed(ActionEvent ev) {
+			if (fileChooser == null) {
+				ExtensionFileFilter fileFilter = new ExtensionFileFilter("JAD files");
+				fileFilter.addExtension("jad");
+				fileChooser = new JFileChooser();
+				fileChooser.setFileFilter(fileFilter);
+				fileChooser.setDialogTitle("Open JAD File...");
+				fileChooser.setCurrentDirectory(new File(Config.getRecentJadDirectory()));
+			}
+
+			int returnVal = fileChooser.showOpenDialog(instance);
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				try {
+					Config.setRecentJadDirectory(fileChooser.getCurrentDirectory().getAbsolutePath());
+					Config.saveConfig();
+					Common.openJadUrl(fileChooser.getSelectedFile().toURL().toString());
 				} catch (IOException ex) {
 					System.err.println("Cannot load " + fileChooser.getSelectedFile().getName());
 				}
-      }
-    } 
-  };
+			}
+		}
+	};
   
   private ActionListener menuOpenJADURLListener = new ActionListener()
   {

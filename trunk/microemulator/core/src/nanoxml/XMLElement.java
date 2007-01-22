@@ -1269,7 +1269,7 @@ public class XMLElement
          return defaultValue;
       } else {
          try {
-            return Integer.parseInt(name);
+            return Integer.parseInt(value);
          } catch (NumberFormatException e) {
             throw this.invalidValue(name, value);
          }

@@ -224,12 +224,12 @@
 			</rectangle>
 		</button>
 		<button name="r" key="VK_RIGHT">
-			<rectangle>
-				<x>131</x>
-				<y>286</y>
-				<width>23</width>
-				<height>33</height>
-			</rectangle>
+            <polygon>
+				<point x="140" y="282" />
+				<point x="154" y="302"/>
+				<point x="140" y="322" />
+				<point x="126" y="302"/>
+			</polygon>
 		</button>
 		<button name="u" key="VK_UP">
 			<rectangle>

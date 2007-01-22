@@ -500,8 +500,13 @@ public class Device
                   charArray[i] = ' ';
                 }
               }
-              getButtons().addElement(deviceDisplay.createButton(tmp_keyboard.getStringAttribute("name"), 
-                  shape, tmp_keyboard.getStringAttribute("key"), charArray));
+              int keyCode = tmp_keyboard.getIntAttribute("keyCode", Integer.MIN_VALUE);
+              getButtons().addElement(deviceDisplay.createButton(
+            		  tmp_keyboard.getStringAttribute("name"),
+            		  shape, 
+            		  keyCode,
+            		  tmp_keyboard.getStringAttribute("key"), 
+            		  charArray));            	  
             } else if (tmp_keyboard.getName().equals("softbutton")) {
               Vector commands = new Vector();
               Rectangle rectangle = null, paintable = null;
@@ -521,9 +526,16 @@ public class Device
                 		  tmp_button.getStringAttribute("size"));
                 }
               }
-              SoftButton button = deviceDisplay.createSoftButton(tmp_keyboard.getStringAttribute("name"),
-                  rectangle, tmp_keyboard.getStringAttribute("key"), paintable, 
-                  tmp_keyboard.getStringAttribute("alignment"), commands, font);
+              int keyCode = tmp_keyboard.getIntAttribute("keyCode", Integer.MIN_VALUE);
+              SoftButton button = deviceDisplay.createSoftButton(
+        			  tmp_keyboard.getStringAttribute("name"),
+        			  rectangle,
+        			  keyCode,
+        			  tmp_keyboard.getStringAttribute("key"), 
+        			  paintable, 
+        			  tmp_keyboard.getStringAttribute("alignment"), 
+        			  commands, 
+        			  font);
               getButtons().addElement(button);
               getSoftButtons().addElement(button);
             }

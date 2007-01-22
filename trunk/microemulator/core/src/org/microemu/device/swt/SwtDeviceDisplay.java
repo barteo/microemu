@@ -465,15 +465,15 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 	}
 
 
-    public Button createButton(String name, Shape shape, String keyName, char[] chars)
+    public Button createButton(String name, Shape shape, int keyCode, String keyName, char[] chars)
     {
-        return new SwtButton(name, shape, keyName, chars);
+        return new SwtButton(name, shape, keyCode, keyName, chars);
     }
 
 
-    public SoftButton createSoftButton(String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands, javax.microedition.lcdui.Font font)
+    public SoftButton createSoftButton(String name, Rectangle rectangle, int keyCode, String keyName, Rectangle paintable, String alignmentName, Vector commands, javax.microedition.lcdui.Font font)
     {
-        return new SwtSoftButton(name, rectangle, keyName, paintable, alignmentName, commands, font);
+        return new SwtSoftButton(name, rectangle, keyCode, keyName, paintable, alignmentName, commands, font);
     }
 
 

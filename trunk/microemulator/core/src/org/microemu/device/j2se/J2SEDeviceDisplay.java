@@ -643,15 +643,15 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 
 
 
-    public Button createButton(String name, org.microemu.device.impl.Shape shape, String keyName, char[] chars)
+    public Button createButton(String name, org.microemu.device.impl.Shape shape, int keyCode, String keyName, char[] chars)
     {
-        return new J2SEButton(name, shape, keyName, chars);
+        return new J2SEButton(name, shape, keyCode, keyName, chars);
     }
 
 
-    public SoftButton createSoftButton(String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands, javax.microedition.lcdui.Font font)
+    public SoftButton createSoftButton(String name, Rectangle rectangle, int keyCode, String keyName, Rectangle paintable, String alignmentName, Vector commands, javax.microedition.lcdui.Font font)
     {
-        return new J2SESoftButton(name, rectangle, keyName, paintable, alignmentName, commands, font);
+        return new J2SESoftButton(name, rectangle, keyCode, keyName, paintable, alignmentName, commands, font);
     }
 
 

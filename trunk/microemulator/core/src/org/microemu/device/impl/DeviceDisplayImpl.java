@@ -33,12 +33,31 @@ public interface DeviceDisplayImpl extends DeviceDisplay
 {
 	
 	Image createSystemImage(URL url) throws IOException;  
-	
+
+	/**
+	 * @param name
+	 * @param shape
+	 * @param keyCode - Integer.MIN_VALUE when unspecified
+	 * @param keyName
+	 * @param chars
+	 * @return
+	 */
 	Button createButton(
-	        String name, Shape shape, String keyName, char[] chars);
+	        String name, Shape shape, int keyCode, String keyName, char[] chars);
 	
+	/**
+	 * @param name
+	 * @param rectangle
+	 * @param keyCode - Integer.MIN_VALUE when unspecified
+	 * @param keyName
+	 * @param paintable
+	 * @param alignmentName
+	 * @param commands
+	 * @param font
+	 * @return
+	 */
 	SoftButton createSoftButton(
-	        String name, Rectangle rectangle, String keyName, Rectangle paintable, String alignmentName, Vector commands, Font font);
+	        String name, Rectangle rectangle, int keyCode, String keyName, Rectangle paintable, String alignmentName, Vector commands, Font font);
 
 	SoftButton createSoftButton(
 			String name, Rectangle paintable, Image normalImage, Image pressedImage);

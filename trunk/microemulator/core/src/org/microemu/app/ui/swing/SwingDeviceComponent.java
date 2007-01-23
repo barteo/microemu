@@ -324,10 +324,18 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 			return;
 		}
 		
+		switch (ev.getKeyCode()) {
+			case KeyEvent.VK_ALT :
+			case KeyEvent.VK_CONTROL :
+			case KeyEvent.VK_SHIFT :
+				return;
+		}
+		
 		for (Iterator it = device.getButtons().iterator(); it.hasNext(); ) {
 			J2SEButton button = (J2SEButton) it.next();
 			if (ev.getKeyCode() == button.getKeyboardKey()) {
 				ev.setKeyCode(button.getKeyCode());
+				break;
 			}
 		}
 		
@@ -352,12 +360,20 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
     		return;
     	}
 
+		switch (ev.getKeyCode()) {
+			case KeyEvent.VK_ALT :
+			case KeyEvent.VK_CONTROL :
+			case KeyEvent.VK_SHIFT :
+				return;
+		}
+	
     	Device device = DeviceFactory.getDevice();
     	
 		for (Iterator it = device.getButtons().iterator(); it.hasNext(); ) {
 			J2SEButton button = (J2SEButton) it.next();
 			if (ev.getKeyCode() == button.getKeyboardKey()) {
 				ev.setKeyCode(button.getKeyCode());
+				break;
 			}
 		}
     	

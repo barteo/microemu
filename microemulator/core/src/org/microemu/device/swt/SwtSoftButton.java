@@ -31,6 +31,7 @@ import org.microemu.app.ui.swt.SwtGraphics;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.impl.Rectangle;
+import org.microemu.device.impl.Shape;
 import org.microemu.device.impl.SoftButton;
 
 public class SwtSoftButton extends SwtButton implements SoftButton {
@@ -67,9 +68,9 @@ public class SwtSoftButton extends SwtButton implements SoftButton {
 	 * @param commands
 	 * @param font
 	 */
-	public SwtSoftButton(String name, Rectangle rectangle, int keyCode, String keyName,
+	public SwtSoftButton(String name, Shape shape, int keyCode, String keyName,
 			Rectangle paintable, String alignmentName, Vector commands, Font font) {
-		super(name, rectangle, keyCode, keyName, null);
+		super(name, shape, keyCode, keyName, null);
 
 		this.type = TYPE_COMMAND;
 

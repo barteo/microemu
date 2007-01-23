@@ -57,7 +57,7 @@ public interface DeviceDisplayImpl extends DeviceDisplay
 	 * @return
 	 */
 	SoftButton createSoftButton(
-	        String name, Rectangle rectangle, int keyCode, String keyName, Rectangle paintable, String alignmentName, Vector commands, Font font);
+	        String name, Shape shape, int keyCode, String keyName, Rectangle paintable, String alignmentName, Vector commands, Font font);
 
 	SoftButton createSoftButton(
 			String name, Rectangle paintable, Image normalImage, Image pressedImage);

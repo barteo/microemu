@@ -216,12 +216,12 @@
 			<command>HELP</command>
 		</softbutton>
 		<button name="l" key="VK_LEFT">
-			<rectangle>
-				<x>77</x>
-				<y>286</y>
-				<width>23</width>
-				<height>33</height>
-			</rectangle>
+            <polygon>
+				<point x="74" y="303" />
+				<point x="89" y="281" />
+				<point x="103" y="303" />
+				<point x="89" y="324" />
+			</polygon>
 		</button>
 		<button name="r" key="VK_RIGHT">
             <polygon>
@@ -244,15 +244,15 @@
 				<x>97</x>
 				<y>316</y>
 				<width>36</width>
-				<height>12</height>
+				<height>14</height>
 			</rectangle>
 		</button>
 		<button name="sel" key="VK_ENTER">
 			<rectangle>
 				<x>103</x>
-				<y>296</y>
+				<y>293</y>
 				<width>28</width>
-				<height>25</height>
+				<height>23</height>
 			</rectangle>
 		</button>
 		<button name="0" key="VK_0">

@@ -4,7 +4,7 @@
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xsi:schemaLocation="http://www.microemu.org/2.0/ http://www.microemu.org/2.0/device.xsd">
 <!--
-  Sony-Ericsson K-300 Photo by: Mariano N. Ruiz  http://www.marianoruiz.com.ar
+  Cellphone illustration is created base on art work of David Luscombe http://www.istockphoto.com/fontmonster/
   Screen-Size: 	176x220; like Sony-Ericsson K750 or Motorola SLVR
 -->
     <system-properties>

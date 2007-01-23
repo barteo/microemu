@@ -86,9 +86,18 @@ public class SwtDeviceComponent extends Canvas
 	    		return;
 	    	}
 
-	    	((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).keyPressed(ev);
+	    	Device device = DeviceFactory.getDevice();
+	    	
+			for (Iterator it = device.getButtons().iterator(); it.hasNext(); ) {
+				SwtButton button = (SwtButton) it.next();
+				if (ev.keyCode == button.getKeyboardKey()) {
+					ev.keyCode = button.getKeyCode();
+				}
+			}
+	    		    	
+	    	((SwtInputMethod) device.getInputMethod()).keyPressed(ev);
 			
-			pressedButton = ((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).getButton(ev);
+			pressedButton = ((SwtInputMethod) device.getInputMethod()).getButton(ev);
 			if (pressedButton != null) {
 				org.microemu.device.impl.Shape shape = pressedButton.getShape();
 				if (shape != null) {
@@ -106,7 +115,16 @@ public class SwtDeviceComponent extends Canvas
 	    		return;
 	    	}
 
-	    	((SwtInputMethod) DeviceFactory.getDevice().getInputMethod()).keyReleased(ev);
+	    	Device device = DeviceFactory.getDevice();
+	    	
+			for (Iterator it = device.getButtons().iterator(); it.hasNext(); ) {
+				SwtButton button = (SwtButton) it.next();
+				if (ev.keyCode == button.getKeyboardKey()) {
+					ev.keyCode = button.getKeyCode();
+				}
+			}
+
+			((SwtInputMethod) device.getInputMethod()).keyReleased(ev);
 			
 			prevOverButton = pressedButton;
 			pressedButton = null;
@@ -175,7 +193,7 @@ public class SwtDeviceComponent extends Canvas
 						Event event = new Event();
 						event.widget = e.widget;
 						KeyEvent ev = new KeyEvent(event);
-						ev.keyCode = pressedButton.getKey();
+						ev.keyCode = pressedButton.getKeyCode();
 						inputMethod.mousePressed(ev);
 					}
 					// optimize for some video cards.
@@ -226,7 +244,7 @@ public class SwtDeviceComponent extends Canvas
 			} else {
 		    	SwtButton prevOverButton = getButton(e.x, e.y);
 				if (prevOverButton != null) {
-					inputMethod.mouseReleased(prevOverButton.getKey());
+					inputMethod.mouseReleased(prevOverButton.getKeyCode());
 				}
 				pressedButton = null;
 				//	optimize for some video cards.

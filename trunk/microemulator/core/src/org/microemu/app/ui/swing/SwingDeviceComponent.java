@@ -126,7 +126,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 							CommandManager.getInstance().commandAction(cmd);
 						}
 					} else {
-						int key = pressedButton.getKey();
+						int key = pressedButton.getKeyCode();
 						KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key,
 								KeyEvent.CHAR_UNDEFINED);
 						inputMethod.mousePressed(ev);
@@ -177,7 +177,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 			} else {
 				J2SEButton prevOverButton = getButton(e.getX(), e.getY());
 				if (prevOverButton != null) {
-					int key = prevOverButton.getKey();
+					int key = prevOverButton.getKeyCode();
 					KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key,
 							KeyEvent.CHAR_UNDEFINED);
 
@@ -303,7 +303,8 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
     		return;
     	}
     	
-    	J2SEInputMethod inputMethod = (J2SEInputMethod) DeviceFactory.getDevice().getInputMethod();
+    	Device device = DeviceFactory.getDevice();
+    	J2SEInputMethod inputMethod = (J2SEInputMethod) device.getInputMethod();
 		
 		if (ev.getKeyCode() == KeyEvent.VK_V && (ev.getModifiers() & KeyEvent.CTRL_MASK) != 0) {
 			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -321,6 +322,13 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 				}
 			}
 			return;
+		}
+		
+		for (Iterator it = device.getButtons().iterator(); it.hasNext(); ) {
+			J2SEButton button = (J2SEButton) it.next();
+			if (ev.getKeyCode() == button.getKeyboardKey()) {
+				ev.setKeyCode(button.getKeyCode());
+			}
 		}
 		
 		inputMethod.keyPressed(ev);
@@ -344,8 +352,16 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
     		return;
     	}
 
-		((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod())
-				.keyReleased(ev);
+    	Device device = DeviceFactory.getDevice();
+    	
+		for (Iterator it = device.getButtons().iterator(); it.hasNext(); ) {
+			J2SEButton button = (J2SEButton) it.next();
+			if (ev.getKeyCode() == button.getKeyboardKey()) {
+				ev.setKeyCode(button.getKeyCode());
+			}
+		}
+    	
+		((J2SEInputMethod) device.getInputMethod()).keyReleased(ev);
 
 		prevOverButton = pressedButton;
 		pressedButton = null;

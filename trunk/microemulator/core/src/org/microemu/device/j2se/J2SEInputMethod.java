@@ -315,7 +315,7 @@ public class J2SEInputMethod extends InputMethodImpl
 		if (text.length() < maxSize) {
 			for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
 				J2SEButton button = (J2SEButton) e.nextElement();
-				if (ev.getKeyCode() == button.getKey()) {
+				if (ev.getKeyCode() == button.getKeyCode()) {
 					synchronized (this) {
 						lastButtonCharIndex++;
 						char[] buttonChars = filterConstraints(filterInputMode(button.getChars()));
@@ -411,7 +411,7 @@ public class J2SEInputMethod extends InputMethodImpl
 		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e
 				.hasMoreElements();) {
 			J2SEButton button = (J2SEButton) e.nextElement();
-			if (ev.getKeyCode() == button.getKey()) {
+			if (ev.getKeyCode() == button.getKeyCode()) {
 				return button;
 			}
 			if (button.isChar(ev.getKeyChar())) {

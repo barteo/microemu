@@ -270,7 +270,7 @@ public class SwtInputMethod extends InputMethodImpl
 		if (text.length() < maxSize) {
 			for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
 				SwtButton button = (SwtButton) e.nextElement();
-				if (ev.keyCode == button.getKey()) {
+				if (ev.keyCode == button.getKeyCode()) {
 					synchronized (this) {
 						lastButtonCharIndex++;
 						char[] buttonChars = filterConstraints(filterInputMode(button.getChars()));
@@ -365,7 +365,7 @@ public class SwtInputMethod extends InputMethodImpl
 	{
 		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements(); ) {
 			SwtButton button = (SwtButton) e.nextElement();
-			if (ev.keyCode == button.getKey()) {
+			if (ev.keyCode == button.getKeyCode()) {
 				return button;
 			}
 			if (button.isChar(ev.character)) {

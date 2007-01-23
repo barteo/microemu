@@ -31,7 +31,8 @@ public class J2SEButton implements Button
  
   private String name;
   private Shape shape;
-  private int key;
+  private int keyboardKey;
+  private int keyCode;
   private char[] chars;
 
 
@@ -46,15 +47,16 @@ public class J2SEButton implements Button
   {
     this.name = name;
     this.shape = shape;
+    this.keyboardKey = parseKeyboardKey(keyName);
 
     if (keyCode == Integer.MIN_VALUE) {
 	    if (keyName != null) {
-	    	this.key = getKeyCode(keyName);
+	    	this.keyCode = this.keyboardKey;
 	    } else {
-	    	this.key = -1;
+	    	this.keyCode = -1;
 	    }
     } else {
-    	this.key = keyCode;
+    	this.keyCode = keyCode;
     }
     this.chars = chars;
     if (chars != null) {
@@ -65,9 +67,15 @@ public class J2SEButton implements Button
   }
   
   
-  public int getKey()
+  public int getKeyboardKey()
   {
-    return key;
+	  return keyboardKey;
+  }
+  
+  
+  public int getKeyCode()
+  {
+    return keyCode;
   }
   
   
@@ -104,7 +112,7 @@ public class J2SEButton implements Button
   }
   
   
-  	private int getKeyCode(String keyName) 
+  	private int parseKeyboardKey(String keyName) 
   	{
 		int key;
 

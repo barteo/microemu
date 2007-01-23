@@ -25,7 +25,6 @@ package org.microemu.device.j2se;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.MediaTracker;
-import java.awt.Shape;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
@@ -56,6 +55,7 @@ import org.microemu.device.impl.Color;
 import org.microemu.device.impl.DeviceDisplayImpl;
 import org.microemu.device.impl.PositionedImage;
 import org.microemu.device.impl.Rectangle;
+import org.microemu.device.impl.Shape;
 import org.microemu.device.impl.SoftButton;
 
 public class J2SEDeviceDisplay implements DeviceDisplayImpl 
@@ -203,7 +203,7 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 
 		g.setColor(foregroundColor);
 
-		Shape oldclip = g.getClip();
+		java.awt.Shape oldclip = g.getClip();
 		if (!(current instanceof Canvas)
 			|| ((Canvas) current).getWidth() != displayRectangle.width
 			|| ((Canvas) current).getHeight() != displayRectangle.height) {
@@ -649,9 +649,9 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
     }
 
 
-    public SoftButton createSoftButton(String name, Rectangle rectangle, int keyCode, String keyName, Rectangle paintable, String alignmentName, Vector commands, javax.microedition.lcdui.Font font)
+    public SoftButton createSoftButton(String name, Shape shape, int keyCode, String keyName, Rectangle paintable, String alignmentName, Vector commands, javax.microedition.lcdui.Font font)
     {
-        return new J2SESoftButton(name, rectangle, keyCode, keyName, paintable, alignmentName, commands, font);
+        return new J2SESoftButton(name, shape, keyCode, keyName, paintable, alignmentName, commands, font);
     }
 
 

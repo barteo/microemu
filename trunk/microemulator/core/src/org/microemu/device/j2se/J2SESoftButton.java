@@ -21,7 +21,6 @@ package org.microemu.device.j2se;
 
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Shape;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -32,6 +31,7 @@ import javax.microedition.lcdui.Image;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.impl.Rectangle;
+import org.microemu.device.impl.Shape;
 import org.microemu.device.impl.SoftButton;
 
 public class J2SESoftButton extends J2SEButton implements SoftButton {
@@ -68,9 +68,9 @@ public class J2SESoftButton extends J2SEButton implements SoftButton {
 	 * @param commands
 	 * @param font
 	 */
-	public J2SESoftButton(String name, Rectangle rectangle, int keyCode, String keyName,
+	public J2SESoftButton(String name, Shape shape, int keyCode, String keyName,
 			Rectangle paintable, String alignmentName, Vector commands, Font font) {
-		super(name, rectangle, keyCode, keyName, null);
+		super(name, shape, keyCode, keyName, null);
 		
 		this.type = TYPE_COMMAND;
 
@@ -160,7 +160,7 @@ public class J2SESoftButton extends J2SEButton implements SoftButton {
 			return;
 		}
 		
-		Shape clip = g.getClip();
+		java.awt.Shape clip = g.getClip();
 		
 		g.setClip(paintable.x, paintable.y, paintable.width, paintable.height);
 		if (type == TYPE_COMMAND) {

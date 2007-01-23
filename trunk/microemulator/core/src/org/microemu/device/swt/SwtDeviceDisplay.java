@@ -471,9 +471,9 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
     }
 
 
-    public SoftButton createSoftButton(String name, Rectangle rectangle, int keyCode, String keyName, Rectangle paintable, String alignmentName, Vector commands, javax.microedition.lcdui.Font font)
+    public SoftButton createSoftButton(String name, Shape shape, int keyCode, String keyName, Rectangle paintable, String alignmentName, Vector commands, javax.microedition.lcdui.Font font)
     {
-        return new SwtSoftButton(name, rectangle, keyCode, keyName, paintable, alignmentName, commands, font);
+        return new SwtSoftButton(name, shape, keyCode, keyName, paintable, alignmentName, commands, font);
     }
 
 

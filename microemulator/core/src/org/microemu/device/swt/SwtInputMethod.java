@@ -40,7 +40,7 @@ public class SwtInputMethod extends InputMethodImpl
 {
 	public int getGameAction(int keyCode)
     {
-        // TODO poprawic KeyEvent
+        // TODO fix KeyEvent
         switch (keyCode) {
             case SWT.ARROW_UP:
                 return Canvas.UP;
@@ -75,7 +75,7 @@ public class SwtInputMethod extends InputMethodImpl
 	
     public int getKeyCode(int gameAction)
     {
-        // TODO poprawic KeyEvent
+        // TODO fix KeyEvent
         switch (gameAction) {
             case Canvas.UP:
                 return SWT.ARROW_UP;
@@ -110,6 +110,7 @@ public class SwtInputMethod extends InputMethodImpl
 
 	public String getKeyName(int keyCode)
     {
+        // TODO fix KeyEvent
 	      if (keyCode == SWT.F1) {
 	    	  return "SOFT1";
 	      } else if (keyCode == SWT.F2) {
@@ -154,7 +155,7 @@ public class SwtInputMethod extends InputMethodImpl
 			return true;
 		}
 
-		// TODO poprawic KeyEvent
+		// TODO fix KeyEvent
 		/*
 		 * if (keyCode == KeyEvent.VK_MODECHANGE) { if (getInputMode() ==
 		 * InputMethod.INPUT_123) { setInputMode(InputMethod.INPUT_ABC_UPPER); }

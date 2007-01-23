@@ -21,6 +21,7 @@ package org.microemu.device.j2se;
 
 import java.awt.event.KeyEvent;
 import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Command;
@@ -43,7 +44,17 @@ public class J2SEInputMethod extends InputMethodImpl
 
 	public int getGameAction(int keyCode)
     {
-        switch (keyCode) {
+		int key = keyCode;
+		
+		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext(); ) {
+			J2SEButton button = (J2SEButton) it.next();
+			if (button.getKeyCode() == keyCode) {
+				key = button.getKeyboardKey();
+				break;
+			}
+		}
+		
+        switch (key) {
             case KeyEvent.VK_UP:
                 return Canvas.UP;
 
@@ -83,51 +94,73 @@ public class J2SEInputMethod extends InputMethodImpl
 	
     public int getKeyCode(int gameAction)
     {
+    	int keyCode;
+    	
         switch (gameAction) {
             case Canvas.UP:
-                return KeyEvent.VK_UP;
-
+                keyCode = KeyEvent.VK_UP;
+                break;
             case Canvas.DOWN:
-                return KeyEvent.VK_DOWN;
-
+                keyCode = KeyEvent.VK_DOWN;
+                break;
             case Canvas.LEFT:
-                return KeyEvent.VK_LEFT;
-
+                keyCode = KeyEvent.VK_LEFT;
+                break;
             case Canvas.RIGHT:
-                return KeyEvent.VK_RIGHT;
-
+                keyCode = KeyEvent.VK_RIGHT;
+                break;
             case Canvas.FIRE:
-                return KeyEvent.VK_ENTER;
-
+                keyCode = KeyEvent.VK_ENTER;
+                break;
             case Canvas.GAME_A:
-                return KeyEvent.VK_1;
-
+                keyCode = KeyEvent.VK_1;
+                break;
             case Canvas.GAME_B:
-                return KeyEvent.VK_3;
-
+                keyCode = KeyEvent.VK_3;
+                break;
             case Canvas.GAME_C:
-                return KeyEvent.VK_7;
-
+                keyCode = KeyEvent.VK_7;
+                break;
             case Canvas.GAME_D:
-                return KeyEvent.VK_9;
-
+                keyCode = KeyEvent.VK_9;
+                break;
             default:
                 throw new IllegalArgumentException();
         }
+        
+		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext(); ) {
+			J2SEButton button = (J2SEButton) it.next();
+			if (button.getKeyboardKey() == keyCode) {
+				keyCode = button.getKeyCode();
+				break;
+			}
+		}
+        
+		return keyCode;
     }
     
     
 	public String getKeyName(int keyCode)
     {
-	      if (keyCode == KeyEvent.VK_F1) {
-	    	  return "SOFT1";
-	      } else if (keyCode == KeyEvent.VK_F2) {
-	    	  return "SOFT2";
-	      } else if (keyCode == KeyEvent.VK_ENTER) {
-	    	  return "SELECT";
-	      }
-	          
-          return Integer.toString(keyCode);
+		int key = keyCode;
+		
+		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext(); ) {
+			J2SEButton button = (J2SEButton) it.next();
+			if (button.getKeyCode() == keyCode) {
+				key = button.getKeyboardKey();
+				break;
+			}
+		}
+
+		if (key == KeyEvent.VK_F1) {
+			return "SOFT1";
+		} else if (key == KeyEvent.VK_F2) {
+			return "SOFT2";
+		} else if (key == KeyEvent.VK_ENTER) {
+			return "SELECT";
+		}
+
+		return Integer.toString(keyCode);
     }
 
     

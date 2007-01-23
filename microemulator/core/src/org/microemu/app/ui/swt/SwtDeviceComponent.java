@@ -92,6 +92,7 @@ public class SwtDeviceComponent extends Canvas
 				SwtButton button = (SwtButton) it.next();
 				if (ev.keyCode == button.getKeyboardKey()) {
 					ev.keyCode = button.getKeyCode();
+					break;
 				}
 			}
 	    		    	
@@ -121,6 +122,7 @@ public class SwtDeviceComponent extends Canvas
 				SwtButton button = (SwtButton) it.next();
 				if (ev.keyCode == button.getKeyboardKey()) {
 					ev.keyCode = button.getKeyCode();
+					break;
 				}
 			}
 

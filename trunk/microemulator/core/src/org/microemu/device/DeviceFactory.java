@@ -36,6 +36,7 @@ public class DeviceFactory
 	  if (DeviceFactory.device != null) {
 		  DeviceFactory.device.destroy();
 	  }
+	  device.init();
 	  DeviceFactory.device = device;
   }
   

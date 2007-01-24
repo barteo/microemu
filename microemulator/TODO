@@ -34,6 +34,10 @@
 
 * (?) applet loader - during loading applet code progress bar should be visible
 
+* for buttons  2, 4, 6, 8  function  Canvas.getGameAction(keyCode)  should return  Up, Left, Right, Down
+
+* KeyCodes for Numeric keyboard
+
 * Replace all System.err.println with proper log infrastructure
 
 * midlet bytcode instrumentation to replace calls to System.getProperty (not avalable in Webstart and Applet env)
@@ -52,3 +56,36 @@
     pros:  SVN, nice issues management, Wiki
 
 * Create Microemulator CruiseControl taks at https://pyx4j.com/cruisecontrol/
+
+-- Maybe TODO -- just ideas
+
+* device.xml inheritance
+
+<device name="Moto Like default device">
+   <inherit>device.xml</inherit>
+   <softbutton name="soft1" key="VK_F1" keyCode="-21"/>
+   <!-- No need to define other stuff, it is inheridet-->
+  <softbutton name="soft2" key="VK_F2" keyCode="-22"/>
+</device>
+
+*  Need to add credits tag to device.xml
+<device>
+<credits>
+    <designer>David Luscombe</designer>
+    <url> http://www.davidluscombe.com/ </url>
+     < -- image size of the display and to cover all the display -->
+    <logo>davidLogo.png<logo>
+<credits>
+
+* Need to have another image and special button on skin
+  when pressed the image is show in display, may show designer credits.
+
+                <specialButton>
+                        <rectangle>
+                                <x>159</x>
+                                <y>432</y>
+                                <width>54</width>
+                                <height>31</height>
+                        </rectangle>
+                        <action>showCreditsImage<action>
+                </specialButton>

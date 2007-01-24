@@ -504,7 +504,7 @@ public class Common implements MicroEmulator {
 		return
 			"[(-d | --device) ({device descriptor} | {device class name}) ] " +
 			"[--rms (file | memory)] " +
-			"{midlet class name | jad file location}";
+			"({midlet class name} | {jad file location})";
 	}
 
 }

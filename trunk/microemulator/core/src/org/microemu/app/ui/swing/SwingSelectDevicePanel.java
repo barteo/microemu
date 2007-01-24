@@ -95,9 +95,9 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
 					}
 
 					for (Enumeration en = jar.entries(); en.hasMoreElements();) {
-						JarEntry entry = (JarEntry) en.nextElement();
-						if (entry.getName().toLowerCase().endsWith(".xml")) {
-							descriptorEntries.add(entry.getName());
+						String entry = ((JarEntry) en.nextElement()).getName();
+						if (entry.toLowerCase().endsWith("device.xml") || entry.toLowerCase().endsWith("device.txt")) {
+							descriptorEntries.add(entry);
 						}
 					}
 					urls[0] = fileChooser.getSelectedFile().toURL();

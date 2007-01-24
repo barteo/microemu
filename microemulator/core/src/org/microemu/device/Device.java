@@ -125,15 +125,18 @@ public class Device
     	String base = descriptorLocation.substring(0, descriptorLocation.lastIndexOf("/"));    	
         device.loadConfig(classLoader, base, doc);
 		
-        try {
-        	device.initSystemProperties();
-		} catch (SecurityException e) {
-			System.out.println("Cannot load SystemProperties: " + e);
-		}
-
 		return device;
 	}
 	
+	
+	public void init()
+	{
+        try {
+        	initSystemProperties();
+		} catch (SecurityException e) {
+			System.out.println("Cannot load SystemProperties: " + e);
+		}
+	}
 
     /**
      * @deprecated use Device.create(EmulatorContext context, ClassLoader classLoader, String descriptorLocation);

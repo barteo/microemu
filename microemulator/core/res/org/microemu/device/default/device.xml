@@ -177,7 +177,7 @@
 		<haspointerevents>true</haspointerevents>
 		<haspointermotionevents>true</haspointermotionevents>
 		<hasrepeatevents>true</hasrepeatevents>
-		<softbutton name="" key="VK_F1" alignment="LEFT">
+		<softbutton name="SOFT1" key="VK_F1" alignment="LEFT">
 			<rectangle>
 				<x>16</x>
 				<y>287</y>
@@ -196,7 +196,7 @@
 			<command>CANCEL</command>
 			<command>STOP</command>
 		</softbutton>
-		<softbutton name="" key="VK_F2" alignment="RIGHT">
+		<softbutton name="SOFT2" key="VK_F2" alignment="RIGHT">
 			<rectangle>
 				<x>154</x>
 				<y>287</y>
@@ -215,7 +215,7 @@
 			<command>ITEM</command>
 			<command>HELP</command>
 		</softbutton>
-		<button name="l" key="VK_LEFT">
+		<button name="LEFT" key="VK_LEFT">
             <polygon>
 				<point x="74" y="303" />
 				<point x="89" y="281" />
@@ -223,7 +223,7 @@
 				<point x="89" y="324" />
 			</polygon>
 		</button>
-		<button name="r" key="VK_RIGHT">
+		<button name="RIGHT" key="VK_RIGHT">
             <polygon>
 				<point x="140" y="282" />
 				<point x="154" y="302"/>
@@ -231,7 +231,7 @@
 				<point x="126" y="302"/>
 			</polygon>
 		</button>
-		<button name="u" key="VK_UP">
+		<button name="UP" key="VK_UP">
 			<rectangle>
 				<x>97</x>
 				<y>277</y>
@@ -239,7 +239,7 @@
 				<height>16</height>
 			</rectangle>
 		</button>
-		<button name="d" key="VK_DOWN">
+		<button name="DOWN" key="VK_DOWN">
 			<rectangle>
 				<x>97</x>
 				<y>316</y>
@@ -247,7 +247,7 @@
 				<height>14</height>
 			</rectangle>
 		</button>
-		<button name="sel" key="VK_ENTER">
+		<button name="SELECT" key="VK_ENTER">
 			<rectangle>
 				<x>103</x>
 				<y>293</y>
@@ -415,7 +415,7 @@
 				<height>31</height>
 			</rectangle>
 		</button>
-		<button name="*" key="VK_MULTIPLY">
+		<button name="ASTERISK" key="VK_MULTIPLY">
 			<chars>
 				<char>*</char>
 				<char>+</char>
@@ -427,7 +427,7 @@
 				<height>31</height>
 			</rectangle>
 		</button>
-		<button name="#" key="VK_MODECHANGE">
+		<button name="POUND" key="VK_MODECHANGE">
 			<rectangle>
 				<x>159</x>
 				<y>432</y>

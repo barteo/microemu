@@ -5,7 +5,8 @@
 		xsi:schemaLocation="http://www.microemu.org/2.0/ http://www.microemu.org/2.0/device.xsd">
 <!--
   Cellphone illustration is created base on art work of David Luscombe http://www.istockphoto.com/fontmonster/
-  Screen-Size: 	176x220; like Sony-Ericsson K750 or Motorola SLVR
+  Screen-Size=FullScreenModeCanvas: 	176x220; like Sony-Ericsson K750
+  Normal Canvas: 176x176 like on Sony-Ericsson, There are 22 pix on Top and 22 on Bottom
 -->
     <system-properties>
         <system-property name="microedition.platform" value="MicroEmulator-2.0" />
@@ -20,16 +21,16 @@
 		<foreground>000000</foreground>
 		<background>ffffff</background>
 		<rectangle>
-			<x>27</x>
-			<y>46</y>
+			<x>26</x>
+			<y>44</y>
 			<width>176</width>
 			<height>220</height>
 		</rectangle>
 		<paintable>
 			<x>0</x>
-			<y>10</y>
+			<y>22</y>
 			<width>176</width>
-			<height>208</height>
+			<height>176</height>
 		</paintable>
 		<icon name="up">
 			<paintable>
@@ -53,8 +54,9 @@
 		</icon>
 		<status name="input">
 			<paintable>
-				<x>0</x>
-				<y>0</y>
+			    <!-- 22/2-7  -->
+				<x>4</x>
+				<y>4</y>
 				<width>14</width>
 				<height>7</height>
 			</paintable>
@@ -180,7 +182,7 @@
 		<softbutton name="SOFT1" key="VK_F1" alignment="LEFT">
 			<rectangle>
 				<x>16</x>
-				<y>287</y>
+				<y>282</y>
 				<width>60</width>
 				<height>35</height>
 			</rectangle>
@@ -199,12 +201,12 @@
 		<softbutton name="SOFT2" key="VK_F2" alignment="RIGHT">
 			<rectangle>
 				<x>154</x>
-				<y>287</y>
+				<y>282</y>
 				<width>60</width>
 				<height>35</height>
 			</rectangle>
 			<paintable>
-				<x>107</x>
+				<x>106</x>
 				<y>203</y>
 				<width>69</width>
 				<height>16</height>
@@ -217,41 +219,41 @@
 		</softbutton>
 		<button name="LEFT" key="VK_LEFT">
             <polygon>
-				<point x="74" y="303" />
-				<point x="89" y="281" />
-				<point x="103" y="303" />
-				<point x="89" y="324" />
+				<point x="74" y="301" />
+				<point x="89" y="279" />
+				<point x="103" y="301" />
+				<point x="89" y="322" />
 			</polygon>
 		</button>
 		<button name="RIGHT" key="VK_RIGHT">
             <polygon>
-				<point x="140" y="282" />
-				<point x="154" y="302"/>
-				<point x="140" y="322" />
-				<point x="126" y="302"/>
+				<point x="140" y="280" />
+				<point x="154" y="300"/>
+				<point x="140" y="320" />
+				<point x="126" y="300"/>
 			</polygon>
 		</button>
 		<button name="UP" key="VK_UP">
 			<rectangle>
 				<x>97</x>
-				<y>277</y>
+				<y>274</y>
 				<width>36</width>
-				<height>16</height>
+				<height>14</height>
 			</rectangle>
 		</button>
 		<button name="DOWN" key="VK_DOWN">
 			<rectangle>
 				<x>97</x>
-				<y>316</y>
+				<y>311</y>
 				<width>36</width>
 				<height>14</height>
 			</rectangle>
 		</button>
 		<button name="SELECT" key="VK_ENTER">
 			<rectangle>
-				<x>103</x>
-				<y>293</y>
-				<width>28</width>
+				<x>101</x>
+				<y>288</y>
+				<width>25</width>
 				<height>23</height>
 			</rectangle>
 		</button>
@@ -261,9 +263,9 @@
 				<char>0</char>
 			</chars>
 			<rectangle>
-				<x>89</x>
-				<y>437</y>
-				<width>53</width>
+				<x>87</x>
+				<y>432</y>
+				<width>55</width>
 				<height>31</height>
 			</rectangle>
 		</button>
@@ -295,10 +297,10 @@
 				<char>1</char>
 			</chars>
 			<rectangle>
-				<x>18</x>
-				<y>327</y>
-				<width>56</width>
-				<height>33</height>
+				<x>19</x>
+				<y>324</y>
+				<width>55</width>
+				<height>34</height>
 			</rectangle>
 		</button>
 		<button name="2" key="VK_2">
@@ -310,7 +312,7 @@
 			</chars>
 			<rectangle>
 				<x>88</x>
-				<y>332</y>
+				<y>328</y>
 				<width>56</width>
 				<height>31</height>
 			</rectangle>
@@ -323,8 +325,8 @@
 				<char>3</char>
 			</chars>
 			<rectangle>
-				<x>159</x>
-				<y>327</y>
+				<x>156</x>
+				<y>323</y>
 				<width>54</width>
 				<height>32</height>
 			</rectangle>
@@ -337,10 +339,10 @@
 				<char>4</char>
 			</chars>
 			<rectangle>
-				<x>19</x>
-				<y>363</y>
-				<width>54</width>
-				<height>31</height>
+				<x>18</x>
+				<y>358</y>
+				<width>58</width>
+				<height>32</height>
 			</rectangle>
 		</button>
 		<button name="5" key="VK_5">
@@ -351,10 +353,10 @@
 				<char>5</char>
 			</chars>
 			<rectangle>
-				<x>89</x>
-				<y>367</y>
-				<width>54</width>
-				<height>31</height>
+				<x>87</x>
+				<y>362</y>
+				<width>59</width>
+				<height>34</height>
 			</rectangle>
 		</button>
 		<button name="6" key="VK_6">
@@ -365,10 +367,10 @@
 				<char>6</char>
 			</chars>
 			<rectangle>
-				<x>159</x>
-				<y>362</y>
+				<x>155</x>
+				<y>357</y>
 				<width>54</width>
-				<height>31</height>
+				<height>33</height>
 			</rectangle>
 		</button>
 		<button name="7" key="VK_7">
@@ -380,10 +382,10 @@
 				<char>7</char>
 			</chars>
 			<rectangle>
-				<x>19</x>
-				<y>398</y>
-				<width>54</width>
-				<height>31</height>
+				<x>17</x>
+				<y>393</y>
+				<width>55</width>
+				<height>32</height>
 			</rectangle>
 		</button>
 		<button name="8" key="VK_8">
@@ -394,8 +396,8 @@
 				<char>8</char>
 			</chars>
 			<rectangle>
-				<x>89</x>
-				<y>402</y>
+				<x>87</x>
+				<y>397</y>
 				<width>54</width>
 				<height>31</height>
 			</rectangle>
@@ -409,9 +411,9 @@
 				<char>9</char>
 			</chars>
 			<rectangle>
-				<x>159</x>
-				<y>398</y>
-				<width>54</width>
+				<x>156</x>
+				<y>393</y>
+				<width>56</width>
 				<height>31</height>
 			</rectangle>
 		</button>
@@ -421,18 +423,18 @@
 				<char>+</char>
 			</chars>
 			<rectangle>
-				<x>19</x>
-				<y>433</y>
+				<x>18</x>
+				<y>428</y>
 				<width>54</width>
-				<height>31</height>
+				<height>32</height>
 			</rectangle>
 		</button>
 		<button name="POUND" key="VK_MODECHANGE">
 			<rectangle>
-				<x>159</x>
-				<y>432</y>
-				<width>54</width>
-				<height>31</height>
+				<x>156</x>
+				<y>427</y>
+				<width>55</width>
+				<height>32</height>
 			</rectangle>
 		</button>
 	</input>

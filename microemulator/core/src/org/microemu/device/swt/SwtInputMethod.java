@@ -20,6 +20,7 @@
 package org.microemu.device.swt;
 
 import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Command;
@@ -110,16 +111,21 @@ public class SwtInputMethod extends InputMethodImpl
 
 	public String getKeyName(int keyCode)
     {
-        // TODO fix KeyEvent
-	      if (keyCode == SWT.F1) {
-	    	  return "SOFT1";
-	      } else if (keyCode == SWT.F2) {
-	    	  return "SOFT2";
-	      } else if (keyCode == SWT.CR) {
-	    	  return "SELECT";
-	      }
-	          
-          return Integer.toString(keyCode);
+		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext(); ) {
+			SwtButton button = (SwtButton) it.next();
+			if (button.getKeyCode() == keyCode) {
+				return button.getName();
+			}
+		}
+
+		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext(); ) {
+			SwtButton button = (SwtButton) it.next();
+			if (button.getKeyboardKey() == keyCode) {
+				return button.getName();
+			}
+		}
+
+		throw new IllegalArgumentException();
     }
 
 	

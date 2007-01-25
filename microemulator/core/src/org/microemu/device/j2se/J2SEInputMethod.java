@@ -142,25 +142,21 @@ public class J2SEInputMethod extends InputMethodImpl
     
 	public String getKeyName(int keyCode)
     {
-		int key = keyCode;
-		
 		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext(); ) {
 			J2SEButton button = (J2SEButton) it.next();
 			if (button.getKeyCode() == keyCode) {
-				key = button.getKeyboardKey();
-				break;
+				return button.getName();
 			}
 		}
 
-		if (key == KeyEvent.VK_F1) {
-			return "SOFT1";
-		} else if (key == KeyEvent.VK_F2) {
-			return "SOFT2";
-		} else if (key == KeyEvent.VK_ENTER) {
-			return "SELECT";
+		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext(); ) {
+			J2SEButton button = (J2SEButton) it.next();
+			if (button.getKeyboardKey() == keyCode) {
+				return button.getName();
+			}
 		}
 
-		return Integer.toString(keyCode);
+		throw new IllegalArgumentException();
     }
 
     

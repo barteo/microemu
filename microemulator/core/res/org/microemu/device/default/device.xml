@@ -179,7 +179,7 @@
 		<haspointerevents>true</haspointerevents>
 		<haspointermotionevents>true</haspointermotionevents>
 		<hasrepeatevents>true</hasrepeatevents>
-		<softbutton name="SOFT1" key="VK_F1" alignment="LEFT">
+		<softbutton name="SOFT1" key="VK_F1" keyCode="-6" alignment="LEFT">
 			<rectangle>
 				<x>16</x>
 				<y>282</y>
@@ -198,7 +198,7 @@
 			<command>CANCEL</command>
 			<command>STOP</command>
 		</softbutton>
-		<softbutton name="SOFT2" key="VK_F2" alignment="RIGHT">
+		<softbutton name="SOFT2" key="VK_F2" keyCode="-7" alignment="RIGHT">
 			<rectangle>
 				<x>154</x>
 				<y>282</y>
@@ -217,7 +217,7 @@
 			<command>ITEM</command>
 			<command>HELP</command>
 		</softbutton>
-		<button name="LEFT" key="VK_LEFT">
+		<button name="LEFT" key="VK_LEFT" keyCode="-3">
             <polygon>
 				<point x="74" y="301" />
 				<point x="89" y="279" />
@@ -225,7 +225,7 @@
 				<point x="89" y="322" />
 			</polygon>
 		</button>
-		<button name="RIGHT" key="VK_RIGHT">
+		<button name="RIGHT" key="VK_RIGHT" keyCode="-4">
             <polygon>
 				<point x="140" y="280" />
 				<point x="154" y="300"/>
@@ -233,7 +233,7 @@
 				<point x="126" y="300"/>
 			</polygon>
 		</button>
-		<button name="UP" key="VK_UP">
+		<button name="UP" key="VK_UP" keyCode="-1">
 			<rectangle>
 				<x>97</x>
 				<y>274</y>
@@ -241,7 +241,7 @@
 				<height>14</height>
 			</rectangle>
 		</button>
-		<button name="DOWN" key="VK_DOWN">
+		<button name="DOWN" key="VK_DOWN" keyCode="-2">
 			<rectangle>
 				<x>97</x>
 				<y>311</y>
@@ -249,7 +249,7 @@
 				<height>14</height>
 			</rectangle>
 		</button>
-		<button name="SELECT" key="VK_ENTER">
+		<button name="SELECT" key="VK_ENTER" keyCode="-5">
 			<rectangle>
 				<x>101</x>
 				<y>288</y>

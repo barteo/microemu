@@ -546,7 +546,7 @@ public class XMLElement
 		xml.setContent(value);
 		return xml;
    }
-   
+
    /**
     * Adds or modifies an attribute.
     *
@@ -891,6 +891,27 @@ public class XMLElement
 		for (Enumeration en = this.children.elements(); en.hasMoreElements();) {
 			XMLElement el = (XMLElement) en.nextElement();
 			if (el.getName().equals(name)) {
+				return el;
+			}
+		}
+		return null;
+	}
+
+	public int getChildCount(String name) {
+	    int cnt = 0;
+		for (Enumeration en = this.children.elements(); en.hasMoreElements();) {
+			XMLElement el = (XMLElement) en.nextElement();
+			if (el.getName().equals(name)) {
+				cnt ++;
+			}
+		}
+		return cnt;
+	}
+
+	public XMLElement getChild(String name, String attrNameValue) {
+		for (Enumeration en = this.children.elements(); en.hasMoreElements();) {
+			XMLElement el = (XMLElement) en.nextElement();
+			if ((el.getName().equals(name)) && (attrNameValue.equalsIgnoreCase(el.getStringAttribute("name")))) {
 				return el;
 			}
 		}
@@ -2245,7 +2266,7 @@ public class XMLElement
 	public void write(Writer writer) throws IOException {
 		writeIdented(writer, 0);
 	}
-   
+
 	private void writeTabs(Writer writer, int level) throws IOException {
 		for(int i = 0 ; i< level; i ++) {
 			writer.write('\t');
@@ -2324,12 +2345,12 @@ public class XMLElement
 
    /**
 	 * Writes a string encoded to a writer.
-	 * 
+	 *
 	 * @param writer
 	 *            The writer to write the XML data to.
 	 * @param str
 	 *            The string to write encoded.
-	 * 
+	 *
 	 * </dl>
 	 * <dl>
 	 * <dt><b>Preconditions:</b></dt>

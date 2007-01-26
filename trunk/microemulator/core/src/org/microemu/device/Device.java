@@ -20,6 +20,8 @@
 package org.microemu.device;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -87,18 +89,8 @@ public class Device
 	
 	public static Device create(EmulatorContext context, ClassLoader classLoader, String descriptorLocation) throws IOException
 	{
-		InputStream descriptor = classLoader.getResourceAsStream(descriptorLocation);
-		if (descriptor == null) {
-			throw new IOException("Cannot find descriptor at: " + descriptorLocation);
-		}
-		
-		XMLElement doc;
-		try {
-			doc = loadDocument(descriptor);
-		} finally {
-			IOUtils.closeQuietly(descriptor);
-		}
-		
+		XMLElement doc = loadDeviceDescriptor(classLoader, descriptorLocation);
+		//saveDevice(doc);
 		Device device = null;
         for (Enumeration e = doc.enumerateChildren(); e.hasMoreElements(); ) {
 			XMLElement tmp = (XMLElement) e.nextElement();
@@ -122,8 +114,7 @@ public class Device
         }
         device.context = context;
         
-    	String base = descriptorLocation.substring(0, descriptorLocation.lastIndexOf("/"));    	
-        device.loadConfig(classLoader, base, doc);
+        device.loadConfig(classLoader, besourceBase(descriptorLocation), doc);
 		
 		return device;
 	}
@@ -161,11 +152,7 @@ public class Device
 
         try {
         	String base = descriptorLocation.substring(0, descriptorLocation.lastIndexOf("/"));   
-        	InputStream descriptor = getClass().getResourceAsStream(descriptorLocation);
-        	if (descriptor == null) {
-    			throw new IOException("Cannot find descriptor at: " + descriptorLocation);
-        	}
-        	XMLElement doc = loadDocument(descriptor);
+        	XMLElement doc = loadDeviceDescriptor(getClass().getClassLoader(), descriptorLocation);
             loadConfig(getClass().getClassLoader(), base, doc);
         } catch (IOException ex) {
             System.out.println("Cannot load config: " + ex);
@@ -345,7 +332,7 @@ public class Device
             	// deprecated, moved to icon  
               	SoftButton icon = deviceDisplay.createSoftButton(
               			tmp_display.getStringAttribute("name"),
-              			getRectangle(getElement(tmp_display, "paintable")),
+              			getRectangle(tmp_display.getChild("paintable")),
               			loadImage(classLoader, base, tmp_display.getStringAttribute("src")),
               			loadImage(classLoader, base, tmp_display.getStringAttribute("src")));
               	getSoftButtons().addElement(icon);              	
@@ -354,15 +341,15 @@ public class Device
                 if (tmp_display.getStringAttribute("type").equals("123")) {
                   deviceDisplay.setMode123Image(new PositionedImage(
                 	loadImage(classLoader, base, tmp_display.getStringAttribute("src")),
-                      getRectangle(getElement(tmp_display, "paintable"))));
+                      getRectangle(tmp_display.getChild("paintable"))));
                 } else if (tmp_display.getStringAttribute("type").equals("abc")) {
                   deviceDisplay.setModeAbcLowerImage(new PositionedImage(
                 	loadImage(classLoader, base, tmp_display.getStringAttribute("src")),
-                      getRectangle(getElement(tmp_display, "paintable"))));
+                      getRectangle(tmp_display.getChild("paintable"))));
                 } else if (tmp_display.getStringAttribute("type").equals("ABC")) {
                   deviceDisplay.setModeAbcUpperImage(new PositionedImage(
                 	loadImage(classLoader, base, tmp_display.getStringAttribute("src")),
-                      getRectangle(getElement(tmp_display, "paintable"))));
+                      getRectangle(tmp_display.getChild("paintable"))));
                 }
               }
             } else if (tmp_display.getName().equals("icon")) {
@@ -380,7 +367,7 @@ public class Device
           	  }
           	  SoftButton icon = deviceDisplay.createSoftButton(
           			  tmp_display.getStringAttribute("name"), 
-          			  getRectangle(getElement(tmp_display, "paintable")), 
+          			  getRectangle(tmp_display.getChild("paintable")), 
           			  iconNormalImage, 
           			  iconPressedImage);
           	  if (icon.getName().equals("up")) {
@@ -391,7 +378,7 @@ public class Device
           	  getSoftButtons().addElement(icon);
             } else if (tmp_display.getName().equals("status")) {
 				if (tmp_display.getStringAttribute("name").equals("input")) {
-					Rectangle paintable = getRectangle(getElement(tmp_display, "paintable"));
+					Rectangle paintable = getRectangle(tmp_display.getChild("paintable"));
 					for (Enumeration e_status = tmp_display.enumerateChildren(); e_status.hasMoreElements();) {
 						XMLElement tmp_status = (XMLElement) e_status.nextElement();
 						if (tmp_status.getName().equals("img")) {
@@ -596,19 +583,6 @@ public class Device
 	}
 
 
-	private XMLElement getElement(XMLElement source, String name)
-    {
-        for (Enumeration e_content = source.enumerateChildren(); e_content.hasMoreElements();) {
-            XMLElement tmp_content = (XMLElement) e_content.nextElement();
-            if (tmp_content.getName().equals(name)) {
-                return tmp_content;
-            }
-        }
-
-        return null;
-    }
-    
-    
     private Rectangle getRectangle(XMLElement source)
     {
         Rectangle rect = new Rectangle();
@@ -671,8 +645,72 @@ public class Device
 		return hasRepeatEvents;
 	}
 	
+	private static void saveDevice(XMLElement doc) {
+		File configFile = new File(".", "device-tmp.xml");
+		FileWriter fw = null;
+		try {
+			fw = new FileWriter(configFile);
+			doc.write(fw);
+			fw.close();
+		} catch (IOException ex) {
+			System.out.println(ex);
+		} finally {
+			IOUtils.closeQuietly(fw);
+		}
+	}
 
-	private static XMLElement loadDocument(InputStream descriptor) throws IOException {
+	private static XMLElement loadDeviceDescriptor(ClassLoader classLoader, String descriptorLocation) throws IOException  {
+		InputStream descriptor = classLoader.getResourceAsStream(descriptorLocation);
+		if (descriptor == null) {
+			throw new IOException("Cannot find descriptor at: " + descriptorLocation);
+		}
+		XMLElement doc;
+		try {
+			doc = loadXmlDocument(descriptor);
+		} finally {
+			IOUtils.closeQuietly(descriptor);
+		}
+		
+		String parent = doc.getStringAttribute("extends");
+		if (parent != null) {
+			return inheritXML(loadDeviceDescriptor(classLoader, expandResourcePath(besourceBase(descriptorLocation), parent)), doc);
+		}
+		return doc;
+	}
+
+	/**
+	 * Very simple xml inheritance for devices.
+	 */
+	private static XMLElement inheritXML(XMLElement parent, XMLElement child) {
+		if (parent == null) {
+			return child;
+		}
+		parent.setContent(child.getContent());
+		for (Enumeration ena = child.enumerateAttributeNames(); ena.hasMoreElements();) {
+			String key = (String) ena.nextElement();
+			parent.setAttribute(key, child.getAttribute(key));
+		}
+		for (Enumeration enc = child.enumerateChildren(); enc.hasMoreElements();) {
+			XMLElement c = (XMLElement) enc.nextElement();
+			int c_siblings = child.getChildCount(c.getName());
+			int p_siblings = parent.getChildCount(c.getName());
+			XMLElement p;
+			if ((c_siblings > 1) || (p_siblings > 1)) {
+				p = parent.getChild(c.getName(), c.getStringAttribute("name"));
+			} else {
+				p = parent.getChild(c.getName());
+			}
+			// System.out.println("inheritXML " + c.getName());
+			if (p == null) {
+				parent.addChild(c);
+			} else {
+				inheritXML(p, c);
+			}
+		}
+		return parent;
+	}
+	
+	private static XMLElement loadXmlDocument(InputStream descriptor) throws IOException {
     	String readLine;
     	StringBuffer xmlBuffer = new StringBuffer();
     	BufferedReader dis = new BufferedReader(new InputStreamReader(descriptor));
@@ -690,8 +728,11 @@ public class Device
         return doc;
 	}
 	
-	
-	private URL getResourceUrl(ClassLoader classLoader, String base, String src) throws IOException {
+	private static String besourceBase(String descriptorLocation) {
+		return descriptorLocation.substring(0, descriptorLocation.lastIndexOf("/"));  
+	}
+
+	private static String expandResourcePath(String base, String src) throws IOException {
 		String expandedSource;
 		if (src.startsWith("/")) {
 			expandedSource = src;
@@ -701,7 +742,12 @@ public class Device
 		if (expandedSource.startsWith("/")) {
 			expandedSource = expandedSource.substring(1);
 		}
-		
+		return expandedSource;
+	}
+	
+	private URL getResourceUrl(ClassLoader classLoader, String base, String src) throws IOException {
+		String expandedSource = expandResourcePath(base, src);
+	
 		URL result = classLoader.getResource(expandedSource);
 		
 		if (result == null) {

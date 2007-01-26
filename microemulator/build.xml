@@ -143,10 +143,12 @@
 			<fileset dir="./build/microemulator/classes">
 				<exclude name="org/microemu/midp/examples/**"/>
 				<exclude name="**/.*"/>
+				<exclude name="**/Thumbs.db"/>
 			</fileset>
 			<fileset dir="./core/res">
 				<exclude name="org/microemu/midp/examples/**"/>
 				<exclude name="**/.*"/>
+				<exclude name="**/Thumbs.db"/>
 			</fileset>
 		</jar>
 	</target>
@@ -156,10 +158,12 @@
 			<fileset dir="./build/microemulator/classes">
 				<exclude name="org/microemu/midp/examples/**"/>
 				<exclude name="**/.*"/>
+				<exclude name="**/Thumbs.db"/>
 			</fileset>
 			<fileset dir="./core/res">
 				<exclude name="org/microemu/midp/examples/**"/>
 				<exclude name="**/.*"/>
+				<exclude name="**/Thumbs.db"/>
 			</fileset>
 		</jar>
 	</target>
@@ -205,10 +209,12 @@
 			<fileset dir="./build/microemulator/classes">
 				<include name="org/microemu/midp/examples/simpledemo/**"/>
 				<exclude name="**/.*"/>
+				<exclude name="**/Thumbs.db"/>
 			</fileset>
 			<fileset dir="./example/res">
 				<include name="org/microemu/midp/examples/simpledemo/**"/>
 				<exclude name="**/.*"/>
+				<exclude name="**/Thumbs.db"/>
 			</fileset>
 		</jar>
 		<copy file="./misc/simpledemo.jad" todir="./target"/>
@@ -244,16 +250,19 @@
 		<jar compress="true" jarfile="./target/devices/minimum.jar">
 			<fileset dir="./devices/minimum/res">
 				<exclude name="**/.*"/>
+				<exclude name="**/Thumbs.db"/>
 			</fileset>
 		</jar>
 		<jar compress="true" jarfile="./target/devices/small.jar">
 			<fileset dir="./devices/small/res">
 				<exclude name="**/.*"/>
+				<exclude name="**/Thumbs.db"/>
 			</fileset>
 		</jar>
 		<jar compress="true" jarfile="./target/devices/large.jar">
 			<fileset dir="./devices/large/res">
 				<exclude name="**/.*"/>
+				<exclude name="**/Thumbs.db"/>
 			</fileset>
 		</jar>
 	</target>

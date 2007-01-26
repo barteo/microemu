@@ -34,7 +34,10 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 
 
@@ -908,16 +911,44 @@ public class XMLElement
 		return cnt;
 	}
 
-	public XMLElement getChild(String name, String attrNameValue) {
+	public XMLElement getChild(String name, String attrValue) {
 		for (Enumeration en = this.children.elements(); en.hasMoreElements();) {
 			XMLElement el = (XMLElement) en.nextElement();
-			if ((el.getName().equals(name)) && (attrNameValue.equalsIgnoreCase(el.getStringAttribute("name")))) {
+			String elAttrValue = el.getStringAttribute("name");
+			if ((el.getName().equals(name)) 
+					&& ((attrValue == elAttrValue) || attrValue.equals(elAttrValue))) {
 				return el;
 			}
 		}
 		return null;
 	}
 
+	public XMLElement getChild(String name, Map equalAttributesNameValue) {
+		nextChildren:
+		for (Enumeration en = this.children.elements(); en.hasMoreElements();) {
+			XMLElement el = (XMLElement) en.nextElement();
+			if (el.getName().equals(name)) {
+				nextAttribute:
+				for(Iterator i = equalAttributesNameValue.entrySet().iterator(); i.hasNext(); ) {
+					Map.Entry atrNameValue = (Map.Entry)i.next();
+					String attrValue = el.getStringAttribute((String)atrNameValue.getKey());
+					if (atrNameValue.getValue() == null){
+						if (attrValue != null) {
+							continue nextChildren;
+						} else {
+							continue nextAttribute;
+						}
+					}
+					if (!atrNameValue.getValue().equals(attrValue)) {
+						continue nextChildren;
+					}
+				}
+				return el;
+			}
+		}
+		return null;
+	}
+	
 	public int getChildInteger(String name, int defaultValue) {
 		XMLElement xml = this.getChild(name);
 		if (xml == null) {
@@ -1147,6 +1178,16 @@ public class XMLElement
       return this.getStringAttribute(name, null);
    }
 
+   public Map getStringAttributes(String[] names)
+   {
+	    // Allow null values.
+		Map attrNameValue = new HashMap();
+		for(int i = 0; i < names.length; i ++) {
+			//System.out.println("add [" + names[i] + "]=[" + this.getStringAttribute(names[i])+"]");
+			attrNameValue.put(names[i], this.getStringAttribute(names[i]));
+		}
+        return attrNameValue;
+   }
 
    /**
     * Returns an attribute of the element.

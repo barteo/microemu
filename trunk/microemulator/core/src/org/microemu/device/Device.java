@@ -27,13 +27,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Image;
+
+import nanoxml.XMLElement;
+import nanoxml.XMLParseException;
 
 import org.microemu.CommandManager;
 import org.microemu.EmulatorContext;
@@ -46,9 +51,6 @@ import org.microemu.device.impl.PositionedImage;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.Shape;
 import org.microemu.device.impl.SoftButton;
-
-import nanoxml.XMLElement;
-import nanoxml.XMLParseException;
 
 
 public class Device 
@@ -77,6 +79,8 @@ public class Device
 	 * @deprecated
 	 */
 	private String descriptorLocation;
+	
+	private static Map specialInheritanceAttributeSet;
 
 	public Device()
 	{	    
@@ -673,15 +677,24 @@ public class Device
 		
 		String parent = doc.getStringAttribute("extends");
 		if (parent != null) {
-			return inheritXML(loadDeviceDescriptor(classLoader, expandResourcePath(besourceBase(descriptorLocation), parent)), doc);
+			return inheritXML(loadDeviceDescriptor(classLoader, expandResourcePath(besourceBase(descriptorLocation), parent)), doc, "/");
 		}
 		return doc;
 	}
 
+	
+	private static void inheritanceConstInit() {
+		if (specialInheritanceAttributeSet == null) {
+			specialInheritanceAttributeSet = new Hashtable();
+			specialInheritanceAttributeSet.put("//FONTS/FONT", new String[]{"face", "style", "size"});
+		}
+	}
+	
 	/**
 	 * Very simple xml inheritance for devices.
 	 */
-	private static XMLElement inheritXML(XMLElement parent, XMLElement child) {
+	static XMLElement inheritXML(XMLElement parent, XMLElement child, String parentName) {
+		inheritanceConstInit();
 		if (parent == null) {
 			return child;
 		}
@@ -692,11 +705,18 @@ public class Device
 		}
 		for (Enumeration enc = child.enumerateChildren(); enc.hasMoreElements();) {
 			XMLElement c = (XMLElement) enc.nextElement();
+			String fullName = (parentName + "/" + c.getName()).toUpperCase(Locale.ENGLISH);
+			//System.out.println("processing [" + fullName + "]");
 			int c_siblings = child.getChildCount(c.getName());
 			int p_siblings = parent.getChildCount(c.getName());
 			XMLElement p;
 			if ((c_siblings > 1) || (p_siblings > 1)) {
-				p = parent.getChild(c.getName(), c.getStringAttribute("name"));
+				String [] equalAttributes = (String []) specialInheritanceAttributeSet.get(fullName); 
+				if (equalAttributes != null) {
+					p = parent.getChild(c.getName(), c.getStringAttributes(equalAttributes));
+				} else {
+					p = parent.getChild(c.getName(), c.getStringAttribute("name"));
+				}
 			} else {
 				p = parent.getChild(c.getName());
 			}
@@ -704,27 +724,22 @@ public class Device
 			if (p == null) {
 				parent.addChild(c);
 			} else {
-				inheritXML(p, c);
+				inheritXML(p, c, fullName);
 			}
 		}
 		return parent;
 	}
 	
 	private static XMLElement loadXmlDocument(InputStream descriptor) throws IOException {
-    	String readLine;
-    	StringBuffer xmlBuffer = new StringBuffer();
     	BufferedReader dis = new BufferedReader(new InputStreamReader(descriptor));
-    	while ((readLine = dis.readLine()) != null) {
-    		xmlBuffer.append(readLine);
-    	}
-    	
         XMLElement doc = new XMLElement();
         try {
-          doc.parseString(xmlBuffer.toString());
+          doc.parseFromReader(dis, 1);
         } catch (XMLParseException ex) {
         	throw new IOException(ex.toString());
+        } finally {
+        	dis.close();
         }
-        
         return doc;
 	}
 	

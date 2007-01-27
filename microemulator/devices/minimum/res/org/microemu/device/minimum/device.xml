@@ -53,6 +53,15 @@
 	</display>
 	<input>
 		<softbutton name="SOFT1" key="VK_F1" alignment="LEFT">
+			<!--polygon>
+				<point x="51" y="165" />
+				<point x="" y="" />
+				<point x="" y="" />
+				<point x="" y="" />
+				<point x="" y="" />
+				<point x="" y="" />
+			</polygon-->
+
 			<rectangle>
 				<x>21</x>
 				<y>154</y>
@@ -72,6 +81,15 @@
 			<command>STOP</command>
 		</softbutton>
 		<softbutton name="SOFT2" key="VK_F2" alignment="RIGHT">
+			<!--polygon>
+				<point x="51" y="165" />
+				<point x="" y="" />
+				<point x="" y="" />
+				<point x="" y="" />
+				<point x="" y="" />
+				<point x="" y="" />
+			</polygon-->
+
 			<rectangle>
 				<x>101</x>
 				<y>154</y>
@@ -90,20 +108,22 @@
 			<command>HELP</command>
 		</softbutton>
 		<button name="LEFT" key="VK_LEFT">
-			<rectangle>
-				<x>52</x>
-				<y>155</y>
-				<width>16</width>
-				<height>19</height>
-			</rectangle>
+			<polygon>
+				<point x="52" y="165" />
+				<point x="58" y="155" />
+				<point x="64" y="153" />
+				<point x="64" y="177" />
+				<point x="54" y="172" />
+			</polygon>
 		</button>
 		<button name="RIGHT" key="VK_RIGHT">
-			<rectangle>
-				<x>89</x>
-				<y>154</y>
-				<width>15</width>
-				<height>23</height>
-			</rectangle>
+			<polygon>
+				<point x="93" y="153" />
+				<point x="102" y="158" />
+				<point x="106" y="165" />
+				<point x="101" y="174" />
+				<point x="93" y="178" />
+			</polygon>
 		</button>
 		<button name="UP" key="VK_UP">
 			<rectangle>
@@ -116,16 +136,16 @@
 		<button name="DOWN" key="VK_DOWN">
 			<rectangle>
 				<x>61</x>
-				<y>171</y>
+				<y>173</y>
 				<width>37</width>
-				<height>10</height>
+				<height>12</height>
 			</rectangle>
 		</button>
 		<button name="SELECT" key="VK_ENTER">
 			<rectangle>
 				<x>68</x>
 				<y>159</y>
-				<width>18</width>
+				<width>22</width>
 				<height>14</height>
 			</rectangle>
 		</button>

@@ -10,8 +10,8 @@
 		<foreground>000000</foreground>
 		<background>c3cbb6</background>
 		<rectangle>
-			<x>16</x>
-			<y>16</y>
+			<x>15</x>
+			<y>17</y>
 			<width>128</width>
 			<height>128</height>
 		</rectangle>
@@ -24,7 +24,7 @@
 		<icon name="up">
 			<paintable>
 				<x>60</x>
-				<y>110</y>
+				<y>112</y>
 				<width>8</width>
 				<height>8</height>
 			</paintable>
@@ -33,7 +33,7 @@
 		<icon name="down">
 			<paintable>
 				<x>60</x>
-				<y>110</y>
+				<y>120</y>
 				<width>8</width>
 				<height>8</height>
 			</paintable>
@@ -62,7 +62,8 @@
 			<paintable>
 				<x>0</x>
 				<y>112</y>
-				<width>38</width>
+				<!-- (128 - 8)/2 -->
+				<width>60</width>
 				<height>16</height>
 			</paintable>
 			<command>BACK</command>
@@ -78,9 +79,9 @@
 				<height>21</height>
 			</rectangle>
 			<paintable>
-				<x>58</x>
+				<x>68</x>
 				<y>112</y>
-				<width>38</width>
+				<width>60</width>
 				<height>16</height>
 			</paintable>
 			<command>OK</command>

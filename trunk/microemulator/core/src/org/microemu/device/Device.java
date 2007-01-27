@@ -138,7 +138,7 @@ public class Device
      */
 	public void init(EmulatorContext context)
     {     
-        init(context, "/" + DEFAULT_LOCATION);
+        init(context, DEFAULT_LOCATION);
     }       
 
     

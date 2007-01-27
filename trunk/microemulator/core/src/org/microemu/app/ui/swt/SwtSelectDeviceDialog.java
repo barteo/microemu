@@ -98,7 +98,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 
 					for (Enumeration en = jar.entries(); en.hasMoreElements();) {
 						String entry = ((JarEntry) en.nextElement()).getName();
-						if (entry.toLowerCase().endsWith("device.xml") || entry.toLowerCase().endsWith("device.txt")) {
+						if (entry.toLowerCase().endsWith(".xml") || entry.toLowerCase().endsWith("device.txt")) {
 							descriptorEntries.add(entry);
 						}
 					}

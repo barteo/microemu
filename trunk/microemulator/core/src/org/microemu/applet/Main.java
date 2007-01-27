@@ -121,16 +121,26 @@ public class Main extends Applet implements MicroEmulator
         add(devicePanel, "Center");
 
         Device device;
-        String deviceClassName = getParameter("device");
-        if (deviceClassName == null) {
+        String deviceParameter = getParameter("device");
+        if (deviceParameter == null) {
             device = new Device();
         } else {
             try {
-                Class cl = Class.forName(deviceClassName);
+                Class cl = Class.forName(deviceParameter);
                 device = (Device) cl.newInstance();
-            } catch (ClassNotFoundException ex) {
-                System.out.println(ex);
-                return;
+                DeviceFactory.setDevice(device);
+                device.init(emulatorContext);
+            } catch (ClassNotFoundException ex) {            	
+				try {
+					device = Device.create(
+							emulatorContext, 
+							Main.class.getClassLoader(),
+							deviceParameter);
+					DeviceFactory.setDevice(device);
+				} catch (IOException ex1) {
+	                System.out.println(ex);
+	                return;
+				}
             } catch (IllegalAccessException ex) {
                 System.out.println(ex);
                 return;
@@ -139,9 +149,6 @@ public class Main extends Applet implements MicroEmulator
                 return;
             }
         }
-
-        DeviceFactory.setDevice(device);
-        device.init(emulatorContext);
         
         devicePanel.init();
 

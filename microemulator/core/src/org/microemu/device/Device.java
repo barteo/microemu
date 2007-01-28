@@ -707,10 +707,15 @@ public class Device
 			XMLElement c = (XMLElement) enc.nextElement();
 			String fullName = (parentName + "/" + c.getName()).toUpperCase(Locale.ENGLISH);
 			//System.out.println("processing [" + fullName + "]");
-			int c_siblings = child.getChildCount(c.getName());
-			int p_siblings = parent.getChildCount(c.getName());
+			boolean inheritWithName = false;
+			if (c.getStringAttribute("name") != null) {
+				inheritWithName = true;
+			} else {
+				// Find if element has siblings
+				inheritWithName = ((child.getChildCount(c.getName()) > 1) || (parent.getChildCount(c.getName()) > 1));
+			}
 			XMLElement p;
-			if ((c_siblings > 1) || (p_siblings > 1)) {
+			if (inheritWithName) {
 				String [] equalAttributes = (String []) specialInheritanceAttributeSet.get(fullName); 
 				if (equalAttributes != null) {
 					p = parent.getChild(c.getName(), c.getStringAttributes(equalAttributes));

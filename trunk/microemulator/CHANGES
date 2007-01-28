@@ -1,7 +1,7 @@
 MicroEmulator
 
-2.0M1
-- milestone 1 version based on MIDP 2
+2.0.0 - 28.01.2006
+- first version based on MIDP 2
 
 1.0 - 21.03.2006
 - fix in keyboard event handling (Canvas.KEY_STAR, Canvas.KEY_POUND)

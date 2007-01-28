@@ -34,9 +34,9 @@
 
 * (?) applet loader - during loading applet code progress bar should be visible
 
-* for buttons  2, 4, 6, 8  function  Canvas.getGameAction(keyCode)  should return  Up, Left, Right, Down
-
-* KeyCodes for Numeric keyboard
+* rewrite InputMethod code:
+  - for buttons  2, 4, 6, 8  function  Canvas.getGameAction(keyCode)  should return  Up, Left, Right, Down
+  - KeyCodes for Numeric keyboard
 
 * Replace all System.err.println with proper log infrastructure
 

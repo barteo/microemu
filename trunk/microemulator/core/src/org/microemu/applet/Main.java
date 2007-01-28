@@ -124,6 +124,8 @@ public class Main extends Applet implements MicroEmulator
         String deviceParameter = getParameter("device");
         if (deviceParameter == null) {
             device = new Device();
+            DeviceFactory.setDevice(device);
+            device.init(emulatorContext);
         } else {
             try {
                 Class cl = Class.forName(deviceParameter);

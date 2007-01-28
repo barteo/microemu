@@ -52,22 +52,23 @@
 		</status>
 	</display>
 	<input>
-		<softbutton name="SOFT1" key="VK_F1" alignment="LEFT">
-			<!--polygon>
-				<point x="51" y="165" />
-				<point x="" y="" />
-				<point x="" y="" />
-				<point x="" y="" />
-				<point x="" y="" />
-				<point x="" y="" />
-			</polygon-->
-
-			<rectangle>
-				<x>21</x>
-				<y>154</y>
-				<width>36</width>
-				<height>21</height>
-			</rectangle>
+		<softbutton name="SOFT1" key="VK_F1" keyCode="-6" alignment="LEFT">
+			<polygon>
+				<point x="21" y="153" />
+				<point x="60" y="153" />
+				<point x="60" y="176" />
+				<point x="21" y="176" />
+			</polygon>
+			<!--
+			<polygon>
+				<point x="21" y="153" />
+				<point x="60" y="153" />
+				<point x="51" y="161" />
+				<point x="51" y="169" />
+				<point x="58" y="176" />
+				<point x="21" y="176" />
+			</polygon>
+			-->
 			<paintable>
 				<x>0</x>
 				<y>112</y>
@@ -80,7 +81,7 @@
 			<command>CANCEL</command>
 			<command>STOP</command>
 		</softbutton>
-		<softbutton name="SOFT2" key="VK_F2" alignment="RIGHT">
+		<softbutton name="SOFT2" key="VK_F2" keyCode="-7" alignment="RIGHT">
 			<!--polygon>
 				<point x="51" y="165" />
 				<point x="" y="" />
@@ -107,7 +108,7 @@
 			<command>ITEM</command>
 			<command>HELP</command>
 		</softbutton>
-		<button name="LEFT" key="VK_LEFT">
+		<button name="LEFT" key="VK_LEFT" keyCode="-3">
 			<polygon>
 				<point x="52" y="165" />
 				<point x="58" y="155" />
@@ -116,16 +117,16 @@
 				<point x="54" y="172" />
 			</polygon>
 		</button>
-		<button name="RIGHT" key="VK_RIGHT">
+		<button name="RIGHT" key="VK_RIGHT" keyCode="-4">
 			<polygon>
 				<point x="93" y="153" />
 				<point x="102" y="158" />
 				<point x="106" y="165" />
-				<point x="101" y="174" />
+				<point x="102" y="174" />
 				<point x="93" y="178" />
 			</polygon>
 		</button>
-		<button name="UP" key="VK_UP">
+		<button name="UP" key="VK_UP" keyCode="-1">
 			<rectangle>
 				<x>60</x>
 				<y>149</y>
@@ -133,7 +134,7 @@
 				<height>10</height>
 			</rectangle>
 		</button>
-		<button name="DOWN" key="VK_DOWN">
+		<button name="DOWN" key="VK_DOWN" keyCode="-2">
 			<rectangle>
 				<x>61</x>
 				<y>173</y>
@@ -141,7 +142,7 @@
 				<height>12</height>
 			</rectangle>
 		</button>
-		<button name="SELECT" key="VK_ENTER">
+		<button name="SELECT" key="VK_ENTER" keyCode="-5">
 			<rectangle>
 				<x>68</x>
 				<y>159</y>
@@ -191,7 +192,7 @@
 			<rectangle>
 				<x>10</x>
 				<y>182</y>
-				<width>40</width>
+				<width>41</width>
 				<height>24</height>
 			</rectangle>
 		</button>
@@ -203,9 +204,9 @@
 				<char>2</char>
 			</chars>
 			<rectangle>
-				<x>59</x>
+				<x>60</x>
 				<y>186</y>
-				<width>40</width>
+				<width>41</width>
 				<height>24</height>
 			</rectangle>
 		</button>
@@ -217,9 +218,9 @@
 				<char>3</char>
 			</chars>
 			<rectangle>
-				<x>108</x>
+				<x>109</x>
 				<y>183</y>
-				<width>40</width>
+				<width>41</width>
 				<height>24</height>
 			</rectangle>
 		</button>
@@ -233,7 +234,7 @@
 			<rectangle>
 				<x>10</x>
 				<y>207</y>
-				<width>40</width>
+				<width>41</width>
 				<height>24</height>
 			</rectangle>
 		</button>
@@ -247,7 +248,7 @@
 			<rectangle>
 				<x>59</x>
 				<y>209</y>
-				<width>40</width>
+				<width>41</width>
 				<height>23</height>
 			</rectangle>
 		</button>
@@ -259,9 +260,9 @@
 				<char>6</char>
 			</chars>
 			<rectangle>
-				<x>108</x>
+				<x>109</x>
 				<y>206</y>
-				<width>40</width>
+				<width>41</width>
 				<height>23</height>
 			</rectangle>
 		</button>
@@ -276,7 +277,7 @@
 			<rectangle>
 				<x>10</x>
 				<y>231</y>
-				<width>40</width>
+				<width>41</width>
 				<height>23</height>
 			</rectangle>
 		</button>
@@ -290,7 +291,7 @@
 			<rectangle>
 				<x>59</x>
 				<y>233</y>
-				<width>40</width>
+				<width>41</width>
 				<height>23</height>
 			</rectangle>
 		</button>
@@ -303,9 +304,9 @@
 				<char>9</char>
 			</chars>
 			<rectangle>
-				<x>108</x>
+				<x>109</x>
 				<y>230</y>
-				<width>40</width>
+				<width>41</width>
 				<height>23</height>
 			</rectangle>
 		</button>
@@ -317,15 +318,15 @@
 			<rectangle>
 				<x>10</x>
 				<y>254</y>
-				<width>40</width>
+				<width>41</width>
 				<height>23</height>
 			</rectangle>
 		</button>
 		<button name="POUND" key="VK_MODECHANGE">
 			<rectangle>
-				<x>108</x>
+				<x>109</x>
 				<y>254</y>
-				<width>40</width>
+				<width>41</width>
 				<height>23</height>
 			</rectangle>
 		</button>

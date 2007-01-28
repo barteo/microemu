@@ -37,7 +37,7 @@ Including html code:
 
 There is additional parameter in applet definition tag if you want start applet
 with another device than default:
-  <param name="device" value="({midlet class name} | {jad file location})">
+  <param name="device" value="({device class name} | {device.xml file location})">
     eg. minimum phone included in distribution has
         org/microemu/device/minimum/device.xml
 

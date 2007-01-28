@@ -510,6 +510,8 @@ public class Device
                 XMLElement tmp_button = (XMLElement) e_button.nextElement();
                 if (tmp_button.getName().equals("rectangle")) {
                   shape = getRectangle(tmp_button);
+                } else if (tmp_button.getName().equals("polygon")) {
+                  shape = getPolygon(tmp_button);
                 } else if (tmp_button.getName().equals("paintable")) {
                   paintable = getRectangle(tmp_button);
                 } else if (tmp_button.getName().equals("command")) {

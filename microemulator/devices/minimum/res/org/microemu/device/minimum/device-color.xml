@@ -8,6 +8,12 @@
 		<numalphalevels>256</numalphalevels>
 		<foreground>000000</foreground>
 		<background>ffffff</background>
+		<icon name="up">
+			<img name="pressed" src="up.png"/>
+		</icon>
+		<icon name="down">
+			<img name="pressed" src="down.png"/>
+		</icon>
 	</display>
 	<input>
 		<haspointerevents>true</haspointerevents>

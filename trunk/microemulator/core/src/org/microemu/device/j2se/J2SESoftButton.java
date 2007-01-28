@@ -97,22 +97,8 @@ public class J2SESoftButton extends J2SEButton implements SoftButton {
 		}
 	}
 	
-	/**
-	 * @param name
-	 * @param paintable
-	 * @param normalImage
-	 * @param pressedImage
-	 * @throws IllegalArgumentException if normalImage or pressedImage is null
-	 */
-	public J2SESoftButton(String name, Rectangle paintable, Image normalImage, Image pressedImage) throws IllegalArgumentException {
+	public J2SESoftButton(String name, Rectangle paintable, Image normalImage, Image pressedImage) {
 		super(name, null, Integer.MIN_VALUE, null, null);
-		
-		if (normalImage == null) {
-			throw new IllegalArgumentException("normal icon is missing for button " + name);
-		}
-		if (pressedImage == null) {
-			throw new IllegalArgumentException("pressed icon is missing for button " + name);
-		}
 		
 		this.type = TYPE_ICON;
 		

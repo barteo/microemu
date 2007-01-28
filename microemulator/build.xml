@@ -257,12 +257,6 @@
 				<exclude name="**/Thumbs.db"/>
 			</fileset>
 		</jar>
-		<jar compress="true" jarfile="./target/devices/small.jar">
-			<fileset dir="./devices/small/res">
-				<exclude name="**/.*"/>
-				<exclude name="**/Thumbs.db"/>
-			</fileset>
-		</jar>
 		<jar compress="true" jarfile="./target/devices/large.jar">
 			<fileset dir="./devices/large/res">
 				<exclude name="**/.*"/>

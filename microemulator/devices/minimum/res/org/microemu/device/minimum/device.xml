@@ -55,20 +55,12 @@
 		<softbutton name="SOFT1" key="VK_F1" keyCode="-6" alignment="LEFT">
 			<polygon>
 				<point x="21" y="153" />
-				<point x="60" y="153" />
+				<point x="62" y="153" />
+				<point x="51" y="161" />
+				<point x="51" y="169" />
 				<point x="60" y="176" />
 				<point x="21" y="176" />
 			</polygon>
-			<!--
-			<polygon>
-				<point x="21" y="153" />
-				<point x="60" y="153" />
-				<point x="51" y="161" />
-				<point x="51" y="169" />
-				<point x="58" y="176" />
-				<point x="21" y="176" />
-			</polygon>
-			-->
 			<paintable>
 				<x>0</x>
 				<y>112</y>
@@ -82,21 +74,14 @@
 			<command>STOP</command>
 		</softbutton>
 		<softbutton name="SOFT2" key="VK_F2" keyCode="-7" alignment="RIGHT">
-			<!--polygon>
-				<point x="51" y="165" />
-				<point x="" y="" />
-				<point x="" y="" />
-				<point x="" y="" />
-				<point x="" y="" />
-				<point x="" y="" />
-			</polygon-->
-
-			<rectangle>
-				<x>101</x>
-				<y>154</y>
-				<width>35</width>
-				<height>21</height>
-			</rectangle>
+			<polygon>
+				<point x="96" y="153" />
+				<point x="138" y="153" />
+				<point x="138" y="177" />
+				<point x="96" y="177" />
+				<point x="107" y="169" />
+				<point x="107" y="162" />
+			</polygon>
 			<paintable>
 				<x>68</x>
 				<y>112</y>
@@ -110,18 +95,20 @@
 		</softbutton>
 		<button name="LEFT" key="VK_LEFT" keyCode="-3">
 			<polygon>
-				<point x="52" y="165" />
-				<point x="58" y="155" />
-				<point x="64" y="153" />
+				<point x="53" y="161" />
+				<point x="59" y="156" />
+				<point x="64" y="155" />
 				<point x="64" y="177" />
-				<point x="54" y="172" />
+				<point x="57" y="173" />
+				<point x="53" y="169" />
 			</polygon>
 		</button>
 		<button name="RIGHT" key="VK_RIGHT" keyCode="-4">
 			<polygon>
 				<point x="93" y="153" />
 				<point x="102" y="158" />
-				<point x="106" y="165" />
+				<point x="106" y="163" />
+				<point x="106" y="168" />
 				<point x="102" y="174" />
 				<point x="93" y="178" />
 			</polygon>

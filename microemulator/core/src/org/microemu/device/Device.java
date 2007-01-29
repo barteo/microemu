@@ -190,7 +190,8 @@ public class Device
     	try {
 			for (Iterator i = systemProperties.entrySet().iterator(); i.hasNext();) {
 				Map.Entry e = (Map.Entry) i.next();
-				System.clearProperty((String) e.getKey());
+				//System.clearProperty((String) e.getKey());
+				System.getProperties().remove(e.getKey());
 			}
 			for (Iterator i = systemPropertiesPreserve.entrySet().iterator(); i.hasNext();) {
 				Map.Entry e = (Map.Entry) i.next();

@@ -174,16 +174,12 @@
 			<arg line="-libraryjars ${env.JAVA_HOME}/jre/lib/rt.jar;${env.JAVA_HOME}/jre/lib/jsse.jar"/>
 			<arg line="-injars ./target/me-applet.jar"/>
 			<arg line="-outjar ./target/me-applet-obfuscated.jar"/>
-			<arg line="-defaultpackage 'me2'"/>
-            <arg line="-dontusemixedcaseclassnames"/>
-            <!-- For Java 6 and ProGuard 3.7 -->
-            <arg line="-dontskipnonpubliclibraryclasses"/>
+			<arg line="-dontskipnonpubliclibraryclasses"/>
 			<arg line="-keep 'class javax.** { *; }'"/>
 			<arg line="-keep 'public class * extends javax.** { *;}'"/>
 			<arg line="-keep 'public class * extends java.applet.Applet { *; }'"/>
+			<arg line="-keep 'public class org.microemu.** { *; }'"/>
 			<arg line="-keep 'public class org.microemu.EmulatorContext { *; }'"/>
-			<arg line="-keep 'public class org.microemu.MIDletBridge { *; }'"/>
-			<arg line="-keep 'public class org.microemu.cldc.ClosedConnection { *; }'"/>
 			<arg line="-keep 'public class org.microemu.device.** { *; }'"/>
 			<arg line="-keep 'public class * extends org.microemu.device.** { *; }'"/>
 			<!--<arg line="-keep 'public class org.microemu.device.applet.** { *; }'"/>-->

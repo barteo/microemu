@@ -1,2 +1,0 @@
-Device-Name: GetKey Device
-Device-Class: net.barteo.me.gkey.device.GKeyJ2SEDevice

@@ -186,7 +186,7 @@
 				<width>112</width>
 				<height>26</height>
 			</paintable>
-			<font face="system" style="plain" size="medium"/>
+			<font face="system" style="bold" size="large"/>
 			<command>BACK</command>
 			<command>EXIT</command>
 			<command>CANCEL</command>
@@ -207,7 +207,7 @@
 				<width>112</width>
 				<height>26</height>
 			</paintable>
-			<font face="system" style="plain" size="medium"/>
+			<font face="system" style="bold" size="large"/>
 			<command>OK</command>
 			<command>SCREEN</command>
 			<command>ITEM</command>

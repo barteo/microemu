@@ -184,7 +184,7 @@
 				<x>1</x>
 				<y>293</y>
 				<width>112</width>
-				<height>26</height>
+				<height>23</height>
 			</paintable>
 			<font face="system" style="bold" size="large"/>
 			<command>BACK</command>
@@ -205,7 +205,7 @@
 				<x>126</x>
 				<y>293</y>
 				<width>112</width>
-				<height>26</height>
+				<height>23</height>
 			</paintable>
 			<font face="system" style="bold" size="large"/>
 			<command>OK</command>

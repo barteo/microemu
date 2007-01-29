@@ -13,47 +13,48 @@
 		<foreground>000000</foreground>
 		<background>ffffff</background>
 		<rectangle>
-			<x>28</x>
-			<y>33</y>
+			<x>26</x>
+			<y>51</y>
 			<width>240</width>
 			<height>320</height>
 		</rectangle>
+		<!-- Like Sony-Ericsson/W900 -->
 		<paintable>
 			<x>0</x>
-			<y>10</y>
-			<width>352</width>
-			<height>384</height>
+			<y>27</y>
+			<width>240</width>
+			<height>266</height>
 		</paintable>
 		<icon name="up">
 			<paintable>
-				<x>166</x>
-				<y>402</y>
+				<x>114</x>
+				<y>295</y>
 				<width>12</width>
 				<height>12</height>
 			</paintable>
-			<img name="normal" src="org/microemu/device/default/up.png"/>
-			<img name="pressed" src="org/microemu/device/default/up-pressed.png"/>
+			<img name="normal" src="/org/microemu/device/default/up.png"/>
+			<img name="pressed" src="/org/microemu/device/default/up-pressed.png"/>
 		</icon>
 		<icon name="down">
 			<paintable>
-				<x>176</x>
-				<y>402</y>
+				<x>114</x>
+				<y>306</y>
 				<width>12</width>
 				<height>12</height>
 			</paintable>
-			<img name="normal" src="org/microemu/device/default/down.png"/>
-			<img name="pressed" src="org/microemu/device/default/down-pressed.png"/>
+			<img name="normal" src="/org/microemu/device/default/down.png"/>
+			<img name="pressed" src="/org/microemu/device/default/down-pressed.png"/>
 		</icon>
 		<status name="input">
 			<paintable>
-				<x>0</x>
-				<y>0</y>
+				<x>3</x>
+				<y>3</y>
 				<width>14</width>
 				<height>7</height>
 			</paintable>
-			<img name="123" src="org/microemu/device/default/123.png"/>
-			<img name="ABC" src="org/microemu/device/default/abc_upper.png"/>
-			<img name="abc" src="org/microemu/device/default/abc_lower.png"/>
+			<img name="123" src="/org/microemu/device/default/123.png"/>
+			<img name="ABC" src="/org/microemu/device/default/abc_upper.png"/>
+			<img name="abc" src="/org/microemu/device/default/abc_lower.png"/>
 		</status>
 	</display>
 	<fonts hint="antialiasing">
@@ -170,18 +171,20 @@
 		<haspointerevents>true</haspointerevents>
 		<haspointermotionevents>true</haspointermotionevents>
 		<hasrepeatevents>true</hasrepeatevents>
-		<softbutton name="SOFT1" key="VK_F1" alignment="LEFT">
-			<rectangle>
-				<x>149</x>
-				<y>456</y>
-				<width>37</width>
-				<height>27</height>
-			</rectangle>
+		<softbutton name="SOFT1" key="VK_F1" keyCode="-6" alignment="LEFT">
+			<polygon>
+				<point x="44" y="396" />
+				<point x="109" y="395" />
+				<point x="100" y="408" />
+				<point x="100" y="420" />
+				<point x="107" y="431" />
+				<point x="45" y="431" />
+			</polygon>
 			<paintable>
 				<x>1</x>
-				<y>399</y>
-				<width>69</width>
-				<height>16</height>
+				<y>293</y>
+				<width>112</width>
+				<height>26</height>
 			</paintable>
 			<font face="system" style="plain" size="medium"/>
 			<command>BACK</command>
@@ -189,18 +192,20 @@
 			<command>CANCEL</command>
 			<command>STOP</command>
 		</softbutton>
-		<softbutton name="SOFT2" key="VK_F2" alignment="RIGHT">
-			<rectangle>
-				<x>222</x>
-				<y>456</y>
-				<width>37</width>
-				<height>27</height>
-			</rectangle>
+		<softbutton name="SOFT2" key="VK_F2" keyCode="-7" alignment="RIGHT">
+			<polygon>
+				<point x="180" y="394" />
+				<point x="249" y="393" />
+				<point x="249" y="431" />
+				<point x="181" y="431" />
+				<point x="189" y="421" />
+				<point x="189" y="407" />
+			</polygon>
 			<paintable>
-				<x>283</x>
-				<y>399</y>
-				<width>69</width>
-				<height>16</height>
+				<x>126</x>
+				<y>293</y>
+				<width>112</width>
+				<height>26</height>
 			</paintable>
 			<font face="system" style="plain" size="medium"/>
 			<command>OK</command>
@@ -208,44 +213,48 @@
 			<command>ITEM</command>
 			<command>HELP</command>
 		</softbutton>
-		<button name="LEFT" key="VK_LEFT">
+		<button name="LEFT" key="VK_LEFT" keyCode="-3">
+			<polygon>
+				<point x="101" y="408" />
+				<point x="109" y="398" />
+				<point x="119" y="391" />
+				<point x="119" y="436" />
+				<point x="107" y="429" />
+				<point x="101" y="420" />
+			</polygon>
+		</button>
+		<button name="RIGHT" key="VK_RIGHT" keyCode="-4">
+			<polygon>
+				<point x="167" y="390" />
+				<point x="182" y="399" />
+				<point x="189" y="407" />
+				<point x="189" y="420" />
+				<point x="182" y="430" />
+				<point x="169" y="438" />
+			</polygon>
+		</button>
+		<button name="UP" key="VK_UP" keyCode="-1">
 			<rectangle>
-				<x>149</x>
-				<y>512</y>
-				<width>37</width>
-				<height>27</height>
+				<x>120</x>
+				<y>382</y>
+				<width>46</width>
+				<height>17</height>
 			</rectangle>
 		</button>
-		<button name="RIGHT" key="VK_RIGHT">
+		<button name="DOWN" key="VK_DOWN" keyCode="-2">
 			<rectangle>
-				<x>222</x>
-				<y>512</y>
-				<width>37</width>
-				<height>27</height>
+				<x>120</x>
+				<y>430</y>
+				<width>46</width>
+				<height>17</height>
 			</rectangle>
 		</button>
-		<button name="UP" key="VK_UP">
+		<button name="SELECT" key="VK_ENTER" keyCode="-5">
 			<rectangle>
-				<x>187</x>
-				<y>485</y>
-				<width>37</width>
-				<height>27</height>
-			</rectangle>
-		</button>
-		<button name="DOWN" key="VK_DOWN">
-			<rectangle>
-				<x>187</x>
-				<y>539</y>
-				<width>37</width>
-				<height>27</height>
-			</rectangle>
-		</button>
-		<button name="SELECT" key="VK_ENTER">
-			<rectangle>
-				<x>187</x>
-				<y>512</y>
-				<width>37</width>
-				<height>27</height>
+				<x>128</x>
+				<y>399</y>
+				<width>34</width>
+				<height>32</height>
 			</rectangle>
 		</button>
 		<button name="0" key="VK_0">
@@ -253,11 +262,11 @@
 				<char/>
 				<char>0</char>
 			</chars>
-			<rectangle>
-				<x>187</x>
-				<y>663</y>
-				<width>37</width>
-				<height>27</height>
+			<rectangle>			
+				<x>112</x>
+				<y>558</y>
+				<width>66</width>
+				<height>35</height>
 			</rectangle>
 		</button>
 		<button name="1" key="VK_1">
@@ -288,10 +297,10 @@
 				<char>1</char>
 			</chars>
 			<rectangle>
-				<x>149</x>
-				<y>581</y>
-				<width>37</width>
-				<height>27</height>
+				<x>36</x>
+				<y>441</y>
+				<width>60</width>
+				<height>36</height>
 			</rectangle>
 		</button>
 		<button name="2" key="VK_2">
@@ -302,10 +311,10 @@
 				<char>2</char>
 			</chars>
 			<rectangle>
-				<x>187</x>
-				<y>581</y>
-				<width>37</width>
-				<height>27</height>
+				<x>115</x>
+				<y>447</y>
+				<width>61</width>
+				<height>36</height>
 			</rectangle>
 		</button>
 		<button name="3" key="VK_3">
@@ -315,11 +324,11 @@
 				<char>f</char>
 				<char>3</char>
 			</chars>
-			<rectangle>
-				<x>222</x>
-				<y>581</y>
-				<width>37</width>
-				<height>27</height>
+			<rectangle>			
+				<x>194</x>
+				<y>440</y>
+				<width>60</width>
+				<height>36</height>
 			</rectangle>
 		</button>
 		<button name="4" key="VK_4">
@@ -330,10 +339,10 @@
 				<char>4</char>
 			</chars>
 			<rectangle>
-				<x>149</x>
-				<y>609</y>
-				<width>37</width>
-				<height>27</height>
+				<x>36</x>
+				<y>480</y>
+				<width>61</width>
+				<height>36</height>
 			</rectangle>
 		</button>
 		<button name="5" key="VK_5">
@@ -344,10 +353,10 @@
 				<char>5</char>
 			</chars>
 			<rectangle>
-				<x>187</x>
-				<y>609</y>
-				<width>37</width>
-				<height>27</height>
+				<x>115</x>
+				<y>482</y>
+				<width>61</width>
+				<height>36</height>
 			</rectangle>
 		</button>
 		<button name="6" key="VK_6">
@@ -357,11 +366,11 @@
 				<char>o</char>
 				<char>6</char>
 			</chars>
-			<rectangle>
-				<x>222</x>
-				<y>609</y>
-				<width>37</width>
-				<height>27</height>
+			<rectangle>			
+				<x>194</x>
+				<y>478</y>
+				<width>60</width>
+				<height>36</height>
 			</rectangle>
 		</button>
 		<button name="7" key="VK_7">
@@ -373,10 +382,10 @@
 				<char>7</char>
 			</chars>
 			<rectangle>
-				<x>149</x>
-				<y>636</y>
-				<width>37</width>
-				<height>27</height>
+				<x>36</x>
+				<y>516</y>
+				<width>61</width>
+				<height>36</height>
 			</rectangle>
 		</button>
 		<button name="8" key="VK_8">
@@ -387,10 +396,10 @@
 				<char>8</char>
 			</chars>
 			<rectangle>
-				<x>187</x>
-				<y>636</y>
-				<width>37</width>
-				<height>27</height>
+				<x>115</x>
+				<y>522</y>
+				<width>61</width>
+				<height>36</height>
 			</rectangle>
 		</button>
 		<button name="9" key="VK_9">
@@ -402,10 +411,10 @@
 				<char>9</char>
 			</chars>
 			<rectangle>
-				<x>222</x>
-				<y>636</y>
-				<width>37</width>
-				<height>27</height>
+				<x>194</x>
+				<y>517</y>
+				<width>61</width>
+				<height>36</height>
 			</rectangle>
 		</button>
 		<button name="ASTERISK" key="VK_MULTIPLY">
@@ -414,18 +423,18 @@
 				<char>+</char>
 			</chars>
 			<rectangle>
-				<x>149</x>
-				<y>663</y>
-				<width>37</width>
-				<height>27</height>
+				<x>36</x>
+				<y>555</y>
+				<width>61</width>
+				<height>36</height>
 			</rectangle>
 		</button>
 		<button name="POUND" key="VK_MODECHANGE">
 			<rectangle>
-				<x>222</x>
-				<y>663</y>
-				<width>37</width>
-				<height>27</height>
+				<x>194</x>
+				<y>554</y>
+				<width>61</width>
+				<height>36</height>
 			</rectangle>
 		</button>
 	</input>

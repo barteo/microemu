@@ -1,0 +1,93 @@
+* Errors that are produced by user action should result in message dialog!
+  (Main/Swt/WebStart)
+
+* Open URL dialog should have Editable DropDown instead of Input box.
+  There should be the list of recently opened URLS this list should
+  be stored in config.xml
+
+* In File dialog we need to have recently opened files. Add the list
+  to config.xml
+
+* Midlet display window should have the ability to have magnified version.
+
+* persistent RecordStore for applet using cookies (some code already exist written by Roar Lauritzsen)
+
+* extended web site with overview, api docs, faq section, instalation instructions, etc.
+  (app requires Java 2, applet can be run in JVM 1.1)
+
+* Prepare WebStart environment to be part of standard distribution not just our demo.
+
+* Untrusted webstart
+
+* decide what to do with JSObject.  create stub class  or use  USER_LIBRARY in .classpath ro eclipse.
+
+* JUnit / HeadlessEmulator
+
+* rebuild InputMethod to extend functionality:
+  - switching between modes (numeric, password, URL, etc.)
+  - solve problem with VK_BACKSPACE key on emulator device
+
+* ConnectionFramework - currently only http connection is supported, implement other:
+  - udp
+  - https - done
+  - file
+
+* (?) applet loader - during loading applet code progress bar should be visible
+
+* rewrite InputMethod code:
+  - for buttons  2, 4, 6, 8  function  Canvas.getGameAction(keyCode)  should return  Up, Left, Right, Down
+  - KeyCodes for Numeric keyboard
+
+* Replace all System.err.println with proper log infrastructure
+
+* midlet bytcode instrumentation to replace calls to System.getProperty (not avalable in Webstart and Applet env)
+
+* Use maven for build. now maven build is here: https://pyx4j.com/svn/contrib/www.microemu.org
+
+* refactor subproject dependency. Idea in module microemu-stubs
+
+* Create eclipseme.core.model.impl for Microemulator as described
+  http://eclipseme.org/docs/developer/extending.html
+  Contribute this to eclipseme
+
+* UEI
+
+* MOVE to SVN
+
+* Consider hosting project at http://code.google.com/
+    pros:  SVN, nice issues management, Wiki
+
+* Create Microemulator CruiseControl taks at https://pyx4j.com/cruisecontrol/
+
+-- Maybe TODO -- just ideas
+
+* device.xml inheritance
+
+<device name="Moto Like default device">
+   <inherit>device.xml</inherit>
+   <softbutton name="soft1" key="VK_F1" keyCode="-21"/>
+   <!-- No need to define other stuff, it is inheridet-->
+  <softbutton name="soft2" key="VK_F2" keyCode="-22"/>
+</device>
+
+*  Need to add credits tag to device.xml
+<device>
+<credits>
+    <designer>David Luscombe</designer>
+    <url> http://www.davidluscombe.com/ </url>
+     < -- image size of the display and to cover all the display -->
+    <logo>davidLogo.png<logo>
+<credits>
+
+* Need to have another image and special button on skin
+  when pressed the image is show in display, may show designer credits.
+
+                <specialButton>
+                        <rectangle>
+                                <x>159</x>
+                                <y>432</y>
+                                <width>54</width>
+                                <height>31</height>
+                        </rectangle>
+                        <action>showCreditsImage<action>
+                </specialButton>

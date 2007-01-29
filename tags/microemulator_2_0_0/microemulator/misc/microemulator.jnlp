@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp
+  spec="1.0+"
+  codebase="http://localhost:8080/test"
+  href="microemulator.jnlp">
+  <information>
+    <title>MicroEmulator</title>
+    <vendor>Bartek Teodorczyk</vendor>
+    <homepage href="webstart.html"/>
+    <description>MicroEmulator description</description>
+    <description kind="short">MicroEmulator description kind</description>
+    <icon href="images/swingset2.jpg"/>
+    <icon kind="splash" href="images/splash.gif"/>
+    <offline-allowed/>
+  </information>
+  <security>
+      <all-permissions/>
+  </security>
+  <resources>
+    <j2se version="1.2+"/>
+    <jar href="me-webstart.jar"/>
+  </resources>
+  <application-desc main-class="org.microemu.app.WebStart"/>
+</jnlp>
+

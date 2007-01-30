@@ -41,8 +41,8 @@
 		</icon>
 		<status name="input">
 			<paintable>
-				<x>0</x>
-				<y>0</y>
+				<x>1</x>
+				<y>1</y>
 				<width>14</width>
 				<height>7</height>
 			</paintable>

@@ -61,7 +61,7 @@ Example for SimpleDemo MIDlet and Minimum device with Mouse and color:
 
 Example for SimpleDemo MIDlet and Large Skin:
 <applet code="org.microemu.applet.Main"
-		width=292 height=618 archive="me-applet.jar,minimum.jar,simpledemo.jar">
+		width=292 height=618 archive="me-applet.jar,large.jar,simpledemo.jar">
 	<param name="midlet" value="org.microemu.midp.examples.simpledemo.SimpleDemo">
 	<param name="device" value="org/microemu/device/large/device.xml">
 </applet>

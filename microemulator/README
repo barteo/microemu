@@ -52,6 +52,19 @@ Example for SimpleDemo MIDlet, Nokia UI support and Minimum device:
 	<param name="device" value="org/microemu/device/minimum/device.xml">
 </applet>
 
+Example for SimpleDemo MIDlet and Minimum device with Mouse and color:
+<applet code="org.microemu.applet.Main"
+		width=157 height=285 archive="me-applet.jar,minimum.jar,simpledemo.jar">
+	<param name="midlet" value="org.microemu.midp.examples.simpledemo.SimpleDemo">
+	<param name="device" value="org/microemu/device/minimum/device-color.xml">
+</applet>
+
+Example for SimpleDemo MIDlet and Large Skin:
+<applet code="org.microemu.applet.Main"
+		width=292 height=618 archive="me-applet.jar,minimum.jar,simpledemo.jar">
+	<param name="midlet" value="org.microemu.midp.examples.simpledemo.SimpleDemo">
+	<param name="device" value="org/microemu/device/large/device.xml">
+</applet>
 
 
 

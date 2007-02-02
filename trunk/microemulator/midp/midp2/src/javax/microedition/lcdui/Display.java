@@ -146,7 +146,6 @@ public class Display
 
         public void keyPressed(int keyCode) 
 		{
-System.out.println("keyPressed: " + keyCode);        	
 			if (current != null) {
                 // Andres Navarro
                 if (current instanceof GameCanvas) {
@@ -160,7 +159,6 @@ System.out.println("keyPressed: " + keyCode);
 
 		public void keyReleased(int keyCode) 
 		{
-System.out.println("keyReleased: " + keyCode);        	
 			if (current != null) {
                 // Andres Navarro
                 if (current instanceof GameCanvas) {

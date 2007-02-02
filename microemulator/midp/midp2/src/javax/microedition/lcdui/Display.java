@@ -146,6 +146,7 @@ public class Display
 
         public void keyPressed(int keyCode) 
 		{
+System.out.println("keyPressed: " + keyCode);        	
 			if (current != null) {
                 // Andres Navarro
                 if (current instanceof GameCanvas) {
@@ -159,6 +160,7 @@ public class Display
 
 		public void keyReleased(int keyCode) 
 		{
+System.out.println("keyReleased: " + keyCode);        	
 			if (current != null) {
                 // Andres Navarro
                 if (current instanceof GameCanvas) {
@@ -566,49 +568,29 @@ public class Display
 	
 	public int getColor(int colorSpecifier)
 	{
-		// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		// TODO implement
+		return 0;
 	}
 	
 	
 	public int getBorderStyle(boolean highlighted)
 	{
-		// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		// TODO implement;
+		return Graphics.SOLID;
 	}
 
 
 	public int getBestImageWidth(int imageType)
 	{
-		// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		// TODO implement
+		return 0;
 	}
 	
 	
 	public int getBestImageHeight(int imageType)
 	{
-		// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		// TODO implement
+		return 0;
 	}
 	
 	
@@ -679,13 +661,7 @@ public class Display
 	
 	public void setCurrentItem(Item item)
 	{
-		// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		// TODO implement
 	}
     
     

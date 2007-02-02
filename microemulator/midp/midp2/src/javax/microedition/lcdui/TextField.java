@@ -248,13 +248,7 @@ public class TextField extends Item
 	
 	public void setInitialInputMode(String characterSubset)
 	{
-		// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		// TODO implement
 	}
 
 	

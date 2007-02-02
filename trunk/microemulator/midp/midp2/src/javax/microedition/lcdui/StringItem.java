@@ -34,43 +34,21 @@ public class StringItem extends Item {
 	}
 	
 	public int getAppearanceMode() {
-    	// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+    	// TODO implement
+		return Item.PLAIN;
 	}
 	
 	public Font getFont() {
-    	// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+    	// TODO implement
+		return Font.getDefaultFont();
 	}
 	
 	public void setFont(Font font) {
-    	// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+    	// TODO implement
 	}
 
 	public void setPreferredSize(int width, int height) {
-    	// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+    	// TODO implement
 	}
 	
 	public String getText() {

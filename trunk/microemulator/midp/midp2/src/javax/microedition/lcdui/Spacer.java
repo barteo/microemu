@@ -42,13 +42,7 @@ public class Spacer extends Item {
 		if (minWidth < 0 || minHeight < 0)
 			throw new IllegalArgumentException();
 		
-		  // TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		  // TODO implement
 	}
 	
 	// Item methods

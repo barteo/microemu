@@ -150,13 +150,8 @@ public class List extends Screen implements Choice
   
   public void removeCommand(Command cmd)
   {
-	  // TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+	  // TODO implement
+	  super.removeCommand(cmd);
   }
     
   
@@ -202,13 +197,8 @@ public class List extends Screen implements Choice
   
   public void setTitle(String s)
   {
-	  // TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+	  // TODO implement
+	  super.setTitle(s);
   }
     
   

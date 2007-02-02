@@ -106,13 +106,7 @@ public abstract class MIDlet
 	}
 
     public final void resumeRequest() {
-    	// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+    	// TODO implement
     }
 
 }

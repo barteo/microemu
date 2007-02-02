@@ -263,23 +263,11 @@ public class Sprite extends Layer {
     }
     
     public final int getFrame() {
-		// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		return frame;
     }
     
     public int getFrameSequenceLength() {
-		// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+    	return (sequence == null) ? rows*cols : sequence.length; 
     }
     
     public void setFrame(int frame) {

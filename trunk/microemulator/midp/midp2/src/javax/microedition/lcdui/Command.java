@@ -62,13 +62,8 @@ public class Command {
 
 	public Command(String shortLabel, String longLabel, int commandType,
 			int priority) {
-		// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		// TODO implement
+		this(shortLabel, commandType, priority);
 	}
 
 	public int getCommandType() {
@@ -80,13 +75,8 @@ public class Command {
 	}
 
 	public String getLongLabel() {
-		// TODO
-		try {
-			throw new RuntimeException("Not implemented");
-		} catch (RuntimeException ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
+		// TODO implement;
+		return label;
 	}
 
 	public int getPriority() {

@@ -30,7 +30,7 @@
 * ConnectionFramework - currently only http connection is supported, implement other:
   - udp
   - https - done
-  - file
+  - file  - done in https://pyx4j.com/svn/contrib/www.microemu.org/microemu-jsr-75-impl
 
 * (?) applet loader - during loading applet code progress bar should be visible
 

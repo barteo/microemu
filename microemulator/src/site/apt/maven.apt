@@ -1,0 +1,52 @@
+~~ @version $Revision$ ($Author$) $Date$
+~~ See this file format http://maven.apache.org/guides/mini/guide-apt-format.html
+
+                                    ------------------
+                                    Maven
+
+Building project using maven
+
+* Releases
+
+    We are working on publishing in http://www.ibiblio.org ...
+
+    Now the releases available from the {{{http://www.microemu.org/maven2}http://www.microemu.org/maven2}} MicroEmulator maven 2 repository.
+    You need to add this repository to your $home/.m2/settings.xml
+
+---
+        <repository>
+            <id>microemu-web</id>
+            <url>http://www.microemu.org/maven2</url>
+        </repository>
+---
+
+* Development snapshot
+
+    The latest snapshot builds can be downloaded from the {{{http://www.pyx4me.com/maven2/}http://www.pyx4me.com/maven2}} MicroEmulator maven 2 snapshot repository.
+
+---
+        <repository>
+            <id>pyx4me-web</id>
+            <url>http://www.pyx4me.com/maven2</url>
+        </repository>
+---
+
+* Adding MicroEmulator dependency to your project
+
+---
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemulator-app-swing</artifactId>
+            <version>2.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+---
+
+~~~            <artifactId>microemu-swing</artifactId>
+~~~            <classifier>app</classifier>
+~~~    *  <classifier> is used to ensure the use of assembly jar. CLDC and MIDP modules of MicroEmulator are included in that bundle .
+
+    *  <scope provided> defines that MicroEmulator classes are not included in your final application jar
+
+
+   For more information on building J2ME  application using maven2 see {{{http://pyx4me.com/snapshot/pyx4me/pyx4me-maven-plugins/j2me-maven-plugin/introduction.html}j2me-maven-plugin}}

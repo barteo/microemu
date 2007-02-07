@@ -1,0 +1,97 @@
+~~ @version $Revision$ ($Author$) $Date$
+~~ See this file format http://maven.apache.org/guides/mini/guide-apt-format.html
+
+                                    ------------------
+                                    Usage
+
+
+Running j2me application with MicroEmulator
+
+* Starting MIDlet from command line
+
+    [[1]] Use MainClass
+
+---
+java org.microemu.app.Main (MIDlet application main class)
+or
+java org.microemu.app.Main (MIDlet jad file)
+---
+
+        * me-app.jar must be in CLASSPATH
+
+        []
+
+---
+java -cp me-app.jar;YourApp.jar org.microemu.app.Main com.yourcompany.YourMidlet
+or
+java org.microemu.app.Main path2yourApp/YourApp.jad
+---
+
+
+    [[2]] Use me-app.jar
+
+---
+java -jar me-app.jar (MIDlet application main class)
+or
+java -jar me-app.jar (MIDlet jad file)
+---
+
+        * (MIDlet application main class) parameter is optional, if used MIDlet application jar file must be in CLASSPATH,
+
+        * (MIDlet jad file) must have .jad extension,
+
+        * to support Nokia UI include nokiaui.jar to the CLASSPATH,
+
+        * to support Siemens API include siemensapi.jar to the CLASSPATH.
+
+        []
+
+---
+java -cp nokiaui.jar;YourApp.jar -jar me-app.jar com.yourcompany.YourMidlet
+or
+java -cp siemensapi.jar -jar me-app.jar http://wwww.yourcompany.com/download/YourApp-sim.jad
+---
+
+    MicroEmulator command line options
+
+        * --rms [memory | file]
+
+            persistent or not RecordStoreManager manager
+
+        * --device | -d <device class or xml>
+
+            specify device skin.
+
+---
+java -cp me-app.jar;devices/large.jar org.microemu.app.Main --device org/microemu/device/large/device.xml http://wintermute.de/wap/5ud0ku.jad
+---
+
+
+* Building and debugging a java project using MicroEmulator and Eclipse
+
+    All you need to do is to configure Run Command to start Emulator Directly from the IDE.
+
+    Click on your project, go to Run > Run.
+
+    Double click "Java Application" to create a run type. Name this new run command.
+
+    For Main class, put in> org.microemu.app.Main
+    and select "Include libraries when searching for main class" .
+
+[images/eclipse-main.png] Java Main class
+
+    Click the "Argument" tab and this under Program arguments enter you MIDlet class name.
+
+[images/eclipse-arguments.png] Java Argument class
+
+    Finally, go to the class path, add your project (done already by default), and add microemu-swing-2.0.0.cr1-app.jar (under User Entries)
+
+
+*  Integration of MicroEmulator into Eclipse EclipseME project
+
+   The described above approach is working when your project is {{{http://eclipseme.org/}EclipseME}} project.
+   In this case you need to specify Runtime JRE.
+
+    Select Execution Environment: J2SE-1.3, J2SE-1.4 or J2SE-1.5
+
+[images/eclipse-jre.png] Java Execution Environment

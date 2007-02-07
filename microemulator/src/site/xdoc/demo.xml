@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <properties>
+    <title>Applet demonstration</title>
+  </properties>
+  <body>
+    <section name="MicroEmulator running as applet">
+
+        <div align="center">
+            <applet code="org.microemu.applet.Main" width="226" height="471" archive="microemu-applet/me-applet.jar,microemu-example/simpledemo.jar">
+                <param name="midlet" value="org.microemu.midp.examples.simpledemo.SimpleDemo"/>
+            </applet>
+        </div>
+
+        <a href="demo-mini.html">MicroEmulator mini skin</a>
+    </section>
+
+    <subsection name="Credits">
+        This image is created base on art work of <a href="http://www.istockphoto.com/fontmonster/">David Luscombe</a>.
+        <!-- His combined book-and-DVD package <a href="http://www.amazon.co.uk/exec/obidos/ASIN/1861542739/fontmonster-21/026-0229972-7834817">Freewave</a>. -->
+    </subsection>
+
+    <section name="Other MicroEmulator applet examples">
+        <a href="http://www.opera.com/products/mobile/operamini/demo.dml">Live demo of Opera Mini</a><br/>
+        <a href="http://www.petitpub.com/labs/j2me/me/tutorial/SonyEricsson/index.htm">Bertil Gralvik SonyEricsson T610 example</a><br/>
+        <a href="http://startofentry.blogdns.org/space/5ud0ku/webdemo">Sudoku</a><br/>
+    </section>
+
+  </body>
+</document>
+

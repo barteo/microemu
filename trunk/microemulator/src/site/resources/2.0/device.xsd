@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.microemu.org/2.0/" targetNamespace="http://www.microemu.org/2.0/" elementFormDefault="qualified" version="2.0">
+	<xsd:annotation>
+		<xsd:documentation>This is the XML Schema for the MicroEmulator custom device descriptor.
+			More information can be found here http://www.microemu.org/skin.html
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:element name="device" type="device">
+		<xsd:annotation>
+			<xsd:documentation>The device element is the root of the device descriptor.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:complexType name="device">
+		<xsd:sequence>
+			<xsd:element name="class-name" type="xsd:string" default="org.microemu.device.Device" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>The optional class that implements this device</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="system-properties" type="system-properties" minOccurs="0"/>
+			<xsd:element name="img" type="img" minOccurs="0" maxOccurs="3">
+			    <xsd:annotation>
+					<xsd:documentation>The image of the phone. Optional when device is extension.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="display" type="display"/>
+			<xsd:element name="fonts" type="fonts" minOccurs="0"/>
+			<xsd:element name="input" type="input"/>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string" default="path">
+			<xsd:annotation>
+				<xsd:documentation>The name of this device</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="extends" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>The path to parent device.xml for inheritance</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="system-properties">
+		<xsd:annotation>
+			<xsd:documentation>System properties. Ignored while running in applet. N.B. You can also add system-properties in config.cml</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="system-property" minOccurs="0" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:attribute name="name"/>
+					<xsd:attribute name="value"/>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="img">
+		<xsd:attribute name="name">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="normal"/>
+					<xsd:enumeration value="over"/>
+					<xsd:enumeration value="pressed"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+		<xsd:attribute name="src" type="xsd:string" default=""/>
+	</xsd:complexType>
+	<xsd:complexType name="display">
+		<xsd:annotation>
+			<xsd:documentation>Define device display capabilities</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="iscolor" type="xsd:boolean" default="true" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>The screen is capable of displaying colors</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="numcolors" type="xsd:integer" minOccurs="0"/>
+			<xsd:element name="numalphalevels" type="xsd:integer" minOccurs="0"/>
+			<xsd:element name="foreground" type="xsd:string" default="000000" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>The foreground color of display</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="background" type="xsd:string" default="ffffff" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>The background color of display</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rectangle" type="rectangle" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>The rectangle element gives the position and extent of the screen. Used by application when Canvas is set to full-screen mode.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="paintable" type="paintable" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>The paintable element gives the position and extent of the area within the screen rectangle that a MIDlet paint on when Canvas is not set to full-screen mode (normal mode).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="icon" type="icon" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>The input mode icons</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="status" type="status" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>The system status icons</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="paintable">
+		<xsd:sequence>
+			<xsd:element name="x" type="xsd:integer"/>
+			<xsd:element name="y" type="xsd:integer"/>
+			<xsd:element name="width" type="xsd:integer"/>
+			<xsd:element name="height" type="xsd:integer"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="rectangle">
+		<xsd:sequence>
+			<xsd:element name="x" type="xsd:integer"/>
+			<xsd:element name="y" type="xsd:integer"/>
+			<xsd:element name="width" type="xsd:integer"/>
+			<xsd:element name="height" type="xsd:integer"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="polygon">
+		<xsd:sequence>
+			<xsd:element name="point" type="point" minOccurs="3" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="point">
+		<xsd:attribute name="x" type="xsd:integer" use="required"/>
+		<xsd:attribute name="y" type="xsd:integer" use="required"/>
+	</xsd:complexType>
+	<xsd:complexType name="icon">
+		<xsd:sequence>
+			<xsd:element name="paintable" type="paintable"/>
+			<xsd:element name="img" type="img" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string"/>
+	</xsd:complexType>
+	<xsd:complexType name="status">
+		<xsd:sequence>
+			<xsd:element name="paintable" type="paintable"/>
+			<xsd:element name="img" type="statusImg" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string"/>
+	</xsd:complexType>
+	<xsd:complexType name="statusImg">
+		<xsd:attribute name="name" type="xsd:string"/>
+		<xsd:attribute name="src" type="xsd:string"/>
+	</xsd:complexType>
+	<xsd:complexType name="fonts">
+		<xsd:sequence>
+			<xsd:element name="font" type="fontMapping" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="hint" type="xsd:string"/>
+	</xsd:complexType>
+	<xsd:complexType name="fontMapping">
+		<xsd:annotation>
+			<xsd:documentation>Mapping to system fonts</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="fontBase">
+				<xsd:choice>
+					<xsd:element name="system" type="system"/>
+					<xsd:element name="ttf" type="ttf"/>
+				</xsd:choice>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="fontReference">
+		<xsd:complexContent>
+			<xsd:extension base="fontBase"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="fontBase" abstract="true">
+		<xsd:annotation>
+			<xsd:documentation>j2me system fonts</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="face">
+			<xsd:annotation>
+				<xsd:documentation>Font face as in lcdui API javax.microedition.lcdui.Font Font.FACE_SYSTEM, Font.FACE_MONOSPACE, or Font.FACE_PROPORTIONAL</xsd:documentation>
+			</xsd:annotation>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="FACE_MONOSPACE"/>
+					<xsd:enumeration value="FACE_PROPORTIONAL"/>
+					<xsd:enumeration value="FACE_SYSTEM"/>
+					<xsd:enumeration value="monospace"/>
+					<xsd:enumeration value="proportional"/>
+					<xsd:enumeration value="system"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+		<xsd:attribute name="style">
+			<xsd:annotation>
+				<xsd:documentation>Font style bold, italic or plain. Comma separated list</xsd:documentation>
+			</xsd:annotation>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="STYLE_PLAIN"/>
+					<xsd:enumeration value="STYLE_BOLD"/>
+					<xsd:enumeration value="STYLE_ITALIC"/>
+					<xsd:enumeration value="STYLE_BOLD,STYLE_ITALIC"/>
+					<xsd:enumeration value="plain"/>
+					<xsd:enumeration value="bold"/>
+					<xsd:enumeration value="italic"/>
+					<xsd:enumeration value="bold,italic"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+		<xsd:attribute name="size">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="SIZE_LARGE"/>
+					<xsd:enumeration value="SIZE_MEDIUM"/>
+					<xsd:enumeration value="SIZE_SMALL"/>
+					<xsd:enumeration value="large"/>
+					<xsd:enumeration value="medium"/>
+					<xsd:enumeration value="small"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="system">
+		<xsd:annotation>
+			<xsd:documentation>Describe system font that used for display</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="name" type="xsd:string"/>
+		<xsd:attribute name="style" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>Font style bold, italic or plain. Comma separatedlist</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="size" type="xsd:integer"/>
+	</xsd:complexType>
+	<xsd:complexType name="ttf">
+		<xsd:annotation>
+			<xsd:documentation>Describe true type font used for display</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="src" type="xsd:string"/>
+		<xsd:attribute name="style" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>Font style bold, italic or plain. Comma separatedlist</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="size" type="xsd:integer"/>
+	</xsd:complexType>
+	<xsd:complexType name="input">
+		<xsd:sequence>
+			<xsd:element name="haspointerevents" type="xsd:boolean" default="false" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>The platform supports pointer press and release events</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="haspointermotionevents" type="xsd:boolean" default="false" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>The platform supports pointer motion events</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="hasrepeatevents" type="xsd:boolean" default="false" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>The platform can generate repeat events when key is kept down</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="softbutton" type="softbutton" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="button" type="button" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="button">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="chars" minOccurs="0">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="char" type="xsd:string" maxOccurs="unbounded"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:choice>
+				<xsd:element name="rectangle" type="rectangle"/>
+				<xsd:element name="polygon" type="polygon"/>
+			</xsd:choice>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>Name of the button. e.g. 0, 1, 2 ... # *</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="key" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>Computer keyboard key code used to trigger this button.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="keyCode" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>Keyboard key code passed to Canvas.keyPressed() finction</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="softbutton">
+		<xsd:annotation>
+			<xsd:documentation/>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:choice>
+				<xsd:element name="rectangle" type="rectangle"/>
+				<xsd:element name="polygon" type="polygon"/>
+			</xsd:choice>
+			<xsd:element name="paintable" type="paintable"/>
+			<xsd:element name="font" type="fontReference" minOccurs="0"/>
+			<xsd:element name="command" type="command" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>As defined in javax.microedition.lcdui.Command</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>Name of the button. Not used?</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="key" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>Computer keyboard key code used to trigger this button.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="keyCode" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>Keyboard key code passed to Canvas.keyPressed() finction</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="alignment">
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="LEFT"/>
+					<xsd:enumeration value="RIGHT"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:simpleType name="command">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="BACK"/>
+			<xsd:enumeration value="CANCEL"/>
+			<xsd:enumeration value="EXIT"/>
+			<xsd:enumeration value="HELP"/>
+			<xsd:enumeration value="ITEM"/>
+			<xsd:enumeration value="OK"/>
+			<xsd:enumeration value="SCREEN"/>
+			<xsd:enumeration value="STOP"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

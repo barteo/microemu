@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="MicroEmulator">
+
+<!-- @version $Revision$ ($Author$) $Date$ -->
+
+    <publishDate position="left" format="MM-dd-yyyy HH:mm z 'GMT'Z" />
+
+    <bannerLeft>
+            <name>J2ME Device Emulator</name>
+            <src>images/logo.png</src>
+            <href>http://www.microemu.org/</href>
+    </bannerLeft>
+
+    <bannerRight>
+        <name>Sourceforge</name>
+        <src>http://sourceforge.net/sflogo.php?group_id=30014&amp;amp;type=4</src>
+        <href>http://sourceforge.net/projects/microemulator/</href>
+    </bannerRight>
+
+    <body>
+        <links>
+            <item name="Live examples" href="/./demo.html"/>
+        </links>
+
+        <menu name="Ver 2.0.0" inherit="top"/>
+
+        <menu name="Overview">
+            <item name="Introduction" href="index.html" />
+            <item name="Usage" href="usage.html" />
+            <item name="Applet config" href="applet.html" />
+            <item name="Skin" href="skin.html" />
+            <item name="Unit Tests" href="unittests.html" />
+            <item name="Faq" href="faq.html" />
+
+            <item name="Download" href="#">
+                <item name="Releases" href="http://sourceforge.net/project/showfiles.php?group_id=30014"/>
+                <item name="Maven" href="maven.html"/>
+                <item name="CVS Access" href="source-repository.html"/>
+                <item name="Browse CVS" href="http://microemulator.cvs.sourceforge.net/microemulator/"/>
+            </item>
+
+        </menu>
+
+        <menu name="Live examples">
+            <item name="Applets" href="/./demo.html" />
+            <item name="WebStart" href="/./microemu-webstart/demo.jnlp" />
+        </menu>
+
+
+        <!--menu ref="modules" collapse="true" /-->
+
+        <menu ref="reports" />
+
+    </body>
+
+</project>

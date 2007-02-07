@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0">
+    <!-- @version $Revision$ ($Author$) $Date$ -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.microemu</groupId>
+    <artifactId>microemu</artifactId>
+    <version>2.0.0</version><!--me-version-->
+
+    <url>http://www.microemu.org/</url>
+
+    <name>MicroEmulator</name>
+    <packaging>pom</packaging>
+
+    <description>
+        This is Java 2 Micro Edition (J2ME) CLDC/MIDP Emulator. Allows demonstration MIDlet (MIDP/CLDC) based applications in web browser applet, also can be run as standalone java application.
+    </description>
+
+    <organization>
+        <name>MicroEmulator Team</name>
+        <url>http://www.microemu.org/</url>
+    </organization>
+    <inceptionYear>2001</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License (LGPL)</name>
+			<url>http://www.gnu.org/licenses/lgpl.html</url>
+        </license>
+    </licenses>
+
+	<issueManagement>
+		<system>SourceForge</system>
+		<url>http://sourceforge.net/tracker/?group_id=30014</url>
+	</issueManagement>
+
+	<scm>
+		<url>http://microemulator.cvs.sourceforge.net/microemulator</url>
+		<connection>scm:cvs:pserver:anonymous@microemulator.cvs.sourceforge.net:/cvsroot/microemulator/microemulator</connection>
+	    <!-- next version
+	    <url>http://microemulator.svn.sourceforge.net/viewvc/microemulator/trunk/microemulator/</url>
+		<connection>scm:svn:https://microemulator.svn.sourceforge.net/svnroot/microemulator/trunk/microemulator</connection>
+		<developerConnection>scm:svn:https://microemulator.svn.sourceforge.net/svnroot/microemulator/trunk/microemulator</developerConnection>
+        -->
+	</scm>
+
+    <!--
+    <modules>
+        <module>microemu-cldc</module>
+        <module>microemu-midp-common</module>
+        <module>microemu-midp2</module>
+        <module>microemu-swing</module>
+        <module>microemu-applet</module>
+        <module>microemu-example</module>
+        <module>microemu-swt</module>
+        <module>microemu-webstart</module>
+        <module>microemu-tests</module>
+    </modules>
+    -->
+
+    <distributionManagement>
+        <site>
+            <id>test-site</id>
+            <url>file:///home/apache/microemu</url>
+        </site>
+
+        <!--
+        <site>
+            <id>pyx4j.com-dav-development</id>
+            <name>microemu.org-project</name>
+            <url>dav:https://pyx4j.com/sec/dav/pyx4me/www.microemu.org</url>
+        </site>
+        -->
+        <!-- this is not yet supported TODO see later..  "Wagon protocol 'ftp' doesn't support directory copying"
+        <site>
+            <id>www.microemu.org-site</id>
+            <url>ftp:ftp://www.microemu.org/m2</url>
+        </site>
+        -->
+
+        <repository>
+            <id>pyx4j.com-dav-development</id>
+            <url>dav:https://pyx4j.com/sec/dav/pyx4me/maven2</url>
+        </repository>
+        <snapshotRepository>
+            <id>pyx4j.com-dav-development</id>
+            <url>dav:https://pyx4j.com/sec/dav/pyx4me/maven2</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <repositories>
+
+        <repository>
+            <id>pyx4me-web</id>
+            <url>http://www.pyx4me.com/maven2</url>
+        </repository>
+
+    </repositories>
+
+    <pluginRepositories>
+
+        <pluginRepository>
+            <id>pyx4me-web</id>
+            <url>http://www.pyx4me.com/maven2</url>
+        </pluginRepository>
+
+    </pluginRepositories>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>swt</groupId>
+                <artifactId>swt-win32</artifactId>
+                <version>3.0m8</version>
+            </dependency>
+
+            <dependency>
+                <groupId>sun</groupId>
+                <artifactId>applet-jsobject</artifactId>
+                <version>1.4</version>
+                <!--scope>provided</scope-->
+                <scope>system</scope>
+                <systemPath>${java.home}/lib/plugin.jar</systemPath>
+            </dependency>
+
+           <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>3.8.1</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>classworlds</groupId>
+                <artifactId>classworlds</artifactId>
+                <version>1.1</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>jboss</groupId>
+                <artifactId>javassist</artifactId>
+                <version>3.3.ga</version>
+                <scope>test</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <developers>
+        <developer>
+            <name>Bartek Teodorczyk</name>
+            <id>barteo</id>
+            <email>barteo@barteo.net</email>
+            <roles>
+                <role>admin</role>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+
+        <developer>
+            <name>Markus Heberling</name>
+            <id>tisoft</id>
+            <email>markus@heberling.net</email>
+            <organization>markus@heberling.net</organization>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+
+        <developer>
+            <name>Vlad Skarzhevskyy</name>
+            <id>vlads</id>
+            <email>skarzhevskyy@gmail.com</email>
+            <organization>pyx4me.com</organization>
+            <organizationUrl>http://www.pyx4me.com</organizationUrl>
+            <roles>
+                <role>developer</role>
+                <role>build master</role>
+            </roles>
+            <timezone>-5</timezone>
+        </developer>
+
+        <!-- template for new developer
+        <developer>
+            <name></name>
+            <id></id>
+            <email></email>
+            <organization></organization>
+            <roles>
+                <role></role>
+            </roles>
+        </developer>
+        -->
+   </developers>
+
+   <contributors>
+        <contributor>
+            <organization>3G Lab</organization>
+            <organizationUrl>http://www.3glab.com</organizationUrl>
+        </contributor>
+
+        <contributor>
+            <name>Julian L. Hunter</name>
+        </contributor>
+
+        <contributor>
+            <name>daniel(at)angrymachine.com.ar</name>
+        </contributor>
+
+        <contributor>
+            <name>Andres Navarro</name>
+        </contributor>
+
+        <contributor>
+            <name>Christian d'Heureuse</name>
+            <organization>Inventec Informatik AG, Switzerland.</organization>
+            <roles>
+                <role>Base64Coder</role>
+            </roles>
+        </contributor>
+
+        <contributor>
+            <name>David Luscombe</name>
+            <organizationUrl>http://www.istockphoto.com/fontmonster/</organizationUrl>
+            <roles>
+                <role>Designer</role>
+            </roles>
+        </contributor>
+
+        <contributor>
+            <name>Matthew Palmer</name>
+            <roles>
+                <role>Designer</role>
+            </roles>
+        </contributor>
+
+        <!-- template for new contributor
+        <contributor>
+            <name></name>
+            <email></email>
+            <organization></organization>
+            <organizationUrl></organizationUrl>
+            <roles>
+                <role></role>
+            </roles>
+        </contributor>
+        -->
+    </contributors>
+
+    <build>
+        <defaultGoal>install</defaultGoal>
+
+        <extensions>
+            <!-- used during automated build deployments -->
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-webdav</artifactId>
+                <version>1.0-beta-1</version>
+            </extension>
+            <!--
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ftp</artifactId>
+               <version>1.0-beta-1</version>
+            </extension>
+            -->
+        </extensions>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <testFailureIgnore>true</testFailureIgnore>
+                    </configuration>
+                </plugin>
+
+            </plugins>
+        </pluginManagement>
+
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <forkMode>always</forkMode>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+       </plugins>
+    </reporting>
+
+</project>

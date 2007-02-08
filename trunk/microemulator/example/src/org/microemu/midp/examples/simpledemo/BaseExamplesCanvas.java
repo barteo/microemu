@@ -24,6 +24,7 @@ import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Graphics;
 
 public abstract class BaseExamplesCanvas extends Canvas implements CommandListener {
 
@@ -40,6 +41,12 @@ public abstract class BaseExamplesCanvas extends Canvas implements CommandListen
 		setCommandListener(this);
 	}
 
+	public int writeln(Graphics g, int line, String s) {
+		int y = (g.getFont().getHeight() + 1) * line;
+		g.drawString(s, 0, y, Graphics.LEFT | Graphics.TOP);
+		return y;
+	}
+	
 	public void commandAction(Command c, Displayable d) {
 		if (d == this) {
 			if (c == BaseExamplesForm.backCommand) {

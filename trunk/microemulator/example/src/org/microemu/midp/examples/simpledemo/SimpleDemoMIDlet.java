@@ -62,6 +62,7 @@ public class SimpleDemoMIDlet extends MIDlet implements CommandListener {
 					new AlertPanel(),
 					new CanvasPanel(),
 					new KeyCanvasPanel(),
+					new PointerCanvasPanel(),
 					new DateFieldPanel(),
 					new GaugePanel(),
 					new ImageItemPanel(),

@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@barteo.net>
+ *  Copyright (C) 2001-2007 MicroEmulator Team.
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -15,66 +15,47 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  @version $Id$
  */
- 
 package org.microemu.midp.examples.simpledemo;
 
-import javax.microedition.lcdui.*;
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.List;
 
+public class ListPanel extends BaseExamplesList {
 
-public class ListPanel extends List implements ScreenPanel, CommandListener
-{
-  
-  static String NAME = "List";
-  
-  String options[] = {"Option A", "Option B", "Option C", "Option D"};
+	String options[] = { "Option A", "Option B", "Option C", "Option D" };
 
-  List lists[] = {
-      new List("Exclusive", List.EXCLUSIVE, options, null),
-      new List("Implicit", List.IMPLICIT, options, null),
-      new List("Multiple", List.MULTIPLE, options, null)
-  };
-  
-  Command backCommand = new Command("Back", Command.BACK, 1);
-  
-  
-  public ListPanel()
-  {
-    super(NAME, List.IMPLICIT);
+	List lists[] = { new List("Exclusive", List.EXCLUSIVE, options, null),
+			new List("Implicit", List.IMPLICIT, options, null),
+			new List("Multiple", List.MULTIPLE, options, null) };
 
-    for (int i = 0; i < lists.length; i++) {
-      lists[i].addCommand(backCommand);
-      lists[i].setCommandListener(this);
-      append(lists[i].getTitle(), null);
-    }
+	public ListPanel() {
+		super("List", List.IMPLICIT);
 
-    addCommand(backCommand);
-    setCommandListener(this);
-  }
-  
+		for (int i = 0; i < lists.length; i++) {
+			lists[i].addCommand(BaseExamplesForm.backCommand);
+			lists[i].setCommandListener(this);
+			append(lists[i].getTitle(), null);
+		}
 
-  public String getName()
-  {
-    return NAME;
-  }
+	}
 
-
-  public void commandAction(Command c, Displayable d)
-  {
-    if (d == this) {
-      if (c == List.SELECT_COMMAND) {
-        Display.getDisplay(SimpleDemo.getInstance()).setCurrent(lists[getSelectedIndex()]);
-      } else if (c == backCommand) {
-        Display.getDisplay(SimpleDemo.getInstance()).setCurrent(SimpleDemo.getInstance().menuList);
-      }
-    } else if (c == backCommand) {
-      for (int i = 0; i < lists.length; i++) {
-        if (d == lists[i]) {
-          Display.getDisplay(SimpleDemo.getInstance()).setCurrent(this);
-        }
-      }
-    }
-  }
+	public void commandAction(Command c, Displayable d) {
+		if (d == this) {
+			if (c == List.SELECT_COMMAND) {
+				SimpleDemoMIDlet.setCurrentDisplayable(lists[getSelectedIndex()]);
+			} 
+		} else if (c == BaseExamplesForm.backCommand) {
+			for (int i = 0; i < lists.length; i++) {
+				if (d == lists[i]) {
+					SimpleDemoMIDlet.setCurrentDisplayable(this);
+				}
+			}
+		}
+		super.commandAction(c, d);
+	}
 
 }
-

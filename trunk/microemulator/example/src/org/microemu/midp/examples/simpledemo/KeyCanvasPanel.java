@@ -20,14 +20,17 @@
  */
 package org.microemu.midp.examples.simpledemo;
 
-import javax.microedition.lcdui.DateField;
+import javax.microedition.lcdui.Graphics;
 
-public class DateFieldPanel extends BaseExamplesForm {
+public class KeyCanvasPanel extends BaseExamplesCanvas {
 
-	public DateFieldPanel() {
-		super("DateField");
-
-		append(new DateField("Time", DateField.TIME));
-		append(new DateField("Date & time", DateField.DATE_TIME));
+	public KeyCanvasPanel() {
+		super("KeyCanvas");
 	}
+
+	protected void paint(Graphics g) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

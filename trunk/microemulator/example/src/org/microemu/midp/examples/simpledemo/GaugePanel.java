@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@barteo.net>
+ *  Copyright (C) 2001-2007 MicroEmulator Team.
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -15,81 +15,55 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  @version $Id$
  */
- 
 package org.microemu.midp.examples.simpledemo;
 
-import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.CommandListener;
-import javax.microedition.lcdui.Display;
-import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.Gauge;
 
+public class GaugePanel extends BaseExamplesForm implements HasRunnable {
 
-public class GaugePanel extends Form implements ScreenPanel, CommandListener
-{  
-  private static final String NAME = "Gauge";
-  
-  private static final Command backCommand = new Command("Back", Command.BACK, 1);
-  
-  boolean cancel = false;
+	private boolean cancel = false;
 
-  private Gauge noninteractive = new Gauge("Noninteractive", false, 25, 0);
-  
-  private Runnable timerTask = new Runnable()
-  {
-    
-    public void run()
-    {
-      while (!cancel) {
-        if (isShown()) {
-          int value = noninteractive.getValue();
-      
-          if (noninteractive.getValue() >= 25) {
-            noninteractive.setValue(0);
-          } else {
-            noninteractive.setValue(++value);
-          }
-        }
-        try {
-          Thread.sleep(500);
-        } catch (InterruptedException ex) {
-          break;
-        }
-      }
-    }
-  };
-  
-  
-  public GaugePanel()
-  {
-    super(NAME);
-    
-    append(new Gauge("Interactive", true, 25, 0));
-    append(noninteractive);
-    
-    Thread thread = new Thread(timerTask, "GaugePanel");
-    thread.start();
+	private Gauge noninteractive = new Gauge("Noninteractive", false, 25, 0);
 
-    addCommand(backCommand);
-    setCommandListener(this);
-  }
-  
+	private Runnable timerTask = new Runnable() {
 
-  public String getName()
-  {
-    return NAME;
-  }
+		public void run() {
+			while (!cancel) {
+				if (isShown()) {
+					int value = noninteractive.getValue();
 
+					if (noninteractive.getValue() >= 25) {
+						noninteractive.setValue(0);
+					} else {
+						noninteractive.setValue(++value);
+					}
+				}
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException ex) {
+					break;
+				}
+			}
+		}
+	};
 
-  public void commandAction(Command c, Displayable d)
-  {
-    if (d == this) {
-      if (c == backCommand) {
-        Display.getDisplay(SimpleDemo.getInstance()).setCurrent(SimpleDemo.getInstance().menuList);
-      }
-    }
-  }
-  
+	public GaugePanel() {
+		super("Gauge");
+		append(new Gauge("Interactive", true, 25, 0));
+		append(noninteractive);
+	}
+
+	public void startRunnable() {
+		cancel = false;
+		Thread thread = new Thread(timerTask, "GaugePanelThread");
+		thread.start();
+	}
+
+	public void stopRunnable() {
+		cancel = true;
+	}
+
 }

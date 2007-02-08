@@ -31,8 +31,6 @@ public class CanvasPanel extends BaseExamplesCanvas implements HasRunnable {
 
 	private static final int POSNUMBER = 20;
 
-	protected boolean fullScreenMode = false;
-
 	private static final Command neCommand = new Command("3 NE Move", Command.ITEM, 1);
 
 	private static final Command nwCommand = new Command("1 NW Move", Command.ITEM, 2);
@@ -40,8 +38,6 @@ public class CanvasPanel extends BaseExamplesCanvas implements HasRunnable {
 	private static final Command seCommand = new Command("9 SE Move", Command.ITEM, 3);
 
 	private static final Command swCommand = new Command("7 SW Move", Command.ITEM, 4);
-
-	private static final Command fullScreenModeCommand = new Command("5 Full Screen Mode", Command.ITEM, 5);
 
 	private boolean cancel = false;
 
@@ -104,7 +100,6 @@ public class CanvasPanel extends BaseExamplesCanvas implements HasRunnable {
 		addCommand(nwCommand);
 		addCommand(seCommand);
 		addCommand(swCommand);
-		addCommand(fullScreenModeCommand);
 	}
 
 	public void startRunnable() {
@@ -137,10 +132,7 @@ public class CanvasPanel extends BaseExamplesCanvas implements HasRunnable {
 					moveX = 1;
 					moveY = 1;
 					moving = true;
-				} else if (c == fullScreenModeCommand) {
-					fullScreenMode = !fullScreenMode;
-					super.setFullScreenMode(fullScreenMode);
-				}
+				} 
 			}
 		}
 		super.commandAction(c, d);
@@ -180,16 +172,14 @@ public class CanvasPanel extends BaseExamplesCanvas implements HasRunnable {
 			moveY = 1;
 			moving = true;
 		} else if (keyCode == '5' /*fullScreenModeCommand*/) {
-			fullScreenMode = !fullScreenMode;
-			super.setFullScreenMode(fullScreenMode);
+			super.setFullScreenMode(!fullScreenMode);
 			repaint();
 		} else if (keyCode == KEY_POUND) {
 			moving = !moving;
 		} else if (keyCode == '0' /*backCommand*/) {
 			SimpleDemoMIDlet.showMenu();
 		} else if (fullScreenMode) {
-			fullScreenMode = false;
-			super.setFullScreenMode(fullScreenMode);
+			setFullScreenMode(false);
 		}
 	}
 

@@ -20,14 +20,26 @@
  */
 package org.microemu.midp.examples.simpledemo;
 
-import javax.microedition.lcdui.DateField;
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.CommandListener;
+import javax.microedition.lcdui.Displayable;
 
-public class DateFieldPanel extends BaseExamplesForm {
+public abstract class BaseExamplesCanvas extends Canvas implements CommandListener {
 
-	public DateFieldPanel() {
-		super("DateField");
+	public BaseExamplesCanvas(String title) {
+		super();
+		super.setTitle(title);
+		
+		addCommand(BaseExamplesForm.backCommand);
+		setCommandListener(this);
+	}
 
-		append(new DateField("Time", DateField.TIME));
-		append(new DateField("Date & time", DateField.DATE_TIME));
+	public void commandAction(Command c, Displayable d) {
+		if (d == this) {
+			if (c == BaseExamplesForm.backCommand) {
+				SimpleDemoMIDlet.showMenu();
+			}
+		}
 	}
 }

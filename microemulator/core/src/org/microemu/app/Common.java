@@ -59,6 +59,7 @@ import org.microemu.device.InputMethod;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEFontManager;
 import org.microemu.device.j2se.J2SEInputMethod;
+import org.microemu.log.Logger;
 import org.microemu.util.Base64Coder;
 import org.microemu.util.JadMidletEntry;
 import org.microemu.util.JadProperties;
@@ -170,6 +171,7 @@ public class Common implements MicroEmulator {
 		} catch (MalformedURLException ex) {
 			throw ex;
 		} catch (ClassNotFoundException ex) {
+			Logger.error(ex);
 			throw new IOException(ex.getMessage());
 		} catch (FileNotFoundException ex) {
 			System.err.println("Cannot found " + urlString);

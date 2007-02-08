@@ -66,6 +66,7 @@ import org.microemu.device.InputMethod;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEFontManager;
 import org.microemu.device.j2se.J2SEInputMethod;
+import org.microemu.log.Logger;
 
 
 public class Main extends JFrame
@@ -141,8 +142,8 @@ public class Main extends JFrame
       		Config.saveConfig();
       		
 	      	Common.openJadUrl(fileChooser.getSelectedFile().toURL().toString());
-				} catch (IOException ex) {
-					System.err.println("Cannot load " + fileChooser.getSelectedFile().getName());
+				} catch (IOException e) {
+					Logger.error("Cannot load", fileChooser.getSelectedFile().getName(), e);
 				}
       }
     } 

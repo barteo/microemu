@@ -140,7 +140,7 @@ public class J2SEInputMethod extends InputMethodImpl
     }
     
     
-	public String getKeyName(int keyCode)
+	public String getKeyName(int keyCode) throws IllegalArgumentException 
     {
 		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext(); ) {
 			J2SEButton button = (J2SEButton) it.next();

@@ -77,6 +77,14 @@ public class KeyCanvasPanel extends BaseExamplesCanvas {
 		}
 	}
 	
+	public String getKeyName(int keyCode) {
+		try {
+			return super.getKeyName(keyCode);
+		} catch (IllegalArgumentException e) {
+			return "not valid key code";
+		}
+	}
+	
 	protected void keyPressed(int keyCode) {
 		if (lastKeyCode == keyCode) {
 			sameKeyCount ++;

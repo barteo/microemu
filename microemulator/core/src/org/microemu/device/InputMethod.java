@@ -47,7 +47,7 @@ public abstract class InputMethod
 
     public abstract int getKeyCode(int gameAction);
 
-    public abstract String getKeyName(int keyCode);
+    public abstract String getKeyName(int keyCode) throws IllegalArgumentException;
 
 
 	public void removeInputMethodListener(InputMethodListener l)

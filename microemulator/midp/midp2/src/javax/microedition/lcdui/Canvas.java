@@ -73,7 +73,7 @@ public abstract class Canvas extends Displayable
     }
 
     
-    public String getKeyName(int keyCode)
+    public String getKeyName(int keyCode) throws IllegalArgumentException 
     {
     	return Display.getKeyName(keyCode);
     }

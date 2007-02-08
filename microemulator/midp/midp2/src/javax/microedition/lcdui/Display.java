@@ -687,7 +687,7 @@ public class Display
 	}
 
 	
-	static String getKeyName(int keyCode) 
+	static String getKeyName(int keyCode) throws IllegalArgumentException 
 	{
 		return DeviceFactory.getDevice().getInputMethod().getKeyName(keyCode);
 	}

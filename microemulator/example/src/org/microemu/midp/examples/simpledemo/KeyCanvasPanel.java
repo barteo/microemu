@@ -47,12 +47,6 @@ public class KeyCanvasPanel extends BaseExamplesCanvas {
 		super("KeyCanvas");
 	}
 
-	public int writeln(Graphics g, int line, String s) {
-		int y = (g.getFont().getHeight() + 1) * line;
-		g.drawString(s, 0, y, Graphics.LEFT | Graphics.TOP);
-		return y;
-	}
-	
 	protected void paint(Graphics g) {
 		int width = getWidth();
         int height = getHeight();
@@ -64,7 +58,7 @@ public class KeyCanvasPanel extends BaseExamplesCanvas {
 		int line = 0;
 		writeln(g, line++, "Key Canvas - Press any key!");
 		if (fullScreenMode) {
-			writeln(g, line++, "Back - same key 3 times.");
+			writeln(g, line++, "Back - same key 3 times");
 		}
 		if (sameKeyCount > 0) {
 			writeln(g, line++, "KeyCode: " + lastKeyCode); 

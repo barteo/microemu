@@ -48,11 +48,13 @@ public class Form extends Screen
 		this(title);
 
 		// TODO add this to MIDP1
-		this.items = new Item[items.length];
-		System.arraycopy(items, 0, this.items, 0, items.length);
-		numOfItems = this.items.length;
-		for (int i = 0; i < numOfItems; i++) {
-			verifyItem(this.items[i]);
+		if (items != null) {
+			this.items = new Item[items.length];
+			System.arraycopy(items, 0, this.items, 0, items.length);
+			numOfItems = this.items.length;
+			for (int i = 0; i < numOfItems; i++) {
+				verifyItem(this.items[i]);
+			}
 		}
 	}
 

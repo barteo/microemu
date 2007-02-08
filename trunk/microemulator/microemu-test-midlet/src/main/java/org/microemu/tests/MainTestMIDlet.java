@@ -45,7 +45,9 @@ public class MainTestMIDlet extends MIDlet implements CommandListener, MIDletUnd
 		
 		if (menuList == null) {
 			testPanels = new Displayable[] {
-					new ItemsOnForm()};
+					new ItemsOnForm(),
+					new ErrorHandlingForm(),
+					new ErrorHandlingCanvas()};
 
 			menuList = new List("Manual Tests", List.IMPLICIT);
 

@@ -4,12 +4,17 @@ import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 
-public class ChangeCallsClassAdapter extends ClassAdapter {
+public class ChangeCallsClassVisitor extends ClassAdapter {
 
-	public ChangeCallsClassAdapter(ClassVisitor cv) {
+	public ChangeCallsClassVisitor(ClassVisitor cv) {
 		super(cv);
 	}
 
+    public void visit(final int version, final int access, final String name, final String signature, final String superName, final String[] interfaces) {
+    	System.out.println("Processing class " + name);
+    	super.visit(version, access, name, signature, superName, interfaces);
+	}
+    
 	public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
 		return  new ChangeCallsMethodVisitor(super.visitMethod(access, name, desc, signature, exceptions));
 	}

@@ -70,6 +70,8 @@ public class Form extends Screen
 		}
 		items[numOfItems] = item;
 		numOfItems++;
+		
+		repaint();
 
 		return (numOfItems - 1);
 	}
@@ -98,6 +100,8 @@ public class Form extends Screen
 		items[itemNum].setOwner(null);
 		System.arraycopy(items, itemNum + 1, items, itemNum, numOfItems - itemNum - 1);
 		numOfItems--;
+		
+		repaint();
 	}
 	
 	
@@ -107,6 +111,8 @@ public class Form extends Screen
 			items[i].setOwner(null);
 		}
 		numOfItems = 0;
+		
+		repaint();
 	}
 
 	
@@ -149,6 +155,8 @@ public class Form extends Screen
 		items[itemNum] = item;
 		items[itemNum].setOwner(this);
 		numOfItems++;
+		
+		repaint();
 	}
 
 	
@@ -162,6 +170,8 @@ public class Form extends Screen
 		
 		items[itemNum] = item;
 		items[itemNum].setOwner(this);
+		
+		repaint();
 	}
 
 	

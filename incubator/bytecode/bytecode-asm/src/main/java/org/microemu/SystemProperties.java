@@ -2,6 +2,13 @@ package org.microemu;
 
 import java.util.Hashtable;
 
+/**
+ * This class is called by MIDlet to access System Property.
+ * Call injection is made by MIDlet ClassLoaded
+ * 
+ * @author vlads
+ *
+ */
 public class SystemProperties {
 
 	private static final Hashtable props = new Hashtable();
@@ -19,6 +26,23 @@ public class SystemProperties {
 	}
 	
 	public static String getProperty(String key) {
-		return (String)props.get(key);
+		String v = (String)props.get(key);
+		if (v != null) {
+			return v;
+		}
+		try {
+			return System.getProperty(key);
+		} catch (SecurityException e) {
+			return null;
+		}
 	}
+	
+	public static String setProperty(String key, String value) {
+		return (String) props.put(key , value);
+	}
+	
+	public static String clearProperty(String key) {
+		return (String) props.remove(key);
+	}
+	
 }

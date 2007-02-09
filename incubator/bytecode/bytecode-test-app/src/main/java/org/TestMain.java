@@ -1,21 +1,25 @@
 package org;
 
-public class TestMain {
+public class TestMain implements Runnable {
 
-	private String filed = "filedValue";
-	
-	public TestMain() {
-		
-	}
-	
 	public static void main(String[] args) {
-		String value = System.getProperty("microedition.io.file.FileConnection.version");
-		System.out.println("Got value " + value);
-		(new TestMain()).stuff();
+		(new TestMain()).run();
 	}
 
+	public void run() {
+		assert("microedition.io.file.FileConnection.version", "1.0");
+		assert("microedition.platform", "MicroEmulator-Test");
+		
+		(new TestResourceLoad()).run();
+		
+		System.out.println("OK");
+	}
 	
-	public void stuff() {
-		System.out.println("stuff" + filed);
+	private void assert(String key, String expected) {
+		String value = System.getProperty(key);
+		System.out.println("Got System.getProperty " + key + " value [" + value + "]");
+		if (!expected.equals(value)) {
+			throw new RuntimeException("Unexpected property value " + value + " expected " + expected);
+		}
 	}
 }

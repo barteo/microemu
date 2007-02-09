@@ -332,7 +332,7 @@
 	<target name="all" depends="init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-jsr-82,jar-jsr-120,simpledemo" description="Build everything.">
 	</target>
 
-    <target name="build" description="Run by CruiseControl after maven2 build." depends="dist"/>
+    <target name="build" description="Run by CruiseControl maven2 build. Called by maven in integration-test Phase" depends="dist"/>
 
 	<target name="dist" depends="clean,init,jar,jar-device,jar-nokiaui,jar-siemensapi,jar-jsr-82,simpledemo" description="Create distribution package">
 		<mkdir dir="dist"/>

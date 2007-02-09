@@ -308,4 +308,36 @@
        </plugins>
     </reporting>
 
+    <profiles>
+        <profile>
+            <!-- We support ant build, Ant Runs with Java 1.4, 5 and 6 -->
+            <id>build</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>exec-ant-build</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>${env.BUILD_HOME}/bin/ant456</executable>
+                                    <workingDirectory>${basedir}</workingDirectory>
+                                    <arguments>
+                                        <argument>build</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+
 </project>

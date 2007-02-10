@@ -44,6 +44,7 @@ import org.microemu.MIDletEntry;
 import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
 import org.microemu.app.launcher.Launcher;
+import org.microemu.app.ui.Message;
 import org.microemu.app.ui.ResponseInterfaceListener;
 import org.microemu.app.ui.StatusBarListener;
 import org.microemu.app.ui.noui.NoUiDisplayComponent;
@@ -192,12 +193,14 @@ public class Common implements MicroEmulator {
 			}
 			MIDletBridge.getMIDletAccess(m).startApp();
 			launcher.setCurrentMIDlet(m);
-		} catch (InstantiationException ex) {
-			handleStartMidletException(new MIDletStateChangeException(ex.getMessage()));
-		} catch (IllegalAccessException ex) {
-			handleStartMidletException(new MIDletStateChangeException(ex.getMessage()));
-		} catch (MIDletStateChangeException ex) {
-			handleStartMidletException(ex);
+		} catch (Throwable e) {
+			String text;
+			if (e.getCause() != null) {
+				text = e.getCause().toString();
+			} else {
+				text = e.toString();
+			}
+			Message.error("Error starting MIDlet", "Can't start MIDlet " + text, e);
 		}
 	}
 

@@ -20,29 +20,39 @@
  */
 package org.microemu.log;
 
-import java.io.PrintStream;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
+import org.microemu.app.ui.Message;
+
+/**
+ * 
+ * This class is used as abstraction layer for log messages 
+ * Minimum Log4j implemenation with multiple overloaded functions
+ * 
+ * @author vlads
+ *
+ */
 public class Logger {
 	
     private static final String FQCN = Logger.class.getName();
 
     private static final Set fqcnSet = new HashSet();
     
-    private final static int ERROR = 40000;
-
-    private final static int WARN = 30000;
-
-    private final static int INFO = 20000;
-
-    private final static int DEBUG = 10000;
-    
     private static boolean java13 = false;
+    
+    private static List loggerAppenders = new Vector();
     
     static {
         fqcnSet.add(FQCN);
-        //fqcnSet.add("org.microemu..?.Message");
+        // This class can be moved to different sub project
+        //fqcnSet.add("org.microemu.app.ui.Message");
+        fqcnSet.add(Message.class.getName());
+        
+        addAppender(new StdOutAppender());
     }
 
 	public static boolean isDebugEnabled() {
@@ -53,124 +63,129 @@ public class Logger {
 		return true;
 	}
 	
-    private static String getLocation() {
+    private static StackTraceElement getLocation() {
     	if (java13) {
-    		return "";
+    		return null;
     	}
     	try {
 			StackTraceElement[] ste = new Throwable().getStackTrace();
 			for (int i = 0; i < ste.length - 1; i++) {
 			    if (fqcnSet.contains(ste[i].getClassName()) && !fqcnSet.contains(ste[i + 1].getClassName())) {
-			        int callerIdx = i + 1;
-			        // Make Line# clickable in eclipse 
-			        return ste[callerIdx].getClassName() + "." + ste[callerIdx].getMethodName() + "("
-			                + ste[callerIdx].getFileName() + ":" + ste[callerIdx].getLineNumber() + ")\n";
+			        return ste[i + 1];
 			    }
 			}
 		} catch (Throwable e) {
 			java13 = true;
 		}
-        return "";
+        return null;
     }
     
-    private static void write(int level, String message, Throwable t) {
-    	PrintStream out = System.out; 
-    	if (level == ERROR) {
-    		out = System.err;
-    	}
-    	out.println(getLocation() + message);
-    	if (t != null) {
-    		t.printStackTrace();
-    	}
+    private static void write(int level, String message, Throwable throwable) {
+    	callAppenders(new LoggingEvent(level, message, getLocation(), throwable));
+    }
+    
+    private static void write(int level, String message, Throwable throwable, Object data) {
+    	callAppenders(new LoggingEvent(level, message, getLocation(), throwable, data));
     }
     
 	public static void debug(String message) {
 		if (isDebugEnabled()) {
-			write(DEBUG, message, null);
+			write(LoggingEvent.DEBUG, message, null);
 		}
 	}
 	
 	public static void debug(String message, Throwable t) {
 		if (isDebugEnabled()) {
-			write(DEBUG, message, t);
+			write(LoggingEvent.DEBUG, message, t);
 		}
 	}
 	
 	public static void debug(String message, String v) {
 		if (isDebugEnabled()) {
-			write(DEBUG, message + " " + v, null);
+			write(LoggingEvent.DEBUG, message, null, v);
 		}
 	}
 	
-	public static void debug(String message, String v, String v2) {
+	public static void debug(String message, String v1, String v2) {
 		if (isDebugEnabled()) {
-			write(DEBUG, message + " " + v + " " + v2, null);
+			write(LoggingEvent.DEBUG, message, null, new LoggerDataWrapper(v1, v2));
 		}
 	}
 	
-	public static void debug(String message, int v) {
+	public static void debug(String message, long v) {
 		if (isDebugEnabled()) {
-			write(DEBUG, message + " " + String.valueOf(v), null);
+			write(LoggingEvent.DEBUG, message, null, new LoggerDataWrapper(v));
 		}
 	}
 
-	public static void debug(String message, int v1, int v2) {
+	public static void debug(String message, long v1, long v2) {
 		if (isDebugEnabled()) {
-			write(DEBUG, message + " " + String.valueOf(v1) + " " + String.valueOf(v2), null);
+			write(LoggingEvent.DEBUG, message, null, new LoggerDataWrapper(v1, v2));
 		}
 	}
 	
 	public static void debug(String message, boolean v) {
 		if (isDebugEnabled()) {
-			write(DEBUG, message + " " + v, null);
+			write(LoggingEvent.DEBUG, message, null, new LoggerDataWrapper(v));
 		}
 	}
 	
 	public static void info(String message) {
 		if (isErrorEnabled()) {
-			write(INFO, message, null);
+			write(LoggingEvent.INFO, message, null);
 		}
 	}
 	
 	public static void warn(String message) {
 		if (isErrorEnabled()) {
-			write(WARN, message, null);
+			write(LoggingEvent.WARN, message, null);
 		}	
 	}
 	
 	public static void error(String message) {
 		if (isErrorEnabled()) {
-			write(ERROR, "error " + message, null);
+			write(LoggingEvent.ERROR, "error " + message, null);
 		}
 	}
 	
 	public static void error(String message, long v) {
 		if (isErrorEnabled()) {
-			write(ERROR, "error " + message + " " + v, null);
+			write(LoggingEvent.ERROR, "error " + message, null, new LoggerDataWrapper(v));
 		}
 	}
 	
 	public static void error(String message, String v) {
 		if (isErrorEnabled()) {
-			write(ERROR, "error " + message + " " + v, null);
+			write(LoggingEvent.ERROR, "error " + message, null, v);
 		}
 	}
 	
 	public static void error(String message, String v, Throwable t) {
 		if (isErrorEnabled()) {
-			write(ERROR, "error " + message + " " + v, t);
+			write(LoggingEvent.ERROR, "error " + message, t, v);
 		}
 	}
 
 	public static void error(Throwable t) {
 		if (isErrorEnabled()) {
-			write(ERROR, "error " + t, t);
+			write(LoggingEvent.ERROR, "error " + t.toString(), t);
 		}
 	}
 	
 	public static void error(String message, Throwable t) {
 		if (isErrorEnabled()) {
-			write(ERROR, "error " + message + " " + t, null);
+			write(LoggingEvent.ERROR, "error " + message + " " + t.toString(), t);
 		}
+	}
+	
+	private static void callAppenders(LoggingEvent event) {
+		for (Iterator iter = loggerAppenders.iterator(); iter.hasNext();) {
+			LoggerAppender a = (LoggerAppender) iter.next();
+			a.append(event);
+		};
+	}
+	
+	public static void addAppender(LoggerAppender newAppender) {
+		loggerAppenders.add(newAppender);
 	}
 }

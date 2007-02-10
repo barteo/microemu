@@ -100,6 +100,12 @@ public class Logger {
 		}
 	}
 	
+	public static void debug(Throwable t) {
+		if (isDebugEnabled()) {
+			write(LoggingEvent.DEBUG, "error", t);
+		}
+	}
+	
 	public static void debug(String message, String v) {
 		if (isDebugEnabled()) {
 			write(LoggingEvent.DEBUG, message, null, v);

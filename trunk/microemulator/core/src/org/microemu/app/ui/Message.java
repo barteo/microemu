@@ -65,6 +65,19 @@ public class Message {
         callListeners(ERROR, title, text, throwable);
     }
     
+    /**
+     * Here we can butify error message text.
+     * @param throwable
+     * @return
+     */
+    public static String getCauseMessage(Throwable throwable) {
+		if (throwable.getCause() == null) {
+			return throwable.toString();
+		} else {
+			return getCauseMessage(throwable.getCause());
+		}
+    }
+    
     private static void callListeners(int level, String title, String text, Throwable throwable) {
 		for (Iterator iter = listeners.iterator(); iter.hasNext();) {
 			MessageListener a = (MessageListener) iter.next();

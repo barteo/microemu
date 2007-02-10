@@ -186,21 +186,28 @@ public class Common implements MicroEmulator {
 	}
 
 	public void startMidlet(Class midletClass, MIDletAccess previousMidletAccess) {
+		MIDlet m; 
+		final String errorTitle = "Error starting MIDlet";
 		try {
-			MIDlet m = (MIDlet) midletClass.newInstance();
+			Object object = midletClass.newInstance();
+			if (!(object instanceof MIDlet)) {
+				Message.error(errorTitle, "Class " + midletClass.getName() + " should extend MIDlet");
+				return;
+			}
+			m = (MIDlet)object;
+		} catch (Throwable e) {
+			Message.error(errorTitle, "Unable to create MIDlet, " + Message.getCauseMessage(e), e);
+			return;
+		}
+		
+		try {
 			if (previousMidletAccess != null) {
 				previousMidletAccess.destroyApp(true);
 			}
 			MIDletBridge.getMIDletAccess(m).startApp();
 			launcher.setCurrentMIDlet(m);
 		} catch (Throwable e) {
-			String text;
-			if (e.getCause() != null) {
-				text = e.getCause().toString();
-			} else {
-				text = e.toString();
-			}
-			Message.error("Error starting MIDlet", "Can't start MIDlet " + text, e);
+			Message.error(errorTitle, "Unable to start MIDlet, " + Message.getCauseMessage(e), e);
 		}
 	}
 

@@ -50,12 +50,14 @@ import org.microemu.DisplayAccess;
 import org.microemu.DisplayComponent;
 import org.microemu.EmulatorContext;
 import org.microemu.MIDletBridge;
+import org.microemu.app.ui.Message;
 import org.microemu.app.ui.ResponseInterfaceListener;
 import org.microemu.app.ui.StatusBarListener;
 import org.microemu.app.ui.swing.ExtensionFileFilter;
 import org.microemu.app.ui.swing.JadUrlPanel;
 import org.microemu.app.ui.swing.SwingDeviceComponent;
 import org.microemu.app.ui.swing.SwingDialogWindow;
+import org.microemu.app.ui.swing.SwingErrorMessageDialogPanel;
 import org.microemu.app.ui.swing.SwingSelectDevicePanel;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.device.Device;
@@ -321,6 +323,8 @@ public class Main extends JFrame
 	this.common.setResponseInterfaceListener(responseInterfaceListener);
 
     getContentPane().add(statusBar, "South");    
+    
+    Message.addListener(new SwingErrorMessageDialogPanel(this));
   }
   
   

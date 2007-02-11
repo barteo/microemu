@@ -29,7 +29,7 @@ import javax.microedition.lcdui.List;
 import javax.microedition.midlet.MIDlet;
 
 import org.microemu.MIDletEntry;
-import org.microemu.app.Common;
+import org.microemu.app.CommonInterface;
 
 public class Launcher extends MIDlet implements CommandListener {
 
@@ -37,7 +37,7 @@ public class Launcher extends MIDlet implements CommandListener {
 	
 	private static final String NOMIDLETS = "[no midlets]";
 	
-	private Common common;
+	private CommonInterface common;
 
 	private List menuList;
 
@@ -47,7 +47,7 @@ public class Launcher extends MIDlet implements CommandListener {
 
 	private MIDlet currentMIDlet = null;
 
-	public Launcher(Common common) {
+	public Launcher(CommonInterface common) {
 		this.common = common;
 	}
 

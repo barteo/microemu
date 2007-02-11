@@ -1,6 +1,6 @@
 @echo off
 rem @version $Revision$ ($Author$)  $Date$
-title Jetty:bytecode-webstart
+title *Jetty:bytecode-webstart
 
 call mvn -P debug webstart:jnlp
 

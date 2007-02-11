@@ -6,6 +6,13 @@
     <!-- @version $Revision$ ($Author$) $Date$ -->
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.microemu</groupId>
+        <artifactId>bytecode</artifactId>
+        <version>0.0.1</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
     <groupId>org.microemu</groupId>
     <artifactId>bytecode-webstart</artifactId>
     <name>bytecode-webstart</name>

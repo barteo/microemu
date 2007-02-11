@@ -7,12 +7,17 @@ public class TestMain implements Runnable {
 	}
 
 	public void run() {
+		
+		System.out.println("ClassLoader " + this.getClass().getClassLoader().hashCode() +  " TestMain");
+		
 		assert("microedition.io.file.FileConnection.version", "1.0");
 		assert("microedition.platform", "MicroEmulator-Test");
 		
+		System.out.println("System.getProperty OK");
+		
 		(new TestResourceLoad()).run();
 		
-		System.out.println("OK");
+		System.out.println("All test OK");
 	}
 	
 	private void assert(String key, String expected) {

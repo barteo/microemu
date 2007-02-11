@@ -16,6 +16,8 @@ public class PreporcessorClassLoader extends URLClassLoader {
 
 	public static boolean traceClassLoading = true;
 	
+	private final static boolean debug = true;
+	
 	private Set notLoadableNames;
 	
 	public PreporcessorClassLoader(ClassLoader parent) {
@@ -33,11 +35,18 @@ public class PreporcessorClassLoader extends URLClassLoader {
 		String resource = getClassResourceName(className);
 		URL url = getParent().getResource(resource);
 		if (url == null) {
-			throw new MalformedURLException("Unable to find class URL");
+			throw new MalformedURLException("Unable to find class " + className + " URL");
 		}
 		String path = url.toExternalForm();
+		if (debug) {
+			System.out.println("Add URL " + path);
+		}
 		addURL(new URL(path.substring(0, path.length() - resource.length())));
     }
+	
+	public void addURL(URL url) {
+		super.addURL(url);
+	}
     
 	/**
 	 * Loads the class with the specified <a href="#name">binary name</a>.
@@ -60,11 +69,17 @@ public class PreporcessorClassLoader extends URLClassLoader {
 	 *
 	 */
 	protected synchronized Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
+		if (debug) {
+			System.out.println("loadClass " + name);
+		}
 		// First, check if the class has already been loaded
 		Class result = findLoadedClass(name);
 		if (result == null) {
 			if (allowClassLoad(name)) {
 				result = findClass(name);
+				if (debug && (result == null)) {
+					System.out.println("loadClass not found " + name);
+				}
 			}
 			if (result == null) {
 				result = super.loadClass(name, false);
@@ -111,8 +126,14 @@ public class PreporcessorClassLoader extends URLClassLoader {
 	}
 
 	protected Class findClass(final String name) {
+		if (debug) {
+			System.out.println("findClass " + name);
+		}
 		final InputStream is = getResourceAsStream(getClassResourceName(name));
 		if (is == null) {
+			if (debug) {
+				System.out.println("Unable to findClass " + name);
+			}
 			return null;
 		}
 		byte[] b;
@@ -123,12 +144,16 @@ public class PreporcessorClassLoader extends URLClassLoader {
 			cr.accept(cv, false);
 			b = cw.toByteArray();
 		} catch (IOException e) {
+			e.printStackTrace();
 			return null;
 		} finally {
 			try {
 				is.close();
 			} catch (IOException ignore) {
 			}
+		}
+		if (debug) {
+			System.out.println("instrumented " + name);
 		}
 		return defineClass(name, b, 0, b.length);
 	}

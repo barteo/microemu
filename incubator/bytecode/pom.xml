@@ -17,6 +17,7 @@
     <modules>
         <module>bytecode-test-app</module>
         <module>bytecode-asm</module>
+        <module>bytecode-webstart</module>
     </modules>
 
     <build>

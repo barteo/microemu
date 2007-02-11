@@ -37,6 +37,8 @@ public class TestResourceLoad implements Runnable {
 
 	public void run() {
 		
+		System.out.println("ClassLoader " + this.getClass().getClassLoader().hashCode() +  " TestResourceLoad");
+		
 		loadStringsUsingSystemClassLoaded();
 		
 	}

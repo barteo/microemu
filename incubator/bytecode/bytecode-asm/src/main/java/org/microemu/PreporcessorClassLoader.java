@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.AccessControlContext;
+import java.security.AccessController;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,15 +18,32 @@ public class PreporcessorClassLoader extends URLClassLoader {
 
 	public static boolean traceClassLoading = true;
 	
+	public static boolean traceSystemClassLoading = true;
+	
 	private final static boolean debug = true;
 	
 	private Set notLoadableNames;
 	
+	/* The context to be used when loading classes and resources */
+    private AccessControlContext acc;
+    
 	public PreporcessorClassLoader(ClassLoader parent) {
 		super(new URL[]{}, parent);
 		notLoadableNames = new HashSet();
+		acc = AccessController.getContext();
 	}
 
+	public PreporcessorClassLoader(URL[] urls, ClassLoader parent) {
+		super(urls, parent);
+		notLoadableNames = new HashSet();
+	}
+	
+	private void debug(String message) {
+		if (debug) {
+			System.out.println("ppcl " + this.hashCode() + " " + message);
+		}
+	}
+	
     /**
      * Appends the Class Location URL to the list of URLs to search for
      * classes and resources.
@@ -39,17 +58,33 @@ public class PreporcessorClassLoader extends URLClassLoader {
 		}
 		String path = url.toExternalForm();
 		if (debug) {
-			System.out.println("Add URL " + path);
+			debug("addClassURL " + path);
 		}
 		addURL(new URL(path.substring(0, path.length() - resource.length())));
     }
 	
+	public static URL getClassURL(ClassLoader parent, String className) throws MalformedURLException {
+		String resource = getClassResourceName(className);
+		URL url = parent.getResource(resource);
+		if (url == null) {
+			throw new MalformedURLException("Unable to find class " + className + " URL");
+		}
+		String path = url.toExternalForm();
+		return new URL(path.substring(0, path.length() - resource.length()));
+    }
+	
 	public void addURL(URL url) {
+		if (debug) {
+			debug("addURL " + url);
+		}
 		super.addURL(url);
 	}
     
 	/**
 	 * Loads the class with the specified <a href="#name">binary name</a>.
+	 * 
+	 * <p> Search order is reverse to standard implemenation</p>
+	 * 
 	 * This implementation of this method searches for classes in the
 	 * following order:
 	 *
@@ -70,7 +105,7 @@ public class PreporcessorClassLoader extends URLClassLoader {
 	 */
 	protected synchronized Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
 		if (debug) {
-			System.out.println("loadClass " + name);
+			debug("loadClass " + name);
 		}
 		// First, check if the class has already been loaded
 		Class result = findLoadedClass(name);
@@ -78,17 +113,57 @@ public class PreporcessorClassLoader extends URLClassLoader {
 			if (allowClassLoad(name)) {
 				result = findClass(name);
 				if (debug && (result == null)) {
-					System.out.println("loadClass not found " + name);
+					debug("loadClass not found " + name);
 				}
 			}
 			if (result == null) {
+				if (traceSystemClassLoading) {
+					System.out.println("Load system class " + name);
+				}
+				// This will call our findClass again if Class is not found in parent
 				result = super.loadClass(name, false);
+				if (result == null) {
+					throw new ClassNotFoundException(name);
+				}
 			}
 		}
 		if (resolve) {
 			resolveClass(result);
 		}
 		return result;
+	}
+	
+	/**
+     * Finds the resource with the given name.  A resource is some data
+     * (images, audio, text, etc) that can be accessed by class code in a way
+     * that is independent of the location of the code.
+     *
+     * <p> The name of a resource is a '<tt>/</tt>'-separated path name that
+     * identifies the resource.
+     *
+     * <p> Search order is reverse to standard implemenation</p>
+     * 
+     * <p> This method will first use {@link #findResource(String)} to find the resource. 
+     * That failing, this method will invoke the parent class loader. </p>
+     *
+     * @param  name
+     *         The resource name
+     *
+     * @return  A <tt>URL</tt> object for reading the resource, or
+     *          <tt>null</tt> if the resource could not be found or the invoker
+     *          doesn't have adequate  privileges to get the resource.
+     *
+     */
+    
+	public URL getResource(String name) {
+		URL url = findResource(name);
+		if (url == null) {
+			if (debug) {
+				debug("Unable to find resource " + name);
+			}
+			url = getParent().getResource(name);
+		}
+		return url;
 	}
 
 	public boolean allowClassLoad(String className) {
@@ -121,18 +196,18 @@ public class PreporcessorClassLoader extends URLClassLoader {
 		notLoadableNames.add(className);
 	}
 
-	public String getClassResourceName(String className) {
-		return className.replace('.', '/') + ".class";
+	public static String getClassResourceName(String className) {
+		return className.replace('.', '/').concat(".class");
 	}
 
 	protected Class findClass(final String name) {
 		if (debug) {
-			System.out.println("findClass " + name);
+			debug("findClass " + name);
 		}
 		final InputStream is = getResourceAsStream(getClassResourceName(name));
 		if (is == null) {
 			if (debug) {
-				System.out.println("Unable to findClass " + name);
+				debug("Unable to find resource for class " + name);
 			}
 			return null;
 		}
@@ -153,7 +228,7 @@ public class PreporcessorClassLoader extends URLClassLoader {
 			}
 		}
 		if (debug) {
-			System.out.println("instrumented " + name);
+			debug("instrumented " + name);
 		}
 		return defineClass(name, b, 0, b.length);
 	}

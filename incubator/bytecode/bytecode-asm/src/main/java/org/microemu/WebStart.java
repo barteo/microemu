@@ -24,6 +24,8 @@ import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import javax.swing.AbstractAction;
@@ -49,8 +51,9 @@ public class WebStart extends JFrame {
 	public WebStart() throws HeadlessException {
 		super("ME2 bytecode Preporcessor");
 
-		Dimension size = new Dimension(200, 200);
+		Dimension size = new Dimension(400, 300);
 		setSize(size);
+		setLocation(300, 300);
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -58,14 +61,20 @@ public class WebStart extends JFrame {
 		JMenu menuFile = new JMenu("File");
 		menuBar.add(menuFile);
 
+		JMenuItem menuOpenJARFileFaset = new JMenuItem("Open JAR");
+		menuOpenJARFileFaset.addActionListener(new MenuOpenJARFileFastListener());
+		menuFile.add(menuOpenJARFileFaset);
+		
 		JMenuItem menuStart = new JMenuItem("Start Internal app");
 		menuStart.addActionListener(new MenuStartInternalListener());
 		menuFile.add(menuStart);
 
-		JMenuItem menuOpenJADFile = new JMenuItem("Open JAD File...");
-		menuOpenJADFile.addActionListener(new MenuOpenJADFileListener());
-		menuFile.add(menuOpenJADFile);
+		JMenuItem menuOpenJARFile = new JMenuItem("Open JAR File...");
+		menuOpenJARFile.addActionListener(new MenuOpenJARFileListener());
+		menuFile.add(menuOpenJARFile);
 
+
+		
 		getContentPane().add(tx = new JTextArea(), "Center");
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -82,7 +91,7 @@ public class WebStart extends JFrame {
 		}
 	}
 
-	private class MenuOpenJADFileListener extends AbstractAction {
+	private class MenuOpenJARFileListener extends AbstractAction {
 
 		private static final long serialVersionUID = 1L;
 
@@ -98,7 +107,7 @@ public class WebStart extends JFrame {
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				try {
 					recentDirectory = fileChooser.getCurrentDirectory().getAbsoluteFile();
-					openJar(fileChooser.getSelectedFile().toURL());
+					openJar(fileChooser.getSelectedFile().toURI().toURL());
 				} catch (Throwable e) {
 					System.err.println("Cannot load " + fileChooser.getSelectedFile().getName());
 				}
@@ -106,44 +115,92 @@ public class WebStart extends JFrame {
 		}
 	};
 
+	private class MenuOpenJARFileFastListener extends AbstractAction {
+
+		private static final long serialVersionUID = 1L;
+
+		public void actionPerformed(ActionEvent ev) {
+			try {
+				File dir = new File(new File(new File("..").getAbsoluteFile(), "bytecode-test-app"), "target").getCanonicalFile();
+				openJar(new File(dir.getAbsoluteFile(), "bytecode-test-app-0.0.1.jar").toURI().toURL());
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	
 	private void openJar(URL path) {
-		tx.setText("Open " + path + " \n");
+		println("Open [" + path + "]");
 		runApp(path);
 	}
 
+	private void println(String text) {
+		System.out.println(text);
+		tx.append(text);
+		tx.append("\n");
+	}
 	
 	public void runApp(URL path) {
-		tx.append("Start Class loader test...\n");
+		println("Start Class loader test...");
 		
-		System.out.println("ClassLoader " + this.getClass().getClassLoader().hashCode() +  " WebStart");
+		println("ClassLoader " + this.getClass().getClassLoader().hashCode() +  " WebStart");
 		
 		try {
 			SystemProperties.setProperty("microedition.platform", "MicroEmulator-Test");
 
-			PreporcessorClassLoader cl = new PreporcessorClassLoader(PreporcessorTest.class.getClassLoader());
+			ClassLoader parent = this.getClass().getClassLoader();
+				
+			if (path == null) {
+				path = PreporcessorClassLoader.getClassURL(parent, PreporcessorTest.TEST_CLASS);
+			}
+			URL[] urls = new URL[]{path};
+			
+			PreporcessorClassLoader cl = new PreporcessorClassLoader(urls, parent);
 			cl.disableClassLoad(SystemProperties.class);
 			cl.disableClassLoad(ResourceLoader.class);
 			ResourceLoader.classLoader = cl;
 			
-			System.out.println("ClassLoader " + cl.hashCode() +  " <-- PreporcessorClassLoader");
+			println("ClassLoader " + cl.hashCode() +  " <-- PreporcessorClassLoader");
 
-			if (path!= null) {
-				cl.addURL(path);
-			} else {
-				cl.addClassURL(PreporcessorTest.TEST_CLASS);
-			}
+//			if (path != null) {
+//				cl.addURL(path);
+//			} else {
+//				cl.addClassURL(PreporcessorTest.TEST_CLASS);
+//			}
 
-			tx.append("ClassLoader created...\n");
+			println("ClassLoader created...");
+			acessResource(cl, PreporcessorClassLoader.getClassResourceName(PreporcessorTest.TEST_CLASS));
+			acessResource(cl, "org/TestResourceLoad.class");			
+			acessResource(cl, PreporcessorClassLoader.getClassResourceName(this.getClass().getName()));
 
+//			Class instrumentedClassX = cl.loadClass("org.TestResourceLoad");
+//			tx.append("Test if file is there org.TestResourceLoad - OK\n");
+			
 			Class instrumentedClass = cl.loadClass(PreporcessorTest.TEST_CLASS);
 			Runnable instrumentedInstance = (Runnable) instrumentedClass.newInstance();
 			instrumentedInstance.run();
 
-			tx.append("Looks good!\n");
+			println("Looks good!\n");
 
 		} catch (Throwable e) {
-			tx.append("Error " + e.toString());
+			println("Error " + e.toString());
 			e.printStackTrace();
+		}
+	}
+	
+	void acessResource(ClassLoader cl, String resource) throws IOException {
+		URL url = cl.getResource(resource);
+		if (url == null) {
+			println("Ups can't find " + resource);
+		} else {
+			println("URL OK " + resource + " ->" + url);
+			InputStream is = url.openStream();
+			try {
+				is.read();
+			} finally {
+				is.close();
+			}
+			println("Read OK " + resource + " ->" + url);
 		}
 	}
 	

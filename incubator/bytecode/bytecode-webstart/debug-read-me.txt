@@ -1,0 +1,34 @@
+ # @version $Revision$ ($Author$)  $Date$
+
+
+Config is using java 6!
+    javaws  -J<option>  supply options to the vm.
+
+    bytecode-webstart-win.launch | bytecode-webstart-unix.launch  is using JAVA6_HOME variable
+
+
+0.  Build webstart project using maven
+    for dubug version of jnlp use
+        mvn -P debug webstart:jnlp
+
+    N.B. You may need to build all project in maven
+
+    This is done in jetty-run.cmd
+
+
+There are 3 things to launch
+
+1.  Local webserver
+    bytecode-webstart\jetty-run.cmd
+
+    verify that server is running using FireFox http://localhost:8080/bytecode-webstart/
+
+2.  Launch webstart application itself  (External tools in Eclipse)
+
+    It rely on env variable JAVA6_HOME  Since it can only work in Java 6. And you may chouse not to use Java6 as your default java.
+
+    bytecode-asm\bytecode-webstart-win.launch
+
+3. Debug the application  (Debug in Eclipse)
+
+    bytecode-asm\bytecode-webstart-debug.launch

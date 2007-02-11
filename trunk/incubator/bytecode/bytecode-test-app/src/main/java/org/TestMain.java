@@ -16,6 +16,7 @@ public class TestMain implements Runnable {
 		System.out.println("System.getProperty OK");
 		
 		(new TestResourceLoad()).run();
+		(new TestStaticInitializer()).run();
 		
 		System.out.println("All test OK");
 	}

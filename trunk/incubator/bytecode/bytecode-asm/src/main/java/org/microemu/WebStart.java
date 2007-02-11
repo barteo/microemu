@@ -107,6 +107,7 @@ public class WebStart extends JFrame {
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				try {
 					recentDirectory = fileChooser.getCurrentDirectory().getAbsoluteFile();
+					tx.setText("");
 					openJar(fileChooser.getSelectedFile().toURI().toURL());
 				} catch (Throwable e) {
 					System.err.println("Cannot load " + fileChooser.getSelectedFile().getName());
@@ -122,6 +123,7 @@ public class WebStart extends JFrame {
 		public void actionPerformed(ActionEvent ev) {
 			try {
 				File dir = new File(new File(new File("..").getAbsoluteFile(), "bytecode-test-app"), "target").getCanonicalFile();
+				tx.setText("");
 				openJar(new File(dir.getAbsoluteFile(), "bytecode-test-app-0.0.1.jar").toURI().toURL());
 			} catch (Throwable e) {
 				e.printStackTrace();
@@ -172,6 +174,7 @@ public class WebStart extends JFrame {
 			acessResource(cl, PreporcessorClassLoader.getClassResourceName(PreporcessorTest.TEST_CLASS));
 			acessResource(cl, "org/TestResourceLoad.class");			
 			acessResource(cl, PreporcessorClassLoader.getClassResourceName(this.getClass().getName()));
+			acessResource(cl, "app-data.txt");
 
 //			Class instrumentedClassX = cl.loadClass("org.TestResourceLoad");
 //			tx.append("Test if file is there org.TestResourceLoad - OK\n");
@@ -191,7 +194,7 @@ public class WebStart extends JFrame {
 	void acessResource(ClassLoader cl, String resource) throws IOException {
 		URL url = cl.getResource(resource);
 		if (url == null) {
-			println("Ups can't find " + resource);
+			println("Ups can't find resource " + resource);
 		} else {
 			println("URL OK " + resource + " ->" + url);
 			InputStream is = url.openStream();

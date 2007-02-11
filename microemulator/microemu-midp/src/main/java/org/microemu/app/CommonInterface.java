@@ -1,7 +1,9 @@
 package org.microemu.app;
 
+import org.microemu.MIDletAccess;
+
 public interface CommonInterface {
 
-	void startMidlet(Class dletClass, Object object);
+	void startMidlet(Class midletClass, MIDletAccess previousMidletAccess);
 
 }

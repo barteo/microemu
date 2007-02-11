@@ -6,5 +6,6 @@
 	<classpathentry kind="src" output="target/test-classes" path="src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="M2_REPO/asm/asm/2.2.3/asm-2.2.3.jar" sourcepath="M2_REPO/asm/asm/2.2.3/asm-2.2.3-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/bytecode-test-app"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

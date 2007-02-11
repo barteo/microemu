@@ -7,6 +7,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.AccessControlContext;
 import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -144,7 +146,7 @@ public class PreporcessorClassLoader extends URLClassLoader {
      * <p> Search order is reverse to standard implemenation</p>
      * 
      * <p> This method will first use {@link #findResource(String)} to find the resource. 
-     * That failing, this method will invoke the parent class loader. </p>
+     * That failing, this method will NOT invoke the parent class loader. </p>
      *
      * @param  name
      *         The resource name
@@ -155,17 +157,45 @@ public class PreporcessorClassLoader extends URLClassLoader {
      *
      */
     
-	public URL getResource(String name) {
-		URL url = findResource(name);
-		if (url == null) {
+	public URL getResource(final String name) {
+		try {
+			return (URL) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() {
+					return findResource(name);
+				}
+			}, acc);
+		} catch (PrivilegedActionException e) {
 			if (debug) {
-				debug("Unable to find resource " + name);
+				debug("Unable to find resource " + name + " " + e.toString());
 			}
-			url = getParent().getResource(name);
+			return null;
 		}
-		return url;
 	}
 
+	/**
+	 * Allow access to resources
+	 */
+	public InputStream getResourceAsStream(String name) {
+		final URL url = getResource(name);
+		if (url == null) {
+			return null;
+		}
+
+		try {
+			return (InputStream) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() throws IOException {
+					return url.openStream();
+				}
+			}, acc);
+		} catch (PrivilegedActionException e) {
+			if (debug) {
+				debug("Unable to find resource for class " + name + " " + e.toString());
+			}
+			return null;
+		}
+
+	}
+	
 	public boolean allowClassLoad(String className) {
 		if (className.startsWith("java.")) {
 			return false;
@@ -204,7 +234,21 @@ public class PreporcessorClassLoader extends URLClassLoader {
 		if (debug) {
 			debug("findClass " + name);
 		}
-		final InputStream is = getResourceAsStream(getClassResourceName(name));
+		InputStream is;
+		//is = getResourceAsStream(getClassResourceName(name));
+		try {
+			is = (InputStream) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() throws ClassNotFoundException {
+					return getResourceAsStream(getClassResourceName(name));
+				}
+			}, acc);
+		} catch (PrivilegedActionException e) {
+			if (debug) {
+				debug("Unable to find resource for class " + name + " " + e.toString());
+			}
+			return null;
+		}
+		
 		if (is == null) {
 			if (debug) {
 				debug("Unable to find resource for class " + name);

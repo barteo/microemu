@@ -13,11 +13,50 @@ import java.io.InputStreamReader;
 public class TestResourceLoad implements Runnable {
 
 	public void loadStringsUsingSystemClassLoaded() {
+		String resourceName;
+		String expected;
+		
+		resourceName = "/app-data.txt";
+		expected = "private app-data";
+		verifyLoadStrings("".getClass().getResourceAsStream(resourceName), "\"\".getClass() " +  resourceName, expected);
+		
+	}
+	
+	public void accessTest() {
+		String resourceName;
+		String expected;
+		
+		resourceName = "/container-internal.txt";
+		verifyLoadStrings(this.getClass().getResourceAsStream(resourceName), "this.getClass() " + resourceName, null);
+		verifyLoadStrings("".getClass().getResourceAsStream(resourceName), "\"\".getClass() " +  resourceName, null);
+		
+		resourceName = "/app-data.txt";
+		expected = "private app-data";
+		verifyLoadStrings(this.getClass().getResourceAsStream(resourceName), "this.getClass() " + resourceName, expected);
+		verifyLoadStrings("".getClass().getResourceAsStream(resourceName), "\"\".getClass() " +  resourceName, expected);
+	}
+
+	public void multipleResources() {
+		
 		String resourceName = "/strings.txt";
 		String expected = "proper MIDlet resources strings";
-		InputStream inputstream = "".getClass().getResourceAsStream(resourceName);
+		verifyLoadStrings(this.getClass().getResourceAsStream(resourceName), "this.getClass() " + resourceName, expected);
+		verifyLoadStrings("".getClass().getResourceAsStream(resourceName), "\"\".getClass() " +  resourceName, expected);
+		
+	}
+
+	
+	private void verifyLoadStrings(InputStream inputstream, String resourceName, String expected) {	
 		if (inputstream == null) {
+			if (expected == null) {
+				System.out.println("OK - Resource not found " + resourceName);
+				return;
+			}
 			throw new RuntimeException("Resource not found " + resourceName);
+		} else {
+			if (expected == null) {
+				throw new RuntimeException("Can access resource " + resourceName);
+			}
 		}
 		try {
 			BufferedReader r = new BufferedReader(new InputStreamReader(inputstream));
@@ -40,6 +79,8 @@ public class TestResourceLoad implements Runnable {
 		System.out.println("ClassLoader " + this.getClass().getClassLoader().hashCode() +  " TestResourceLoad");
 		
 		loadStringsUsingSystemClassLoaded();
+		multipleResources();
+		accessTest();
 		
 	}
 	

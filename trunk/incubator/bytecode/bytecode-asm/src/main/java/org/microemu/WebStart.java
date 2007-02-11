@@ -34,6 +34,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 /**
@@ -46,7 +47,9 @@ public class WebStart extends JFrame {
 
 	JTextArea tx;
 	
+	String lastURL = "http://localhost:8080/bytecode-webstart/more/bytecode-test-app-0.0.1.jar";
 	File recentDirectory;
+	File recentJar;
 
 	public WebStart() throws HeadlessException {
 		super("ME2 bytecode Preporcessor");
@@ -61,10 +64,6 @@ public class WebStart extends JFrame {
 		JMenu menuFile = new JMenu("File");
 		menuBar.add(menuFile);
 
-		JMenuItem menuOpenJARFileFaset = new JMenuItem("Open JAR");
-		menuOpenJARFileFaset.addActionListener(new MenuOpenJARFileFastListener());
-		menuFile.add(menuOpenJARFileFaset);
-		
 		JMenuItem menuStart = new JMenuItem("Start Internal app");
 		menuStart.addActionListener(new MenuStartInternalListener());
 		menuFile.add(menuStart);
@@ -73,7 +72,13 @@ public class WebStart extends JFrame {
 		menuOpenJARFile.addActionListener(new MenuOpenJARFileListener());
 		menuFile.add(menuOpenJARFile);
 
-
+		JMenuItem menuOpenJARFileFaset = new JMenuItem("Re-open JAR");
+		menuOpenJARFileFaset.addActionListener(new MenuOpenJARFileFastListener());
+		menuFile.add(menuOpenJARFileFaset);
+		
+		JMenuItem menuOpenJARURL = new JMenuItem("Open JAR URL...");
+		menuOpenJARURL.addActionListener(new MenuOpenJARURLListener());
+		menuFile.add(menuOpenJARURL);
 		
 		getContentPane().add(tx = new JTextArea(), "Center");
 
@@ -108,7 +113,8 @@ public class WebStart extends JFrame {
 				try {
 					recentDirectory = fileChooser.getCurrentDirectory().getAbsoluteFile();
 					tx.setText("");
-					openJar(fileChooser.getSelectedFile().toURI().toURL());
+					recentJar = fileChooser.getSelectedFile(); 
+					openJar(recentJar.toURI().toURL());
 				} catch (Throwable e) {
 					System.err.println("Cannot load " + fileChooser.getSelectedFile().getName());
 				}
@@ -122,14 +128,36 @@ public class WebStart extends JFrame {
 
 		public void actionPerformed(ActionEvent ev) {
 			try {
-				File dir = new File(new File(new File("..").getAbsoluteFile(), "bytecode-test-app"), "target").getCanonicalFile();
 				tx.setText("");
-				openJar(new File(dir.getAbsoluteFile(), "bytecode-test-app-0.0.1.jar").toURI().toURL());
+				if (recentJar == null) {
+					File dir = new File(new File(new File("..").getAbsoluteFile(), "bytecode-test-app"), "target").getCanonicalFile();
+					recentJar = new File(dir.getAbsoluteFile(), "bytecode-test-app-0.0.1.jar");
+				}
+				openJar(recentJar.toURI().toURL());
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
 		}
 	};
+	
+	private class MenuOpenJARURLListener extends AbstractAction {
+
+		private static final long serialVersionUID = 1L;
+
+		public void actionPerformed(ActionEvent ev) {
+			try {
+				String entered = JOptionPane.showInputDialog(WebStart.this, "Enter JAR URL:", lastURL);
+				if (lastURL != null) {
+					tx.setText("");
+					lastURL = entered; 
+					openJar(new URL(lastURL));
+				}
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+		}
+	};
+
 	
 	private void openJar(URL path) {
 		println("Open [" + path + "]");
@@ -154,6 +182,14 @@ public class WebStart extends JFrame {
 				
 			if (path == null) {
 				path = PreporcessorClassLoader.getClassURL(parent, PreporcessorTest.TEST_CLASS);
+			} else {
+				InputStream is = path.openStream();
+				try {
+					is.read();
+				} finally {
+					is.close();
+				}
+				println("Read OK " + path);
 			}
 			URL[] urls = new URL[]{path};
 			

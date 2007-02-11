@@ -120,7 +120,7 @@
                 <configuration>
                     <wtkHome>${env.WTK_HOME}</wtkHome>
                     <useWtkLibs>true</useWtkLibs>
-                    <proguard>true</proguard>
+                    <proguard>false</proguard>
                     <obfuscate>false</obfuscate>
                     <test>false</test>
                     <midlets>

@@ -32,9 +32,9 @@ public class ItemsOnForm extends Form implements CommandListener, DisplayableUnd
 	public static final Command addCommand = new Command("add", Command.ITEM, 1);
 	
 	public ItemsOnForm(Item[] items) {
-		super("Form Items test", items);
+		super("Form with Items", items);
 		addCommand(addCommand);
-		addCommand(backCommand);
+		addCommand(DisplayableUnderTests.backCommand);
 		setCommandListener(this);
     }
 	
@@ -44,7 +44,7 @@ public class ItemsOnForm extends Form implements CommandListener, DisplayableUnd
 
 	public void commandAction(Command c, Displayable d) {
 		if (d == this) {
-			if (c == backCommand) {
+			if (c == DisplayableUnderTests.backCommand) {
 				Manager.midletInstance.showMainPage();
 			} if (c == addCommand) {
 				append(new StringItem("si:", "StringItem" + Manager.sequenceNext()));

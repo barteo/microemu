@@ -20,6 +20,9 @@
  */
 package org.microemu.tests;
 
+import java.util.Enumeration;
+import java.util.Vector;
+
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Display;
@@ -34,7 +37,7 @@ public class MainTestMIDlet extends MIDlet implements CommandListener, MIDletUnd
 
 	List menuList = null;
 
-	Displayable testPanels[];
+	Vector testPanels;
 	
 	public MainTestMIDlet() {
 		
@@ -44,15 +47,18 @@ public class MainTestMIDlet extends MIDlet implements CommandListener, MIDletUnd
 		Manager.midletInstance = this;
 		
 		if (menuList == null) {
-			testPanels = new Displayable[] {
-					new ItemsOnForm(),
-					new ErrorHandlingForm(),
-					new ErrorHandlingCanvas()};
+			testPanels = new Vector();
+			testPanels.addElement(new ItemsOnForm());
+			testPanels.addElement(new ErrorHandlingForm());
+			testPanels.addElement(new ErrorHandlingCanvas());
+			if (OverrideNewJSRCanvas.enabled) {
+				testPanels.addElement(new OverrideNewJSRCanvas());
+			}
 
 			menuList = new List("Manual Tests", List.IMPLICIT);
 
-			for (int i = 0; i < testPanels.length; i++) {
-				menuList.append(testPanels[i].getTitle(), null);
+			for (Enumeration iter = testPanels.elements(); iter.hasMoreElements();) {
+				menuList.append(((Displayable) iter.nextElement()).getTitle(), null);
 			}
 			menuList.addCommand(exitCommand);
 			menuList.setCommandListener(this);
@@ -63,9 +69,12 @@ public class MainTestMIDlet extends MIDlet implements CommandListener, MIDletUnd
 	public void commandAction(Command c, Displayable d) {
 		if (d == menuList) {
 			if (c == List.SELECT_COMMAND) {
-				setCurrentDisplayable(testPanels[menuList.getSelectedIndex()]);
+				setCurrentDisplayable((Displayable)testPanels.elementAt(menuList.getSelectedIndex()));
 			} else if (c == exitCommand) {
-				destroyApp(true);
+				try {
+					destroyApp(true);
+				} catch (MIDletStateChangeException e) {
+				}
 				notifyDestroyed();
 			}
 		}
@@ -81,7 +90,7 @@ public class MainTestMIDlet extends MIDlet implements CommandListener, MIDletUnd
 		display.setCurrent(nextDisplayable);
 	}
 	
-	protected void destroyApp(boolean unconditional) {
+	protected void destroyApp(boolean unconditional) throws MIDletStateChangeException {
 	}
 
 	protected void pauseApp() {

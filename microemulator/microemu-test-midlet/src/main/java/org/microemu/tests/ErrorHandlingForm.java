@@ -30,15 +30,15 @@ public class ErrorHandlingForm extends Form implements CommandListener, Displaya
 	public static final Command makeErrorCommand = new Command("make error", Command.ITEM, 1);
 	
 	public ErrorHandlingForm() {
-		super("Form with Errors test");
+		super("Form with Errors");
 		addCommand(makeErrorCommand);
-		addCommand(backCommand);
+		addCommand(DisplayableUnderTests.backCommand);
 		setCommandListener(this);
     }
 	
 	public void commandAction(Command c, Displayable d) {
 		if (d == this) {
-			if (c == backCommand) {
+			if (c == DisplayableUnderTests.backCommand) {
 				Manager.midletInstance.showMainPage();
 			} if (c == makeErrorCommand) {
 				throw new IllegalArgumentException("Emulator Should still work");

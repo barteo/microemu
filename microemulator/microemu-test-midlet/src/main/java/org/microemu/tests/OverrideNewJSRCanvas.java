@@ -1,4 +1,4 @@
-/*
+/**
  *  MicroEmulator
  *  Copyright (C) 2001-2007 MicroEmulator Team.
  *
@@ -22,16 +22,21 @@ package org.microemu.tests;
 
 import javax.microedition.lcdui.Graphics;
 
-public class ErrorHandlingCanvas extends BaseTestsCanvas {
+/**
+ * @author vlads
+ *  To test if MIDlet can override javax.microedition package on the device.
+ */
+public class OverrideNewJSRCanvas extends BaseTestsCanvas {
+
+	public static final boolean enabled = true;
 	
-	boolean makeErrorInPaint = false;
-	
-	int lastKeyCode = 0;
-	
-	public ErrorHandlingCanvas() {
-		super("Canvas with Errors");
+	public OverrideNewJSRCanvas() {
+		super("OverrideNewJSR");
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.microedition.lcdui.Canvas#paint(javax.microedition.lcdui.Graphics)
+	 */
 	protected void paint(Graphics g) {
 		int width = getWidth();
         int height = getHeight();
@@ -41,37 +46,19 @@ public class ErrorHandlingCanvas extends BaseTestsCanvas {
 		
 		g.setColor(0);
 		int line = 0;
-		writeln(g, line++, "Make Error Canvas");
-		if (fullScreenMode) {
-			writeln(g, line++, "0 - Normal Mode");
-		}
-		writeln(g, line++, "1 - Error in keyPressed");
-		writeln(g, line++, "2 - Error in pain");
-		if (makeErrorInPaint) {
-			makeErrorInPaint = false;
-			writeln(g, line++, "Making error");
-			throw new IllegalArgumentException("Emulator Should still work");
-		}
-		if (lastKeyCode != 0) {
-			writeln(g, line++, "KeyCode: " + lastKeyCode);
+		writeln(g, line++, "Override New JSR");
+		
+		String result;
+		
+		try {
+			result = new OverrideNewJSRClient().doJSRStuff("Can use new classes");
+			writeln(g, line++, "success");
+		} catch (Throwable e) {
+			writeln(g, line++, "failure");
+			result = e.toString();
 		}
 		
+		writeln(g, line++, result);
 	}
-	
-	protected void keyPressed(int keyCode) {
-		switch (keyCode) {
-		case '0':
-			if (fullScreenMode) {
-				setFullScreenMode(false);
-			}
-			break;
-		case '1':
-			throw new IllegalArgumentException("Emulator Should still work");
-		case '2':
-			makeErrorInPaint = true;
-			break;
-		}
-		lastKeyCode = keyCode;
-		repaint();
-	}
+
 }

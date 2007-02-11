@@ -120,9 +120,9 @@
                 <configuration>
                     <wtkHome>${env.WTK_HOME}</wtkHome>
                     <useWtkLibs>true</useWtkLibs>
-                    <proguard>false</proguard>
+                    <proguard>true</proguard>
                     <obfuscate>false</obfuscate>
-                    <test>true</test>
+                    <test>false</test>
                     <midlets>
                         <MIDlet>
                             <name>MainTest</name>

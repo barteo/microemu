@@ -1,4 +1,4 @@
-/*
+/**
  *  MicroEmulator
  *  Copyright (C) 2001-2007 MicroEmulator Team.
  *
@@ -18,20 +18,26 @@
  *
  *  @version $Id$
  */
-package org.microemu.tests;
+package javax.microedition.io.newjsr;
 
+/**
+ * @author vlads
+ *
+ * To test if MIDlet can override javax.microedition package on the device.
+ */
+public class NewJSRFacade {
 
-public abstract class Manager {
+	private static class WorkerImpl implements NewJSRInterface {
 
-	public static MIDletUnderTests midletInstance = null;
-
-	public static int sequence = 0;
-	
-	public static int sequenceNext() {
-		return (sequence++);
+		public String doStuff(String data) {
+			System.out.println("Working on " + data);
+			return data;
+		}
+		
 	}
 	
-	public static int sequenceValue() {
-		return sequence;
+	public static NewJSRInterface createWorker() {
+		return new WorkerImpl();
 	}
+	
 }

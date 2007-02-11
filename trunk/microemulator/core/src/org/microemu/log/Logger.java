@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import org.microemu.app.ui.Message;
-
 /**
  * 
  * This class is used as abstraction layer for log messages 
@@ -48,9 +46,9 @@ public class Logger {
     
     static {
         fqcnSet.add(FQCN);
-        // This class can be moved to different sub project
+        // Message class can be moved to different sub project, See call to addLogOrigin
+        // Also Message calss can be refactored by ProGuard
         //fqcnSet.add("org.microemu.app.ui.Message");
-        fqcnSet.add(Message.class.getName());
         
         addAppender(new StdOutAppender());
     }
@@ -189,6 +187,14 @@ public class Logger {
 			LoggerAppender a = (LoggerAppender) iter.next();
 			a.append(event);
 		};
+	}
+	
+	/**
+	 * Add the Class which serves as entry point for log message location.
+	 * @param origin Class
+	 */
+	public static void addLogOrigin(Class origin) {
+		fqcnSet.add(origin.getName());
 	}
 	
 	public static void addAppender(LoggerAppender newAppender) {

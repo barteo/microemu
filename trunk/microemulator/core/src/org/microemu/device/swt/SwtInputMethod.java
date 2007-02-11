@@ -109,7 +109,7 @@ public class SwtInputMethod extends InputMethodImpl
     }
 
 
-	public String getKeyName(int keyCode)
+	public String getKeyName(int keyCode) throws IllegalArgumentException
     {
 		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext(); ) {
 			SwtButton button = (SwtButton) it.next();

@@ -38,8 +38,7 @@ import nanoxml.XMLParseException;
 import org.microemu.EmulatorContext;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.IOUtils;
-
-import com.barteo.emulator.device.Device;
+import org.microemu.device.Device;
 
 
 public class Config {

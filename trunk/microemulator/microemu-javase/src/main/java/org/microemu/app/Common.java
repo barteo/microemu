@@ -47,7 +47,6 @@ import org.microemu.app.launcher.Launcher;
 import org.microemu.app.ui.Message;
 import org.microemu.app.ui.ResponseInterfaceListener;
 import org.microemu.app.ui.StatusBarListener;
-import org.microemu.app.ui.noui.NoUiDisplayComponent;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.FileRecordStoreManager;
 import org.microemu.app.util.IOUtils;
@@ -57,9 +56,6 @@ import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
-import org.microemu.device.j2se.J2SEDeviceDisplay;
-import org.microemu.device.j2se.J2SEFontManager;
-import org.microemu.device.j2se.J2SEInputMethod;
 import org.microemu.log.Logger;
 import org.microemu.util.Base64Coder;
 import org.microemu.util.JadMidletEntry;
@@ -68,7 +64,7 @@ import org.microemu.util.MemoryRecordStoreManager;
 
 //import com.barteo.emulator.app.capture.Capturer;
 
-public class Common implements MicroEmulator {
+public class Common implements MicroEmulator, CommonInterface {
 	private static Common instance;
 
 	private static Launcher launcher;
@@ -315,43 +311,6 @@ public class Common implements MicroEmulator {
 		if (responseInterfaceListener != null) {
 			responseInterfaceListener.stateChanged(state);
 		}
-	}
-
-	public static void main(String args[]) {
-		Common app = new Common(new EmulatorContext() {
-			private DisplayComponent displayComponent = new NoUiDisplayComponent();
-
-			private InputMethod inputMethod = new J2SEInputMethod();
-
-			private DeviceDisplay deviceDisplay = new J2SEDeviceDisplay(this);
-
-			private FontManager fontManager = new J2SEFontManager();
-
-			public DisplayComponent getDisplayComponent() {
-				return displayComponent;
-			}
-
-			public InputMethod getDeviceInputMethod() {
-				return inputMethod;
-			}
-
-			public DeviceDisplay getDeviceDisplay() {
-				return deviceDisplay;
-			}
-
-			public FontManager getDeviceFontManager() {
-				return fontManager;
-			}
-		});
-
-		List params = new ArrayList();
-		for (int i = 0; i < args.length; i++) {
-			params.add(args[i]);
-		}		
-		DeviceEntry defaultDevice = new DeviceEntry("Default device", null, Device.DEFAULT_LOCATION, true, false);
-		app.initDevice(params, defaultDevice);
-
-		app.initMIDlet(params, false);
 	}
 
 	public void initDevice(List params, DeviceEntry defaultDevice) {

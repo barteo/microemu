@@ -6,12 +6,18 @@ import org.objectweb.asm.MethodVisitor;
 
 public class ChangeCallsClassVisitor extends ClassAdapter {
 
-	public ChangeCallsClassVisitor(ClassVisitor cv) {
+	private boolean traceClassLoading;
+	
+	public ChangeCallsClassVisitor(ClassVisitor cv, boolean traceClassLoading) {
 		super(cv);
+		this.traceClassLoading = traceClassLoading;
 	}
 
     public void visit(final int version, final int access, final String name, final String signature, final String superName, final String[] interfaces) {
-    	System.out.println("Processing class " + name);
+    	if (this.traceClassLoading) {
+    		//TODO Logger.info();
+    		System.out.println("Processing class " + name);
+    	}
     	super.visit(version, access, name, signature, superName, interfaces);
 	}
     

@@ -6,6 +6,7 @@ import org.objectweb.asm.*;
 
 public class PreporcessorTest {
 
+	public static String TEST_CLASS = "org.TestMain";
 
 	public static void main(String[] args) throws Exception {
 
@@ -16,7 +17,9 @@ public class PreporcessorTest {
 		cl.disableClassLoad(ResourceLoader.class);
 		ResourceLoader.classLoader = cl;
 		
-		Class instrumentedClass = cl.loadClass("org.TestMain");
+		cl.addClassURL(TEST_CLASS);
+		
+		Class instrumentedClass = cl.loadClass(TEST_CLASS);
 		Runnable instrumentedInstance = (Runnable)instrumentedClass.newInstance();
 		instrumentedInstance.run();
 		
@@ -27,7 +30,7 @@ public class PreporcessorTest {
 		
 		ClassReader cr = new ClassReader("org.TestMain");
         ClassWriter cw = new ClassWriter(false);
-        ClassVisitor cv = new ChangeCallsClassVisitor(cw);
+        ClassVisitor cv = new ChangeCallsClassVisitor(cw, true);
         cr.accept(cv, false);
         byte[] b = cw.toByteArray();
 

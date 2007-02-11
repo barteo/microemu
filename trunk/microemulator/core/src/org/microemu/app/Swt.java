@@ -43,10 +43,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.microemu.DisplayComponent;
 import org.microemu.EmulatorContext;
 import org.microemu.MIDletBridge;
+import org.microemu.app.ui.Message;
 import org.microemu.app.ui.ResponseInterfaceListener;
 import org.microemu.app.ui.StatusBarListener;
 import org.microemu.app.ui.swt.SwtDeviceComponent;
 import org.microemu.app.ui.swt.SwtDialog;
+import org.microemu.app.ui.swt.SwtErrorMessageDialogPanel;
 import org.microemu.app.ui.swt.SwtInputDialog;
 import org.microemu.app.ui.swt.SwtMessageDialog;
 import org.microemu.app.ui.swt.SwtSelectDeviceDialog;
@@ -59,6 +61,7 @@ import org.microemu.device.InputMethod;
 import org.microemu.device.swt.SwtDeviceDisplay;
 import org.microemu.device.swt.SwtFontManager;
 import org.microemu.device.swt.SwtInputMethod;
+import org.microemu.log.Logger;
 
 public class Swt extends Common
 {
@@ -112,7 +115,7 @@ public class Swt extends Common
 				try {
 					openJadUrl(new File(fileDialog.getFilterPath(), fileDialog.getFileName()).toURL().toString());
 				} catch (IOException ex) {
-					System.err.println("Cannot load " + fileDialog.getFileName());
+					Logger.error("Cannot load " + fileDialog.getFileName());
 				}
 			}
 		} 
@@ -279,6 +282,8 @@ public class Swt extends Common
     
 		setStatusBarListener(statusBarListener);
 		setResponseInterfaceListener(responseInterfaceListener);
+		
+	    Message.addListener(new SwtErrorMessageDialogPanel(shell));
 	}
 	
 	

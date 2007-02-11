@@ -24,41 +24,40 @@ import javax.microedition.lcdui.Graphics;
 
 /**
  * @author vlads
- *  To test if MIDlet can override javax.microedition package on the device.
+ *
  */
-public class OverrideNewJSRCanvas extends BaseTestsCanvas {
+public class OverrideNewJSR2Canvas  extends BaseTestsCanvas {
 
-	public static final boolean enabled = true;
-	
-	public OverrideNewJSRCanvas() {
-		super("OverrideNew IO JSR");
-	}
-
-	/* (non-Javadoc)
-	 * @see javax.microedition.lcdui.Canvas#paint(javax.microedition.lcdui.Graphics)
-	 */
-	protected void paint(Graphics g) {
-		int width = getWidth();
-        int height = getHeight();
-
-		g.setGrayScale(255);
-		g.fillRect(0, 0, width, height);
+		public static final boolean enabled = true;
 		
-		g.setColor(0);
-		int line = 0;
-		writeln(g, line++, "Override New JSR");
-		
-		String result;
-		
-		try {
-			result = new OverrideNewJSRClient().doJSRStuff("Can use new classes");
-			writeln(g, line++, "success");
-		} catch (Throwable e) {
-			writeln(g, line++, "failure");
-			result = e.toString();
+		public OverrideNewJSR2Canvas() {
+			super("OverrideNewJSR2");
 		}
-		
-		writeln(g, line++, result);
-	}
 
+		/* (non-Javadoc)
+		 * @see javax.microedition.lcdui.Canvas#paint(javax.microedition.lcdui.Graphics)
+		 */
+		protected void paint(Graphics g) {
+			int width = getWidth();
+	        int height = getHeight();
+
+			g.setGrayScale(255);
+			g.fillRect(0, 0, width, height);
+			
+			g.setColor(0);
+			int line = 0;
+			writeln(g, line++, "Override New JSR2");
+			
+			String result;
+			
+			try {
+				result = new OverrideNewJSR2Client().doJSR2Stuff("Can use new classes");
+				writeln(g, line++, "success");
+			} catch (Throwable e) {
+				writeln(g, line++, "failure");
+				result = e.toString();
+			}
+			
+			writeln(g, line++, result);
+		}
 }

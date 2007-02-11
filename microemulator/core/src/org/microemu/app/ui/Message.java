@@ -43,6 +43,10 @@ public class Message {
     
     private static List listeners = new Vector();
     
+    static {
+    	Logger.addLogOrigin(Message.class);
+    }
+    
     /**
      * Show Error message to user
      * 

@@ -21,6 +21,12 @@
             <version>2.2.3</version>
         </dependency>
 
+        <!--dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>bytecode-test-app</artifactId>
+            <version>0.0.1</version>
+        </dependency-->
+
     </dependencies>
 
     <build>
@@ -33,6 +39,22 @@
                     <source>1.4</source>
                     <target>1.4</target>
                 </configuration>
+            </plugin>
+
+            <!-- jar-with-dependencies -->
+            <plugin>
+               <artifactId>maven-assembly-plugin</artifactId>
+               <executions>
+                   <execution>
+                       <phase>package</phase>
+                       <goals><goal>attached</goal></goals>
+                   </execution>
+               </executions>
+               <configuration>
+                   <descriptors>
+                       <descriptor>applet-assembly.xml</descriptor>
+                   </descriptors>
+               </configuration>
             </plugin>
 
         </plugins>

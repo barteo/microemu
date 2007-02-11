@@ -2,6 +2,9 @@ package org.microemu;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,19 +12,33 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 
-public class PreporcessorClassLoader extends ClassLoader {
+public class PreporcessorClassLoader extends URLClassLoader {
 
+	public static boolean traceClassLoading = true;
+	
 	private Set notLoadableNames;
 	
 	public PreporcessorClassLoader(ClassLoader parent) {
-		super(parent);
+		super(new URL[]{}, parent);
 		notLoadableNames = new HashSet();
 	}
 
-	protected synchronized Class loadClassStd(String name, boolean resolve) throws ClassNotFoundException {
-		return super.loadClass(name, resolve);
-	}
-
+    /**
+     * Appends the Class Location URL to the list of URLs to search for
+     * classes and resources.
+     *
+     * @param Class Name
+     */
+	public void addClassURL(String className) throws MalformedURLException {
+		String resource = getClassResourceName(className);
+		URL url = getParent().getResource(resource);
+		if (url == null) {
+			throw new MalformedURLException("Unable to find class URL");
+		}
+		String path = url.toExternalForm();
+		addURL(new URL(path.substring(0, path.length() - resource.length())));
+    }
+    
 	/**
 	 * Loads the class with the specified <a href="#name">binary name</a>.
 	 * This implementation of this method searches for classes in the
@@ -63,6 +80,10 @@ public class PreporcessorClassLoader extends ClassLoader {
 		if (className.startsWith("java.")) {
 			return false;
 		}
+		/* No real device support overloading this package */
+		if (className.startsWith("javax.microedition.")) {
+			return false;
+		}
 //		Class loadedByParent = getParent().findLoadedClass(className);
 //		if (loadedByParent != null) {
 //			return false;
@@ -73,6 +94,10 @@ public class PreporcessorClassLoader extends ClassLoader {
 		return true;
 	}
 	
+	/**
+	 * Special case for classes injected to MIDlet 
+	 * @param klass
+	 */
 	public void disableClassLoad(Class klass) {
 		disableClassLoad(klass.getName());
 	}
@@ -94,7 +119,7 @@ public class PreporcessorClassLoader extends ClassLoader {
 		try {
 			ClassReader cr = new ClassReader(is);
 			ClassWriter cw = new ClassWriter(false);
-			ClassVisitor cv = new ChangeCallsClassVisitor(cw);
+			ClassVisitor cv = new ChangeCallsClassVisitor(cw, traceClassLoading);
 			cr.accept(cv, false);
 			b = cw.toByteArray();
 		} catch (IOException e) {

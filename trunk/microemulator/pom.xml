@@ -50,6 +50,7 @@
         <module>microemu-javase-swing</module>
         <module>microemu-javase-swt</module>
         <module>microemu-extensions</module>
+        <module>microemu-tests</module>
         <!--
         <module>microemu-applet</module>
         <module>microemu-example</module>

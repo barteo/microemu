@@ -119,6 +119,7 @@
                 GET SWT for your platform from http://www.eclipse.org/swt/
                 Make ENV variable
             -->
+<!--        Only in SWT module
             <dependency>
                 <groupId>swt</groupId>
                 <artifactId>swt</artifactId>
@@ -126,7 +127,7 @@
                 <scope>system</scope>
                 <systemPath>${SWT_HOME}/swt.jar</systemPath>
             </dependency>
-
+-->
             <dependency>
                 <groupId>sun</groupId>
                 <artifactId>applet-jsobject</artifactId>

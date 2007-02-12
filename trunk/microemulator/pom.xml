@@ -52,9 +52,9 @@
         <module>microemu-extensions</module>
         <module>microemu-tests</module>
         <module>microemu-examples</module>
+        <module>microemu-webstart</module>
         <!--
         <module>microemu-applet</module>
-        <module>microemu-webstart</module>
         -->
     </modules>
 

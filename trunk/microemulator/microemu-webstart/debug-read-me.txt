@@ -1,0 +1,32 @@
+ # @version $Revision$ ($Author$)  $Date$
+
+
+Config is using java 6!
+    javaws  -J<option>  supply options to the vm.
+
+    me2-webstart-win.launch  is using JAVA_HOME variable
+
+
+0.  Build webstart project using maven
+    for dubug version of jnlp use
+        mvn -P debug webstart:jnlp
+
+    N.B. You may need to build all project in maven
+
+    This is done in jetty-run.cmd
+
+
+There are 3 things to launch
+
+1.  Local webserver
+    microemu-webstart\jetty-run.cmd
+
+    verify that server is running using FireFox http://localhost:8080/microemu-webstart/
+
+2.  Launch webstart application itself
+
+    microemulator\misc\eclipse\me2-webstart-win.launch
+
+3. Debug the application
+
+    microemulator\misc\eclipse\me2-webstart-debug.launch

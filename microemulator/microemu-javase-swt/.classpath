@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/microemu-javase"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/microemu-midp"/>
+	<classpathentry kind="lib" path="/opt/eclipse-3.3x/plugins/org.eclipse.swt.gtk.linux.x86_3.3.0.v3325c.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -73,6 +73,7 @@
                 </executions>
                 <configuration>
                     <wtkHome>${env.WTK_HOME}</wtkHome>
+                    <proguard>true</proguard>
                     <obfuscate>true</obfuscate>
                     <proguardInclude>${basedir}/proguard.conf</proguardInclude>
                     <jadAttributes>

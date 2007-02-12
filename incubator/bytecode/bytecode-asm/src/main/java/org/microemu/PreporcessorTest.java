@@ -9,12 +9,20 @@ public class PreporcessorTest {
 	public static String TEST_CLASS = "org.TestMain";
 
 	public static void main(String[] args) throws Exception {
-
+		
+		saveToFile();
+		
+		runClass();
+		
+	}
+	
+	public static void runClass() throws Exception {
 		SystemProperties.setProperty("microedition.platform" , "MicroEmulator-Test");
 		
 		PreporcessorClassLoader cl = new PreporcessorClassLoader(PreporcessorTest.class.getClassLoader());
 		cl.disableClassLoad(SystemProperties.class);
 		cl.disableClassLoad(ResourceLoader.class);
+		cl.disableClassLoad(OutputStreamRedirector.class);
 		ResourceLoader.classLoader = cl;
 		
 		cl.addClassURL(TEST_CLASS);
@@ -22,9 +30,7 @@ public class PreporcessorTest {
 		Class instrumentedClass = cl.loadClass(TEST_CLASS);
 		Runnable instrumentedInstance = (Runnable)instrumentedClass.newInstance();
 		instrumentedInstance.run();
-		
 	}
-	
 	
 	public static void saveToFile() throws Exception {
 		

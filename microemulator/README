@@ -4,8 +4,13 @@ J2ME Device Emulator is pure Java implementation of J2ME in J2SE.
 It allows demonstrate MIDlet (MIDP/CLDC) based applications as a
 standalone Java application or as web browser applet.
 
+Context:
+    1. Running application
+    2. Applet config
+    3. Building MicroEmulator from sources
+
 Requirements:
- - J2SE 1.3+
+ - J2SE 1.4+
 
 There are two methods of running apps in emulator:
 
@@ -66,5 +71,18 @@ Example for SimpleDemo MIDlet and Large Skin:
 	<param name="device" value="org/microemu/device/large/device.xml">
 </applet>
 
+
+3. Building MicroEmulator from sources
+
+  We are using maven2 to build project
+
+  To build project you need this environment variables:
+  JAVA_HOME, SWT_HOME (to build swt module) and WTK_HOME to compile and test MIDlets
+
+  To create Eclipse projects run:
+    mvn eclipse:clean eclipse:eclipse -DdownloadSources=true
+
+  To run build without tests:
+    mvn -Dmaven.test.skip=true
 
 

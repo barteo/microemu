@@ -43,19 +43,21 @@
 		<developerConnection>scm:svn:https://microemulator.svn.sourceforge.net/svnroot/microemulator/trunk/microemulator</developerConnection>
 	</scm>
 
-    <!--
     <modules>
         <module>microemu-cldc</module>
-        <module>microemu-midp-common</module>
-        <module>microemu-midp2</module>
-        <module>microemu-swing</module>
+        <module>microemu-midp</module>
+        <module>microemu-javase</module>
+        <module>microemu-javase-swing</module>
+        <module>microemu-javase-swt</module>
+        <!--
         <module>microemu-applet</module>
         <module>microemu-example</module>
         <module>microemu-swt</module>
         <module>microemu-webstart</module>
         <module>microemu-tests</module>
+        -->
     </modules>
-    -->
+
 
     <ciManagement>
         <system>CruiseControl</system>
@@ -113,10 +115,16 @@
     <dependencyManagement>
         <dependencies>
 
+            <!--
+                GET SWT for your platform from http://www.eclipse.org/swt/
+                Make ENV variable
+            -->
             <dependency>
                 <groupId>swt</groupId>
-                <artifactId>swt-win32</artifactId>
-                <version>3.0m8</version>
+                <artifactId>swt</artifactId>
+                <version>3.2.1</version>
+                <scope>system</scope>
+                <systemPath>${SWT_HOME}/swt.jar</systemPath>
             </dependency>
 
             <dependency>
@@ -274,17 +282,28 @@
             -->
         </extensions>
 
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <configuration>
-                        <testFailureIgnore>true</testFailureIgnore>
-                    </configuration>
-                </plugin>
-
-            </plugins>
-        </pluginManagement>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.4</source>
+                    <target>1.4</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Version>${label}</Version>
+                            <Build-Time>${cctimestamp}</Build-Time>
+                            <Implementation-Version>${pom.version}</Implementation-Version>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
 
     </build>
 
@@ -310,8 +329,9 @@
 
     <profiles>
         <profile>
-            <!-- We support ant build, Ant Runs with Java 1.4, 5 and 6 -->
+            <!-- We will support ant build, Ant Runs with Java 1.4, 5 and 6 -->
             <id>build</id>
+            <!--
             <build>
                 <plugins>
                     <plugin>
@@ -336,6 +356,7 @@
                     </plugin>
                 </plugins>
             </build>
+            -->
         </profile>
     </profiles>
 

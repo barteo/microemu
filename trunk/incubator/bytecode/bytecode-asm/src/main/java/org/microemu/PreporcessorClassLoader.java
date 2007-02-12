@@ -22,7 +22,7 @@ public class PreporcessorClassLoader extends URLClassLoader {
 	
 	public static boolean traceSystemClassLoading = true;
 	
-	private final static boolean debug = true;
+	private final static boolean debug = false;
 	
 	private Set notLoadableNames;
 	

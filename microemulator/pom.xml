@@ -51,12 +51,10 @@
         <module>microemu-javase-swt</module>
         <module>microemu-extensions</module>
         <module>microemu-tests</module>
+        <module>microemu-examples</module>
         <!--
         <module>microemu-applet</module>
-        <module>microemu-example</module>
-        <module>microemu-swt</module>
         <module>microemu-webstart</module>
-        <module>microemu-tests</module>
         -->
     </modules>
 

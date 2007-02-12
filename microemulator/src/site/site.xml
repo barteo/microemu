@@ -22,7 +22,7 @@
             <item name="Live examples" href="/./demo.html"/>
         </links>
 
-        <menu name="Ver 2.0.0" inherit="top"/>
+        <menu name="Ver 2.0.1-SNAPSHOT" inherit="top"/>
 
         <menu name="Overview">
             <item name="Introduction" href="index.html" />
@@ -35,8 +35,8 @@
             <item name="Download" href="#">
                 <item name="Releases" href="http://sourceforge.net/project/showfiles.php?group_id=30014"/>
                 <item name="Maven" href="maven.html"/>
-                <item name="CVS Access" href="source-repository.html"/>
-                <item name="Browse CVS" href="http://microemulator.cvs.sourceforge.net/microemulator/"/>
+                <item name="SVN Access" href="source-repository.html"/>
+                <item name="Browse SVN" href="http://microemulator.svn.sourceforge.net/viewvc/microemulator/trunk/microemulator/"/>
             </item>
 
         </menu>
@@ -47,7 +47,7 @@
         </menu>
 
 
-        <!--menu ref="modules" collapse="true" /-->
+        <menu ref="modules" collapse="true" />
 
         <menu ref="reports" />
 

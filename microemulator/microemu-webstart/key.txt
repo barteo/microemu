@@ -1,0 +1,31 @@
+
+1.
+    keystore created like this:
+
+    keytool -genkey -keystore MicroEmulator.keystore -storepass PWD -keypass PWD -alias MicroEmulatorSignJars -dname "cn=MicroEmulator Team"
+
+2.
+    keystore should be stored in file ${home}/.m2/MicroEmulator.keystore for build to work
+
+3.
+    Your ${home}/.m2/settings.xml  should have password stored like this:
+
+    <settings>
+        ...
+        <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault/>
+            </activation>
+            <properties>
+                <MicroEmulator-keystore-pwd>PWD</MicroEmulator-keystore-pwd>
+            </properties>
+            .....
+        </profiles>
+        <activeProfiles>
+            <activeProfile>default</activeProfile>
+        </activeProfiles>
+    </settings>
+
+

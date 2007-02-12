@@ -25,6 +25,8 @@
         <module>microemu-jsr-120</module>
         <module>microemu-nokiaui</module>
         <module>microemu-siemensapi</module>
+        <module>microemu-device-large</module>
+        <module>microemu-device-minimum</module>
     </modules>
 
 

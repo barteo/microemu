@@ -63,7 +63,8 @@ public abstract class BaseTestHttpConnection extends BaseGCFTestCase {
 		assertEquals("getHost()", TEST_HOST, hc.getHost());
 		assertEquals("getFile()", testFile, hc.getFile());
 		assertEquals("getRequestMethod()", HttpConnection.GET, hc.getRequestMethod());
-		assertTrue("getHeaderField()", (hc.getHeaderField("Server").indexOf("Apache") != -1));
+		String server = hc.getHeaderField("Server");
+		assertTrue("getHeaderField()", ((server.indexOf("Apache") != -1) || (server.indexOf("Sun-ONE") != -1)) );
 		Calendar year2005 = Calendar.getInstance();
 		year2005.set(Calendar.YEAR, 2005);
 		long past2005 = year2005.getTime().getTime();

@@ -58,6 +58,8 @@ public class PointerCanvasPanel extends BaseExamplesCanvas {
 				g.setColor(0xBB5500);
 				g.drawLine(ppX - CROSS_SIZE, ppY + CROSS_SIZE, ppX + CROSS_SIZE, ppY - CROSS_SIZE);
 				g.drawLine(ppX - CROSS_SIZE, ppY - CROSS_SIZE, ppX + CROSS_SIZE, ppY + CROSS_SIZE);
+			} else {
+				writeln(g, line++, "Click anywhere and drag");	
 			}
 		}
 	}

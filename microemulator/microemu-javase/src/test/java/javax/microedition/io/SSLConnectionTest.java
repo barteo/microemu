@@ -28,7 +28,7 @@ import java.io.OutputStream;
 
 import javax.microedition.pki.Certificate;
 
-public class TestSSLConnection extends BaseGCFTestCase {
+public class SSLConnectionTest extends BaseGCFTestCase {
 
 	private static final String TEST_PORT = "443";
 	

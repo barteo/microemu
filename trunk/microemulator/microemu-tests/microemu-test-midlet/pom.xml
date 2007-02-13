@@ -22,7 +22,7 @@
 
         <dependency>
             <groupId>org.microemu</groupId>
-            <artifactId>microemulator-app-swing</artifactId>
+            <artifactId>microemu-javase-swing</artifactId>
             <version>${version}</version>
             <scope>provided</scope>
         </dependency>

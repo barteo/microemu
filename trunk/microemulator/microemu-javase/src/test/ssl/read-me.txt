@@ -1,0 +1,30 @@
+@version $Id$
+
+This is uses during UnitTests for SSL
+
+ When using SSLFactory to talk SSL with a server, or using the URL class
+to open an https connection we need to make the server certificate be trusted by SSLSocketFactory.
+
+1. You must have the server certificate. If you don't have this
+handy, navigate to the secure website, click on the lock icon
+(in Internet Explorer). Click on "Details" tab and then click
+the "Copy to File..." button. Export the certificate to a DER
+encoded binary X.509 (.CER) file. Let's say you chose the
+filename test-server.cer
+
+ Java 1.4 do not acept key len above the normal 2048 bits.
+
+2. Import the file test-server.cer to our keystore  Create src\test\resources\test-servers.keystore
+
+   keytool -keystore test-servers.keystore -storepass microemu2006 -import -alias test-server.host.net -file test-server.cer -trustcacerts
+
+Done:
+   keytool -printcert -file pyx4j.com-der-X509.cer
+   keytool -keystore ../resources/test-servers.keystore -storepass microemu2006 -import -alias pyx4j.com -file pyx4j.com-der-X509.cer -trustcacerts
+
+
+3. Unit test will load this keystore automaticaly during build
+
+
+-- for build server you need to add pyx4j.com to java to enable dav deployment
+set MAVEN_OPTS=-Djavax.net.ssl.trustStore=D:\di\pyx4me\www.microemu.org\microemu-tests\src\test\resources\test-servers.keystore -Djavax.net.ssl.trustStorePassword=microemu2006

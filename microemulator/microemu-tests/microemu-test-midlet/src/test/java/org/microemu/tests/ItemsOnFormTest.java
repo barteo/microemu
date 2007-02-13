@@ -1,6 +1,7 @@
-/*
+/**
  *  MicroEmulator
- *  Copyright (C) 2001-2007 MicroEmulator Team.
+ *  Copyright (C) 2001-2007 Bartek Teodorczyk <barteo@barteo.net>
+ *  Copyright (C) 2006-2007 Vlad Skarzhevskyy
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public

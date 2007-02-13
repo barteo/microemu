@@ -29,6 +29,12 @@
 
         <dependency>
             <groupId>org.microemu</groupId>
+            <artifactId>microemu-jsr-75</artifactId>
+            <version>${version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
             <artifactId>microemu-demo</artifactId>
             <version>${version}</version>
         </dependency>

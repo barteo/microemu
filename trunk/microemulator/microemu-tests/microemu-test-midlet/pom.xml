@@ -8,8 +8,8 @@
 
     <parent>
         <groupId>org.microemu</groupId>
-        <artifactId>microemu</artifactId>
-        <version>2.0.0</version><!--me-version-->
+        <artifactId>microemu-tests</artifactId>
+        <version>2.0.1</version><!--me-version-->
         <relativePath>../pom.xml</relativePath>
     </parent>
 

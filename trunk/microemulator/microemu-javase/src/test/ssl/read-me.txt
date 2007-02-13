@@ -22,6 +22,9 @@ Done:
    keytool -printcert -file pyx4j.com-der-X509.cer
    keytool -keystore ../resources/test-servers.keystore -storepass microemu2006 -import -alias pyx4j.com -file pyx4j.com-der-X509.cer -trustcacerts
 
+# torvspocweb Server used for tests on Windows build server
+    keytool -keystore ../resources/test-servers.keystore -storepass microemu2006 -import -alias torvspocweb -file torvspocweb-der-X509.cer -trustcacerts
+
 
 3. Unit test will load this keystore automaticaly during build
 

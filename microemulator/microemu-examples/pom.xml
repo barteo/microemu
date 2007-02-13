@@ -21,6 +21,7 @@
 
     <modules>
         <module>microemu-demo</module>
+        <module>microemu-fcview</module>
     </modules>
 
 </project>

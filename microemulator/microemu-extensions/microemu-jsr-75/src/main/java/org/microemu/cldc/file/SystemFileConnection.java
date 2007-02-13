@@ -47,20 +47,31 @@ public class SystemFileConnection implements FileConnection {
 	
 	private File file;
 	
+	private boolean isRoot;
+	
 	private Throwable locationClosedFrom = null;
 	
 	private InputStream opendInputStream;
 	
 	private OutputStream opendOutputStream;
 	
+	private final static char  DIR_SEP = '/';
+	
+	private final static String  DIR_SEP_STR = "/";
+	
 	SystemFileConnection(String name) throws IOException {
 		// <host>/<path>
-		int hostEnd = name.indexOf('/');
+		int hostEnd = name.indexOf(DIR_SEP);
 		if (hostEnd == -1) {
 			throw new IOException("Invalid path " + name);
 		}
 		host = name.substring(0, hostEnd);
 		fullPath = name.substring(hostEnd + 1);
+		int rootEnd = fullPath.indexOf(DIR_SEP); 
+		isRoot = ((rootEnd == -1) || (rootEnd == fullPath.length() - 1));
+		if (fullPath.charAt(fullPath.length() - 1) == DIR_SEP) {
+			fullPath = fullPath.substring(0, fullPath.length() -1);
+		}
 		this.file = new File(getRoot(), fullPath);
 	}
 	
@@ -93,7 +104,7 @@ public class SystemFileConnection implements FileConnection {
             	continue;
             }
             if (file.isDirectory()) {
-            	list.add(file.getName() + "/");
+            	list.add(file.getName() + DIR_SEP);
             }
         }
         return list.elements();
@@ -183,8 +194,12 @@ public class SystemFileConnection implements FileConnection {
 		// TODO test on real device. Not declared
 		throwClosed();
 
+		if (isRoot) {
+			return "";
+		}
+		
 		if (this.file.isDirectory()) {
-			return this.file.getName() + "/";
+			return this.file.getName() + DIR_SEP;
 		} else {
 			return this.file.getName();
 		}
@@ -194,12 +209,17 @@ public class SystemFileConnection implements FileConnection {
 		// TODO test on real device. Not declared
 		throwClosed();
 		
+		//returns Parent directory
         //  /<root>/<directory>/
-		int pathEnd = fullPath.lastIndexOf('/');
-		if (pathEnd == -1) {
-			return "/";
+		if (isRoot) {
+			return DIR_SEP + fullPath + DIR_SEP;
 		}
-		return '/' + fullPath.substring(0, pathEnd + 1);
+		
+		int pathEnd = fullPath.lastIndexOf(DIR_SEP);
+		if (pathEnd == -1) {
+			return DIR_SEP_STR;
+		}
+		return DIR_SEP + fullPath.substring(0, pathEnd + 1);
 	}
 
 	public String getURL() {
@@ -209,7 +229,7 @@ public class SystemFileConnection implements FileConnection {
 		// file://<host>/<root>/<directory>/<filename.extension>
 		//  or
 		// file://<host>/<root>/<directory>/<directoryname>/
-		return Connection.PROTOCOL + this.host + '/' + fullPath;
+		return Connection.PROTOCOL + this.host + DIR_SEP + fullPath + ((this.file.isDirectory())?DIR_SEP_STR:"");
 	}
 
 	public boolean isDirectory() {
@@ -257,7 +277,7 @@ public class SystemFileConnection implements FileConnection {
             	continue;
             }
             if (child.isDirectory()) {
-            	list.add(child.getName() + "/");
+            	list.add(child.getName() + DIR_SEP);
             } else {
             	list.add(child.getName());
             }
@@ -338,7 +358,7 @@ public class SystemFileConnection implements FileConnection {
 
 	public void rename(String newName) throws IOException {
 		throwClosed();
-		if (newName.indexOf('/') != -1) {
+		if (newName.indexOf(DIR_SEP) != -1) {
 			throw new IllegalArgumentException("Name contains path specification " + newName);
 		}
 		File newFile = new File(this.file.getParentFile(), newName);

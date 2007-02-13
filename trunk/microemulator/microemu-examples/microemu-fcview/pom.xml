@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0">
+    <!-- @version $Revision$ ($Author$) $Date$ -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.microemu</groupId>
+        <artifactId>microemu-examples</artifactId>
+        <version>2.0.1-SNAPSHOT</version><!--me-version-->
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>microemu-fcview</artifactId>
+    <name>microemu-fcview</name>
+
+    <description>microemulator File Connection View, jsr-75 example</description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-jsr-75</artifactId>
+            <version>${version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-javase-swing</artifactId>
+            <version>${version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+<!--
+        <dependency>
+            <groupId>com.pyx4me</groupId>
+            <artifactId>cldcunit</artifactId>
+            <version>2.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.pyx4me</groupId>
+            <artifactId>cldcunit-se</artifactId>
+            <version>2.0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <properties>
+        <wtk.optionalpda.enabled>true</wtk.optionalpda.enabled>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.3</source>
+                    <target>1.1</target>
+                </configuration>
+            </plugin>
+
+            <!-- Add EclipseME nature to the generated project-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <configuration>
+                    <buildcommands>
+                        <buildcommand>org.eclipse.jdt.core.javabuilder</buildcommand>
+                        <buildcommand>eclipseme.core.preverifier</buildcommand>
+                    </buildcommands>
+                    <projectnatures>
+                        <projectnature>org.eclipse.jdt.core.javanature</projectnature>
+                        <projectnature>eclipseme.core.nature</projectnature>
+                    </projectnatures>
+                    <classpathContainers>
+                        <classpathContainer>J2MELIB</classpathContainer>
+                        <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
+                    </classpathContainers>
+                </configuration>
+            </plugin>
+
+            <!-- Create application loadable on the phone -->
+            <plugin>
+                <groupId>com.pyx4me</groupId>
+                <artifactId>j2me-maven-plugin</artifactId>
+                <executions>
+                   <execution>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <wtkHome>${env.WTK_HOME}</wtkHome>
+                    <useWtkLibs>true</useWtkLibs>
+                    <proguard>false</proguard>
+                    <obfuscate>false</obfuscate>
+                    <test>false</test>
+                    <jadAttributes>
+                        <Created-By>Vlad Skarzhevskyy</Created-By>
+                    </jadAttributes>
+                    <midlets>
+                        <MIDlet>
+                            <name>FileBrowser</name>
+                            <class>org.microemu.examples.fcview.FCViewMIDlet</class>
+                        </MIDlet>
+                        <!--MIDlet>
+                            <name>UnitTests</name>
+                            <class>org.microemu.FileUnitTestsMIDLet</class>
+                            <test>true</test>
+                        </MIDlet-->
+                    </midlets>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

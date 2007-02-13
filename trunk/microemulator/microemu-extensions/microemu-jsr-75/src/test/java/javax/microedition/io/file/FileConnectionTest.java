@@ -34,12 +34,46 @@ public class FileConnectionTest extends TestCase {
 	static {
 		CreateTestFileSystem.init();
 	}
+
+	public void testRoot() throws Exception {
+		FileConnection fconn = (FileConnection) Connector.open("file:///test/");
 	
-	public void testFileExists() throws Exception {
+		assertTrue("should exists", fconn.exists());
+		
+		assertTrue("is directory", fconn.isDirectory());
+		
+		assertEquals("", fconn.getName());
+		
+		assertEquals("/test/", fconn.getPath());
+		
+		assertEquals("file:///test/", fconn.getURL());
+		
+		fconn.close();
+	}
+	
+	public void testDirectory() throws Exception {
+		FileConnection fconn = (FileConnection) Connector.open("file:///test/dir1/");
+	
+		assertTrue("should exists", fconn.exists());
+		
+		assertTrue("is directory", fconn.isDirectory());
+		
+		assertEquals("dir1/", fconn.getName());
+		
+		assertEquals("/test/", fconn.getPath());
+		
+		assertEquals("file:///test/dir1/", fconn.getURL());
+		
+		fconn.close();
+	}
+	
+	public void testFile() throws Exception {
 		FileConnection fconn = (FileConnection) Connector.open("file:///test/dir1/f1.txt");
 	
 		// If no exception is thrown, then the URI is valid, but the file may or may not exist.
-		assertTrue(fconn.exists());
+		assertTrue("should exists", fconn.exists());
+		
+		assertFalse("not directory", fconn.isDirectory());
 		
 		assertEquals("f1.txt", fconn.getName());
 		

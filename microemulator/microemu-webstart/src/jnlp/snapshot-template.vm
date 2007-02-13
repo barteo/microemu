@@ -24,7 +24,7 @@
   </resources>
 
   <application-desc main-class="$mainClass">
-        <argument>org.microemu.midp.examples.simpledemo.SimpleDemo</argument>
+        <argument>org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet</argument>
   </application-desc>
 
 </jnlp>

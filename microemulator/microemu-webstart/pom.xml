@@ -131,6 +131,9 @@
                                 <copy overwrite="true" todir="${project.build.directory}/site/">
                                     <fileset dir="${project.build.directory}/jnlp"/>
                                 </copy>
+                                <copy overwrite="true"
+                                    file="${project.build.directory}/jnlp/${jnlpPrefix}demo.jnlp"
+                                    tofile="${project.build.directory}/site/demo.jnlp"/>
                             </tasks>
                         </configuration>
                     </execution>

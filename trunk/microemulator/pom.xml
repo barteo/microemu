@@ -301,6 +301,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <testFailureIgnore>true</testFailureIgnore>
+                    <includes>
+                        <include>**/*Test.*</include>
+                        <include>**/*Tests.*</include>
+                    </includes>
                 </configuration>
             </plugin>
             <plugin>

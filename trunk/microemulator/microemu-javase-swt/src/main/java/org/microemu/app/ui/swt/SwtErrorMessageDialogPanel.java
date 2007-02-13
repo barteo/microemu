@@ -1,6 +1,6 @@
 /**
  *  MicroEmulator
- *  Copyright (C) 2001-2007 MicroEmulator Team.
+ *  Copyright (C) 2001-2007 Bartek Teodorczyk <barteo@barteo.net>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -16,7 +16,7 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  @version $Id: SwingErrorMessageDialogPanel.java 692 2007-02-10 19:46:35Z vlads $
+ *  @version $Id: ConnectionClosedException.java 877 2007-02-13 02:24:09Z vlads $
  */
 package org.microemu.app.ui.swt;
 

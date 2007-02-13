@@ -19,12 +19,11 @@
 
     <description>microemu-tests</description>
 
-<!--
+
     <modules>
-        <module>microemu-test-gcf</module>
+        <!--module>microemu-test-gcf</module-->
         <module>microemu-test-midlet</module>
     </modules>
--->
 
     <dependencies>
         <dependency>

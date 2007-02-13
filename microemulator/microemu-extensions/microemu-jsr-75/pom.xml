@@ -8,35 +8,31 @@
 
     <parent>
         <groupId>org.microemu</groupId>
-        <artifactId>microemu</artifactId>
+        <artifactId>microemu-extensions</artifactId>
         <version>2.0.1-SNAPSHOT</version><!--me-version-->
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>microemu-extensions</artifactId>
-    <name>microemu-extensions</name>
-    <packaging>pom</packaging>
+    <artifactId>microemu-jsr-75</artifactId>
+    <name>microemu-jsr-75</name>
 
-    <description>microemu-extensions</description>
-
-
-    <modules>
-        <module>microemu-device-large</module>
-        <module>microemu-device-minimum</module>
-        <module>microemu-jsr-75</module>
-        <module>microemu-jsr-82</module>
-        <module>microemu-jsr-120</module>
-        <module>microemu-nokiaui</module>
-        <module>microemu-siemensapi</module>
-    </modules>
-
+    <description>jsr-75</description>
 
     <dependencies>
+
         <dependency>
             <groupId>org.microemu</groupId>
             <artifactId>microemu-javase</artifactId>
             <version>${version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
+
 
 </project>

@@ -25,12 +25,4 @@
         <module>microemu-test-midlet</module>
     </modules>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.microemu</groupId>
-            <artifactId>microemu-javase</artifactId>
-            <version>${version}</version>
-        </dependency>
-    </dependencies>
-
 </project>

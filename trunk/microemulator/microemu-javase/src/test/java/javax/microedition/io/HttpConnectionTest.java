@@ -23,7 +23,7 @@ package javax.microedition.io;
 
 import java.io.IOException;
 
-public class TestHttpConnection extends BaseTestHttpConnection {
+public class HttpConnectionTest extends BaseTestHttpConnection {
 
 	private static final String testInetHTTPUrl = "http://" + TEST_HOST + testFile;
 

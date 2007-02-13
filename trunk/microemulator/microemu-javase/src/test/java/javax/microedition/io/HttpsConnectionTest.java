@@ -25,7 +25,7 @@ import java.io.IOException;
 
 import javax.microedition.pki.Certificate;
 
-public class TestHttpsConnection extends BaseTestHttpConnection {
+public class HttpsConnectionTest extends BaseTestHttpConnection {
 	
 	private static final String testInetHTTPUrl = "https://" + TEST_HOST + testFile;
 	

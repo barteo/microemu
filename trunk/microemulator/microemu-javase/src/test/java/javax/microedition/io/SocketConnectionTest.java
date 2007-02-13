@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class TestSocketConnection extends BaseGCFTestCase {
+public class SocketConnectionTest extends BaseGCFTestCase {
 
 	private static final String loopbackHost = TEST_HOST;
 	//private static final String loopbackHost = "localhost";

@@ -325,6 +325,8 @@ public class Main extends JFrame
     getContentPane().add(statusBar, "South");    
     
     Message.addListener(new SwingErrorMessageDialogPanel(this));
+    
+    this.setResizable(false);
   }
   
   

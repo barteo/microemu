@@ -58,6 +58,16 @@ public class Message {
         Logger.error("Message: " + title + ": " + text);
         callListeners(ERROR, title, text, null);
     }
+
+    /**
+     * Show Error message to user
+     * 
+     * @param text  Message
+     */
+    public static void error(String text) {
+        Logger.error("Message: Error: " + text);
+        callListeners(ERROR, "Error", text, null);
+    }
     
     /**
      * Show Error message to user
@@ -68,6 +78,11 @@ public class Message {
     public static void error(String title, String text, Throwable throwable) {
         Logger.error("Message: " + title + ": " + text, throwable);
         callListeners(ERROR, title, text, throwable);
+    }
+
+    public static void error(String text, Throwable throwable) {
+        Logger.error("Message: Error : " + text, throwable);
+        callListeners(ERROR, "Error", text, throwable);
     }
     
     /**

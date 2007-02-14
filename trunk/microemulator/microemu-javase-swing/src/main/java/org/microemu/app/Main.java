@@ -450,10 +450,11 @@ public class Main extends JFrame
     app.common.initDevice(params, app.selectDevicePanel.getSelectedDeviceEntry());
     app.updateDevice();
     
-    app.common.initMIDlet(params, false);
-    
+   
     app.validate();
     app.setVisible(true);
+    
+    app.common.initMIDlet(params, false);
   }
 
 }

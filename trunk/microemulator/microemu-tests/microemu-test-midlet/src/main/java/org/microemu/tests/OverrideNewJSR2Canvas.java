@@ -29,7 +29,7 @@ import javax.microedition.lcdui.Graphics;
  */
 public class OverrideNewJSR2Canvas  extends BaseTestsCanvas {
 
-		public static final boolean enabled = true;
+		public static final boolean enabled = false;
 		
 		public OverrideNewJSR2Canvas() {
 			super("OverrideNewJSR2");

@@ -46,6 +46,7 @@
     <modules>
         <module>microemu-cldc</module>
         <module>microemu-midp</module>
+        <module>microemu-injected</module>
         <module>microemu-javase</module>
         <module>microemu-javase-swing</module>
         <module>microemu-javase-swt</module>

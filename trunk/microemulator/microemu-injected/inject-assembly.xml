@@ -8,8 +8,10 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
+           <directory>target</directory>
+           <outputDirectory></outputDirectory>
            <includes>
-                <include>**/microemu-injected.jar</include>
+                <include>microemu-injected.jar</include>
             </includes>
         </fileSet>
     </fileSets>

@@ -27,10 +27,9 @@
   - switching between modes (numeric, password, URL, etc.)
   - solve problem with VK_BACKSPACE key on emulator device
 
-* ConnectionFramework - currently only http connection is supported, implement other:
+* ConnectionFramework
   - udp
-  - https - done
-  - file  - done in https://pyx4j.com/svn/contrib/www.microemu.org/microemu-jsr-75-impl
+  - file  in memory
 
 * (?) applet loader - during loading applet code progress bar should be visible
 
@@ -42,33 +41,13 @@
 
 * midlet bytcode instrumentation to replace calls to System.getProperty (not avalable in Webstart and Applet env)
 
-* Use maven for build. now maven build is here: https://pyx4j.com/svn/contrib/www.microemu.org
-
-* refactor subproject dependency. Idea in module microemu-stubs
-
 * Create eclipseme.core.model.impl for Microemulator as described
   http://eclipseme.org/docs/developer/extending.html
   Contribute this to eclipseme
 
 * UEI
 
-* MOVE to SVN
-
-* Consider hosting project at http://code.google.com/
-    pros:  SVN, nice issues management, Wiki
-
-* Create Microemulator CruiseControl taks at https://pyx4j.com/cruisecontrol/
-
 -- Maybe TODO -- just ideas
-
-* device.xml inheritance
-
-<device name="Moto Like default device">
-   <inherit>device.xml</inherit>
-   <softbutton name="soft1" key="VK_F1" keyCode="-21"/>
-   <!-- No need to define other stuff, it is inheridet-->
-  <softbutton name="soft2" key="VK_F2" keyCode="-22"/>
-</device>
 
 *  Need to add credits tag to device.xml
 <device>

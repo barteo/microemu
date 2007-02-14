@@ -10,12 +10,12 @@ public class ResourceLoader {
 	
 	private static final String FQCN = ResourceLoader.class.getName();
 	
-	public static InputStream getResourceAsStream(Object origClass, String resourceName)  {
+	public static InputStream getResourceAsStream(Class origClass, String resourceName)  {
 		System.out.println("Load MIDlet resource [" + resourceName + "]");
 		if (resourceName.startsWith("/")) {
 			resourceName = resourceName.substring(1);
 		}
-		if (classLoader != ((Class)origClass).getClassLoader()) {
+		if (classLoader != origClass.getClassLoader()) {
 			// showWarning
 			if (!java13) {
 				try {

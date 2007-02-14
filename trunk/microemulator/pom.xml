@@ -139,6 +139,7 @@
                 <groupId>sun</groupId>
                 <artifactId>applet-jsobject</artifactId>
                 <version>1.4</version>
+                <optional>true</optional>
                 <!--scope>provided</scope-->
                 <scope>system</scope>
                 <systemPath>${java.home}/lib/plugin.jar</systemPath>

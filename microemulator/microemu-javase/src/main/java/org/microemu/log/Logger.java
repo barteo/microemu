@@ -140,6 +140,12 @@ public class Logger {
 			write(LoggingEvent.INFO, message, null);
 		}
 	}
+
+	public static void info(String message, String data) {
+		if (isErrorEnabled()) {
+			write(LoggingEvent.INFO, message, null, data);
+		}
+	}
 	
 	public static void warn(String message) {
 		if (isErrorEnabled()) {

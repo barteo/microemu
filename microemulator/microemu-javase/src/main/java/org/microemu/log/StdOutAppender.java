@@ -52,7 +52,7 @@ public class StdOutAppender implements LoggerAppender {
     	if (event.hasData()) {
     		data = " [" + event.getFormatedData() + "]";
     	}
-    	out.println(formatLocation(event.getLocation()) + "\n" + event.getMessage() + data);
+    	out.println(event.getMessage() + data +  "\n\t  " + formatLocation(event.getLocation()));
     	if (event.getThrowable() != null) {
     		event.getThrowable().printStackTrace();
     	}

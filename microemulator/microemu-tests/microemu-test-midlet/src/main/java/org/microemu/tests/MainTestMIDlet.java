@@ -58,6 +58,12 @@ public class MainTestMIDlet extends MIDlet implements CommandListener, MIDletUnd
 			if (OverrideNewJSR2Canvas.enabled) {
 				testPanels.addElement(new OverrideNewJSR2Canvas());
 			}
+			if (OverrideNewJSR2Canvas.enabled) {
+				testPanels.addElement(new OverrideNewJSR2Canvas());
+			}
+			if (PreporcessorTestCanvas.enabled) {
+				testPanels.addElement(new PreporcessorTestCanvas());
+			}
 
 			menuList = new List("Manual Tests", List.IMPLICIT);
 

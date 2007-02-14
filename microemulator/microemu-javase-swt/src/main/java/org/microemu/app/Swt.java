@@ -389,15 +389,16 @@ public class Swt extends Common
 		app.initDevice(params, app.selectDeviceDialog.getSelectedDeviceEntry());
 		app.updateDevice();
 		
+		shell.pack();
+		shell.open();
+		
 		app.initMIDlet(params, false);
 		
-		shell.pack ();
-		shell.open ();
 		while (!shell.isDisposed ()) {
 			if (!display.readAndDispatch ())
 				display.sleep ();
 		}
-		display.dispose ();			
+		display.dispose();			
 	}
 
 }

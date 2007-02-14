@@ -24,6 +24,13 @@
             <artifactId>microemu-javase</artifactId>
             <version>${version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>sun</groupId>
+            <artifactId>applet-jsobject</artifactId>
+            <version>1.4</version>
+        </dependency>
+        
     </dependencies>
 
 </project>

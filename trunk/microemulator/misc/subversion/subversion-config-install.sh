@@ -3,5 +3,5 @@
 #
 
 
-copy subversion_config ${HOME}/.subversion/config
+cp subversion_config ${HOME}/.subversion/config
 

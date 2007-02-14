@@ -26,6 +26,13 @@
         </dependency>
 
         <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-injected</artifactId>
+            <version>${version}</version>
+            <classifier>inject</classifier>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>

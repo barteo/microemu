@@ -19,6 +19,7 @@ public class TestResourceLoad implements Runnable {
 		resourceName = "/app-data.txt";
 		expected = "private app-data";
 		verifyLoadStrings("".getClass().getResourceAsStream(resourceName), "\"\".getClass() " +  resourceName, expected);
+		verifyLoadStrings(String.class.getResourceAsStream(resourceName), "String.class. " +  resourceName, expected);
 		
 	}
 	

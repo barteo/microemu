@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0">
+    <!-- @version $Revision$ ($Author$) $Date$ -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.microemu</groupId>
+        <artifactId>microemu</artifactId>
+        <version>2.0.1-SNAPSHOT</version><!--me-version-->
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>microemu-javase-applet</artifactId>
+    <name>microemu-javase-applet</name>
+
+    <description>javase-swing</description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-cldc</artifactId>
+            <version>${version}</version>
+            <classifier>4applet</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-midp</artifactId>
+            <version>${version}</version>
+            <classifier>4applet</classifier>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.microemu</groupId><artifactId>microemu-cldc</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-javase-swing</artifactId>
+            <version>${version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.microemu</groupId><artifactId>microemu-cldc</artifactId>
+                </exclusion>
+                <!--exclusion>
+                    <groupId>org.microemu</groupId><artifactId>microemu-midp</artifactId>
+                </exclusion-->
+                <exclusion>
+                    <groupId>org.microemu</groupId><artifactId>microemu-injected</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>asm</groupId><artifactId>asm</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>sun</groupId>
+            <artifactId>applet-jsobject</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <!-- applet jar-with-dependencies -->
+
+            <plugin>
+                <groupId>com.pyx4me</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <executions>
+                   <execution>
+                       <phase>package</phase>
+                       <goals><goal>proguard</goal></goals>
+                   </execution>
+                </executions>
+                <configuration>
+                    <proguardInclude>${basedir}/proguard.conf</proguardInclude>
+                    <attach>true</attach>
+                    <attachArtifactClassifier>applet</attachArtifactClassifier>
+                    <assembly>
+                        <inclusions>
+                            <inclusion>
+                                <groupId>org.microemu</groupId><artifactId>microemu-cldc</artifactId><library>true</library>
+                            </inclusion>
+                            <inclusion>
+                                <groupId>org.microemu</groupId><artifactId>microemu-midp</artifactId><library>true</library>
+                            </inclusion>
+                            <inclusion>
+                                <groupId>org.microemu</groupId><artifactId>microemu-javase</artifactId>
+                            </inclusion>
+                            <inclusion>
+                                <groupId>org.microemu</groupId><artifactId>microemu-javase-swing</artifactId>
+                            </inclusion>
+                        </inclusions>
+                    </assembly>
+                    <libs>
+                        <lib>${java.home}/lib/rt.jar</lib>
+                        <lib>${java.home}/lib/jsse.jar</lib>
+                    </libs>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

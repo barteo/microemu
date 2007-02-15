@@ -45,8 +45,8 @@
                 <configuration>
                     <attach>false</attach>
                     <wtkHome>${env.WTK_HOME}</wtkHome>
-                    <proguard>false</proguard>
-                    <obfuscate>false</obfuscate>
+                    <proguard>true</proguard>
+                    <obfuscate>true</obfuscate>
                     <proguardInclude>${basedir}/proguard.conf</proguardInclude>
                     <jarfile>microemu-injected</jarfile>
                     <classifier>none</classifier>
@@ -68,26 +68,7 @@
                    </descriptors>
                </configuration>
             </plugin>
-<!--
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>site</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <copy overwrite="true"
-                                    file="${project.build.directory}/${project.build.finalName}-me.jar"
-                                    tofile="${project.build.directory}/site/simpledemo.jar"/>
-                            </tasks>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
--->
+
         </plugins>
     </build>
 

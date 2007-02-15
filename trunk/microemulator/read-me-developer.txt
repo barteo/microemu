@@ -1,0 +1,24 @@
+ @version $Revision$ ($Author$) $Date$
+
+
+* Build
+
+   We are using maven2 to build project
+
+    To build project you need this environment variables:
+    JAVA_HOME, SWT_HOME (to build swt module) and WTK_HOME to compile and test MIDlets
+
+   To create Eclipse projects run:
+     mvn eclipse:clean eclipse:eclipse -DdownloadSources=true
+
+   To run build without tests:
+     mvn -Dmaven.test.skip=true
+
+
+* Building applet
+
+  This describe procedure for building applet.
+
+  We run proguard 3 times with deferent options
+   on microemu-cldc and microemu-midp we need to preserve all API declarations
+   on microemu-javase+microemu-javase-swing assembly we just need to preserve main applet class.

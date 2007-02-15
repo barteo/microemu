@@ -36,7 +36,7 @@ import java.io.PrintStream;
  * This class is not used while application is running in Applet with MicroEmulator. 
  * Different class with the same name is used from me-apple.jar.    
  */
-public class Injected {
+public final class Injected {
 
 	/**
 	 * This allow redirection of stdout to MicroEmulator console
@@ -45,6 +45,13 @@ public class Injected {
 
 	public final static PrintStream err = errPrintStream();
 
+	/**
+	 * We don't need to instantiate the class, all access is static
+	 */
+	private Injected() {
+		
+	}
+	
 	private static PrintStream outPrintStream() {
 		return System.out;
 	}

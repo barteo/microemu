@@ -9,7 +9,7 @@ Testing j2me application with MicroEmulator
 
 * Introduction
 
-     If you’re a Java developer, you’re familiar with the {{{http://www.junit.org/}JUnit}} project, an open source unit testing framework for Java.
+     If you're a Java developer, you're familiar with the {{{http://www.junit.org/}JUnit}} project, an open source unit testing framework for Java.
      With JUnit you write simple classes (test cases) that have a number of methods that use assertions to test various aspects of your code.
      The only question is that you need to run J2ME test differently.
 

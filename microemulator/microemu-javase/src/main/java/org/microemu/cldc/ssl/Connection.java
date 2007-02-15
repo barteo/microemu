@@ -39,7 +39,7 @@ import org.microemu.cldc.CertificateImpl;
 import org.microemu.cldc.ClosedConnection;
 import org.microemu.cldc.SecurityInfoImpl;
 
-public class Connection extends org.microemu.cldc.socket.Connection implements SecureConnection, ClosedConnection {
+public class Connection extends org.microemu.cldc.socket.SocketConnection implements SecureConnection, ClosedConnection {
 	
 	private SecurityInfo securityInfo;
 	
@@ -78,16 +78,12 @@ public class Connection extends org.microemu.cldc.socket.Connection implements S
 			throw new IOException(ex.toString());
 		}
 		
-		updateSocketOptions();
-		
 		return this;
 	}
 
 	public void close() throws IOException {
-		if (socket == null) {
-			return;
-		}
-
+		// TODO fix differences between Java ME and Java SE
+		
 		socket.close();
 	}
 

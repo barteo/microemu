@@ -31,7 +31,8 @@
                 </executions>
                 <configuration>
                     <proguardInclude>${basedir}/proguard.conf</proguardInclude>
-                    <outjar>${project.build.finalName}-4applet.jar</outjar>
+                    <attach>true</attach>
+                    <attachArtifactClassifier>4applet</attachArtifactClassifier>
                     <libs>
                         <lib>${java.home}/lib/rt.jar</lib>
                     </libs>

@@ -49,7 +49,7 @@
         <module>microemu-injected</module>
         <module>microemu-javase</module>
         <module>microemu-javase-swing</module>
-        <!--module>microemu-javase-applet</module-->
+        <module>microemu-javase-applet</module>
         <module>microemu-javase-swt</module>
         <module>microemu-extensions</module>
         <module>microemu-tests</module>

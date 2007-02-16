@@ -41,6 +41,8 @@ public class Logger {
 
     private static final Set fqcnSet = new HashSet();
     
+    private static final Set logFunctionsSet = new HashSet();
+    
     private static boolean java13 = false;
     
     private static List loggerAppenders = new Vector();
@@ -52,6 +54,11 @@ public class Logger {
         //fqcnSet.add("org.microemu.app.ui.Message");
         
         addAppender(new StdOutAppender());
+        
+        // This is done for MIDletInternlaLogger a wrapper for System.out.println functions.
+        logFunctionsSet.add("debug");
+        logFunctionsSet.add("log");
+        logFunctionsSet.add("error");
     }
 
 	public static boolean isDebugEnabled() {
@@ -68,9 +75,25 @@ public class Logger {
     	}
     	try {
 			StackTraceElement[] ste = new Throwable().getStackTrace();
+			boolean wrapperFound = false;
 			for (int i = 0; i < ste.length - 1; i++) {
-			    if (fqcnSet.contains(ste[i].getClassName()) && !fqcnSet.contains(ste[i + 1].getClassName())) {
-			        return ste[i + 1];
+			    if (fqcnSet.contains(ste[i].getClassName())) {
+			    	wrapperFound = false;
+					String nextClassName = ste[i + 1].getClassName();
+					if (nextClassName.startsWith("java.") || nextClassName.startsWith("sun.")) {
+						continue;
+					}
+			    	if (!fqcnSet.contains(nextClassName)) {
+			    		if (logFunctionsSet.contains(ste[i + 1].getMethodName())) {
+			    			wrapperFound = true;
+			    		} else {
+			    			return ste[i + 1];
+			    		}
+			    	}
+			    } else if (wrapperFound) {
+			    	if (!logFunctionsSet.contains(ste[i].getMethodName())) {
+			    		return ste[i];
+			    	}
 			    }
 			}
 		} catch (Throwable e) {
@@ -206,5 +229,9 @@ public class Logger {
 	
 	public static void addAppender(LoggerAppender newAppender) {
 		loggerAppenders.add(newAppender);
+	}
+	
+	public static void removeAppender(LoggerAppender newAppender) {
+		loggerAppenders.remove(newAppender);
 	}
 }

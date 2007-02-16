@@ -13,6 +13,8 @@ public class RecordStoreForm extends BaseTestsForm {
 	
 	static final Command storeCommand = new Command("Store", Command.ITEM, 2);
 	
+	static final Command deleteCommand = new Command("Delete", Command.ITEM, 3);
+	
 	static final String recordStoreName = "meTestRecordStore";
 	
 	TextField textFiled;
@@ -25,6 +27,7 @@ public class RecordStoreForm extends BaseTestsForm {
 		super("RecordStore");
 		addCommand(loadCommand);
 		addCommand(storeCommand);
+		addCommand(deleteCommand);
 		
 		textFiled = new TextField("Enter data", "", 128, TextField.ANY);
 		append(textFiled);
@@ -39,7 +42,7 @@ public class RecordStoreForm extends BaseTestsForm {
 	private void load() {
 		RecordStore recordStore = null;
 		try {
-			recordStore = RecordStore.openRecordStore(recordStoreName, true);
+			recordStore = RecordStore.openRecordStore(recordStoreName, false);
 			String message;
 			if (recordStore.getNumRecords() > 0) {
 				int recordId = 1;
@@ -89,12 +92,25 @@ public class RecordStoreForm extends BaseTestsForm {
 		}
 	}
 	
+	private void delete() {
+		try {
+			RecordStore.deleteRecordStore(recordStoreName);
+			messageItem.setText("removed " + recordStoreName);
+		} catch (Throwable e) {
+			System.out.println("error accessing RecordStore");
+			e.printStackTrace();
+			messageItem.setText(e.toString());
+		} 	
+	}
+	
 	public void commandAction(Command c, Displayable d) {
 		if (d == this) {
 			if (c == loadCommand) {
 				load();
-			} if (c == storeCommand) {
+			} else if (c == storeCommand) {
 				store();
+			} else if (c == deleteCommand) {
+				delete();
 			}
 		}
 		super.commandAction(c, d);

@@ -42,6 +42,7 @@ public class MIDletOutputStreamRedirector extends PrintStream {
 
 	static {
 		Logger.addLogOrigin(MIDletOutputStreamRedirector.class);
+		Logger.addLogOrigin(OutputStream2Log.class);
 	}
 	
 	private static class OutputStream2Log extends OutputStream {
@@ -81,6 +82,92 @@ public class MIDletOutputStreamRedirector extends PrintStream {
 
 	private static PrintStream errPrintStream() {
 		return new MIDletOutputStreamRedirector(true);
+	}
+
+	//Override methods to be able to get proper stack trace
+
+	public void print(boolean b) {
+		super.print(b);
+	}
+
+	public void print(char c) {
+		super.print(c);
+	}
+
+	public void print(char[] s) {
+		super.print(s);
+	}
+
+	public void print(double d) {
+		super.print(d);
+	}
+
+	public void print(float f) {
+		super.print(f);
+	}
+
+	public void print(int i) {
+		super.print(i);
+	}
+
+	public void print(long l) {
+		super.print(l);
+	}
+
+	public void print(Object obj) {
+		super.print(obj);
+	}
+
+	public void print(String s) {
+		super.print(s);
+	}
+
+	public void println() {
+		super.println();
+	}
+
+	public void println(boolean x) {
+		super.println(x);
+	}
+
+	public void println(char x) {
+		super.println(x);
+	}
+
+	public void println(char[] x) {
+		super.println(x);
+	}
+
+	public void println(double x) {
+		super.println(x);
+	}
+
+	public void println(float x) {
+		super.println(x);
+	}
+
+	public void println(int x) {
+		super.println(x);
+	}
+
+	public void println(long x) {
+		super.println(x);
+	}
+
+	public void println(Object x) {
+		super.println(x);
+	}
+
+	public void println(String x) {
+		super.println(x);
+	}
+
+	public void write(byte[] buf, int off, int len) {
+		super.write(buf, off, len);
+	}
+
+	public void write(int b) {
+		super.write(b);
 	}
 	
 }

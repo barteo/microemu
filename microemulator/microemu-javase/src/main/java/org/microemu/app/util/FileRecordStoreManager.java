@@ -39,40 +39,30 @@ import org.microemu.app.Config;
 import org.microemu.app.launcher.Launcher;
 import org.microemu.util.RecordStoreImpl;
 
-
-
-public class FileRecordStoreManager implements RecordStoreManager 
-{
+public class FileRecordStoreManager implements RecordStoreManager {
 	private final static String RECORD_STORE_SUFFIX = ".rs";
-	
+
 	private Launcher launcher;
-	
+
 	private Hashtable testOpenRecordStores = new Hashtable();
 
-	private FilenameFilter filter = new FilenameFilter()
-	{
+	private FilenameFilter filter = new FilenameFilter() {
 
-		public boolean accept(File dir, String name) 
-		{
+		public boolean accept(File dir, String name) {
 			if (name.endsWith(RECORD_STORE_SUFFIX)) {
 				return true;
 			} else {
 				return false;
 			}
 		}
-		
-	};
-	
 
-	public FileRecordStoreManager(Launcher launcher) 
-	{
+	};
+
+	public FileRecordStoreManager(Launcher launcher) {
 		this.launcher = launcher;
 	}
 
-
-	public void deleteRecordStore(String recordStoreName) 
-			throws RecordStoreNotFoundException, RecordStoreException 
-	{
+	public void deleteRecordStore(String recordStoreName) throws RecordStoreNotFoundException, RecordStoreException {
 		File suiteFolder = new File(Config.getConfigPath(), "suite-" + launcher.getSuiteName());
 		File storeFile = new File(suiteFolder, recordStoreName + RECORD_STORE_SUFFIX);
 
@@ -80,47 +70,43 @@ public class FileRecordStoreManager implements RecordStoreManager
 		if (recordStoreImpl != null && recordStoreImpl.isOpen()) {
 			throw new RecordStoreException();
 		}
-		
+
 		try {
 			recordStoreImpl = loadFromDisk(storeFile);
 		} catch (FileNotFoundException ex) {
 			throw new RecordStoreNotFoundException();
 		}
-		
+
 		storeFile.delete();
 	}
 
-
-	public RecordStore openRecordStore(String recordStoreName, boolean createIfNecessary) 
-			throws RecordStoreNotFoundException 
-	{
+	public RecordStore openRecordStore(String recordStoreName, boolean createIfNecessary)
+			throws RecordStoreNotFoundException {
 		File suiteFolder = new File(Config.getConfigPath(), "suite-" + launcher.getSuiteName());
 		File storeFile = new File(suiteFolder, recordStoreName + RECORD_STORE_SUFFIX);
-						
-        RecordStoreImpl recordStoreImpl;
+
+		RecordStoreImpl recordStoreImpl;
 		try {
 			recordStoreImpl = loadFromDisk(storeFile);
 		} catch (FileNotFoundException e) {
-            if (!createIfNecessary) { 
-                throw new RecordStoreNotFoundException(); 
-            }
-            recordStoreImpl = new RecordStoreImpl(this, recordStoreName);
-            suiteFolder.mkdirs();
-            saveToDisk(storeFile, recordStoreImpl);
+			if (!createIfNecessary) {
+				throw new RecordStoreNotFoundException();
+			}
+			recordStoreImpl = new RecordStoreImpl(this, recordStoreName);
+			suiteFolder.mkdirs();
+			saveToDisk(storeFile, recordStoreImpl);
 		}
-        recordStoreImpl.setOpen(true);
+		recordStoreImpl.setOpen(true);
 
-        testOpenRecordStores.put(storeFile.getName(), recordStoreImpl);
-        
-        return recordStoreImpl;
+		testOpenRecordStores.put(storeFile.getName(), recordStoreImpl);
+
+		return recordStoreImpl;
 	}
 
-
-	public String[] listRecordStores() 
-	{
+	public String[] listRecordStores() {
 		File suiteFolder = new File(Config.getConfigPath(), "suite-" + launcher.getSuiteName());
 		String[] result = suiteFolder.list(filter);
-		
+
 		if (result != null) {
 			if (result.length == 0) {
 				result = null;
@@ -130,74 +116,59 @@ public class FileRecordStoreManager implements RecordStoreManager
 				}
 			}
 		}
-		
+
 		return result;
 	}
 
-
-	public void saveChanges(RecordStoreImpl recordStoreImpl) 
-			throws RecordStoreNotOpenException 
-	{
+	public void saveChanges(RecordStoreImpl recordStoreImpl) throws RecordStoreNotOpenException {
 		File suiteFolder = new File(Config.getConfigPath(), "suite-" + launcher.getSuiteName());
 		File storeFile = new File(suiteFolder, recordStoreImpl.getName() + RECORD_STORE_SUFFIX);
 
 		saveToDisk(storeFile, recordStoreImpl);
 	}
-	
-	public void init()
-	{
+
+	public void init() {
 	}
 
-    public void deleteStores()
-    {
-        String[] stores = listRecordStores();
-        for (int i = 0; i < stores.length; i++)
-        {
-            String store = stores[i];
-            try
-            {
-                deleteRecordStore(store);
-            }
-            catch (RecordStoreException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
+	public void deleteStores() {
+		String[] stores = listRecordStores();
+		for (int i = 0; i < stores.length; i++) {
+			String store = stores[i];
+			try {
+				deleteRecordStore(store);
+			} catch (RecordStoreException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
+	private RecordStoreImpl loadFromDisk(File recordStoreFile) throws FileNotFoundException {
+		RecordStoreImpl store = null;
 
-    private RecordStoreImpl loadFromDisk(File recordStoreFile)
-            throws FileNotFoundException
-    {
-        RecordStoreImpl store = null;
+		try {
+			DataInputStream dis = new DataInputStream(new FileInputStream(recordStoreFile));
+			store = new RecordStoreImpl(this, dis);
+			dis.close();
+		} catch (FileNotFoundException ex) {
+			throw ex;
+		} catch (IOException ex) {
+			System.out.println("RecordStore.loadFromDisk: ERROR reading " + recordStoreFile.getName());
+			ex.printStackTrace();
+		}
 
-        try {
-            DataInputStream dis = new DataInputStream(new FileInputStream(recordStoreFile));
-            store = new RecordStoreImpl(this, dis);
-            dis.close();
-        } catch (FileNotFoundException ex) {
-            throw ex;
-        } catch (IOException ex) {
-            System.out.println("RecordStore.loadFromDisk: ERROR reading " + recordStoreFile.getName());
-            ex.printStackTrace();
-        }
+		return store;
+	}
 
-        return store;
-    }
-  
-    
-    private static void saveToDisk(File recordStoreFile, RecordStoreImpl recordStore) 
-    {
-        try {
-            DataOutputStream dos = new DataOutputStream(new FileOutputStream(recordStoreFile));
-            recordStore.write(dos);
-            dos.close();
-        } catch (IOException ex) {
-            System.out.println("RecordStore.saveToDisk: ERROR writting object to " + recordStoreFile.getName());
-            ex.printStackTrace();
-        }
-    }
-
+	private static void saveToDisk(File recordStoreFile, RecordStoreImpl recordStore) {
+		try {
+			DataOutputStream dos = new DataOutputStream(new FileOutputStream(recordStoreFile));
+			recordStore.write(dos);
+			dos.close();
+		} catch (IOException ex) {
+			System.out.println("RecordStore.saveToDisk: ERROR writting object to " + recordStoreFile.getName());
+			ex.printStackTrace();
+		}
+	}
 
 	public int getSizeAvailable(RecordStoreImpl recordStoreImpl) {
 		// FIXME should return free space on device

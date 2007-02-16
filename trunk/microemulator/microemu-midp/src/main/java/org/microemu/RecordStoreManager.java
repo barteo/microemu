@@ -1,6 +1,6 @@
-/*
+/**
  *  MicroEmulator
- *  Copyright (C) 2001-2005 Bartek Teodorczyk <barteo@barteo.net>
+ *  Copyright (C) 2001-2007 Bartek Teodorczyk <barteo@barteo.net>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -16,7 +16,6 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
 package org.microemu;
 
 import javax.microedition.rms.RecordStore;
@@ -26,32 +25,26 @@ import javax.microedition.rms.RecordStoreNotOpenException;
 
 import org.microemu.util.RecordStoreImpl;
 
+public interface RecordStoreManager {
 
+	void deleteRecordStore(String recordStoreName) throws RecordStoreNotFoundException, RecordStoreException;
 
-public interface RecordStoreManager 
-{	
-	
-	void deleteRecordStore(String recordStoreName) 
-			throws RecordStoreNotFoundException, RecordStoreException;
-	
-	RecordStore openRecordStore(String recordStoreName, boolean createIfNecessary) 
-			throws RecordStoreNotFoundException;
-	
+	RecordStore openRecordStore(String recordStoreName, boolean createIfNecessary) throws RecordStoreException;
+
 	String[] listRecordStores();
-	
-	void saveChanges(RecordStoreImpl recordStoreImpl) 
-			throws RecordStoreNotOpenException;
-	
+
+	void saveChanges(RecordStoreImpl recordStoreImpl) throws RecordStoreNotOpenException, RecordStoreException;
+
 	int getSizeAvailable(RecordStoreImpl recordStoreImpl);
 
 	/**
 	 * Initialize RMS Manager before starting MIDlet 
 	 */
 	void init();
-	
-    /**
-     * Delete all record stores.
-     */
-    void deleteStores();
-    
+
+	/**
+	 * Delete all record stores.
+	 */
+	void deleteStores();
+
 }

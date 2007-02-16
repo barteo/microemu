@@ -52,6 +52,7 @@ public class MainTestMIDlet extends MIDlet implements CommandListener, MIDletUnd
 			testPanels.addElement(new ItemsOnForm());
 			testPanels.addElement(new ErrorHandlingForm());
 			testPanels.addElement(new ErrorHandlingCanvas());
+			testPanels.addElement(new RecordStoreForm());
 			if (OverrideNewJSRCanvas.enabled) {
 				testPanels.addElement(new OverrideNewJSRCanvas());
 			}

@@ -7,8 +7,8 @@
     <section name="MicroEmulator running as applet">
 
         <div align="center">
-            <applet code="org.microemu.applet.Main" width="157" height="285" archive="microemu-applet/me-applet.jar,ant-build/minimum.jar,microemu-example/simpledemo.jar">
-                <param name="midlet" value="org.microemu.midp.examples.simpledemo.SimpleDemo"/>
+            <applet code="org.microemu.applet.Main" width="157" height="285" archive="microemu-javase-applet/me-applet.jar,microemu-extensions/microemu-device-minimum/minimum.jar,microemu-examples/microemu-demo/simpledemo.jar">
+                <param name="midlet" value="org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet"/>
                 <param name="device" value="org/microemu/device/minimum/device-color.xml"/>
             </applet>
         </div>

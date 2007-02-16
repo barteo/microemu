@@ -47,6 +47,7 @@
                 <exclusion>
                     <groupId>org.microemu</groupId><artifactId>microemu-cldc</artifactId>
                 </exclusion>
+                <!-- this is bug in maven if used artifact with classifier would be exclused as well -->
                 <!--exclusion>
                     <groupId>org.microemu</groupId><artifactId>microemu-midp</artifactId>
                 </exclusion-->
@@ -83,29 +84,52 @@
                 </executions>
                 <configuration>
                     <proguardInclude>${basedir}/proguard.conf</proguardInclude>
-                    <attach>true</attach>
-                    <attachArtifactClassifier>applet</attachArtifactClassifier>
                     <assembly>
                         <inclusions>
                             <inclusion>
-                                <groupId>org.microemu</groupId><artifactId>microemu-cldc</artifactId><library>true</library>
+                                <groupId>org.microemu</groupId><artifactId>microemu-cldc</artifactId><classifier>4applet</classifier><library>true</library>
                             </inclusion>
                             <inclusion>
-                                <groupId>org.microemu</groupId><artifactId>microemu-midp</artifactId><library>true</library>
+                                <groupId>org.microemu</groupId><artifactId>microemu-midp</artifactId><classifier>4applet</classifier><library>true</library>
                             </inclusion>
                             <inclusion>
                                 <groupId>org.microemu</groupId><artifactId>microemu-javase</artifactId>
+                                <filter>!org/microemu/app/classloader/**</filter>
                             </inclusion>
                             <inclusion>
                                 <groupId>org.microemu</groupId><artifactId>microemu-javase-swing</artifactId>
                             </inclusion>
                         </inclusions>
                     </assembly>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.microemu</groupId><artifactId>microemu-midp</artifactId>
+                        </exclusion>
+                    </exclusions>
                     <libs>
                         <lib>${java.home}/lib/rt.jar</lib>
                         <lib>${java.home}/lib/jsse.jar</lib>
                     </libs>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy overwrite="true"
+                                    file="${project.build.directory}/${project.build.finalName}.jar"
+                                    tofile="${project.build.directory}/site/me-applet.jar"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>

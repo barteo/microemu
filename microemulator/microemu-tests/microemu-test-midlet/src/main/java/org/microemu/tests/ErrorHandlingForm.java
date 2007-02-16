@@ -22,28 +22,23 @@
 package org.microemu.tests;
 
 import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.Form;
 
-public class ErrorHandlingForm extends Form implements CommandListener, DisplayableUnderTests {
+public class ErrorHandlingForm extends BaseTestsForm {
 
-	public static final Command makeErrorCommand = new Command("make error", Command.ITEM, 1);
+	static final Command makeErrorCommand = new Command("make error", Command.ITEM, 1);
 	
 	public ErrorHandlingForm() {
 		super("Form with Errors");
 		addCommand(makeErrorCommand);
-		addCommand(DisplayableUnderTests.backCommand);
-		setCommandListener(this);
     }
 	
 	public void commandAction(Command c, Displayable d) {
 		if (d == this) {
-			if (c == DisplayableUnderTests.backCommand) {
-				Manager.midletInstance.showMainPage();
-			} if (c == makeErrorCommand) {
+			if (c == makeErrorCommand) {
 				throw new IllegalArgumentException("Emulator Should still work");
 			}
 		}
+		super.commandAction(c, d);
 	}
 }

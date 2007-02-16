@@ -75,7 +75,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 	}
 	
 	public void deleteRecordStore(String recordStoreName) throws RecordStoreNotFoundException, RecordStoreException {
-		File storeFile = new File(getSuiteFolder(), recordStoreName + RECORD_STORE_SUFFIX);
+		final File storeFile = new File(getSuiteFolder(), recordStoreName + RECORD_STORE_SUFFIX);
 
 		RecordStoreImpl recordStoreImpl = (RecordStoreImpl) testOpenRecordStores.get(storeFile.getName());
 		if (recordStoreImpl != null && recordStoreImpl.isOpen()) {
@@ -88,7 +88,17 @@ public class FileRecordStoreManager implements RecordStoreManager {
 			throw new RecordStoreNotFoundException();
 		}
 
-		storeFile.delete();
+		try {
+			AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() throws FileNotFoundException {
+					storeFile.delete();
+					return null;
+				}
+			}, acc);
+		} catch (PrivilegedActionException e) {
+			Logger.error("Unable remove file " + storeFile, e);
+			throw new RecordStoreException();
+		}
 	}
 
 	public RecordStore openRecordStore(String recordStoreName, boolean createIfNecessary) throws RecordStoreException {

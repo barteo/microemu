@@ -91,9 +91,9 @@
                     <!-- JNLP generation -->
                     <jnlp>
                         <!-- default values -->
-                        <!--resources>${project.basedir}/src/main/jnlp</resources-->
+                        <resources>${project.basedir}/src/main/jnlp</resources>
                         <!--inputTemplateResourcePath>${project.basedir}</inputTemplateResourcePath-->
-                        <inputTemplate>src/jnlp/${jnlpPrefix}template.vm</inputTemplate> <!-- relative to inputTemplateResourcePath -->
+                        <inputTemplate>src/jnlp-templates/${jnlpPrefix}template.vm</inputTemplate> <!-- relative to inputTemplateResourcePath -->
                         <outputFile>${jnlpPrefix}demo.jnlp</outputFile> <!-- defaults to launch.jnlp -->
 
                         <!-- used to automatically identify the jar containing the main class. -->

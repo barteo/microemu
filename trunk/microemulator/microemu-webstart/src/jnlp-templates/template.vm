@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp
   spec="1.0+"
-  codebase="http://pyx4j.com/snapshot/microemu/microemu-webstart"
+  codebase="http://www.microemu.org/microemu-webstart"
   href="$outputFile">
   <information>
     <title>MicroEmulator</title>
@@ -9,8 +9,8 @@
     <homepage href="http://www.microemu.org/"/>
     <description>MicroEmulator</description>
     <description kind="short">MicroEmulator</description>
-    <icon href="images/swingset2.jpg"/>
-    <icon kind="splash" href="images/splash.gif"/>
+    <icon href="icon.png"/>
+    <icon kind="splash" href="icon.png"/>
     <offline-allowed/>
   </information>
 

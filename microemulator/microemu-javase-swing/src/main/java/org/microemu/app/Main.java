@@ -21,6 +21,7 @@ package org.microemu.app;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -307,6 +308,9 @@ public class Main extends JFrame
     setJMenuBar(menuBar);
     
     setTitle("MicroEmulator");
+    
+    this.setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/org/microemu/icon.png")));
+    
     addWindowListener(windowListener);
     
     Config.loadConfig(defaultDevice, emulatorContext);

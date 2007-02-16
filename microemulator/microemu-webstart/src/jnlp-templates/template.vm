@@ -10,7 +10,6 @@
     <description>MicroEmulator</description>
     <description kind="short">MicroEmulator</description>
     <icon href="icon.png"/>
-    <icon kind="splash" href="icon.png"/>
     <offline-allowed/>
   </information>
 

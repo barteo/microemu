@@ -122,7 +122,17 @@ public class FileRecordStoreManager implements RecordStoreManager {
 	}
 
 	public String[] listRecordStores() {
-		String[] result = getSuiteFolder().list(filter);
+		String[] result;
+		try {
+			result = (String[])AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() {
+					return getSuiteFolder().list(filter);
+				}
+			}, acc);
+		} catch (PrivilegedActionException e) {
+			Logger.error("Unable to acess storeFiles", e);
+			return null;
+		}
 		if (result != null) {
 			if (result.length == 0) {
 				result = null;

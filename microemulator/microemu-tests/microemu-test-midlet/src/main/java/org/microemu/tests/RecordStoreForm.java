@@ -1,7 +1,29 @@
+/**
+ *  MicroEmulator
+ *  Copyright (C) 2006-2007 Vlad Skarzhevskyy
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  @version $Id$
+ */
 package org.microemu.tests;
 
 import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.List;
 import javax.microedition.lcdui.StringItem;
 import javax.microedition.lcdui.TextField;
 import javax.microedition.rms.RecordStore;
@@ -14,6 +36,8 @@ public class RecordStoreForm extends BaseTestsForm {
 	static final Command storeCommand = new Command("Store", Command.ITEM, 2);
 	
 	static final Command deleteCommand = new Command("Delete", Command.ITEM, 3);
+	
+	static final Command listCommand = new Command("List", Command.ITEM, 4);
 	
 	static final String recordStoreName = "meTestRecordStore";
 	
@@ -28,6 +52,7 @@ public class RecordStoreForm extends BaseTestsForm {
 		addCommand(loadCommand);
 		addCommand(storeCommand);
 		addCommand(deleteCommand);
+		addCommand(listCommand);
 		
 		textFiled = new TextField("Enter data", "", 128, TextField.ANY);
 		append(textFiled);
@@ -103,6 +128,40 @@ public class RecordStoreForm extends BaseTestsForm {
 		} 	
 	}
 	
+	public class RecordStoreList extends List implements CommandListener {
+
+		public RecordStoreList() {
+			super("names of record stores", List.IMPLICIT);
+			this.setCommandListener(this);
+			addCommand(DisplayableUnderTests.backCommand);
+		}
+
+		/* (non-Javadoc)
+		 * @see javax.microedition.lcdui.CommandListener#commandAction(javax.microedition.lcdui.Command, javax.microedition.lcdui.Displayable)
+		 */
+		public void commandAction(Command c, Displayable d) {
+			if (c == DisplayableUnderTests.backCommand) {
+				Manager.midletInstance.setCurrentDisplayable(RecordStoreForm.this);
+			}
+		}
+	}
+	
+	private void list() {
+		try {
+			String[] items = RecordStore.listRecordStores();
+			messageItem.setText("listed " + items.length);
+			List list = new RecordStoreList();
+			for (int i = 0; i < items.length; i++) {
+				list.append(items[i], null);				
+			}
+			Manager.midletInstance.setCurrentDisplayable(list);
+		} catch (Throwable e) {
+			System.out.println("error accessing RecordStore");
+			e.printStackTrace();
+			messageItem.setText(e.toString());
+		} 
+	}
+	
 	public void commandAction(Command c, Displayable d) {
 		if (d == this) {
 			if (c == loadCommand) {
@@ -111,6 +170,8 @@ public class RecordStoreForm extends BaseTestsForm {
 				store();
 			} else if (c == deleteCommand) {
 				delete();
+			} else if (c == listCommand) {
+				list();
 			}
 		}
 		super.commandAction(c, d);

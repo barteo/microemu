@@ -129,13 +129,12 @@ public class MIDletClassLoader extends URLClassLoader {
 		// First, check if the class has already been loaded
 		Class result = findLoadedClass(name);
 		if (result == null) {
-			if (allowClassLoad(name)) {
+			try {
 				result = findClass(name);
 				if (debug && (result == null)) {
 					Logger.debug("loadClass not found", name);
 				}
-			}
-			if (result == null) {
+			} catch (ClassNotFoundException e) {
 				if (traceSystemClassLoading) {
 					Logger.info("Load system class", name);
 				}
@@ -247,12 +246,14 @@ public class MIDletClassLoader extends URLClassLoader {
 		return className.replace('.', '/').concat(".class");
 	}
 
-	protected Class findClass(final String name) {
+	protected Class findClass(final String name) throws ClassNotFoundException {
 		if (debug) {
 			Logger.debug("findClass", name);
 		}
+		if (!allowClassLoad(name)) {
+			throw new ClassNotFoundException(name);
+		}
 		InputStream is;
-		//is = getResourceAsStream(getClassResourceName(name));
 		try {
 			is = (InputStream) AccessController.doPrivileged(new PrivilegedExceptionAction() {
 				public Object run() throws ClassNotFoundException {
@@ -263,14 +264,14 @@ public class MIDletClassLoader extends URLClassLoader {
 			if (debug) {
 				Logger.debug("Unable to find resource for class " + name + " ", e);
 			}
-			return null;
+			throw new ClassNotFoundException(name);
 		}
 		
 		if (is == null) {
 			if (debug) {
 				Logger.debug("Unable to find resource for class", name);
 			}
-			return null;
+			throw new ClassNotFoundException(name);
 		}
 		byte[] b;
 		try {

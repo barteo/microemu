@@ -83,6 +83,10 @@ public class FilesList extends List implements CommandListener {
 					sep  = String.valueOf(DIR_SEP);
 				}
 				dir = (FileConnection) Connector.open("file://localhost" + sep + location);
+				if (!dir.isDirectory()) {
+					FCViewMIDlet.setCurrentDisplayable(new FileEditor(dir, this));
+					return;
+				}
 				this.setTitle(dir.getPath() + dir.getName());
 				fsEnum = dir.list();
 				System.out.println("new location " + dir.getURL());

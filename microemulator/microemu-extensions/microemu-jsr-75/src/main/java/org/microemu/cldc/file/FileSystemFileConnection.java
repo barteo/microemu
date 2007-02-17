@@ -309,14 +309,23 @@ public class FileSystemFileConnection implements FileConnection {
 
 	public long lastModified() {
 		throwClosed();
-		return this.file.lastModified();
+		return ((Long)AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				return new Long(file.lastModified());
+			}
+		}, acc)).longValue();
 	}
 
 	public void mkdir() throws IOException {
 		throwClosed();
-		if (!this.file.mkdir()) {
-			throw new RuntimeException("Can't create directory " + this.file.getAbsolutePath());
-		}
+		doPrivilegedIO(new PrivilegedExceptionAction() {
+			public Object run() throws IOException {
+				if (!file.mkdir()) {
+					throw new IOException("Can't create directory " + file.getAbsolutePath());
+				}
+				return null;
+			}
+		});
 	}
 	
 	public Enumeration list() throws IOException {
@@ -378,12 +387,16 @@ public class FileSystemFileConnection implements FileConnection {
 		/**
 		 * Trying to open more than one InputStream or more than one OutputStream from a StreamConnection causes an IOException. 
 		 */
-		this.opendInputStream = new FileInputStream(this.file) {
-			public void close() throws IOException {
-				FileSystemFileConnection.this.opendInputStream = null;
-				super.close();
+		this.opendInputStream = (InputStream)doPrivilegedIO(new PrivilegedExceptionAction() {
+			public Object run() throws IOException {
+				return new FileInputStream(file) {
+					public void close() throws IOException {
+						FileSystemFileConnection.this.opendInputStream = null;
+						super.close();
+					}
+				};
 			}
-		};
+		});
 		return this.opendInputStream;
 	}
 	
@@ -405,13 +418,16 @@ public class FileSystemFileConnection implements FileConnection {
 		/**
 		 * Trying to open more than one InputStream or more than one OutputStream from a StreamConnection causes an IOException. 
 		 */
-		this.opendOutputStream = new FileOutputStream(this.file) {
-			public void close() throws IOException {
-				FileSystemFileConnection.this.opendOutputStream = null;
-				super.close();
+		this.opendOutputStream = (OutputStream)doPrivilegedIO(new PrivilegedExceptionAction() {
+			public Object run() throws IOException {
+				return new FileOutputStream(file) {
+					public void close() throws IOException {
+						FileSystemFileConnection.this.opendOutputStream = null;
+						super.close();
+					}
+				};
 			}
-		};
-		
+		}); 
 		return this.opendOutputStream;
 	}
 
@@ -429,22 +445,26 @@ public class FileSystemFileConnection implements FileConnection {
 		return openOutputStream(true);
 	}
 
-	public void rename(String newName) throws IOException {
+	public void rename(final String newName) throws IOException {
 		throwClosed();
 		if (newName.indexOf(DIR_SEP) != -1) {
 			throw new IllegalArgumentException("Name contains path specification " + newName);
 		}
-		File newFile = new File(this.file.getParentFile(), newName);
-		if (!this.file.renameTo(newFile)) {
-			throw new IOException("Unable to rename " + this.file.getAbsolutePath() + " to " + newFile.getAbsolutePath());
-		}
+		doPrivilegedIO(new PrivilegedExceptionAction() {
+			public Object run() throws IOException {
+				File newFile = new File(file.getParentFile(), newName);
+				if (!file.renameTo(newFile)) {
+					throw new IOException("Unable to rename " + file.getAbsolutePath() + " to " + newFile.getAbsolutePath());
+				}
+				return null;
+			}
+		}); 
 		this.fullPath = this.getPath() + newName;
 	}
 
 	public void setFileConnection(String s) throws IOException {
 		throwClosed();
 		// TODO Auto-generated method stub
-
 	}
 
 	public void setHidden(boolean hidden) throws IOException {
@@ -459,24 +479,37 @@ public class FileSystemFileConnection implements FileConnection {
 	public void setWritable(boolean writable) throws IOException {
 		throwClosed();
 		if (!writable) {
-			this.file.setReadOnly();
+			doPrivilegedIO(new PrivilegedExceptionAction() {
+				public Object run() throws IOException {
+					file.setReadOnly();
+					return null;
+				}
+			});
 		}
 		// TODO use Java6 function in reflection.
 	}
 
-	public void truncate(long byteOffset) throws IOException {
+	public void truncate(final long byteOffset) throws IOException {
 		throwClosed();
-		RandomAccessFile raf = new RandomAccessFile(this.file, "rw");
-		try {
-			raf.setLength(byteOffset);
-		} finally {
-			raf.close();
-		}
+		doPrivilegedIO(new PrivilegedExceptionAction() {
+			public Object run() throws IOException {
+				RandomAccessFile raf = new RandomAccessFile(file, "rw");
+				try {
+					raf.setLength(byteOffset);
+				} finally {
+					raf.close();
+				}
+				return null;
+			}
+		});
 	}
 
 	public long usedSize() {
-		throwClosed();
-		return this.file.length();
+		try {
+			return fileSize();
+		} catch (IOException e) {
+			return -1;
+		}
 	}
 
 	public void close() throws IOException {

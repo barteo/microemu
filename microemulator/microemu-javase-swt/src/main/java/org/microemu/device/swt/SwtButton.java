@@ -115,6 +115,9 @@ public class SwtButton implements Button
   
   private int parseKeyboardKey(String keyName)
   {
+	  	if (keyName == null) {
+	  		return -1;
+	  	}
 		// TODO poprawic KeyEvent	
 		if (keyName.equals("VK_LEFT")) {
 			return SWT.ARROW_LEFT;

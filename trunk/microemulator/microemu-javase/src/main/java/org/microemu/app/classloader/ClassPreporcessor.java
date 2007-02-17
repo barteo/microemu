@@ -35,11 +35,11 @@ import org.objectweb.asm.ClassWriter;
  */
 public class ClassPreporcessor {
 
-	public static byte[] instrument(final InputStream classInputStream, boolean traceClassLoading) {
+	public static byte[] instrument(final InputStream classInputStream) {
 		try {
 			ClassReader cr = new ClassReader(classInputStream);
 			ClassWriter cw = new ClassWriter(false);
-			ClassVisitor cv = new ChangeCallsClassVisitor(cw, true);
+			ClassVisitor cv = new ChangeCallsClassVisitor(cw);
 			cr.accept(cv, false);
 			return cw.toByteArray();
 		} catch (IOException e) {

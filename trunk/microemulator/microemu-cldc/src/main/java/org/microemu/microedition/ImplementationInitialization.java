@@ -1,6 +1,7 @@
 /**
  *  MicroEmulator
- *  Copyright (C) 2001 Bartek Teodorczyk <barteo@barteo.net>
+ *  Copyright (C) 2006-2007 Bartek Teodorczyk <barteo@barteo.net>
+ *  Copyright (C) 2006-2007 Vlad Skarzhevskyy
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -15,16 +16,17 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *  
+ *
  *  @version $Id$
  */
-package javax.microedition.io;
+package org.microemu.microedition;
 
-import java.io.IOException;
+/**
+ * @author vlads
+ *
+ */
+public interface ImplementationInitialization {
 
-
-public interface Connection {
-
-	void close() throws IOException;
-
+	public void registerImplementation();
+	
 }

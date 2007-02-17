@@ -58,6 +58,9 @@ import org.microemu.device.DeviceFactory;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.log.Logger;
+import org.microemu.microedition.ImplFactory;
+import org.microemu.microedition.ImplementationInitialization;
+import org.microemu.microedition.io.ConnectorImpl;
 import org.microemu.util.Base64Coder;
 import org.microemu.util.JadMidletEntry;
 import org.microemu.util.JadProperties;
@@ -89,6 +92,10 @@ public class Common implements MicroEmulator, CommonInterface {
 		launcher = new Launcher(this);
 		launcher.setCurrentMIDlet(launcher);
 
+		/* Initialize secutity context for implemenations, May be there are better place for this call */
+		ImplFactory.instance();
+		ImplFactory.registerGCF(ImplFactory.DEFAULT, new ConnectorImpl());
+		
 		MIDletBridge.setMicroEmulator(this);
 	}
 
@@ -316,6 +323,26 @@ public class Common implements MicroEmulator, CommonInterface {
 		}
 	}
 
+	private void registerImplementation(String implClassName) {
+		final String errorText = "Implementation initialization";
+		try {
+			Class implClass = getClass().getClassLoader().loadClass(implClassName);
+			Object inst = implClass.newInstance();
+			if (inst instanceof ImplementationInitialization) {
+				((ImplementationInitialization)inst).registerImplementation();
+				Logger.debug("Implementation registered", implClassName);
+			} else {
+				Logger.debug("Implementation does not implement", ImplementationInitialization.class.getName());
+			}
+		} catch (ClassNotFoundException e) {
+			Logger.error(errorText, e);
+		} catch (InstantiationException e) {
+			Logger.error(errorText, e);
+		} catch (IllegalAccessException e) {
+			Logger.error(errorText, e);
+		}
+	}
+	
 	public void initDevice(List params, DeviceEntry defaultDevice) {
 		RecordStoreManager paramRecordStoreManager = null;		
 		Class deviceClass = null;
@@ -350,8 +377,15 @@ public class Common implements MicroEmulator, CommonInterface {
 						paramRecordStoreManager = new MemoryRecordStoreManager();
 					}
 				}
+			} else if (tmp.equals("--impl")) {
+				it.remove();
+				registerImplementation((String)it.next());
+				it.remove();
 			}
 		}
+		
+		//TODO registerImplementations by reading jar files in classpath.
+		
 		ClassLoader classLoader = getClass().getClassLoader();
 		if (classLoader == null) {
 			classLoader = ClassLoader.getSystemClassLoader();
@@ -458,6 +492,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		return
 			"[(-d | --device) ({device descriptor} | {device class name}) ] " +
 			"[--rms (file | memory)] " +
+			"[--impl {implementation class name}]" +
 			"({midlet class name} | {jad file location})";
 	}
 

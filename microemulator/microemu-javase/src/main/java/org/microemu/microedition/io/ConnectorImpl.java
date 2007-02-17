@@ -22,11 +22,16 @@
 package org.microemu.microedition.io;
 
 import java.io.IOException;
+import java.security.AccessControlContext;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 
 import javax.microedition.io.Connection;
 import javax.microedition.io.ConnectionNotFoundException;
 
 import org.microemu.cldc.ClosedConnection;
+import org.microemu.log.Logger;
 
 import com.sun.cdc.io.ConnectionBaseInterface;
 
@@ -36,37 +41,56 @@ import com.sun.cdc.io.ConnectionBaseInterface;
  */
 public class ConnectorImpl extends ConnectorAdapter {
 
-	public Connection open(String name, int mode, boolean timeouts) throws IOException {
-		Class cl;
+	/* The context to be used when loading classes */
+    private AccessControlContext acc;
+    
+    public ConnectorImpl() {
+    	acc = AccessController.getContext();
+    }
+    
+    public Connection open(final String name, final int mode, final boolean timeouts) throws IOException {
 		try {
-			cl = Class.forName("org.microemu.cldc." + name.substring(0, name.indexOf(':')) + ".Connection");
-			Object inst = cl.newInstance();
-			if (inst instanceof ConnectionImplementation) {
-				return ((ConnectionImplementation)inst).openConnection(name, mode, timeouts);
-			} else {
-				return ((ClosedConnection)inst).open(name);
+			return (Connection) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() throws IOException {
+					return openSecure(name, mode, timeouts);
+				}
+			}, acc);
+		} catch (PrivilegedActionException e) {
+			if (e.getCause() instanceof IOException) {
+				throw (IOException) e.getCause();
 			}
-		} catch (ClassNotFoundException ex) {
+			throw new IOException(e.toString());
+		}
+	}
+	
+	private Connection openSecure(String name, int mode, boolean timeouts) throws IOException {
+		String className = null;
+		try {
 			try {
-				cl = Class.forName("com.sun.cdc.io.j2me." + name.substring(0, name.indexOf(':')) + ".Protocol");
-				ConnectionBaseInterface base = (ConnectionBaseInterface) cl.newInstance();
-
-				return base.openPrim(name.substring(name.indexOf(':') + 1), mode, timeouts);
-			} catch (ClassNotFoundException ex1) {
-				System.err.println(ex1);
-				throw new ConnectionNotFoundException();
-			} catch (InstantiationException ex1) {
-				System.err.println(ex);
-				throw new ConnectionNotFoundException();
-			} catch (IllegalAccessException ex1) {
-				System.err.println(ex);
-				throw new ConnectionNotFoundException();
+				className = "org.microemu.cldc." + name.substring(0, name.indexOf(':')) + ".Connection";
+				Class cl = Class.forName(className);
+				Object inst = cl.newInstance();
+				if (inst instanceof ConnectionImplementation) {
+					return ((ConnectionImplementation) inst).openConnection(name, mode, timeouts);
+				} else {
+					return ((ClosedConnection) inst).open(name);
+				}
+			} catch (ClassNotFoundException e) {
+				try {
+					className = "com.sun.cdc.io.j2me." + name.substring(0, name.indexOf(':')) + ".Protocol";
+					Class cl = Class.forName(className);
+					ConnectionBaseInterface base = (ConnectionBaseInterface) cl.newInstance();
+					return base.openPrim(name.substring(name.indexOf(':') + 1), mode, timeouts);
+				} catch (ClassNotFoundException ex) {
+					Logger.debug("connection class not found");
+					throw new ConnectionNotFoundException();
+				}
 			}
-		} catch (InstantiationException ex) {
-			System.err.println(ex);
+		} catch (InstantiationException e) {
+			Logger.error("Unable to create", className, e);
 			throw new ConnectionNotFoundException();
-		} catch (IllegalAccessException ex) {
-			System.err.println(ex);
+		} catch (IllegalAccessException e) {
+			Logger.error("Unable to create", className, e);
 			throw new ConnectionNotFoundException();
 		}
 	}

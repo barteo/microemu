@@ -21,6 +21,8 @@
  */
 package org.microemu.tests;
 
+import javax.microedition.lcdui.Display;
+import javax.microedition.lcdui.Displayable;
 import javax.microedition.midlet.MIDletStateChangeException;
 
 import junit.framework.TestCase;
@@ -41,6 +43,11 @@ public class UnitTestsMIDLet extends TestRunner implements MIDletUnderTests {
 	
 	public void showMainPage() {
 		
+	}
+	
+	public void setCurrentDisplayable(Displayable nextDisplayable) {
+		Display display = Display.getDisplay(this);
+		display.setCurrent(nextDisplayable);
 	}
 
 }

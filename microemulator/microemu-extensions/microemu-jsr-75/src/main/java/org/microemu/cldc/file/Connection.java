@@ -23,24 +23,24 @@ package org.microemu.cldc.file;
 
 import java.io.IOException;
 
-import org.microemu.cldc.ClosedConnection;
+import org.microemu.microedition.io.ConnectionImplementation;
 
-public class Connection implements ClosedConnection {
+public class Connection implements ConnectionImplementation {
 
-	final static String PROTOCOL = "file://";
+	public final static String PROTOCOL = "file://";
 	
 	public static final int CONNECTIONTYPE_SYSTEM_FS = 0;
 	
 	private static int connectionType = CONNECTIONTYPE_SYSTEM_FS;
 	
-	public javax.microedition.io.Connection open(String name) throws IOException {
+	public javax.microedition.io.Connection openConnection(String name, int mode, boolean timeouts) throws IOException {
 		// file://<host>/<path>
 		if (!name.startsWith(PROTOCOL)) {
 			throw new IOException("Invalid Protocol " + name);
 		}
 		switch (connectionType) {
 		case CONNECTIONTYPE_SYSTEM_FS:
-			return new SystemFileConnection(name.substring(PROTOCOL.length()));
+			return new FileSystemFileConnection(name.substring(PROTOCOL.length()));
 		default:
 			throw new IOException("Invalid connectionType configuration");
 		}

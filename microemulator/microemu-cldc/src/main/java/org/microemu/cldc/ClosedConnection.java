@@ -1,6 +1,6 @@
-/*
+/**
  *  MicroEmulator
- *  Copyright (C) 2001,2002 Bartek Teodorczyk <barteo@barteo.net>
+ *  Copyright (C) 2001-2007 Bartek Teodorczyk <barteo@barteo.net>
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -23,11 +23,13 @@ import java.io.IOException;
 
 import javax.microedition.io.Connection;
 
+/**
+ * 
+ * @deprecated use <code>ConnectionImplementation</code> or <code>ConnectorAdapter</code> and <code>ImplFactory</code> to registed GCF protocol .
+ *
+ */
+public interface ClosedConnection {
 
-public interface ClosedConnection 
-{
-  
-  Connection open(String name) throws IOException;
-  
+	Connection open(String name) throws IOException;
+
 }
-

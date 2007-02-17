@@ -1,4 +1,4 @@
-/*
+/**
  *  MicroEmulator
  *  Copyright (C) 2001 Bartek Teodorczyk <barteo@barteo.net>
  *
@@ -15,38 +15,30 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *  
+ *  @version $Id$  
  */
- 
+
 package javax.microedition.io;
 
 import java.io.IOException;
 
+public interface DatagramConnection extends Connection {
 
-public interface DatagramConnection extends Connection
-{
+	int getMaximumLength() throws IOException;
 
-	int getMaximumLength()
-			throws IOException;
+	int getNominalLength() throws IOException;
 
-	int getNominalLength()
-      throws IOException;
-      
-	void send(Datagram dgram)
-      throws IOException;
-      
-	void receive(Datagram dgram)
-      throws IOException;
-  
-	Datagram newDatagram(int size)
-      throws IOException;
+	void send(Datagram dgram) throws IOException;
 
-	Datagram newDatagram(int size, String addr)
-      throws IOException;
+	void receive(Datagram dgram) throws IOException;
 
-	Datagram newDatagram(byte[] buf, int size)
-      throws IOException;
-	
-	Datagram newDatagram(byte[] buf, int size, String addr)
-      throws IOException;
-      
+	Datagram newDatagram(int size) throws IOException;
+
+	Datagram newDatagram(int size, String addr) throws IOException;
+
+	Datagram newDatagram(byte[] buf, int size) throws IOException;
+
+	Datagram newDatagram(byte[] buf, int size, String addr) throws IOException;
+
 }

@@ -275,7 +275,10 @@ public class MIDletClassLoader extends URLClassLoader {
 		}
 		byte[] b;
 		try {
-			b = ClassPreporcessor.instrument(is, traceClassLoading);
+			if (traceClassLoading) {
+				Logger.info("Load MIDlet class", name);
+			}
+			b = ClassPreporcessor.instrument(is);
 		} finally {
 			try {
 				is.close();

@@ -1,4 +1,4 @@
-/*
+/**
  *  MicroEmulator
  *  Copyright (C) 2001 Bartek Teodorczyk <barteo@barteo.net>
  *
@@ -15,35 +15,34 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *  
+ *  @version $Id$  
  */
- 
+
 package javax.microedition.io;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-
-public interface Datagram extends DataInput, DataOutput
-{
+public interface Datagram extends DataInput, DataOutput {
 
 	String getAddress();
-	
+
 	byte[] getData();
-	
+
 	int getLength();
 
 	int getOffset();
-	
-	void setAddress(String addr)
-			throws IOException;
-	
+
+	void setAddress(String addr) throws IOException;
+
 	void setAddress(Datagram reference);
-	
+
 	void setLength(int len);
-	
+
 	void setData(byte[] buffer, int offset, int len);
-	
+
 	void reset();
 
 }

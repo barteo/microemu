@@ -21,6 +21,9 @@
  */
 package org.microemu.cldc.file;
 
+import java.security.AccessControlContext;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Enumeration;
 
 import javax.microedition.io.file.FileSystemListener;
@@ -29,9 +32,12 @@ import org.microemu.microedition.Implementation;
 
 public class FileSystemRegistryImpl implements FileSystemRegistryDelegate, Implementation {
 
-	// TODO
-	// Discovery: 
-	// System.getProperty( "microedition.io.file.FileConnection.version" ).equals( "1.0" );
+	/* The context to be used when acessing filesystem */
+    private AccessControlContext acc;
+    
+	public FileSystemRegistryImpl() {
+		acc = AccessController.getContext();
+	}
 	
 	public boolean addFileSystemListener(FileSystemListener listener) {
 		// TODO Auto-generated method stub
@@ -41,7 +47,11 @@ public class FileSystemRegistryImpl implements FileSystemRegistryDelegate, Imple
 	public Enumeration listRoots() {
 		switch (Connection.getConnectionType()) {
 		case Connection.CONNECTIONTYPE_SYSTEM_FS:
-			return SystemFileConnection.listRoots();
+			return (Enumeration)AccessController.doPrivileged(new PrivilegedAction() {
+				public Object run() {
+					return FileSystemFileConnection.listRoots();
+				}
+			}, acc);
 		default:
 			throw new RuntimeException("Invalid connectionType configuration");
 		}

@@ -19,28 +19,37 @@
  *
  *  @version $Id$
  */
-package org.microemu.app.classloader;
+package org.microemu.microedition.io;
 
-import org.objectweb.asm.ClassAdapter;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.MethodVisitor;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import javax.microedition.io.Connection;
+
+import org.microemu.microedition.Implementation;
 
 /**
+ * Delegate for javax.microedition.Connector
+ * 
  * @author vlads
- *
  */
-public class ChangeCallsClassVisitor extends ClassAdapter {
+public interface ConnectorDelegate extends Implementation {
 
-	public ChangeCallsClassVisitor(ClassVisitor cv) {
-		super(cv);
-	}
+	public Connection open(String name) throws IOException;
+	
+	public Connection open(String name, int mode) throws IOException;
 
-    public void visit(final int version, final int access, final String name, final String signature, final String superName, final String[] interfaces) {
-    	super.visit(version, access, name, signature, superName, interfaces);
-	}
-    
-	public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
-		return  new ChangeCallsMethodVisitor(super.visitMethod(access, name, desc, signature, exceptions));
-	}
+	public Connection open(String name, int mode, boolean timeouts) throws IOException;
 
+	public DataInputStream openDataInputStream(String name) throws IOException;
+
+	public DataOutputStream openDataOutputStream(String name) throws IOException;
+
+	public InputStream openInputStream(String name) throws IOException;
+  
+	public OutputStream openOutputStream(String name) throws IOException;
+	
 }

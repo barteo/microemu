@@ -93,15 +93,6 @@
         </snapshotRepository>
     </distributionManagement>
 
-    <repositories>
-
-        <repository>
-            <id>pyx4me-web</id>
-            <url>http://www.pyx4me.com/maven2</url>
-        </repository>
-
-    </repositories>
-
     <pluginRepositories>
 
         <pluginRepository>

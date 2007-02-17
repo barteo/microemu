@@ -23,14 +23,14 @@
         <dependency>
             <groupId>org.microemu</groupId>
             <artifactId>microemu-jsr-75</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.microemu</groupId>
             <artifactId>microemu-javase-swing</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 

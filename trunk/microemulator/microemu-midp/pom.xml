@@ -23,7 +23,7 @@
         <dependency>
             <groupId>org.microemu</groupId>
             <artifactId>microemu-cldc</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

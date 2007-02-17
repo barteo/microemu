@@ -22,13 +22,13 @@
         <dependency>
             <groupId>org.microemu</groupId>
             <artifactId>microemu-midp</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.microemu</groupId>
             <artifactId>microemu-injected</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
             <classifier>inject</classifier>
         </dependency>
 

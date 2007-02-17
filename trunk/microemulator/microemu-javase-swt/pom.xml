@@ -22,7 +22,7 @@
         <dependency>
             <groupId>org.microemu</groupId>
             <artifactId>microemu-javase</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!--

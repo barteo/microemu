@@ -22,7 +22,7 @@
         <dependency>
             <groupId>org.microemu</groupId>
             <artifactId>microemu-javase</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.microemu</groupId>
             <artifactId>microemu-cldc</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
             <classifier>4applet</classifier>
             <optional>true</optional>
         </dependency>
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>org.microemu</groupId>
             <artifactId>microemu-midp</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
             <classifier>4applet</classifier>
             <optional>true</optional>
         </dependency>

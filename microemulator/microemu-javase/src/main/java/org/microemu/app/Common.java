@@ -51,6 +51,7 @@ import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.FileRecordStoreManager;
 import org.microemu.app.util.IOUtils;
 import org.microemu.app.util.MIDletResourceLoader;
+import org.microemu.app.util.MIDletSystemProperties;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 import org.microemu.log.Logger;
@@ -300,6 +301,7 @@ public class Common implements MicroEmulator, CommonInterface {
 	}
 
 	protected void setDevice(Device device) {
+		MIDletSystemProperties.setDevice(device);
 		DeviceFactory.setDevice(device);
 	}
 

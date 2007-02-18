@@ -25,7 +25,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -39,7 +38,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -49,7 +47,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.microemu.EmulatorContext;
+import org.microemu.app.Common;
 import org.microemu.app.Config;
+import org.microemu.app.ui.Message;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.IOUtils;
 import org.microemu.device.Device;
@@ -101,10 +101,8 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
 						}
 					}
 					urls[0] = fileChooser.getSelectedFile().toURL();
-				} catch (IOException ex) {
-					JOptionPane.showMessageDialog(SwingSelectDevicePanel.this,
-							"Error reading file: " + fileChooser.getSelectedFile().getName(),
-							"Error", JOptionPane.ERROR_MESSAGE);
+				} catch (IOException e) {
+					Message.error("Error reading file: " + fileChooser.getSelectedFile().getName() + ", " + Message.getCauseMessage(e), e);
 					return;
 				} finally {
 					if (jar != null) {
@@ -116,9 +114,7 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
 				}
 				
 				if (descriptorEntries.size() == 0) {
-					JOptionPane.showMessageDialog(SwingSelectDevicePanel.this,
-							"Cannot find any device profile in file: " + fileChooser.getSelectedFile().getName(),
-							"Error", JOptionPane.ERROR_MESSAGE);
+					Message.error("Cannot find any device profile in file: " + fileChooser.getSelectedFile().getName());
 					return;
 				}
 				
@@ -126,17 +122,15 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
 					manifestDeviceName = null;
 				}
 
-				URLClassLoader classLoader = new URLClassLoader(urls);
+				ClassLoader classLoader = Common.createExtensionsClassLoader(urls);
 				HashMap devices = new HashMap();
 				for (Iterator it = descriptorEntries.iterator(); it.hasNext();) {
 					String entryName = (String) it.next();
 					try {
 						devices.put(entryName,
 								Device.create(emulatorContext, classLoader, entryName));
-					} catch (IOException ex) {
-						JOptionPane.showMessageDialog(SwingSelectDevicePanel.this,
-								"Error parsing device profile: " + ex.getMessage(), 
-								"Error", JOptionPane.ERROR_MESSAGE);
+					} catch (IOException e) {
+						Message.error("Error parsing device profile, " + Message.getCauseMessage(e), e);
 						return;
 					}
 				}
@@ -148,9 +142,7 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
 					}
 				}
 				if (devices.size() == 0) {
-					JOptionPane.showMessageDialog(SwingSelectDevicePanel.this,
-							"Device profile already added", 
-							"Info", JOptionPane.INFORMATION_MESSAGE);
+					Message.info("Device profile already added");
 					return;
 				}
 				
@@ -171,10 +163,8 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
 						Config.addDeviceEntry(entry);
 					}
 					lsDevices.setSelectedValue(entry, true);
-				} catch (IOException ex) {
-					JOptionPane.showMessageDialog(SwingSelectDevicePanel.this,
-							"Error adding device profile: " + ex.getMessage(),
-							"Error", JOptionPane.ERROR_MESSAGE);
+				} catch (IOException e) {
+					Message.error("Error adding device profile, " + Message.getCauseMessage(e), e);
 					return;
 				}				
 			}

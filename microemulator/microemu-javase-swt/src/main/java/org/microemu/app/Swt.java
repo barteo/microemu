@@ -1,4 +1,4 @@
-/*
+/**
  *  MicroEmulator
  *  Copyright (C) 2001-2003 Bartek Teodorczyk <barteo@barteo.net>
  *
@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -348,7 +347,7 @@ public class Swt extends Common
 			if (entry.getFileName() != null) {
 				URL[] urls = new URL[1];
 				urls[0] = new File(Config.getConfigPath(), entry.getFileName()).toURL();
-				classLoader = new URLClassLoader(urls);
+				classLoader = Common.createExtensionsClassLoader(urls);
 			}
 
 			// TODO font manager have to be moved from emulatorContext into device

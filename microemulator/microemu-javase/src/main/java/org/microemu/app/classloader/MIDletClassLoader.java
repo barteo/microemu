@@ -47,20 +47,20 @@ public class MIDletClassLoader extends URLClassLoader {
 	
 	private final static boolean debug = false;
 	
-	private Set notLoadableNames;
+	private Set noPreporcessingNames;
 	
 	/* The context to be used when loading classes and resources */
     private AccessControlContext acc;
     
 	public MIDletClassLoader(ClassLoader parent) {
 		super(new URL[]{}, parent);
-		notLoadableNames = new HashSet();
+		noPreporcessingNames = new HashSet();
 		acc = AccessController.getContext();
 	}
 
 	public MIDletClassLoader(URL[] urls, ClassLoader parent) {
 		super(urls, parent);
-		notLoadableNames = new HashSet();
+		noPreporcessingNames = new HashSet();
 	}
 	
     /**
@@ -224,7 +224,7 @@ public class MIDletClassLoader extends URLClassLoader {
 //		if (loadedByParent != null) {
 //			return false;
 //		}
-		if (notLoadableNames.contains(className)) {
+		if (noPreporcessingNames.contains(className)) {
 			return false;
 		}
 		return true;
@@ -234,12 +234,12 @@ public class MIDletClassLoader extends URLClassLoader {
 	 * Special case for classes injected to MIDlet 
 	 * @param klass
 	 */
-	public void disableClassLoad(Class klass) {
-		disableClassLoad(klass.getName());
+	public void disableClassPreporcessing(Class klass) {
+		disableClassPreporcessing(klass.getName());
 	}
 	
-	public void disableClassLoad(String className) {
-		notLoadableNames.add(className);
+	public void disableClassPreporcessing(String className) {
+		noPreporcessingNames.add(className);
 	}
 
 	public static String getClassResourceName(String className) {

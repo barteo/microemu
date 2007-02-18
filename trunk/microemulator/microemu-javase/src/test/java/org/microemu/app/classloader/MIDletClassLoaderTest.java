@@ -27,7 +27,12 @@ import java.net.URLClassLoader;
 
 import junit.framework.TestCase;
 
+import org.microemu.app.util.EventCatureLoggerAppender;
 import org.microemu.app.util.IOUtils;
+import org.microemu.app.util.MIDletResourceLoader;
+import org.microemu.app.util.MIDletSystemProperties;
+import org.microemu.log.Logger;
+import org.microemu.log.LoggingEvent;
 
 /**
  * @author vlads
@@ -38,6 +43,19 @@ public class MIDletClassLoaderTest extends TestCase {
 	private static final String TEST_APP_JAR = "bytecode-test-app.jar"; 
 	
 	private static final String TEST_CLASS = "org.TestMain";
+	
+	EventCatureLoggerAppender capture;
+	
+	protected void setUp() throws Exception {
+		super.setUp();
+		capture = new EventCatureLoggerAppender();
+		Logger.addAppender(capture);
+	}
+	
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		Logger.removeAppender(capture);
+	}
 	
 	public void testGetResourceAsStream() throws Exception {
 		
@@ -67,5 +85,32 @@ public class MIDletClassLoaderTest extends TestCase {
 			IOUtils.closeQuietly(is);
 		}
 		
+	}
+	
+	public void testApplication() throws Exception {
+		ClassLoader parent = MIDletClassLoaderTest.class.getClassLoader();
+		URL jarURL = parent.getResource(TEST_APP_JAR);
+		assertNotNull("Can't find app jar", jarURL);
+		
+		//System.setProperty("test.verbose", "1");
+		
+		MIDletSystemProperties.setProperty("test.property1", "1");
+		MIDletSystemProperties.setProperty("microedition.platform", null);
+		
+		MIDletClassLoader mcl = new MIDletClassLoader(parent);
+		MIDletResourceLoader.classLoader = mcl;
+		mcl.addURL(jarURL);
+		
+		Class instrumentedClass = mcl.loadClass(TEST_CLASS);
+		Runnable instrumentedInstance = (Runnable) instrumentedClass.newInstance();
+		instrumentedInstance.run();
+		
+		LoggingEvent lastEvent = capture.getLastEvent();
+		assertNotNull("got event", lastEvent);
+		assertEquals("All tests OK", lastEvent.getMessage());
+		StackTraceElement ste = lastEvent.getLocation();
+		assertEquals("MethodName", "run", ste.getMethodName());
+		assertEquals("ClassName", TEST_CLASS, ste.getClassName());
+
 	}
 }

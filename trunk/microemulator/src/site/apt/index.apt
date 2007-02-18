@@ -37,6 +37,8 @@ MicroEmulator
 
 ~~    * Support of Mobile 2D Graphics (JSR 226)
 
+    * Support for  FileConnection API (JSR 75)
+
     * Support for Nokia APIs
 
     * Support for Siemens APIs

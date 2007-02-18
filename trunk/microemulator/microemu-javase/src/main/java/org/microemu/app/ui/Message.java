@@ -86,6 +86,26 @@ public class Message {
     }
     
     /**
+     * Show info message to user
+     * 
+     * @param text  Message
+     */
+    public static void info(String text) {
+        Logger.info("Message: info: " + text);
+        callListeners(INFO, "Info", text, null);
+    }
+
+    /**
+     * Show info message to user
+     * 
+     * @param text  Message
+     */
+    public static void warn(String text) {
+        Logger.warn("Message: warn: " + text);
+        callListeners(INFO, "Warning", text, null);
+    }
+    
+    /**
      * Here we can butify error message text.
      * @param throwable
      * @return

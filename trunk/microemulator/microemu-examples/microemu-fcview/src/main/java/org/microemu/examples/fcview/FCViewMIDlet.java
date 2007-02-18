@@ -47,6 +47,7 @@ public class FCViewMIDlet extends MIDlet {
 	
 	protected void startApp() throws MIDletStateChangeException {
 		try {
+			System.out.println("FileConnection " + System.getProperty("microedition.io.file.FileConnection.version"));
 			this.list.setDir(null);
 			setCurrentDisplayable(this.list);
 		} catch (SecurityException e) {

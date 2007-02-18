@@ -1,4 +1,4 @@
-/*
+/**
  *  MicroEmulator
  *  Copyright (C) 2002 Bartek Teodorczyk <barteo@barteo.net>
  *
@@ -22,74 +22,69 @@ package org.microemu.app.util;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 
 import org.microemu.EmulatorContext;
+import org.microemu.app.Common;
 import org.microemu.app.Config;
 
 import com.barteo.emulator.device.Device;
 import org.microemu.log.Logger;
 
-public class DeviceEntry
-{
-  private String name;
-  private String fileName;
-  private String descriptorLocation;
-  private boolean defaultDevice;
-  private boolean canRemove;
+public class DeviceEntry {
+	
+	private String name;
 
-  /**
-   * @deprecated
-   */
-  private String className;
+	private String fileName;
 
-  /**
-   * @deprecated
-   */
-  private EmulatorContext emulatorContext;
+	private String descriptorLocation;
 
+	private boolean defaultDevice;
 
-  public DeviceEntry(String name, String fileName, String descriptorLocation, boolean defaultDevice)
-  {
-    this(name, fileName, descriptorLocation, defaultDevice, true);
-  }
+	private boolean canRemove;
 
+	/**
+	 * @deprecated
+	 */
+	private String className;
 
-  public DeviceEntry(String name, String fileName, String descriptorLocation, boolean defaultDevice, boolean canRemove)
-  {
-    this.name = name;
-    this.fileName = fileName;
-    this.descriptorLocation = descriptorLocation;
-    this.defaultDevice = defaultDevice;
-    this.canRemove = canRemove;
-  }
+	/**
+	 * @deprecated
+	 */
+	private EmulatorContext emulatorContext;
 
+	public DeviceEntry(String name, String fileName, String descriptorLocation, boolean defaultDevice) {
+		this(name, fileName, descriptorLocation, defaultDevice, true);
+	}
 
-  /**
-   * @deprecated use new DeviceEntry(String name, String fileName, String descriptorLocation, boolean defaultDevice);
-   */
-  public DeviceEntry(String name, String fileName, boolean defaultDevice, String className, EmulatorContext emulatorContext)
-  {
-    this(name, fileName, null, defaultDevice, true);
+	public DeviceEntry(String name, String fileName, String descriptorLocation, boolean defaultDevice, boolean canRemove) {
+		this.name = name;
+		this.fileName = fileName;
+		this.descriptorLocation = descriptorLocation;
+		this.defaultDevice = defaultDevice;
+		this.canRemove = canRemove;
+	}
 
-    this.className = className;
-    this.emulatorContext = emulatorContext;
-  }
+	/**
+	 * @deprecated use new DeviceEntry(String name, String fileName, String descriptorLocation, boolean defaultDevice);
+	 */
+	public DeviceEntry(String name, String fileName, boolean defaultDevice, String className,
+			EmulatorContext emulatorContext) {
+		this(name, fileName, null, defaultDevice, true);
 
+		this.className = className;
+		this.emulatorContext = emulatorContext;
+	}
 
-  public boolean canRemove()
-  {
-    return canRemove;
-  }
-  
-  
-  public String getDescriptorLocation()
-  {
-	  if (descriptorLocation == null) {
+	public boolean canRemove() {
+		return canRemove;
+	}
+
+	public String getDescriptorLocation() {
+		if (descriptorLocation == null) {
 			URL[] urls = new URL[1];
 			try {
 				urls[0] = new File(Config.getConfigPath(), fileName).toURL();
-				URLClassLoader classLoader = new URLClassLoader(urls);
+				ClassLoader classLoader = Common.createExtensionsClassLoader(urls);
 				Class deviceClass = Class.forName(className, true, classLoader);
 				Device device = (Device) deviceClass.newInstance();
 
@@ -107,64 +102,51 @@ public class DeviceEntry
 				Logger.error(ex);
 			}
 
-	  }
+		}
 
-	  return descriptorLocation;
-  }
-
-
-  public String getFileName()
-  {
-    return fileName;
-  }
-
-
-  /**
-   * @deprecated
-   */
-  public void setFileName(String fileName)
-  {
-	this.fileName = fileName;
-  }
-
-  public String getName()
-  {
-    return name;
-  }
-
-
-  public boolean isDefaultDevice()
-  {
-    return defaultDevice;
-  }
-
-
-  public void setDefaultDevice(boolean b)
-  {
-    defaultDevice = b;
-  }
-
-
-  public boolean equals(DeviceEntry test)
-  {
-	if (test == null) {
-      return false;
+		return descriptorLocation;
 	}
-    if (test.getDescriptorLocation().equals(getDescriptorLocation())) {
-      return true;
-    }
 
-    return false;
-  }
+	public String getFileName() {
+		return fileName;
+	}
 
+	/**
+	 * @deprecated
+	 */
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
 
-  public String toString()
-  {
-    if (defaultDevice) {
-      return name + " (default)";
-    } else {
-      return name;
-    }
-  }
+	public String getName() {
+		return name;
+	}
+
+	public boolean isDefaultDevice() {
+		return defaultDevice;
+	}
+
+	public void setDefaultDevice(boolean b) {
+		defaultDevice = b;
+	}
+
+	public boolean equals(DeviceEntry test) {
+		if (test == null) {
+			return false;
+		}
+		if (test.getDescriptorLocation().equals(getDescriptorLocation())) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public String toString() {
+		if (defaultDevice) {
+			return name + " (default)";
+		} else {
+			return name;
+		}
+	}
 
 }

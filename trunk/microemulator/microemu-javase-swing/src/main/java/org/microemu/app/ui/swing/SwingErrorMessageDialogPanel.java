@@ -25,6 +25,7 @@ import java.awt.Component;
 
 import javax.swing.JOptionPane;
 
+import org.microemu.app.ui.Message;
 import org.microemu.app.ui.MessageListener;
 
 /**
@@ -49,7 +50,19 @@ public class SwingErrorMessageDialogPanel implements MessageListener {
 	 */
 	public void showMessage(int level, String title, String text, Throwable throwable) {
 		// TODO Add option to show throwable
-		JOptionPane.showMessageDialog(parent, text, title, JOptionPane.INFORMATION_MESSAGE);
+		//Message.ERROR
+		int messageType;
+		switch (level) {
+		case Message.ERROR:
+			messageType = JOptionPane.ERROR_MESSAGE;
+			break;
+		case Message.WARN:
+			messageType = JOptionPane.WARNING_MESSAGE;
+			break;
+		default:
+			messageType = JOptionPane.INFORMATION_MESSAGE;
+		}
+		JOptionPane.showMessageDialog(parent, text, title, messageType);
 	}
 
 

@@ -22,7 +22,6 @@ package org.microemu.app.ui.swt;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -49,6 +48,7 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.microemu.EmulatorContext;
+import org.microemu.app.Common;
 import org.microemu.app.Config;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.IOUtils;
@@ -122,7 +122,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 					manifestDeviceName = null;
 				}
 
-				URLClassLoader classLoader = new URLClassLoader(urls);
+				ClassLoader classLoader = Common.createExtensionsClassLoader(urls);
 				HashMap devices = new HashMap();
 				for (Iterator it = descriptorEntries.iterator(); it.hasNext();) {
 					JarEntry entry = (JarEntry) it.next();

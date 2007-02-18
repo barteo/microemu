@@ -1,4 +1,4 @@
-/*
+/**
  *  MicroEmulator
  *  Copyright (C) 2001-2003 Bartek Teodorczyk <barteo@barteo.net>
  *
@@ -25,9 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -36,13 +34,15 @@ import java.util.Locale;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
-import org.microemu.DisplayComponent;
 import org.microemu.EmulatorContext;
+import org.microemu.Injected;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.MIDletEntry;
 import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
+import org.microemu.app.classloader.ExtensionsClassLoader;
+import org.microemu.app.classloader.MIDletClassLoader;
 import org.microemu.app.launcher.Launcher;
 import org.microemu.app.ui.Message;
 import org.microemu.app.ui.ResponseInterfaceListener;
@@ -51,12 +51,8 @@ import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.FileRecordStoreManager;
 import org.microemu.app.util.IOUtils;
 import org.microemu.app.util.MIDletResourceLoader;
-import org.microemu.app.classloader.MIDletClassLoader;
 import org.microemu.device.Device;
-import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
-import org.microemu.device.FontManager;
-import org.microemu.device.InputMethod;
 import org.microemu.log.Logger;
 import org.microemu.microedition.ImplFactory;
 import org.microemu.microedition.ImplementationInitialization;
@@ -69,6 +65,7 @@ import org.microemu.util.MemoryRecordStoreManager;
 //import com.barteo.emulator.app.capture.Capturer;
 
 public class Common implements MicroEmulator, CommonInterface {
+	
 	private static Common instance;
 
 	private static Launcher launcher;
@@ -88,7 +85,7 @@ public class Common implements MicroEmulator, CommonInterface {
 	public Common(EmulatorContext context) {
 		instance = this;
 		this.emulatorContext = context;
-
+		
 		launcher = new Launcher(this);
 		launcher.setCurrentMIDlet(launcher);
 
@@ -405,7 +402,7 @@ public class Common implements MicroEmulator, CommonInterface {
 					if (defaultDevice.getFileName() != null) {
 						URL[] urls = new URL[1];
 						urls[0] = new File(Config.getConfigPath(), defaultDevice.getFileName()).toURL();
-						classLoader = new URLClassLoader(urls);
+						classLoader = createExtensionsClassLoader(urls);
 					}
 					setDevice(Device.create(
 							emulatorContext,
@@ -440,8 +437,13 @@ public class Common implements MicroEmulator, CommonInterface {
 
 	private static MIDletClassLoader createMIDletClassLoader() {
 		MIDletClassLoader mcl = new MIDletClassLoader(instance.getClass().getClassLoader());
+		mcl.disableClassPreporcessing(Injected.class);
 		MIDletResourceLoader.classLoader = mcl;
 		return mcl;
+	}
+	
+	public static ClassLoader createExtensionsClassLoader(final URL[] urls) {
+		return new ExtensionsClassLoader(urls, instance.getClass().getClassLoader());
 	}
 
 	public void initMIDlet(List params, boolean startMidlet) {

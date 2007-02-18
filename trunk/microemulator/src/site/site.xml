@@ -7,7 +7,7 @@
 
     <bannerLeft>
             <name>J2ME Device Emulator</name>
-            <src>images/logo.png</src>
+            <src>http://www.microemu.org/images/logo.png</src>
             <href>http://www.microemu.org/</href>
     </bannerLeft>
 
@@ -19,22 +19,24 @@
 
     <body>
         <links>
-            <item name="Live examples" href="/./demo.html"/>
+            <item name="Live examples" href="http://www.microemu.org/demo.html"/>
         </links>
 
         <menu name="Ver 2.0.1-SNAPSHOT" inherit="top"/>
 
+        <menu ref="parent" />
+
         <menu name="Overview">
-            <item name="Introduction" href="index.html" />
-            <item name="Usage" href="usage.html" />
-            <item name="Applet config" href="applet.html" />
-            <item name="Skin" href="skin.html" />
-            <item name="Unit Tests" href="unittests.html" />
-            <item name="Faq" href="faq.html" />
+            <item name="Introduction" href="http://www.microemu.org/index.html" />
+            <item name="Usage" href="http://www.microemu.org/usage.html" />
+            <item name="Applet config" href="http://www.microemu.org/applet.html" />
+            <item name="Skin" href="http://www.microemu.org/skin.html" />
+            <item name="Unit Tests" href="http://www.microemu.org/unittests.html" />
+            <item name="Faq" href="http://www.microemu.org/faq.html" />
 
             <item name="Download" href="#">
                 <item name="Releases" href="http://sourceforge.net/project/showfiles.php?group_id=30014"/>
-                <item name="Maven" href="maven.html"/>
+                <item name="Maven" href="http://www.microemu.org/maven.html"/>
                 <item name="SVN Access" href="source-repository.html"/>
                 <item name="Browse SVN" href="http://microemulator.svn.sourceforge.net/viewvc/microemulator/trunk/microemulator/"/>
             </item>
@@ -42,10 +44,9 @@
         </menu>
 
         <menu name="Live examples">
-            <item name="Applets" href="/./demo.html" />
-            <item name="WebStart" href="/./microemu-webstart/demo.jnlp" />
+            <item name="Applets" href="http://www.microemu.org/demo.html" />
+            <item name="WebStart" href="http://www.microemu.org/microemu-webstart/demo.jnlp" />
         </menu>
-
 
         <menu ref="modules" collapse="true" />
 

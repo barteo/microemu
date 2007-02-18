@@ -23,6 +23,7 @@ package org.microemu.app.util;
 
 import java.util.Hashtable;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * @author vlads
@@ -43,7 +44,7 @@ public class MIDletSystemProperties {
 		props.put("microedition.configuration", "CLDC-1.1");
 		props.put("microedition.configuration", "MIDP-2.0");
 		props.put("microedition.platform", "MicroEmulator");
-		props.put("microedition.locale",  Locale.getDefault().getLanguage());
+		props.put("microedition.encoding", System.getProperty("file.encoding"));
 	}
 	
 	/**
@@ -57,11 +58,26 @@ public class MIDletSystemProperties {
 		if (v != null) {
 			return v;
 		}
+		v = getDynamicProperty(key);
+		if (v != null) {
+			return v;
+		}
 		try {
 			return System.getProperty(key);
 		} catch (SecurityException e) {
 			return null;
 		}
+	}
+	
+	private static String getDynamicProperty(String key) {
+		if (key.equals("microedition.locale")) {
+			return Locale.getDefault().getLanguage();
+		}
+		return null;
+	}
+	
+	public static Set getPropertiesSet() {
+		 return props.entrySet();  
 	}
 	
 	public static String setProperty(String key, String value) {

@@ -43,7 +43,7 @@ public class MIDletClassLoader extends URLClassLoader {
 
 	public static boolean traceClassLoading = true;
 	
-	public static boolean traceSystemClassLoading = true;
+	public static boolean traceSystemClassLoading = false;
 	
 	private final static boolean debug = false;
 	

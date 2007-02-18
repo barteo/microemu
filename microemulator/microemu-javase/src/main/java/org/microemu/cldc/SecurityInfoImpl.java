@@ -21,13 +21,14 @@ package org.microemu.cldc;
 
 import javax.microedition.io.SecurityInfo;
 import javax.microedition.pki.Certificate;
+import org.microemu.log.Logger;
 
 public class SecurityInfoImpl implements SecurityInfo {
 
 	private String cipherSuite;
 	private String protocolName;
 	private Certificate certificate;
-	
+
 	public SecurityInfoImpl(String cipherSuite, String protocolName, Certificate certificate) {
 		this.cipherSuite = cipherSuite;
 		this.protocolName = protocolName;
@@ -48,7 +49,7 @@ public class SecurityInfoImpl implements SecurityInfo {
 			try {
 				throw new RuntimeException();
 			} catch (RuntimeException ex) {
-				ex.printStackTrace();
+				Logger.error(ex);
 				throw ex;
 			}
 		}
@@ -64,7 +65,7 @@ public class SecurityInfoImpl implements SecurityInfo {
 			try {
 				throw new RuntimeException();
 			} catch (RuntimeException ex) {
-				ex.printStackTrace();
+				Logger.error(ex);
 				throw ex;
 			}
 		}

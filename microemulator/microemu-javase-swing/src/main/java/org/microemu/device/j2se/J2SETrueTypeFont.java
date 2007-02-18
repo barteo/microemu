@@ -28,21 +28,23 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
+import org.microemu.log.Logger;
+
 public class J2SETrueTypeFont implements J2SEFont {
-	
+
 	private final static Graphics2D graphics = (Graphics2D) new BufferedImage(1, 1,
 			BufferedImage.TYPE_INT_ARGB).getGraphics();
 
 	private URL url;
-	
+
 	private String style;
-	
+
 	private int size;
-	
+
 	private boolean antialiasing;
-	
+
 	private boolean initialized;
-	
+
 	private FontMetrics fontMetrics;
 
 	public J2SETrueTypeFont(URL url, String style, int size, boolean antialiasing) {
@@ -50,7 +52,7 @@ public class J2SETrueTypeFont implements J2SEFont {
 		this.style = style.toLowerCase();
 		this.size = size;
 		this.antialiasing = antialiasing;
-		
+
 		this.initialized = false;
 	}
 
@@ -60,7 +62,7 @@ public class J2SETrueTypeFont implements J2SEFont {
 			initialized = false;
 		}
 	}
-	
+
 	public int charWidth(char ch) {
 		checkInitialized();
 
@@ -96,7 +98,7 @@ public class J2SETrueTypeFont implements J2SEFont {
 
 		return fontMetrics.getFont();
 	}
-	
+
 	private synchronized void checkInitialized() {
 		if (!initialized) {
 			int awtStyle = 0;
@@ -123,9 +125,9 @@ public class J2SETrueTypeFont implements J2SEFont {
 				fontMetrics = graphics.getFontMetrics(baseFont.deriveFont(awtStyle, size));
 				initialized = true;
 			} catch (FontFormatException ex) {
-				ex.printStackTrace();
+				Logger.error(ex);
 			} catch (IOException ex) {
-				ex.printStackTrace();
+				Logger.error(ex);
 			}
 		}
 	}

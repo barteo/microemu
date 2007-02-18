@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Locale;
@@ -71,8 +72,7 @@ public class Device
 	// TODO not implemented yet
 	private boolean hasRepeatEvents;
 
-	private Properties systemProperties;
-	private Properties systemPropertiesPreserve;
+	private Map systemProperties;
 	
 	public static final String DEFAULT_LOCATION = "org/microemu/device/default/device.xml";
 	/**
@@ -84,8 +84,8 @@ public class Device
 
 	public Device()
 	{	    
-		systemProperties = new Properties();
-		systemPropertiesPreserve = new Properties();
+		// Permits null values. 
+		systemProperties = new HashMap();
         buttons = new Vector();
         softButtons = new Vector();
 	}
@@ -124,13 +124,8 @@ public class Device
 	}
 	
 	
-	public void init()
-	{
-        try {
-        	initSystemProperties();
-		} catch (SecurityException e) {
-			System.out.println("Cannot load SystemProperties: " + e);
-		}
+	public void init() {
+
 	}
 
     /**
@@ -161,11 +156,6 @@ public class Device
         } catch (IOException ex) {
             System.out.println("Cannot load config: " + ex);
         }
-        try {
-			initSystemProperties();
-		} catch (SecurityException e) {
-			System.out.println("Cannot load SystemProperties: " + e);
-		}
     }
     
     /**
@@ -175,31 +165,7 @@ public class Device
     	return descriptorLocation;
     }
     
-    private void initSystemProperties() {
-        for(Iterator i = systemProperties.entrySet().iterator(); i.hasNext(); ) {
-        	Map.Entry e = (Map.Entry)i.next();
-        	String orig = System.setProperty((String)e.getKey(), (String)e.getValue());
-        	if (orig != null) {
-        		systemPropertiesPreserve.put(e.getKey(), orig);
-        	}
-        }
-    }
-    
     public void destroy() {
-    	// Restore System Properties.
-    	try {
-			for (Iterator i = systemProperties.entrySet().iterator(); i.hasNext();) {
-				Map.Entry e = (Map.Entry) i.next();
-				//System.clearProperty((String) e.getKey());
-				System.getProperties().remove(e.getKey());
-			}
-			for (Iterator i = systemPropertiesPreserve.entrySet().iterator(); i.hasNext();) {
-				Map.Entry e = (Map.Entry) i.next();
-				System.setProperty((String) e.getKey(), (String) e.getValue());
-			}
-		} catch (SecurityException e) {
-			System.out.println("Cannot restore SystemProperties: " + e);
-		}
     }
     
     public String getName()
@@ -650,6 +616,10 @@ public class Device
 
 	public boolean hasRepeatEvents() {
 		return hasRepeatEvents;
+	}
+	
+	public Map getSystemProperties() {
+		return this.systemProperties;
 	}
 	
 	private static void saveDevice(XMLElement doc) {

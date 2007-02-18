@@ -27,6 +27,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -38,6 +39,7 @@ import nanoxml.XMLParseException;
 import org.microemu.EmulatorContext;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.IOUtils;
+import org.microemu.app.util.MIDletSystemProperties;
 import org.microemu.device.Device;
 import org.microemu.log.Logger;
 
@@ -153,12 +155,13 @@ public class Config {
 	}
 
     private static void initSystemProperties() {
-    	Properties systemProperties = null;
+    	Map systemProperties = null;
 
 		for (Enumeration e = configXml.enumerateChildren(); e.hasMoreElements();) {
 			XMLElement tmp = (XMLElement) e.nextElement();
 			if (tmp.getName().equals("system-properties")) {
-				systemProperties = new Properties();
+				// Permits null values. 
+				systemProperties = new HashMap();
 				for (Enumeration e_prop = tmp.enumerateChildren(); e_prop.hasMoreElements(); ) {
 		            XMLElement tmp_prop = (XMLElement) e_prop.nextElement();
 		            if (tmp_prop.getName().equals("system-property")) {
@@ -191,14 +194,7 @@ public class Config {
     		saveConfig();
     	}
 
-        try {
-			for (Iterator i = systemProperties.entrySet().iterator(); i.hasNext(); ) {
-				Map.Entry e = (Map.Entry)i.next();
-				System.setProperty((String)e.getKey(), (String)e.getValue());
-			}
-        } catch (SecurityException e) {
-			Logger.error("Cannot set SystemProperties", e);
-		}
+       	MIDletSystemProperties.setProperties(systemProperties);
 	}
 
   	public static File getConfigPath() {

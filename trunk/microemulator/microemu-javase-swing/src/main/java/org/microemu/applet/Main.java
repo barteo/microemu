@@ -52,12 +52,13 @@ import org.microemu.device.InputMethod;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEFontManager;
 import org.microemu.device.j2se.J2SEInputMethod;
+import org.microemu.log.Logger;
 import org.microemu.util.JadMidletEntry;
 import org.microemu.util.JadProperties;
 import org.microemu.util.MemoryRecordStoreManager;
 
 
-public class Main extends Applet implements MicroEmulator 
+public class Main extends Applet implements MicroEmulator
 {
 
 	private static final long serialVersionUID = 1L;
@@ -70,7 +71,7 @@ public class Main extends Applet implements MicroEmulator
 
     private SwingDeviceComponent devicePanel;
 
-    private EmulatorContext emulatorContext = new EmulatorContext() 
+    private EmulatorContext emulatorContext = new EmulatorContext()
     {
         private InputMethod inputMethod = new J2SEInputMethod();
 
@@ -98,15 +99,15 @@ public class Main extends Applet implements MicroEmulator
             return fontManager;
         }
     };
-    
-    
+
+
     public Main()
     {
         devicePanel = new SwingDeviceComponent();
         devicePanel.addKeyListener(devicePanel);
     }
 
-    
+
     public void init()
     {
         if (midlet != null) {
@@ -128,30 +129,30 @@ public class Main extends Applet implements MicroEmulator
             device.init(emulatorContext);
         } else {
             try {
-                Class cl = Class.forName(deviceParameter);
+               Class cl = Class.forName(deviceParameter);
                 device = (Device) cl.newInstance();
                 DeviceFactory.setDevice(device);
                 device.init(emulatorContext);
-            } catch (ClassNotFoundException ex) {            	
+            } catch (ClassNotFoundException ex) {
 				try {
 					device = Device.create(
-							emulatorContext, 
+							emulatorContext,
 							Main.class.getClassLoader(),
 							deviceParameter);
 					DeviceFactory.setDevice(device);
 				} catch (IOException ex1) {
-	                System.out.println(ex);
+	                Logger.error(ex);
 	                return;
 				}
             } catch (IllegalAccessException ex) {
-                System.out.println(ex);
+                Logger.error(ex);
                 return;
             } catch (InstantiationException ex) {
-                System.out.println(ex);
+                Logger.error(ex);
                 return;
             }
         }
-        
+
         devicePanel.init();
 
         manifest.clear();
@@ -163,7 +164,7 @@ public class Main extends Applet implements MicroEmulator
                 manifest.clear();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.error(e);
         }
 
         // load jad
@@ -195,7 +196,7 @@ public class Main extends Applet implements MicroEmulator
         if (midletClassName == null) {
             midletClassName = getParameter("midlet");
             if (midletClassName == null) {
-                System.out.println("There is no midlet parameter");
+                Logger.debug("There is no midlet parameter");
                 return;
             }
         }
@@ -204,29 +205,27 @@ public class Main extends Applet implements MicroEmulator
         try {
             midletClass = Class.forName(midletClassName);
         } catch (ClassNotFoundException ex) {
-            System.out.println("Cannot find " + midletClassName + " MIDlet class");
+            Logger.error("Cannot find " + midletClassName + " MIDlet class");
             return;
         }
 
         try {
             midlet = (MIDlet) midletClass.newInstance();
         } catch (Exception ex) {
-            System.out.println("Cannot initialize " + midletClass + " MIDlet class");
-            System.out.println(ex);
-            ex.printStackTrace();
+            Logger.error("Cannot initialize " + midletClass + " MIDlet class", ex);
             return;
         }
 
         Image tmpImg = DeviceFactory.getDevice().getNormalImage();
         resize(tmpImg.getWidth(), tmpImg.getHeight());
-        
+
         return;
     }
 
-    
+
     public void start() {
 		devicePanel.requestFocus();
-		
+
 		new Thread("midlet_starter") {
 			public void run() {
 				try {
@@ -236,7 +235,7 @@ public class Main extends Applet implements MicroEmulator
 				}
 			}
 		}.start();
-		
+
 		Timer timer = new Timer(1000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				devicePanel.requestFocus();
@@ -246,13 +245,13 @@ public class Main extends Applet implements MicroEmulator
 		timer.start();
 	}
 
-    
+
     public void stop()
     {
         MIDletBridge.getMIDletAccess(midlet).pauseApp();
     }
 
-    
+
     public void destroy()
     {
         try {
@@ -262,17 +261,17 @@ public class Main extends Applet implements MicroEmulator
         }
     }
 
-    
+
     public RecordStoreManager getRecordStoreManager()
     {
         return recordStoreManager;
     }
 
-    
+
     public String getAppProperty(String key)
     {
 	    if (key.equals("applet")) {
-			return "yes";	    	
+			return "yes";
 	    }
 
         String value = null;
@@ -291,11 +290,11 @@ public class Main extends Applet implements MicroEmulator
         } else {
             value = manifest.getProperty(key);
         }
-        
+
         return value;
     }
-    
-    
+
+
     public boolean platformRequest(String url)
     {
 		try {
@@ -306,22 +305,22 @@ public class Main extends Applet implements MicroEmulator
     }
 
 
-    
+
     public void notifyDestroyed(MIDletAccess previousMidletAccess)
     {
     }
 
-    
+
     public String getAppletInfo()
     {
         return "Title: MicroEmulator \nAuthor: Bartek Teodorczyk, 2001";
     }
 
-    
+
     public String[][] getParameterInfo()
     {
-        String[][] info = { 
-                { "midlet", "MIDlet class name", "The MIDlet class name. This field is mandatory." }, 
+        String[][] info = {
+                { "midlet", "MIDlet class name", "The MIDlet class name. This field is mandatory." },
         };
 
         return info;

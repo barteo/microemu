@@ -55,28 +55,29 @@ import org.microemu.device.j2se.J2SEButton;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEImmutableImage;
 import org.microemu.device.j2se.J2SEInputMethod;
+import org.microemu.log.Logger;
 
 
 public class SwingDeviceComponent extends JPanel implements KeyListener
 {
   private static final long serialVersionUID = 1L;
-  
+
   SwingDeviceComponent instance;
-  
+
   SwingDisplayComponent dc;
 
   J2SEButton prevOverButton;
   J2SEButton overButton;
   J2SEButton pressedButton;
-  
+
   private SoftButton initialPressedSoftButton;
-  
+
 	Image offi;
 	Graphics offg;
-      
-  private MouseAdapter mouseListener = new MouseAdapter() 
+
+  private MouseAdapter mouseListener = new MouseAdapter()
   {
-    
+
 	  	public void mousePressed(MouseEvent e) {
 			requestFocus();
 
@@ -195,15 +196,15 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 		}
 
   };
-  
 
-  private MouseMotionListener mouseMotionListener = new MouseMotionListener() 
+
+  private MouseMotionListener mouseMotionListener = new MouseMotionListener()
   {
 
     public void mouseDragged(MouseEvent e)
     {
     	overButton = getButton(e.getX(), e.getY());
-    	
+
 		Device device = DeviceFactory.getDevice();
 		org.microemu.device.impl.Rectangle rect = ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
 		InputMethodImpl inputMethod = (InputMethodImpl) device.getInputMethod();
@@ -239,7 +240,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 		}
     }
 
-    
+
     public void mouseMoved(MouseEvent e)
     {
     	prevOverButton = overButton;
@@ -256,38 +257,38 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
       		}
       	}
     }
-    
+
   };
-  
-  
-  public SwingDeviceComponent() 
+
+
+  public SwingDeviceComponent()
   {
     instance = this;
-    
-    dc = new SwingDisplayComponent(this);    
-    
+
+    dc = new SwingDisplayComponent(this);
+
     this.initialPressedSoftButton = null;
-    
+
     addMouseListener(mouseListener);
     addMouseMotionListener(mouseMotionListener);
   }
-  
-  
+
+
   public DisplayComponent getDisplayComponent()
   {
     return dc;
   }
-  
-  
+
+
   public void init()
   {
       dc.init();
-      
+
       revalidate();
   }
-  
-  
-  	public void keyTyped(KeyEvent ev) 
+
+
+  	public void keyTyped(KeyEvent ev)
   	{
     	if (MIDletBridge.getCurrentMIDlet() == null) {
     		return;
@@ -295,42 +296,42 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 
     	((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod()).keyTyped(ev);
 	}
-  
-  
+
+
   	public void keyPressed(KeyEvent ev)
   	{
     	if (MIDletBridge.getCurrentMIDlet() == null) {
     		return;
     	}
-    	
+
     	Device device = DeviceFactory.getDevice();
     	J2SEInputMethod inputMethod = (J2SEInputMethod) device.getInputMethod();
-		
+
 		if (ev.getKeyCode() == KeyEvent.VK_V && (ev.getModifiers() & KeyEvent.CTRL_MASK) != 0) {
 			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 			Transferable transferable = clipboard.getContents(null);
-			if (transferable != null) {				
+			if (transferable != null) {
 				try {
 					Object data = transferable.getTransferData(DataFlavor.stringFlavor);
 					if (data instanceof String) {
 						inputMethod.clipboardPaste((String) data);
 					}
 				} catch (UnsupportedFlavorException ex) {
-					ex.printStackTrace();
+					Logger.error(ex);
 				} catch (IOException ex) {
-					ex.printStackTrace();
+					Logger.error(ex);
 				}
 			}
 			return;
 		}
-		
+
 		switch (ev.getKeyCode()) {
 			case KeyEvent.VK_ALT :
 			case KeyEvent.VK_CONTROL :
 			case KeyEvent.VK_SHIFT :
 				return;
 		}
-		
+
 		for (Iterator it = device.getButtons().iterator(); it.hasNext(); ) {
 			J2SEButton button = (J2SEButton) it.next();
 			if (ev.getKeyCode() == button.getKeyboardKey()) {
@@ -338,9 +339,9 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 				break;
 			}
 		}
-		
+
 		inputMethod.keyPressed(ev);
-		
+
 		pressedButton = inputMethod.getButton(ev);
 		if (pressedButton != null) {
 			org.microemu.device.impl.Shape shape = pressedButton.getShape();
@@ -352,9 +353,9 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 			repaint();
 		}
   	}
-   
-  
-  	public void keyReleased(KeyEvent ev) 
+
+
+  	public void keyReleased(KeyEvent ev)
   	{
     	if (MIDletBridge.getCurrentMIDlet() == null) {
     		return;
@@ -366,9 +367,9 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 			case KeyEvent.VK_SHIFT :
 				return;
 		}
-	
+
     	Device device = DeviceFactory.getDevice();
-    	
+
 		for (Iterator it = device.getButtons().iterator(); it.hasNext(); ) {
 			J2SEButton button = (J2SEButton) it.next();
 			if (ev.getKeyCode() == button.getKeyboardKey()) {
@@ -376,7 +377,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 				break;
 			}
 		}
-    	
+
 		((J2SEInputMethod) device.getInputMethod()).keyReleased(ev);
 
 		prevOverButton = pressedButton;
@@ -391,23 +392,23 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 			repaint();
 		}
 	}
-  	
-  	
+
+
   	public MouseListener getDefaultMouseListener()
   	{
   		return mouseListener;
   	}
-  	
-  	
+
+
   	public MouseMotionListener getDefaultMouseMotionListener()
   	{
   		return mouseMotionListener;
   	}
-   
-  
-  public void paint(Graphics g) 
+
+
+  public void paint(Graphics g)
   {
-    if (offg == null || 
+    if (offg == null ||
         offi.getWidth(null) != getSize().width || offi.getHeight(null) != getSize().height) {
 			offi = createImage(getSize().width, getSize().height);
 			offg = offi.getGraphics();
@@ -417,15 +418,15 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
     offg.setColor(UIManager.getColor("text"));
     offg.fillRect(0, 0, size.width, size.height);
     Device device = DeviceFactory.getDevice();
-    if (device == null) 
+    if (device == null)
     {
         g.drawRect(0, 0, getWidth()-1, getHeight()-1);
         return;
     }
     offg.drawImage(((J2SEImmutableImage) device.getNormalImage()).getImage(),
               0, 0, this);
-    
-    org.microemu.device.impl.Rectangle displayRectangle = 
+
+    org.microemu.device.impl.Rectangle displayRectangle =
         ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
     offg.translate(displayRectangle.x, displayRectangle.y);
     dc.paint(offg);
@@ -435,8 +436,8 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 			org.microemu.device.impl.Shape shape = prevOverButton.getShape();
 			if (shape != null) {
 				drawImageInShape(
-						offg, 
-						((J2SEImmutableImage) device.getNormalImage()).getImage(), 
+						offg,
+						((J2SEImmutableImage) device.getNormalImage()).getImage(),
 						shape);
 			}
 			prevOverButton = null;
@@ -445,8 +446,8 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 			org.microemu.device.impl.Shape shape = overButton.getShape();
 			if (shape != null) {
 				drawImageInShape(
-						offg, 
-						((J2SEImmutableImage) device.getOverImage()).getImage(), 
+						offg,
+						((J2SEImmutableImage) device.getOverImage()).getImage(),
 						shape);
 			}
 		}
@@ -454,16 +455,16 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 			org.microemu.device.impl.Shape shape = pressedButton.getShape();
 			if (shape != null) {
 				drawImageInShape(
-						offg, 
-						((J2SEImmutableImage) device.getPressedImage()).getImage(), 
+						offg,
+						((J2SEImmutableImage) device.getPressedImage()).getImage(),
 						shape);
 			}
 		}
-    
+
  		g.drawImage(offi, 0, 0, null);
   	}
-  
-  	
+
+
   	private void drawImageInShape(Graphics g, Image image, org.microemu.device.impl.Shape shape) {
   		Shape clipSave = g.getClip();
 		if (shape instanceof org.microemu.device.impl.Polygon) {
@@ -484,8 +485,8 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 	{
 		paint(g);
 	}
- 
-  
+
+
   private J2SEButton getButton(int x, int y)
   {
     for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements(); ) {
@@ -497,16 +498,16 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 		    	  return button;
 		      }
 		} catch (CloneNotSupportedException ex) {
-			ex.printStackTrace();
+			Logger.error(ex);
 		}
       }
-    }        
+    }
     return null;
   }
-  
+
   	public Dimension getPreferredSize() {
   		javax.microedition.lcdui.Image img = DeviceFactory.getDevice().getNormalImage();
-  		
+
   		return new Dimension(img.getWidth(), img.getHeight());
 	}
 

@@ -39,31 +39,31 @@ import org.microemu.EmulatorContext;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.IOUtils;
 import org.microemu.device.Device;
-
+import org.microemu.log.Logger;
 
 public class Config {
 
 	private static File configPath = initConfigPath();
-	
+
 	private static XMLElement configXml;
-	
+
 	private static DeviceEntry defaultDevice;
-	
+
 	private static EmulatorContext emulatorContext;
 
 	private static File initConfigPath() {
 		try {
 			return new File(System.getProperty("user.home") + "/.microemulator/");
 		} catch (SecurityException e) {
-			System.out.println("Cannot access user.home in webstart: " + e);
+			Logger.error("Cannot access user.home", e);
 			return null;
 		}
 	}
-	
+
 	public static void loadConfig(DeviceEntry defaultDevice, EmulatorContext emulatorContext) {
 		Config.defaultDevice = defaultDevice;
 		Config.emulatorContext = emulatorContext;
-		
+
     	File configFile = new File(configPath, "config2.xml");
 		try {
 	    	if (configFile.exists()) {
@@ -71,32 +71,32 @@ public class Config {
 			} else {
 				// migrate from config.xml
 				loadConfig("config.xml", defaultDevice, emulatorContext);
-				
+
 				for (Enumeration e = getDeviceEntries().elements(); e.hasMoreElements();) {
 					DeviceEntry entry = (DeviceEntry) e.nextElement();
 					if (!entry.canRemove()) {
 						continue;
 					}
-					
-					removeDeviceEntry(entry);					
-					File src = new File(configPath, entry.getFileName());					
+
+					removeDeviceEntry(entry);
+					File src = new File(configPath, entry.getFileName());
 					File dst = File.createTempFile("dev", ".jar", configPath);
 					IOUtils.copyFile(src, dst);
-					entry.setFileName(dst.getName());					
+					entry.setFileName(dst.getName());
 					addDeviceEntry(entry);
 				}
-				
+
 				saveConfig();
 			}
 		} catch (FileNotFoundException ex) {
 			loadDefaultConfig();
 		} catch (IOException ex) {
-			System.out.println(ex);
+			Logger.error(ex);
 			loadDefaultConfig();
 		} finally {
 			// Happens in webstart untrusted environment
 			if (configXml == null) {
-				loadDefaultConfig();	
+				loadDefaultConfig();
 			}
 		}
 
@@ -116,7 +116,7 @@ public class Config {
 			}
 			parseConfigXML(xml, defaultDevice, emulatorContext);
 		} catch (XMLParseException e) {
-			System.out.println(e);
+			Logger.error(e);
 			loadDefaultConfig();
 		} finally {
 			IOUtils.closeQuietly(is);
@@ -125,20 +125,20 @@ public class Config {
 
 	private static void parseConfigXML(String xml, DeviceEntry defaultDevice, EmulatorContext emulatorContext) throws XMLParseException {
 		configXml = new XMLElement();
-		
+
 		configXml.parseString(xml);
-	
-	}				  
-  
+
+	}
+
 	private static void loadDefaultConfig() {
 		configXml = new XMLElement();
 		configXml.setName("config");
 	}
-  
-  
+
+
 	public static void saveConfig() {
 		File configFile = new File(configPath, "config2.xml");
-		
+
 		configPath.mkdirs();
 		FileWriter fw = null;
 		try {
@@ -146,15 +146,15 @@ public class Config {
 			configXml.write(fw);
 			fw.close();
 		} catch (IOException ex) {
-			System.out.println(ex);
+			Logger.error(ex);
 		} finally {
 			IOUtils.closeQuietly(fw);
 		}
 	}
-	
+
     private static void initSystemProperties() {
     	Properties systemProperties = null;
-    	
+
 		for (Enumeration e = configXml.enumerateChildren(); e.hasMoreElements();) {
 			XMLElement tmp = (XMLElement) e.nextElement();
 			if (tmp.getName().equals("system-properties")) {
@@ -167,7 +167,7 @@ public class Config {
 		        }
 			}
 		}
-    	
+
     	// No <system-properties> in config2.xml
     	if (systemProperties == null) {
     		systemProperties = new Properties();
@@ -175,12 +175,12 @@ public class Config {
     		systemProperties.put("microedition.profiles", "MIDP-2.0");
     		// Ask avetana to ignore MIDP profiles and load JSR-82 implementation dll or so
     		systemProperties.put("avetana.forceNativeLibrary", Boolean.TRUE.toString());
-    		
+
     		XMLElement propertiesXml = configXml.getChild("system-properties");
     		if (propertiesXml == null) {
     			propertiesXml = configXml.addChild("system-properties");
     		}
-    		
+
 			for (Iterator i = systemProperties.entrySet().iterator(); i.hasNext();) {
 				Map.Entry e = (Map.Entry) i.next();
 				XMLElement xmlProperty = propertiesXml.addChild("system-property");
@@ -190,31 +190,31 @@ public class Config {
 
     		saveConfig();
     	}
-    	
+
         try {
 			for (Iterator i = systemProperties.entrySet().iterator(); i.hasNext(); ) {
 				Map.Entry e = (Map.Entry)i.next();
 				System.setProperty((String)e.getKey(), (String)e.getValue());
 			}
         } catch (SecurityException e) {
-			System.out.println("Cannot set SystemProperties: " + e);
-		}	
-	}  
-  
+			Logger.error("Cannot set SystemProperties", e);
+		}
+	}
+
   	public static File getConfigPath() {
 		return configPath;
 	}
 
 	public static Vector getDeviceEntries() {
 		Vector result = new Vector();
-		
+
 		if (defaultDevice == null) {
-		    defaultDevice = 
+		    defaultDevice =
 	            new DeviceEntry("Default device", null, Device.DEFAULT_LOCATION, true, false);
 		}
     	defaultDevice.setDefaultDevice(true);
     	result.add(defaultDevice);
-    	
+
 		XMLElement devicesXml = configXml.getChild("devices");
 		if (devicesXml == null) {
 			return result;
@@ -239,11 +239,11 @@ public class Config {
 	            	result.add(new DeviceEntry(devName, devFile, devDescriptor, devDefault));
 	            }
 			}
-		}    	
+		}
 
 		return result;
 	}
-	
+
 	public static void addDeviceEntry(DeviceEntry entry) {
 		for (Enumeration en = getDeviceEntries().elements(); en.hasMoreElements(); ) {
 			DeviceEntry test = (DeviceEntry) en.nextElement();
@@ -251,12 +251,12 @@ public class Config {
 				return;
 			}
 		}
-		
+
 		XMLElement devicesXml = configXml.getChild("devices");
 		if (devicesXml == null) {
 			devicesXml = configXml.addChild("devices");
 		}
-		
+
 		XMLElement deviceXml = devicesXml.addChild("device");
 		if (entry.isDefaultDevice()) {
 			deviceXml.setAttribute("default", "true");
@@ -264,16 +264,16 @@ public class Config {
 		deviceXml.addChild("name", entry.getName());
 		deviceXml.addChild("filename", entry.getFileName());
 		deviceXml.addChild("descriptor", entry.getDescriptorLocation());
-		
+
 		saveConfig();
 	}
-	
+
 	public static void removeDeviceEntry(DeviceEntry entry) {
 		XMLElement devicesXml = configXml.getChild("devices");
 		if (devicesXml == null) {
 			return;
 		}
-		
+
 		for (Enumeration e_device = devicesXml.enumerateChildren(); e_device.hasMoreElements();) {
 			XMLElement tmp_device = (XMLElement) e_device.nextElement();
 			if (tmp_device.getName().equals("device")) {
@@ -281,13 +281,13 @@ public class Config {
 				// this is needed by migration config.xml -> config2.xml
 				if (testDescriptor == null) {
 					devicesXml.removeChild(tmp_device);
-					
+
 					saveConfig();
 					continue;
 				}
 				if (testDescriptor.equals(entry.getDescriptorLocation())) {
 					devicesXml.removeChild(tmp_device);
-					
+
 					saveConfig();
 					break;
 				}
@@ -300,11 +300,11 @@ public class Config {
 		if (devicesXml == null) {
 			return;
 		}
-		
+
 		for (Enumeration e_device = devicesXml.enumerateChildren(); e_device.hasMoreElements();) {
 			XMLElement tmp_device = (XMLElement) e_device.nextElement();
 			if (tmp_device.getName().equals("device")) {
-				String testDescriptor = tmp_device.getChildString("descriptor", null);				
+				String testDescriptor = tmp_device.getChildString("descriptor", null);
 				if (testDescriptor.equals(entry.getDescriptorLocation())) {
 					if (entry.isDefaultDevice()) {
 						tmp_device.setAttribute("default", "true");
@@ -314,7 +314,7 @@ public class Config {
 
 					saveConfig();
 					break;
-				}				
+				}
 			}
 		}
 	}
@@ -326,12 +326,12 @@ public class Config {
 		if (windowsXml == null) {
 			return defaultResult;
 		}
-						
+
 		XMLElement mainXml = windowsXml.getChild("main");
 		if (mainXml == null) {
 			return defaultResult;
 		}
-		
+
 		return mainXml.getChildInteger("x", defaultResult);
 	}
 
@@ -340,7 +340,7 @@ public class Config {
 		if (windowsXml == null) {
 			windowsXml = configXml.addChild("windows");
 		}
-						
+
 		XMLElement mainXml = windowsXml.getChild("main");
 		if (mainXml == null) {
 			mainXml = windowsXml.addChild("main");
@@ -350,25 +350,25 @@ public class Config {
 		if (xXml == null) {
 			xXml = mainXml.addChild("x");
 		}
-		
+
 		xXml.setContent(String.valueOf(windowX));
-		
+
 		saveConfig();
 	}
 
 	public static int getWindowY() {
 		int defaultResult = 0;
-		
+
 		XMLElement windowsXml = configXml.getChild("windows");
 		if (windowsXml == null) {
 			return defaultResult;
 		}
-						
+
 		XMLElement mainXml = windowsXml.getChild("main");
 		if (mainXml == null) {
 			return defaultResult;
 		}
-		
+
 		return mainXml.getChildInteger("y", defaultResult);
 	}
 
@@ -377,7 +377,7 @@ public class Config {
 		if (windowsXml == null) {
 			windowsXml = configXml.addChild("windows");
 		}
-						
+
 		XMLElement mainXml = windowsXml.getChild("main");
 		if (mainXml == null) {
 			mainXml = windowsXml.addChild("main");
@@ -387,20 +387,20 @@ public class Config {
 		if (yXml == null) {
 			yXml = mainXml.addChild("y");
 		}
-		
+
 		yXml.setContent(String.valueOf(windowY));
-		
+
 		saveConfig();
 	}
 
 	public static String getRecentJadDirectory() {
 		String defaultResult = ".";
-		
+
 		XMLElement filesXml = configXml.getChild("files");
 		if (filesXml == null) {
 			return defaultResult;
 		}
-		
+
 		return filesXml.getChildString("recentJadDirectory", defaultResult);
 	}
 
@@ -409,14 +409,14 @@ public class Config {
 		if (filesXml == null) {
 			filesXml = configXml.addChild("files");
 		}
-		
+
 		XMLElement recentJadDirectoryXml = filesXml.getChild("recentJadDirectory");
 		if (recentJadDirectoryXml == null) {
 			recentJadDirectoryXml = filesXml.addChild("recentJadDirectory");
 		}
-		
+
 		recentJadDirectoryXml.setContent(recentJadDirectory);
-		
+
 		saveConfig();
 	}
 

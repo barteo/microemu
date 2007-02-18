@@ -28,7 +28,7 @@ import org.microemu.EmulatorContext;
 import org.microemu.app.Config;
 
 import com.barteo.emulator.device.Device;
-
+import org.microemu.log.Logger;
 
 public class DeviceEntry
 {
@@ -37,7 +37,7 @@ public class DeviceEntry
   private String descriptorLocation;
   private boolean defaultDevice;
   private boolean canRemove;
-  
+
   /**
    * @deprecated
    */
@@ -47,14 +47,14 @@ public class DeviceEntry
    * @deprecated
    */
   private EmulatorContext emulatorContext;
-  
-  
+
+
   public DeviceEntry(String name, String fileName, String descriptorLocation, boolean defaultDevice)
   {
     this(name, fileName, descriptorLocation, defaultDevice, true);
   }
-  
-  
+
+
   public DeviceEntry(String name, String fileName, String descriptorLocation, boolean defaultDevice, boolean canRemove)
   {
     this.name = name;
@@ -63,20 +63,20 @@ public class DeviceEntry
     this.defaultDevice = defaultDevice;
     this.canRemove = canRemove;
   }
-  
-  
+
+
   /**
    * @deprecated use new DeviceEntry(String name, String fileName, String descriptorLocation, boolean defaultDevice);
    */
   public DeviceEntry(String name, String fileName, boolean defaultDevice, String className, EmulatorContext emulatorContext)
   {
     this(name, fileName, null, defaultDevice, true);
-    
+
     this.className = className;
     this.emulatorContext = emulatorContext;
   }
-  
-  
+
+
   public boolean canRemove()
   {
     return canRemove;
@@ -92,59 +92,59 @@ public class DeviceEntry
 				URLClassLoader classLoader = new URLClassLoader(urls);
 				Class deviceClass = Class.forName(className, true, classLoader);
 				Device device = (Device) deviceClass.newInstance();
-				
+
 				com.barteo.emulator.EmulatorContext oldContext = new com.barteo.emulator.EmulatorContext(emulatorContext);
-				
+
 				device.init(oldContext);
 				descriptorLocation = device.getDescriptorLocation();
 			} catch (MalformedURLException ex) {
-				ex.printStackTrace();
+				Logger.error(ex);
 			} catch (ClassNotFoundException ex) {
-				ex.printStackTrace();
+				Logger.error(ex);
 			} catch (InstantiationException ex) {
-				ex.printStackTrace();
+				Logger.error(ex);
 			} catch (IllegalAccessException ex) {
-				ex.printStackTrace();
+				Logger.error(ex);
 			}
 
 	  }
-	  
+
 	  return descriptorLocation;
   }
-  
-  
+
+
   public String getFileName()
   {
     return fileName;
   }
-  
-  
+
+
   /**
    * @deprecated
    */
   public void setFileName(String fileName)
   {
-	this.fileName = fileName;  
+	this.fileName = fileName;
   }
-  
+
   public String getName()
   {
     return name;
   }
-  
-  
+
+
   public boolean isDefaultDevice()
   {
     return defaultDevice;
   }
-  
-  
+
+
   public void setDefaultDevice(boolean b)
   {
     defaultDevice = b;
   }
-  
-  
+
+
   public boolean equals(DeviceEntry test)
   {
 	if (test == null) {
@@ -153,11 +153,11 @@ public class DeviceEntry
     if (test.getDescriptorLocation().equals(getDescriptorLocation())) {
       return true;
     }
-    
+
     return false;
   }
-  
-  
+
+
   public String toString()
   {
     if (defaultDevice) {
@@ -166,5 +166,5 @@ public class DeviceEntry
       return name;
     }
   }
-  
+
 }

@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *  
+ *
  *  Contributor(s):
  *    Andres Navarro
  */
@@ -23,6 +23,8 @@
 package org.microemu.device.j2se;
 
 import java.awt.Toolkit;
+
+import org.microemu.log.Logger;
 
 public class J2SEImmutableImage extends javax.microedition.lcdui.Image {
 	private java.awt.Image img;
@@ -80,7 +82,7 @@ public class J2SEImmutableImage extends javax.microedition.lcdui.Image {
 			(new java.awt.image.PixelGrabber(img, x, y, width, height, argb,
 					offset, scanlength)).grabPixels();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			Logger.error(e);
 		}
 	}
 

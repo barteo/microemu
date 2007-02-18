@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *  
+ *
  *  Contributor(s):
  *    Andres Navarro
  */
@@ -57,18 +57,19 @@ import org.microemu.device.impl.PositionedImage;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.Shape;
 import org.microemu.device.impl.SoftButton;
+import org.microemu.log.Logger;
 
-public class J2SEDeviceDisplay implements DeviceDisplayImpl 
+public class J2SEDeviceDisplay implements DeviceDisplayImpl
 {
     EmulatorContext context;
-	
+
 	Rectangle displayRectangle;
 	Rectangle displayPaintable;
 
 	boolean isColor;
 	int numColors;
     int numAlphaLevels;
-    
+
 	java.awt.Color backgroundColor;
 	java.awt.Color foregroundColor;
 
@@ -76,7 +77,7 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	PositionedImage modeAbcUpperImage;
 	PositionedImage modeAbcLowerImage;
 
-	public J2SEDeviceDisplay(EmulatorContext context) 
+	public J2SEDeviceDisplay(EmulatorContext context)
 	{
 		this.context = context;
 	}
@@ -88,7 +89,7 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	}
 
 
-	public int getHeight() 
+	public int getHeight()
 	{
 		if (isFullScreenMode()) {
 			return getFullHeight();
@@ -98,7 +99,7 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	}
 
 
-	public int getWidth() 
+	public int getWidth()
 	{
 		if (isFullScreenMode()) {
 			return getFullWidth();
@@ -108,26 +109,26 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	}
 
 
-	public int getFullHeight() 
+	public int getFullHeight()
 	{
 		return displayRectangle.height;
 	}
 
 
-	public int getFullWidth() 
+	public int getFullWidth()
 	{
 		return displayRectangle.width;
 	}
 
 
-	public boolean isColor() 
+	public boolean isColor()
 	{
 		return isColor;
 	}
-	
-	
-    public boolean isFullScreenMode() 
-    { 
+
+
+    public boolean isFullScreenMode()
+    {
     	MIDletAccess ma = MIDletBridge.getMIDletAccess();
     	if (ma == null) {
     		return false;
@@ -142,25 +143,25 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
     }
 
 
-    public int numAlphaLevels() 
+    public int numAlphaLevels()
     {
         return numAlphaLevels;
     }
 
-    
-    public int numColors() 
+
+    public int numColors()
 	{
 		return numColors;
 	}
 
 
-	public void paintControls(Graphics g) 
+	public void paintControls(Graphics g)
 	{
 		Device device = DeviceFactory.getDevice();
-		
+
 		g.setColor(backgroundColor);
 		g.fillRect(0, 0, displayRectangle.width, displayPaintable.y);
-		g.fillRect(0, displayPaintable.y, 
+		g.fillRect(0, displayPaintable.y,
 				displayPaintable.x, displayPaintable.height);
 		g.fillRect(displayPaintable.x + displayPaintable.width, displayPaintable.y,
 				displayRectangle.width - displayPaintable.x - displayPaintable.width, displayPaintable.height);
@@ -174,19 +175,19 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 
 		int inputMode = device.getInputMethod().getInputMode();
 		if (inputMode == InputMethod.INPUT_123) {
-			g.drawImage(((J2SEImmutableImage) mode123Image.getImage()).getImage(), 
+			g.drawImage(((J2SEImmutableImage) mode123Image.getImage()).getImage(),
 			        mode123Image.getRectangle().x, mode123Image.getRectangle().y, null);
 		} else if (inputMode == InputMethod.INPUT_ABC_UPPER) {
-			g.drawImage(((J2SEImmutableImage) modeAbcUpperImage.getImage()).getImage(), 
+			g.drawImage(((J2SEImmutableImage) modeAbcUpperImage.getImage()).getImage(),
 			        modeAbcUpperImage.getRectangle().x, modeAbcUpperImage.getRectangle().y, null);
 		} else if (inputMode == InputMethod.INPUT_ABC_LOWER) {
-			g.drawImage(((J2SEImmutableImage) modeAbcLowerImage.getImage()).getImage(), 
+			g.drawImage(((J2SEImmutableImage) modeAbcLowerImage.getImage()).getImage(),
 			        modeAbcLowerImage.getRectangle().x, modeAbcLowerImage.getRectangle().y, null);
 		}
 	}
 
-	
-	public void paintDisplayable(Graphics g, int x, int y, int width, int height) 
+
+	public void paintDisplayable(Graphics g, int x, int y, int width, int height)
 	{
 		MIDletAccess ma = MIDletBridge.getMIDletAccess();
 		if (ma == null) {
@@ -208,7 +209,7 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 			|| ((Canvas) current).getWidth() != displayRectangle.width
 			|| ((Canvas) current).getHeight() != displayRectangle.height) {
 			g.translate(displayPaintable.x, displayPaintable.y);
-		}		
+		}
 		g.setClip(x, y, width, height);
 		Font oldf = g.getFont();
         ma.getDisplayAccess().paint(new J2SEDisplayGraphics((java.awt.Graphics2D)g, getDisplayImage()));
@@ -221,14 +222,14 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 		g.setClip(oldclip);
 	}
 
-	
-	public void repaint(int x, int y, int width, int height) 
+
+	public void repaint(int x, int y, int width, int height)
 	{
 		context.getDisplayComponent().repaint(x, y, width, height);
 	}
 
 
-	public void setScrollDown(boolean state) 
+	public void setScrollDown(boolean state)
 	{
 		Enumeration en = DeviceFactory.getDevice().getSoftButtons().elements();
 		while (en.hasMoreElements()) {
@@ -241,7 +242,7 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	}
 
 
-	public void setScrollUp(boolean state) 
+	public void setScrollUp(boolean state)
 	{
 		Enumeration en = DeviceFactory.getDevice().getSoftButtons().elements();
 		while (en.hasMoreElements()) {
@@ -254,47 +255,47 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	}
 
 
-	public Rectangle getDisplayRectangle() 
+	public Rectangle getDisplayRectangle()
 	{
 		return displayRectangle;
 	}
-	
-	
+
+
 	public Rectangle getDisplayPaintable()
 	{
 		return displayPaintable;
 	}
 
 
-	public Color getBackgroundColor() 
+	public Color getBackgroundColor()
 	{
 		return new Color(backgroundColor.getRGB());
 	}
 
 
-	public Color getForegroundColor() 
+	public Color getForegroundColor()
 	{
 		return new Color(foregroundColor.getRGB());
 	}
-	
-	
+
+
 	public Image createImage(int width, int height)
 	{
 		if (width <= 0 || height <= 0) {
 			throw new IllegalArgumentException();
 		}
-	
+
 		return new J2SEMutableImage(width, height);
 	}
-	
-																
+
+
 	public Image createImage(String name)
   		throws IOException
 	{
 		return getImage(name);
 	}
-  
-  
+
+
 	public Image createImage(javax.microedition.lcdui.Image source)
         {
             if (source.isMutable()) {
@@ -312,7 +313,7 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 		return getImage(is);
         }
 
-        public Image createRGBImage(int[] rgb, int width, int height, 
+        public Image createRGBImage(int[] rgb, int width, int height,
                     boolean processAlpha) {
 		ImageFilter filter = null;
 
@@ -320,24 +321,24 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
                     throw new NullPointerException();
                 if (width <= 0 || height <= 0)
                     throw new IllegalArgumentException();
-                
-                BufferedImage img = new BufferedImage (width, height, 
+
+                BufferedImage img = new BufferedImage (width, height,
                         BufferedImage.TYPE_INT_ARGB);
-                
+
                 if (!processAlpha) {
                     // we should eliminate the transparency info
                     // but can't touch the original array
                     // so we just create another
                     int l = rgb.length;
-                    
+
                     int [] rgbAux = new int[l];
                     for (int i = 0; i < l; i++)
                         rgbAux[i] = rgb[i] | 0xff000000;
                     rgb = rgbAux;
-                } 
+                }
 
                 img.setRGB(0, 0, width, height, rgb, 0, width);
-                        
+
                 // now apply the corresponding filter
                 if (isColor()) {
 			filter = new RGBImageFilter();
@@ -351,8 +352,8 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 		FilteredImageSource imageSource = new FilteredImageSource(img.getSource(), filter);
 		return new J2SEImmutableImage(Toolkit.getDefaultToolkit().createImage(imageSource));
         }
-        
-        public Image createImage(Image image, int x, int y, 
+
+        public Image createImage(Image image, int x, int y,
                 int width, int height, int transform) {
             if (image == null)
                 throw new NullPointerException();
@@ -446,12 +447,12 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
             // to aid gc
             rgbData = null;
             image = null;
-            
+
             return createRGBImage(rgbTransformedData, width, height, true);
         }
-        
+
         // Andres Navarro
- 
+
         public Image createImage(byte[] imageData, int imageOffset, int imageLength)
 	{
 		ByteArrayInputStream is = new ByteArrayInputStream(imageData, imageOffset, imageLength);
@@ -461,7 +462,7 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 			throw new IllegalArgumentException(ex.toString());
 		}
 	}
-  
+
 
     public void setNumAlphaLevels(int i)
     {
@@ -547,8 +548,8 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
     {
         modeAbcUpperImage = object;
     }
-    
-    
+
+
     public Image createSystemImage(URL url)
 			throws IOException
 	{
@@ -560,16 +561,16 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 		try {
 			mediaTracker.waitForID(0);
 		} catch (InterruptedException ex) {
-			ex.printStackTrace();
+			Logger.error(ex);
 		}
 		if (mediaTracker.isErrorID(0)) {
 			throw new IOException();
 		}
-		
+
 		return new J2SEImmutableImage(resultImage);
 	}
-    
-    
+
+
 	private Image getImage(String str)
 			throws IOException
 	{
@@ -610,7 +611,7 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 			System.arraycopy(imageBytes, 0, newImageBytes, 0, imageBytes.length - EXTEND + num);
 			imageBytes = newImageBytes;
 		}
-		
+
 		java.awt.Image image = Toolkit.getDefaultToolkit().createImage(imageBytes);
 
 		ImageFilter filter;
@@ -632,12 +633,12 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 		try {
 			mediaTracker.waitForID(0);
 		} catch (InterruptedException ex) {
-			ex.printStackTrace();
+			Logger.error(ex);
 		}
 		if (mediaTracker.isErrorID(0)) {
 			throw new IOException();
 		}
-		
+
 		return new J2SEImmutableImage(resultImage);
 	}
 

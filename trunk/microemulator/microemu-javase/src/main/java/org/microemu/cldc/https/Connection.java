@@ -31,20 +31,21 @@ import javax.net.ssl.SSLContext;
 
 import org.microemu.cldc.CertificateImpl;
 import org.microemu.cldc.SecurityInfoImpl;
+import org.microemu.log.Logger;
 
 public class Connection extends org.microemu.cldc.http.Connection implements HttpsConnection {
-	
+
 	private SSLContext sslContext;
-	
+
 	private SecurityInfo securityInfo;
-	
+
 	public Connection() {
 	    try {
-			sslContext = SSLContext.getInstance("SSL");			
+			sslContext = SSLContext.getInstance("SSL");
 		} catch (NoSuchAlgorithmException ex) {
-			ex.printStackTrace();
+			Logger.error(ex);
 		}
-				
+
 		securityInfo = null;
 	}
 
@@ -58,7 +59,7 @@ public class Connection extends org.microemu.cldc.http.Connection implements Htt
 				connected = true;
 			}
 			HttpsURLConnection https = (HttpsURLConnection) cn;
-			
+
 			Certificate[] certs = https.getServerCertificates();
 			if (certs.length == 0) {
 				throw new IOException();
@@ -76,7 +77,7 @@ public class Connection extends org.microemu.cldc.http.Connection implements Htt
 		return "https";
 	}
 
-	
+
     /**
      * Returns the network port number of the URL for this HttpsConnection
      *

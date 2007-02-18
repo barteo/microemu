@@ -41,31 +41,32 @@ import javax.microedition.rms.RecordStoreNotOpenException;
 import netscape.javascript.JSObject;
 
 import org.microemu.RecordStoreManager;
+import org.microemu.log.Logger;
 import org.microemu.util.Base64Coder;
 import org.microemu.util.RecordStoreImpl;
 
 public class CookieRecordStoreManager implements RecordStoreManager {
-	
+
 	private static final int MAX_SPLIT_COOKIES = 5; // max 10
-	
+
 	private static final int MAX_COOKIE_SIZE = 4096 * 3 / 4; // Base64
-	
+
 	private Applet applet;
-	
-	private JSObject document; 
-	
+
+	private JSObject document;
+
 	private HashMap cookies;
-	
+
 	private String expires;
-	
+
 	public CookieRecordStoreManager(Applet applet) {
 		this.applet = applet;
-		
+
 		Calendar c = Calendar.getInstance();
 	    c.add(java.util.Calendar.YEAR, 1);
 	    SimpleDateFormat format = new SimpleDateFormat("EEE, dd-MM-yyyy hh:mm:ss z");
 	    this.expires = "; Max-Age=" + (60 * 60 * 24 * 365);
-System.out.println("CookieRecordStoreManager: " + this.expires);	    
+System.out.println("CookieRecordStoreManager: " + this.expires);
 	}
 
 	public void deleteRecordStore(String recordStoreName)
@@ -74,10 +75,10 @@ System.out.println("CookieRecordStoreManager: " + this.expires);
 		if (cookieContent == null) {
 			throw new RecordStoreNotFoundException();
 		}
-		
+
 		removeCookie(recordStoreName, cookieContent);
-		cookies.remove(recordStoreName);		
-System.out.println("deleteRecordStore: " + recordStoreName);		
+		cookies.remove(recordStoreName);
+System.out.println("deleteRecordStore: " + recordStoreName);
 	}
 
 	public void deleteStores() {
@@ -85,11 +86,10 @@ System.out.println("deleteRecordStore: " + recordStoreName);
 			try {
 				deleteRecordStore((String) it.next());
 			} catch (RecordStoreException ex) {
-				// TODO Auto-generated catch block
-				ex.printStackTrace();
+				Logger.error(ex);
 			}
 		}
-System.out.println("deleteStores:");		
+System.out.println("deleteStores:");
 	}
 
 	public void init() {
@@ -117,7 +117,7 @@ System.out.println("deleteStores:");
 						} else {
 							try {
 								content.setPart(Integer.parseInt(first), token.substring(index + 2));
-							} catch (NumberFormatException ex) {								
+							} catch (NumberFormatException ex) {
 							}
 						}
 System.out.println("init: " + token.substring(0, index) + "(" + token.substring(index + 2) + ")");
@@ -125,42 +125,41 @@ System.out.println("init: " + token.substring(0, index) + "(" + token.substring(
 				}
 			}
 		}
-System.out.println("init: " + cookies.size());		
+System.out.println("init: " + cookies.size());
     }
 
 	public String[] listRecordStores() {
 System.out.println("listRecordStores:");
 		String[] result = (String[]) cookies.keySet().toArray();
-		
+
 		if (result.length == 0) {
 			result = null;
 		}
-		
+
 		return result;
 	}
 
 	public RecordStore openRecordStore(String recordStoreName,
 			boolean createIfNecessary) throws RecordStoreNotFoundException {
 		RecordStoreImpl result;
-		
-		CookieContent load = (CookieContent) cookies.get(recordStoreName);		
+
+		CookieContent load = (CookieContent) cookies.get(recordStoreName);
 		if (load != null) {
 			try {
 				byte[] data = Base64Coder.decode(load.toCharArray());
 				result = new RecordStoreImpl(this, new DataInputStream(
 						new ByteArrayInputStream(data)));
 			} catch (IOException ex) {
-				// TODO Auto-generated catch block
-				ex.printStackTrace();
+				Logger.error(ex);
 				throw new RecordStoreNotFoundException(ex.getMessage());
 			}
-System.out.println("openRecordStore: " + recordStoreName + " (" + load.getParts().length + ")");		
+System.out.println("openRecordStore: " + recordStoreName + " (" + load.getParts().length + ")");
 		} else {
-            if (!createIfNecessary) { 
-                throw new RecordStoreNotFoundException(); 
+            if (!createIfNecessary) {
+                throw new RecordStoreNotFoundException();
             }
             result = new RecordStoreImpl(this, recordStoreName);
-System.out.println("openRecordStore: " + recordStoreName + " (" + load + ")");		
+System.out.println("openRecordStore: " + recordStoreName + " (" + load + ")");
 		}
 		result.setOpen(true);
 
@@ -168,20 +167,20 @@ System.out.println("openRecordStore: " + recordStoreName + " (" + load + ")");
 	}
 
 	public void saveChanges(RecordStoreImpl recordStoreImpl)
-			throws RecordStoreNotOpenException {		
+			throws RecordStoreNotOpenException {
 	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(baos);
 		try {
 			recordStoreImpl.write(dos);
-			CookieContent cookieContent = 
+			CookieContent cookieContent =
 				new CookieContent(Base64Coder.encode(baos.toByteArray()));
-			
-			CookieContent previousCookie = 
+
+			CookieContent previousCookie =
 				(CookieContent) cookies.get(recordStoreImpl.getName());
 			if (previousCookie != null) {
 				removeCookie(recordStoreImpl.getName(), previousCookie);
 			}
-			
+
 			cookies.put(recordStoreImpl.getName(), cookieContent);
 
 			String[] parts = cookieContent.getParts();
@@ -197,16 +196,15 @@ System.out.println("openRecordStore: " + recordStoreName + " (" + load + ")");
 				}
 			}
 
-System.out.println("saveChanges: " + recordStoreImpl.getName() + " (" + cookieContent.getParts().length + ")");				
+System.out.println("saveChanges: " + recordStoreImpl.getName() + " (" + cookieContent.getParts().length + ")");
 		} catch (IOException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
+			Logger.error(ex);
 		}
 	}
 
 	public int getSizeAvailable(RecordStoreImpl recordStoreImpl) {
 		int size = MAX_COOKIE_SIZE * MAX_SPLIT_COOKIES;
-		
+
 		size -= recordStoreImpl.getHeaderSize();
 		try {
 			RecordEnumeration en = recordStoreImpl.enumerateRecords(null, null, false);
@@ -214,15 +212,14 @@ System.out.println("saveChanges: " + recordStoreImpl.getName() + " (" + cookieCo
 				size -= en.nextRecord().length + recordStoreImpl.getRecordHeaderSize();
 			}
 		} catch (RecordStoreException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
+			Logger.error(ex);
 		}
-		
+
 		// TODO Auto-generated method stub
-System.out.println("getSizeAvailable: " + size);				
+System.out.println("getSizeAvailable: " + size);
 		return size;
 	}
-	
+
 	private void removeCookie(String recordStoreName, CookieContent cookieContent) {
 		String[] parts = cookieContent.getParts();
 		if (parts.length == 1) {
@@ -236,28 +233,28 @@ System.out.println("getSizeAvailable: " + size);
 		}
 System.out.println("removeCookie: " + recordStoreName);
 	}
-	
+
 	private class CookieContent {
 		private String[] parts;
-		
-		public CookieContent() {			
+
+		public CookieContent() {
 		}
-		
+
 		public CookieContent(char[] buffer) {
 			parts = new String[buffer.length / MAX_COOKIE_SIZE + 1];
 System.out.println("CookieContent(before): " + parts.length);
 			int index = 0;
-			for (int i = 0; i < parts.length; i++) {	
+			for (int i = 0; i < parts.length; i++) {
 				int size = MAX_COOKIE_SIZE;
 				if (index + size > buffer.length) {
 					size = buffer.length - index;
 				}
 System.out.println("CookieContent: " + i + "," + index + "," + size);
-				parts[i] = new String(buffer, index, size);	
+				parts[i] = new String(buffer, index, size);
 				index += size;
 			}
 		}
-		
+
 		public void setPart(int index, String content) {
 			if (parts == null) {
 				parts = new String[index + 1];
@@ -269,32 +266,32 @@ System.out.println("CookieContent: " + i + "," + index + "," + size);
 				}
 			}
 System.out.println("setPart: " + index + "," + parts.length);
-			
+
 			parts[index] = content;
 		}
-		
+
 		public String[] getParts() {
 System.out.println("getParts: " + parts);
 			return parts;
-		}		
-		
+		}
+
 		public char[] toCharArray() {
 			int size = 0;
 			for (int i = 0; i < parts.length; i++) {
 				size += parts[i].length();
 			}
-			
+
 			char[] result = new char[size];
-			
+
 			int index = 0;
 			for (int i = 0; i < parts.length; i++) {
 System.out.println("toCharArray: " + i + "," + index + "," + size + "," + parts[i].length());
 				System.arraycopy(parts[i].toCharArray(), 0, result, index, parts[i].length());
 				index += parts[i].length();
 			}
-			
+
 			return result;
 		}
 	}
-		
+
 }

@@ -127,13 +127,19 @@ public class Logger {
 			write(LoggingEvent.DEBUG, "error", t);
 		}
 	}
-	
+
 	public static void debug(String message, String v) {
 		if (isDebugEnabled()) {
 			write(LoggingEvent.DEBUG, message, null, v);
 		}
 	}
-	
+
+	public static void debug(String message, Object o) {
+		if (isDebugEnabled()) {
+			write(LoggingEvent.DEBUG, message, null, new LoggerDataWrapper(o));
+		}
+	}
+
 	public static void debug(String message, String v1, String v2) {
 		if (isDebugEnabled()) {
 			write(LoggingEvent.DEBUG, message, null, new LoggerDataWrapper(v1, v2));

@@ -26,9 +26,9 @@ import java.net.URL;
 import org.microemu.EmulatorContext;
 import org.microemu.app.Common;
 import org.microemu.app.Config;
+import org.microemu.log.Logger;
 
 import com.barteo.emulator.device.Device;
-import org.microemu.log.Logger;
 
 public class DeviceEntry {
 	
@@ -83,7 +83,7 @@ public class DeviceEntry {
 		if (descriptorLocation == null) {
 			URL[] urls = new URL[1];
 			try {
-				urls[0] = new File(Config.getConfigPath(), fileName).toURL();
+				urls[0] = new File(Config.getConfigPath(), fileName).toURI().toURL();
 				ClassLoader classLoader = Common.createExtensionsClassLoader(urls);
 				Class deviceClass = Class.forName(className, true, classLoader);
 				Device device = (Device) deviceClass.newInstance();

@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
@@ -44,6 +45,8 @@ public class DropTransferHandler extends TransferHandler {
 
 	private static final long serialVersionUID = 1L;
 
+	private static DataFlavor uriListFlavor = new DataFlavor("text/uri-list;class=java.lang.String", null);
+	
 	public int getSourceActions(JComponent c) {
         return TransferHandler.COPY;
     }
@@ -66,16 +69,21 @@ public class DropTransferHandler extends TransferHandler {
             	Logger.debug("acepted ", transferFlavors[i]);
                 return true;
             }
-//			String mimePrimaryType = transferFlavors[i].getPrimaryType();
+			if (uriListFlavor.equals(transferFlavors[i])) {
+				Logger.debug("acepted ", transferFlavors[i]);
+				return true;
+        	}
+//          String mimePrimaryType = transferFlavors[i].getPrimaryType();
 //			String mimeSubType = transferFlavors[i].getSubType();
-//			Logger.debug(i + " canImport mimeType ", mimePrimaryType, mimeSubType);
 //			if ((mimePrimaryType != null) && (mimeSubType != null)) {
-//				if (mimePrimaryType.equals("application") && mimeSubType.equals("x-java-url")) {
+//				if (mimePrimaryType.equals("text") && mimeSubType.equals("uri-list")) {
+//					Logger.debug("acepted ", transferFlavors[i]);
 //					return true;
 //				}
 //			}
 			Logger.debug(i + " unknown import ", transferFlavors[i]);
 		}
+		Logger.debug("import rejected");
         return false;
 	}
 	
@@ -124,7 +132,7 @@ public class DropTransferHandler extends TransferHandler {
         		return true;
             }
         	
-        	// Drop from GNOME
+        	// Drop from GNOME Firefox
             if (DataFlavor.stringFlavor.equals(transferFlavors[i])) {
             	Object data;
 				try {
@@ -145,6 +153,32 @@ public class DropTransferHandler extends TransferHandler {
           			return true;
               	}
             }
+            // Drop from GNOME Nautilus
+            if (uriListFlavor.equals(transferFlavors[i])) {
+				Object data;
+				try {
+					data = t.getTransferData(DataFlavor.stringFlavor);
+				} catch (UnsupportedFlavorException e) {
+					continue;
+				} catch (IOException e) {
+					continue;
+				}
+				if (data instanceof String) {
+					Logger.debug("importing", transferFlavors[i]);
+					Logger.debug("importing list", data);
+					StringTokenizer st = new StringTokenizer((String) data, "\n\r");
+					if (st.hasMoreTokens()) {
+						String path = st.nextToken();
+						if (Common.isJadExtension(path)) {
+							Common.openJadUrlSafe(path);
+						} else {
+							Message.warn("Unable to open " + path + ", Only JAD files are acepted");
+						}
+						return true;
+					}
+
+				}
+			}
 
         	Logger.debug(i + " unknown importData ", transferFlavors[i]);
         }

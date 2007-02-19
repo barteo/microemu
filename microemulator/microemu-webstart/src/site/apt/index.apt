@@ -1,0 +1,31 @@
+~~ @version $Revision$ ($Author$) $Date$
+~~ See this file format http://maven.apache.org/guides/mini/guide-apt-format.html
+
+                                    ------------------
+                                    MicroEmulator Web Start
+                                    ------------------
+
+
+MicroEmulator Web Start
+
+    To start MicroEmulator application click this link {{{demo.jnlp}Java Web Start}}.
+
+    You can Drag and Drop .jad files or links to running MicroEmulator application.
+
+    This is some example applications you can try.
+
+~~    * {{{http://mini.opera.com/global/opera-mini-3.0.6636-advanced-int.jad} Opera Mini}}
+
+    * {{{http://wintermute.de/wap/extended/5ud0ku.jad}A Sudoku Game}}
+
+    * {{{../microemu-examples/microemu-demo/simpledemo.jad}MicroEmulator Demo}}
+
+    * {{{../microemu-examples/microemu-fcview/microemu-fcview.jad}MicroEmulator JSR-75 Demo}}
+
+    * {{{http://www.google.com/gmm/apps/v1.4.4/L1/gmaps-Sony_Ericsson-W810_L1.jad}Google Maps for Sony Ericsson}}
+
+    * {{{http://www.google.com/gmm/apps/v1.4.4/L1/gmaps-Generic-Advanced_MIDP2_L1.jad}Google Maps Generic}}
+
+    * {{{http://www.gmail.com/app/v1.1.0/L1/gm-Sony_Ericsson-W810.jad}Google Gmail for Sony Ericsson}}
+
+    * {{{http://www.gmail.com/app/v1.1.0/L1/gm-Generic-Advanced_MIDP2.jad}Google Gmail Generic}}

@@ -13,6 +13,8 @@
             </applet>
         </div>
 
+        <a href="demo.html">MicroEmulator default skin</a><br/>
+        <a href="microemu-webstart/index.html">MicroEmulator Web Start demo</a>
     </section>
 
     <subsection name="Credits">

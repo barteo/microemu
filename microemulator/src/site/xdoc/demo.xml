@@ -12,7 +12,8 @@
             </applet>
         </div>
 
-        <a href="demo-mini.html">MicroEmulator mini skin</a>
+        <a href="demo-mini.html">MicroEmulator mini skin</a><br/>
+        <a href="microemu-webstart/index.html">MicroEmulator Web Start demo</a>
     </section>
 
     <subsection name="Credits">

@@ -45,7 +45,7 @@
 
         <menu name="Live examples">
             <item name="Applets" href="http://www.microemu.org/demo.html" />
-            <item name="WebStart" href="http://www.microemu.org/microemu-webstart/demo.jnlp" />
+            <item name="Web Start" href="http://www.microemu.org/microemu-webstart/demo.jnlp" />
         </menu>
 
         <menu ref="modules" collapse="true" />

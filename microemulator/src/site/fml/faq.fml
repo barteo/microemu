@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-~~ @version $Revision: 696 $ ($Author: vlads $) $Date: 2006-12-17 13:49:02 -0500 (Sun, 17 Dec 2006) $
+~~ @version $Revision$ ($Author$) $Date$
 ~~ See this file format http://maven.apache.org/maven-1.x/plugins/faq/  and http://maven.apache.org/maven-1.x/plugins/xdoc/
 -->
 <faqs title="Frequently Asked Questions">

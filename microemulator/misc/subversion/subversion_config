@@ -137,6 +137,7 @@ Makefile = svn:eol-style=native;svn:keywords=Date Author Id Revision
 *.zip = svn:mime-type=application/zip
 *.txt = svn:mime-type=text/plain;svn:eol-style=native;svn:keywords=Date Author Id Revision
 *.apt = svn:mime-type=text/plain;svn:eol-style=native;svn:keywords=Date Author Id Revision
+*.fml = svn:mime-type=text/xml;svn:eol-style=native;svn:keywords=Date Author Id Revision
 *.csv = svn:mime-type=text/plain;svn:eol-style=native;svn:keywords=Date Author Id Revision
 *.ora = svn:mime-type=text/plain;svn:eol-style=native;svn:keywords=Date Author Id Revision
 *.version = svn:mime-type=text/plain;svn:eol-style=native;svn:keywords=Date Author Id Revision

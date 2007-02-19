@@ -429,7 +429,7 @@ public class Common implements MicroEmulator, CommonInterface {
 				if (deviceClass == null) {
 					if (defaultDevice.getFileName() != null) {
 						URL[] urls = new URL[1];
-						urls[0] = new File(Config.getConfigPath(), defaultDevice.getFileName()).toURL();
+						urls[0] = new File(Config.getConfigPath(), defaultDevice.getFileName()).toURI().toURL();
 						classLoader = createExtensionsClassLoader(urls);
 					}
 					setDevice(Device.create(
@@ -486,8 +486,7 @@ public class Common implements MicroEmulator, CommonInterface {
 			if (midletClass == null && test.endsWith(".jad")) {
 				try {
 					File file = new File(test);
-					String url = file.exists() ? file.toURL().toString()
-							: test;
+					String url = file.exists() ? file.toURI().toURL().toString() : test;
 					openJadUrl(url);
 				} catch (IOException exception) {
 					Logger.error("Cannot load " + test + " URL", exception);

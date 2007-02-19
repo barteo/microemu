@@ -112,7 +112,7 @@ public class Swt extends Common
 
 			if (fileDialog.getFileName().length() > 0) {
 				try {
-					openJadUrl(new File(fileDialog.getFilterPath(), fileDialog.getFileName()).toURL().toString());
+					openJadUrl(new File(fileDialog.getFilterPath(), fileDialog.getFileName()).toURI().toURL().toString());
 				} catch (IOException ex) {
 					Logger.error("Cannot load " + fileDialog.getFileName());
 				}
@@ -346,7 +346,7 @@ public class Swt extends Common
 			ClassLoader classLoader = getClass().getClassLoader();
 			if (entry.getFileName() != null) {
 				URL[] urls = new URL[1];
-				urls[0] = new File(Config.getConfigPath(), entry.getFileName()).toURL();
+				urls[0] = new File(Config.getConfigPath(), entry.getFileName()).toURI().toURL();
 				classLoader = Common.createExtensionsClassLoader(urls);
 			}
 

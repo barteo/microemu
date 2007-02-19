@@ -1,4 +1,4 @@
-/*
+/**
  *  MicroEmulator
  *  Copyright (C) 2001 Bartek Teodorczyk <barteo@barteo.net>
  *
@@ -141,7 +141,7 @@ public class Main extends JFrame {
 					Config.setRecentJadDirectory(fileChooser.getCurrentDirectory().getAbsolutePath());
 					Config.saveConfig();
 
-					Common.openJadUrl(fileChooser.getSelectedFile().toURL().toString());
+					Common.openJadUrl(fileChooser.getSelectedFile().toURI().toURL().toString());
 				} catch (IOException e) {
 					Logger.error("Cannot load", fileChooser.getSelectedFile().getName(), e);
 				}
@@ -331,7 +331,7 @@ public class Main extends JFrame {
 			ClassLoader classLoader = getClass().getClassLoader();
 			if (entry.getFileName() != null) {
 				URL[] urls = new URL[1];
-				urls[0] = new File(Config.getConfigPath(), entry.getFileName()).toURL();
+				urls[0] = new File(Config.getConfigPath(), entry.getFileName()).toURI().toURL();
 				classLoader = Common.createExtensionsClassLoader(urls);
 			}
 

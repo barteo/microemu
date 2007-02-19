@@ -53,14 +53,17 @@ public class DropTransferHandler extends TransferHandler {
 			Class representationclass = transferFlavors[i].getRepresentationClass();
 			// URL from Explorer or Firefox, KDE
         	if ((representationclass != null) && URL.class.isAssignableFrom(representationclass)) {
+        		Logger.debug("acepted ", transferFlavors[i]);
         		return true;
         	}
         	// Drop from Windows Explorer
         	if (DataFlavor.javaFileListFlavor.equals(transferFlavors[i])) {
-                return true;
+        		Logger.debug("acepted ", transferFlavors[i]);
+        		return true;
             }
         	// Drop from GNOME
             if (DataFlavor.stringFlavor.equals(transferFlavors[i])) {
+            	Logger.debug("acepted ", transferFlavors[i]);
                 return true;
             }
 //			String mimePrimaryType = transferFlavors[i].getPrimaryType();
@@ -71,7 +74,7 @@ public class DropTransferHandler extends TransferHandler {
 //					return true;
 //				}
 //			}
-			Logger.debug(i + " canImport ", transferFlavors[i]);
+			Logger.debug(i + " unknown import ", transferFlavors[i]);
 		}
         return false;
 	}
@@ -82,11 +85,12 @@ public class DropTransferHandler extends TransferHandler {
         	Class representationclass = transferFlavors[i].getRepresentationClass();
         	// URL from Explorer or Firefox, KDE
         	if ((representationclass != null) && URL.class.isAssignableFrom(representationclass)) {
+        		Logger.debug("importing", transferFlavors[i]);
         		try {
 					URL jadUrl = (URL)t.getTransferData(transferFlavors[i]);
 					String urlString = jadUrl.toExternalForm();
 					if (Common.isJadExtension(urlString)) {
-						Common.openJadUrl(urlString);
+						Common.openJadUrlSafe(urlString);
 					} else {
 						Message.warn("Unable to open " + urlString + ", Only JAD url are acepted");	
 					}
@@ -99,12 +103,13 @@ public class DropTransferHandler extends TransferHandler {
         	}
         	// Drop from Windows Explorer
         	if (DataFlavor.javaFileListFlavor.equals(transferFlavors[i])) {
+        		Logger.debug("importing", transferFlavors[i]);
         		try {
 					List fileList = (List) t.getTransferData(DataFlavor.javaFileListFlavor);
 					if (fileList.get(0) instanceof File) {
 						File f = (File) fileList.get(0);
 						if (Common.isJadExtension(f.getName())) {
-							Common.openJadUrl(f.toURL().toExternalForm());
+							Common.openJadUrlSafe(f.toURL().toExternalForm());
 						} else {
 							Message.warn("Unable to open " + f.getAbsolutePath() + ", Only JAD files are acepted");	
 						}
@@ -118,8 +123,30 @@ public class DropTransferHandler extends TransferHandler {
 				}
         		return true;
             }
+        	
+        	// Drop from GNOME
+            if (DataFlavor.stringFlavor.equals(transferFlavors[i])) {
+            	Object data;
+				try {
+					data = t.getTransferData(DataFlavor.stringFlavor);
+				} catch (UnsupportedFlavorException e) {
+					continue;
+				} catch (IOException e) {
+					continue;
+				}
+            	if (data instanceof String) {
+                	Logger.debug("importing", transferFlavors[i]);
+            		String path = (String) data;
+          			if (Common.isJadExtension(path)) {
+						Common.openJadUrlSafe(path);
+					} else {
+						Message.warn("Unable to open " + path + ", Only JAD files are acepted");	
+					}
+          			return true;
+              	}
+            }
 
-        	Logger.debug(i + " importData ", transferFlavors[i]);
+        	Logger.debug(i + " unknown importData ", transferFlavors[i]);
         }
 		return false;
 	}

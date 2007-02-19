@@ -150,6 +150,17 @@ public class Common implements MicroEmulator, CommonInterface {
 	}
 
 
+	public static boolean isJadExtension(String nameString) {
+		if (nameString == null) {
+			return false;
+		}
+		int end = nameString.lastIndexOf('.');
+		if (end == -1) {
+			return false;
+		}
+		return nameString.substring(end + 1, nameString.length()).toLowerCase(Locale.ENGLISH).equals("jad");
+	}
+	
 	public static void openJadUrl(String urlString)
 			throws IOException {
 		openJadUrl(urlString, createMIDletClassLoader());

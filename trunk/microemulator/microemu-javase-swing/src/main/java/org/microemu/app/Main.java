@@ -53,6 +53,7 @@ import org.microemu.MIDletBridge;
 import org.microemu.app.ui.Message;
 import org.microemu.app.ui.ResponseInterfaceListener;
 import org.microemu.app.ui.StatusBarListener;
+import org.microemu.app.ui.swing.DropTransferHandler;
 import org.microemu.app.ui.swing.ExtensionFileFilter;
 import org.microemu.app.ui.swing.JadUrlPanel;
 import org.microemu.app.ui.swing.SwingDeviceComponent;
@@ -308,6 +309,8 @@ public class Main extends JFrame {
 
 		Message.addListener(new SwingErrorMessageDialogPanel(this));
 
+		devicePanel.setTransferHandler(new DropTransferHandler());
+		
 		this.setResizable(false);
 	}
 

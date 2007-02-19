@@ -157,7 +157,7 @@ public class DropTransferHandler extends TransferHandler {
             if (uriListFlavor.equals(transferFlavors[i])) {
 				Object data;
 				try {
-					data = t.getTransferData(DataFlavor.stringFlavor);
+					data = t.getTransferData(uriListFlavor);
 				} catch (UnsupportedFlavorException e) {
 					continue;
 				} catch (IOException e) {

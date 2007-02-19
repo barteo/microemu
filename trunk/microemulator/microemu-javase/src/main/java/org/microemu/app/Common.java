@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -450,6 +451,9 @@ public class Common implements MicroEmulator, CommonInterface {
 
 	private static MIDletClassLoader createMIDletClassLoader() {
 		MIDletClassLoader mcl = new MIDletClassLoader(instance.getClass().getClassLoader());
+		if (!Serializable.class.isAssignableFrom(Injected.class)) {
+			Logger.error("classpath configuration error, Wrong Injected class detected. microemu-injected module should be after microemu-javase in eclipse");
+		}
 		mcl.disableClassPreporcessing(Injected.class);
 		MIDletResourceLoader.classLoader = mcl;
 		return mcl;

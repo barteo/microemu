@@ -23,6 +23,7 @@ package org.microemu;
 
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.io.Serializable;
 
 import org.microemu.app.util.MIDletOutputStreamRedirector;
 import org.microemu.app.util.MIDletResourceLoader;
@@ -37,8 +38,11 @@ import org.microemu.app.util.MIDletSystemProperties;
  * 
  * This class is used instead injected one when application is running in Applet with MicroEmulator. 
  *
+ * Serializable is just internal flag to verify tha proper class is loaded by application.
  */
-public final class Injected {
+public final class Injected implements Serializable {
+
+	private static final long serialVersionUID = -1L;
 
 	/**
 	 * This allow redirection of stdout to MicroEmulator console

@@ -12,6 +12,10 @@
     <body>
         <menu ref="parent" />
 
+        <menu name="Live example">
+            <item name="Web Start" href="demo.jnlp" />
+        </menu>
+
         <menu ref="modules" />
 
         <menu ref="reports" />

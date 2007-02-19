@@ -110,6 +110,12 @@
                                 <copy overwrite="true"
                                     file="${project.build.directory}/${project.build.finalName}-me.jar"
                                     tofile="${project.build.directory}/site/simpledemo.jar"/>
+                                <copy overwrite="true"
+                                    file="${project.build.directory}/${project.build.finalName}-me.jad"
+                                    tofile="${project.build.directory}/site/simpledemo.jad"/>
+                                <replace value="simpledemo.jar" token="${project.build.finalName}-me.jar" dir="${project.build.directory}/site">
+                                    <include name="simpledemo.jad"></include>
+                                </replace>
                             </tasks>
                         </configuration>
                     </execution>

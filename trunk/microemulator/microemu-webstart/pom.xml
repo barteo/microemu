@@ -35,6 +35,30 @@
 
         <dependency>
             <groupId>org.microemu</groupId>
+            <artifactId>microemu-device-large</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-device-minimum</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-nokiaui</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-siemensapi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
             <artifactId>microemu-demo</artifactId>
             <version>${project.version}</version>
         </dependency>

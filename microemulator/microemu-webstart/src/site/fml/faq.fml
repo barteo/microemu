@@ -9,7 +9,7 @@
 
         <faq id="FirefoxLinux">
             <question>
-                 I couldn’t figure out how to run Java Web Start applications in Mozilla Firefox on Linux. There was nothing associated with the .jnlp files...
+                 I couldn't figure out how to run Java Web Start applications in Mozilla Firefox on Linux. There was nothing associated with the .jnlp files...
             </question>
             <answer>
                 <ul>
@@ -31,6 +31,34 @@
                 </ul>
             </answer>
         </faq>
+
+        <faq id="WebStartConsole">
+            <question>
+                 How can I open Web Start Console
+            </question>
+            <answer>
+                <ul>
+                    <li>
+                        Start <a href="http://java.sun.com/products/javawebstart/apps/player.jnlp">Java Web Start Application Manager</a>
+                    </li>
+                    <li>
+                        From menu "Edit" -> "Preferences"...
+                    </li>
+                    <li>
+                        Select "Advanced".
+                    </li>
+                    <li>
+                        "Java Console" -> "Show Console".
+                    </li>
+                    <li>
+                        Click OK.
+                    </li>
+                </ul>
+            </answer>
+        </faq>
+
+
+        Web Start Faq
 
     </part>
 </faqs>

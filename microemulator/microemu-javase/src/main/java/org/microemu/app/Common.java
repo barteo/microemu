@@ -162,6 +162,17 @@ public class Common implements MicroEmulator, CommonInterface {
 		return nameString.substring(end + 1, nameString.length()).toLowerCase(Locale.ENGLISH).equals("jad");
 	}
 	
+	/**
+	 * TODO add proper Error handling and display in this function. 
+	 */
+	public static void openJadUrlSafe(String urlString) {
+		try {
+			openJadUrl(urlString);
+		} catch (IOException e) {
+			Message.error("Unable to open jad " + urlString, e);
+		}
+	}
+	
 	public static void openJadUrl(String urlString)
 			throws IOException {
 		openJadUrl(urlString, createMIDletClassLoader());

@@ -117,7 +117,7 @@ public class DropTransferHandler extends TransferHandler {
 					if (fileList.get(0) instanceof File) {
 						File f = (File) fileList.get(0);
 						if (Common.isJadExtension(f.getName())) {
-							Common.openJadUrlSafe(f.toURL().toExternalForm());
+							Common.openJadUrlSafe(f.toURI().toURL().toExternalForm());
 						} else {
 							Message.warn("Unable to open " + f.getAbsolutePath() + ", Only JAD files are acepted");	
 						}
@@ -144,7 +144,7 @@ public class DropTransferHandler extends TransferHandler {
 				}
             	if (data instanceof String) {
                 	Logger.debug("importing", transferFlavors[i]);
-            		String path = (String) data;
+                	String path = getPathString((String) data);
           			if (Common.isJadExtension(path)) {
 						Common.openJadUrlSafe(path);
 					} else {
@@ -165,23 +165,28 @@ public class DropTransferHandler extends TransferHandler {
 				}
 				if (data instanceof String) {
 					Logger.debug("importing", transferFlavors[i]);
-					Logger.debug("importing list", data);
-					StringTokenizer st = new StringTokenizer((String) data, "\n\r");
-					if (st.hasMoreTokens()) {
-						String path = st.nextToken();
-						if (Common.isJadExtension(path)) {
-							Common.openJadUrlSafe(path);
-						} else {
-							Message.warn("Unable to open " + path + ", Only JAD files are acepted");
-						}
-						return true;
+					String path = getPathString((String) data);
+					if (Common.isJadExtension(path)) {
+						Common.openJadUrlSafe(path);
+					} else {
+						Message.warn("Unable to open " + path + ", Only JAD files are acepted");
 					}
-
+					return true;
 				}
 			}
-
         	Logger.debug(i + " unknown importData ", transferFlavors[i]);
         }
 		return false;
+	}
+	
+	private String getPathString(String path) {
+		if (path == null) {
+			return null;
+		}
+		StringTokenizer st = new StringTokenizer(path.trim(), "\n\r");
+		if (st.hasMoreTokens()) {
+			return st.nextToken();
+		}
+		return path;
 	}
 }

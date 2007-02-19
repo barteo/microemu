@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+~~ @version $Revision: 696 $ ($Author: vlads $) $Date: 2006-12-17 13:49:02 -0500 (Sun, 17 Dec 2006) $
+~~ See this file format http://maven.apache.org/maven-1.x/plugins/faq/  and http://maven.apache.org/maven-1.x/plugins/xdoc/
+-->
+<faqs title="Frequently Asked Questions">
+    <part id="general">
+        <title>Java Web Start</title>
+
+        <faq id="FirefoxLinux">
+            <question>
+                 I couldn’t figure out how to run Java Web Start applications in Mozilla Firefox on Linux. There was nothing associated with the .jnlp files...
+            </question>
+            <answer>
+                <ul>
+                    <li>
+                        Java 1.4 or greater must be installed.
+                    </li>
+                    <li>
+                        Click on the .jnlp file link and select "Open with Other Application"
+                    </li>
+                    <li>
+                        Select "Use a custom command", and click "Browse".
+                    </li>
+                    <li>
+                        Locate your java installation folder and select the file $JAVA_HOME/jre/javaws/javaws. or /usr/share/javaws/javaws.
+                    </li>
+                    <li>
+                        Click OK.
+                    </li>
+                </ul>
+            </answer>
+        </faq>
+
+    </part>
+</faqs>

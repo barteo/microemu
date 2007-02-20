@@ -40,9 +40,9 @@ import org.microemu.log.LoggingEvent;
  */
 public class MIDletClassLoaderTest extends TestCase {
 
-	private static final String TEST_APP_JAR = "bytecode-test-app.jar"; 
+	public static final String TEST_APP_JAR = "bytecode-test-app.jar"; 
 	
-	private static final String TEST_CLASS = "org.TestMain";
+	public static final String TEST_CLASS = "org.TestMain";
 	
 	EventCatureLoggerAppender capture;
 	
@@ -64,7 +64,7 @@ public class MIDletClassLoaderTest extends TestCase {
 		URL jarURL = parent.getResource(TEST_APP_JAR);
 		assertNotNull("Can't find app jar", jarURL);
 		
-		URLClassLoader ucl = new URLClassLoader(new URL[]{jarURL}, parent);
+		URLClassLoader ucl = new URLClassLoader(new URL[]{jarURL});
 		
 		final String testFile = "META-INF/MANIFEST.MF";
 		

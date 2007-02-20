@@ -35,6 +35,7 @@ import javax.swing.TransferHandler;
 
 import org.microemu.app.Common;
 import org.microemu.app.ui.Message;
+import org.microemu.app.util.IOUtils;
 import org.microemu.log.Logger;
 
 /**
@@ -117,7 +118,7 @@ public class DropTransferHandler extends TransferHandler {
 					if (fileList.get(0) instanceof File) {
 						File f = (File) fileList.get(0);
 						if (Common.isJadExtension(f.getName())) {
-							Common.openJadUrlSafe(f.toURI().toURL().toExternalForm());
+							Common.openJadUrlSafe(IOUtils.getCanonicalFileURL(f));
 						} else {
 							Message.warn("Unable to open " + f.getAbsolutePath() + ", Only JAD files are acepted");	
 						}

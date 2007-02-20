@@ -41,6 +41,26 @@ import java.io.Writer;
 
 public class IOUtils {
 
+	/**
+	 * Solution for JVM bug 
+	 *  http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6351751
+	 */
+	public static String getCanonicalFileURL(File file) throws IOException {
+		String path = file.getAbsoluteFile().getPath();
+		if (File.separatorChar != '/') {
+			path = path.replace(File.separatorChar, '/');
+		}
+		// Not network path
+		if (!path.startsWith("//")) {
+			if (path.startsWith("/")) {
+				path = "//" + path;
+			} else {
+				path = "///" + path;
+			}
+		}
+		return "file:" + path;
+	}
+	
 	public static void copyFile(File src, File dst) throws IOException {
 		FileInputStream fis = null;
 		FileOutputStream fos = null;

@@ -41,7 +41,9 @@ import org.microemu.log.Logger;
  */
 public class MIDletClassLoader extends URLClassLoader {
 
-	public static boolean traceClassLoading = true;
+	//TODO make this configurable
+	
+	public static boolean traceClassLoading = false;
 	
 	public static boolean traceSystemClassLoading = false;
 	

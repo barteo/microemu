@@ -195,7 +195,7 @@ public class Common implements MicroEmulator, CommonInterface {
 				cn.setRequestProperty("Authorization", "Basic " + userInfo);
 				getInstance().jad.load(cn.getInputStream());
 			}
-			getInstance().loadFromJad(url, midletClassLoader);
+			getInstance().loadFromJad(urlString, midletClassLoader);
 			
 			Config.getUrlsMRU().push(new MidletURLReference(getInstance().jad.getSuiteName(), urlString));
 			
@@ -268,7 +268,7 @@ public class Common implements MicroEmulator, CommonInterface {
 
 	}
 
-	protected void loadFromJad(URL jadUrl, MIDletClassLoader midletClassLoader) throws ClassNotFoundException{
+	protected void loadFromJad(String jadUrl, MIDletClassLoader midletClassLoader) throws ClassNotFoundException{
 		if (jad.getJarURL() == null) {
 			throw new ClassNotFoundException("Cannot find MIDlet-Jar-URL property in jad");
 		}
@@ -282,8 +282,7 @@ public class Common implements MicroEmulator, CommonInterface {
 				url = new URL(jad.getJarURL());
 			} catch (MalformedURLException ex) {
 				try {
-					String urlFullPath = jadUrl.toExternalForm();
-					url = new URL(urlFullPath.substring(0, urlFullPath.lastIndexOf('/') + 1) + jad.getJarURL());
+					url = new URL(jadUrl.substring(0, jadUrl.lastIndexOf('/') + 1) + jad.getJarURL());
 					Logger.debug("openJar url", url);
 				} catch (MalformedURLException ex1) {
 					Logger.error("Unable to find jar url", ex1);

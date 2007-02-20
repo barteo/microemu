@@ -27,15 +27,27 @@ import java.util.Stack;
 
 import nanoxml.XMLElement;
 
-public class MRUList extends Stack/*<XMLItem>*/ {
+/**
+ * 
+ * Most Recently Used (MRU) list
+ * 
+ * @author vlads
+ */
+public class MRUList implements XMLItem {
 
 	private static final long serialVersionUID = 1L;
 	
 	protected int maxCapacity;
+
+	private Stack items = new Stack/*<XMLItem>*/(); 
 	
 	private String itemsName;
 	
 	private Class classXMLItem;
+	
+	private MRUListListener listener;
+	
+	private boolean modified = true;
 	
 	public MRUList(Class classXMLItem, String itemsName) {
 		this.classXMLItem = classXMLItem;
@@ -46,13 +58,30 @@ public class MRUList extends Stack/*<XMLItem>*/ {
 		if (!(item instanceof XMLItem)) {
 			throw new ClassCastException(item.getClass().getName());
 		}
-		if (size() > maxCapacity) {
-			pop();
+		modified = true;
+		if (items.size() > maxCapacity) {
+			items.pop();
 		}
-		remove(item);
-		return super.push(item);
+		items.remove(item);
+		items.push(item);
+		fireListener(item);
+		return item;
 	}
 
+	private void fireListener(Object item) {
+		if (this.listener != null) {
+			this.listener.listItemChanged(item);
+		}
+	
+	}
+	
+	public void setListener(MRUListListener l) {
+		if (this.listener != null) {
+			throw new IllegalArgumentException();
+		}
+		this.listener = l;
+	}
+	
 	public int getMaxCapacity() {
 		return maxCapacity;
 	}
@@ -61,26 +90,31 @@ public class MRUList extends Stack/*<XMLItem>*/ {
 		this.maxCapacity = maxCapacity;
 	}
 
-	public XMLElement save() {
-		XMLElement xml = new XMLElement();
-		xml.setAttribute("maxCapacity", String.valueOf(maxCapacity));
-		for (Iterator iter = this.iterator(); iter.hasNext();) {
-			XMLItem element = (XMLItem) iter.next();
-			XMLElement xmlChild = element.save();
-			xmlChild.setName(itemsName);
-			xml.addChild(xmlChild);
+	public void save(XMLElement xml) {
+		if (!modified) {
+			return;
 		}
-		return xml;
+		xml.removeChildren();
+		xml.setAttribute("maxCapacity", String.valueOf(maxCapacity));
+		for (Iterator iter = items.iterator(); iter.hasNext();) {
+			XMLItem element = (XMLItem) iter.next();
+			element.save(xml.addChild(itemsName));
+		}
+		modified = false;
 	}
 	
 	public void read(XMLElement xml) {
+		modified = false;
+		items.removeAllElements();
 		this.maxCapacity = xml.getIntAttribute("maxCapacity", 10);
 		for (Enumeration en = xml.enumerateChildren(); en.hasMoreElements(); ) {
             XMLElement xmlChild = (XMLElement) en.nextElement();
             if (xmlChild.getName().equals(itemsName)) {
 				try {
 					XMLItem element = (XMLItem)classXMLItem.newInstance();
-					add(element);
+					element.read(xmlChild);
+					items.add(element);
+					fireListener(element);
 				} catch (InstantiationException e) {
 					throw new RuntimeException(e);
 				} catch (IllegalAccessException e) {

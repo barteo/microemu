@@ -53,6 +53,7 @@ import org.microemu.app.util.FileRecordStoreManager;
 import org.microemu.app.util.IOUtils;
 import org.microemu.app.util.MIDletResourceLoader;
 import org.microemu.app.util.MIDletSystemProperties;
+import org.microemu.app.util.MidletURLReference;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 import org.microemu.log.Logger;
@@ -195,6 +196,9 @@ public class Common implements MicroEmulator, CommonInterface {
 				getInstance().jad.load(cn.getInputStream());
 			}
 			getInstance().loadFromJad(url, midletClassLoader);
+			
+			Config.getUrlsMRU().push(new MidletURLReference(getInstance().jad.getSuiteName(), urlString));
+			
 		} catch (MalformedURLException ex) {
 			throw ex;
 		} catch (ClassNotFoundException ex) {

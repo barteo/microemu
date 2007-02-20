@@ -21,11 +21,11 @@
  */
 package org.microemu.app.util;
 
-import nanoxml.XMLElement;
+/**
+ * @author vlads
+ *
+ */
+public interface MRUListListener {
 
-public interface XMLItem {
-
-	public void save(XMLElement xml);
-	
-	public void read(XMLElement xml);
+	public void listItemChanged(Object item);
 }

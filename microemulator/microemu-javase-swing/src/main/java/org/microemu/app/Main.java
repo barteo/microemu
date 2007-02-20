@@ -55,12 +55,14 @@ import org.microemu.app.ui.ResponseInterfaceListener;
 import org.microemu.app.ui.StatusBarListener;
 import org.microemu.app.ui.swing.DropTransferHandler;
 import org.microemu.app.ui.swing.ExtensionFileFilter;
+import org.microemu.app.ui.swing.JMRUMenu;
 import org.microemu.app.ui.swing.JadUrlPanel;
 import org.microemu.app.ui.swing.SwingDeviceComponent;
 import org.microemu.app.ui.swing.SwingDialogWindow;
 import org.microemu.app.ui.swing.SwingErrorMessageDialogPanel;
 import org.microemu.app.ui.swing.SwingSelectDevicePanel;
 import org.microemu.app.util.DeviceEntry;
+import org.microemu.app.util.MidletURLReference;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
@@ -137,14 +139,16 @@ public class Main extends JFrame {
 
 			int returnVal = fileChooser.showOpenDialog(instance);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				try {
 					Config.setRecentJadDirectory(fileChooser.getCurrentDirectory().getAbsolutePath());
 					Config.saveConfig();
-
-					Common.openJadUrl(fileChooser.getSelectedFile().toURI().toURL().toString());
-				} catch (IOException e) {
-					Logger.error("Cannot load", fileChooser.getSelectedFile().getName(), e);
-				}
+					String url;
+					try {
+						url = fileChooser.getSelectedFile().toURI().toURL().toExternalForm();
+					} catch (MalformedURLException e) {
+						Logger.error(fileChooser.getSelectedFile().getAbsolutePath(), e);
+						return;
+					}
+					Common.openJadUrlSafe(url);
 			}
 		}
 	};
@@ -152,15 +156,11 @@ public class Main extends JFrame {
 	private ActionListener menuOpenJADURLListener = new ActionListener() {
 		public void actionPerformed(ActionEvent ev) {
 			if (SwingDialogWindow.show(Main.this, "Enter JAD URL:", jadUrlPanel)) {
-				try {
-					Common.openJadUrl(jadUrlPanel.getText());
-				} catch (IOException ex) {
-					Logger.error("Cannot load ", jadUrlPanel.getText());
-				}
+				Common.openJadUrlSafe(jadUrlPanel.getText());
 			}
 		}
 	};
-
+	
 	private ActionListener menuCloseMidletListener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			if (MIDletBridge.getCurrentMIDlet() != common.getLauncher()) {
@@ -174,7 +174,6 @@ public class Main extends JFrame {
 			Config.setWindowX(Main.this.getX());
 			Config.setWindowY(Main.this.getY());
 			Config.saveConfig();
-
 			System.exit(0);
 		}
 	};
@@ -259,7 +258,7 @@ public class Main extends JFrame {
 		menuOpenJADFile = new JMenuItem("Open JAD File...");
 		menuOpenJADFile.addActionListener(menuOpenJADFileListener);
 		menuFile.add(menuOpenJADFile);
-
+		
 		menuOpenJADURL = new JMenuItem("Open JAD URL...");
 		menuOpenJADURL.addActionListener(menuOpenJADURLListener);
 		menuFile.add(menuOpenJADURL);
@@ -269,6 +268,17 @@ public class Main extends JFrame {
 		menuItemTmp.addActionListener(menuCloseMidletListener);
 		menuFile.add(menuItemTmp);
 
+		menuFile.addSeparator();
+		
+		//TODO use ActionListener?
+		JMRUMenu urlsMRU = new JMRUMenu("Recent MIDlets...") {
+			public void fireMRUActionPerformed(Object source) {
+				Common.openJadUrlSafe(((MidletURLReference)source).getUrl());
+			}
+		};
+		Config.getUrlsMRU().setListener(urlsMRU);
+		menuFile.add(urlsMRU);
+		
 		menuFile.addSeparator();
 
 		JMenuItem menuItem = new JMenuItem("Exit");

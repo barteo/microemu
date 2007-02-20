@@ -899,6 +899,14 @@ public class XMLElement
 		}
 		return null;
 	}
+	
+	public XMLElement getChildOrNew(String name) {
+		XMLElement c = getChild(name);
+		if (c == null) {
+			c = addChild(name);
+		}
+		return c;
+	}
 
 	public int getChildCount(String name) {
 	    int cnt = 0;
@@ -2106,6 +2114,10 @@ public class XMLElement
       this.children.removeElement(child);
    }
 
+   public void removeChildren()
+   {
+      this.children.removeAllElements();
+   }
 
    /**
     * Removes an attribute.

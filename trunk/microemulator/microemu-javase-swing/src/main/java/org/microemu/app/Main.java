@@ -271,12 +271,15 @@ public class Main extends JFrame {
 
 		menuFile.addSeparator();
 		
-		//TODO use ActionListener?
-		JMRUMenu urlsMRU = new JMRUMenu("Recent MIDlets...") {
-			public void fireMRUActionPerformed(Object source) {
-				Common.openJadUrlSafe(((MidletURLReference)source).getUrl());
+		JMRUMenu urlsMRU = new JMRUMenu("Recent MIDlets...");
+		urlsMRU.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				if (event instanceof JMRUMenu.MRUActionEvent) {
+					Common.openJadUrlSafe(((MidletURLReference)((JMRUMenu.MRUActionEvent)event).getSourceMRU()).getUrl());	
+				}
 			}
-		};
+		});
+		
 		Config.getUrlsMRU().setListener(urlsMRU);
 		menuFile.add(urlsMRU);
 		

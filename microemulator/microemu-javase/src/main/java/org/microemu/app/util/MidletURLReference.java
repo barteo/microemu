@@ -21,7 +21,14 @@
  */
 package org.microemu.app.util;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
 import nanoxml.XMLElement;
+
+import org.microemu.log.Logger;
 
 /**
  * @author vlads
@@ -56,8 +63,47 @@ public class MidletURLReference implements XMLItem {
 	}
 	 
 	public String toString() {
-		//TODO make the text presentation shorter.
-		return name + " " + url;
+		// make the text presentation shorter.
+		URL u;
+		try {
+			u = new URL(url);
+		} catch (MalformedURLException e) {
+			Logger.error(e);
+			return url;
+		}
+		StringBuffer b = new StringBuffer();
+		
+		String scheme = u.getProtocol();
+		if (scheme.equals("file") || scheme.startsWith("http")) {
+			b.append(scheme).append("://");
+			if (u.getHost() != null) {
+				b.append(u.getHost());
+			}
+			Vector pathComponents = new Vector();
+			final String pathSeparator = "/";
+			StringTokenizer st = new StringTokenizer(u.getPath(), pathSeparator);
+			while (st.hasMoreTokens()) {
+				pathComponents.add(st.nextToken());
+			}
+			if (pathComponents.size() > 3) {
+				b.append(pathSeparator);
+				b.append(pathComponents.get(0));
+				b.append(pathSeparator).append("...").append(pathSeparator);
+				b.append(pathComponents.get(pathComponents.size()-2));
+				b.append(pathSeparator);
+				b.append(pathComponents.get(pathComponents.size()-1));
+			} else {
+				b.append(u.getPath());
+			}
+			
+		} else {
+			b.append(url);
+		}
+		if (name != null) {
+			b.append(" - ");
+			b.append(name);
+		}
+		return b.toString();
 	}
 	
 	public void read(XMLElement xml) {

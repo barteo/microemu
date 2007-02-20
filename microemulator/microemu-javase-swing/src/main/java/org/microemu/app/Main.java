@@ -68,6 +68,7 @@ import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
+import org.microemu.device.impl.DeviceImpl;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEFontManager;
 import org.microemu.device.j2se.J2SEInputMethod;
@@ -348,7 +349,7 @@ public class Main extends JFrame {
 			// TODO font manager have to be moved from emulatorContext into device
 			emulatorContext.getDeviceFontManager().init();
 
-			Device device = Device.create(emulatorContext, classLoader, entry.getDescriptorLocation());
+			Device device = DeviceImpl.create(emulatorContext, classLoader, entry.getDescriptorLocation());
 			this.deviceEntry = entry;
 			common.setDevice(device);
 			updateDevice();

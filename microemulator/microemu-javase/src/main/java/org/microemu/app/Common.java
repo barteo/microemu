@@ -56,6 +56,7 @@ import org.microemu.app.util.MIDletSystemProperties;
 import org.microemu.app.util.MidletURLReference;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
+import org.microemu.device.impl.DeviceImpl;
 import org.microemu.log.Logger;
 import org.microemu.microedition.ImplFactory;
 import org.microemu.microedition.ImplementationInitialization;
@@ -419,7 +420,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		}
 		if (deviceDescriptorLocation != null) {
 			try {
-				setDevice(Device.create(
+				setDevice(DeviceImpl.create(
 						emulatorContext,
 						classLoader,
 						deviceDescriptorLocation));
@@ -435,12 +436,12 @@ public class Common implements MicroEmulator, CommonInterface {
 						urls[0] = new File(Config.getConfigPath(), defaultDevice.getFileName()).toURI().toURL();
 						classLoader = createExtensionsClassLoader(urls);
 					}
-					setDevice(Device.create(
+					setDevice(DeviceImpl.create(
 							emulatorContext,
 							classLoader,
 							defaultDevice.getDescriptorLocation()));
 				} else {
-					Device device = (Device) deviceClass.newInstance();
+					DeviceImpl device = (DeviceImpl) deviceClass.newInstance();
 					device.init(emulatorContext);
 					setDevice(device);
 				}

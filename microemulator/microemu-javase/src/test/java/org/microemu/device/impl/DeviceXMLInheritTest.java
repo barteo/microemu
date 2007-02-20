@@ -19,7 +19,9 @@
  *
  *  @version $Id$
  */
-package org.microemu.device;
+package org.microemu.device.impl;
+
+import org.microemu.device.impl.DeviceImpl;
 
 import nanoxml.XMLElement;
 
@@ -39,7 +41,7 @@ public class DeviceXMLInheritTest extends TestCase {
 		XMLElement expected = new XMLElement();
 		expected.parseString(expectedXML);
 		
-		XMLElement result = Device.inheritXML(parent, child, "/");
+		XMLElement result = DeviceImpl.inheritXML(parent, child, "/");
 		
 		//System.out.println("expected:" + expected.toString());
 		//System.out.println(" result:" + result.toString());

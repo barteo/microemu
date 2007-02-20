@@ -24,7 +24,7 @@ import com.barteo.emulator.EmulatorContext;
 /*
  * @deprecated use org.microemu.device.Device
  */ 
-public class Device extends org.microemu.device.Device {
+public class Device extends org.microemu.device.impl.DeviceImpl {
 	
     /**
      * @deprecated

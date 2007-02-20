@@ -19,9 +19,9 @@
  
 package org.microemu.device.j2se;
 
-import org.microemu.device.Device;
+import org.microemu.device.impl.DeviceImpl;
 
 
-public class J2SEDevice extends Device
+public class J2SEDevice extends DeviceImpl
 {    
 }

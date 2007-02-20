@@ -62,6 +62,7 @@ import org.microemu.app.ui.swing.SwingDialogWindow;
 import org.microemu.app.ui.swing.SwingErrorMessageDialogPanel;
 import org.microemu.app.ui.swing.SwingSelectDevicePanel;
 import org.microemu.app.util.DeviceEntry;
+import org.microemu.app.util.IOUtils;
 import org.microemu.app.util.MidletURLReference;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
@@ -144,8 +145,8 @@ public class Main extends JFrame {
 					Config.saveConfig();
 					String url;
 					try {
-						url = fileChooser.getSelectedFile().toURI().toURL().toExternalForm();
-					} catch (MalformedURLException e) {
+						url = IOUtils.getCanonicalFileURL(fileChooser.getSelectedFile());
+					} catch (IOException e) {
 						Logger.error(fileChooser.getSelectedFile().getAbsolutePath(), e);
 						return;
 					}

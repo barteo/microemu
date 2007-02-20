@@ -490,7 +490,7 @@ public class Common implements MicroEmulator, CommonInterface {
 			if (midletClass == null && test.endsWith(".jad")) {
 				try {
 					File file = new File(test);
-					String url = file.exists() ? file.toURI().toURL().toString() : test;
+					String url = file.exists() ? IOUtils.getCanonicalFileURL(file) : test;
 					openJadUrl(url);
 				} catch (IOException exception) {
 					Logger.error("Cannot load " + test + " URL", exception);

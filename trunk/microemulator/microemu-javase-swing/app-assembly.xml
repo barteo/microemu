@@ -10,11 +10,6 @@
         <dependencySet>
             <unpack>true</unpack>
             <scope>runtime</scope>
-            <!--unpackOptions>
-                <excludes>
-                    <exclude>**/Thumbs.db</exclude>
-                </excludes>
-            </unpackOptions-->
         </dependencySet>
     </dependencySets>
 </assembly>

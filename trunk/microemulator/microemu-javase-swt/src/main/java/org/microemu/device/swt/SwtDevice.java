@@ -19,9 +19,9 @@
  
 package org.microemu.device.swt;
 
-import org.microemu.device.Device;
+import org.microemu.device.impl.DeviceImpl;
 
 
-public class SwtDevice extends Device
+public class SwtDevice extends DeviceImpl
 {
 }

@@ -41,7 +41,7 @@ import org.microemu.app.util.IOUtils;
 import org.microemu.app.util.MIDletSystemProperties;
 import org.microemu.app.util.MRUList;
 import org.microemu.app.util.MidletURLReference;
-import org.microemu.device.Device;
+import org.microemu.device.impl.DeviceImpl;
 import org.microemu.log.Logger;
 
 public class Config {
@@ -201,7 +201,7 @@ public class Config {
 
 		if (defaultDevice == null) {
 		    defaultDevice =
-	            new DeviceEntry("Default device", null, Device.DEFAULT_LOCATION, true, false);
+	            new DeviceEntry("Default device", null, DeviceImpl.DEFAULT_LOCATION, true, false);
 		}
     	defaultDevice.setDefaultDevice(true);
     	result.add(defaultDevice);

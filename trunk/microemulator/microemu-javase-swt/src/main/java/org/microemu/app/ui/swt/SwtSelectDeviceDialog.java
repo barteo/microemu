@@ -53,6 +53,7 @@ import org.microemu.app.Config;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.IOUtils;
 import org.microemu.device.Device;
+import org.microemu.device.impl.DeviceImpl;
 
 
 public class SwtSelectDeviceDialog extends SwtDialog
@@ -129,7 +130,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 					try {
 						devices.put(
 								entry.getName(),
-								Device.create(emulatorContext, classLoader, entry.getName()));
+								DeviceImpl.create(emulatorContext, classLoader, entry.getName()));
 					} catch (IOException ex) {
 						SwtMessageDialog.openError(getShell(),
 								"Error",

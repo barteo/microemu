@@ -53,6 +53,7 @@ import org.microemu.app.ui.Message;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.IOUtils;
 import org.microemu.device.Device;
+import org.microemu.device.impl.DeviceImpl;
 
 
 public class SwingSelectDevicePanel extends SwingDialogPanel
@@ -128,7 +129,7 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
 					String entryName = (String) it.next();
 					try {
 						devices.put(entryName,
-								Device.create(emulatorContext, classLoader, entryName));
+								DeviceImpl.create(emulatorContext, classLoader, entryName));
 					} catch (IOException e) {
 						Message.error("Error parsing device profile, " + Message.getCauseMessage(e), e);
 						return;

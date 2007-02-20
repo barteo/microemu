@@ -44,11 +44,11 @@ import org.microemu.MIDletBridge;
 import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
 import org.microemu.app.ui.swing.SwingDeviceComponent;
-import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
+import org.microemu.device.impl.DeviceImpl;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEFontManager;
 import org.microemu.device.j2se.J2SEInputMethod;
@@ -121,21 +121,21 @@ public class Main extends Applet implements MicroEmulator
         setLayout(new BorderLayout());
         add(devicePanel, "Center");
 
-        Device device;
+        DeviceImpl device;
         String deviceParameter = getParameter("device");
         if (deviceParameter == null) {
-            device = new Device();
+            device = new DeviceImpl();
             DeviceFactory.setDevice(device);
             device.init(emulatorContext);
         } else {
             try {
                Class cl = Class.forName(deviceParameter);
-                device = (Device) cl.newInstance();
+                device = (DeviceImpl) cl.newInstance();
                 DeviceFactory.setDevice(device);
                 device.init(emulatorContext);
             } catch (ClassNotFoundException ex) {
 				try {
-					device = Device.create(
+					device = DeviceImpl.create(
 							emulatorContext,
 							Main.class.getClassLoader(),
 							deviceParameter);

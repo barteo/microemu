@@ -57,6 +57,7 @@ import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
+import org.microemu.device.impl.DeviceImpl;
 import org.microemu.device.swt.SwtDeviceDisplay;
 import org.microemu.device.swt.SwtFontManager;
 import org.microemu.device.swt.SwtInputMethod;
@@ -353,7 +354,7 @@ public class Swt extends Common
 			// TODO font manager have to be moved from emulatorContext into device
 			emulatorContext.getDeviceFontManager().init();		
 			
-			Device device = Device.create(
+			Device device = DeviceImpl.create(
 					emulatorContext, 
 					classLoader, 
 					entry.getDescriptorLocation());

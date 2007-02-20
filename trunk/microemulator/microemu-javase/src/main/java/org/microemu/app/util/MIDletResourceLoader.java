@@ -40,8 +40,12 @@ import org.microemu.log.Logger;
  */
 public class MIDletResourceLoader {
 	
+	//TODO make this configurable
+	
+	public static boolean traceResourceLoading = false;
+	
 	/**
-	 * @deprecated find better solution
+	 * @deprecated find better solution to share variable
 	 */
 	public static ClassLoader classLoader;
 	
@@ -50,7 +54,9 @@ public class MIDletResourceLoader {
 	private static final String FQCN = Injected.class.getName();
 	
 	public static InputStream getResourceAsStream(Class origClass, String resourceName)  {
-		Logger.debug("Loading MIDlet resource", resourceName);
+		if (traceResourceLoading) {
+			Logger.debug("Loading MIDlet resource", resourceName);
+		}
 		if (resourceName.startsWith("/")) {
 			resourceName = resourceName.substring(1);
 		}

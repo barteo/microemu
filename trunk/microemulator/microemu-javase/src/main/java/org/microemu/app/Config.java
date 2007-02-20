@@ -22,7 +22,6 @@ package org.microemu.app;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,6 +39,8 @@ import org.microemu.EmulatorContext;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.IOUtils;
 import org.microemu.app.util.MIDletSystemProperties;
+import org.microemu.app.util.MRUList;
+import org.microemu.app.util.MidletURLReference;
 import org.microemu.device.Device;
 import org.microemu.log.Logger;
 
@@ -52,6 +53,8 @@ public class Config {
 	private static DeviceEntry defaultDevice;
 
 	private static EmulatorContext emulatorContext;
+	
+	private static MRUList urlsMRU = new MRUList(MidletURLReference.class, "midlet");
 
 	private static File initConfigPath() {
 		try {
@@ -69,10 +72,10 @@ public class Config {
     	File configFile = new File(configPath, "config2.xml");
 		try {
 	    	if (configFile.exists()) {
-				loadConfig("config2.xml", defaultDevice, emulatorContext);
+				loadConfigFile("config2.xml");
 			} else {
 				// migrate from config.xml
-				loadConfig("config.xml", defaultDevice, emulatorContext);
+				loadConfigFile("config.xml");
 
 				for (Enumeration e = getDeviceEntries().elements(); e.hasMoreElements();) {
 					DeviceEntry entry = (DeviceEntry) e.nextElement();
@@ -90,22 +93,20 @@ public class Config {
 
 				saveConfig();
 			}
-		} catch (FileNotFoundException ex) {
-			loadDefaultConfig();
 		} catch (IOException ex) {
 			Logger.error(ex);
-			loadDefaultConfig();
+			createDefaultConfigXml();
 		} finally {
 			// Happens in webstart untrusted environment
 			if (configXml == null) {
-				loadDefaultConfig();
+				createDefaultConfigXml();
 			}
 		}
-
+		urlsMRU.read(configXml.getChildOrNew("files").getChildOrNew("recent"));
 		initSystemProperties();
 	}
 
-	private static void loadConfig(String configFileName, DeviceEntry defaultDevice, EmulatorContext emulatorContext) throws IOException {
+	private static void loadConfigFile(String configFileName) throws IOException {
 		File configFile = new File(configPath, configFileName);
 		InputStream is = null;
 		String xml = "";
@@ -116,29 +117,26 @@ public class Config {
 				dis.read(b);
 				xml += new String(b);
 			}
-			parseConfigXML(xml, defaultDevice, emulatorContext);
+			configXml = new XMLElement();
+			configXml.parseString(xml);
 		} catch (XMLParseException e) {
 			Logger.error(e);
-			loadDefaultConfig();
+			createDefaultConfigXml();
 		} finally {
 			IOUtils.closeQuietly(is);
 		}
 	}
 
-	private static void parseConfigXML(String xml, DeviceEntry defaultDevice, EmulatorContext emulatorContext) throws XMLParseException {
-		configXml = new XMLElement();
-
-		configXml.parseString(xml);
-
-	}
-
-	private static void loadDefaultConfig() {
+	private static void createDefaultConfigXml() {
 		configXml = new XMLElement();
 		configXml.setName("config");
 	}
 
 
 	public static void saveConfig() {
+		
+		urlsMRU.save(configXml.getChildOrNew("files").getChildOrNew("recent"));
+		
 		File configFile = new File(configPath, "config2.xml");
 
 		configPath.mkdirs();
@@ -179,10 +177,7 @@ public class Config {
     		// Ask avetana to ignore MIDP profiles and load JSR-82 implementation dll or so
     		systemProperties.put("avetana.forceNativeLibrary", Boolean.TRUE.toString());
 
-    		XMLElement propertiesXml = configXml.getChild("system-properties");
-    		if (propertiesXml == null) {
-    			propertiesXml = configXml.addChild("system-properties");
-    		}
+    		XMLElement propertiesXml = configXml.getChildOrNew("system-properties");
 
 			for (Iterator i = systemProperties.entrySet().iterator(); i.hasNext();) {
 				Map.Entry e = (Map.Entry) i.next();
@@ -248,10 +243,7 @@ public class Config {
 			}
 		}
 
-		XMLElement devicesXml = configXml.getChild("devices");
-		if (devicesXml == null) {
-			devicesXml = configXml.addChild("devices");
-		}
+		XMLElement devicesXml = configXml.getChildOrNew("devices");
 
 		XMLElement deviceXml = devicesXml.addChild("device");
 		if (entry.isDefaultDevice()) {
@@ -332,23 +324,10 @@ public class Config {
 	}
 
 	public static void setWindowX(int windowX) {
-		XMLElement windowsXml = configXml.getChild("windows");
-		if (windowsXml == null) {
-			windowsXml = configXml.addChild("windows");
-		}
-
-		XMLElement mainXml = windowsXml.getChild("main");
-		if (mainXml == null) {
-			mainXml = windowsXml.addChild("main");
-		}
-
-		XMLElement xXml = mainXml.getChild("x");
-		if (xXml == null) {
-			xXml = mainXml.addChild("x");
-		}
-
+		XMLElement windowsXml = configXml.getChildOrNew("windows");
+		XMLElement mainXml = windowsXml.getChildOrNew("main");
+		XMLElement xXml = mainXml.getChildOrNew("x");
 		xXml.setContent(String.valueOf(windowX));
-
 		saveConfig();
 	}
 
@@ -369,20 +348,9 @@ public class Config {
 	}
 
 	public static void setWindowY(int windowY) {
-		XMLElement windowsXml = configXml.getChild("windows");
-		if (windowsXml == null) {
-			windowsXml = configXml.addChild("windows");
-		}
-
-		XMLElement mainXml = windowsXml.getChild("main");
-		if (mainXml == null) {
-			mainXml = windowsXml.addChild("main");
-		}
-
-		XMLElement yXml = mainXml.getChild("y");
-		if (yXml == null) {
-			yXml = mainXml.addChild("y");
-		}
+		XMLElement windowsXml = configXml.getChildOrNew("windows");
+		XMLElement mainXml = windowsXml.getChildOrNew("main");
+		XMLElement yXml = mainXml.getChildOrNew("y");
 
 		yXml.setContent(String.valueOf(windowY));
 
@@ -401,19 +369,15 @@ public class Config {
 	}
 
 	public static void setRecentJadDirectory(String recentJadDirectory) {
-		XMLElement filesXml = configXml.getChild("files");
-		if (filesXml == null) {
-			filesXml = configXml.addChild("files");
-		}
-
-		XMLElement recentJadDirectoryXml = filesXml.getChild("recentJadDirectory");
-		if (recentJadDirectoryXml == null) {
-			recentJadDirectoryXml = filesXml.addChild("recentJadDirectory");
-		}
-
+		XMLElement filesXml = configXml.getChildOrNew("files");
+		XMLElement recentJadDirectoryXml = filesXml.getChildOrNew("recentJadDirectory");
 		recentJadDirectoryXml.setContent(recentJadDirectory);
 
 		saveConfig();
+	}
+
+	public static MRUList getUrlsMRU() {
+		return urlsMRU;
 	}
 
 }

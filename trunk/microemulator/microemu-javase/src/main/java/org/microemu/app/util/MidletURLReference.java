@@ -23,9 +23,60 @@ package org.microemu.app.util;
 
 import nanoxml.XMLElement;
 
-public interface XMLItem {
+/**
+ * @author vlads
+ *
+ */
+public class MidletURLReference implements XMLItem {
 
-	public void save(XMLElement xml);
+
+	private String name;
 	
-	public void read(XMLElement xml);
+	private String url;
+
+	public MidletURLReference() {
+		super();
+	}
+	
+	/**
+	 * @param name MIDlet name
+	 * @param url  URL to locate this URL
+	 */
+	public MidletURLReference(String name, String url) {
+		super();
+		this.name = name;
+		this.url = url;
+	}
+
+	public boolean equals(Object obj) {
+		 if (!(obj instanceof MidletURLReference)) {
+			 return false;
+		 }
+		 return ((MidletURLReference)obj).url.equals(url); 
+	}
+	 
+	public String toString() {
+		//TODO make the text presentation shorter.
+		return name + " " + url;
+	}
+	
+	public void read(XMLElement xml) {
+		name = xml.getChildString("name", "");
+		url = xml.getChildString("url", "");
+	}
+
+	public void save(XMLElement xml) {
+		xml.removeChildren();
+		xml.addChild("name", name);
+		xml.addChild("url", url);
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public String getUrl() {
+		return this.url;
+	}
+	
 }

@@ -74,4 +74,28 @@ java -cp me-app.jar;bluecove-1.2.1.jar;YourApp.jar com.yourcompany.YourMidlet
         </faq>
 
     </part>
+
+    <part id="network">
+        <title>Network configuration</title>
+
+        <faq id="proxy">
+            <question>
+                 How can I ask MicroEmulator to use proxy server.
+            </question>
+            <answer>
+                Edit the configuration file <i>$home/.microemulator/config2.xml</i>.
+<source>
+<config>
+    ...
+    <system-properties>
+	    <system-property name="http.proxyHost" value="webcache.mydomain.com"/>
+	    <system-property name="http.proxyPort" value="8080"/>
+	    <system-property name="http.nonProxyHosts" value="localhost"/>
+    </system-properties>
+    ...
+</config>
+</source>
+            </answer>
+        </faq>
+    </part>
 </faqs>

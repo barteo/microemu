@@ -31,14 +31,29 @@ Building project using maven
         </repository>
 ---
 
-* Adding MicroEmulator dependency to your project
+* Adding MicroEmulator dependency to your project as one jar
 
 ---
         <dependency>
             <groupId>org.microemu</groupId>
-            <artifactId>microemulator-app-swing</artifactId>
-            <version>2.0.0</version>
+            <artifactId>microemu-javase-swing</artifactId>
+            <version>2.0.1-SNAPSHOT</version>
+            <classifier>app</classifier>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.microemu</groupId><artifactId>microemu-cldc</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.microemu</groupId><artifactId>microemu-midp</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.microemu</groupId><artifactId>microemu-injected</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>asm</groupId><artifactId>asm</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 ---
 

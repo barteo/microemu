@@ -30,23 +30,6 @@
             <artifactId>applet-jsobject</artifactId>
             <optional>true</optional>
         </dependency>
-
-        <dependency>
-            <groupId>org.microemu</groupId>
-            <artifactId>microemu-cldc</artifactId>
-            <version>${project.version}</version>
-            <classifier>4applet</classifier>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.microemu</groupId>
-            <artifactId>microemu-midp</artifactId>
-            <version>${project.version}</version>
-            <classifier>4applet</classifier>
-            <optional>true</optional>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -61,10 +44,15 @@
                    </execution>
                </executions>
                <configuration>
-                   <attach>false</attach>
+                   <attach>true</attach>
                    <descriptors>
                        <descriptor>app-assembly.xml</descriptor>
                    </descriptors>
+                   <archive>
+                        <manifest>
+                            <mainClass>org.microemu.app.Main</mainClass>
+                        </manifest>
+                    </archive>
                </configuration>
             </plugin>
 

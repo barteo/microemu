@@ -31,6 +31,9 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.jar.JarEntry;
+import java.util.jar.JarInputStream;
+import java.util.zip.ZipException;
 
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
@@ -269,7 +272,60 @@ public class Common implements MicroEmulator, CommonInterface {
 
 	}
 
-	protected void loadFromJad(String jadUrl, MIDletClassLoader midletClassLoader) throws ClassNotFoundException{
+	/**
+	 * Show message describing problem with jar if any
+	 */
+	protected boolean describeJarProblem(URL jarUrl , MIDletClassLoader midletClassLoader) {
+		InputStream is = null;
+		JarInputStream jis = null;
+		try {
+			final String message = "Unable to open jar " + jarUrl;
+			URLConnection conn;
+			try {
+				conn = jarUrl.openConnection();
+			} catch (IOException e) {
+				Message.error(message, e);
+				return true;
+			}
+			try {
+				is = conn.getInputStream();
+			} catch (FileNotFoundException e) {
+				Message.error("The system cannot find the jar file " + jarUrl, e);
+				return true;
+			} catch (IOException e) {
+				Message.error(message, e);
+				return true;
+			}
+			try {
+				jis = new JarInputStream(is);
+			} catch (IOException e) {
+				Message.error(message, e);
+				return true;
+			}
+			try {
+				JarEntry entry = jis.getNextJarEntry();
+				if (entry == null) {
+					Message.error("Empty jar " + jarUrl);
+					return true;
+				}
+				// Read till the end
+				while (jis.getNextJarEntry() != null);
+			} catch (ZipException e) {
+				Message.error("Problem reading jar " + jarUrl, e);
+				return true;
+			} catch (IOException e) {
+				Message.error("Problem reading jar " + jarUrl, e);
+				return true;
+			}
+			// There seems to be no poblem with jar
+			return false;
+		} finally {
+			IOUtils.closeQuietly(jis);
+			IOUtils.closeQuietly(is);
+		}		
+	}
+	
+	protected void loadFromJad(String jadUrl, MIDletClassLoader midletClassLoader) throws ClassNotFoundException {
 		if (jad.getJarURL() == null) {
 			throw new ClassNotFoundException("Cannot find MIDlet-Jar-URL property in jad");
 		}
@@ -300,7 +356,9 @@ public class Common implements MicroEmulator, CommonInterface {
 			try {
 				is = midletClassLoader.getResourceAsStream("META-INF/MANIFEST.MF");
 				if (is == null) {
-					Message.error("Unable to find MANIFEST in MIDlet jar");
+					if (!describeJarProblem(url, midletClassLoader)) {
+						Message.error("Unable to find MANIFEST in MIDlet jar");
+					}
 					return;
 				}
 				manifest.load(is);
@@ -312,8 +370,7 @@ public class Common implements MicroEmulator, CommonInterface {
 
 			launcher.setSuiteName(jad.getSuiteName());
 
-			for (Enumeration e = jad.getMidletEntries().elements(); e
-					.hasMoreElements();) {
+			for (Enumeration e = jad.getMidletEntries().elements(); e.hasMoreElements();) {
 				JadMidletEntry jadEntry = (JadMidletEntry) e.nextElement();
 				Class midletClass = midletClassLoader.loadClass(jadEntry.getClassName());
 				loadMidlet(jadEntry.getName(), midletClass);

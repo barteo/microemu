@@ -161,10 +161,17 @@ public abstract class Canvas extends Displayable
     }
     
     
-    public void setFullScreenMode(boolean mode)
-    {
+    public void setFullScreenMode(boolean mode) {
+    	if (this.fullScreenMode != mode) {
     		this.fullScreenMode = mode;
-    }
+    		
+    		if (currentDisplay != null) {
+    			sizeChanged(getWidth(), getHeight());
+    		} else {
+    			sizeChangedDeferredRequest = true;
+    		}
+    	}
+	}
     
     
     protected void sizeChanged(int w, int h)

@@ -30,6 +30,8 @@ public abstract class Displayable
 {
 	protected Device device;
 	
+	boolean sizeChangedDeferredRequest;
+	
 	Display currentDisplay = null;
     
     private Ticker ticker;
@@ -52,7 +54,8 @@ public abstract class Displayable
     {
         this.title = new StringComponent(title);
         
-        device = DeviceFactory.getDevice();
+        this.device = DeviceFactory.getDevice();
+        this.sizeChangedDeferredRequest = false;
     }
     
 
@@ -238,6 +241,11 @@ public abstract class Displayable
         viewPortHeight = device.getDeviceDisplay().getHeight() - this.title.getHeight() - 1;
         if (ticker != null) {
         		viewPortHeight -= this.ticker.getHeight();
+        }
+        
+        if (sizeChangedDeferredRequest) {
+        	sizeChanged(getWidth(), getHeight());
+        	sizeChangedDeferredRequest = false;
         }
 
 		showNotify();

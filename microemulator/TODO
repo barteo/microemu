@@ -5,8 +5,7 @@
   There should be the list of recently opened URLS this list should
   be stored in config.xml
 
-* In File dialog we need to have recently opened files. Add the list
-  to config.xml
+* Need SWT, Swing done - In File dialog we need to have recently opened files. Add the list  to config.xml
 
 * Midlet display window should have the ability to have magnified version.
 

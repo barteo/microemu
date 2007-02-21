@@ -69,7 +69,8 @@ public class SimpleDemoMIDlet extends MIDlet implements CommandListener {
 					new ImageItemPanel(),
 					new ListPanel(),
 					new TextFieldPanel(),
-					new TextBoxPanel() };
+					new TextBoxPanel(),
+					new HTTPPanel()};
 
 			Ticker ticker = new Ticker("This is SimpleDemo ticker");
 

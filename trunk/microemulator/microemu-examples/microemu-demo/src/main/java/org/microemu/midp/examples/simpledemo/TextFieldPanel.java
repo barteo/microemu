@@ -21,9 +21,6 @@
  */
 package org.microemu.midp.examples.simpledemo;
 
-import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.List;
 import javax.microedition.lcdui.TextField;
 
 public class TextFieldPanel extends BaseExamplesForm {
@@ -46,20 +43,4 @@ public class TextFieldPanel extends BaseExamplesForm {
 		}
 
 	}
-
-	public void commandAction(Command c, Displayable d) {
-		if (d == this) {
-			if (c == List.SELECT_COMMAND) {
-				//        Display.getDisplay(SimpleDemo.getInstance()).setCurrent(textBoxes[getSelectedIndex()]);
-			} 
-		} else if (c == backCommand) {
-			/*      for (int i = 0; i < textBoxes.length; i++) {
-			 if (d == textBoxes[i]) {
-			 Display.getDisplay(SimpleDemo.getInstance()).setCurrent(this);
-			 }
-			 }*/
-		}
-		super.commandAction(c, d);
-	}
-
 }

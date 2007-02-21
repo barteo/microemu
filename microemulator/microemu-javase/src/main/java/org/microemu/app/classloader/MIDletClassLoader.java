@@ -36,12 +36,20 @@ import java.util.Set;
 import org.microemu.log.Logger;
 
 /**
+ * Main features of this class loader
+ * Security aware  - enables load and run app in Webstart.
+ * Proper class loading order. MIDlet classes loaded first then system and MicroEmulator classes
+ * Proper resource loading order. MIDlet resources only can be loaded.
+ * MIDlet Bytecode preprocessing/instrumentation  
+ * 
  * @author vlads
  *
  */
 public class MIDletClassLoader extends URLClassLoader {
 
 	//TODO make this configurable
+	
+	public static boolean instrumentMIDletClasses = true;
 	
 	public static boolean traceClassLoading = false;
 	
@@ -266,7 +274,7 @@ public class MIDletClassLoader extends URLClassLoader {
 			if (debug) {
 				Logger.debug("Unable to find resource for class " + name + " ", e);
 			}
-			throw new ClassNotFoundException(name);
+			throw new ClassNotFoundException(name, e.getCause());
 		}
 		
 		if (is == null) {
@@ -275,21 +283,48 @@ public class MIDletClassLoader extends URLClassLoader {
 			}
 			throw new ClassNotFoundException(name);
 		}
-		byte[] b;
+		byte[] byteCode;
 		try {
 			if (traceClassLoading) {
 				Logger.info("Load MIDlet class", name);
 			}
-			b = ClassPreporcessor.instrument(is);
+			if (instrumentMIDletClasses) {
+				byteCode = ClassPreporcessor.instrument(is);
+			} else {
+				int chunkSize = 1024;
+				//  No class or data object must be bigger than 16 Kilobyte
+				int maxClassSizeSize = 1024 * 16;
+				byte[] readData = new byte[chunkSize];
+				int readOffset = 0;
+				do {
+					int retrived;
+					try {
+						retrived = is.read(readData, readOffset, chunkSize);
+					} catch (IOException e) {
+						throw new ClassNotFoundException(name, e);
+					}
+					if (retrived == -1) {
+						break;
+					}
+					if (readData.length + chunkSize > maxClassSizeSize) {
+						throw new ClassNotFoundException(name, new ClassFormatError("Class object is bigger than 16 Kilobyte"));
+					}
+					readOffset += chunkSize;
+					byte[] newData = new byte[readData.length + chunkSize];
+					System.arraycopy(readData, 0, newData, 0, readData.length);
+					readData = newData;
+				} while (true);
+				byteCode = readData;
+			}
 		} finally {
 			try {
 				is.close();
 			} catch (IOException ignore) {
 			}
 		}
-		if (debug) {
+		if ((debug) && (instrumentMIDletClasses)) {
 			Logger.debug("instrumented ", name);
 		}
-		return defineClass(name, b, 0, b.length);
+		return defineClass(name, byteCode, 0, byteCode.length);
 	}
 }

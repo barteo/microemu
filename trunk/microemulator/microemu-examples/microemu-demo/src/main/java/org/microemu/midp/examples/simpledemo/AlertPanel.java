@@ -29,12 +29,17 @@ import javax.microedition.lcdui.List;
 
 public class AlertPanel extends BaseExamplesList {
 
+	static final Command okCommand = new Command("Agree", Command.OK, 1);
+	
+	Alert alertCmd;
+	
 	Alert alerts[] = {
 			new Alert("Alarm alert", "This is alarm alert", null, AlertType.ALARM),
 			new Alert("Confirmation alert", "This is confirmation alert with 5 sec timeout", null, AlertType.CONFIRMATION),
 			new Alert("Error alert", "This is error alert", null, AlertType.ERROR),
 			new Alert("Info alert", "This is info alert with 5 sec timeout", null, AlertType.INFO),
-			new Alert("Warning alert", "This is warning alert", null, AlertType.WARNING) };
+			new Alert("Warning alert", "This is warning alert", null, AlertType.WARNING),
+			alertCmd = new Alert("Command alert", "This is alert with command", null, AlertType.INFO)};
 
 	public AlertPanel() {
 		super("Alert", List.IMPLICIT);
@@ -50,6 +55,9 @@ public class AlertPanel extends BaseExamplesList {
 	public void commandAction(Command c, Displayable d) {
 		if (d == this) {
 			if (c == List.SELECT_COMMAND) {
+				if (alertCmd == alerts[getSelectedIndex()]) {
+					alertCmd.addCommand(okCommand);
+				}
 				SimpleDemoMIDlet.setCurrentDisplayable(alerts[getSelectedIndex()]);
 			}
 		}

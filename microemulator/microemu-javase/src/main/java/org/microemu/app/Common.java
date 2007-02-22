@@ -248,11 +248,16 @@ public class Common implements MicroEmulator, CommonInterface {
 			if (previousMidletAccess != null) {
 				previousMidletAccess.destroyApp(true);
 			}
+		} catch (Throwable e) {
+		    Logger.error("destroyApp error", e);
+		}
+		
+		try {
 			MIDletBridge.getMIDletAccess(launcher).startApp();
 			launcher.setCurrentMIDlet(launcher);
-		} catch (MIDletStateChangeException ex) {
-		    Logger.error(ex);
-			handleStartMidletException(ex);
+		} catch (Throwable e) {
+			Message.error("Unable to start launcher MIDlet, " + Message.getCauseMessage(e), e);
+			handleStartMidletException(e);
 		}
 	}
 
@@ -268,7 +273,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		responseInterfaceListener = listener;
 	}
 
-	protected void handleStartMidletException(MIDletStateChangeException ex) {
+	protected void handleStartMidletException(Throwable e) {
 
 	}
 

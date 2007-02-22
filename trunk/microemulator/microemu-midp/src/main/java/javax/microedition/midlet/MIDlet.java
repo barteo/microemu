@@ -25,44 +25,31 @@ import org.microemu.DisplayAccess;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 
-
-public abstract class MIDlet 
-{
+public abstract class MIDlet {
+	
 	private boolean destroyed;
 
-	class MIDletAccessor extends MIDletAccess 
-	{
-		public MIDletAccessor(MIDlet amidlet) 
-		{
+	class MIDletAccessor extends MIDletAccess {
+		
+		public MIDletAccessor(MIDlet amidlet) {
 			super(amidlet);
 		}
 
-		public void startApp() throws MIDletStateChangeException 
-		{
-            if (MIDletBridge.getCurrentMIDlet() != midlet) {
-                MIDletBridge.setCurrentMIDlet(midlet);
-            }
-			MIDletBridge.getRecordStoreManager().init();
-			try {
-				midlet.startApp();
-			} catch (Error er) {
-				throw new MIDletStateChangeException(er.getMessage());
+		public void startApp() throws MIDletStateChangeException {
+			if (MIDletBridge.getCurrentMIDlet() != midlet) {
+				MIDletBridge.setCurrentMIDlet(midlet);
 			}
+			MIDletBridge.getRecordStoreManager().init();
+			midlet.startApp();
 		}
 
-		public void pauseApp() 
-		{
+		public void pauseApp() {
 			midlet.pauseApp();
 		}
 
-		public void destroyApp(boolean unconditional) throws MIDletStateChangeException 
-		{
+		public void destroyApp(boolean unconditional) throws MIDletStateChangeException {
 			if (!destroyed) {
-				try {
-					midlet.destroyApp(unconditional);
-				} catch (Error er) {
-					System.out.println(er.getMessage());
-				}
+				midlet.destroyApp(unconditional);
 			}
 			DisplayAccess da = getDisplayAccess();
 			if (da != null) {
@@ -72,55 +59,41 @@ public abstract class MIDlet
 		}
 	}
 
-	
-	protected MIDlet() 
-	{
+	protected MIDlet() {
 		MIDletBridge.setAccess(this, new MIDletAccessor(this));
 
 		destroyed = false;
 	}
 
-	
 	protected abstract void startApp() throws MIDletStateChangeException;
 
 	protected abstract void pauseApp();
 
 	protected abstract void destroyApp(boolean unconditional) throws MIDletStateChangeException;
 
-	
-	public final int checkPermission(String permission)
-	{
+	public final int checkPermission(String permission) {
 		// TODO
 		return 0;
 	}
-	
-	
-	public final String getAppProperty(String key) 
-	{
+
+	public final String getAppProperty(String key) {
 		return MIDletBridge.getAppProperty(key);
 	}
 
-	
-	public final void notifyDestroyed() 
-	{
+	public final void notifyDestroyed() {
 		destroyed = true;
 		MIDletBridge.notifyDestroyed();
 	}
 
-	
-	public final void notifyPaused() 
-	{
+	public final void notifyPaused() {
 	}
-	
-	
-    public final boolean platformRequest(String URL) 
-    		throws ConnectionNotFoundException
-    {
-    	return MIDletBridge.platformRequest(URL);
-    }
-    
-    public final void resumeRequest() {
-    	// TODO implement
-    }
+
+	public final boolean platformRequest(String URL) throws ConnectionNotFoundException {
+		return MIDletBridge.platformRequest(URL);
+	}
+
+	public final void resumeRequest() {
+		// TODO implement
+	}
 
 }

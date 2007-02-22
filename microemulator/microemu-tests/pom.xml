@@ -23,6 +23,16 @@
     <modules>
         <!--module>microemu-test-gcf</module-->
         <module>microemu-test-midlet</module>
+
+        <!-- Not part of the project build.
+        <module>bytecode-test-app</module>
+        -->
+
+        <!-- Not part of the project build.  USed just for internal tests -->
+        <!--
+        <module>microemu-test-avetana</module>
+        <module>microemu-test-bluecove</module>
+        -->
     </modules>
 
 </project>

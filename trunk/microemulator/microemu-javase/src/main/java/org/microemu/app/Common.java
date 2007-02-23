@@ -15,8 +15,9 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *  
+ *  @version $Id$
  */
-
 package org.microemu.app;
 
 import java.io.File;
@@ -31,6 +32,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipException;
@@ -545,11 +547,20 @@ public class Common implements MicroEmulator, CommonInterface {
 
 	public void initMIDlet(List params, boolean startMidlet) {
 		Class midletClass = null;
+		Vector appclasses = new Vector();
+		Vector appclasspath = new Vector();
+		
 		Iterator it = params.iterator();
 		while (it.hasNext()) {
 			String test = (String) it.next();
 			it.remove();
-			if (midletClass == null && test.endsWith(".jad")) {
+			if (test.equals("--appclasspath")) {
+				appclasspath.add(it.next());
+				it.remove();
+			} else if (test.equals("--appclass")) {
+				appclasses.add(it.next());
+				it.remove();
+			} else if (midletClass == null && test.endsWith(".jad")) {
 				try {
 					File file = new File(test);
 					String url = file.exists() ? IOUtils.getCanonicalFileURL(file) : test;
@@ -561,6 +572,15 @@ public class Common implements MicroEmulator, CommonInterface {
 				MIDletClassLoader classLoader = createMIDletClassLoader();
 				try {
 					classLoader.addClassURL(test);
+					for (Iterator iter = appclasses.iterator(); iter.hasNext();) {
+						classLoader.addClassURL((String) iter.next());
+						
+					}
+					for (Iterator iter = appclasspath.iterator(); iter.hasNext();) {
+						// TODO add appclasspath parts separators and path with spaces ''
+						classLoader.addURL(new URL(IOUtils.getCanonicalFileURL(new File((String)iter.next()))));
+					}					
+					
 					midletClass = classLoader.loadClass(test);
 				} catch (MalformedURLException e) {
 					Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
@@ -584,13 +604,14 @@ public class Common implements MicroEmulator, CommonInterface {
 	}
 
 
-	public static String usage()
-	{
+	public static String usage() {
 		return
 			"[(-d | --device) ({device descriptor} | {device class name}) ] " +
 			"[--rms (file | memory)] " +
-			"[--impl {implementation class name}]" +
-			"({midlet class name} | {jad file location})";
+			"[--impl {JSR implementation class name}]" +
+			"[--appclasspath <MIDlet CLASSPATH>]" +
+			"[--appclass <library class name>]" +
+			"({MIDlet class name} | {jad file location})";
 	}
 
 }

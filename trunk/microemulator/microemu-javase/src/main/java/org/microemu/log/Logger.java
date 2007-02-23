@@ -87,7 +87,12 @@ public class Logger {
 			    		if (logFunctionsSet.contains(ste[i + 1].getMethodName())) {
 			    			wrapperFound = true;
 			    		} else {
-			    			return ste[i + 1];
+			    			// if dynamic proxy classes
+			    			if (nextClassName.startsWith("$Proxy")) {
+			    				return ste[i + 2];
+			    			} else {
+			    				return ste[i + 1];
+			    			}
 			    		}
 			    	}
 			    } else if (wrapperFound) {

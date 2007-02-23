@@ -55,12 +55,18 @@ java -cp siemensapi.jar -jar me-app.jar http://wwww.yourcompany.com/download/You
     MicroEmulator command line options
 
         * --rms [memory | file]
-
             persistent or not RecordStoreManager manager
 
         * --device | -d <device class or xml>
-
             specify device skin.
+
+        * --appclasspath <CLASSPATH> for MIDlet application components if any; ignored when opening .jad
+
+        * --appclass <library class name> for appclasspath auto detection from system classpath; ignored when opening .jad
+
+        * ({MIDlet class name} | {jad file location})
+
+        []
 
 ---
 java -cp me-app.jar;devices/large.jar org.microemu.app.Main --device org/microemu/device/large/device.xml http://wintermute.de/wap/5ud0ku.jad
@@ -84,7 +90,21 @@ java -cp me-app.jar;devices/large.jar org.microemu.app.Main --device org/microem
 
 [images/eclipse-arguments.png] Java Argument class
 
-    Finally, go to the class path, add your project (done already by default), and add microemu-swing-2.0.0.cr1-app.jar (under User Entries)
+    If your MIDlet project includes other projects or libraries that are compiled differently and included in you final application. e.g. XML or Log libraries.
+    Then you need to add aditional configuration option. MicroEmulator will use the same MIDlet classloader for this clases. If not specified this classes would be loaded by the same classloader as MicroEmulator.
+
+---
+--appclasspath /home/bob/work/framework0.1.jar;/home/bob/work/core/target/classes org.app.MainMIDlet
+---
+
+    More convenient option is to let MicroEmulator detect the location of the classes in project classpath.
+    Only one class name from each library or project needs to be specified.
+
+---
+--appclass org.framework.OneClass --appclass org.core.AnotherClass org.app.MainMIDlet
+---
+
+    Finally, go to the class path, add your project (done already by default), and add microemu-swing-2.0.0-app.jar (under User Entries)
 
 
 *  Integration of MicroEmulator into Eclipse EclipseME project

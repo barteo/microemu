@@ -45,7 +45,7 @@ public class IOUtils {
 	 * Solution for JVM bug 
 	 *  http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6351751
 	 */
-	public static String getCanonicalFileURL(File file) throws IOException {
+	public static String getCanonicalFileURL(File file) {
 		String path = file.getAbsoluteFile().getPath();
 		if (File.separatorChar != '/') {
 			path = path.replace(File.separatorChar, '/');

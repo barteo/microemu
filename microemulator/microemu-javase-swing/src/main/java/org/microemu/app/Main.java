@@ -143,13 +143,7 @@ public class Main extends JFrame {
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 					Config.setRecentJadDirectory(fileChooser.getCurrentDirectory().getAbsolutePath());
 					Config.saveConfig();
-					String url;
-					try {
-						url = IOUtils.getCanonicalFileURL(fileChooser.getSelectedFile());
-					} catch (IOException e) {
-						Logger.error(fileChooser.getSelectedFile().getAbsolutePath(), e);
-						return;
-					}
+					String url = IOUtils.getCanonicalFileURL(fileChooser.getSelectedFile());
 					Common.openJadUrlSafe(url);
 			}
 		}

@@ -25,12 +25,15 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- moved to microemu-javase-swing and swt -->
+        <!--
         <dependency>
             <groupId>org.microemu</groupId>
             <artifactId>microemu-injected</artifactId>
             <version>${project.version}</version>
             <classifier>inject</classifier>
         </dependency>
+        -->
 
         <dependency>
             <groupId>asm</groupId>

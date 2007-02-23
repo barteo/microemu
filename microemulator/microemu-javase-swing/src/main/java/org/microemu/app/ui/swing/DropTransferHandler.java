@@ -48,6 +48,8 @@ public class DropTransferHandler extends TransferHandler {
 
 	private static DataFlavor uriListFlavor = new DataFlavor("text/uri-list;class=java.lang.String", null);
 	
+	private static boolean debug = false;
+	
 	public int getSourceActions(JComponent c) {
         return TransferHandler.COPY;
     }
@@ -82,34 +84,19 @@ public class DropTransferHandler extends TransferHandler {
 //					return true;
 //				}
 //			}
-			Logger.debug(i + " unknown import ", transferFlavors[i]);
+			if (debug) {
+				Logger.debug(i + " unknown import ", transferFlavors[i]);
+			}
 		}
-		Logger.debug("import rejected");
+		if (debug) {
+			Logger.debug("import rejected");
+		}
         return false;
 	}
 	
 	public boolean importData(JComponent comp, Transferable t) {
 		DataFlavor[] transferFlavors = t.getTransferDataFlavors();
         for (int i = 0; i < transferFlavors.length; i++) {
-        	Class representationclass = transferFlavors[i].getRepresentationClass();
-        	// URL from Explorer or Firefox, KDE
-        	if ((representationclass != null) && URL.class.isAssignableFrom(representationclass)) {
-        		Logger.debug("importing", transferFlavors[i]);
-        		try {
-					URL jadUrl = (URL)t.getTransferData(transferFlavors[i]);
-					String urlString = jadUrl.toExternalForm();
-					if (Common.isJadExtension(urlString)) {
-						Common.openJadUrlSafe(urlString);
-					} else {
-						Message.warn("Unable to open " + urlString + ", Only JAD url are acepted");	
-					}
-				} catch (UnsupportedFlavorException e) {
-					Logger.debug(e);
-				} catch (IOException e) {
-					Logger.debug(e);
-				}
-				return true;
-        	}
         	// Drop from Windows Explorer
         	if (DataFlavor.javaFileListFlavor.equals(transferFlavors[i])) {
         		Logger.debug("importing", transferFlavors[i]);
@@ -175,7 +162,31 @@ public class DropTransferHandler extends TransferHandler {
 					return true;
 				}
 			}
-        	Logger.debug(i + " unknown importData ", transferFlavors[i]);
+            if (debug) {
+            	Logger.debug(i + " unknown importData ", transferFlavors[i]);
+            }
+        }
+        // This is the second best option since it works incorrectly  on Max OS X making url like this [file://localhost/users/work/app.jad]
+        for (int i = 0; i < transferFlavors.length; i++) {
+        	Class representationclass = transferFlavors[i].getRepresentationClass();
+        	// URL from Explorer or Firefox, KDE
+        	if ((representationclass != null) && URL.class.isAssignableFrom(representationclass)) {
+        		Logger.debug("importing", transferFlavors[i]);
+        		try {
+					URL jadUrl = (URL)t.getTransferData(transferFlavors[i]);
+					String urlString = jadUrl.toExternalForm();
+					if (Common.isJadExtension(urlString)) {
+						Common.openJadUrlSafe(urlString);
+					} else {
+						Message.warn("Unable to open " + urlString + ", Only JAD url are acepted");	
+					}
+				} catch (UnsupportedFlavorException e) {
+					Logger.debug(e);
+				} catch (IOException e) {
+					Logger.debug(e);
+				}
+				return true;
+        	}
         }
 		return false;
 	}

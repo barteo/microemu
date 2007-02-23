@@ -46,7 +46,7 @@ public class ConnectorImpl extends ConnectorAdapter {
     private AccessControlContext acc;
     
     // TODO make this configurable
-	public static boolean debugConnectionInvocations = true;
+	public static boolean debugConnectionInvocations = false;
     
 	private final boolean needPrivilegedCalls = (System.getProperty("javawebstart.version") != null);  
 	

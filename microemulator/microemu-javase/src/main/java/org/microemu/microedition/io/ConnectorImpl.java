@@ -22,6 +22,7 @@
 package org.microemu.microedition.io;
 
 import java.io.IOException;
+import java.lang.reflect.Proxy;
 import java.security.AccessControlContext;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
@@ -44,15 +45,24 @@ public class ConnectorImpl extends ConnectorAdapter {
 	/* The context to be used when loading classes */
     private AccessControlContext acc;
     
+    // TODO make this configurable
+	public static boolean debugConnectionInvocations = true;
+    
+	private final boolean needPrivilegedCalls = (System.getProperty("javawebstart.version") != null);  
+	
     public ConnectorImpl() {
     	acc = AccessController.getContext();
     }
     
     public Connection open(final String name, final int mode, final boolean timeouts) throws IOException {
-		try {
+    	try {
 			return (Connection) AccessController.doPrivileged(new PrivilegedExceptionAction() {
 				public Object run() throws IOException {
-					return openSecure(name, mode, timeouts);
+					if (debugConnectionInvocations || needPrivilegedCalls) {
+						return openSecureProxy(name, mode, timeouts, needPrivilegedCalls);
+					} else {
+						return openSecure(name, mode, timeouts);
+					}
 				}
 			}, acc);
 		} catch (PrivilegedActionException e) {
@@ -63,6 +73,25 @@ public class ConnectorImpl extends ConnectorAdapter {
 		}
 	}
 	
+    private Connection openSecureProxy(String name, int mode, boolean timeouts, boolean needPrivilegedCalls) throws IOException {
+    	Connection origConnection =  openSecure(name, mode, timeouts);
+    	Class connectionClass = null;
+    	Class[] interfaces = origConnection.getClass().getInterfaces();
+    	for (int i = 0; i < interfaces.length; i++) {
+    		if (Connection.class.isAssignableFrom(interfaces[i])) {
+    			connectionClass = interfaces[i];
+    			break;
+    		}
+		}
+    	if (connectionClass == null) {
+    		throw new ClassCastException(origConnection.getClass().getName() + " Connection expected");
+    	}
+    	return (Connection) Proxy.newProxyInstance(
+    			 ConnectorImpl.class.getClassLoader(), 
+                 new Class[] { connectionClass }, 
+                 new ConnectionInvocationHandler(origConnection, needPrivilegedCalls));
+    }
+    
 	private Connection openSecure(String name, int mode, boolean timeouts) throws IOException {
 		String className = null;
 		try {

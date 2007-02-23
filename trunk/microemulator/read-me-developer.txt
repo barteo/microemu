@@ -14,6 +14,15 @@
    To run build without tests:
      mvn -Dmaven.test.skip=true
 
+* error classpath configuration error, Wrong Injected class detected. microemu-injected module should be after microemu-javase in eclipse
+
+  This is the problem that order of dependancies in maven is undefined.
+
+  To solve: In eclipse edit project  microemu-javase-swing  move microemu-injected down.
+
+  In fact it should not even be there as project (bug in maven-eclipse plugin), only jar microemu-injected-2.0.1-SNAPSHOT-inject.jar is required!
+  The best option to remove this dependacncy from eclipse project.
+
 
 * Building applet
 

@@ -191,7 +191,7 @@ public class J2SEInputMethod extends InputMethodImpl
 			return true;
 		}
 
-		if (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_DOWN) {
+		if (getGameAction(keyCode) == Canvas.UP || getGameAction(keyCode) == Canvas.DOWN) {
 			MIDletBridge.getMIDletAccess().getDisplayAccess().keyPressed(keyCode);
 			return true;
 		}

@@ -156,7 +156,7 @@ public class SwtInputMethod extends InputMethodImpl
 			return true;
 		}
 
-		if (keyCode == SWT.ARROW_UP || keyCode == SWT.ARROW_DOWN) {
+		if (getGameAction(keyCode) == Canvas.UP || getGameAction(keyCode) == Canvas.DOWN) {
 			MIDletBridge.getMIDletAccess().getDisplayAccess().keyPressed(keyCode);
 			return true;
 		}

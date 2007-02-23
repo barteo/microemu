@@ -67,7 +67,7 @@ public class ConnectionInvocationHandler implements InvocationHandler {
 		}
 		try {
 			if (this.acc != null) {
-			return (Connection) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+			return AccessController.doPrivileged(new PrivilegedExceptionAction() {
 				public Object run() throws InvocationTargetException, IllegalAccessException {
 					return method.invoke(originalConnection, args);
 				}

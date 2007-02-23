@@ -5,7 +5,7 @@
   href="$outputFile">
   <information>
     <title>MicroEmulator</title>
-    <vendor>MicroEmulator Team</vendor>
+    <vendor>Bartek Teodorczyk & Vlad Skarzhevskyy</vendor>
     <homepage href="http://www.microemu.org/"/>
     <description>MicroEmulator</description>
     <description kind="short">MicroEmulator</description>

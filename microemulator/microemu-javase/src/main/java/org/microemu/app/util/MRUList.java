@@ -23,6 +23,7 @@ package org.microemu.app.util;
 
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Stack;
 
 import nanoxml.XMLElement;
@@ -63,7 +64,11 @@ public class MRUList implements XMLItem {
 			items.pop();
 		}
 		items.remove(item);
-		items.push(item);
+		if (items.empty()) {
+			items.add(item);
+		} else {
+			items.insertElementAt(item, 0);
+		}
 		fireListener(item);
 		return item;
 	}
@@ -114,7 +119,6 @@ public class MRUList implements XMLItem {
 					XMLItem element = (XMLItem)classXMLItem.newInstance();
 					element.read(xmlChild);
 					items.add(element);
-					fireListener(element);
 				} catch (InstantiationException e) {
 					throw new RuntimeException(e);
 				} catch (IllegalAccessException e) {
@@ -122,6 +126,12 @@ public class MRUList implements XMLItem {
 				}
             }
         }
+		
+		// Fire Listener in reverse order
+		for(ListIterator iter = items.listIterator(items.size() - 1); iter.hasPrevious() ; ) {
+			XMLItem element = (XMLItem) iter.previous();
+			fireListener(element);			
+		}
 	}
 
 }

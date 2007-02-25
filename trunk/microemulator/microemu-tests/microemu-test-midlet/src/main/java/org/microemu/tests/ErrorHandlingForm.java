@@ -28,15 +28,51 @@ public class ErrorHandlingForm extends BaseTestsForm {
 
 	static final Command makeErrorCommand = new Command("make error", Command.ITEM, 1);
 	
+	static final Command catchExceptionCommand = new Command("catch Exception", Command.ITEM, 2);
+	
 	public ErrorHandlingForm() {
 		super("Form with Errors");
 		addCommand(makeErrorCommand);
+		addCommand(catchExceptionCommand);
     }
 	
+	
+	private void tryCatchTest() {
+		System.out.println("test Exception catch bytcode injection");
+		try {
+			throwExceptionFunction();		
+		} catch (IllegalArgumentException e) {
+			handleCatchIllegalArgumentException(e);
+		}
+		try {
+			throwExceptionFunction();		
+		} catch (Throwable e) {
+			handleCatchThrowable(e);
+		}
+	}
+
+	public static Throwable handleCatchIllegalArgumentException(Throwable t) {
+		System.out.println("App caught " + t.toString());
+		return t;
+	}
+	
+	public static Throwable handleCatchThrowable(Throwable t) {
+		System.out.println("App caught " + t.toString());
+		return t;
+	}
+	
+	private void throwExceptionFunction() {
+		System.out.println("App will throw new IllegalArgumentException");
+		throw new IllegalArgumentException("Emulator should print stack trace");
+	}
+
+
 	public void commandAction(Command c, Displayable d) {
 		if (d == this) {
 			if (c == makeErrorCommand) {
 				throw new IllegalArgumentException("Emulator Should still work");
+			} else if (c == catchExceptionCommand) {
+				tryCatchTest();
 			}
 		}
 		super.commandAction(c, d);

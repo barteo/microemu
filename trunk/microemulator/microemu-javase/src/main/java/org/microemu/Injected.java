@@ -28,6 +28,7 @@ import java.io.Serializable;
 import org.microemu.app.util.MIDletOutputStreamRedirector;
 import org.microemu.app.util.MIDletResourceLoader;
 import org.microemu.app.util.MIDletSystemProperties;
+import org.microemu.log.Logger;
 
 /**
  * @author vlads
@@ -51,6 +52,10 @@ public final class Injected implements Serializable {
 
 	public final static PrintStream err = errPrintStream();
 
+	static {
+		Logger.addLogOrigin(Injected.class);
+	}
+	
 	/**
 	 * We don't need to instantiate the class, all access is static
 	 */
@@ -96,4 +101,11 @@ public final class Injected implements Serializable {
 		return MIDletResourceLoader.getResourceAsStream(origClass, name);
 	}
 
+	/**
+	 * TODO fix ChangeCallsMethodVisitor
+	 */
+	public static Throwable handleCatchThrowable(Throwable t) {
+		Logger.error("MIDlet caught", t);
+		return t;
+	}
 }

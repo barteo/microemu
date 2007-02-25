@@ -25,6 +25,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -419,12 +423,37 @@ public class Common implements MicroEmulator, CommonInterface {
 		final String errorText = "Implementation initialization";
 		try {
 			Class implClass = getClass().getClassLoader().loadClass(implClassName);
-			Object inst = implClass.newInstance();
-			if (inst instanceof ImplementationInitialization) {
+			if (ImplementationInitialization.class.isAssignableFrom(implClass)) {
+				Object inst = implClass.newInstance();
 				((ImplementationInitialization)inst).registerImplementation();
-				Logger.debug("Implementation registered", implClassName);
+				Logger.debug("implementation registered", implClassName);
 			} else {
-				Logger.debug("Implementation does not implement", ImplementationInitialization.class.getName());
+				Logger.debug("initialize implementation", implClassName);
+				boolean isStatic = true;
+				try {
+					// Create and object or call static initializer instance();
+					Constructor c = implClass.getConstructor(null);
+					if (Modifier.isPublic(c.getModifiers())) {
+						isStatic = false;
+						implClass.newInstance();
+					}
+				} catch (NoSuchMethodException e) {
+				}
+				
+				if (isStatic) {
+					try {
+						Method getinst = implClass.getMethod("instance", null);
+						if (Modifier.isStatic(getinst.getModifiers())) {
+							getinst.invoke(implClass, null);
+						} else {
+							Logger.debug("No known way to initialize implementation class");	
+						}
+					} catch (NoSuchMethodException e) {
+						Logger.debug("No known way to initialize implementation class");
+					} catch (InvocationTargetException e) {
+						Logger.debug("Unable to initialize Implementation", e.getCause());
+					}
+				}
 			}
 		} catch (ClassNotFoundException e) {
 			Logger.error(errorText, e);

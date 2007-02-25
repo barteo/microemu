@@ -21,7 +21,10 @@
  */
 package org.microemu.app.classloader;
 
+import java.util.HashMap;
+
 import org.microemu.Injected;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -39,6 +42,23 @@ public class ChangeCallsMethodVisitor extends MethodAdapter implements Opcodes {
 	static String NEW_SYSTEM_PROPERTIES_CLASS = INJECTED_CLASS;
 	
 	static String NEW_RESOURCE_LOADER_CLASS = INJECTED_CLASS;
+	
+	//	TODO make this configurable
+	public static boolean enhanceCatchBlock = false;  
+	
+	private HashMap catchInfo;
+	
+	private static class CatchInformation {
+		
+		Label label; 
+		
+		String type;
+
+		public CatchInformation(String type) {
+			this.label = new Label();
+			this.type = type;
+		}
+	}
 	
 	public ChangeCallsMethodVisitor(MethodVisitor mv) {
 		super(mv);
@@ -92,5 +112,36 @@ public class ChangeCallsMethodVisitor extends MethodAdapter implements Opcodes {
 
 		mv.visitMethodInsn(opcode, owner, name, desc);
 	}
+	
+    public void visitTryCatchBlock(final Label start, final Label end, final Label handler, final String type) {
+    	if (enhanceCatchBlock && type != null) {
+    		if (catchInfo == null) {
+    			catchInfo = new HashMap(); 
+    		}
+    		CatchInformation newHandler = (CatchInformation)catchInfo.get(handler);
+    		if (newHandler == null) {
+    			newHandler = new CatchInformation(type);
+    			catchInfo.put(handler, newHandler);
+    		}
+    		mv.visitTryCatchBlock(start, end, newHandler.label, type);
+    	} else {
+    		mv.visitTryCatchBlock(start, end, handler, type);
+    	}
+	}
+    
+    //TODO make this work for gMaps case
+    public void visitLabel(Label label) {
+    	if (enhanceCatchBlock && catchInfo != null) {
+    		CatchInformation newHandler = (CatchInformation)catchInfo.get(label);
+    		if (newHandler != null) {
+    			mv.visitLabel(newHandler.label);
+    			// no push, just use current Throwable in stack
+    			mv.visitMethodInsn(INVOKESTATIC, INJECTED_CLASS, "handleCatchThrowable", "(Ljava/lang/Throwable;)Ljava/lang/Throwable;");
+    			// stack contains Throwable, just verify that it is right type for this handler
+        		mv.visitTypeInsn(CHECKCAST, newHandler.type);
+    		}	
+    	}
+    	mv.visitLabel(label);
+    }
 	
 }

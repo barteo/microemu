@@ -12,7 +12,7 @@ MicroEmulator Web Start
 
     You can Drag and Drop .jad files or links to running MicroEmulator application.
 
-    This is some example applications you can try.
+* Some example applications you can try.
 
 ~~    * {{{http://mini.opera.com/global/opera-mini-3.0.6636-advanced-int.jad} Opera Mini}}
 
@@ -29,3 +29,8 @@ MicroEmulator Web Start
     * {{{http://www.gmail.com/app/v1.1.0/L1/gm-Sony_Ericsson-W810.jad}Google Gmail for Sony Ericsson}}
 
     * {{{http://www.gmail.com/app/v1.1.0/L1/gm-Generic-Advanced_MIDP2.jad}Google Gmail Generic}}
+
+
+* Other MicroEmulator Web Start demonstrations
+
+    MicroEmulator Web Start with JSR-82 available at {{{http://bluecove.sourceforge.net/}BlueCove project website}}

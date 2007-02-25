@@ -16,6 +16,7 @@
   <security>
       <all-permissions/>
   </security>
+  <update check="always"/>
 
   <resources>
     <j2se version="1.4+"/>

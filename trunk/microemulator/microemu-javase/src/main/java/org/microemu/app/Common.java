@@ -211,7 +211,7 @@ public class Common implements MicroEmulator, CommonInterface {
 			Logger.error(ex);
 			throw new IOException(ex.getMessage());
 		} catch (FileNotFoundException ex) {
-			Logger.error("Not found", urlString, ex);
+			Message.error("File Not found", urlString, ex);
 		} catch (NullPointerException ex) {
 			Logger.error("Cannot open jad", urlString, ex);
 		} catch (IllegalArgumentException ex) {

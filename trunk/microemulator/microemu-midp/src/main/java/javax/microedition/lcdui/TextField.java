@@ -233,8 +233,8 @@ public class TextField extends Item
 	public void setConstraints(int constraints) 
 	{
 		if ((constraints & TextField.CONSTRAINT_MASK) < ANY
-			|| (constraints & TextField.CONSTRAINT_MASK) > URL) {
-			throw new IllegalArgumentException("constraints is an illegal value");
+			|| (constraints & TextField.CONSTRAINT_MASK) > DECIMAL) {
+			throw new IllegalArgumentException("constraints " + constraints + " is an illegal value");
 		}
 		this.constraints = constraints;
 	}

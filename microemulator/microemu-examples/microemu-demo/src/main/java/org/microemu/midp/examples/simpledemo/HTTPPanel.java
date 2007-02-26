@@ -97,6 +97,8 @@ public class HTTPPanel extends BaseExamplesForm {
             }
             reply.setText(new String(data));            
 		} catch (Throwable e) {
+			System.out.println(e.toString());
+			e.printStackTrace();
 			reply.setText(e.getMessage());
 			Alert alert = new Alert("Error", e.toString(), null, AlertType.ERROR);
 			alert.setTimeout(Alert.FOREVER);

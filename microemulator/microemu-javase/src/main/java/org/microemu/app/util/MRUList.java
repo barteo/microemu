@@ -129,7 +129,7 @@ public class MRUList implements XMLItem {
 		
 		if (!items.empty()) {
 			// Fire Listener in reverse order
-			for (ListIterator iter = items.listIterator(items.size() - 1); iter.hasPrevious();) {
+			for (ListIterator iter = items.listIterator(items.size()); iter.hasPrevious();) {
 				XMLItem element = (XMLItem) iter.previous();
 				fireListener(element);
 			}

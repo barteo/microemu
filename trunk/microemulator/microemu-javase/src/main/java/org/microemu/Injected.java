@@ -74,6 +74,13 @@ public final class Injected implements Serializable {
 	}
 	
 	/**
+	 * Redirect throwable.printStackTrace() to MicroEmulator console
+	 */
+	public static void printStackTrace(Throwable t) {
+		Logger.error("MIDlet caught", t);
+	}
+	
+	/**
 	 * This code Ingected By MicroEmulator to enable access to System properties while running in Applet
      *
      * @param      key   the name of the system property.

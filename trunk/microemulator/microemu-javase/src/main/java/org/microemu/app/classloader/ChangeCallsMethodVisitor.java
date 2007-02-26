@@ -107,7 +107,12 @@ public class ChangeCallsMethodVisitor extends MethodAdapter implements Opcodes {
 				// "org/microemu/ResourceLoader", "getResourceAsStream", "(Ljava/lang/Class;Ljava/lang/String;)Ljava/io/InputStream;");
 				mv.visitMethodInsn(INVOKESTATIC, NEW_RESOURCE_LOADER_CLASS, name, "(Ljava/lang/Class;Ljava/lang/String;)Ljava/io/InputStream;");
 				return;
+			} else if ((name.equals("printStackTrace")) && (owner.equals("java/lang/Throwable"))) {
+				// INVOKEVIRTUAL java/lang/Throwable.printStackTrace()V
+				mv.visitMethodInsn(INVOKESTATIC, INJECTED_CLASS, name, "(Ljava/lang/Throwable;)V");
+				return;
 			}
+			
 		}
 
 		mv.visitMethodInsn(opcode, owner, name, desc);

@@ -22,7 +22,9 @@
             <item name="Live examples" href="http://www.microemu.org/demo.html"/>
         </links>
 
-        <menu name="Ver 2.0.1-SNAPSHOT" inherit="top"/>
+        <menu name="Ver 2.0.1-SNAPSHOT" inherit="top">
+            <item name="Release 2.0.0" href="http://microemu.org/"/>
+        </menu>
 
         <menu ref="parent" />
 
@@ -40,6 +42,8 @@
                 <item name="SVN Access" href="source-repository.html"/>
                 <item name="Browse SVN" href="http://microemulator.svn.sourceforge.net/viewvc/microemulator/trunk/microemulator/"/>
             </item>
+
+            <!--item name="Preview 2.0.2" href="http://pyx4j.com/snapshot/microemu/" /-->
 
         </menu>
 

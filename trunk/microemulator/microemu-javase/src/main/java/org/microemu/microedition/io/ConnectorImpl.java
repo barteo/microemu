@@ -48,10 +48,19 @@ public class ConnectorImpl extends ConnectorAdapter {
     // TODO make this configurable
 	public static boolean debugConnectionInvocations = false;
     
-	private final boolean needPrivilegedCalls = (System.getProperty("javawebstart.version") != null);  
+	private final boolean needPrivilegedCalls = isWebstart();  
 	
     public ConnectorImpl() {
     	acc = AccessController.getContext();
+    }
+    
+    private static boolean isWebstart() {
+    	try {
+			return (System.getProperty("javawebstart.version") != null);
+		} catch (SecurityException e) {
+			// This is the case for Applet.
+			return false;
+		}
     }
     
     public Connection open(final String name, final int mode, final boolean timeouts) throws IOException {

@@ -44,7 +44,7 @@
             </item>
 
             <!--item name="Preview 2.0.2" href="http://pyx4j.com/snapshot/microemu/" /-->
-
+            <item name="Changes and Plans" href="http://www.microemu.org/changes-report.html" />
         </menu>
 
         <menu name="Live examples">

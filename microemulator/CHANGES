@@ -1,6 +1,8 @@
 MicroEmulator
 
-2.0.0 - 28.01.2006
+From now use file src/changes.xml
+
+2.0.0 - 28.01.2007
 - first version based on MIDP 2
 
 1.0 - 21.03.2006
@@ -26,7 +28,7 @@ MicroEmulator
 0.3.2 (alpha) - 24.03.2003
 - applet: obfuscator for applet reduces jar file at ~30% (thanks to Julian L. Hunter)
 - applet: fixed broken applet target
-- target build depends on build.properties configuration: 
+- target build depends on build.properties configuration:
     target = app | applet
 - a lot of small fixes
 

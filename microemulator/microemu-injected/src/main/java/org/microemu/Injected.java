@@ -61,6 +61,13 @@ public final class Injected {
 	}
 	
 	/**
+	 * Redirect throwable.printStackTrace() to MicroEmulator console
+	 */
+	public static void printStackTrace(Throwable t) {
+		t.printStackTrace();
+	}
+	
+	/**
 	 * This code Ingected By MicroEmulator to enable access to System properties while running in Applet
      *
      * @param      key   the name of the system property.
@@ -90,6 +97,13 @@ public final class Injected {
 	 */
 	public static InputStream getResourceAsStream(Class origClass, String name)  {
 		return origClass.getResourceAsStream(name);
+	}
+	
+	/**
+	 * Enhanced Catch Block
+	 */
+	public static Throwable handleCatchThrowable(Throwable t) {
+		return t;
 	}
 	
 }

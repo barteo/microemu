@@ -290,9 +290,6 @@ public class ChoiceGroup extends Item implements Choice
 		if (elementNum < 0 || elementNum > numOfItems) {
 			throw new IndexOutOfBoundsException();
 		}
-		if (imagePart != null && imagePart.isMutable()) {
-			throw new IllegalArgumentException();
-		}
 		if (stringPart == null) {
 			throw new NullPointerException();
 		}

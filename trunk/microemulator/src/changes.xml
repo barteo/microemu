@@ -24,6 +24,7 @@
         <action dev="vlads" type="add">Progress bar Asynchronous non blocking loading of MIDlet jar</action>
         <action dev="vlads" type="update">new microemu Distribution modules</action>
         <action dev="vlads" type="update">restore ant build</action>
+        <action dev="barteo" type="add">Start ME2 as child windows from another java program.</action>
     </release>
 
     <release version="2.0.1-SNAPSHOT" date="Release date not defined" description="">

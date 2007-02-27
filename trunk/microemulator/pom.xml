@@ -55,7 +55,12 @@
         <module>microemulator</module>
         <module>microemu-tests</module>
         <module>microemu-examples</module>
+        <!-- Only during build on server
+            Use mvn -P webstart  to include  microemu-webstart
+        -->
+        <!--
         <module>microemu-webstart</module>
+        -->
     </modules>
 
 
@@ -438,6 +443,10 @@
         <profile>
             <!-- We will support ant build, Ant Runs with Java 1.4, 5 and 6 -->
             <id>build</id>
+            <modules>
+                <module>microemu-webstart</module>
+            </modules>
+
             <!--
             <build>
                 <plugins>
@@ -465,7 +474,14 @@
             </build>
             -->
         </profile>
-    </profiles>
 
+        <profile>
+            <id>webstart</id>
+            <modules>
+                <module>microemu-webstart</module>
+            </modules>
+        </profile>
+
+    </profiles>
 
 </project>

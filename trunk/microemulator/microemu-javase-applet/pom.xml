@@ -15,8 +15,9 @@
 
     <artifactId>microemu-javase-applet</artifactId>
     <name>microemu-javase-applet</name>
+    <packaging>pom</packaging>
 
-    <description>javase-swing</description>
+    <description>MicroEmulator applet assembly for distribution</description>
 
     <dependencies>
 
@@ -25,6 +26,7 @@
             <artifactId>microemu-cldc</artifactId>
             <version>${project.version}</version>
             <classifier>4applet</classifier>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -37,6 +39,7 @@
                     <groupId>org.microemu</groupId><artifactId>microemu-cldc</artifactId>
                 </exclusion>
             </exclusions>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -58,6 +61,7 @@
                     <groupId>asm</groupId><artifactId>asm</artifactId>
                 </exclusion>
             </exclusions>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -84,6 +88,8 @@
                 </executions>
                 <configuration>
                     <proguardInclude>${basedir}/proguard.conf</proguardInclude>
+                    <attach>true</attach>
+                    <appendClassifier>false</appendClassifier>
                     <assembly>
                         <inclusions>
                             <inclusion>

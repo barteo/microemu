@@ -52,6 +52,7 @@
         <module>microemu-javase-applet</module>
         <module>microemu-javase-swt</module>
         <module>microemu-extensions</module>
+        <module>microemulator</module>
         <module>microemu-tests</module>
         <module>microemu-examples</module>
         <module>microemu-webstart</module>

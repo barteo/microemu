@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0">
+    <!-- @version $Revision$ ($Author$) $Date$ -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.microemu</groupId>
+        <artifactId>microemu</artifactId>
+        <version>2.0.1-SNAPSHOT</version><!--me-version-->
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>microemulator</artifactId>
+    <name>microemulator</name>
+    <packaging>pom</packaging>
+
+    <description>MicroEmulator one jar assembly for distribution</description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-javase-swing</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-javase-swt</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <!-- app jar-with-dependencies -->
+            <plugin>
+               <artifactId>maven-assembly-plugin</artifactId>
+               <executions>
+                   <execution>
+                       <phase>package</phase>
+                       <goals><goal>single</goal></goals>
+                   </execution>
+               </executions>
+               <configuration>
+                   <attach>true</attach>
+                   <appendAssemblyId>false</appendAssemblyId>
+                   <descriptors>
+                       <descriptor>assembly.xml</descriptor>
+                   </descriptors>
+                   <archive>
+                        <manifest>
+                            <mainClass>org.microemu.app.Main</mainClass>
+                        </manifest>
+                    </archive>
+               </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

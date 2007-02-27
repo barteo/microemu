@@ -48,25 +48,46 @@ public class HTTPPanel extends BaseExamplesForm {
 	
 	TextField url;
 	
-	StringItem reply;
+	StringItem message;
+	
+	StringItem status;
+	
+	Thread requestThread = null;
 	
 	public HTTPPanel() {
 		super("HTTP Connection");
 		
 		append(url = new TextField("URL:", demoLocation, 128, TextField.URL));
-		append(reply = new StringItem("Message:", null));
+		append(message = new StringItem("Message:", null));
+		append(status = new StringItem("Status:", null));
 		
 		addCommand(goCommand);
 	}
 
+	private void makeConnection() {
+		if (requestThread == null) {
+			requestThread = new Thread(new ConnectionRun());
+			requestThread.start();
+		} else {
+			message.setText("Request still running");  
+		}
+	}
+	
+	class ConnectionRun implements Runnable {
+
+		public void run() {
+			tryConnect();
+		}
+	}
+	
 	private void tryConnect() {
 		Connection c = null;
 		InputStream is = null;
 		try {
-			reply.setText("Connecting..");
+			status.setText("Connecting...");
 			c = Connector.open(url.getString(), Connector.READ, true);
 			HttpConnection hcon = (HttpConnection) c;
-			
+			status.setText("http:" + String.valueOf(hcon.getResponseCode()) + " len:" + String.valueOf(hcon.getLength()));
 			int length = (int) hcon.getLength();
             byte[] data = null;
             if (length != -1) {
@@ -95,15 +116,17 @@ public class HTTPPanel extends BaseExamplesForm {
                 data = new byte[index];
                 System.arraycopy(readData, 0, data, 0, index);
             }
-            reply.setText(new String(data));            
+            message.setText(new String(data));            
 		} catch (Throwable e) {
 			System.out.println(e.toString());
 			e.printStackTrace();
-			reply.setText(e.getMessage());
-			Alert alert = new Alert("Error", e.toString(), null, AlertType.ERROR);
+			status.setText(e.toString());
+			message.setText("");
+			Alert alert = new Alert("Error", e.getMessage() + " " + e.toString(), null, AlertType.ERROR);
 			alert.setTimeout(Alert.FOREVER);
 			SimpleDemoMIDlet.setCurrentDisplayable(alert);
 		} finally {
+			requestThread = null;
 			if (is != null) {
                 try {
 					is.close();
@@ -121,7 +144,7 @@ public class HTTPPanel extends BaseExamplesForm {
 	
 	public void commandAction(Command c, Displayable d) {
 		if (c == goCommand) {
-			tryConnect();
+			makeConnection();
 		}
 		super.commandAction(c, d);
 	}

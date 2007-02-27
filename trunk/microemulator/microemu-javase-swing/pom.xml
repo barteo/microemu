@@ -25,12 +25,13 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- Used for ready for applet Preprocessor  -->
+        <!-- Used for ready for applet Preprocessor should only in pakaged jar -->
         <dependency>
             <groupId>org.microemu</groupId>
             <artifactId>microemu-injected</artifactId>
             <version>${project.version}</version>
             <classifier>inject</classifier>
+            <optional>true</optional>
         </dependency>
 
         <dependency>

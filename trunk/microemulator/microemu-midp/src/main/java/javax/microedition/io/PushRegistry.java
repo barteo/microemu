@@ -1,6 +1,7 @@
 /*
  *  MicroEmulator
  *  Copyright (C) 2001-2006 Bartek Teodorczyk <barteo@barteo.net>
+ *  Copyright (C) 2006-2007 Vlad Skarzhevskyy
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -15,43 +16,49 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  @version $Id$  
  */
 
 package javax.microedition.io;
 
 import java.io.IOException;
 
+import org.microemu.microedition.ImplFactory;
+import org.microemu.microedition.io.PushRegistryDelegate;
+
 public class PushRegistry {
-	
+
+	private static PushRegistryDelegate impl;
+
+	static {
+		impl = (PushRegistryDelegate) ImplFactory.getImplementation(PushRegistry.class, PushRegistryDelegate.class);
+	}
+
 	public static void registerConnection(String connection, String midlet, String filter)
-    		throws ClassNotFoundException, IOException {
-		// TODO implement
+			throws ClassNotFoundException, IOException {
+		impl.registerConnection(connection, midlet, filter);
 	}
-	
+
 	public static boolean unregisterConnection(String connection) {
-		// TODO implement
-		return false;
+		return impl.unregisterConnection(connection);
 	}
-	
+
 	public static String[] listConnections(boolean available) {
-		// TODO implement
-		return new String[0];
+		return impl.listConnections(available);
 	}
-	
+
 	public static String getMIDlet(String connection) {
-		// TODO implement
-		return null;
+		return impl.getMIDlet(connection);
 	}
-	
+
 	public static String getFilter(String connection) {
-		// TODO implement
-		return null;
+		return impl.getFilter(connection);
 	}
-	
-	public static long registerAlarm(String midlet, long time)
-			throws ClassNotFoundException, ConnectionNotFoundException {
-		// TODO implement
-		throw new ConnectionNotFoundException();
+
+	public static long registerAlarm(String midlet, long time) throws ClassNotFoundException,
+			ConnectionNotFoundException {
+		return impl.registerAlarm(midlet, time);
 	}
 
 }

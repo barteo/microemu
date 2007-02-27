@@ -78,8 +78,8 @@ public class SimpleDemoMIDlet extends MIDlet implements CommandListener {
 
 			for (int i = 0; i < screenPanels.length; i++) {
 				menuList.append(screenPanels[i].getTitle(), null);
-				if (screenPanels[i] instanceof Screen) {
-					((Screen) screenPanels[i]).setTicker(ticker);
+				if ((screenPanels[i] instanceof Screen) && (i < 4)) {
+					((Screen)screenPanels[i]).setTicker(ticker);
 				}
 			}
 			menuList.addCommand(exitCommand);

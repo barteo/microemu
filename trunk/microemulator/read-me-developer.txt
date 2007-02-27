@@ -31,3 +31,16 @@
   We run proguard 3 times with deferent options
    on microemu-cldc and microemu-midp we need to preserve all API declarations
    on microemu-javase+microemu-javase-swing assembly we just need to preserve main applet class.
+
+* Building Web Start
+
+   We are using signed Web Start.
+   The microemu-webstart module is created to be build by primary ME2 developers only because it involves signing jars with our keys.
+   The module can still be used by other as reference. Please see microemu-webstart\key.txt
+
+   microemu-webstart module is not part of regular build
+   To build webstart module use
+    mvn -P webstart
+   When building all application.
+   This is because some users may get ME2 SVN tree and try to compile.
+   The microemu-webstart will fail for them.

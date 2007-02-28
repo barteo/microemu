@@ -34,6 +34,8 @@ public abstract class Displayable
 	
 	Display currentDisplay = null;
     
+    boolean fullScreenMode;
+
     private Ticker ticker;
     
     // TODO make private
@@ -42,7 +44,7 @@ public abstract class Displayable
     protected int viewPortY;
     // TODO make private
     protected int viewPortHeight;
-
+    
     /**
      * @associates Command 
      */
@@ -55,7 +57,8 @@ public abstract class Displayable
         this.title = new StringComponent(title);
         
         this.device = DeviceFactory.getDevice();
-        this.sizeChangedDeferredRequest = false;
+        this.sizeChangedDeferredRequest = false;        
+        this.fullScreenMode = false;
     }
     
 
@@ -101,15 +104,21 @@ public abstract class Displayable
     
     public int getWidth()
     {
-        // FIXME
-        return device.getDeviceDisplay().getWidth();
+    	if (fullScreenMode) {
+    		return device.getDeviceDisplay().getFullWidth();
+    	} else {
+    		return device.getDeviceDisplay().getWidth();
+    	}
     }
 
 
     public int getHeight()
     {
-        // FIXME
-        return device.getDeviceDisplay().getHeight();
+    	if (fullScreenMode) {
+    		return device.getDeviceDisplay().getFullHeight();
+    	} else {
+    		return device.getDeviceDisplay().getHeight();
+    	}
     }
 
 
@@ -238,7 +247,7 @@ public abstract class Displayable
 	{
 		currentDisplay = d;
         viewPortY = 0;
-        viewPortHeight = device.getDeviceDisplay().getHeight() - this.title.getHeight() - 1;
+        viewPortHeight = getHeight() - this.title.getHeight() - 1;
         if (ticker != null) {
         		viewPortHeight -= this.ticker.getHeight();
         }

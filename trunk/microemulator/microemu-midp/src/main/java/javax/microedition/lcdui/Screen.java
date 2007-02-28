@@ -75,9 +75,7 @@ public abstract class Screen extends Displayable
 		}
 
 		g.setGrayScale(255);
-		g.fillRect(0, 0, 
-				DeviceFactory.getDevice().getDeviceDisplay().getWidth(), 
-				DeviceFactory.getDevice().getDeviceDisplay().getHeight());
+		g.fillRect(0, 0, getWidth(), getHeight());
 
 		g.setGrayScale(0);
 
@@ -91,21 +89,18 @@ public abstract class Screen extends Displayable
 
         // TODO move to Displayable
 		contentHeight += title.paint(g);
-		g.drawLine(0, title.getHeight(), 
-				DeviceFactory.getDevice().getDeviceDisplay().getWidth(), title.getHeight());
+		g.drawLine(0, title.getHeight(), getWidth(), title.getHeight());
 		contentHeight += 1;
 
 		g.translate(0, contentHeight - translatedY);
 		translatedY = contentHeight;
 
-		g.setClip(0, 0,
-				DeviceFactory.getDevice().getDeviceDisplay().getWidth(),
-				DeviceFactory.getDevice().getDeviceDisplay().getHeight() - contentHeight);
+		g.setClip(0, 0, getWidth(), getHeight() - contentHeight);
 		g.translate(0, -viewPortY);
 		contentHeight += paintContent(g);
 		g.translate(0, viewPortY);
 
-		if (contentHeight - viewPortY > DeviceFactory.getDevice().getDeviceDisplay().getHeight()) {
+		if (contentHeight - viewPortY > getHeight()) {
 			currentDisplay.setScrollDown(true);
 		} else {
 			currentDisplay.setScrollDown(false);

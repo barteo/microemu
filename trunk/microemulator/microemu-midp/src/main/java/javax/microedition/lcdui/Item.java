@@ -25,6 +25,8 @@ package javax.microedition.lcdui;
 
 import java.util.Vector;
 
+import org.microemu.device.DeviceFactory;
+
 public abstract class Item
 {
 
@@ -307,11 +309,13 @@ public abstract class Item
 	}
 
 	int getMaximumHeight() {
-		return Form.getMaximumItemHeight();
+		// TODO use Screen getHeight 
+		return DeviceFactory.getDevice().getDeviceDisplay().getHeight() * 10;
 	}
 	
 	int getMaximumWidth() {
-		return Form.getMaximumItemWidth();
+		// TODO use Screen getWidth 
+		return DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 3;
 	}
 
 	ItemCommandListener getItemCommandListener() {

@@ -515,16 +515,6 @@ public class Form extends Screen
 		}
 	}
 
-	static int getMaximumItemWidth() {
-		return DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 3; 
-
-	}
-
-	static int getMaximumItemHeight() {
-		// XXX check this!
-		return DeviceFactory.getDevice().getDeviceDisplay().getHeight() * 10;
-	}
-
 	Vector getCommands() {
 		Vector formCommands = super.getCommands();
 		if (focusItemIndex < 0)

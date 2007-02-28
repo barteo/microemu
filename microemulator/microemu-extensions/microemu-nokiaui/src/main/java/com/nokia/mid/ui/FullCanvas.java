@@ -50,6 +50,7 @@ public abstract class FullCanvas extends Canvas
 	protected FullCanvas()
 	{
 		super();
+		super.setFullScreenMode(true);
 		super.addCommand(new NokiaCommand(KEY_SOFTKEY1,Command.OK));
 		super.addCommand(new NokiaCommand(KEY_SOFTKEY2,Command.BACK));
 		super.setCommandListener(new NokiaCommandListener(this));
@@ -66,13 +67,13 @@ public abstract class FullCanvas extends Canvas
     
 	public int getWidth()
 	{
-		return device.getDeviceDisplay().getFullWidth();
+		return super.getWidth();
 	}
 
 
 	public int getHeight()
 	{
-		return device.getDeviceDisplay().getFullHeight();
+		return super.getHeight();
 	}
 
 	/** Commands are not supported by FullCanvas

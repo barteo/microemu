@@ -18,7 +18,7 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  @version $Id: DateFieldPanel.java 905 2007-02-13 23:53:20Z vlads $
+ *  @version $Id$
  */
 
     header('Content-Type: application/x-java-jnlp-file');

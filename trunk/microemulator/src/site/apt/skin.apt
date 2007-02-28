@@ -55,7 +55,7 @@ Custom Skin Creation for MicroEmulator
     See Schema for device.xml {{{2.0/device.xsd}http://www.microemu.org/2.0/device.xsd}} and {{{2.0/xsd-doc/index.html}XML Schema Documentation}}.
 ~~     or {{{2.0/device.xsd.html}XML Schema Documentation}}..
 
-    The root element for device.xml is <device>. Is contains <img> images making up the skin, <display> and <fonts> definition and finally <input> descriptor.
+    The root element for device.xml is <device>. It contains <img> images making up the skin, <display> and <fonts> definition and finally <input> descriptor.
 
     * device Attribute extends
 

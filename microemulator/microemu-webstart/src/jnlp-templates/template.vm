@@ -25,7 +25,7 @@
   <application-desc main-class="$mainClass">
         <argument>--impl</argument>
         <argument>org.microemu.cldc.file.FileSystem</argument>
-        <argument>org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet</argument>
+        <!--jadRewrite--><argument>org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet</argument><!--jadRewrite-->
   </application-desc>
 
 </jnlp>

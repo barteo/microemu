@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp
   spec="1.0+"
-  codebase="http://www.microemu.org/microemu-webstart"
-  href="$outputFile">
+  codebase="http://www.microemu.org/microemu-webstart">
   <information>
     <title>MicroEmulator</title>
     <vendor>Bartek Teodorczyk & Vlad Skarzhevskyy</vendor>

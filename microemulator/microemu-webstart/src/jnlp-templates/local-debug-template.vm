@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp
   spec="1.0+"
-  codebase="http://localhost:8080/microemu-webstart/"
-  href="$outputFile">
+  codebase="http://localhost:8080/microemu-webstart/">
   <information>
     <title>MicroEmulator</title>
     <vendor>Bartek Teodorczyk & Vlad Skarzhevskyy</vendor>

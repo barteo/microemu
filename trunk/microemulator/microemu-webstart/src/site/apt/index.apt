@@ -10,26 +10,26 @@ MicroEmulator Web Start
 
     To start MicroEmulator application click this link {{{demo.jnlp}Java Web Start}}.
 
-    You can Drag and Drop .jad files or links to running MicroEmulator application.
+    You can Drag and Drop .jad files or http jad links to running MicroEmulator application.
 
 * Some example applications you can try.
 
 ~~    * {{{http://mini.opera.com/global/opera-mini-3.0.6636-advanced-int.jad} Opera Mini}}
 ~~  {{{open/}Web Start}}
 
-    * {{{http://wintermute.de/wap/extended/5ud0ku.jad}A Sudoku Game.jad}}   {{{open/wintermute.de/wap/extended/5ud0ku}Web Start}}
+    * {{{http://wintermute.de/wap/extended/5ud0ku.jad}A Sudoku Game.jad}}   <<<{{{open/wintermute.de/wap/extended/5ud0ku.jnlp}\u00bbOpen}}>>>
 
     * {{{../microemu-examples/microemu-demo/simpledemo.jad}MicroEmulator Demo.jad}}
 
     * {{{../microemu-examples/microemu-fcview/microemu-fcview.jad}MicroEmulator JSR-75 Demo.jad}}
 
-    * {{{http://www.google.com/gmm/apps/v1.4.4/L1/gmaps-Sony_Ericsson-W810_L1.jad}Google Maps for Sony Ericsson.jad}}    {{{open/www.google.com/gmm/apps/v1.4.4/L1/gmaps-Sony_Ericsson-W810_L1}Web Start}}
+    * {{{http://www.google.com/gmm/apps/v1.4.4/L1/gmaps-Sony_Ericsson-W810_L1.jad}Google Maps for Sony Ericsson.jad}}   <<<{{{open/www.google.com/gmm/apps/v1.4.4/L1/gmaps-Sony_Ericsson-W810_L1.jnlp}\u00bbOpen}}>>>
 
-    * {{{http://www.google.com/gmm/apps/v1.4.4/L1/gmaps-Generic-Advanced_MIDP2_L1.jad}Google Maps Generic.jad}}   {{{open/}Web Start}}
+    * {{{http://www.google.com/gmm/apps/v1.4.4/L1/gmaps-Generic-Advanced_MIDP2_L1.jad}Google Maps Generic.jad}}        <<<{{{open/www.google.com/gmm/apps/v1.4.4/L1/gmaps-Generic-Advanced_MIDP2_L1.jnlp}\u00bbOpen}}>>>
 
-    * {{{http://www.gmail.com/app/v1.1.0/L1/gm-Sony_Ericsson-W810.jad}Google Gmail for Sony Ericsson.jad}}   {{{open/}Web Start}}
+    * {{{http://www.gmail.com/app/v1.1.0/L1/gm-Sony_Ericsson-W810.jad}Google Gmail for Sony Ericsson.jad}}   <<<{{{open/www.gmail.com/app/v1.1.0/L1/gm-Sony_Ericsson-W810.jnlp}\u00bbOpen}}>>>
 
-    * {{{http://www.gmail.com/app/v1.1.0/L1/gm-Generic-Advanced_MIDP2.jad}Google Gmail Generic.jad}}  {{{open/}Web Start}}
+    * {{{http://www.gmail.com/app/v1.1.0/L1/gm-Generic-Advanced_MIDP2.jad}Google Gmail Generic.jad}}  <<<{{{open/www.gmail.com/app/v1.1.0/L1/gm-Generic-Advanced_MIDP2.jnlp}\u00bbOpen}}>>>
 
 
 * Other MicroEmulator Web Start demonstrations
@@ -51,8 +51,9 @@ MicroEmulator Web Start URL:
 ---
 
   HTML text on your page:
+
 ---
     <a href="http://microemu.org/webstart/wintermute.de/wap/extended/5ud0ku.jnlp">Run it now</a>
 ---
 
-  {{{http://microemu.org/webstart/wintermute.de/wap/extended/5ud0ku}Try it yourself first}}
+  {{{http://microemu.org/webstart/wintermute.de/wap/extended/5ud0ku.jnlp}Try it yourself first}}

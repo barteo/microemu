@@ -2,7 +2,7 @@
 <jnlp
   spec="1.0+"
   codebase="http://pyx4j.com/snapshot/microemu/microemu-webstart"
-  href="$outputFile">
+  href="demo.jnlp">
   <information>
     <title>MicroEmulator</title>
     <vendor>Bartek Teodorczyk & Vlad Skarzhevskyy</vendor>
@@ -26,7 +26,7 @@
   <application-desc main-class="$mainClass">
         <argument>--impl</argument>
         <argument>org.microemu.cldc.file.FileSystem</argument>
-        <argument>org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet</argument>
+        <!--jadRewrite--><argument>org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet</argument><!--jadRewrite-->
   </application-desc>
 
 </jnlp>

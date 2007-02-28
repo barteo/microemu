@@ -15,22 +15,44 @@ MicroEmulator Web Start
 * Some example applications you can try.
 
 ~~    * {{{http://mini.opera.com/global/opera-mini-3.0.6636-advanced-int.jad} Opera Mini}}
+~~  {{{open/}Web Start}}
 
-    * {{{http://wintermute.de/wap/extended/5ud0ku.jad}A Sudoku Game}}
+    * {{{http://wintermute.de/wap/extended/5ud0ku.jad}A Sudoku Game.jad}}   {{{open/wintermute.de/wap/extended/5ud0ku}Web Start}}
 
-    * {{{../microemu-examples/microemu-demo/simpledemo.jad}MicroEmulator Demo}}
+    * {{{../microemu-examples/microemu-demo/simpledemo.jad}MicroEmulator Demo.jad}}
 
-    * {{{../microemu-examples/microemu-fcview/microemu-fcview.jad}MicroEmulator JSR-75 Demo}}
+    * {{{../microemu-examples/microemu-fcview/microemu-fcview.jad}MicroEmulator JSR-75 Demo.jad}}
 
-    * {{{http://www.google.com/gmm/apps/v1.4.4/L1/gmaps-Sony_Ericsson-W810_L1.jad}Google Maps for Sony Ericsson}}
+    * {{{http://www.google.com/gmm/apps/v1.4.4/L1/gmaps-Sony_Ericsson-W810_L1.jad}Google Maps for Sony Ericsson.jad}}    {{{open/www.google.com/gmm/apps/v1.4.4/L1/gmaps-Sony_Ericsson-W810_L1}Web Start}}
 
-    * {{{http://www.google.com/gmm/apps/v1.4.4/L1/gmaps-Generic-Advanced_MIDP2_L1.jad}Google Maps Generic}}
+    * {{{http://www.google.com/gmm/apps/v1.4.4/L1/gmaps-Generic-Advanced_MIDP2_L1.jad}Google Maps Generic.jad}}   {{{open/}Web Start}}
 
-    * {{{http://www.gmail.com/app/v1.1.0/L1/gm-Sony_Ericsson-W810.jad}Google Gmail for Sony Ericsson}}
+    * {{{http://www.gmail.com/app/v1.1.0/L1/gm-Sony_Ericsson-W810.jad}Google Gmail for Sony Ericsson.jad}}   {{{open/}Web Start}}
 
-    * {{{http://www.gmail.com/app/v1.1.0/L1/gm-Generic-Advanced_MIDP2.jad}Google Gmail Generic}}
+    * {{{http://www.gmail.com/app/v1.1.0/L1/gm-Generic-Advanced_MIDP2.jad}Google Gmail Generic.jad}}  {{{open/}Web Start}}
 
 
 * Other MicroEmulator Web Start demonstrations
 
     MicroEmulator Web Start with JSR-82 available at {{{http://bluecove.sourceforge.net/}BlueCove project website}}
+
+
+* Add a link from your page to start MicroEmulator.
+
+    Your users can start your MIDlet application with a single click.
+
+    URL Example:
+
+---
+For JAD URL:
+    http://wintermute.de/wap/extended/5ud0ku.jad
+MicroEmulator Web Start URL:
+    http://microemu.org/webstart/wintermute.de/wap/extended/5ud0ku.jnlp
+---
+
+  HTML text on your page:
+---
+    <a href="http://microemu.org/webstart/wintermute.de/wap/extended/5ud0ku.jnlp">Run it now</a>
+---
+
+  {{{http://microemu.org/webstart/wintermute.de/wap/extended/5ud0ku}Try it yourself first}}

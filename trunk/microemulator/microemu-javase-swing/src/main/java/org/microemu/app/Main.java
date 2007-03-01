@@ -434,6 +434,7 @@ public class Main extends JFrame {
 			params.add(args[i]);
 		}
 
+		Common.initParams(params);
 		Main app = new Main();
 		app.common.initDevice(params, app.selectDevicePanel.getSelectedDeviceEntry());
 		app.updateDevice();

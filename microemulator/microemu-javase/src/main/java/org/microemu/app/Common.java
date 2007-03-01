@@ -464,6 +464,18 @@ public class Common implements MicroEmulator, CommonInterface {
 		}
 	}
 
+	public static void initParams(List params) {
+		Iterator it = params.iterator();
+		while (it.hasNext()) {
+			String tmp = (String) it.next();
+			if (tmp.equals("--id")) {
+				it.remove();
+				Config.setEmulatorID((String)it.next());
+				it.remove();
+			}
+		}
+	}
+	
 	public void initDevice(List params, DeviceEntry defaultDevice) {
 		RecordStoreManager paramRecordStoreManager = null;
 		Class deviceClass = null;
@@ -637,6 +649,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		return
 			"[(-d | --device) ({device descriptor} | {device class name}) ] " +
 			"[--rms (file | memory)] " +
+			"[--id EmulatorID ] " +
 			"[--impl {JSR implementation class name}]" +
 			"[--appclasspath <MIDlet CLASSPATH>]" +
 			"[--appclass <library class name>]" +

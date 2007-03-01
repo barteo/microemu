@@ -46,8 +46,13 @@ import org.microemu.log.Logger;
 
 public class Config {
 
-	private static File configPath = initConfigPath();
+	private static File meHome;
 
+	/**
+	 * emulatorID used for multiple instance of MicroEmulator, now redefine home
+	 */
+	private static String emulatorID;
+	
 	private static XMLElement configXml;
 
 	private static DeviceEntry defaultDevice;
@@ -56,9 +61,14 @@ public class Config {
 	
 	private static MRUList urlsMRU = new MRUList(MidletURLReference.class, "midlet");
 
-	private static File initConfigPath() {
+	private static File initMEHomePath() {
 		try {
-			return new File(System.getProperty("user.home") + "/.microemulator/");
+			File meHome = new File(System.getProperty("user.home") + "/.microemulator/");
+			if (emulatorID != null) {
+				return new File(meHome, emulatorID);
+			} else {
+				return meHome;
+			}
 		} catch (SecurityException e) {
 			Logger.error("Cannot access user.home", e);
 			return null;
@@ -69,28 +79,32 @@ public class Config {
 		Config.defaultDevice = defaultDevice;
 		Config.emulatorContext = emulatorContext;
 
-    	File configFile = new File(configPath, "config2.xml");
+    	File configFile = new File(getConfigPath(), "config2.xml");
 		try {
 	    	if (configFile.exists()) {
 				loadConfigFile("config2.xml");
 			} else {
-				// migrate from config.xml
-				loadConfigFile("config.xml");
+				configFile = new File(getConfigPath(), "config.xml");
+				if (configFile.exists()) {
+					// migrate from config.xml
+					loadConfigFile("config.xml");
 
-				for (Enumeration e = getDeviceEntries().elements(); e.hasMoreElements();) {
-					DeviceEntry entry = (DeviceEntry) e.nextElement();
-					if (!entry.canRemove()) {
-						continue;
+					for (Enumeration e = getDeviceEntries().elements(); e.hasMoreElements();) {
+						DeviceEntry entry = (DeviceEntry) e.nextElement();
+						if (!entry.canRemove()) {
+							continue;
+						}
+
+						removeDeviceEntry(entry);
+						File src = new File(getConfigPath(), entry.getFileName());
+						File dst = File.createTempFile("dev", ".jar", getConfigPath());
+						IOUtils.copyFile(src, dst);
+						entry.setFileName(dst.getName());
+						addDeviceEntry(entry);
 					}
-
-					removeDeviceEntry(entry);
-					File src = new File(configPath, entry.getFileName());
-					File dst = File.createTempFile("dev", ".jar", configPath);
-					IOUtils.copyFile(src, dst);
-					entry.setFileName(dst.getName());
-					addDeviceEntry(entry);
+				} else {
+					createDefaultConfigXml();
 				}
-
 				saveConfig();
 			}
 		} catch (IOException ex) {
@@ -107,7 +121,7 @@ public class Config {
 	}
 
 	private static void loadConfigFile(String configFileName) throws IOException {
-		File configFile = new File(configPath, configFileName);
+		File configFile = new File(getConfigPath(), configFileName);
 		InputStream is = null;
 		String xml = "";
 		try {
@@ -137,9 +151,9 @@ public class Config {
 		
 		urlsMRU.save(configXml.getChildOrNew("files").getChildOrNew("recent"));
 		
-		File configFile = new File(configPath, "config2.xml");
+		File configFile = new File(getConfigPath(), "config2.xml");
 
-		configPath.mkdirs();
+		getConfigPath().mkdirs();
 		FileWriter fw = null;
 		try {
 			fw = new FileWriter(configFile);
@@ -193,7 +207,10 @@ public class Config {
 	}
 
   	public static File getConfigPath() {
-		return configPath;
+  		if (meHome == null) {
+  			meHome = initMEHomePath();
+  		}
+		return meHome;
 	}
 
 	public static Vector getDeviceEntries() {
@@ -378,6 +395,14 @@ public class Config {
 
 	public static MRUList getUrlsMRU() {
 		return urlsMRU;
+	}
+
+	public static String getEmulatorID() {
+		return emulatorID;
+	}
+
+	public static void setEmulatorID(String emulatorID) {
+		Config.emulatorID = emulatorID;
 	}
 
 }

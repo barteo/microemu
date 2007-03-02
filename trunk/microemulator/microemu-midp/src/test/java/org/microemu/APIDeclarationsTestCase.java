@@ -77,6 +77,11 @@ public class APIDeclarationsTestCase extends TestCase {
 	
 	protected ClassPool createClassPool(String className) throws Exception {
 		ClassPool classPool = new ClassPool(true);
+		appendClassPath(classPool, className);
+		return classPool;
+	}
+	
+	protected void appendClassPath(ClassPool classPool, String className) throws Exception {
 		String resource = getClassResourceName(className);
 		URL url = this.getClass().getClassLoader().getResource(resource);
 		if (url == null) {
@@ -84,11 +89,17 @@ public class APIDeclarationsTestCase extends TestCase {
 		}
 		String path = url.toExternalForm();
 		path = path.substring(0, path.length() - resource.length() - 1);
+		if (path.startsWith("jar:")) {
+			path = path.substring(4);
+		}
 		if (path.startsWith("file:")) {
 			path = path.substring(5);
 		}
-		classPool.appendClassPath(path);
-		return classPool;
+		if (path.endsWith("!")) {
+			path = path.substring(0, path.length() - 1);
+		}
+		System.out.println(path);
+		classPool.appendClassPath(path);		
 	}
 	
 	protected void verifyClassList(List names, ClassPool implClassPool, ClassPool refClassPool) throws Exception {

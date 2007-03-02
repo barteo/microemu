@@ -62,12 +62,14 @@ public class MIDP2APIDeclarationsTest extends APIDeclarationsTestCase{
 
 	public void testGenericConnectionFrameworkAPI() throws Exception {
 
+		String aPackage = "javax.microedition.io.";
+		
 		ClassPool wtkClassPool = createClassPool(getWtkJarURLList(new String[] { "midpapi20.jar", "cldcapi11.jar" }));
-		ClassPool ourClassPool = createClassPool("javax.microedition.io.Connection");
+		ClassPool ourClassPool = createClassPool(aPackage + "Connection");
+		appendClassPath(ourClassPool, aPackage + "PushRegistry");
 		
 		List names = new Vector();
 
-		String aPackage = "javax.microedition.io.";
 		// Interface
 		//names.add(aPackage + "CommConnection");
 		names.add(aPackage + "Connection");

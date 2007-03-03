@@ -174,11 +174,11 @@ public class Sprite extends Layer {
     }
     
     public int getRefPixelX() {
-        return refX;
+        return getX() + refX;
     }
     
     public int getRefPixelY() {
-        return refY;
+        return getY() + refY;
     }
 
     public void setRefPixelPosition(int x, int y) {

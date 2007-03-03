@@ -74,22 +74,23 @@ public class Alert extends Screen
 
 	public void addCommand(Command cmd)
 	{
-		if (cmd == Alert.DISMISS_COMMAND)
+		if (cmd == Alert.DISMISS_COMMAND) {
 			return;
-		else {
+		} else {
 			super.addCommand(cmd);
 			super.removeCommand(Alert.DISMISS_COMMAND);
-			if (getCommands().size() > 1) {
-				// XXX remove timeout
-			}
 		}
-			
-		throw new IllegalStateException("Alert does not accept commands");
 	}
 
 	public void removeCommand(Command cmd) {
-    	// TODO implement
-		super.removeCommand(cmd);
+		if (cmd == Alert.DISMISS_COMMAND) {
+			return;
+		} else {
+			super.removeCommand(cmd);
+			if (getCommands().size() == 0) {
+				super.addCommand(Alert.DISMISS_COMMAND);
+			}
+		}
 	}
 
 	public int getDefaultTimeout()

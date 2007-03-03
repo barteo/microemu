@@ -22,6 +22,7 @@
 
 package org.microemu.app.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -32,12 +33,8 @@ import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
-import org.microemu.app.classloader.ChangeCallsClassVisitor;
-import org.microemu.app.util.IOUtils;
+import org.microemu.app.classloader.ClassPreprocessor;
 import org.microemu.device.Device;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.ClassWriter;
 
 public class AppletProducer {
 
@@ -109,11 +106,7 @@ public class AppletProducer {
 					byte[] outputBuffer = inputBuffer;
 					int outputSize = size;
 					if (name.endsWith(".class")) {					
-						ClassReader cr = new ClassReader(inputBuffer, 0, size);
-				        ClassWriter cw = new ClassWriter(false);
-				        ClassVisitor cv = new ChangeCallsClassVisitor(cw);
-				        cr.accept(cv, false);
-				        outputBuffer = cw.toByteArray();
+				        outputBuffer = ClassPreprocessor.instrument(new ByteArrayInputStream(inputBuffer, 0, size));
 				        outputSize = outputBuffer.length;
 					}
 					jos.putNextEntry(new JarEntry(name));

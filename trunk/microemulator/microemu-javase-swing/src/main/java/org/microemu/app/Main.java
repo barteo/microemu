@@ -65,6 +65,7 @@ import org.microemu.app.ui.swing.SwingDeviceComponent;
 import org.microemu.app.ui.swing.SwingDialogWindow;
 import org.microemu.app.ui.swing.SwingErrorMessageDialogPanel;
 import org.microemu.app.ui.swing.SwingSelectDevicePanel;
+import org.microemu.app.util.AppletProducer;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.IOUtils;
 import org.microemu.app.util.MidletURLReference;

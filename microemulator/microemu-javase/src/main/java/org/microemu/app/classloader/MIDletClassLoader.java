@@ -289,7 +289,7 @@ public class MIDletClassLoader extends URLClassLoader {
 				Logger.info("Load MIDlet class", name);
 			}
 			if (instrumentMIDletClasses) {
-				byteCode = ClassPreporcessor.instrument(is);
+				byteCode = ClassPreprocessor.instrument(is);
 			} else {
 				int chunkSize = 1024;
 				//  No class or data object must be bigger than 16 Kilobyte

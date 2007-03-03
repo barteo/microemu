@@ -351,6 +351,8 @@ public class Common implements MicroEmulator, CommonInterface {
 			} catch (MalformedURLException ex) {
 				try {
 					url = new URL(jadUrl.substring(0, jadUrl.lastIndexOf('/') + 1) + jad.getJarURL());
+					// TODO check if IOUtils.getCanonicalFileURL is needed
+					jad.setCorrectedJarURL(url.toExternalForm());
 					Logger.debug("openJar url", url);
 				} catch (MalformedURLException ex1) {
 					Logger.error("Unable to find jar url", ex1);

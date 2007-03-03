@@ -28,10 +28,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.microedition.midlet.MIDletStateChangeException;
@@ -74,18 +78,21 @@ import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEFontManager;
 import org.microemu.device.j2se.J2SEInputMethod;
 import org.microemu.log.Logger;
+import org.microemu.util.JadMidletEntry;
 
 public class Main extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
-
-	private Main instance = null;
+	
+	private static final String APPLET_RESOURCE = "/me-applet.jar";
 
 	protected Common common;
 
 	protected SwingSelectDevicePanel selectDevicePanel = null;
 
 	private JadUrlPanel jadUrlPanel;
+
+	private JFileChooser saveForWebChooser;
 
 	private JFileChooser fileChooser = null;
 
@@ -95,6 +102,8 @@ public class Main extends JFrame {
 
 	private JMenuItem menuSelectDevice;
 
+	private JMenuItem menuSaveForWeb;
+	
 	private SwingDeviceComponent devicePanel;
 
 	private DeviceEntry deviceEntry;
@@ -139,7 +148,7 @@ public class Main extends JFrame {
 				fileChooser.setCurrentDirectory(new File(Config.getRecentJadDirectory()));
 			}
 
-			int returnVal = fileChooser.showOpenDialog(instance);
+			int returnVal = fileChooser.showOpenDialog(Main.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 					Config.setRecentJadDirectory(fileChooser.getCurrentDirectory().getAbsolutePath());
 					Config.saveConfig();
@@ -165,6 +174,106 @@ public class Main extends JFrame {
 		}
 	};
 
+	private ActionListener menuSaveForWebListener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			if (saveForWebChooser == null) {
+				ExtensionFileFilter fileFilter = new ExtensionFileFilter("HTML files");
+				fileFilter.addExtension("html");
+				saveForWebChooser = new JFileChooser();
+				saveForWebChooser.setFileFilter(fileFilter);
+				saveForWebChooser.setDialogTitle("Save for Web...");
+			}
+			if (saveForWebChooser.showSaveDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
+				File pathFile = saveForWebChooser.getSelectedFile().getParentFile();
+
+				String name = saveForWebChooser.getSelectedFile().getName();
+				if (!name.toLowerCase().endsWith(".html") && name.indexOf('.') == -1) {
+					name = name + ".html";
+				}
+
+				InputStream appletPackageInputStream = getClass().getResourceAsStream(APPLET_RESOURCE);
+				if (appletPackageInputStream == null) {
+					ExtensionFileFilter fileFilter = new ExtensionFileFilter("JAR packages");
+					fileFilter.addExtension("jar");
+					JFileChooser appletChooser = new JFileChooser();
+					appletChooser.setFileFilter(fileFilter);
+					appletChooser.setDialogTitle("Select MicroEmulator applet jar package...");
+					if (appletChooser.showOpenDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
+						try {
+							appletPackageInputStream = new FileInputStream(appletChooser.getSelectedFile());
+						} catch (FileNotFoundException ex) {
+							Logger.error(ex);
+						}
+					} else {
+						return;
+					}
+				}
+
+				JadMidletEntry jadMidletEntry;
+				Iterator it = common.jad.getMidletEntries().iterator();
+				if (it.hasNext()) {
+					jadMidletEntry = (JadMidletEntry) it.next();
+				} else {
+					Message.error("MIDlet Suite has no entries");
+					return;
+				}
+
+				String midletInput = common.jad.getJarURL();
+				DeviceEntry deviceInput = selectDevicePanel.getSelectedDeviceEntry();
+				if (deviceInput != null && deviceInput.getDescriptorLocation().equals(DeviceImpl.DEFAULT_LOCATION)) {
+					deviceInput = null;
+				}
+
+				File htmlOutputFile = new File(pathFile, name);
+				if (!allowOverride(htmlOutputFile)) {
+					return;
+				}
+				File appletPackageOutputFile = new File(pathFile, "me-applet.jar");
+				if (!allowOverride(appletPackageOutputFile)) {
+					return;
+				}
+				File midletOutputFile = new File(pathFile, midletInput.substring(midletInput.lastIndexOf("/") + 1));
+				if (!allowOverride(midletOutputFile)) {
+					return;
+				}
+				File deviceOutputFile = null;
+				String deviceDescriptorLocation = null;
+				if (deviceInput != null) {
+					deviceOutputFile = new File(pathFile, deviceInput.getFileName());
+					if (!allowOverride(deviceOutputFile)) {
+						return;
+					}
+					deviceDescriptorLocation = deviceInput.getDescriptorLocation();
+				}
+
+				try {
+					AppletProducer.createHtml(htmlOutputFile, DeviceFactory.getDevice(), jadMidletEntry.getClassName(),
+							midletOutputFile, appletPackageOutputFile, deviceOutputFile, deviceDescriptorLocation);
+					AppletProducer.createMidlet(midletInput, midletOutputFile);
+					IOUtils.copyToFile(appletPackageInputStream, appletPackageOutputFile);
+					if (deviceInput != null) {
+						IOUtils.copyFile(new File(Config.getConfigPath(), deviceInput.getFileName()), deviceOutputFile);
+					}
+				} catch (IOException ex) {
+					Logger.error(ex);
+				}
+			}
+		}
+
+		private boolean allowOverride(File file) {
+			if (file.exists()) {
+				int answer = JOptionPane.showConfirmDialog(Main.this,
+						"Override the file:" + file + "?", "Question?",
+						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				if (answer == 1) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+	};
+
 	private ActionListener menuExitListener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			Config.setWindowX(Main.this.getX());
@@ -176,13 +285,13 @@ public class Main extends JFrame {
 
 	private ActionListener menuSelectDeviceListener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-			if (SwingDialogWindow.show(instance, "Select device...", selectDevicePanel)) {
+			if (SwingDialogWindow.show(Main.this, "Select device...", selectDevicePanel)) {
 				if (selectDevicePanel.getSelectedDeviceEntry().equals(deviceEntry)) {
 					return;
 				}
 				int restartMidlet = 1;
 				if (MIDletBridge.getCurrentMIDlet() != common.getLauncher()) {
-					restartMidlet = JOptionPane.showConfirmDialog(instance,
+					restartMidlet = JOptionPane.showConfirmDialog(Main.this,
 							"Changing device may trigger MIDlet to the unpredictable state and restart of MIDlet is recommended. \n"
 									+ "Do you want to restart the MIDlet? All MIDlet data will be lost.", "Question?",
 							JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -219,6 +328,12 @@ public class Main extends JFrame {
 			menuOpenJADFile.setEnabled(state);
 			menuOpenJADURL.setEnabled(state);
 			menuSelectDevice.setEnabled(state);
+
+			if (common.jad.getJarURL() != null) {
+				menuSaveForWeb.setEnabled(state);
+			} else {
+				menuSaveForWeb.setEnabled(false);
+			}
 		}
 	};
 
@@ -245,8 +360,6 @@ public class Main extends JFrame {
 	}
 
 	public Main(DeviceEntry defaultDevice) {
-		instance = this;
-
 		JMenuBar menuBar = new JMenuBar();
 
 		JMenu menuFile = new JMenu("File");
@@ -278,6 +391,12 @@ public class Main extends JFrame {
 		Config.getUrlsMRU().setListener(urlsMRU);
 		menuFile.add(urlsMRU);
 		
+		menuFile.addSeparator();
+
+		menuSaveForWeb = new JMenuItem("Save for Web...");
+		menuSaveForWeb.addActionListener(menuSaveForWebListener);
+		menuFile.add(menuSaveForWeb);
+
 		menuFile.addSeparator();
 
 		JMenuItem menuItem = new JMenuItem("Exit");
@@ -443,6 +562,8 @@ public class Main extends JFrame {
 		app.setVisible(true);
 
 		app.common.initMIDlet(params, false);
+		
+	    app.responseInterfaceListener.stateChanged(true);		
 	}
 
 }

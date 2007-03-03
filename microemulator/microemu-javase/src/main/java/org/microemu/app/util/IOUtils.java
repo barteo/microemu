@@ -63,17 +63,24 @@ public class IOUtils {
 	
 	public static void copyFile(File src, File dst) throws IOException {
 		FileInputStream fis = null;
-		FileOutputStream fos = null;
 		try {
 			fis = new FileInputStream(src);
+			copyToFile(fis, dst);
+		} finally {
+			closeQuietly(fis); 
+		}
+	}
+	
+	public static void copyToFile(InputStream is, File dst) throws IOException {
+		FileOutputStream fos = null;
+		try {
 			fos = new FileOutputStream(dst);
 			byte[] buf = new byte[1024]; 
 			int i = 0;
-			while ((i = fis.read(buf)) != -1) { 
+			while ((i = is.read(buf)) != -1) { 
 				fos.write(buf, 0, i);
 			}
 		} finally {
-			closeQuietly(fis); 
 			closeQuietly(fos);	
 		}
 	}

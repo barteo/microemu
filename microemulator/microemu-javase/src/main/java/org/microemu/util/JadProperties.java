@@ -31,6 +31,8 @@ public class JadProperties extends Properties
   
   Vector midletEntries = null;
   
+  String correctedJarURL = null;
+  
 
   public void clear()
   {
@@ -72,7 +74,17 @@ public class JadProperties extends Properties
   
   public String getJarURL()
   {
-    return getProperty("MIDlet-Jar-URL");
+	  if (correctedJarURL != null) {
+		  return correctedJarURL;
+	  } else {
+		  return getProperty("MIDlet-Jar-URL");
+	  }
+  }
+  
+  
+  public void setCorrectedJarURL(String correctedJarURL)
+  {
+	  this.correctedJarURL = correctedJarURL;
   }
   
   

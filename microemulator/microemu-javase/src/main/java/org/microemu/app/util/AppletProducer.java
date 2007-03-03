@@ -20,7 +20,7 @@
  *  @version $Id: AppletProducer.java 940 2007-02-16 20:59:37Z barteo $
  */
 
-package org.microemu.app;
+package org.microemu.app.util;
 
 import java.io.File;
 import java.io.FileOutputStream;

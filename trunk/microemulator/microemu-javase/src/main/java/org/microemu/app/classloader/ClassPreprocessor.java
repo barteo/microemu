@@ -33,7 +33,7 @@ import org.objectweb.asm.ClassWriter;
  * @author vlads
  *
  */
-public class ClassPreporcessor {
+public class ClassPreprocessor {
 
 	public static byte[] instrument(final InputStream classInputStream) {
 		try {

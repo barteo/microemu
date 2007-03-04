@@ -42,7 +42,7 @@ import org.microemu.log.Logger;
 public class MIDletSystemProperties {
 
 	/**
-	 * This may be a configuration option.
+	 * This may be a configuration option. But not for applet and Web Start.
 	 */
 	public static boolean applyToJavaSystemProperties = true;
 
@@ -56,17 +56,20 @@ public class MIDletSystemProperties {
 	private static List systemPropertiesDevice;
 
 	private static boolean wanrOnce = true;
+	
+	private static boolean initialized = false;
 
-	static {
-		init();
-	}
-
-	private static void init() {
+	private static void initOnce() {
+		// Can't use static initializer because of applyToJavaSystemProperties in applet
+		if (initialized) {
+			return;
+		}
+		initialized = true;
 		// This are set in Config
 		//setProperty("microedition.configuration", "CLDC-1.1");
 		//setProperty("microedition.configuration", "MIDP-2.0");
 		setProperty("microedition.platform", "MicroEmulator");
-		setProperty("microedition.encoding", System.getProperty("file.encoding"));
+		setProperty("microedition.encoding", getSystemProperty("file.encoding"));
 	}
 
 	/**
@@ -76,6 +79,7 @@ public class MIDletSystemProperties {
 	 * @return
 	 */
 	public static String getProperty(String key) {
+		initOnce();
 		if (props.containsKey(key)) {
 			return (String) props.get(key);
 		}
@@ -83,6 +87,14 @@ public class MIDletSystemProperties {
 		if (v != null) {
 			return v;
 		}
+		try {
+			return System.getProperty(key);
+		} catch (SecurityException e) {
+			return null;
+		}
+	}
+	
+	public static String getSystemProperty(String key) {
 		try {
 			return System.getProperty(key);
 		} catch (SecurityException e) {
@@ -98,10 +110,12 @@ public class MIDletSystemProperties {
 	}
 
 	public static Set getPropertiesSet() {
+		initOnce();
 		return props.entrySet();
 	}
 
 	public static String setProperty(String key, String value) {
+		initOnce();
 		if (applyToJavaSystemProperties) {
 			try {
 				if (value == null) {
@@ -113,6 +127,7 @@ public class MIDletSystemProperties {
 				if (wanrOnce) {
 					wanrOnce = false;
 					Logger.error("Cannot update Java System.Properties", e);
+					Logger.debug("Continue ME2 operations with no updates to system Properties");
 				}
 			}
 		}
@@ -134,6 +149,7 @@ public class MIDletSystemProperties {
 	}
 
 	public static void setProperties(Map properties) {
+		initOnce();
 		for (Iterator i = properties.entrySet().iterator(); i.hasNext();) {
 			Map.Entry e = (Map.Entry) i.next();
 			setProperty((String) e.getKey(), (String) e.getValue());
@@ -141,6 +157,7 @@ public class MIDletSystemProperties {
 	}
 
 	public static void setDevice(Device newDevice) {
+		initOnce();
 		// Restore System Properties from previous device activation.
 		if (systemPropertiesDevice != null) {
 			for (Iterator iter = systemPropertiesDevice.iterator(); iter.hasNext();) {

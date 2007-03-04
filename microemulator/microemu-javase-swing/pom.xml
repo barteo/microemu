@@ -41,31 +41,4 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <!-- app jar-with-dependencies -->
-            <plugin>
-               <artifactId>maven-assembly-plugin</artifactId>
-               <executions>
-                   <execution>
-                       <phase>package</phase>
-                       <goals><goal>single</goal></goals>
-                   </execution>
-               </executions>
-               <configuration>
-                   <attach>true</attach>
-                   <descriptors>
-                       <descriptor>app-assembly.xml</descriptor>
-                   </descriptors>
-                   <archive>
-                        <manifest>
-                            <mainClass>org.microemu.app.Main</mainClass>
-                        </manifest>
-                    </archive>
-               </configuration>
-            </plugin>
-
-        </plugins>
-    </build>
-
 </project>

@@ -374,7 +374,7 @@ public class Config {
 		saveConfig();
 	}
 
-	public static String getRecentJadDirectory() {
+	public static String getRecentDirectory(String key) {
 		String defaultResult = ".";
 
 		XMLElement filesXml = configXml.getChild("files");
@@ -382,12 +382,12 @@ public class Config {
 			return defaultResult;
 		}
 
-		return filesXml.getChildString("recentJadDirectory", defaultResult);
+		return filesXml.getChildString(key, defaultResult);
 	}
 
-	public static void setRecentJadDirectory(String recentJadDirectory) {
+	public static void setRecentDirectory(String key, String recentJadDirectory) {
 		XMLElement filesXml = configXml.getChildOrNew("files");
-		XMLElement recentJadDirectoryXml = filesXml.getChildOrNew("recentJadDirectory");
+		XMLElement recentJadDirectoryXml = filesXml.getChildOrNew(key);
 		recentJadDirectoryXml.setContent(recentJadDirectory);
 
 		saveConfig();

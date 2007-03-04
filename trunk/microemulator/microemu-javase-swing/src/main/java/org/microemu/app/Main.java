@@ -28,10 +28,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -54,6 +51,7 @@ import org.microemu.DisplayAccess;
 import org.microemu.DisplayComponent;
 import org.microemu.EmulatorContext;
 import org.microemu.MIDletBridge;
+import org.microemu.app.classloader.MIDletClassLoader;
 import org.microemu.app.ui.Message;
 import org.microemu.app.ui.ResponseInterfaceListener;
 import org.microemu.app.ui.StatusBarListener;
@@ -85,8 +83,6 @@ public class Main extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static final String APPLET_RESOURCE = "/me-applet.jar";
-
 	protected Common common;
 
 	protected SwingSelectDevicePanel selectDevicePanel = null;
@@ -146,13 +142,12 @@ public class Main extends JFrame {
 				fileChooser = new JFileChooser();
 				fileChooser.setFileFilter(fileFilter);
 				fileChooser.setDialogTitle("Open JAD File...");
-				fileChooser.setCurrentDirectory(new File(Config.getRecentJadDirectory()));
+				fileChooser.setCurrentDirectory(new File(Config.getRecentDirectory("recentJadDirectory")));
 			}
 
 			int returnVal = fileChooser.showOpenDialog(Main.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
-					Config.setRecentJadDirectory(fileChooser.getCurrentDirectory().getAbsolutePath());
-					Config.saveConfig();
+					Config.setRecentDirectory("recentJadDirectory", fileChooser.getCurrentDirectory().getAbsolutePath());
 					String url = IOUtils.getCanonicalFileURL(fileChooser.getSelectedFile());
 					Common.openJadUrlSafe(url);
 			}
@@ -183,8 +178,10 @@ public class Main extends JFrame {
 				saveForWebChooser = new JFileChooser();
 				saveForWebChooser.setFileFilter(fileFilter);
 				saveForWebChooser.setDialogTitle("Save for Web...");
+				saveForWebChooser.setCurrentDirectory(new File(Config.getRecentDirectory("recentSaveForWebDirectory")));
 			}
 			if (saveForWebChooser.showSaveDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
+				Config.setRecentDirectory("recentSaveForWebDirectory", saveForWebChooser.getCurrentDirectory().getAbsolutePath());
 				File pathFile = saveForWebChooser.getSelectedFile().getParentFile();
 
 				String name = saveForWebChooser.getSelectedFile().getName();
@@ -192,19 +189,37 @@ public class Main extends JFrame {
 					name = name + ".html";
 				}
 
-				InputStream appletPackageInputStream = getClass().getResourceAsStream(APPLET_RESOURCE);
-				if (appletPackageInputStream == null) {
+				// try to get from distribution home location
+				String resource = MIDletClassLoader.getClassResourceName(this.getClass().getName());
+				URL url = this.getClass().getClassLoader().getResource(resource);
+				String path = url.toExternalForm();
+				String mainJarFileName = path.substring(0, path.length() - resource.length());
+				File appletJarFile = new File(new File(mainJarFileName).getParent(), "me-applet.jar");
+				if (!appletJarFile.exists()) {
+					appletJarFile = null;
+				}
+				
+				if (appletJarFile == null) {
+					// try to get from maven2 repository
+/*					loc/org/microemu/microemulator/2.0.1-SNAPSHOT/microemulator-2.0.1-20070227.080140-1.jar
+					String version = doRegExpr(mainJarFileName,   );
+					String basePath = "loc/org/microemu/"
+					appletJarFile = new File(basePath + "microemu-javase-applet/" + version + "/microemu-javase-applet" + version + ".jar");
+					if (!appletJarFile.exists()) {
+						appletJarFile = null;
+					}*/
+				}
+				
+				if (appletJarFile == null) {
 					ExtensionFileFilter fileFilter = new ExtensionFileFilter("JAR packages");
 					fileFilter.addExtension("jar");
 					JFileChooser appletChooser = new JFileChooser();
 					appletChooser.setFileFilter(fileFilter);
 					appletChooser.setDialogTitle("Select MicroEmulator applet jar package...");
+					appletChooser.setCurrentDirectory(new File(Config.getRecentDirectory("recentAppletJarDirectory")));
 					if (appletChooser.showOpenDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
-						try {
-							appletPackageInputStream = new FileInputStream(appletChooser.getSelectedFile());
-						} catch (FileNotFoundException ex) {
-							Logger.error(ex);
-						}
+						Config.setRecentDirectory("recentAppletJarDirectory", appletChooser.getCurrentDirectory().getAbsolutePath());
+						appletJarFile = appletChooser.getSelectedFile();
 					} else {
 						return;
 					}
@@ -251,7 +266,7 @@ public class Main extends JFrame {
 					AppletProducer.createHtml(htmlOutputFile, DeviceFactory.getDevice(), jadMidletEntry.getClassName(),
 							midletOutputFile, appletPackageOutputFile, deviceOutputFile, deviceDescriptorLocation);
 					AppletProducer.createMidlet(midletInput, midletOutputFile);
-					IOUtils.copyToFile(appletPackageInputStream, appletPackageOutputFile);
+					IOUtils.copyFile(appletJarFile, appletPackageOutputFile);
 					if (deviceInput != null) {
 						IOUtils.copyFile(new File(Config.getConfigPath(), deviceInput.getFileName()), deviceOutputFile);
 					}

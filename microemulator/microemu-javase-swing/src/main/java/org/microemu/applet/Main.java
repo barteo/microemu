@@ -44,6 +44,7 @@ import org.microemu.MIDletBridge;
 import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
 import org.microemu.app.ui.swing.SwingDeviceComponent;
+import org.microemu.app.util.MIDletSystemProperties;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.FontManager;
@@ -114,6 +115,7 @@ public class Main extends Applet implements MicroEmulator
             return;
         }
 
+        MIDletSystemProperties.applyToJavaSystemProperties = false;	
         MIDletBridge.setMicroEmulator(this);
 
         recordStoreManager = new MemoryRecordStoreManager();

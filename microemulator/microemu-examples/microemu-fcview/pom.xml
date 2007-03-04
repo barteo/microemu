@@ -73,6 +73,7 @@
             </plugin>
 
             <!-- Add EclipseME nature to the generated project-->
+            <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-eclipse-plugin</artifactId>
@@ -91,6 +92,7 @@
                     </classpathContainers>
                 </configuration>
             </plugin>
+            -->
 
             <!-- Create application loadable on the phone -->
             <plugin>

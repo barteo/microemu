@@ -35,6 +35,7 @@ import java.util.jar.Manifest;
 
 import org.microemu.app.classloader.ClassPreprocessor;
 import org.microemu.device.Device;
+import org.microemu.log.Logger;
 
 public class AppletProducer {
 
@@ -74,6 +75,7 @@ public class AppletProducer {
 
 	public static void createMidlet(String midletInput, File midletOutputFile) throws IOException {
 		JarInputStream jis = null;
+		JarInputStream ijis = null;
 		JarOutputStream jos = null;
 		try {
 			jis = new JarInputStream(new URL(midletInput).openStream());
@@ -113,10 +115,27 @@ public class AppletProducer {
 					jos.write(outputBuffer, 0, outputSize);
 				}
 			}
+			
+			URL url = AppletProducer.class.getResource("/microemu-injected.jar");
+			if (url != null) {
+				ijis = new JarInputStream(url.openStream());
+				while ((jarEntry = ijis.getNextJarEntry()) != null) {
+					if (jarEntry.getName().equals("org/microemu/Injected.class")) {
+						jos.putNextEntry(new JarEntry(jarEntry.getName()));
+						int read;
+						while ((read = ijis.read(inputBuffer)) > 0) {
+							jos.write(inputBuffer, 0, read);
+						}
+					}
+				}
+			} else {
+				Logger.error("Cannot find microemu-injected.jar resource in classpath");
+			}
 		} finally {
 			IOUtils.closeQuietly(jis);
+			IOUtils.closeQuietly(ijis);
 			IOUtils.closeQuietly(jos);
 		}
 	}
-	
+		
 }

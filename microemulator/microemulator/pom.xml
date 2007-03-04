@@ -68,6 +68,14 @@
                         <manifest>
                             <mainClass>org.microemu.app.Main</mainClass>
                         </manifest>
+                        <!-- this does not work, bug http://jira.codehaus.org/browse/MASSEMBLY-188 -->
+                        <manifestEntries>
+                            <Version>${label}</Version>
+                            <Build-Time>${cctimestamp}</Build-Time>
+                            <Build-Time>${cctimestamp}</Build-Time>
+                            <Implementation-Version2>${pom.version}</Implementation-Version2>
+                            <SVN-Revision>${scm.revision}</SVN-Revision>
+                        </manifestEntries>
                     </archive>
                </configuration>
             </plugin>

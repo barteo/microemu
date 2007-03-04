@@ -59,6 +59,8 @@ public class Logger {
         logFunctionsSet.add("debug");
         logFunctionsSet.add("log");
         logFunctionsSet.add("error");
+        logFunctionsSet.add("info");
+        logFunctionsSet.add("warn");
     }
 
 	public static boolean isDebugEnabled() {

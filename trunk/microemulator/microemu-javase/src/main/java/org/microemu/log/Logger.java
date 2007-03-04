@@ -169,6 +169,32 @@ public class Logger {
 		}
 	}
 	
+    public static void debugClassLoader(String message, Object obj) {
+        if (obj == null) {
+        	write(LoggingEvent.DEBUG, message + " no class, no object", null, null);
+            return;
+        }
+        Class klass;
+        StringBuffer buf = new StringBuffer();
+        buf.append(message).append(" ");
+        if (obj instanceof Class) {
+            klass = (Class) obj;
+            buf.append("class ");
+        } else {
+            klass = obj.getClass();
+            buf.append("instance ");
+        }
+        buf.append(klass.getName() + " loaded by ");
+        if (klass.getClassLoader() != null) {
+            buf.append(klass.getClassLoader().hashCode());
+            buf.append(" ");
+            buf.append(klass.getClassLoader().getClass().getName());
+        } else {
+            buf.append("system");
+        }
+        write(LoggingEvent.DEBUG, buf.toString(), null, null);
+    }
+	
 	public static void info(String message) {
 		if (isErrorEnabled()) {
 			write(LoggingEvent.INFO, message, null);

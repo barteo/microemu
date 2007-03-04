@@ -44,6 +44,7 @@ import org.microemu.MIDletBridge;
 import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
 import org.microemu.app.ui.swing.SwingDeviceComponent;
+import org.microemu.app.util.MIDletResourceLoader;
 import org.microemu.app.util.MIDletSystemProperties;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
@@ -203,6 +204,8 @@ public class Main extends Applet implements MicroEmulator
             }
         }
 
+        // Applet is using only one classLoader
+        MIDletResourceLoader.classLoader = this.getClass().getClassLoader();
         Class midletClass;
         try {
             midletClass = Class.forName(midletClassName);

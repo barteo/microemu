@@ -25,6 +25,8 @@ import junit.framework.TestCase;
 
 /**
  * @author vlads
+ * @author <a href="mailto:russgold@acm.org">Russell Gold</a>
+ * @author <a href="mailto:mtarruella@silacom.com">Marcos Tarruella</a> 
  *
  */
 public class Base64CoderTest extends TestCase {

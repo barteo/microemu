@@ -75,28 +75,15 @@
             <url>file:///home/apache/microemu</url>
         </site>
 
-        <!--
-        <site>
-            <id>pyx4j.com-dav-development</id>
-            <name>microemu.org-project</name>
-            <url>dav:https://pyx4j.com/sec/dav/pyx4me/www.microemu.org</url>
-        </site>
-        -->
-        <!-- this is not yet supported TODO see later..  "Wagon protocol 'ftp' doesn't support directory copying"
-        <site>
-            <id>www.microemu.org-site</id>
-            <url>ftp:ftp://www.microemu.org/m2</url>
-        </site>
-        -->
-
         <repository>
-            <id>pyx4j.com-dav-development</id>
-            <url>dav:https://pyx4j.com/sec/dav/pyx4me/maven2</url>
+            <id>pyx4j.com-file-development</id>
+            <url>file:///home/apache/pyx4j/maven2</url>
         </repository>
         <snapshotRepository>
-            <id>pyx4j.com-dav-development</id>
-            <url>dav:https://pyx4j.com/sec/dav/pyx4me/maven2</url>
+            <id>pyx4j.com-file-development</id>
+            <url>file:///home/apache/pyx4j/maven2</url>
         </snapshotRepository>
+
     </distributionManagement>
 
     <pluginRepositories>
@@ -262,22 +249,6 @@
 
     <build>
         <defaultGoal>install</defaultGoal>
-
-        <extensions>
-            <!-- used during automated build deployments -->
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-webdav</artifactId>
-                <version>1.0-beta-1</version>
-            </extension>
-            <!--
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ftp</artifactId>
-               <version>1.0-beta-1</version>
-            </extension>
-            -->
-        </extensions>
 
         <plugins>
             <plugin>

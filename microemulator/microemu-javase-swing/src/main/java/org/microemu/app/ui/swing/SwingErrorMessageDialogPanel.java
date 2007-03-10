@@ -21,9 +21,18 @@
  */
 package org.microemu.app.ui.swing;
 
-import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
-import javax.swing.JOptionPane;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.UIManager;
 
 import org.microemu.app.ui.Message;
 import org.microemu.app.ui.MessageListener;
@@ -32,38 +41,86 @@ import org.microemu.app.ui.MessageListener;
  * @author vlads
  *
  */
-public class SwingErrorMessageDialogPanel implements MessageListener {
+public class SwingErrorMessageDialogPanel extends SwingDialogPanel implements MessageListener {
 
 	private static final long serialVersionUID = 1L;
 
-	private Component parent;
+	private Frame parent;
+	
+	private JLabel iconLabel;
+	
+	private JLabel textLabel;
+	
+	private JTextArea stackTraceArea;
+	
+	private JScrollPane stackTracePane;
 
 	/**
 	 * @param parent
 	 */
-	public SwingErrorMessageDialogPanel(Component parent) {
+	public SwingErrorMessageDialogPanel(Frame parent) {
 		this.parent = parent;
+		
+		setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		
+		c.ipadx = 10;
+		c.ipady = 10;
+		c.gridx = 0;
+		c.gridy = 0;
+		iconLabel = new JLabel();
+		add(iconLabel, c);
+		
+		c.gridx = 1;
+		c.gridy = 0;
+		c.weightx = 1;
+		textLabel = new JLabel();
+		add(textLabel, c);
+		
+		stackTraceArea = new JTextArea();
+		stackTraceArea.setEditable(false);
+		stackTracePane = new JScrollPane(stackTraceArea);
+		stackTracePane.setPreferredSize(new Dimension(250, 250));
+		
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.microemu.app.ui.MessageListener#showMessage(int, java.lang.String, java.lang.String, java.lang.Throwable)
 	 */
 	public void showMessage(int level, String title, String text, Throwable throwable) {
-		// TODO Add option to show throwable
-		//Message.ERROR
-		int messageType;
 		switch (level) {
 		case Message.ERROR:
-			messageType = JOptionPane.ERROR_MESSAGE;
+			iconLabel.setIcon(UIManager.getIcon("OptionPane.errorIcon"));
 			break;
 		case Message.WARN:
-			messageType = JOptionPane.WARNING_MESSAGE;
+			iconLabel.setIcon(UIManager.getIcon("OptionPane.warningIcon"));
 			break;
 		default:
-			messageType = JOptionPane.INFORMATION_MESSAGE;
+			iconLabel.setIcon(UIManager.getIcon("OptionPane.informationIcon"));
 		}
-		JOptionPane.showMessageDialog(parent, text, title, messageType);
-	}
 
+		textLabel.setText(text);
+		
+		if (throwable != null) {
+			StringWriter writer = new StringWriter();
+			throwable.printStackTrace(new PrintWriter(writer));
+			stackTraceArea.setText(writer.toString());
+			stackTraceArea.setCaretPosition(0);
+			GridBagConstraints c = new GridBagConstraints();
+			c.fill = GridBagConstraints.BOTH;
+			c.gridx = 0;
+			c.gridy = 1;
+			c.gridwidth = 2;
+			c.weightx = 1;
+			c.weighty = 1;
+			add(stackTracePane, c);
+		}
+		
+		SwingDialogWindow.show(parent, title, this, false);
+		
+		if (throwable != null) {
+			remove(stackTracePane);
+		}
+	}
 
 }

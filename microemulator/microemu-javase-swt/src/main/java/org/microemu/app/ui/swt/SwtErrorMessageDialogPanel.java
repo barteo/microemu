@@ -21,6 +21,7 @@
 package org.microemu.app.ui.swt;
 
 import org.eclipse.swt.widgets.Shell;
+import org.microemu.app.ui.Message;
 import org.microemu.app.ui.MessageListener;
 
 public class SwtErrorMessageDialogPanel implements MessageListener {
@@ -33,7 +34,18 @@ public class SwtErrorMessageDialogPanel implements MessageListener {
 
 	public void showMessage(int level, String title, String text, Throwable throwable) {
 		// TODO Add option to show throwable
-		SwtMessageDialog.openInformation(shell, title, text);
+		int messageType;
+		switch (level) {
+		case Message.ERROR:
+			messageType = SwtMessageDialog.ERROR;
+			break;
+		case Message.WARN:
+			messageType = SwtMessageDialog.WARNING;
+			break;
+		default:
+			messageType = SwtMessageDialog.INFORMATION;
+		}
+		SwtMessageDialog.openMessageDialog(shell, title, text, messageType);
 	}
 
 }

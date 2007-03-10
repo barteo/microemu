@@ -34,8 +34,9 @@ import org.eclipse.swt.widgets.Shell;
 public class SwtMessageDialog extends SwtDialog 
 {
 	public final static int ERROR = 1;
-	public final static int INFORMATION = 2;
-	public final static int QUESTION = 3;
+	public final static int WARNING = 2;
+	public final static int INFORMATION = 3;
+	public final static int QUESTION = 4;
 	
 	private String title;
 	private String message;
@@ -54,18 +55,10 @@ public class SwtMessageDialog extends SwtDialog
 	}
 
 
-	public static void openError(Shell parent, String title, String message) 
+	public static void openMessageDialog(Shell parent, String title, String message, int messageType) 
 	{
 		SwtMessageDialog dialog = 
-				new SwtMessageDialog(parent, title, message, ERROR, new String[] {"OK"}, 0);
-		dialog.open();
-	}
-	
-	
-	public static void openInformation(Shell parent, String title, String message) 
-	{
-		SwtMessageDialog dialog = 
-				new SwtMessageDialog(parent, title, message, INFORMATION, new String[] {"OK"}, 0);
+				new SwtMessageDialog(parent, title, message, messageType, new String[] {"OK"}, 0);
 		dialog.open();	
 	}
 	

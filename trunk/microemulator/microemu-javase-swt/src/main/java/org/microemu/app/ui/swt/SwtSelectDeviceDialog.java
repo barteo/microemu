@@ -153,7 +153,10 @@ public class SwtSelectDeviceDialog extends SwtDialog
 				}
 
 				try { 
-					File deviceFile = File.createTempFile("dev", ".jar", Config.getConfigPath());
+					File deviceFile = new File(Config.getConfigPath(), file.getName());
+					if (deviceFile.exists()) {
+						deviceFile = File.createTempFile("device", ".jar", Config.getConfigPath()); 
+					}
 					IOUtils.copyFile(file, deviceFile);
 
 					DeviceEntry entry = null;

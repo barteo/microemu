@@ -148,7 +148,10 @@ public class SwingSelectDevicePanel extends SwingDialogPanel
 				}
 				
 				try {
-					File deviceFile = File.createTempFile("dev", ".jar", Config.getConfigPath()); 
+					File deviceFile = new File(Config.getConfigPath(), fileChooser.getSelectedFile().getName());
+					if (deviceFile.exists()) {
+						deviceFile = File.createTempFile("device", ".jar", Config.getConfigPath()); 
+					}
 					IOUtils.copyFile(fileChooser.getSelectedFile(), deviceFile);
 					
 					DeviceEntry entry = null;

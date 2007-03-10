@@ -52,6 +52,7 @@ import org.microemu.app.ui.swt.SwtInputDialog;
 import org.microemu.app.ui.swt.SwtMessageDialog;
 import org.microemu.app.ui.swt.SwtSelectDeviceDialog;
 import org.microemu.app.util.DeviceEntry;
+import org.microemu.app.util.IOUtils;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
@@ -106,17 +107,21 @@ public class Swt extends Common
 				fileDialog.setText("Open JAD File...");
 				fileDialog.setFilterNames(new String[] {"JAD files"});
 				fileDialog.setFilterExtensions(new String[] {"*.jad"});
-				// TODO folder saved in config
+				fileDialog.setFilterPath(Config.getRecentDirectory("recentJadDirectory"));
 			}
       
 			fileDialog.open();
 
 			if (fileDialog.getFileName().length() > 0) {
-				try {
-					openJadUrl(new File(fileDialog.getFilterPath(), fileDialog.getFileName()).toURI().toURL().toString());
-				} catch (IOException ex) {
-					Logger.error("Cannot load " + fileDialog.getFileName());
+				File selectedFile;
+				if (fileDialog.getFilterPath() == null) {
+					selectedFile = new File(fileDialog.getFileName());
+				} else {
+					selectedFile = new File(fileDialog.getFilterPath(), fileDialog.getFileName());
+					Config.setRecentDirectory("recentJadDirectory", fileDialog.getFilterPath());
 				}
+				String url = IOUtils.getCanonicalFileURL(selectedFile);
+				Common.openJadUrlSafe(url);
 			}
 		} 
 	};

@@ -155,7 +155,7 @@ public class Main extends JFrame {
 
 	private ActionListener menuOpenJADURLListener = new ActionListener() {
 		public void actionPerformed(ActionEvent ev) {
-			if (SwingDialogWindow.show(Main.this, "Enter JAD URL:", jadUrlPanel)) {
+			if (SwingDialogWindow.show(Main.this, "Enter JAD URL:", jadUrlPanel, true)) {
 				Common.openJadUrlSafe(jadUrlPanel.getText());
 			}
 		}
@@ -300,7 +300,7 @@ public class Main extends JFrame {
 
 	private ActionListener menuSelectDeviceListener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-			if (SwingDialogWindow.show(Main.this, "Select device...", selectDevicePanel)) {
+			if (SwingDialogWindow.show(Main.this, "Select device...", selectDevicePanel, true)) {
 				if (selectDevicePanel.getSelectedDeviceEntry().equals(deviceEntry)) {
 					return;
 				}

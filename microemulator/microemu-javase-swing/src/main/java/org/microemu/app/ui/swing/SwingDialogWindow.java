@@ -21,6 +21,7 @@ package org.microemu.app.ui.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -28,7 +29,6 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /**
@@ -39,13 +39,14 @@ public class SwingDialogWindow
 {
 
   /**
-   * Metoda wywolujaca modalne okienko dialogowe
+   * Open modal dialog window
    *
-   * @param title tytul okienka
-   * @param panel wnetrze okienka dialogowego
-   * @return true jesli zamkniecie okna zostalo wywolane przez przycisk OK
+   * @param title dialog title
+   * @param panel content
+   * @param hasCancel has Cancel button 
+   * @return true if user pressed OK button
    */
-  public static boolean show(JFrame parent, String title, final SwingDialogPanel panel)
+  public static boolean show(Frame parent, String title, final SwingDialogPanel panel, boolean hasCancel)
   {
     final JDialog dialog = new JDialog(parent, title, true);
     dialog.getContentPane().setLayout(new BorderLayout());
@@ -53,7 +54,9 @@ public class SwingDialogWindow
 
     JPanel actionPanel = new JPanel();
     actionPanel.add(panel.btOk);
-    actionPanel.add(panel.btCancel);
+    if (hasCancel) {
+    	actionPanel.add(panel.btCancel);
+    }
     final JButton extraButton = panel.getExtraButton();
     if (extraButton != null) {
     	actionPanel.add(extraButton);

@@ -48,7 +48,7 @@ public class DropTransferHandler extends TransferHandler {
 
 	private static DataFlavor uriListFlavor = new DataFlavor("text/uri-list;class=java.lang.String", null);
 	
-	private static boolean debug = false;
+	private static boolean debugImport = false;
 	
 	public int getSourceActions(JComponent c) {
         return TransferHandler.COPY;
@@ -59,21 +59,29 @@ public class DropTransferHandler extends TransferHandler {
 			Class representationclass = transferFlavors[i].getRepresentationClass();
 			// URL from Explorer or Firefox, KDE
         	if ((representationclass != null) && URL.class.isAssignableFrom(representationclass)) {
-        		Logger.debug("acepted ", transferFlavors[i]);
+        		if (debugImport) {
+        			Logger.debug("acepted ", transferFlavors[i]);
+        		}
         		return true;
         	}
         	// Drop from Windows Explorer
         	if (DataFlavor.javaFileListFlavor.equals(transferFlavors[i])) {
-        		Logger.debug("acepted ", transferFlavors[i]);
+        		if (debugImport) {
+        			Logger.debug("acepted ", transferFlavors[i]);
+        		}
         		return true;
             }
         	// Drop from GNOME
             if (DataFlavor.stringFlavor.equals(transferFlavors[i])) {
-            	Logger.debug("acepted ", transferFlavors[i]);
+            	if (debugImport) {
+        			Logger.debug("acepted ", transferFlavors[i]);
+        		}
                 return true;
             }
 			if (uriListFlavor.equals(transferFlavors[i])) {
-				Logger.debug("acepted ", transferFlavors[i]);
+				if (debugImport) {
+        			Logger.debug("acepted ", transferFlavors[i]);
+        		}
 				return true;
         	}
 //          String mimePrimaryType = transferFlavors[i].getPrimaryType();
@@ -84,11 +92,11 @@ public class DropTransferHandler extends TransferHandler {
 //					return true;
 //				}
 //			}
-			if (debug) {
+			if (debugImport) {
 				Logger.debug(i + " unknown import ", transferFlavors[i]);
 			}
 		}
-		if (debug) {
+		if (debugImport) {
 			Logger.debug("import rejected");
 		}
         return false;
@@ -162,7 +170,7 @@ public class DropTransferHandler extends TransferHandler {
 					return true;
 				}
 			}
-            if (debug) {
+            if (debugImport) {
             	Logger.debug(i + " unknown importData ", transferFlavors[i]);
             }
         }

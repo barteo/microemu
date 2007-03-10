@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.microemu.EmulatorContext;
 import org.microemu.app.Common;
 import org.microemu.app.Config;
+import org.microemu.app.ui.Message;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.IOUtils;
 import org.microemu.device.Device;
@@ -106,16 +107,12 @@ public class SwtSelectDeviceDialog extends SwtDialog
 					jar.close();
 					urls[0] = file.toURL();
 				} catch (IOException ex) {
-					SwtMessageDialog.openError(getShell(),
-							"Error", 
-							"Error reading file: " + fileDialog.getFileName());
+					Message.error("Error reading file: " + fileDialog.getFileName() + ", " + Message.getCauseMessage(ex), ex);
 					return;
 				}
 					
 				if (descriptorEntries.size() == 0) {
-					SwtMessageDialog.openError(getShell(),
-							"Error",
-							"Cannot find any device profile in file: " + fileDialog.getFileName());
+					Message.error("Cannot find any device profile in file: " + fileDialog.getFileName());
 					return;
 				}
 				
@@ -132,9 +129,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 								entry.getName(),
 								DeviceImpl.create(emulatorContext, classLoader, entry.getName()));
 					} catch (IOException ex) {
-						SwtMessageDialog.openError(getShell(),
-								"Error",
-								"Error parsing device profile: " + ex.getMessage());
+						Message.error("Error parsing device profile, " + Message.getCauseMessage(ex), ex);
 						return;
 					}
 				}
@@ -146,9 +141,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 					}
 				}
 				if (devices.size() == 0) {
-					SwtMessageDialog.openError(getShell(),
-							"Info", 
-							"Device profile already added");
+					Message.info("Device profile already added");
 					return;
 				}
 
@@ -179,9 +172,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 					}
 					lsDevicesListener.widgetSelected(null);
 				} catch (IOException ex) {
-					SwtMessageDialog.openError(getShell(),
-							"Error",
-							"Error adding device profile: " + ex.getMessage());
+					Message.error("Error adding device profile, " + Message.getCauseMessage(ex), ex);
 					return;
 				}				
 				

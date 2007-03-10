@@ -97,7 +97,7 @@ public class ConnectorImpl extends ConnectorAdapter {
     	}
     	return (Connection) Proxy.newProxyInstance(
     			 ConnectorImpl.class.getClassLoader(), 
-                 new Class[] { connectionClass }, 
+                 interfaces, 
                  new ConnectionInvocationHandler(origConnection, needPrivilegedCalls));
     }
     

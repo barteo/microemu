@@ -44,7 +44,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
-import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 
 import org.microemu.DisplayAccess;
@@ -503,67 +502,12 @@ public class Main extends JFrame {
 	}
 
 	public static void main(String args[]) {
-		Class uiClass = null;
-		int uiFontSize = 11;
 		try {
-			uiClass = Class.forName(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException e) {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception ex) {
+			Logger.error(ex);
 		}
-
-		if (uiClass != null) {
-			try {
-				LookAndFeel customUI = (javax.swing.LookAndFeel) uiClass.newInstance();
-				UIManager.setLookAndFeel(customUI);
-			} catch (Exception e) {
-				Logger.error("ERR_UIError", e);
-			}
-		} else {
-			try {
-				UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-			} catch (Exception ex) {
-				Logger.error("Failed loading Metal look and feel", ex);
-				uiFontSize = 11;
-			}
-		}
-
-		if (uiFontSize > 0) {
-			java.awt.Font dialogPlain = new java.awt.Font("Dialog", java.awt.Font.PLAIN, uiFontSize);
-			java.awt.Font serifPlain = new java.awt.Font("Serif", java.awt.Font.PLAIN, uiFontSize);
-			java.awt.Font sansSerifPlain = new java.awt.Font("SansSerif", java.awt.Font.PLAIN, uiFontSize);
-			java.awt.Font monospacedPlain = new java.awt.Font("Monospaced", java.awt.Font.PLAIN, uiFontSize);
-			UIManager.getDefaults().put("Button.font", dialogPlain);
-			UIManager.getDefaults().put("ToggleButton.font", dialogPlain);
-			UIManager.getDefaults().put("RadioButton.font", dialogPlain);
-			UIManager.getDefaults().put("CheckBox.font", dialogPlain);
-			UIManager.getDefaults().put("ColorChooser.font", dialogPlain);
-			UIManager.getDefaults().put("ComboBox.font", dialogPlain);
-			UIManager.getDefaults().put("Label.font", dialogPlain);
-			UIManager.getDefaults().put("List.font", dialogPlain);
-			UIManager.getDefaults().put("MenuBar.font", dialogPlain);
-			UIManager.getDefaults().put("MenuItem.font", dialogPlain);
-			UIManager.getDefaults().put("RadioButtonMenuItem.font", dialogPlain);
-			UIManager.getDefaults().put("CheckBoxMenuItem.font", dialogPlain);
-			UIManager.getDefaults().put("Menu.font", dialogPlain);
-			UIManager.getDefaults().put("PopupMenu.font", dialogPlain);
-			UIManager.getDefaults().put("OptionPane.font", dialogPlain);
-			UIManager.getDefaults().put("Panel.font", dialogPlain);
-			UIManager.getDefaults().put("ProgressBar.font", dialogPlain);
-			UIManager.getDefaults().put("ScrollPane.font", dialogPlain);
-			UIManager.getDefaults().put("Viewport.font", dialogPlain);
-			UIManager.getDefaults().put("TabbedPane.font", dialogPlain);
-			UIManager.getDefaults().put("Table.font", dialogPlain);
-			UIManager.getDefaults().put("TableHeader.font", dialogPlain);
-			UIManager.getDefaults().put("TextField.font", sansSerifPlain);
-			UIManager.getDefaults().put("PasswordField.font", monospacedPlain);
-			UIManager.getDefaults().put("TextArea.font", monospacedPlain);
-			UIManager.getDefaults().put("TextPane.font", serifPlain);
-			UIManager.getDefaults().put("EditorPane.font", serifPlain);
-			UIManager.getDefaults().put("TitledBorder.font", dialogPlain);
-			UIManager.getDefaults().put("ToolBar.font", dialogPlain);
-			UIManager.getDefaults().put("ToolTip.font", sansSerifPlain);
-			UIManager.getDefaults().put("Tree.font", dialogPlain);
-		}
-
+		
 		List params = new ArrayList();
 		for (int i = 0; i < args.length; i++) {
 			params.add(args[i]);

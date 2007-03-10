@@ -24,10 +24,8 @@ Done:
 
 # torvspocweb Server used for tests on Windows build server
     keytool -keystore ../resources/test-servers.keystore -storepass microemu2006 -import -alias torvspocweb -file torvspocweb-der-X509.cer -trustcacerts
-
+    keytool -keystore ../resources/test-servers.keystore -storepass microemu2006 -delete -alias pyx4j.com
+    keytool -keystore ../resources/test-servers.keystore -storepass microemu2006 -list
 
 3. Unit test will load this keystore automaticaly during build
 
-
--- for build server you need to add pyx4j.com to java to enable dav deployment
-set MAVEN_OPTS=-Djavax.net.ssl.trustStore=D:\di\pyx4me\www.microemu.org\microemu-tests\src\test\resources\test-servers.keystore -Djavax.net.ssl.trustStorePassword=microemu2006

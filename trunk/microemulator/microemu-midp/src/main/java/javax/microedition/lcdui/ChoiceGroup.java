@@ -503,6 +503,12 @@ public class ChoiceGroup extends Item implements Choice
 	}
 
 
+	int getItemHeight(int itemIndex)
+	{
+		return items[itemIndex].getHeight();
+	}
+	
+	
   int paint(Graphics g)
   {
 		super.paintContent(g);

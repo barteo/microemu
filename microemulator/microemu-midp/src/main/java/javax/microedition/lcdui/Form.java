@@ -25,8 +25,6 @@ package javax.microedition.lcdui;
 
 import java.util.Vector;
 
-import org.microemu.device.DeviceFactory;
-
 //TODO implement pointer events
 public class Form extends Screen 
 {
@@ -264,7 +262,12 @@ public class Form extends Screen
 		if (focusItemIndex < 0)
 			return;
 		int heightToItem = getHeightToItem(focusItemIndex);
-		viewPortY = heightToItem;
+		int heightAfterItem = heightToItem + items[focusItemIndex].getHeight();
+		if (viewPortY > heightToItem) {
+			viewPortY = heightToItem;
+		} else if ((viewPortY + viewPortHeight) < heightAfterItem) {
+			viewPortY = heightAfterItem - viewPortHeight;
+		}
 	}
 	
 	int traverse(int gameKeyCode, int top, int bottom) 

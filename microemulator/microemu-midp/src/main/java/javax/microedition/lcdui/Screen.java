@@ -19,8 +19,6 @@
 
 package javax.microedition.lcdui;
 
-import org.microemu.device.DeviceFactory;
-
 // TODO implement pointer events
 public abstract class Screen extends Displayable
 {

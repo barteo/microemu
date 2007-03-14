@@ -40,7 +40,7 @@ public class MemoryRecordStoreManager implements RecordStoreManager
 	{
 		RecordStoreImpl recordStoreImpl = (RecordStoreImpl) recordStores.get(recordStoreName);
 		if (recordStoreImpl == null) {
-			throw new RecordStoreNotFoundException();
+			throw new RecordStoreNotFoundException(recordStoreName);
 		}
 		if (recordStoreImpl.isOpen()) {
 			throw new RecordStoreException();
@@ -55,7 +55,7 @@ public class MemoryRecordStoreManager implements RecordStoreManager
         RecordStoreImpl recordStoreImpl = (RecordStoreImpl) recordStores.get(recordStoreName);
         if (recordStoreImpl == null) {
             if (!createIfNecessary) { 
-                throw new RecordStoreNotFoundException(); 
+                throw new RecordStoreNotFoundException(recordStoreName); 
             }
             recordStoreImpl = new RecordStoreImpl(this, recordStoreName);
             recordStores.put(recordStoreName, recordStoreImpl);

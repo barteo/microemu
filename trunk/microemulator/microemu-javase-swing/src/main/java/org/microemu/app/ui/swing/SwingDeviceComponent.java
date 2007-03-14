@@ -55,6 +55,7 @@ import org.microemu.device.j2se.J2SEButton;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEImmutableImage;
 import org.microemu.device.j2se.J2SEInputMethod;
+import org.microemu.device.j2se.J2SEMutableImage;
 import org.microemu.log.Logger;
 
 
@@ -410,7 +411,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
   {
     if (offg == null ||
         offi.getWidth(null) != getSize().width || offi.getHeight(null) != getSize().height) {
-			offi = createImage(getSize().width, getSize().height);
+			offi = new J2SEMutableImage(getSize().width, getSize().height).getImage();
 			offg = offi.getGraphics();
     }
 

@@ -315,13 +315,13 @@ public class Display
 
 		public void serviceRepaints()
 		{
-			synchronized (paintLock) {
-				if (!repaintPending) {
-					return;
-				}			
-			}
-			
 			synchronized (serviceRepaintsLock) {
+				synchronized (paintLock) {
+					if (!repaintPending) {
+						return;
+					}			
+				}
+				
 				try {
 					serviceRepaintsLock.wait();
 				} catch (InterruptedException ex) {

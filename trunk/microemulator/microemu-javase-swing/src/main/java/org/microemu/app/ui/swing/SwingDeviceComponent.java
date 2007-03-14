@@ -35,12 +35,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Iterator;
 
 import javax.microedition.lcdui.Command;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.microemu.CommandManager;
@@ -83,6 +86,20 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 			requestFocus();
 
 			if (MIDletBridge.getCurrentMIDlet() == null) {
+				return;
+			}
+
+			if (SwingUtilities.isMiddleMouseButton(e)) {				
+				// fire
+				KeyEvent event = new KeyEvent(
+						SwingDeviceComponent.this, 
+						0,
+						System.currentTimeMillis(),
+						0,
+						KeyEvent.VK_ENTER,
+						KeyEvent.CHAR_UNDEFINED);
+				keyPressed(event);
+				keyReleased(event);
 				return;
 			}
 
@@ -262,6 +279,37 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
   };
 
 
+    private MouseWheelListener mouseWheelListener = new MouseWheelListener() {
+    	
+		public void mouseWheelMoved(MouseWheelEvent ev) {
+			if (ev.getWheelRotation() > 0) {				
+				// down
+				KeyEvent event = new KeyEvent(
+						SwingDeviceComponent.this, 
+						0,
+						System.currentTimeMillis(),
+						0,
+						KeyEvent.VK_DOWN,
+						KeyEvent.CHAR_UNDEFINED);
+				keyPressed(event);
+				keyReleased(event);
+			} else {
+				// up
+				KeyEvent event = new KeyEvent(
+						SwingDeviceComponent.this, 
+						0,
+						System.currentTimeMillis(),
+						0,
+						KeyEvent.VK_UP,
+						KeyEvent.CHAR_UNDEFINED);
+				keyPressed(event);
+				keyReleased(event);
+			}
+		}
+    	
+    };
+
+
   public SwingDeviceComponent()
   {
     instance = this;
@@ -272,6 +320,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 
     addMouseListener(mouseListener);
     addMouseMotionListener(mouseMotionListener);
+    addMouseWheelListener(mouseWheelListener);
   }
 
 

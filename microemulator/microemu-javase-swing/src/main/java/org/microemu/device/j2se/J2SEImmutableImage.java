@@ -33,8 +33,8 @@ public class J2SEImmutableImage extends javax.microedition.lcdui.Image {
 
 	public J2SEImmutableImage(java.awt.Image image) {
 		img = image;
-		width = image.getWidth(null);
-		height = image.getHeight(null);
+		width = -1;
+		height = -1;
 	}
 
 	public J2SEImmutableImage(J2SEMutableImage image) {
@@ -43,6 +43,10 @@ public class J2SEImmutableImage extends javax.microedition.lcdui.Image {
 	}
 
 	public int getHeight() {
+		if (height == -1) {
+			init();
+		}
+		
 		return height;
 	}
 
@@ -51,6 +55,10 @@ public class J2SEImmutableImage extends javax.microedition.lcdui.Image {
 	}
 
 	public int getWidth() {
+		if (width == -1) {
+			init();
+		}
+		
 		return width;
 	}
 
@@ -84,6 +92,11 @@ public class J2SEImmutableImage extends javax.microedition.lcdui.Image {
 		} catch (InterruptedException e) {
 			Logger.error(e);
 		}
+	}
+	
+	private synchronized void init() {
+		width = img.getWidth(null);
+		height = img.getHeight(null);
 	}
 
 }

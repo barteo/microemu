@@ -436,12 +436,15 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
                     (scanlength >= 0 && scanlength * (height-1) + width-1 >= l))
                     throw new ArrayIndexOutOfBoundsException();
             
-            int [] rgb = new int[l - offset];
+            int [] rgb = new int[width*height];
             // this way we dont create yet another array in createImage
-            int transparencyMask = processAlpha? 0 : 0xff000000;
-            
-            for(int i = 0; offset < l; offset++, i++)
-                rgb[i] = rgbData[offset] | transparencyMask;
+            int transparencyMask = processAlpha? 0 : 0xff000000;            
+            for(int row = 0; row < height; row++)
+            {
+                for(int px = 0; px < width; px++)
+                    rgb[row*width+px] = rgbData[offset+px] | transparencyMask;
+                offset +=scanlength;
+            }
             
             // help gc
             rgbData = null;

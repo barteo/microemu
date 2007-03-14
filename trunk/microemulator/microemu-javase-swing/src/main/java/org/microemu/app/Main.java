@@ -27,7 +27,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -50,7 +53,9 @@ import org.microemu.DisplayAccess;
 import org.microemu.DisplayComponent;
 import org.microemu.EmulatorContext;
 import org.microemu.MIDletBridge;
+import org.microemu.app.capture.AnimatedGifEncoder;
 import org.microemu.app.classloader.MIDletClassLoader;
+import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.app.ui.Message;
 import org.microemu.app.ui.ResponseInterfaceListener;
 import org.microemu.app.ui.StatusBarListener;
@@ -71,10 +76,12 @@ import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
+import org.microemu.device.MutableImage;
 import org.microemu.device.impl.DeviceImpl;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEFontManager;
 import org.microemu.device.j2se.J2SEInputMethod;
+import org.microemu.device.j2se.J2SEMutableImage;
 import org.microemu.log.Logger;
 import org.microemu.util.JadMidletEntry;
 
@@ -91,6 +98,8 @@ public class Main extends JFrame {
 	private JFileChooser saveForWebChooser;
 
 	private JFileChooser fileChooser = null;
+	
+	private JFileChooser captureFileChooser = null;
 
 	private JMenuItem menuOpenJADFile;
 
@@ -100,9 +109,15 @@ public class Main extends JFrame {
 
 	private JMenuItem menuSaveForWeb;
 	
+	private JMenuItem menuStartCapture;
+
+	private JMenuItem menuStopCapture;	
+	
 	private SwingDeviceComponent devicePanel;
 
 	private DeviceEntry deviceEntry;
+	
+	private AnimatedGifEncoder encoder;
 
 	private JLabel statusBar = new JLabel("Status");
 
@@ -288,9 +303,97 @@ public class Main extends JFrame {
 			return true;
 		}
 	};
+	
+  	private ActionListener menuStartCaptureListener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			if (captureFileChooser == null) {
+				ExtensionFileFilter fileFilter = new ExtensionFileFilter("GIF files");
+				fileFilter.addExtension("gif");
+				captureFileChooser = new JFileChooser();
+				captureFileChooser.setFileFilter(fileFilter);
+				captureFileChooser.setDialogTitle("Capture to GIF File...");
+				captureFileChooser.setCurrentDirectory(new File(Config.getRecentDirectory("recentCaptureDirectory")));
+			}
+
+			if (captureFileChooser.showSaveDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
+				Config.setRecentDirectory("recentCaptureDirectory", captureFileChooser.getCurrentDirectory().getAbsolutePath());
+				String name = captureFileChooser.getSelectedFile().getName();
+				if (!name.toLowerCase().endsWith(".gif") && name.indexOf('.') == -1) {
+					name = name + ".gif";
+				}
+				File captureFile = new File(captureFileChooser.getSelectedFile().getParentFile(), name);
+				if (!allowOverride(captureFile)) {
+					return;
+				}
+
+				try {
+					encoder = new AnimatedGifEncoder();
+					encoder.start(new FileOutputStream(captureFile));
+					
+					menuStartCapture.setEnabled(false);
+					menuStopCapture.setEnabled(true);
+					
+					emulatorContext.getDisplayComponent().addDisplayRepaintListener(new DisplayRepaintListener() {
+						long start = 0;
+	
+						public void repaintInvoked(MutableImage image) {
+							synchronized (Main.this) {
+								if (encoder != null) {
+									if (start == 0) {
+										start = System.currentTimeMillis();
+									} else {
+										long current = System.currentTimeMillis();
+										encoder.setDelay((int) (current - start));
+										start = current;
+									}
+	
+									encoder.addFrame((BufferedImage) ((J2SEMutableImage) image).getImage());
+								}
+							}
+						}
+					});
+				} catch (FileNotFoundException ex) {
+					Logger.error(ex);
+				}
+			}
+		}
+		
+		private boolean allowOverride(File file) {
+			if (file.exists()) {
+				int answer = JOptionPane.showConfirmDialog(Main.this,
+						"Override the file:" + file + "?", "Question?",
+						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				if (answer == 1 /* no */) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+	};  	
+  	
+  	private ActionListener menuStopCaptureListener = new ActionListener() {    
+  		public void actionPerformed(ActionEvent e) {
+  			menuStopCapture.setEnabled(false);
+
+  			synchronized (Main.this) {
+	  			encoder.finish();
+	  			encoder = null;
+  			}
+  			
+  			menuStartCapture.setEnabled(true);
+  		}
+  	};
 
 	private ActionListener menuExitListener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
+	    	synchronized (Main.this) {
+		    	if (encoder != null) {
+		    		encoder.finish();
+		    		encoder = null;
+		    	}
+	    	}
+	    	
 			Config.setWindowX(Main.this.getX());
 			Config.setWindowY(Main.this.getY());
 			Config.saveConfig();
@@ -424,6 +527,15 @@ public class Main extends JFrame {
 		menuSelectDevice = new JMenuItem("Select device...");
 		menuSelectDevice.addActionListener(menuSelectDeviceListener);
 		menuOptions.add(menuSelectDevice);
+		
+		menuStartCapture = new JMenuItem("Start capture to GIF...");
+    	menuStartCapture.addActionListener(menuStartCaptureListener);
+    	menuOptions.add(menuStartCapture);
+        
+    	menuStopCapture = new JMenuItem("Stop capture");
+    	menuStopCapture.setEnabled(false);
+    	menuStopCapture.addActionListener(menuStopCaptureListener);
+    	menuOptions.add(menuStopCapture);		
 
 		menuBar.add(menuFile);
 		menuBar.add(menuOptions);

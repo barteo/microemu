@@ -22,7 +22,7 @@
             <item name="Live examples" href="http://www.microemu.org/demo.html"/>
         </links>
 
-        <menu name="Ver 2.0.1-SNAPSHOT" inherit="top">
+        <menu name="Ver {#build#} SNAPSHOT" inherit="top">
             <item name="Release 2.0.0" href="http://microemu.org/"/>
         </menu>
 

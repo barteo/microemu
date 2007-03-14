@@ -1,7 +1,5 @@
 /**
  *  MicroEmulator
- *  Copyright (C) 2001-2007 Bartek Teodorczyk <barteo@barteo.net>
- *  Copyright (C) 2006-2007 Vlad Skarzhevskyy
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -21,34 +19,26 @@
  */
 package javax.microedition.media.control;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import javax.microedition.media.Control;
 import javax.microedition.media.MediaException;
 
-public interface VideoControl extends GUIControl {
+public interface RecordControl extends Control {
 
-	public static final int USE_DIRECT_VIDEO = 1;
+	public abstract void setRecordStream(OutputStream outputstream);
 
-	public abstract Object initDisplayMode(int i, Object obj);
+	public abstract void setRecordLocation(String s) throws IOException, MediaException;
 
-	public abstract void setDisplayLocation(int i, int j);
+	public abstract String getContentType();
 
-	public abstract int getDisplayX();
+	public abstract void startRecord();
 
-	public abstract int getDisplayY();
+	public abstract void stopRecord();
 
-	public abstract void setVisible(boolean flag);
+	public abstract void commit() throws IOException;
 
-	public abstract void setDisplaySize(int i, int j) throws MediaException;
+	public abstract int setRecordSizeLimit(int i) throws MediaException;
 
-	public abstract void setDisplayFullScreen(boolean flag) throws MediaException;
-
-	public abstract int getSourceWidth();
-
-	public abstract int getSourceHeight();
-
-	public abstract int getDisplayWidth();
-
-	public abstract int getDisplayHeight();
-
-	public abstract byte[] getSnapshot(String s) throws MediaException;
-
+	public abstract void reset() throws IOException;
 }

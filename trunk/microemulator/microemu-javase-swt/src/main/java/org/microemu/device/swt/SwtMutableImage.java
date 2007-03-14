@@ -30,9 +30,7 @@ public class SwtMutableImage extends MutableImage
 {
 	public org.eclipse.swt.graphics.Image img;
 	
-	private SwtDisplayGraphics displayGraphics = null;
-
-
+	
 	public SwtMutableImage(int width, int height) 
 	{
 		img = SwtDeviceComponent.createImage(width, height);
@@ -41,12 +39,11 @@ public class SwtMutableImage extends MutableImage
 
 	public javax.microedition.lcdui.Graphics getGraphics() 
 	{
-		if (displayGraphics == null) {
-			displayGraphics = new SwtDisplayGraphics(new SwtGraphics(new GC(img)), this);
-			displayGraphics.setGrayScale(255);
-			displayGraphics.fillRect(0, 0, getWidth(), getHeight());
-			displayGraphics.setGrayScale(0);
-		}
+		SwtDisplayGraphics displayGraphics = new SwtDisplayGraphics(new SwtGraphics(new GC(img)), this);
+		displayGraphics.setColor(0x00000000);
+		displayGraphics.setClip(0, 0, getWidth(), getHeight());
+		displayGraphics.translate(-displayGraphics.getTranslateX(), -displayGraphics.getTranslateY());
+
 		return displayGraphics;
 	}
 

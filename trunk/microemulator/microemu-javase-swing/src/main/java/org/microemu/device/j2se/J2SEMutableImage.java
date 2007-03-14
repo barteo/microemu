@@ -32,7 +32,6 @@ import org.microemu.log.Logger;
 public class J2SEMutableImage extends MutableImage
 {
 	private java.awt.Image img;
-	private J2SEDisplayGraphics displayGraphics = null;
 	private PixelGrabber grabber = null;
 	private int[] pixels;
 
@@ -45,14 +44,11 @@ public class J2SEMutableImage extends MutableImage
 
 	public javax.microedition.lcdui.Graphics getGraphics()
 	{
-		if (displayGraphics == null) {
-                        // Andres Navarro
-                        displayGraphics = new J2SEDisplayGraphics((java.awt.Graphics2D)img.getGraphics(), this);
-                        // Andres Navarro
-			displayGraphics.setGrayScale(255);
-			displayGraphics.fillRect(0, 0, getWidth(), getHeight());
-			displayGraphics.setGrayScale(0);
-		}
+		J2SEDisplayGraphics displayGraphics = new J2SEDisplayGraphics((java.awt.Graphics2D)img.getGraphics(), this);
+		displayGraphics.setColor(0x00000000);
+		displayGraphics.setClip(0, 0, getWidth(), getHeight());
+		displayGraphics.translate(-displayGraphics.getTranslateX(), -displayGraphics.getTranslateY());
+		
 		return displayGraphics;
 	}
 

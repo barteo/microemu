@@ -300,6 +300,10 @@
                         </goals>
                         <configuration>
                             <tasks>
+                                <!-- Set build number -->
+                                <replace value="${label}" token="{#build#}" dir="${project.build.directory}/site">
+                                    <include name="*.html"></include>
+                                </replace>
                                 <copy overwrite="true" failonerror="false"
                                       file="${basedir}/../target/site/css/site-child.css"
                                       tofile="${project.build.directory}/site/css/site.css"/>

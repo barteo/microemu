@@ -192,6 +192,9 @@ public class Graphics {
 	}
 
 	public void setGrayScale(int grey) {
+		if (grey < 0 || grey > 255) {
+			throw new IllegalArgumentException();
+		}
 		setColor(grey, grey, grey);
 	}
 

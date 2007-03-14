@@ -34,6 +34,8 @@ public interface DisplayAccess
 
 	void keyPressed(int keyCode);
 
+	void keyRepeated(int keyCode);
+
 	void keyReleased(int keyCode);
 
 	void pointerPressed(int x, int y);

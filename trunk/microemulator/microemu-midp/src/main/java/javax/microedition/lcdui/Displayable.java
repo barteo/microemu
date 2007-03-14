@@ -199,6 +199,11 @@ public abstract class Displayable
 	}
 
 
+	void keyRepeated(int keyCode)
+	{
+	}
+
+
 	void keyReleased(int keyCode)
 	{
 	}

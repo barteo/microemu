@@ -157,6 +157,13 @@ public class Display
 			}
 		}
 
+        public void keyRepeated(int keyCode) 
+		{
+			if (current != null) {
+                current.keyRepeated(keyCode);
+			}
+		}
+
 		public void keyReleased(int keyCode) 
 		{
 			if (current != null) {

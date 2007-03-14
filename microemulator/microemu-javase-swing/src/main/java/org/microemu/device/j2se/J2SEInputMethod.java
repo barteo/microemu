@@ -22,6 +22,8 @@ package org.microemu.device.j2se;
 import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Command;
@@ -40,6 +42,48 @@ import org.microemu.device.impl.SoftButton;
 public class J2SEInputMethod extends InputMethodImpl 
 {
 	private boolean eventAlreadyConsumed;
+	
+	private Timer keyRepeatTimer;
+	
+	private int repeatModeKeyCode;
+	
+	private boolean clearRepeatFlag;
+	
+	
+	private class KeyRepeatTask extends TimerTask
+	{
+		public void run() {
+			if (repeatModeKeyCode != Integer.MIN_VALUE) {
+				MIDletAccess ma = MIDletBridge.getMIDletAccess();
+				if (ma == null) {
+					return;
+				}
+				
+				DisplayAccess da = ma.getDisplayAccess();
+				if (da == null) {
+					return;
+				}
+
+				if (clearRepeatFlag) {
+					da.keyReleased(repeatModeKeyCode);		
+					eventAlreadyConsumed = false;
+					repeatModeKeyCode = Integer.MIN_VALUE;
+				}				
+			}
+		}
+	};
+	
+	
+	public J2SEInputMethod()
+	{
+		super();
+		
+		// TODO When InputMethod will be removed from EmulatorContext add:
+		// if (DeviceFactory.getDevice().hasRepeatEvents()) {
+		keyRepeatTimer = new Timer();
+		repeatModeKeyCode = Integer.MIN_VALUE;
+		clearRepeatFlag = false;
+	}
 
 
 	public int getGameAction(int keyCode)
@@ -311,6 +355,28 @@ public class J2SEInputMethod extends InputMethodImpl
 	{		
 		eventAlreadyConsumed = false;
 		
+		if (DeviceFactory.getDevice().hasRepeatEvents()) {
+			clearRepeatFlag = false;
+			if (repeatModeKeyCode == ev.getKeyCode()) {
+				MIDletAccess ma = MIDletBridge.getMIDletAccess();
+				if (ma == null) {
+					return;
+				}
+				
+				DisplayAccess da = ma.getDisplayAccess();
+				if (da == null) {
+					return;
+				}
+
+				da.keyRepeated(ev.getKeyCode());		
+				eventAlreadyConsumed = true;
+				
+				return;
+			}
+			
+			repeatModeKeyCode = ev.getKeyCode();			
+		}
+		
 		// invoke any associated commands, but send the raw key codes instead
 		boolean rawSoftKeys = DeviceFactory.getDevice().getDeviceDisplay().isFullScreenMode();
 		J2SEButton pressedButton = getButton(ev);
@@ -332,6 +398,28 @@ public class J2SEInputMethod extends InputMethodImpl
 	}
 
 
+	public void keyReleased(KeyEvent ev) 
+	{		
+		if (DeviceFactory.getDevice().hasRepeatEvents()) {
+			clearRepeatFlag = true;
+			keyRepeatTimer.schedule(new KeyRepeatTask(), 50);
+		} else {		
+			MIDletAccess ma = MIDletBridge.getMIDletAccess();
+			if (ma == null) {
+				return;
+			}
+			
+			DisplayAccess da = ma.getDisplayAccess();
+			if (da == null) {
+				return;
+			}
+
+			da.keyReleased(ev.getKeyCode());		
+			eventAlreadyConsumed = false;
+		}
+	}
+
+	
 	
 	public void mousePressed(KeyEvent ev) 
 	{
@@ -399,24 +487,6 @@ public class J2SEInputMethod extends InputMethodImpl
 				}
 			}
 		}
-	}
-
-	
-	public void keyReleased(KeyEvent ev) 
-	{
-		MIDletAccess ma = MIDletBridge.getMIDletAccess();
-		if (ma == null) {
-			return;
-		}
-		
-		DisplayAccess da = ma.getDisplayAccess();
-		if (da == null) {
-			return;
-		}
-		
-		da.keyReleased(ev.getKeyCode());
-		
-		eventAlreadyConsumed = false;
 	}
 
 	

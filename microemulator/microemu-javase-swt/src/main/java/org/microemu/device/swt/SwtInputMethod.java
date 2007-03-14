@@ -21,6 +21,8 @@ package org.microemu.device.swt;
 
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Command;
@@ -39,6 +41,48 @@ import org.microemu.device.impl.SoftButton;
 
 public class SwtInputMethod extends InputMethodImpl 
 {
+	
+	private Timer keyRepeatTimer;
+	
+	private int repeatModeKeyCode;
+	
+	private boolean clearRepeatFlag;
+	
+	
+	private class KeyRepeatTask extends TimerTask
+	{
+		public void run() {
+			if (repeatModeKeyCode != Integer.MIN_VALUE) {
+				MIDletAccess ma = MIDletBridge.getMIDletAccess();
+				if (ma == null) {
+					return;
+				}
+				
+				DisplayAccess da = ma.getDisplayAccess();
+				if (da == null) {
+					return;
+				}
+
+				if (clearRepeatFlag) {
+					da.keyReleased(repeatModeKeyCode);							
+					repeatModeKeyCode = Integer.MIN_VALUE;
+				}				
+			}
+		}
+	};
+	
+	
+	public SwtInputMethod()
+	{
+		super();
+		
+		// TODO When InputMethod will be removed from EmulatorContext add:
+		// if (DeviceFactory.getDevice().hasRepeatEvents()) {
+		keyRepeatTimer = new Timer();
+		repeatModeKeyCode = Integer.MIN_VALUE;
+		clearRepeatFlag = false;
+	}
+
 	public int getGameAction(int keyCode)
     {
         // TODO fix KeyEvent
@@ -243,6 +287,27 @@ public class SwtInputMethod extends InputMethodImpl
 	
 	public void keyPressed(KeyEvent ev) 
 	{
+		if (DeviceFactory.getDevice().hasRepeatEvents()) {
+			clearRepeatFlag = false;
+			if (repeatModeKeyCode == ev.keyCode) {
+				MIDletAccess ma = MIDletBridge.getMIDletAccess();
+				if (ma == null) {
+					return;
+				}
+				
+				DisplayAccess da = ma.getDisplayAccess();
+				if (da == null) {
+					return;
+				}
+
+				da.keyRepeated(ev.keyCode);		
+				
+				return;
+			}
+			
+			repeatModeKeyCode = ev.keyCode;			
+		}
+
 		// invoke any associated commands, but send the raw key codes instead
 		boolean rawSoftKeys = DeviceFactory.getDevice().getDeviceDisplay().isFullScreenMode();
 		SwtButton pressedButton = getButton(ev);
@@ -262,6 +327,27 @@ public class SwtInputMethod extends InputMethodImpl
 
 		if (text.length() < maxSize && (ev.keyCode & SWT.EMBEDDED) == 0) {
 			insertText(new Character(ev.character).toString());
+		}
+	}
+
+	
+	public void keyReleased(KeyEvent ev) 
+	{
+		if (DeviceFactory.getDevice().hasRepeatEvents()) {
+			clearRepeatFlag = true;
+			keyRepeatTimer.schedule(new KeyRepeatTask(), 50);
+		} else {		
+			MIDletAccess ma = MIDletBridge.getMIDletAccess();
+			if (ma == null) {
+				return;
+			}
+			
+			DisplayAccess da = ma.getDisplayAccess();
+			if (da == null) {
+				return;
+			}
+	
+			da.keyReleased(ev.keyCode);
 		}
 	}
 
@@ -333,22 +419,6 @@ public class SwtInputMethod extends InputMethodImpl
 				}
 			}
 		}
-	}
-
-	
-	public void keyReleased(KeyEvent ev) 
-	{
-		MIDletAccess ma = MIDletBridge.getMIDletAccess();
-		if (ma == null) {
-			return;
-		}
-		
-		DisplayAccess da = ma.getDisplayAccess();
-		if (da == null) {
-			return;
-		}
-
-		da.keyReleased(ev.keyCode);
 	}
 
 	

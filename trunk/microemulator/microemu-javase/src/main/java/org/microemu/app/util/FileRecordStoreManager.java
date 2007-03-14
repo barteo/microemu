@@ -85,7 +85,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 		try {
 			recordStoreImpl = loadFromDisk(storeFile);
 		} catch (FileNotFoundException ex) {
-			throw new RecordStoreNotFoundException();
+			throw new RecordStoreNotFoundException(recordStoreName);
 		}
 
 		try {
@@ -109,7 +109,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 			recordStoreImpl = loadFromDisk(storeFile);
 		} catch (FileNotFoundException e) {
 			if (!createIfNecessary) {
-				throw new RecordStoreNotFoundException();
+				throw new RecordStoreNotFoundException(recordStoreName);
 			}
 			recordStoreImpl = new RecordStoreImpl(this, recordStoreName);
 			saveToDisk(storeFile, recordStoreImpl);

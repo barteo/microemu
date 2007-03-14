@@ -73,7 +73,7 @@ System.out.println("CookieRecordStoreManager: " + this.expires);
 			throws RecordStoreNotFoundException, RecordStoreException {
 		CookieContent cookieContent = (CookieContent) cookies.get(recordStoreName);
 		if (cookieContent == null) {
-			throw new RecordStoreNotFoundException();
+			throw new RecordStoreNotFoundException(recordStoreName);
 		}
 
 		removeCookie(recordStoreName, cookieContent);
@@ -155,8 +155,8 @@ System.out.println("listRecordStores:");
 			}
 System.out.println("openRecordStore: " + recordStoreName + " (" + load.getParts().length + ")");
 		} else {
-            if (!createIfNecessary) {
-                throw new RecordStoreNotFoundException();
+            if (!createIfNecessary) { 
+                throw new RecordStoreNotFoundException(recordStoreName); 
             }
             result = new RecordStoreImpl(this, recordStoreName);
 System.out.println("openRecordStore: " + recordStoreName + " (" + load + ")");

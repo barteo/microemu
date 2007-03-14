@@ -280,7 +280,7 @@ public class Main extends JFrame {
 				int answer = JOptionPane.showConfirmDialog(Main.this,
 						"Override the file:" + file + "?", "Question?",
 						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-				if (answer == 1) {
+				if (answer == 1 /* no */) {
 					return false;
 				}
 			}

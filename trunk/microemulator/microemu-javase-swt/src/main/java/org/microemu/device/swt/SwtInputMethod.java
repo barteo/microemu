@@ -287,7 +287,7 @@ public class SwtInputMethod extends InputMethodImpl
 	
 	public void keyPressed(KeyEvent ev) 
 	{
-		if (DeviceFactory.getDevice().hasRepeatEvents()) {
+		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
 			clearRepeatFlag = false;
 			if (repeatModeKeyCode == ev.keyCode) {
 				MIDletAccess ma = MIDletBridge.getMIDletAccess();
@@ -333,7 +333,7 @@ public class SwtInputMethod extends InputMethodImpl
 	
 	public void keyReleased(KeyEvent ev) 
 	{
-		if (DeviceFactory.getDevice().hasRepeatEvents()) {
+		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
 			clearRepeatFlag = true;
 			keyRepeatTimer.schedule(new KeyRepeatTask(), 50);
 		} else {		

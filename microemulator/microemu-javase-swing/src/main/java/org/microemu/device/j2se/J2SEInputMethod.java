@@ -355,7 +355,7 @@ public class J2SEInputMethod extends InputMethodImpl
 	{		
 		eventAlreadyConsumed = false;
 		
-		if (DeviceFactory.getDevice().hasRepeatEvents()) {
+		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
 			clearRepeatFlag = false;
 			if (repeatModeKeyCode == ev.getKeyCode()) {
 				MIDletAccess ma = MIDletBridge.getMIDletAccess();
@@ -400,7 +400,7 @@ public class J2SEInputMethod extends InputMethodImpl
 
 	public void keyReleased(KeyEvent ev) 
 	{		
-		if (DeviceFactory.getDevice().hasRepeatEvents()) {
+		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
 			clearRepeatFlag = true;
 			keyRepeatTimer.schedule(new KeyRepeatTask(), 50);
 		} else {		

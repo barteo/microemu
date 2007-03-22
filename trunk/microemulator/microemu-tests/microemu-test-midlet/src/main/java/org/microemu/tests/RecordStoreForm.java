@@ -47,6 +47,8 @@ public class RecordStoreForm extends BaseTestsForm {
 	
 	StringItem messageItem;
 	
+	int savedRecordId = -1;
+	
 	public RecordStoreForm() {
 		super("RecordStore");
 		addCommand(loadCommand);
@@ -75,6 +77,11 @@ public class RecordStoreForm extends BaseTestsForm {
 				byte[] data = recordStore.getRecord(recordId);
 				message = recordId + " loaded";
 				stringItem.setText(new String(data));
+				
+				if (savedRecordId != recordId) {
+					messageItem.setText("recordId " + recordId + " is different " + savedRecordId);
+				}
+				
 			} else {
 				message = "recordStore empty";
 				stringItem.setText("");
@@ -107,6 +114,7 @@ public class RecordStoreForm extends BaseTestsForm {
 				recordId = recordStore.addRecord(data, 0, data.length);
 				message = recordId + " created";
 			}
+			savedRecordId = recordId; 
 			messageItem.setText(message);
 		} catch (Throwable e) {
 			System.out.println("error accessing RecordStore");

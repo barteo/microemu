@@ -24,13 +24,17 @@ import java.io.IOException;
 import org.microemu.cldc.ClosedConnection;
 
 public class Connection implements ClosedConnection {
-	
-	public javax.microedition.io.Connection open(String name)
-			throws IOException {
+
+	public javax.microedition.io.Connection open(String name) throws IOException {
+
+		if (!org.microemu.cldc.http.Connection.isAllowNetworkConnection()) {
+			throw new IOException("No network");
+		}
+
 		int portSepIndex = name.lastIndexOf(':');
 		int port = Integer.parseInt(name.substring(portSepIndex + 1));
 		String host = name.substring("socket://".length(), portSepIndex);
-		
+
 		if (host.length() > 0) {
 			return new SocketConnection(host, port);
 		} else {

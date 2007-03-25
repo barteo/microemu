@@ -39,6 +39,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.microedition.midlet.MIDletStateChangeException;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -112,6 +113,8 @@ public class Main extends JFrame {
 	private JMenuItem menuStartCapture;
 
 	private JMenuItem menuStopCapture;	
+	
+	private JCheckBoxMenuItem menuMIDletNetworkConnection;
 	
 	private SwingDeviceComponent devicePanel;
 
@@ -384,6 +387,13 @@ public class Main extends JFrame {
   			menuStartCapture.setEnabled(true);
   		}
   	};
+  	
+  	private ActionListener menuMIDletNetworkConnectionListener = new ActionListener() {    
+  		public void actionPerformed(ActionEvent e) {
+  			org.microemu.cldc.http.Connection.setAllowNetworkConnection(menuMIDletNetworkConnection.getState());
+  		}
+  		
+  	};
 
 	private ActionListener menuExitListener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
@@ -537,6 +547,11 @@ public class Main extends JFrame {
     	menuStopCapture.addActionListener(menuStopCaptureListener);
     	menuOptions.add(menuStopCapture);		
 
+    	menuMIDletNetworkConnection = new JCheckBoxMenuItem("MIDlet Network access");
+    	menuMIDletNetworkConnection.setState(true);
+    	menuMIDletNetworkConnection.addActionListener(menuMIDletNetworkConnectionListener);
+    	menuOptions.add(menuMIDletNetworkConnection);
+    	
 		menuBar.add(menuFile);
 		menuBar.add(menuOptions);
 		setJMenuBar(menuBar);

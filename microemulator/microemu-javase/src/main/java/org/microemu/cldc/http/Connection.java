@@ -38,8 +38,13 @@ public class Connection implements HttpConnection, ConnectionImplementation {
 	protected URLConnection cn;
 
 	protected boolean connected = false;
+	
+	protected static boolean allowNetworkConnection = true;
 
 	public javax.microedition.io.Connection openConnection(String name, int mode, boolean timeouts) throws IOException {
+		if (!isAllowNetworkConnection()) {
+			throw new IOException("No network");
+		}
 		URL url;
 		try {
 			url = new URL(name);
@@ -341,6 +346,14 @@ public class Connection implements HttpConnection, ConnectionImplementation {
 		} catch (IOException ex) {
 			return -1;
 		}
+	}
+
+	public static boolean isAllowNetworkConnection() {
+		return allowNetworkConnection;
+	}
+
+	public static void setAllowNetworkConnection(boolean allowNetworkConnection) {
+		Connection.allowNetworkConnection = allowNetworkConnection;
 	}
 
 }

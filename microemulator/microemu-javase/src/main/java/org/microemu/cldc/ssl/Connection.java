@@ -48,6 +48,11 @@ public class Connection extends org.microemu.cldc.socket.SocketConnection implem
 	}
 
 	public javax.microedition.io.Connection open(String name) throws IOException {
+		
+		if (!org.microemu.cldc.http.Connection.isAllowNetworkConnection()) {
+			throw new IOException("No network");
+		}
+		
 		int portSepIndex = name.lastIndexOf(':');
 		int port = Integer.parseInt(name.substring(portSepIndex + 1));
 		String host = name.substring("ssl://".length(), portSepIndex);

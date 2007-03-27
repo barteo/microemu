@@ -35,7 +35,7 @@ import org.microemu.device.swt.SwtDisplayGraphics;
 import org.microemu.device.swt.SwtMutableImage;
 
 
-
+//TODO extends Canvas like in swing version
 public class SwtDisplayComponent implements DisplayComponent
 {
 	private Canvas deviceCanvas;
@@ -89,7 +89,7 @@ public class SwtDisplayComponent implements DisplayComponent
 	}
 
   
-	public void repaint(int x, int y, int width, int height) 
+	public void repaintRequest(int x, int y, int width, int height) 
 	{
 		if (!deviceCanvas.isDisposed()) {			
 			MIDletAccess ma = MIDletBridge.getMIDletAccess();

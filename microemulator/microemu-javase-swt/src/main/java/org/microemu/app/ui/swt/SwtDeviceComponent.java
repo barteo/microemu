@@ -170,7 +170,7 @@ public class SwtDeviceComponent extends Canvas
 								if (pb != null && pb.contains(e.x - rect.x, e.y - rect.y)) {
 									initialPressedSoftButton = button;
 									button.setPressed(true);
-									dc.repaint(pb.x, pb.y, pb.width, pb.height);
+									dc.repaintRequest(pb.x, pb.y, pb.width, pb.height);
 									break;
 								}
 							}
@@ -225,7 +225,7 @@ public class SwtDeviceComponent extends Canvas
 							initialPressedSoftButton.setPressed(false);
 							org.microemu.device.impl.Rectangle pb = initialPressedSoftButton.getPaintable();
 							if (pb != null) {
-								dc.repaint(pb.x, pb.y, pb.width, pb.height);
+								dc.repaintRequest(pb.x, pb.y, pb.width, pb.height);
 								if (pb.contains(e.x - rect.x, e.y - rect.y)) {
 									Command cmd = initialPressedSoftButton.getCommand();
 									if (cmd != null) {
@@ -296,12 +296,12 @@ public class SwtDeviceComponent extends Canvas
 									if (pb.contains(e.x - rect.x, e.y - rect.y)) {
 										if (!initialPressedSoftButton.isPressed()) {
 											initialPressedSoftButton.setPressed(true);
-											dc.repaint(pb.x, pb.y, pb.width, pb.height);
+											dc.repaintRequest(pb.x, pb.y, pb.width, pb.height);
 										}
 									} else {
 										if (initialPressedSoftButton.isPressed()) {
 											initialPressedSoftButton.setPressed(false);
-											dc.repaint(pb.x, pb.y, pb.width, pb.height);
+											dc.repaintRequest(pb.x, pb.y, pb.width, pb.height);
 										}
 									}
 								}

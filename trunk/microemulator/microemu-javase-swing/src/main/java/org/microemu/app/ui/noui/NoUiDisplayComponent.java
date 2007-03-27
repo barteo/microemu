@@ -53,7 +53,7 @@ public class NoUiDisplayComponent implements DisplayComponent {
 		return displayImage;
 	}
 
-	public void repaint(int x, int y, int width, int height) 
+	public void repaintRequest(int x, int y, int width, int height) 
 	{
 		MIDletAccess ma = MIDletBridge.getMIDletAccess();
 		if (ma == null) {

@@ -35,15 +35,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Iterator;
 
 import javax.microedition.lcdui.Command;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.microemu.CommandManager;
@@ -51,7 +48,6 @@ import org.microemu.DisplayComponent;
 import org.microemu.MIDletBridge;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
-import org.microemu.device.impl.InputMethodImpl;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.SoftButton;
 import org.microemu.device.j2se.J2SEButton;
@@ -66,15 +62,11 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 {
   private static final long serialVersionUID = 1L;
 
-  SwingDeviceComponent instance;
-
   SwingDisplayComponent dc;
 
   J2SEButton prevOverButton;
   J2SEButton overButton;
   J2SEButton pressedButton;
-
-  private SoftButton initialPressedSoftButton;
 
 	Image offi;
 	Graphics offg;
@@ -89,71 +81,29 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 				return;
 			}
 
-			if (SwingUtilities.isMiddleMouseButton(e)) {				
-				// fire
-				KeyEvent event = new KeyEvent(
-						SwingDeviceComponent.this, 
-						0,
-						System.currentTimeMillis(),
-						0,
-						KeyEvent.VK_ENTER,
-						KeyEvent.CHAR_UNDEFINED);
-				keyPressed(event);
-				keyReleased(event);
-				return;
-			}
-
 			Device device = DeviceFactory.getDevice();
-			org.microemu.device.impl.Rectangle rect = ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
 			J2SEInputMethod inputMethod = (J2SEInputMethod) device.getInputMethod();
 			// if the displayable is in full screen mode, we should not
 			// invoke any associated commands, but send the raw key codes
 			// instead
 			boolean fullScreenMode = device.getDeviceDisplay().isFullScreenMode();
 
-			if (rect.x <= e.getX() && (rect.x + rect.width) > e.getX()
-					&& rect.y <= e.getY() && (rect.y + rect.height) > e.getY()) {
-				if (device.hasPointerEvents()) {
-					if (!fullScreenMode) {
-						Iterator it = device.getSoftButtons().iterator();
-						while (it.hasNext()) {
-							SoftButton button = (SoftButton) it.next();
-							if (button.isVisible()) {
-								org.microemu.device.impl.Rectangle pb = button.getPaintable();
-								if (pb != null && pb.contains(e.getX() - rect.x, e.getY() - rect.y)) {
-									initialPressedSoftButton = button;
-									button.setPressed(true);
-									dc.repaint(pb.x, pb.y, pb.width, pb.height);
-									break;
-								}
-							}
-						}
+			pressedButton = getButton(e.getX(), e.getY());
+			if (pressedButton != null) {
+				if (pressedButton instanceof SoftButton && !fullScreenMode) {
+					Command cmd = ((SoftButton) pressedButton).getCommand();
+					if (cmd != null) {
+						CommandManager.getInstance().commandAction(cmd);
 					}
-					if (fullScreenMode) {
-						inputMethod.pointerPressed(e.getX() - rect.x, e.getY() - rect.y);
-					} else {
-						org.microemu.device.impl.Rectangle pb = ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayPaintable();
-						inputMethod.pointerPressed(e.getX() - rect.x - pb.x, e.getY() - rect.y - pb.y);
-					}
+				} else {
+					int key = pressedButton.getKeyCode();
+					KeyEvent ev = new KeyEvent(SwingDeviceComponent.this, 0, 0, 0, key,
+							KeyEvent.CHAR_UNDEFINED);
+					inputMethod.mousePressed(ev);
 				}
-			} else {
-				pressedButton = getButton(e.getX(), e.getY());
-				if (pressedButton != null) {
-					if (pressedButton instanceof SoftButton && !fullScreenMode) {
-						Command cmd = ((SoftButton) pressedButton).getCommand();
-						if (cmd != null) {
-							CommandManager.getInstance().commandAction(cmd);
-						}
-					} else {
-						int key = pressedButton.getKeyCode();
-						KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key,
-								KeyEvent.CHAR_UNDEFINED);
-						inputMethod.mousePressed(ev);
-					}
-					// optimize for some video cards.
-					Rectangle r = pressedButton.getShape().getBounds();
-	      			repaint(r.x, r.y, r.width, r.height);
-				}
+				// optimize for some video cards.
+				Rectangle r = pressedButton.getShape().getBounds();
+      			repaint(r.x, r.y, r.width, r.height);
 			}
 		}
 
@@ -164,53 +114,23 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 			}
 
 			Device device = DeviceFactory.getDevice();
-			org.microemu.device.impl.Rectangle rect = ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
 			J2SEInputMethod inputMethod = (J2SEInputMethod) device.getInputMethod();
-			boolean fullScreenMode = device.getDeviceDisplay().isFullScreenMode();
-			if (rect.x <= e.getX() && (rect.x + rect.width) > e.getX()
-					&& rect.y <= e.getY() && (rect.y + rect.height) > e.getY()) {
-				if (device.hasPointerEvents()) {
-					if (!fullScreenMode) {
-						if (initialPressedSoftButton != null && initialPressedSoftButton.isPressed()) {
-							initialPressedSoftButton.setPressed(false);
-							org.microemu.device.impl.Rectangle pb = initialPressedSoftButton.getPaintable();
-							if (pb != null) {
-								dc.repaint(pb.x, pb.y, pb.width, pb.height);
-								if (pb.contains(e.getX() - rect.x, e.getY() - rect.y)) {
-									Command cmd = initialPressedSoftButton.getCommand();
-									if (cmd != null) {
-										CommandManager.getInstance().commandAction(cmd);
-									}
-								}
-							}
-						}
-						initialPressedSoftButton = null;
-					}
-					if (fullScreenMode) {
-						inputMethod.pointerReleased(e.getX() - rect.x, e.getY() - rect.y);
-					} else {
-						org.microemu.device.impl.Rectangle pb = ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayPaintable();
-						inputMethod.pointerReleased(e.getX() - rect.x - pb.x, e.getY() - rect.y - pb.y);
-					}
-				}
-			} else {
-				J2SEButton prevOverButton = getButton(e.getX(), e.getY());
-				if (prevOverButton != null) {
-					int key = prevOverButton.getKeyCode();
-					KeyEvent ev = new KeyEvent(instance, 0, 0, 0, key,
-							KeyEvent.CHAR_UNDEFINED);
+			J2SEButton prevOverButton = getButton(e.getX(), e.getY());
+			if (prevOverButton != null) {
+				int key = prevOverButton.getKeyCode();
+				KeyEvent ev = new KeyEvent(SwingDeviceComponent.this, 0, 0, 0, key,
+						KeyEvent.CHAR_UNDEFINED);
 
-					inputMethod.mouseReleased(ev.getKeyCode());
-				}
-				pressedButton = null;
-				//	optimize for some video cards.
-				if (prevOverButton != null) {
-					Rectangle r = prevOverButton.getShape().getBounds();
-	      			repaint(r.x, r.y, r.width, r.height);
-	      		} else {
-	      			repaint();
-	      		}
+				inputMethod.mouseReleased(ev.getKeyCode());
 			}
+			pressedButton = null;
+			//	optimize for some video cards.
+			if (prevOverButton != null) {
+				Rectangle r = prevOverButton.getShape().getBounds();
+      			repaint(r.x, r.y, r.width, r.height);
+      		} else {
+      			repaint();
+      		}
 		}
 
   };
@@ -222,40 +142,6 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
     public void mouseDragged(MouseEvent e)
     {
     	overButton = getButton(e.getX(), e.getY());
-
-		Device device = DeviceFactory.getDevice();
-		org.microemu.device.impl.Rectangle rect = ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
-		InputMethodImpl inputMethod = (InputMethodImpl) device.getInputMethod();
-		boolean fullScreenMode = device.getDeviceDisplay().isFullScreenMode();
-		if (rect.x <= e.getX() && (rect.x + rect.width) > e.getX()
-				&& rect.y <= e.getY() && (rect.y + rect.height) > e.getY()) {
-			if (device.hasPointerMotionEvents()) {
-				if (!fullScreenMode) {
-					if (initialPressedSoftButton != null) {
-						org.microemu.device.impl.Rectangle pb = initialPressedSoftButton.getPaintable();
-						if (pb != null) {
-							if (pb.contains(e.getX() - rect.x, e.getY() - rect.y)) {
-								if (!initialPressedSoftButton.isPressed()) {
-									initialPressedSoftButton.setPressed(true);
-									dc.repaint(pb.x, pb.y, pb.width, pb.height);
-								}
-							} else {
-								if (initialPressedSoftButton.isPressed()) {
-									initialPressedSoftButton.setPressed(false);
-									dc.repaint(pb.x, pb.y, pb.width, pb.height);
-								}
-							}
-						}
-					}
-				}
-				if (fullScreenMode) {
-					inputMethod.pointerDragged(e.getX() - rect.x, e.getY() - rect.y);
-				} else {
-					org.microemu.device.impl.Rectangle pb = ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayPaintable();
-					inputMethod.pointerDragged(e.getX() - rect.x - pb.x, e.getY() - rect.y - pb.y);
-				}
-			}
-		}
     }
 
 
@@ -279,48 +165,13 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
   };
 
 
-    private MouseWheelListener mouseWheelListener = new MouseWheelListener() {
-    	
-		public void mouseWheelMoved(MouseWheelEvent ev) {
-			if (ev.getWheelRotation() > 0) {				
-				// down
-				KeyEvent event = new KeyEvent(
-						SwingDeviceComponent.this, 
-						0,
-						System.currentTimeMillis(),
-						0,
-						KeyEvent.VK_DOWN,
-						KeyEvent.CHAR_UNDEFINED);
-				keyPressed(event);
-				keyReleased(event);
-			} else {
-				// up
-				KeyEvent event = new KeyEvent(
-						SwingDeviceComponent.this, 
-						0,
-						System.currentTimeMillis(),
-						0,
-						KeyEvent.VK_UP,
-						KeyEvent.CHAR_UNDEFINED);
-				keyPressed(event);
-				keyReleased(event);
-			}
-		}
-    	
-    };
-
-
   public SwingDeviceComponent()
   {
-    instance = this;
-
     dc = new SwingDisplayComponent(this);
-
-    this.initialPressedSoftButton = null;
+    setLayout(new XYLayout());
 
     addMouseListener(mouseListener);
     addMouseMotionListener(mouseMotionListener);
-    addMouseWheelListener(mouseWheelListener);
   }
 
 
@@ -333,6 +184,12 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
   public void init()
   {
       dc.init();
+
+      remove(dc);
+      
+      Rectangle r = 
+    	  	((J2SEDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle();
+      add(dc, new XYConstraints(r.x, r.y, r.width, r.height));
 
       revalidate();
   }
@@ -456,7 +313,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
   	}
 
 
-  public void paint(Graphics g)
+  protected void paintComponent(Graphics g)
   {
     if (offg == null ||
         offi.getWidth(null) != getSize().width || offi.getHeight(null) != getSize().height) {
@@ -475,12 +332,6 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
     }
     offg.drawImage(((J2SEImmutableImage) device.getNormalImage()).getImage(),
               0, 0, this);
-
-    org.microemu.device.impl.Rectangle displayRectangle =
-        ((J2SEDeviceDisplay) device.getDeviceDisplay()).getDisplayRectangle();
-    offg.translate(displayRectangle.x, displayRectangle.y);
-    dc.paint(offg);
-    offg.translate(-displayRectangle.x, -displayRectangle.y);
 
     	if (prevOverButton != null) {
 			org.microemu.device.impl.Shape shape = prevOverButton.getShape();
@@ -528,12 +379,6 @@ public class SwingDeviceComponent extends JPanel implements KeyListener
 		g.drawImage(image, r.x, r.y, r.x + r.width, r.y + r.height, r.x,
 				r.y, r.x + r.width, r.y + r.height, null);
 		g.setClip(clipSave);
-	}
-
-
-	public void update(Graphics g)
-	{
-		paint(g);
 	}
 
 

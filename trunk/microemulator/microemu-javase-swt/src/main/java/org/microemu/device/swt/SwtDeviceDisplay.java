@@ -230,7 +230,7 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 	
 	public void repaint(int x, int y, int width, int height) 
 	{
-		context.getDisplayComponent().repaint(x, y, width, height);
+		context.getDisplayComponent().repaintRequest(x, y, width, height);
 	}
 
 

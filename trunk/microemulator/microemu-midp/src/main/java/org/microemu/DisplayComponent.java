@@ -32,6 +32,6 @@ public interface DisplayComponent
 	
 	public MutableImage getDisplayImage();
 		
-	public void repaint(int x, int y, int width, int height);
+	public void repaintRequest(int x, int y, int width, int height);
 
 }

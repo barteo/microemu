@@ -24,6 +24,8 @@ package org.microemu.app.classloader;
 import java.util.HashMap;
 
 import org.microemu.Injected;
+import org.microemu.app.util.MIDletThread;
+import org.microemu.app.util.MIDletTimer;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
@@ -112,12 +114,32 @@ public class ChangeCallsMethodVisitor extends MethodAdapter implements Opcodes {
 				mv.visitMethodInsn(INVOKESTATIC, INJECTED_CLASS, name, "(Ljava/lang/Throwable;)V");
 				return;
 			}
-			
+			break;
+		case INVOKESPECIAL:
+			if (name.equals("<init>")) {
+				if (owner.equals("java/util/Timer")) {
+					owner = codeName(MIDletTimer.class);
+				} else if (owner.equals("java/util/Thread")) {
+					owner = codeName(MIDletThread.class);
+				}
+			}
+			break;
 		}
 
 		mv.visitMethodInsn(opcode, owner, name, desc);
 	}
 	
+    public void visitTypeInsn(final int opcode, String desc) {
+    	if (opcode == NEW) {
+    		if ("java/util/Timer".equals(desc)) {
+    			desc = codeName(MIDletTimer.class);
+    		} else if ("java/util/Thread".equals(desc)) {
+    			desc = codeName(MIDletThread.class);
+    		}
+    	} 
+    	mv.visitTypeInsn(opcode, desc);
+    }
+    
     public void visitTryCatchBlock(final Label start, final Label end, final Label handler, final String type) {
     	if (enhanceCatchBlock && type != null) {
     		if (catchInfo == null) {

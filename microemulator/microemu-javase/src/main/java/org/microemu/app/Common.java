@@ -62,6 +62,7 @@ import org.microemu.app.util.FileRecordStoreManager;
 import org.microemu.app.util.IOUtils;
 import org.microemu.app.util.MIDletResourceLoader;
 import org.microemu.app.util.MIDletSystemProperties;
+import org.microemu.app.util.MIDletThread;
 import org.microemu.app.util.MidletURLReference;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
@@ -139,7 +140,9 @@ public class Common implements MicroEmulator, CommonInterface {
 	}
 
 	public void notifyDestroyed(MIDletAccess previousMidletAccess) {
+		MIDletThread.notifyDestroyed(previousMidletAccess);
 		startLauncher(previousMidletAccess);
+		
 	}
 
 	public Launcher getLauncher() {

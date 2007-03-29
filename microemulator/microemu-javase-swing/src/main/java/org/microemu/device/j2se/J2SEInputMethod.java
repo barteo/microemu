@@ -37,6 +37,7 @@ import org.microemu.device.InputMethod;
 import org.microemu.device.InputMethodEvent;
 import org.microemu.device.impl.InputMethodImpl;
 import org.microemu.device.impl.SoftButton;
+import org.microemu.util.ThreadUtils;
 
 
 public class J2SEInputMethod extends InputMethodImpl 
@@ -80,7 +81,7 @@ public class J2SEInputMethod extends InputMethodImpl
 		
 		// TODO When InputMethod will be removed from EmulatorContext add:
 		// if (DeviceFactory.getDevice().hasRepeatEvents()) {
-		keyRepeatTimer = new Timer();
+		keyRepeatTimer = ThreadUtils.createTimer("InputKeyRepeatTimer");
 		repeatModeKeyCode = Integer.MIN_VALUE;
 		clearRepeatFlag = false;
 	}

@@ -21,31 +21,29 @@
  */
 package org.microemu.app.classloader;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.microemu.log.Logger;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.ClassWriter;
-
 /**
  * @author vlads
- *
  */
-public class ClassPreprocessor {
+public class InstrumentationConfig {
 
-	public static byte[] instrument(final InputStream classInputStream, InstrumentationConfig config) {
-		try {
-			ClassReader cr = new ClassReader(classInputStream);
-			ClassWriter cw = new ClassWriter(false);
-			ClassVisitor cv = new ChangeCallsClassVisitor(cw, config);
-			cr.accept(cv, false);
-			return cw.toByteArray();
-		} catch (IOException e) {
-			Logger.error("Error loading MIDlet class", e);
-			return null;
-		} 
-    }
+	private boolean enhanceThreadCreation = false;
+	
+	private boolean enhanceCatchBlock = false;
+
+	public boolean isEnhanceCatchBlock() {
+		return this.enhanceCatchBlock;
+	}
+
+	public void setEnhanceCatchBlock(boolean enhanceCatchBlock) {
+		this.enhanceCatchBlock = enhanceCatchBlock;
+	}
+
+	public boolean isEnhanceThreadCreation() {
+		return this.enhanceThreadCreation;
+	}
+
+	public void setEnhanceThreadCreation(boolean enhanceThreadCreation) {
+		this.enhanceThreadCreation = enhanceThreadCreation;
+	}
 	
 }

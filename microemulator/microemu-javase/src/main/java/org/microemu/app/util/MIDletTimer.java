@@ -21,15 +21,148 @@
  */
 package org.microemu.app.util;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Timer;
+import java.util.TimerTask;
+import java.util.WeakHashMap;
+
+import org.microemu.MIDletAccess;
+import org.microemu.MIDletBridge;
+import org.microemu.log.Logger;
 
 /**
+ * Terminate all timers on MIDlet exit.
  * TODO Name all the timer Threads created by MIDlet in Java 5  
  * @author vlads
  */
 public class MIDletTimer extends Timer {
 
+	private static Map midlets = new WeakHashMap();
+	
+	private class OneTimeTimerTaskWrapper extends TimerTask {
+
+		TimerTask task;
+		
+		OneTimeTimerTaskWrapper(TimerTask task) {
+			this.task = task;
+		}
+		
+		public void run() {
+			unregister(MIDletTimer.this);
+			task.run();
+		}
+		
+	}
+	
+	private String name;
+	
 	public MIDletTimer() {
 		super();
+		StackTraceElement[] ste = new Throwable().getStackTrace();
+		name = ste[1].getClassName() + "." + ste[1].getMethodName();  
 	}
+	
+	public void schedule(TimerTask task, Date time) {
+		register(this);
+		super.schedule(new OneTimeTimerTaskWrapper(task), time);
+	}
+	
+	public void schedule(TimerTask task, Date firstTime, long period) {
+		register(this);
+		super.schedule(task, firstTime, period);
+	}
+	
+	public void schedule(TimerTask task, long delay) {
+		register(this);
+		super.schedule(new OneTimeTimerTaskWrapper(task), delay);
+	}
+	
+	public void schedule(TimerTask task, long delay, long period) {
+		register(this);
+		super.schedule(task, delay, period);
+	}
+	
+	public void scheduleAtFixedRate(TimerTask task, Date firstTime, long period) {
+		register(this);
+		super.schedule(task, firstTime, period);
+	}
+	
+	public void scheduleAtFixedRate(TimerTask task, long delay, long period) {
+		register(this);
+		super.scheduleAtFixedRate(task, delay, period);
+	}
+	
+	public void cancel() {
+    	unregister(this);
+		super.cancel();
+	}
+
+	private void terminate() {
+		super.cancel();
+	}
+	
+	private static void register(MIDletTimer timer) {
+		MIDletAccess midletAccess = MIDletBridge.getMIDletAccess();
+		if (midletAccess == null) {
+			Logger.error("Creating Timer with no MIDlet context", new Throwable());
+			return;
+		}
+		Map timers = (Map)midlets.get(midletAccess);
+		if (timers == null) {
+			// Can't use WeakHashMap Timers are disposed by JVM
+			timers = new HashMap();
+			midlets.put(midletAccess, timers);
+		}
+		//Logger.debug("Register timer created from [" + timer.name + "]");
+		timers.put(timer, midletAccess);
+	}
+	
+	private static void unregister(MIDletTimer timer) {
+		MIDletAccess midletAccess = MIDletBridge.getMIDletAccess();
+		if (midletAccess == null) {
+			Logger.error("Creating Timer with no MIDlet context", new Throwable());
+			return;
+		}
+		Map timers = (Map)midlets.get(midletAccess);
+		if (timers == null) {
+			return;
+		}
+		//Logger.debug("Unregister timer created from [" + timer.name + "]");
+		timers.remove(timer);
+	}
+	
+	/**
+	 * Termnate all Threads created by MIDlet
+	 * @param previousMidletAccess
+	 */
+	public static void notifyDestroyed(MIDletAccess midletAccess) {
+		if (midletAccess == null) {
+			return;
+		}
+		Map timers = (Map)midlets.get(midletAccess);
+		if (timers != null) {
+			terminateTimers(timers);
+			midlets.remove(midletAccess);
+		}
+	}
+	
+	private static void terminateTimers(Map timers) {
+		for (Iterator iter = timers.keySet().iterator(); iter.hasNext();) {
+			Object o = iter.next();
+			if (o == null) {
+				continue;
+			}
+			if (o instanceof MIDletTimer) {
+				MIDletTimer tm = (MIDletTimer)o;
+				Logger.warn("MIDlet timer created from [" + tm.name + "] still running");
+				tm.terminate();
+			} else {
+				Logger.debug("unrecognized Object [" + o.getClass().getName() + "]");
+			}
+		};
+	}
+
 }

@@ -34,6 +34,7 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
 import org.microemu.app.classloader.ClassPreprocessor;
+import org.microemu.app.classloader.InstrumentationConfig;
 import org.microemu.device.Device;
 import org.microemu.log.Logger;
 
@@ -77,6 +78,8 @@ public class AppletProducer {
 		JarInputStream jis = null;
 		JarInputStream ijis = null;
 		JarOutputStream jos = null;
+		InstrumentationConfig config = new InstrumentationConfig();
+		config.setEnhanceThreadCreation(false);
 		try {
 			jis = new JarInputStream(new URL(midletInput).openStream());
 			Manifest manifest = jis.getManifest();
@@ -108,7 +111,7 @@ public class AppletProducer {
 					byte[] outputBuffer = inputBuffer;
 					int outputSize = size;
 					if (name.endsWith(".class")) {					
-				        outputBuffer = ClassPreprocessor.instrument(new ByteArrayInputStream(inputBuffer, 0, size));
+				        outputBuffer = ClassPreprocessor.instrument(new ByteArrayInputStream(inputBuffer, 0, size), config);
 				        outputSize = outputBuffer.length;
 					}
 					jos.putNextEntry(new JarEntry(name));

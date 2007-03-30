@@ -36,6 +36,8 @@ import org.microemu.log.Logger;
  */
 public class MIDletThread extends Thread {
 
+	private static final String THREAD_NAME_PREFIX = "MIDletThread-";
+	
 	private static Map midlets = new WeakHashMap();
 	
     private static int threadInitNumber;
@@ -45,26 +47,26 @@ public class MIDletThread extends Thread {
     }
     
 	public MIDletThread() {
-		super("MIDletThread-" + nextThreadNum());
+		super(THREAD_NAME_PREFIX + nextThreadNum());
 		register(this);
 	}
 	
 	public MIDletThread(Runnable target) {
-		super(target, "MIDletThread-" + nextThreadNum());
+		super(target, THREAD_NAME_PREFIX + nextThreadNum());
 		register(this);
 	}
 	
 	public MIDletThread(Runnable target, String name) {
-		super(target, "MIDletThread-" + name);
+		super(target, THREAD_NAME_PREFIX + name);
 		register(this);
 	}
 	
 	public MIDletThread(String name) {
-		super("MIDletThread-" + name);
+		super(THREAD_NAME_PREFIX + name);
 		register(this);
 	}
 	
-	private static void register(MIDletThread thread) {
+	private static void register(Thread thread) {
 		MIDletAccess midletAccess = MIDletBridge.getMIDletAccess();
 		if (midletAccess == null) {
 			Logger.error("Creating thread with no MIDlet context", new Throwable());
@@ -76,7 +78,6 @@ public class MIDletThread extends Thread {
 			midlets.put(midletAccess, threads);
 		}
 		threads.put(thread, midletAccess);
-		
 	}
 	
 	/**
@@ -92,14 +93,23 @@ public class MIDletThread extends Thread {
 			terminateThreads(threads);
 			midlets.remove(midletAccess);
 		}
+		MIDletTimer.notifyDestroyed(midletAccess);
 	}
 	
 	private static void terminateThreads(Map threads) {
 		for (Iterator iter = threads.keySet().iterator(); iter.hasNext();) {
-			MIDletThread t = (MIDletThread) iter.next();
-			if (t.isAlive()) {
-				Logger.warn("MIDlet thread " + t.getName() + " still running");
-				t.interrupt();
+			Object o = iter.next();
+			if (o == null) {
+				continue;
+			}
+			if (o instanceof MIDletThread) {
+				MIDletThread t = (MIDletThread) o;
+				if (t.isAlive()) {
+					Logger.warn("MIDlet thread [" + t.getName() + "] still running");
+					t.interrupt();
+				}
+			} else {
+				Logger.debug("unrecognized Object [" + o.getClass().getName() + "]");
 			}
 		};
 	}

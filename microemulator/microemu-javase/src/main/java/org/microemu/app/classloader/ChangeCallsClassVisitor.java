@@ -21,6 +21,7 @@
  */
 package org.microemu.app.classloader;
 
+import org.microemu.app.util.MIDletThread;
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -31,16 +32,22 @@ import org.objectweb.asm.MethodVisitor;
  */
 public class ChangeCallsClassVisitor extends ClassAdapter {
 
-	public ChangeCallsClassVisitor(ClassVisitor cv) {
+	InstrumentationConfig config;
+	
+	public ChangeCallsClassVisitor(ClassVisitor cv, InstrumentationConfig config) {
 		super(cv);
+		this.config = config;
 	}
 
-    public void visit(final int version, final int access, final String name, final String signature, final String superName, final String[] interfaces) {
+    public void visit(final int version, final int access, final String name, final String signature, String superName, final String[] interfaces) {
+    	if  ((config.isEnhanceThreadCreation()) && (superName.equals("java/lang/Thread"))) {
+    		superName = ChangeCallsMethodVisitor.codeName(MIDletThread.class);
+    	}
     	super.visit(version, access, name, signature, superName, interfaces);
 	}
     
 	public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
-		return  new ChangeCallsMethodVisitor(super.visitMethod(access, name, desc, signature, exceptions));
+		return  new ChangeCallsMethodVisitor(super.visitMethod(access, name, desc, signature, exceptions), config);
 	}
 
 }

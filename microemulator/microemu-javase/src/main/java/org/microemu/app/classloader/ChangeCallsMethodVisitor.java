@@ -45,10 +45,9 @@ public class ChangeCallsMethodVisitor extends MethodAdapter implements Opcodes {
 	
 	static String NEW_RESOURCE_LOADER_CLASS = INJECTED_CLASS;
 	
-	//	TODO make this configurable
-	public static boolean enhanceCatchBlock = false;  
-	
 	private HashMap catchInfo;
+	
+	private InstrumentationConfig config;
 	
 	private static class CatchInformation {
 		
@@ -62,11 +61,12 @@ public class ChangeCallsMethodVisitor extends MethodAdapter implements Opcodes {
 		}
 	}
 	
-	public ChangeCallsMethodVisitor(MethodVisitor mv) {
+	public ChangeCallsMethodVisitor(MethodVisitor mv, InstrumentationConfig config) {
 		super(mv);
+		this.config = config;
 	}
 
-	private static String codeName(Class klass) {
+	public static String codeName(Class klass) {
 		return klass.getName().replace('.', '/');
 	}
 
@@ -116,10 +116,10 @@ public class ChangeCallsMethodVisitor extends MethodAdapter implements Opcodes {
 			}
 			break;
 		case INVOKESPECIAL:
-			if (name.equals("<init>")) {
+			if  ((config.isEnhanceThreadCreation()) && (name.equals("<init>"))) {
 				if (owner.equals("java/util/Timer")) {
 					owner = codeName(MIDletTimer.class);
-				} else if (owner.equals("java/util/Thread")) {
+				} else if (owner.equals("java/lang/Thread")) {
 					owner = codeName(MIDletThread.class);
 				}
 			}
@@ -130,10 +130,10 @@ public class ChangeCallsMethodVisitor extends MethodAdapter implements Opcodes {
 	}
 	
     public void visitTypeInsn(final int opcode, String desc) {
-    	if (opcode == NEW) {
+    	if ((opcode == NEW) && (config.isEnhanceThreadCreation())) {
     		if ("java/util/Timer".equals(desc)) {
     			desc = codeName(MIDletTimer.class);
-    		} else if ("java/util/Thread".equals(desc)) {
+    		} else if ("java/lang/Thread".equals(desc)) {
     			desc = codeName(MIDletThread.class);
     		}
     	} 
@@ -141,7 +141,7 @@ public class ChangeCallsMethodVisitor extends MethodAdapter implements Opcodes {
     }
     
     public void visitTryCatchBlock(final Label start, final Label end, final Label handler, final String type) {
-    	if (enhanceCatchBlock && type != null) {
+    	if (config.isEnhanceCatchBlock() && type != null) {
     		if (catchInfo == null) {
     			catchInfo = new HashMap(); 
     		}
@@ -158,7 +158,7 @@ public class ChangeCallsMethodVisitor extends MethodAdapter implements Opcodes {
     
     //TODO make this work for gMaps case
     public void visitLabel(Label label) {
-    	if (enhanceCatchBlock && catchInfo != null) {
+    	if (config.isEnhanceCatchBlock() && catchInfo != null) {
     		CatchInformation newHandler = (CatchInformation)catchInfo.get(label);
     		if (newHandler != null) {
     			mv.visitLabel(newHandler.label);

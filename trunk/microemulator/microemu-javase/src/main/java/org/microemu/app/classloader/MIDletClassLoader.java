@@ -55,7 +55,11 @@ public class MIDletClassLoader extends URLClassLoader {
 	
 	public static boolean traceSystemClassLoading = false;
 	
+	public static boolean enhanceCatchBlock = false;  
+	
 	private final static boolean debug = false;
+	
+	private InstrumentationConfig config;
 	
 	private Set noPreporcessingNames;
 	
@@ -66,12 +70,15 @@ public class MIDletClassLoader extends URLClassLoader {
 		super(new URL[]{}, parent);
 		noPreporcessingNames = new HashSet();
 		acc = AccessController.getContext();
+		config = new InstrumentationConfig();
+		config.setEnhanceCatchBlock(enhanceCatchBlock);
+		config.setEnhanceThreadCreation(true);
 	}
 
-	public MIDletClassLoader(URL[] urls, ClassLoader parent) {
-		super(urls, parent);
-		noPreporcessingNames = new HashSet();
-	}
+//	public MIDletClassLoader(URL[] urls, ClassLoader parent) {
+//		super(urls, parent);
+//		noPreporcessingNames = new HashSet();
+//	}
 	
     /**
      * Appends the Class Location URL to the list of URLs to search for
@@ -289,7 +296,7 @@ public class MIDletClassLoader extends URLClassLoader {
 				Logger.info("Load MIDlet class", name);
 			}
 			if (instrumentMIDletClasses) {
-				byteCode = ClassPreprocessor.instrument(is);
+				byteCode = ClassPreprocessor.instrument(is, config);
 			} else {
 				int chunkSize = 1024;
 				//  No class or data object must be bigger than 16 Kilobyte

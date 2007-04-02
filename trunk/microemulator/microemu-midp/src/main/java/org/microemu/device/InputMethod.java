@@ -62,7 +62,7 @@ public abstract class InputMethod
 	public void setInputMethodListener(InputMethodListener l)
 	{
 		inputMethodListener = l;
-		setInputMode(INPUT_ABC_UPPER);
+		setInputMode(INPUT_ABC_LOWER);
 		text = "";
 		caret = 0;
 	}

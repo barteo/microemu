@@ -28,11 +28,17 @@ import org.microemu.MIDletBridge;
 public abstract class MIDlet {
 	
 	private boolean destroyed;
+	
+	private MIDletAccess access = new MIDletAccessor(this);
 
 	class MIDletAccessor extends MIDletAccess {
 		
 		public MIDletAccessor(MIDlet amidlet) {
 			super(amidlet);
+
+			MIDletBridge.setAccess(amidlet, this);
+
+			destroyed = false;
 		}
 
 		public void startApp() throws MIDletStateChangeException {
@@ -60,9 +66,6 @@ public abstract class MIDlet {
 	}
 
 	protected MIDlet() {
-		MIDletBridge.setAccess(this, new MIDletAccessor(this));
-
-		destroyed = false;
 	}
 
 	protected abstract void startApp() throws MIDletStateChangeException;

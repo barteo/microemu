@@ -275,7 +275,7 @@ public class TextField extends Item
 		}
 		g.drawRect(
 		        1, 1, 
-				DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 3, stringComponent.getHeight() + 4);
+				owner.getWidth() - 3, stringComponent.getHeight() + 4);
 		if (!hasFocus()) {
 		    g.setColor(savedColor);
 		}

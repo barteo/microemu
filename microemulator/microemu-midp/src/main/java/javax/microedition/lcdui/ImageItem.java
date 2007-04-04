@@ -20,9 +20,6 @@
  
 package javax.microedition.lcdui;
 
-import org.microemu.device.DeviceFactory;
-
-
 public class ImageItem extends Item
 {
 
@@ -127,10 +124,10 @@ public class ImageItem extends Item
 			if (layout == LAYOUT_DEFAULT || layout == LAYOUT_LEFT) {
 				g.drawImage(img, 0, 0, Graphics.LEFT | Graphics.TOP);
 			} else if (layout == LAYOUT_RIGHT) {
-				g.drawImage(img, DeviceFactory.getDevice().getDeviceDisplay().getWidth(), 0, 
+				g.drawImage(img, owner.getWidth(), 0, 
         	  Graphics.RIGHT | Graphics.TOP);
 			} else if (layout == LAYOUT_CENTER) {
-				g.drawImage(img, DeviceFactory.getDevice().getDeviceDisplay().getWidth() / 2, 0, 
+				g.drawImage(img, owner.getWidth() / 2, 0, 
         	  Graphics.HCENTER | Graphics.TOP);
 			} else {
 				g.drawImage(img, 0, 0, Graphics.LEFT | Graphics.TOP);

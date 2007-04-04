@@ -309,13 +309,19 @@ public abstract class Item
 	}
 
 	int getMaximumHeight() {
-		// TODO use Screen getHeight 
-		return DeviceFactory.getDevice().getDeviceDisplay().getHeight() * 10;
+		if (owner != null) {
+			return owner.getHeight() * 10;
+		} else {
+			return DeviceFactory.getDevice().getDeviceDisplay().getHeight() * 10;
+		}
 	}
 	
 	int getMaximumWidth() {
-		// TODO use Screen getWidth 
-		return DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 3;
+		if (owner != null) {
+			return owner.getWidth() - 3;
+		} else {
+			return DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 3;
+		}
 	}
 
 	ItemCommandListener getItemCommandListener() {

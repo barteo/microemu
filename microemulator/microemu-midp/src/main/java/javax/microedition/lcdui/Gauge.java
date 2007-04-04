@@ -23,9 +23,6 @@
 
 package javax.microedition.lcdui;
 
-import org.microemu.device.DeviceFactory;
-
-
 public class Gauge extends Item
 {
   static int HEIGHT = 15;
@@ -188,23 +185,19 @@ public class Gauge extends Item
 	g.translate(0, super.getHeight());
 
 	if (hasFocus()) {
-		g.drawRect(2, 2, DeviceFactory.getDevice().getDeviceDisplay().
-				getWidth() - 5, HEIGHT - 5); 
+		g.drawRect(2, 2, owner.getWidth() - 5, HEIGHT - 5); 
 	}
     if (hasIndefiniteRange()) {
     	if (getValue() == Gauge.CONTINUOUS_IDLE ||
     			getValue() == Gauge.INCREMENTAL_IDLE) {
-        	int width = DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 9;
+        	int width = owner.getWidth() - 9;
     		g.drawRect(4, 4, width, HEIGHT - 9);
     	} else {
-    		int width = ((DeviceFactory.getDevice().getDeviceDisplay().
-    						getWidth() - 8) << 1) / Gauge.IDEFINITE_FRAMES;
+    		int width = ((owner.getWidth() - 8) << 1) / Gauge.IDEFINITE_FRAMES;
     		int offset = (width >>> 1) * indefiniteFrame;
     		int width2 = 0;
-    		if (offset + width > (DeviceFactory.getDevice(). 
-    				getDeviceDisplay().getWidth() - 8)) {
-    			width2 = offset + width - ((DeviceFactory.getDevice(). 
-        				getDeviceDisplay().getWidth() - 8));
+    		if (offset + width > (owner.getWidth() - 8)) {
+    			width2 = offset + width - (owner.getWidth() - 8);
     			width -= width2; 
         				
     		}
@@ -214,7 +207,7 @@ public class Gauge extends Item
     		}
     	}
     } else {
-	    int width = (DeviceFactory.getDevice().getDeviceDisplay().getWidth() - 8) * value / maxValue; 
+	    int width = (owner.getWidth() - 8) * value / maxValue; 
 	    g.fillRect(4, 4, width, HEIGHT - 8);
     }
     

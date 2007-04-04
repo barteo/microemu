@@ -24,12 +24,15 @@
 package org.microemu.device.j2se;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
 
+import org.microemu.DisplayAccess;
+import org.microemu.MIDletBridge;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.DisplayGraphics;
@@ -150,7 +153,8 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
 	{
 		Rectangle rect = g.getClipBounds();
 		if (rect == null) {
-			return DeviceFactory.getDevice().getDeviceDisplay().getHeight();
+			DisplayAccess da = MIDletBridge.getMIDletAccess().getDisplayAccess();
+			return da.getCurrent().getHeight();
 		} else {
 			return rect.height;
 		}
@@ -161,7 +165,8 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
 	{
 		Rectangle rect = g.getClipBounds();
 		if (rect == null) {
-			return DeviceFactory.getDevice().getDeviceDisplay().getWidth();
+			DisplayAccess da = MIDletBridge.getMIDletAccess().getDisplayAccess();
+			return da.getCurrent().getWidth();
 		} else {
 			return rect.width;
 		}
@@ -281,7 +286,7 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
 
                 // may throw NullPointerException, this is ok
                 if (x_src + width > src.getWidth() || y_src + height > src.getHeight() ||
-                        width <= 0 || height <= 0 || x_src < 0 || y_src < 0)
+                        width < 0 || height < 0 || x_src < 0 || y_src < 0)
                     throw new IllegalArgumentException("Area out of Image");
 
 
@@ -429,9 +434,13 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
             if (rgbData == null)
                 throw new NullPointerException();
             
+            if (width == 0 || height == 0) {
+            	return;
+            }
+
             int l = rgbData.length;
             
-            if (width <= 0 || height <= 0 || offset < 0 || offset >= l ||
+            if (width < 0 || height < 0 || offset < 0 || offset >= l ||
                     (scanlength < 0 && scanlength * (height-1) < 0) ||
                     (scanlength >= 0 && scanlength * (height-1) + width-1 >= l))
                     throw new ArrayIndexOutOfBoundsException();
@@ -520,5 +529,10 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
                 
                 g.copyArea(x_src, y_src, width, height, x_dest-x_src, y_dest-y_src);
         }
+
+
+		public Graphics2D getGraphics() {
+			return g;
+		}
 
 }

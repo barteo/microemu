@@ -22,7 +22,8 @@
  
 package javax.microedition.lcdui;
 
-import org.microemu.device.DeviceFactory;
+import org.microemu.DisplayAccess;
+import org.microemu.MIDletBridge;
 
 
 public class Ticker
@@ -79,7 +80,8 @@ public class Ticker
       int stringWidth = f.stringWidth(text) + PAINT_GAP;
       g.drawString(text, textPos, 0, Graphics.LEFT | Graphics.TOP);
       int xPos = textPos + stringWidth;
-      while (xPos < DeviceFactory.getDevice().getDeviceDisplay().getWidth()) {
+      DisplayAccess da = MIDletBridge.getMIDletAccess().getDisplayAccess();
+      while (xPos < da.getCurrent().getWidth()) {
         g.drawString(text, xPos, 0, Graphics.LEFT | Graphics.TOP);
         xPos += stringWidth;
       }

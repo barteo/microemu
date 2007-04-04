@@ -437,7 +437,7 @@ public class Main extends JFrame {
 					DeviceDisplay deviceDisplay = DeviceFactory.getDevice().getDeviceDisplay();
 					DisplayAccess da = MIDletBridge.getMIDletAccess().getDisplayAccess();
 					if (da != null) {
-						da.sizeChanged(deviceDisplay.getWidth(), deviceDisplay.getHeight());
+						da.sizeChanged(da.getCurrent().getWidth(), da.getCurrent().getHeight());
 						deviceDisplay.repaint(0, 0, deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
 					}
 				}

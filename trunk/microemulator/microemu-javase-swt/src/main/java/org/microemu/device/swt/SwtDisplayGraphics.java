@@ -27,6 +27,8 @@ import javax.microedition.lcdui.Image;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
+import org.microemu.DisplayAccess;
+import org.microemu.MIDletBridge;
 import org.microemu.app.ui.swt.ImageFilter;
 import org.microemu.app.ui.swt.SwtGraphics;
 import org.microemu.device.Device;
@@ -165,7 +167,8 @@ public class SwtDisplayGraphics extends javax.microedition.lcdui.Graphics implem
 	{
 		Rectangle rect = g.getClipping();
 		if (rect == null) {
-			return DeviceFactory.getDevice().getDeviceDisplay().getHeight();
+			DisplayAccess da = MIDletBridge.getMIDletAccess().getDisplayAccess();
+			return da.getCurrent().getHeight();
 		} else {
 			return rect.height;
 		}
@@ -176,7 +179,8 @@ public class SwtDisplayGraphics extends javax.microedition.lcdui.Graphics implem
 	{
 		Rectangle rect = g.getClipping();
 		if (rect == null) {
-			return DeviceFactory.getDevice().getDeviceDisplay().getWidth();
+			DisplayAccess da = MIDletBridge.getMIDletAccess().getDisplayAccess();
+			return da.getCurrent().getWidth();
 		} else {
 			return rect.width;
 		}

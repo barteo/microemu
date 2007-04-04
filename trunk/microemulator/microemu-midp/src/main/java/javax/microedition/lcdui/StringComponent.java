@@ -216,6 +216,7 @@ class StringComponent {
 			return;
 		}
 
+		// TODO use Displayable width
 		width = DeviceFactory.getDevice().getDeviceDisplay().getWidth()
 				- widthDecreaser;
 

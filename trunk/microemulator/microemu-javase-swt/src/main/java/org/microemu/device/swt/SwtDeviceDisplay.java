@@ -87,21 +87,13 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 
 	public int getHeight() 
 	{
-		if (isFullScreenMode()) {
-			return getFullHeight();
-		} else {
-			return displayPaintable.height;
-		}
+		return displayPaintable.height;
 	}
 
 
 	public int getWidth() 
 	{
-		if (isFullScreenMode()) {
-			return getFullWidth();
-		} else {
-			return displayPaintable.width;
-		}
+		return displayPaintable.width;
 	}
 
 

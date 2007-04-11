@@ -261,12 +261,12 @@ public class J2SEInputMethod extends InputMethodImpl
 			return true;
 		}
 
-		if (keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_RIGHT) {
+		if (getGameAction(keyCode) == Canvas.LEFT || getGameAction(keyCode) == Canvas.RIGHT) {
 			synchronized (this) {
-				if (keyCode == KeyEvent.VK_LEFT && caret > 0) {
+				if (getGameAction(keyCode) == Canvas.LEFT && caret > 0) {
 					caret--;
 				}
-				if (keyCode == KeyEvent.VK_RIGHT && caret < text.length()) {
+				if (getGameAction(keyCode) == Canvas.RIGHT && caret < text.length()) {
 					caret++;
 				}
 				lastButton = null;

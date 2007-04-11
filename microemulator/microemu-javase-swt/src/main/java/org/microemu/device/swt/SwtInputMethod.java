@@ -218,12 +218,12 @@ public class SwtInputMethod extends InputMethodImpl
 		 * text); inputMethodListener.caretPositionChanged(event); return true;
 		 */
 
-		if (keyCode == SWT.ARROW_LEFT || keyCode == SWT.ARROW_RIGHT) {
+		if (getGameAction(keyCode) == Canvas.LEFT || getGameAction(keyCode) == Canvas.RIGHT) {
 			synchronized (this) {
-				if (keyCode == SWT.ARROW_LEFT && caret > 0) {
+				if (getGameAction(keyCode) == Canvas.LEFT && caret > 0) {
 					caret--;
 				}
-				if (keyCode == SWT.ARROW_RIGHT && caret < text.length()) {
+				if (getGameAction(keyCode) == Canvas.RIGHT && caret < text.length()) {
 					caret++;
 				}
 				lastButton = null;

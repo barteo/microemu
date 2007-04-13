@@ -34,6 +34,9 @@ public class SwtMutableImage extends MutableImage
 	public SwtMutableImage(int width, int height) 
 	{
 		img = SwtDeviceComponent.createImage(width, height);
+		SwtDisplayGraphics displayGraphics = new SwtDisplayGraphics(new SwtGraphics(new GC(img)), this);
+		displayGraphics.setColor(0x00ffffff);
+		displayGraphics.fillRect(0, 0, width, height);
 	}
 
 

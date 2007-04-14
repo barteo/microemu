@@ -181,9 +181,7 @@ public class Main extends JFrame {
 	
 	private ActionListener menuCloseMidletListener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-			if (MIDletBridge.getCurrentMIDlet() != common.getLauncher()) {
-				common.startLauncher(MIDletBridge.getMIDletAccess());
-			}
+			common.startLauncher(MIDletBridge.getMIDletContext());
 		}
 	};
 

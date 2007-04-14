@@ -40,6 +40,11 @@ public class MainTestMIDlet extends MIDlet implements CommandListener, MIDletUnd
 
 	Vector testPanels;
 	
+	static {
+		System.out.println("MainTestMIDlet static init");
+		ThreadTestsForm.onMIDletInit();
+	}
+	
 	public MainTestMIDlet() {
 		
 	}
@@ -53,6 +58,7 @@ public class MainTestMIDlet extends MIDlet implements CommandListener, MIDletUnd
 			testPanels.addElement(new ErrorHandlingForm());
 			testPanels.addElement(new ErrorHandlingCanvas());
 			testPanels.addElement(new RecordStoreForm());
+			testPanels.addElement(new ThreadTestsForm());
 			if (OverrideNewJSRCanvas.enabled) {
 				testPanels.addElement(new OverrideNewJSRCanvas());
 			}

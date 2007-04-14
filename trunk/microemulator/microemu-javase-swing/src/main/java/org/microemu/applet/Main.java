@@ -39,8 +39,8 @@ import javax.swing.Timer;
 
 import org.microemu.DisplayComponent;
 import org.microemu.EmulatorContext;
-import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
+import org.microemu.MIDletContext;
 import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
 import org.microemu.app.ui.swing.SwingDeviceComponent;
@@ -311,8 +311,12 @@ public class Main extends Applet implements MicroEmulator
 
 
 
-    public void notifyDestroyed(MIDletAccess previousMidletAccess)
+    public void notifyDestroyed(MIDletContext midletContext)
     {
+    }
+    
+    public void destroyMIDletContext(MIDletContext midletContext) {
+    	
     }
 
 

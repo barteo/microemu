@@ -29,8 +29,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.WeakHashMap;
 
-import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
+import org.microemu.MIDletContext;
 import org.microemu.log.Logger;
 
 /**
@@ -59,10 +59,12 @@ public class MIDletTimer extends Timer {
 	
 	private String name;
 	
+	private MIDletContext midletContext;
+	
 	public MIDletTimer() {
 		super();
 		StackTraceElement[] ste = new Throwable().getStackTrace();
-		name = ste[1].getClassName() + "." + ste[1].getMethodName();  
+		name = ste[1].getClassName() + "." + ste[1].getMethodName(); 
 	}
 	
 	public void schedule(TimerTask task, Date time) {
@@ -105,28 +107,29 @@ public class MIDletTimer extends Timer {
 	}
 	
 	private static void register(MIDletTimer timer) {
-		MIDletAccess midletAccess = MIDletBridge.getMIDletAccess();
-		if (midletAccess == null) {
+		if (timer.midletContext == null) {
+			timer.midletContext = MIDletBridge.getMIDletContext();
+		}
+		if (timer.midletContext == null) {
 			Logger.error("Creating Timer with no MIDlet context", new Throwable());
 			return;
 		}
-		Map timers = (Map)midlets.get(midletAccess);
+		Map timers = (Map)midlets.get(timer.midletContext);
 		if (timers == null) {
 			// Can't use WeakHashMap Timers are disposed by JVM
 			timers = new HashMap();
-			midlets.put(midletAccess, timers);
+			midlets.put(timer.midletContext, timers);
 		}
 		//Logger.debug("Register timer created from [" + timer.name + "]");
-		timers.put(timer, midletAccess);
+		timers.put(timer, timer.midletContext);
 	}
 	
 	private static void unregister(MIDletTimer timer) {
-		MIDletAccess midletAccess = MIDletBridge.getMIDletAccess();
-		if (midletAccess == null) {
-			Logger.error("Creating Timer with no MIDlet context", new Throwable());
+		if (timer.midletContext == null) {
+			Logger.error("Timer with no MIDlet context", new Throwable());
 			return;
 		}
-		Map timers = (Map)midlets.get(midletAccess);
+		Map timers = (Map)midlets.get(timer.midletContext);
 		if (timers == null) {
 			return;
 		}
@@ -136,16 +139,15 @@ public class MIDletTimer extends Timer {
 	
 	/**
 	 * Termnate all Threads created by MIDlet
-	 * @param previousMidletAccess
 	 */
-	public static void notifyDestroyed(MIDletAccess midletAccess) {
-		if (midletAccess == null) {
+	public static void contextDestroyed(MIDletContext midletContext) {
+		if (midletContext == null) {
 			return;
 		}
-		Map timers = (Map)midlets.get(midletAccess);
+		Map timers = (Map)midlets.get(midletContext);
 		if (timers != null) {
 			terminateTimers(timers);
-			midlets.remove(midletAccess);
+			midlets.remove(midletContext);
 		}
 	}
 	

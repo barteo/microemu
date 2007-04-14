@@ -18,8 +18,10 @@
  *  
  *  Contributor(s):
  *    Andres Navarro
+ *    
+ *  @version $Id$    
  */
- 
+
 package org.microemu;
 
 import javax.microedition.midlet.MIDlet;
@@ -27,48 +29,43 @@ import javax.microedition.midlet.MIDletStateChangeException;
 
 import org.microemu.DisplayAccess;
 
+/**
+ * 
+ * Enables access to MIDlet protected methods.
+ *
+ */
+public abstract class MIDletAccess {
+	
+	public MIDlet midlet;
 
-public abstract class MIDletAccess
-{
-  public MIDlet midlet;
-  private DisplayAccess displayAccess;
-  private GameCanvasKeyAccess gameCanvasKeyAccess;
-    
-    
-  public MIDletAccess(MIDlet amidlet)
-  {
-    midlet = amidlet;
-  }
-  
-  public GameCanvasKeyAccess getGameCanvasKeyAccess()
-  {
-    return gameCanvasKeyAccess;
-  }
-  
-  
-  public void setGameCanvasKeyAccess(GameCanvasKeyAccess aGameCanvasKeyAccess)
-  {
-    gameCanvasKeyAccess = aGameCanvasKeyAccess;
-  }
-  
-  public DisplayAccess getDisplayAccess()
-  {
-    return displayAccess;
-  }
-  
-  
-  public void setDisplayAccess(DisplayAccess adisplayAccess)
-  {
-    displayAccess = adisplayAccess;
-  }
-    
+	private DisplayAccess displayAccess;
 
-	public abstract void startApp()
-  		throws MIDletStateChangeException;
+	private GameCanvasKeyAccess gameCanvasKeyAccess;
+
+	public MIDletAccess(MIDlet amidlet) {
+		midlet = amidlet;
+	}
+
+	public GameCanvasKeyAccess getGameCanvasKeyAccess() {
+		return gameCanvasKeyAccess;
+	}
+
+	public void setGameCanvasKeyAccess(GameCanvasKeyAccess aGameCanvasKeyAccess) {
+		gameCanvasKeyAccess = aGameCanvasKeyAccess;
+	}
+
+	public DisplayAccess getDisplayAccess() {
+		return displayAccess;
+	}
+
+	public void setDisplayAccess(DisplayAccess adisplayAccess) {
+		displayAccess = adisplayAccess;
+	}
+
+	public abstract void startApp() throws MIDletStateChangeException;
 
 	public abstract void pauseApp();
 
-	public abstract void destroyApp(boolean unconditional)
-  		throws MIDletStateChangeException;
+	public abstract void destroyApp(boolean unconditional) throws MIDletStateChangeException;
 
 }

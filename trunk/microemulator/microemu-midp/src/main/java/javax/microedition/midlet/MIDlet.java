@@ -1,6 +1,7 @@
 /*
  * MicroEmulator 
- * Copyright (C) 2001 Bartek Teodorczyk <barteo@barteo.net>
+ * Copyright (C) 2001-2007 Bartek Teodorczyk <barteo@barteo.net>
+ * Copyright (C) 2007-2007 Vlad Skarzhevskyy
  * 
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published by the
@@ -15,6 +16,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this library; if not, write to the Free Software Foundation,
  * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
+ * @version $Id$  
  */
 
 package javax.microedition.midlet;
@@ -29,22 +32,15 @@ public abstract class MIDlet {
 	
 	private boolean destroyed;
 	
-	private MIDletAccess access = new MIDletAccessor(this);
-
 	class MIDletAccessor extends MIDletAccess {
 		
-		public MIDletAccessor(MIDlet amidlet) {
-			super(amidlet);
-
-			MIDletBridge.setAccess(amidlet, this);
-
+		public MIDletAccessor() {
+			super(MIDlet.this);
 			destroyed = false;
 		}
 
 		public void startApp() throws MIDletStateChangeException {
-			if (MIDletBridge.getCurrentMIDlet() != midlet) {
-				MIDletBridge.setCurrentMIDlet(midlet);
-			}
+			MIDletBridge.setCurrentMIDlet(midlet);
 			MIDletBridge.getRecordStoreManager().init();
 			midlet.startApp();
 		}
@@ -54,7 +50,7 @@ public abstract class MIDlet {
 		}
 
 		public void destroyApp(boolean unconditional) throws MIDletStateChangeException {
-			if (!destroyed) {
+			if (!midlet.destroyed) {
 				midlet.destroyApp(unconditional);
 			}
 			DisplayAccess da = getDisplayAccess();
@@ -62,10 +58,12 @@ public abstract class MIDlet {
 				getDisplayAccess().clean();
 				setDisplayAccess(null);
 			}
+			MIDletBridge.destroyMIDletContext(MIDletBridge.getMIDletContext(midlet));
 		}
 	}
 
 	protected MIDlet() {
+		MIDletBridge.registerMIDletAccess(new MIDletAccessor());
 	}
 
 	protected abstract void startApp() throws MIDletStateChangeException;

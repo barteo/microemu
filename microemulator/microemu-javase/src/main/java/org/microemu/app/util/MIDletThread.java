@@ -25,12 +25,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
+import org.microemu.MIDletContext;
 import org.microemu.log.Logger;
 
 /**
- * MIDletAccess is used to hold keys to running Threads created by  MIDlet  
+ * MIDletContext is used to hold keys to running Threads created by  MIDlet  
  * 
  * @author vlads
  */
@@ -67,33 +67,33 @@ public class MIDletThread extends Thread {
 	}
 	
 	private static void register(Thread thread) {
-		MIDletAccess midletAccess = MIDletBridge.getMIDletAccess();
-		if (midletAccess == null) {
+		MIDletContext midletContext = MIDletBridge.getMIDletContext();
+		if (midletContext == null) {
 			Logger.error("Creating thread with no MIDlet context", new Throwable());
 			return;
 		}
-		Map threads = (Map)midlets.get(midletAccess);
+		Map threads = (Map)midlets.get(midletContext);
 		if (threads == null) {
 			threads = new WeakHashMap();
-			midlets.put(midletAccess, threads);
+			midlets.put(midletContext, threads);
 		}
-		threads.put(thread, midletAccess);
+		threads.put(thread, midletContext);
 	}
 	
 	/**
-	 * Termnate all Threads created by MIDlet
+	 * Terminate all Threads created by MIDlet
 	 * @param previousMidletAccess
 	 */
-	public static void notifyDestroyed(MIDletAccess midletAccess) {
-		if (midletAccess == null) {
+	public static void contextDestroyed(MIDletContext midletContext) {
+		if (midletContext == null) {
 			return;
 		}
-		Map threads = (Map)midlets.get(midletAccess);
+		Map threads = (Map)midlets.get(midletContext);
 		if (threads != null) {
 			terminateThreads(threads);
-			midlets.remove(midletAccess);
+			midlets.remove(midletContext);
 		}
-		MIDletTimer.notifyDestroyed(midletAccess);
+		MIDletTimer.contextDestroyed(midletContext);
 	}
 	
 	private static void terminateThreads(Map threads) {

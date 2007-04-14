@@ -48,6 +48,7 @@ import org.microemu.EmulatorContext;
 import org.microemu.Injected;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
+import org.microemu.MIDletContext;
 import org.microemu.MIDletEntry;
 import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
@@ -139,12 +140,14 @@ public class Common implements MicroEmulator, CommonInterface {
         return result;
 	}
 
-	public void notifyDestroyed(MIDletAccess previousMidletAccess) {
-		MIDletThread.notifyDestroyed(previousMidletAccess);
-		startLauncher(previousMidletAccess);
-		
+	public void notifyDestroyed(MIDletContext midletContext) {
+		startLauncher(midletContext);
 	}
 
+	public void destroyMIDletContext(MIDletContext midletContext) {
+		MIDletThread.contextDestroyed(midletContext);
+	}
+	
 	public Launcher getLauncher() {
 		return launcher;
 	}
@@ -219,38 +222,62 @@ public class Common implements MicroEmulator, CommonInterface {
 	}
 
 	public void startMidlet(Class midletClass, MIDletAccess previousMidletAccess) {
-		MIDlet m;
-		final String errorTitle = "Error starting MIDlet";
 		try {
-			Object object = midletClass.newInstance();
-			if (!(object instanceof MIDlet)) {
-				Message.error(errorTitle, "Class " + midletClass.getName() + " should extend MIDlet");
+			if (previousMidletAccess != null) {
+				previousMidletAccess.destroyApp(true);
+			}
+		} catch (Throwable e) {
+			Message.error("Unable to destroy MIDlet, " + Message.getCauseMessage(e), e);
+		}
+		
+		MIDletContext context = new MIDletContext();
+		MIDletBridge.setThreadMIDletContext(context);
+		try {
+			MIDlet m;
+			
+			final String errorTitle = "Error starting MIDlet";
+			
+			try {
+				Object object = midletClass.newInstance();
+				if (!(object instanceof MIDlet)) {
+					Message.error(errorTitle, "Class " + midletClass.getName() + " should extend MIDlet");
+					return;
+				}
+				m = (MIDlet) object;
+			} catch (Throwable e) {
+				Message.error(errorTitle, "Unable to create MIDlet, " + Message.getCauseMessage(e), e);
+				MIDletBridge.destroyMIDletContext(context);
 				return;
 			}
-			m = (MIDlet)object;
-		} catch (Throwable e) {
-			Message.error(errorTitle, "Unable to create MIDlet, " + Message.getCauseMessage(e), e);
-			return;
+			
+			try {
+				if (context.getMIDlet() != m) {
+					throw new Error("MIDlet Context corrupted");
+				}
+				context.getMIDletAccess().startApp();
+				
+				launcher.setCurrentMIDlet(m);
+			} catch (Throwable e) {
+				Message.error(errorTitle, "Unable to start MIDlet, " + Message.getCauseMessage(e), e);
+				MIDletBridge.destroyMIDletContext(context);
+			}
+
+		} finally {
+			MIDletBridge.setThreadMIDletContext(null);
 		}
 
-		try {
-			if (previousMidletAccess != null) {
-				previousMidletAccess.destroyApp(true);
-			}
-			MIDletBridge.getMIDletAccess(m).startApp();
-			launcher.setCurrentMIDlet(m);
-		} catch (Throwable e) {
-			Message.error(errorTitle, "Unable to start MIDlet, " + Message.getCauseMessage(e), e);
-		}
 	}
 
-	protected void startLauncher(MIDletAccess previousMidletAccess) {
-		try {
-			if (previousMidletAccess != null) {
-				previousMidletAccess.destroyApp(true);
+	protected void startLauncher(MIDletContext midletContext) {
+		if (midletContext != null && !midletContext.isLauncher()) {
+			try {
+				MIDletAccess previousMidletAccess = midletContext.getMIDletAccess();
+				if (previousMidletAccess != null) {
+					previousMidletAccess.destroyApp(true);
+				}
+			} catch (Throwable e) {
+				Logger.error("destroyApp error", e);
 			}
-		} catch (Throwable e) {
-		    Logger.error("destroyApp error", e);
 		}
 		
 		try {
@@ -336,8 +363,14 @@ public class Common implements MicroEmulator, CommonInterface {
 			throw new ClassNotFoundException("Cannot find MIDlet-Jar-URL property in jad");
 		}
 		Logger.debug("openJar", jad.getJarURL());
-		MIDletAccess previousMidletAccess = MIDletBridge.getMIDletAccess();
+		
+		// Close Current MIDlet before oppening new one.
+		MIDletContext previousMidletContext = MIDletBridge.getMIDletContext();
+		if (previousMidletContext != null && !previousMidletContext.isLauncher()) {
+			 MIDletBridge.destroyMIDletContext(previousMidletContext);
+		}
 		MIDletBridge.clear();
+		
 		setResponseInterface(false);
 		try {
 			URL url = null;
@@ -383,8 +416,7 @@ public class Common implements MicroEmulator, CommonInterface {
 				Class midletClass = midletClassLoader.loadClass(jadEntry.getClassName());
 				loadMidlet(jadEntry.getName(), midletClass);
 			}
-			notifyDestroyed(previousMidletAccess);
-
+			startLauncher(null);
 			setStatusBar("");
 		} finally {
 			setResponseInterface(true);

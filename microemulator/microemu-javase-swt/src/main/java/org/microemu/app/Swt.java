@@ -178,7 +178,7 @@ public class Swt extends Common
 						System.err.println(ex);
 					}
 				} else {
-					startLauncher(MIDletBridge.getMIDletAccess());
+					startLauncher(MIDletBridge.getMIDletContext());
 				}
 			}
 		}    

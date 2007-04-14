@@ -19,19 +19,19 @@
  *  Contributor(s):
  *    3GLab
  */
- 
+
 package org.microemu;
 
+public interface MicroEmulator {
 
-public interface MicroEmulator
-{
-	
-  RecordStoreManager getRecordStoreManager();
-	
-  String getAppProperty(String key);
-  
-  void notifyDestroyed(MIDletAccess previousMidletAccess);
+	RecordStoreManager getRecordStoreManager();
 
-  boolean platformRequest(String URL);
-    
+	String getAppProperty(String key);
+
+	void notifyDestroyed(MIDletContext midletContext);
+
+	void destroyMIDletContext(MIDletContext midletContext);
+	
+	boolean platformRequest(String URL);
+
 }

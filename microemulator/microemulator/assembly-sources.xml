@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<assembly>
+    <!-- @version $Revision$ ($Author$) $Date$ -->
+    <id>sources</id>
+    <formats>
+        <format>jar</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <dependencySets>
+        <dependencySet>
+            <unpack>true</unpack>
+            <scope>runtime</scope>
+            <includes>
+                <include>org.microemu:microemu-cldc:jar:sources</include>
+                <include>org.microemu:microemu-midp:jar:sources</include>
+                <include>org.microemu:microemu-javase:jar:sources</include>
+                <include>org.microemu:microemu-javase-swing:jar:sources</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
+</assembly>

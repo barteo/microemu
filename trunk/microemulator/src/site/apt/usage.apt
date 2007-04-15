@@ -17,39 +17,39 @@ or
 java org.microemu.app.Main (MIDlet jad file)
 ---
 
-        * me-app.jar must be in CLASSPATH
+        * microemulator.jar must be in CLASSPATH
 
         []
 
 ---
-java -cp me-app.jar;YourApp.jar org.microemu.app.Main com.yourcompany.YourMidlet
+java -cp microemulator.jar;YourApp.jar org.microemu.app.Main com.yourcompany.YourMidlet
 or
-java org.microemu.app.Main path2yourApp/YourApp.jad
+java -cp microemulator.jar org.microemu.app.Main path2yourApp/YourApp.jad
 ---
 
 
-    [[2]] Use me-app.jar
+    [[2]] Use microemulator.jar
 
 ---
-java -jar me-app.jar (MIDlet application main class)
+java -jar microemulator.jar (MIDlet application main class)
 or
-java -jar me-app.jar (MIDlet jad file)
+java -jar microemulator.jar (MIDlet jad file)
 ---
 
         * (MIDlet application main class) parameter is optional, if used MIDlet application jar file must be in CLASSPATH,
 
         * (MIDlet jad file) must have .jad extension,
 
-        * to support Nokia UI include nokiaui.jar to the CLASSPATH,
+        * to support Nokia UI include microemu-nokiaui.jar to the CLASSPATH,
 
-        * to support Siemens API include siemensapi.jar to the CLASSPATH.
+        * to support Siemens API include microemu-siemensapi.jar to the CLASSPATH.
 
         []
 
 ---
-java -cp nokiaui.jar;YourApp.jar -jar me-app.jar com.yourcompany.YourMidlet
+java -cp microemulator.jar;microemu-nokiaui.jar;YourApp.jar org.microemu.app.Main com.yourcompany.YourMidlet
 or
-java -cp siemensapi.jar -jar me-app.jar http://wwww.yourcompany.com/download/YourApp-sim.jad
+java -jar microemulator.jar -cp microemu-siemensapi.jar http://wwww.yourcompany.com/download/YourApp-sim.jad
 ---
 
     MicroEmulator command line options
@@ -60,7 +60,9 @@ java -cp siemensapi.jar -jar me-app.jar http://wwww.yourcompany.com/download/You
         * --device | -d <device class or xml>
             specify device skin.
 
-        * --appclasspath <CLASSPATH> for MIDlet application components if any; ignored when opening .jad
+        * --classpath | -cp  <CLASSPATH>  Extensions class path entries
+
+        * --appclasspath | -appcp <CLASSPATH> for MIDlet application components if any; ignored when opening .jad
 
         * --appclass <library class name> for appclasspath auto detection from system classpath; ignored when opening .jad
 
@@ -68,8 +70,20 @@ java -cp siemensapi.jar -jar me-app.jar http://wwww.yourcompany.com/download/You
 
         []
 
+    Other examples
+
 ---
-java -cp me-app.jar;devices/large.jar org.microemu.app.Main --device org/microemu/device/large/device.xml http://wintermute.de/wap/5ud0ku.jad
+java -cp microemulator.jar;microemu-device-large.jar org.microemu.app.Main --device org/microemu/device/large/device.xml http://wintermute.de/wap/5ud0ku.jad
+
+java -jar microemulator.jar -cp microemu-device-large.jar --device org/microemu/device/large/device.xml http://wintermute.de/wap/5ud0ku.jad
+---
+
+    MicroEmulator with JSR
+
+---
+java -cp microemulator.jar;bluecove-1.2.2.jar org.microemu.app.Main btbrowserv20.jad
+or
+java -jar microemulator.jar -cp bluecove-1.2.2.jar btbrowserv20.jad
 ---
 
 

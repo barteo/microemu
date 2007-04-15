@@ -44,41 +44,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- sources-jar -->
-
-        <dependency>
-            <groupId>org.microemu</groupId>
-            <artifactId>microemu-cldc</artifactId>
-            <version>${project.version}</version>
-            <classifier>sources</classifier>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.microemu</groupId>
-            <artifactId>microemu-midp</artifactId>
-            <version>${project.version}</version>
-            <classifier>sources</classifier>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.microemu</groupId>
-            <artifactId>microemu-javase</artifactId>
-            <version>${project.version}</version>
-            <classifier>sources</classifier>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.microemu</groupId>
-            <artifactId>microemu-javase-swing</artifactId>
-            <version>${project.version}</version>
-            <classifier>sources</classifier>
-            <optional>true</optional>
-        </dependency>
-
-
     </dependencies>
 
     <build>
@@ -113,22 +78,75 @@
                             </archive>
                        </configuration>
                     </execution>
-
-                    <execution>
-                        <id>sources-jar</id>
-                        <phase>package</phase>
-                        <goals><goal>single</goal></goals>
-                        <configuration>
-                            <attach>true</attach>
-                            <descriptors>
-                                <descriptor>assembly-sources.xml</descriptor>
-                            </descriptors>
-                        </configuration>
-                    </execution>
                </executions>
             </plugin>
 
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+
+            <dependencies>
+            <!-- sources-jar -->
+
+                <dependency>
+                    <groupId>org.microemu</groupId>
+                    <artifactId>microemu-cldc</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                    <optional>true</optional>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.microemu</groupId>
+                    <artifactId>microemu-midp</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                    <optional>true</optional>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.microemu</groupId>
+                    <artifactId>microemu-javase</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                    <optional>true</optional>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.microemu</groupId>
+                    <artifactId>microemu-javase-swing</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>sources</classifier>
+                    <optional>true</optional>
+                </dependency>
+
+            </dependencies>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sources-jar</id>
+                                <phase>package</phase>
+                                <goals><goal>single</goal></goals>
+                                <configuration>
+                                    <attach>true</attach>
+                                    <descriptors>
+                                        <descriptor>assembly-sources.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
 
 </project>

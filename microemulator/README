@@ -18,10 +18,10 @@ There are two methods of running apps in emulator:
 a) java org.microemu.app.Main (MIDlet application main class)
 or, java org.microemu.app.Main (MIDlet jad file)
 
- - me-app.jar must be in CLASSPATH
+ - microemulator.jar must be in CLASSPATH
 
-b) java -jar me-app.jar (MIDlet application main class)
-or, java -jar me-app.jar (MIDlet jad file)
+b) java -jar microemulator.jar (MIDlet application main class)
+or, java -jar microemulator.jar (MIDlet jad file)
 
  - (MIDlet application main class) parameter is optional, if used MIDlet
    application jar file must be in CLASSPATH,

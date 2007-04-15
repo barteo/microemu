@@ -31,6 +31,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -97,6 +98,8 @@ public class Common implements MicroEmulator, CommonInterface {
 
 	private ResponseInterfaceListener responseInterfaceListener = null;
 
+	private ExtensionsClassLoader extensionsClassLoader;
+	
 	public Common(EmulatorContext context) {
 		instance = this;
 		this.emulatorContext = context;
@@ -451,7 +454,7 @@ public class Common implements MicroEmulator, CommonInterface {
 	private void registerImplementation(String implClassName) {
 		final String errorText = "Implementation initialization";
 		try {
-			Class implClass = getClass().getClassLoader().loadClass(implClassName);
+			Class implClass = getExtensionsClassLoader().loadClass(implClassName);
 			if (ImplementationInitialization.class.isAssignableFrom(implClass)) {
 				Object inst = implClass.newInstance();
 				((ImplementationInitialization)inst).registerImplementation();
@@ -501,6 +504,9 @@ public class Common implements MicroEmulator, CommonInterface {
 				it.remove();
 				Config.setEmulatorID((String)it.next());
 				it.remove();
+			} else if ((tmp.equals("--help")) || (tmp.equals("-help"))) {
+				System.out.println(usage());
+				System.exit(0);
 			}
 		}
 	}
@@ -539,6 +545,10 @@ public class Common implements MicroEmulator, CommonInterface {
 						paramRecordStoreManager = new MemoryRecordStoreManager();
 					}
 				}
+			} else if ((tmp.equals("--classpath")) || (tmp.equals("-classpath"))  || (tmp.equals("-cp"))) {
+				it.remove();
+				getExtensionsClassLoader().addClasspath((String)it.next());
+				it.remove();
 			} else if (tmp.equals("--impl")) {
 				it.remove();
 				registerImplementation((String)it.next());
@@ -548,10 +558,7 @@ public class Common implements MicroEmulator, CommonInterface {
 
 		//TODO registerImplementations by reading jar files in classpath.
 
-		ClassLoader classLoader = getClass().getClassLoader();
-		if (classLoader == null) {
-			classLoader = ClassLoader.getSystemClassLoader();
-		}
+		ClassLoader classLoader = getExtensionsClassLoader();
 		if (deviceDescriptorLocation != null) {
 			try {
 				setDevice(DeviceImpl.create(
@@ -601,8 +608,15 @@ public class Common implements MicroEmulator, CommonInterface {
 		initMIDlet(params, false);
 	}
 
+	private static ExtensionsClassLoader getExtensionsClassLoader() {
+		if (instance.extensionsClassLoader == null) {
+			instance.extensionsClassLoader = new ExtensionsClassLoader(new URL[]{}, instance.getClass().getClassLoader());
+		}
+		return instance.extensionsClassLoader;
+	}
+	
 	private static MIDletClassLoader createMIDletClassLoader() {
-		MIDletClassLoader mcl = new MIDletClassLoader(instance.getClass().getClassLoader());
+		MIDletClassLoader mcl = new MIDletClassLoader(getExtensionsClassLoader());
 		if (!Serializable.class.isAssignableFrom(Injected.class)) {
 			Logger.error("classpath configuration error, Wrong Injected class detected. microemu-injected module should be after microemu-javase in eclipse");
 		}
@@ -612,7 +626,7 @@ public class Common implements MicroEmulator, CommonInterface {
 	}
 	
 	public static ClassLoader createExtensionsClassLoader(final URL[] urls) {
-		return new ExtensionsClassLoader(urls, instance.getClass().getClassLoader());
+		return new ExtensionsClassLoader(urls, getExtensionsClassLoader());
 	}
 	
 	private static JadProperties loadJadProperties(String urlString) throws IOException {
@@ -641,7 +655,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		while (it.hasNext()) {
 			String test = (String) it.next();
 			it.remove();
-			if (test.equals("--appclasspath")) {
+			if ((test.equals("--appclasspath")) || (test.equals("-appclasspath"))  || (test.equals("-appcp"))) {
 				appclasspath.add(it.next());
 				it.remove();
 			} else if (test.equals("--appclass")) {
@@ -705,12 +719,13 @@ public class Common implements MicroEmulator, CommonInterface {
 
 	public static String usage() {
 		return
-			"[(-d | --device) ({device descriptor} | {device class name}) ] " +
-			"[--rms (file | memory)] " +
-			"[--id EmulatorID ] " +
-			"[--impl {JSR implementation class name}]" +
-			"[--appclasspath <MIDlet CLASSPATH>]" +
-			"[--appclass <library class name>]" +
+			"[(-d | --device) ({device descriptor} | {device class name}) ] \n" +
+			"[--rms (file | memory)] \n" +
+			"[--id EmulatorID ] \n" +
+			"[--impl {JSR implementation class name}]\n" +
+			"[(--classpath|-cp) <JSR CLASSPATH>]\n" +
+			"[(--appclasspath|--appcp) <MIDlet CLASSPATH>]\n" +
+			"[--appclass <library class name>]\n" +
 			"(({MIDlet class name} [--propertiesjad {jad file location}]) | {jad file location})";
 	}
 

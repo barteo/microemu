@@ -9,6 +9,8 @@
     <dependencySets>
         <dependencySet>
             <unpack>true</unpack>
+            <outputDirectory></outputDirectory>
+            <outputFileNameMapping></outputFileNameMapping>
             <scope>runtime</scope>
             <excludes>
                 <exclude>org.microemu:microemu-cldc:jar:sources</exclude>

@@ -14,6 +14,12 @@
    To run build without tests:
      mvn -Dmaven.test.skip=true
 
+* Building Release
+
+    mvn -DperformRelease=true
+
+    this is done on build server.
+
 * error classpath configuration error, Wrong Injected class detected. microemu-injected module should be after microemu-javase in eclipse
 
   This is the problem that order of dependancies in maven is undefined.
@@ -44,3 +50,4 @@
    When building all application.
    This is because some users may get ME2 SVN tree and try to compile.
    The microemu-webstart will fail for them.
+

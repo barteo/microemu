@@ -19,9 +19,12 @@
  
 package org.microemu.device.swt;
 
+import java.util.Hashtable;
+
 import javax.microedition.lcdui.Canvas;
 
 import org.eclipse.swt.SWT;
+import org.microemu.device.InputMethod;
 import org.microemu.device.impl.Button;
 import org.microemu.device.impl.Shape;
 
@@ -34,7 +37,7 @@ public class SwtButton implements Button
   Shape shape;
   private int keyboardKey;
   private int keyCode;
-  char[] chars;
+  private Hashtable inputToChars;
 
 
   /**
@@ -44,7 +47,7 @@ public class SwtButton implements Button
  * @param keyName
  * @param chars
  */
-  public SwtButton(String name, Shape shape, int keyCode, String keyName, char[] chars)
+  public SwtButton(String name, Shape shape, int keyCode, String keyName, Hashtable inputToChars)
   {
     this.name = name;
     this.shape = shape;
@@ -59,12 +62,7 @@ public class SwtButton implements Button
     } else {
     	this.keyCode = keyCode;
     }
-    this.chars = chars;
-    if (chars != null) {
-	    for (int i = 0; i < this.chars.length; i++) {
-	    	this.chars[i] = Character.toLowerCase(this.chars[i]);
-	    }
-    }
+    this.inputToChars = inputToChars;
   }
   
   
@@ -80,24 +78,41 @@ public class SwtButton implements Button
   }
   
   
-  public char[] getChars()
+  public char[] getChars(int inputMode)
   {
-    return chars;
+      char[] result = null;
+      switch (inputMode) {
+          case InputMethod.INPUT_123 : 
+              result = (char[]) inputToChars.get("123");
+              break;
+          case InputMethod.INPUT_ABC_LOWER : 
+              result = (char[]) inputToChars.get("abc");
+              break;
+          case InputMethod.INPUT_ABC_UPPER : 
+              result = (char[]) inputToChars.get("ABC");
+              break;
+      }
+      if (result == null) {
+          result = (char[]) inputToChars.get("common");
+      }
+      
+      return result;
   }
   
   
-  public boolean isChar(char c)
+  public boolean isChar(char c, int inputMode)
   {
-    c = Character.toLowerCase(c);
-    if (chars != null) {
-      for (int i = 0; i < chars.length; i++) {
-        if (c == chars[i]) {
-          return true;
-        } 
+      c = Character.toLowerCase(c);
+      char[] chars = getChars(inputMode);
+      if (chars != null) {
+          for (int i = 0; i < chars.length; i++) {
+              if (c == Character.toLowerCase(chars[i])) {
+                  return true;
+              }
+          }
       }
-    }
     
-    return false;
+      return false;
   }
   
   

@@ -20,6 +20,7 @@
 package org.microemu.device.swt;
 
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Command;
@@ -70,7 +71,7 @@ public class SwtSoftButton extends SwtButton implements SoftButton {
 	 */
 	public SwtSoftButton(String name, Shape shape, int keyCode, String keyName,
 			Rectangle paintable, String alignmentName, Vector commands, Font font) {
-		super(name, shape, keyCode, keyName, null);
+		super(name, shape, keyCode, keyName, new Hashtable());
 
 		this.type = TYPE_COMMAND;
 

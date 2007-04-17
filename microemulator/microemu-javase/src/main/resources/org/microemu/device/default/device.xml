@@ -296,6 +296,14 @@
 				<char>=</char>
 				<char>1</char>
 			</chars>
+			<chars input="123">
+				<char>1</char>
+				<char>.</char>
+				<char>-</char>
+				<char>(</char>
+				<char>)</char>
+				<char>+</char>
+			</chars>
 			<rectangle>
 				<x>19</x>
 				<y>324</y>

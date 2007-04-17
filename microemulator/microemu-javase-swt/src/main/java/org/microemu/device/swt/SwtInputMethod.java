@@ -175,8 +175,6 @@ public class SwtInputMethod extends InputMethodImpl
 	
 	private boolean commonKeyPressed(KeyEvent ev) 
 	{
-		String tmp;
-
 		int keyCode = ev.keyCode;
 		if (inputMethodListener == null) {
 			int midpKeyCode;
@@ -218,23 +216,26 @@ public class SwtInputMethod extends InputMethodImpl
 		 * text); inputMethodListener.caretPositionChanged(event); return true;
 		 */
 
+		int caret = inputMethodListener.getCaretPosition();
+		
 		if (getGameAction(keyCode) == Canvas.LEFT || getGameAction(keyCode) == Canvas.RIGHT) {
 			synchronized (this) {
 				if (getGameAction(keyCode) == Canvas.LEFT && caret > 0) {
 					caret--;
 				}
-				if (getGameAction(keyCode) == Canvas.RIGHT && caret < text.length()) {
+				if (getGameAction(keyCode) == Canvas.RIGHT && caret < inputMethodListener.getText().length()) {
 					caret++;
 				}
 				lastButton = null;
 				lastButtonCharIndex = -1;
 			}
-			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
+			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, inputMethodListener.getText());
 			inputMethodListener.caretPositionChanged(event);
 			return true;
 		}
 
 		if (keyCode == SWT.BS) {
+			String tmp = inputMethodListener.getText();
 			synchronized (this) {
 				if (lastButton != null) {
 					caret++;
@@ -245,34 +246,40 @@ public class SwtInputMethod extends InputMethodImpl
 					caret--;
 					tmp = "";
 					if (caret > 0) {
-						tmp += text.substring(0, caret);
+						tmp += inputMethodListener.getText().substring(0, caret);
 					}
-					if (caret < text.length() - 1) {
-						tmp += text.substring(caret + 1);
+					if (caret < inputMethodListener.getText().length() - 1) {
+						tmp += inputMethodListener.getText().substring(caret + 1);
 					}
-					text = tmp;
 				}
 			}
-			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, text);
+            if (!validate(tmp, inputMethodListener.getConstraints())) {
+                return true;
+            }
+			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, tmp);
 			inputMethodListener.inputMethodTextChanged(event);
-			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
+			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, tmp);
 			inputMethodListener.caretPositionChanged(event);
 			return true;
 		}
 		
 		if (keyCode == SWT.DEL) {
+			String tmp = inputMethodListener.getText();
 			synchronized (this) {
 				if (lastButton != null) {
 					lastButton = null;
 					lastButtonCharIndex = -1;
 				}
-				if (caret != text.length()) {
-					text = text.substring(0, caret) + text.substring(caret + 1);
+				if (caret != inputMethodListener.getText().length()) {
+					tmp = inputMethodListener.getText().substring(0, caret) + inputMethodListener.getText().substring(caret + 1);
 				}
 			}
-			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, text);
+            if (!validate(tmp, inputMethodListener.getConstraints())) {
+                return true;
+            }
+			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, tmp);
 			inputMethodListener.inputMethodTextChanged(event);
-			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
+			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, tmp);
 			inputMethodListener.caretPositionChanged(event);
 			return true;
 		}
@@ -325,7 +332,7 @@ public class SwtInputMethod extends InputMethodImpl
 			return;
 		}
 
-		if (text.length() < maxSize && (ev.keyCode & SWT.EMBEDDED) == 0) {
+		if (inputMethodListener.getText().length() < maxSize && (ev.keyCode & SWT.EMBEDDED) == 0) {
 			insertText(new Character(ev.character).toString());
 		}
 	}
@@ -354,19 +361,19 @@ public class SwtInputMethod extends InputMethodImpl
 	
 	public void mousePressed(KeyEvent ev) 
 	{
-		String tmp;
-
 		if (commonKeyPressed(ev)) {
 			return;
 		}
 
-		if (text.length() < maxSize) {
+		if (inputMethodListener.getText().length() < maxSize) {
 			for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
 				SwtButton button = (SwtButton) e.nextElement();
 				if (ev.keyCode == button.getKeyCode()) {
+					int caret = inputMethodListener.getCaretPosition();
+					String tmp = inputMethodListener.getText();
 					synchronized (this) {
 						lastButtonCharIndex++;
-						char[] buttonChars = filterConstraints(filterInputMode(button.getChars()));
+						char[] buttonChars = filterConstraints(filterInputMode(button.getChars(getInputMode())));
 						if (buttonChars.length > 0) {
 							if (lastButtonCharIndex == buttonChars.length) {
 								if (buttonChars.length == 1) {
@@ -384,25 +391,23 @@ public class SwtInputMethod extends InputMethodImpl
 								}
 								tmp = "";
 								if (caret > 0) {
-									tmp += text.substring(0, caret);
+									tmp += inputMethodListener.getText().substring(0, caret);
 								}
 								tmp += buttonChars[0];
-								if (caret < text.length()) {
-									tmp += text.substring(caret);
+								if (caret < inputMethodListener.getText().length()) {
+									tmp += inputMethodListener.getText().substring(caret);
 								}
-								text = tmp;
 								lastButton = button;
 								lastButtonCharIndex = 0;
 							} else {
 								tmp = "";
 								if (caret > 0) {
-									tmp += text.substring(0, caret);
+									tmp += inputMethodListener.getText().substring(0, caret);
 								}
 								tmp += buttonChars[lastButtonCharIndex];
-								if (caret < text.length() - 1) {
-									tmp += text.substring(caret + 1);
+								if (caret < inputMethodListener.getText().length() - 1) {
+									tmp += inputMethodListener.getText().substring(caret + 1);
 								}
-								text = tmp;
 								lastButton = button;
 							}
 						} else {
@@ -412,8 +417,10 @@ public class SwtInputMethod extends InputMethodImpl
 						resetKey = false;
 						notify();
 					}
-
-					InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, text);
+                    if (!validate(tmp, inputMethodListener.getConstraints())) {
+                        return;
+                    }
+					InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, tmp);
 					inputMethodListener.inputMethodTextChanged(event);
 					break;
 				}
@@ -445,7 +452,7 @@ public class SwtInputMethod extends InputMethodImpl
 			if (ev.keyCode == button.getKeyCode()) {
 				return button;
 			}
-			if (button.isChar(ev.character)) {
+			if (button.isChar(ev.character, getInputMode())) {
 				return button;
 			}
 		}

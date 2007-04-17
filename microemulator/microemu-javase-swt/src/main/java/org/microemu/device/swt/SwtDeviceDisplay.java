@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Canvas;
@@ -457,9 +458,9 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
 	}
 
 
-    public Button createButton(String name, Shape shape, int keyCode, String keyName, char[] chars)
+    public Button createButton(String name, Shape shape, int keyCode, String keyName, Hashtable inputToChars)
     {
-        return new SwtButton(name, shape, keyCode, keyName, chars);
+        return new SwtButton(name, shape, keyCode, keyName, inputToChars);
     }
 
 

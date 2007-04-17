@@ -21,6 +21,7 @@ package org.microemu.device.impl;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Font;
@@ -43,7 +44,7 @@ public interface DeviceDisplayImpl extends DeviceDisplay
 	 * @return
 	 */
 	Button createButton(
-	        String name, Shape shape, int keyCode, String keyName, char[] chars);
+	        String name, Shape shape, int keyCode, String keyName, Hashtable inputToChars);
 	
 	/**
 	 * @param name

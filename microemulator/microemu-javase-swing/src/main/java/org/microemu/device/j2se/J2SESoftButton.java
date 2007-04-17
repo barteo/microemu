@@ -22,6 +22,7 @@ package org.microemu.device.j2se;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Command;
@@ -70,7 +71,7 @@ public class J2SESoftButton extends J2SEButton implements SoftButton {
 	 */
 	public J2SESoftButton(String name, Shape shape, int keyCode, String keyName,
 			Rectangle paintable, String alignmentName, Vector commands, Font font) {
-		super(name, shape, keyCode, keyName, null);
+		super(name, shape, keyCode, keyName, new Hashtable());
 		
 		this.type = TYPE_COMMAND;
 

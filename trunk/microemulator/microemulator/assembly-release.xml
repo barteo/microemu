@@ -25,7 +25,7 @@
         </file>
         <file>
             <source>${basedir}/../microemu-javase-applet/target/microemu-javase-applet-${project.version}.jar</source>
-            <destName>microemu-javase-applet.jar</destName>
+            <destName>lib/microemu-javase-applet.jar</destName>
         </file>
         <file>
             <source>${basedir}/../microemu-extensions/microemu-device-large/target/microemu-device-large-${project.version}.jar</source>

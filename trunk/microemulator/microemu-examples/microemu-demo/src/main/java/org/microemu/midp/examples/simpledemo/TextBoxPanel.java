@@ -34,6 +34,7 @@ public class TextBoxPanel extends BaseExamplesList {
 			new TextBox("Numeric", null, 128, TextField.NUMERIC),
 			new TextBox("Phone number", null, 128, TextField.PHONENUMBER),
 			new TextBox("URL", null, 128, TextField.URL),
+			new TextBox("Decimal", null, 128, TextField.DECIMAL),
 			new TextBox("Password", null, 128, TextField.PASSWORD), };
 
 	Command okCommand = new Command("Ok", Command.OK, 2);

@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Canvas;
@@ -636,9 +637,9 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 
 
 
-    public Button createButton(String name, org.microemu.device.impl.Shape shape, int keyCode, String keyName, char[] chars)
+    public Button createButton(String name, org.microemu.device.impl.Shape shape, int keyCode, String keyName, Hashtable inputToChars)
     {
-        return new J2SEButton(name, shape, keyCode, keyName, chars);
+        return new J2SEButton(name, shape, keyCode, keyName, inputToChars);
     }
 
 

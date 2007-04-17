@@ -34,9 +34,6 @@ public abstract class InputMethod
 	int inputMode = INPUT_NONE;
 
 	protected InputMethodListener inputMethodListener = null;
-	protected int constraints = TextField.ANY;
-	protected String text;
-	protected int caret;
 	protected int maxSize;
 
 
@@ -62,18 +59,21 @@ public abstract class InputMethod
 	public void setInputMethodListener(InputMethodListener l)
 	{
 		inputMethodListener = l;
-		setInputMode(INPUT_ABC_LOWER);
-		text = "";
-		caret = 0;
+        switch (l.getConstraints() & TextField.CONSTRAINT_MASK) {
+	        case TextField.ANY :
+	        case TextField.EMAILADDR :
+	        case TextField.URL :
+	            setInputMode(INPUT_ABC_LOWER);
+	            break;
+	        case TextField.NUMERIC :
+	        case TextField.PHONENUMBER :
+	        case TextField.DECIMAL :
+	            setInputMode(INPUT_123);
+	            break;
+	    }
 	}
   
   
-	public void setConstraints(int aconstraints)
-  	{
-	    constraints = aconstraints;
-  	}
-
-
 	public int getInputMode()
 	{
 		return inputMode;
@@ -86,21 +86,46 @@ public abstract class InputMethod
 	}
 
 
-	public void setText(String text)
-	{
-		this.text = text;
-		caret = text.length();
-	}
-    
-    public String getText()
-    {
-        return text;
-    }
-
-
     public void setMaxSize(int maxSize)
 	{
 		this.maxSize = maxSize;
 	}
+    
+    public static boolean validate(String text, int constraints) 
+    {
+        switch (constraints & TextField.CONSTRAINT_MASK) {
+            case TextField.ANY :
+                break;
+            case TextField.EMAILADDR :
+                // TODO validate email
+                break;
+            case TextField.NUMERIC :
+                if (text != null && text.length() > 0 && !text.equals("-")) {
+                    try { 
+                        Integer.parseInt(text); 
+                    } catch (NumberFormatException e) { 
+                        return false;
+                    }
+                }
+                break;
+            case TextField.PHONENUMBER :
+                // TODO validate email
+                break;
+            case TextField.URL :
+                // TODO validate url
+                break;
+            case TextField.DECIMAL :
+                if (text != null && text.length() > 0 && !text.equals("-")) {
+                    try {
+                        Double.valueOf(text);
+                    } catch (NumberFormatException e) { 
+                        return false;
+                    }
+                }
+                break;
+        }
+        
+        return true;
+    }
 
 }

@@ -29,10 +29,8 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Font;
@@ -465,29 +463,32 @@ public class DeviceImpl implements Device
               hasRepeatEvents = parseBoolean(tmp_keyboard.getContent());
             } else if (tmp_keyboard.getName().equals("button")) {
               Shape shape = null;
-              Vector stringArray = new Vector();
+              Hashtable inputToChars = new Hashtable();
               for (Enumeration e_button = tmp_keyboard.enumerateChildren(); e_button.hasMoreElements(); ) {
                 XMLElement tmp_button = (XMLElement) e_button.nextElement();
                 if (tmp_button.getName().equals("chars")) {
+                  String input = tmp_button.getStringAttribute("input", "common");
+                  Vector stringArray = new Vector();
                   for (Enumeration e_chars = tmp_button.enumerateChildren(); e_chars.hasMoreElements(); ) {
                     XMLElement tmp_chars = (XMLElement) e_chars.nextElement();
                     if (tmp_chars.getName().equals("char")) {                 
                       stringArray.addElement(tmp_chars.getContent());                    
                     }
                   }
+                  char[] charArray = new char[stringArray.size()];
+                  for (int i = 0; i < stringArray.size(); i++) {
+                    String str = (String) stringArray.elementAt(i);
+                    if (str.length() > 0) {
+                      charArray[i] = str.charAt(0);
+                    } else {
+                      charArray[i] = ' ';
+                    }
+                  }
+                  inputToChars.put(input, charArray);
                 } else if (tmp_button.getName().equals("rectangle")) {
                   shape = getRectangle(tmp_button);
                 } else if (tmp_button.getName().equals("polygon")) {
                   shape = getPolygon(tmp_button);
-                }
-              }
-              char[] charArray = new char[stringArray.size()];
-              for (int i = 0; i < stringArray.size(); i++) {
-                String str = (String) stringArray.elementAt(i);
-                if (str.length() > 0) {
-                  charArray[i] = str.charAt(0);
-                } else {
-                  charArray[i] = ' ';
                 }
               }
               int keyCode = tmp_keyboard.getIntAttribute("keyCode", Integer.MIN_VALUE);
@@ -496,7 +497,7 @@ public class DeviceImpl implements Device
             		  shape, 
             		  keyCode,
             		  tmp_keyboard.getStringAttribute("key"), 
-            		  charArray));            	  
+            		  inputToChars));            	  
             } else if (tmp_keyboard.getName().equals("softbutton")) {
               Vector commands = new Vector();
               Shape shape = null; 

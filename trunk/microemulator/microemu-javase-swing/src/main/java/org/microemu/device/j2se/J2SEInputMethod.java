@@ -27,6 +27,7 @@ import java.util.TimerTask;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.TextField;
 
 import org.microemu.CommandManager;
 import org.microemu.DisplayAccess;
@@ -207,8 +208,6 @@ public class J2SEInputMethod extends InputMethodImpl
     
 	protected boolean commonKeyPressed(KeyEvent ev) 
 	{
-		String tmp;
-
 		int keyCode = ev.getKeyCode();
 		if (inputMethodListener == null) {
 			int midpKeyCode;
@@ -240,24 +239,32 @@ public class J2SEInputMethod extends InputMethodImpl
 			MIDletBridge.getMIDletAccess().getDisplayAccess().keyPressed(keyCode);
 			return true;
 		}
+		
+		int caret = inputMethodListener.getCaretPosition();
 
 		if (keyCode == KeyEvent.VK_MODECHANGE) {
-			if (getInputMode() == InputMethod.INPUT_123) {
-				setInputMode(InputMethod.INPUT_ABC_UPPER);
-			} else if (getInputMode() == InputMethod.INPUT_ABC_UPPER) {
-				setInputMode(InputMethod.INPUT_ABC_LOWER);
-			} else if (getInputMode() == InputMethod.INPUT_ABC_LOWER) {
-				setInputMode(InputMethod.INPUT_123);
-			}
-			synchronized (this) {
-				if (lastButton != null) {
-					caret++;
-					lastButton = null;
-					lastButtonCharIndex = -1;
-				}
-			}
-			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
-			inputMethodListener.caretPositionChanged(event);
+            switch (inputMethodListener.getConstraints() & TextField.CONSTRAINT_MASK) {
+            case TextField.ANY :
+            case TextField.EMAILADDR :
+            case TextField.URL :
+                if (getInputMode() == InputMethod.INPUT_123) {
+                    setInputMode(InputMethod.INPUT_ABC_UPPER);
+                } else if (getInputMode() == InputMethod.INPUT_ABC_UPPER) {
+                    setInputMode(InputMethod.INPUT_ABC_LOWER);
+                } else if (getInputMode() == InputMethod.INPUT_ABC_LOWER) {
+                    setInputMode(InputMethod.INPUT_123);
+                }
+                synchronized (this) {
+                    if (lastButton != null) {
+                        caret++;
+                        lastButton = null;
+                        lastButtonCharIndex = -1;
+                    }
+                }
+                InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, inputMethodListener.getText());
+                inputMethodListener.caretPositionChanged(event);
+                break;
+        }
 			return true;
 		}
 
@@ -266,18 +273,19 @@ public class J2SEInputMethod extends InputMethodImpl
 				if (getGameAction(keyCode) == Canvas.LEFT && caret > 0) {
 					caret--;
 				}
-				if (getGameAction(keyCode) == Canvas.RIGHT && caret < text.length()) {
+				if (getGameAction(keyCode) == Canvas.RIGHT && caret < inputMethodListener.getText().length()) {
 					caret++;
 				}
 				lastButton = null;
 				lastButtonCharIndex = -1;
 			}
-			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
+			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, inputMethodListener.getText());
 			inputMethodListener.caretPositionChanged(event);
 			return true;
 		}
 
 		if (keyCode == KeyEvent.VK_BACK_SPACE) {
+			String tmp = "";
 			synchronized (this) {
 				if (lastButton != null) {
 					caret++;
@@ -286,36 +294,41 @@ public class J2SEInputMethod extends InputMethodImpl
 				}
 				if (caret > 0) {
 					caret--;
-					tmp = "";
 					if (caret > 0) {
-						tmp += text.substring(0, caret);
+						tmp += inputMethodListener.getText().substring(0, caret);
 					}
-					if (caret < text.length() - 1) {
-						tmp += text.substring(caret + 1);
+					if (caret < inputMethodListener.getText().length() - 1) {
+						tmp += inputMethodListener.getText().substring(caret + 1);
 					}
-					text = tmp;
 				}
 			}
-			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, text);
+            if (!validate(tmp, inputMethodListener.getConstraints())) {
+                return true;
+            }
+            InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, tmp);
 			inputMethodListener.inputMethodTextChanged(event);
-			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
+			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, tmp);
 			inputMethodListener.caretPositionChanged(event);
 			return true;
 		}
 		
 		if (keyCode == KeyEvent.VK_DELETE) {
+			String tmp = inputMethodListener.getText();
 			synchronized (this) {
 				if (lastButton != null) {
 					lastButton = null;
 					lastButtonCharIndex = -1;
 				}
-				if (caret != text.length()) {
-					text = text.substring(0, caret) + text.substring(caret + 1);
+				if (caret != inputMethodListener.getText().length()) {
+					tmp = inputMethodListener.getText().substring(0, caret) + inputMethodListener.getText().substring(caret + 1);
 				}
 			}
-			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, text);
+            if (!validate(tmp, inputMethodListener.getConstraints())) {
+                return true;
+            }
+			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, tmp);
 			inputMethodListener.inputMethodTextChanged(event);
-			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, text);
+			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, tmp);
 			inputMethodListener.caretPositionChanged(event);
 			return true;
 		}
@@ -335,7 +348,7 @@ public class J2SEInputMethod extends InputMethodImpl
 			return;
 		}
 
-		if (inputMethodListener != null && text != null && text.length() < maxSize) {
+		if (inputMethodListener != null && inputMethodListener.getText() != null && inputMethodListener.getText().length() < maxSize) {
 			insertText(new Character(c).toString());
 		}
 	}
@@ -343,8 +356,8 @@ public class J2SEInputMethod extends InputMethodImpl
 	
 	public void clipboardPaste(String str) 
 	{
-		if (inputMethodListener != null && text != null
-				&& ((text.length() + str.length()) <= maxSize)) {
+		if (inputMethodListener != null && inputMethodListener.getText() != null
+				&& ((inputMethodListener.getText().length() + str.length()) <= maxSize)) {
 			insertText(str);
 		}
 
@@ -424,19 +437,19 @@ public class J2SEInputMethod extends InputMethodImpl
 	
 	public void mousePressed(KeyEvent ev) 
 	{
-		String tmp;
-
 		if (commonKeyPressed(ev)) {
 			return;
 		}
 
-		if (text.length() < maxSize) {
+		if (inputMethodListener.getText().length() < maxSize) {
 			for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
 				J2SEButton button = (J2SEButton) e.nextElement();
 				if (ev.getKeyCode() == button.getKeyCode()) {
+					int caret = inputMethodListener.getCaretPosition();
+					String tmp = inputMethodListener.getText();
 					synchronized (this) {
 						lastButtonCharIndex++;
-						char[] buttonChars = filterConstraints(filterInputMode(button.getChars()));
+						char[] buttonChars = filterConstraints(filterInputMode(button.getChars(getInputMode())));
 						if (buttonChars.length > 0) {
 							if (lastButtonCharIndex == buttonChars.length) {
 								if (buttonChars.length == 1) {
@@ -454,25 +467,23 @@ public class J2SEInputMethod extends InputMethodImpl
 								}
 								tmp = "";
 								if (caret > 0) {
-									tmp += text.substring(0, caret);
+									tmp += inputMethodListener.getText().substring(0, caret);
 								}
 								tmp += buttonChars[0];
-								if (caret < text.length()) {
-									tmp += text.substring(caret);
+								if (caret < inputMethodListener.getText().length()) {
+									tmp += inputMethodListener.getText().substring(caret);
 								}
-								text = tmp;
 								lastButton = button;
 								lastButtonCharIndex = 0;
 							} else {
 								tmp = "";
 								if (caret > 0) {
-									tmp += text.substring(0, caret);
+									tmp += inputMethodListener.getText().substring(0, caret);
 								}
 								tmp += buttonChars[lastButtonCharIndex];
-								if (caret < text.length() - 1) {
-									tmp += text.substring(caret + 1);
+								if (caret < inputMethodListener.getText().length() - 1) {
+									tmp += inputMethodListener.getText().substring(caret + 1);
 								}
-								text = tmp;
 								lastButton = button;
 							}
 						} else {
@@ -482,7 +493,10 @@ public class J2SEInputMethod extends InputMethodImpl
 						resetKey = false;
 						notify();
 					}
-					InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, text);
+                    if (!validate(tmp, inputMethodListener.getConstraints())) {
+                        return;
+                    }
+                    InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, tmp);
 					inputMethodListener.inputMethodTextChanged(event);
 					break;
 				}
@@ -514,7 +528,7 @@ public class J2SEInputMethod extends InputMethodImpl
 			if (ev.getKeyCode() == button.getKeyCode()) {
 				return button;
 			}
-			if (button.isChar(ev.getKeyChar())) {
+			if (button.isChar(ev.getKeyChar(), getInputMode())) {
 				return button;
 			}
 		}

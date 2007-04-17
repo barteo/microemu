@@ -66,13 +66,28 @@ public class TextField extends Item
 		public void inputMethodTextChanged(InputMethodEvent event) 
 		{
 			setCaretVisible(false);
-			setString(event.getText());
+			setString(event.getText(), event.getCaret());
 			repaint();
             
             if (owner instanceof Form) {
                 ((Form) owner).fireItemStateListener();
             }
 		}
+
+		public int getCaretPosition()
+		{
+			return TextField.this.getCaretPosition();
+		}
+
+		public String getText()
+		{
+			return TextField.this.getString();
+		}
+
+		public int getConstraints()
+        {
+            return TextField.this.getConstraints();
+        }
 	};
 
 	
@@ -83,6 +98,9 @@ public class TextField extends Item
 			throw new IllegalArgumentException();
 		}
 		setConstraints(constraints);
+        if (!InputMethod.validate(text, constraints)) {
+            throw new IllegalArgumentException();
+        }
 		this.maxSize = maxSize;
 		stringComponent = new StringComponent();
 		if (text != null) {
@@ -102,29 +120,37 @@ public class TextField extends Item
 	
 	public void setString(String text) 
 	{
-		validate(text);
-		if (text == null) {
-			field = "";
-			stringComponent.setText("");
-		} else {
-			if (text.length() > maxSize) {
-				throw new IllegalArgumentException();
-			}
-			field = text;
-			if ((constraints & PASSWORD) == 0) {
-				stringComponent.setText(text);
-			} else {
-				StringBuffer sb = new StringBuffer();
-				for (int i = 0; i < text.length(); i++) {
-					sb.append('*');
-				}
-				stringComponent.setText(sb.toString());
-			}
-		}
-		setCaretPosition(getString().length());
-		setCaretVisible(false);
-		repaint();
+        setString(text, text.length());
 	}
+    
+    
+    void setString(String text, int caret)
+    {
+        if (!InputMethod.validate(text, constraints)) {
+            throw new IllegalArgumentException();
+        }
+        if (text == null) {
+            field = "";
+            stringComponent.setText("");
+        } else {
+            if (text.length() > maxSize) {
+                throw new IllegalArgumentException();
+            }
+            field = text;
+            if ((constraints & PASSWORD) == 0) {
+                stringComponent.setText(text);
+            } else {
+                StringBuffer sb = new StringBuffer();
+                for (int i = 0; i < text.length(); i++) {
+                    sb.append('*');
+                }
+                stringComponent.setText(sb.toString());
+            }
+        }
+        setCaretPosition(caret);
+        setCaretVisible(false);
+        repaint();
+    }
 
 	
 	public int getChars(char[] data) 
@@ -147,7 +173,9 @@ public class TextField extends Item
 				throw new IllegalArgumentException();
 			}
 			String newtext = new String(data, offset, length);
-			validate(newtext);
+			if (!InputMethod.validate(newtext, constraints)) {
+                throw new IllegalArgumentException();
+            }
 			setString(newtext);
 		}
 		repaint();
@@ -156,7 +184,9 @@ public class TextField extends Item
 	
 	public void insert(String src, int position) 
 	{
-		validate(src);
+		if (!InputMethod.validate(src, constraints)) {
+            throw new IllegalArgumentException();
+        }
 		if (field.length() + src.length() > maxSize) {
 			throw new IllegalArgumentException();
 		}
@@ -237,6 +267,9 @@ public class TextField extends Item
 			throw new IllegalArgumentException("constraints " + constraints + " is an illegal value");
 		}
 		this.constraints = constraints;
+        if (!InputMethod.validate(field, constraints)) {
+            setString("");
+        }
 	}
 
 	
@@ -339,8 +372,6 @@ public class TextField extends Item
 			// register input listener
 			InputMethod inputMethod = DeviceFactory.getDevice().getInputMethod();
 			inputMethod.setInputMethodListener(inputMethodListener);
-			inputMethod.setConstraints(getConstraints());
-			inputMethod.setText(getString());
 			inputMethod.setMaxSize(getMaxSize());
 			setCaretVisible(true);
 		} else {
@@ -348,27 +379,6 @@ public class TextField extends Item
 			DeviceFactory.getDevice().getInputMethod().removeInputMethodListener(inputMethodListener);
 			setCaretVisible(false);
 		}
-	}
-
-	
-	void validate(String text) 
-	{
-		// text is illegal for the specified constraints so IllegalArgumentException
-		if ((constraints & CONSTRAINT_MASK) == ANY) {
-			return;
-		}
-		/*
-		 * if ((constraints & CONSTRAINT_MASK) == NUMERIC) { 
-		 *   try { 
-		 *     int tmp = Integer.parseInt(text); 
-		 *   } catch (NumberFormatException e) { 
-		 *     throw new IllegalArgumentException(
-		 *         "TextField limited to numeric values: text = " + text); 
-		 *   } 
-		 * }
-		 */
-
-		/* @todo add more constraints checking */
-	}
+	}	
 
 }

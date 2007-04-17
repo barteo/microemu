@@ -27,4 +27,10 @@ public interface InputMethodListener
 
 	public void inputMethodTextChanged(InputMethodEvent event);
 
+	public int getCaretPosition();
+	
+	public String getText();
+    
+    public int getConstraints();
+	
 }

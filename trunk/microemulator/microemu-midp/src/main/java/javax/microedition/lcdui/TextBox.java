@@ -39,9 +39,22 @@ public class TextBox extends Screen {
 
 		public void inputMethodTextChanged(InputMethodEvent event) {
 			tf.setCaretVisible(false);
-			tf.setString(event.getText());
+			tf.setString(event.getText(), event.getCaret());
 			repaint();
 		}
+
+		public int getCaretPosition() {
+			return TextBox.this.getCaretPosition();
+		}
+
+		public String getText() {
+			return TextBox.this.getString();
+		}
+
+        public int getConstraints()
+        {
+            return TextBox.this.getConstraints();
+        }
 	};
 
 	public TextBox(String title, String text, int maxSize, int constraints) {
@@ -147,8 +160,6 @@ public class TextBox extends Screen {
 		super.showNotify();
 		InputMethod inputMethod = DeviceFactory.getDevice().getInputMethod();
 		inputMethod.setInputMethodListener(inputMethodListener);
-		inputMethod.setConstraints(getConstraints());
-		inputMethod.setText(getString());
 		inputMethod.setMaxSize(getMaxSize());
 		setCaretPosition(getString().length());
 		tf.setCaretVisible(true);

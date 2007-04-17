@@ -19,6 +19,10 @@
 
     <description>MicroEmulator applet assembly for distribution</description>
 
+    <prerequisites>
+        <maven>2.0.5</maven>
+    </prerequisites>
+
     <dependencies>
 
         <dependency>
@@ -47,13 +51,13 @@
             <artifactId>microemu-javase-swing</artifactId>
             <version>${project.version}</version>
             <exclusions>
+                <!-- this is bug in maven 2.0.4., if used artifact with classifier would be exclused as well -->
                 <exclusion>
                     <groupId>org.microemu</groupId><artifactId>microemu-cldc</artifactId>
                 </exclusion>
-                <!-- this is bug in maven if used artifact with classifier would be exclused as well -->
-                <!--exclusion>
+                <exclusion>
                     <groupId>org.microemu</groupId><artifactId>microemu-midp</artifactId>
-                </exclusion-->
+                </exclusion>
                 <exclusion>
                     <groupId>org.microemu</groupId><artifactId>microemu-injected</artifactId>
                 </exclusion>
@@ -108,6 +112,9 @@
                         </inclusions>
                     </assembly>
                     <exclusions>
+                        <exclusion>
+                            <groupId>org.microemu</groupId><artifactId>microemu-cldc</artifactId>
+                        </exclusion>
                         <exclusion>
                             <groupId>org.microemu</groupId><artifactId>microemu-midp</artifactId>
                         </exclusion>

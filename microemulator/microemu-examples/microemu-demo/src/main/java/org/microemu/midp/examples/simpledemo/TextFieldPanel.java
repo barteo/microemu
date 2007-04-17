@@ -30,6 +30,7 @@ public class TextFieldPanel extends BaseExamplesForm {
 			new TextField("Numeric", null, 128, TextField.NUMERIC),
 			new TextField("Phone number", null, 128, TextField.PHONENUMBER),
 			new TextField("URL", null, 128, TextField.URL),
+			new TextField("Decimal", null, 128, TextField.DECIMAL),
 			new TextField("Password", null, 128, TextField.PASSWORD), };
 
 	public TextFieldPanel() {

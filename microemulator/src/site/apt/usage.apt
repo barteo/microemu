@@ -118,7 +118,7 @@ java -jar microemulator.jar -cp bluecove-1.2.2.jar btbrowserv20.jad
 --appclass org.framework.OneClass --appclass org.core.AnotherClass org.app.MainMIDlet
 ---
 
-    Finally, go to the class path, add your project (done already by default), and add microemu-swing-2.0.0-app.jar (under User Entries)
+    Finally, go to the class path, add your project (done already by default), and add microemulator.jar (under User Entries)
 
 
 *  Integration of MicroEmulator into Eclipse EclipseME project

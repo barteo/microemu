@@ -55,6 +55,8 @@ public interface Device {
 
 	public abstract boolean hasRepeatEvents();
 
+	public abstract boolean vibrate(int duration);
+
 	public abstract Map getSystemProperties();
 
 }

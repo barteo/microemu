@@ -658,6 +658,13 @@ public class DeviceImpl implements Device
 	}
 	
 	/* (non-Javadoc)
+	 * @see org.microemu.device.DeviceA#hasRepeatEvents()
+	 */
+	public boolean vibrate(int duration) {
+		return false;
+	}
+
+	/* (non-Javadoc)
 	 * @see org.microemu.device.DeviceA#getSystemProperties()
 	 */
 	public Map getSystemProperties() {

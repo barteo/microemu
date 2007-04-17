@@ -672,7 +672,7 @@ public class Display
     
     public boolean vibrate(int duration) 
     { 
-        return false; 
+        return DeviceFactory.getDevice().vibrate(duration); 
     }
 	
 	// Who call this?? (Andres Navarro)

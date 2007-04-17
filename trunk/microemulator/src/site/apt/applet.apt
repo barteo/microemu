@@ -31,14 +31,14 @@ Embedding applet into html page
 
 ---
 <applet code="org.microemu.applet.Main"
-		width=226 height=471 archive="me-applet.jar,(MIDlet application jar)">
+		width=226 height=471 archive="microemu-javase-applet.jar,(MIDlet application jar)">
 	<param name="midlet" value="(MIDlet application main class)">
 </applet>
 ---
 
-  * To support Nokia UI nokiaui.jar should be included in the archive attribute.
+  * To support Nokia UI microemu-nokiaui.jar should be included in the archive attribute.
 
-  * To support Siemens API siemensapi.jar should be included in the archive attribute.
+  * To support Siemens API microemu-siemensapi.jar should be included in the archive attribute.
 
   []
 
@@ -59,9 +59,9 @@ Embedding applet into html page
 
     Remember to include the new device jar into the applet archive tag
 
-    * minimum phone included in distribution is packaged inside minimum.jar
+    * minimum phone included in distribution is packaged inside microemu-device-minimum.jar
 
-    * large phone included in distribution is packaged inside large.jar
+    * large phone included in distribution is packaged inside microemu-device-large.jar
 
     []
 
@@ -70,7 +70,7 @@ Embedding applet into html page
 
 ---
 <applet code="org.microemu.applet.Main"
-		width=157 height=285 archive="me-applet.jar,nokiaui.jar,minimum.jar,simpledemo.jar">
+		width=157 height=285 archive="microemu-javase-applet.jar,microemu-nokiaui.jar,microemu-device-minimum.jar,simpledemo.jar">
 	<param name="midlet" value="org.microemu.midp.examples.simpledemo.SimpleDemo">
 	<param name="device" value="org/microemu/device/minimum/device.xml">
 </applet>
@@ -80,7 +80,7 @@ Embedding applet into html page
 
 ---
 <applet code="org.microemu.applet.Main"
-		width=157 height=285 archive="me-applet.jar,minimum.jar,simpledemo.jar">
+		width=157 height=285 archive="microemu-javase-applet.jar,microemu-device-minimum.jar,simpledemo.jar">
 	<param name="midlet" value="org.microemu.midp.examples.simpledemo.SimpleDemo">
 	<param name="device" value="org/microemu/device/minimum/device-color.xml">
 </applet>
@@ -90,7 +90,7 @@ Embedding applet into html page
 
 ---
 <applet code="org.microemu.applet.Main"
-		width=292 height=618 archive="me-applet.jar,large.jar,simpledemo.jar">
+		width=292 height=618 archive="microemu-javase-applet.jar,microemu-device-large.jar,simpledemo.jar">
 	<param name="midlet" value="org.microemu.midp.examples.simpledemo.SimpleDemo">
 	<param name="device" value="org/microemu/device/large/device.xml">
 </applet>

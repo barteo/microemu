@@ -88,6 +88,13 @@
         <profile>
             <id>release</id>
 
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+
             <dependencies>
             <!-- sources-jar -->
 
@@ -141,8 +148,40 @@
                                     </descriptors>
                                 </configuration>
                             </execution>
+                            <execution>
+                                <id>release-jar</id>
+                                <phase>package</phase>
+                                <goals><goal>single</goal></goals>
+                                <configuration>
+                                    <attach>false</attach>
+                                    <appendAssemblyId>false</appendAssemblyId>
+                                    <descriptors>
+                                        <descriptor>assembly-release.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
                         </executions>
                     </plugin>
+
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>site</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <copy overwrite="true"
+                                            file="${project.build.directory}/${project.build.finalName}.tar.gz"
+                                            todir="${project.build.directory}/site/snapshot"/>
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
                 </plugins>
             </build>
         </profile>

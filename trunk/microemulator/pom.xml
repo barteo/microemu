@@ -52,9 +52,9 @@
         <module>microemu-javase-applet</module>
         <module>microemu-javase-swt</module>
         <module>microemu-extensions</module>
+        <module>microemu-examples</module>
         <module>microemulator</module>
         <module>microemu-tests</module>
-        <module>microemu-examples</module>
         <!-- Only during build on server
             Use mvn -P webstart  to include  microemu-webstart
         -->

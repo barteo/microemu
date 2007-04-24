@@ -327,35 +327,31 @@ public class Main extends JFrame {
 					return;
 				}
 
-				try {
-					encoder = new AnimatedGifEncoder();
-					encoder.start(new FileOutputStream(captureFile));
-					
-					menuStartCapture.setEnabled(false);
-					menuStopCapture.setEnabled(true);
-					
-					emulatorContext.getDisplayComponent().addDisplayRepaintListener(new DisplayRepaintListener() {
-						long start = 0;
-	
-						public void repaintInvoked(MutableImage image) {
-							synchronized (Main.this) {
-								if (encoder != null) {
-									if (start == 0) {
-										start = System.currentTimeMillis();
-									} else {
-										long current = System.currentTimeMillis();
-										encoder.setDelay((int) (current - start));
-										start = current;
-									}
-	
-									encoder.addFrame((BufferedImage) ((J2SEMutableImage) image).getImage());
+				encoder = new AnimatedGifEncoder();
+				encoder.start(captureFile.getAbsolutePath());
+				
+				menuStartCapture.setEnabled(false);
+				menuStopCapture.setEnabled(true);
+				
+				emulatorContext.getDisplayComponent().addDisplayRepaintListener(new DisplayRepaintListener() {
+					long start = 0;
+
+					public void repaintInvoked(MutableImage image) {
+						synchronized (Main.this) {
+							if (encoder != null) {
+								if (start == 0) {
+									start = System.currentTimeMillis();
+								} else {
+									long current = System.currentTimeMillis();
+									encoder.setDelay((int) (current - start));
+									start = current;
 								}
+
+								encoder.addFrame((BufferedImage) ((J2SEMutableImage) image).getImage());
 							}
 						}
+					}
 					});
-				} catch (FileNotFoundException ex) {
-					Logger.error(ex);
-				}
 			}
 		}
 		

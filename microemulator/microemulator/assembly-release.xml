@@ -3,7 +3,6 @@
     <!-- @version $Revision$ ($Author$) $Date$ -->
     <id>release</id>
     <formats>
-        <!--format>zip</format-->
         <format>tar.gz</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
@@ -15,6 +14,7 @@
                 <include>LICENSE</include>
                 <include>CREDITS</include>
                 <include>TODO</include>
+                <include>README</include>
             </includes>
         </fileSet>
     </fileSets>

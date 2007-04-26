@@ -6,17 +6,36 @@
         <format>jar</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
-    <dependencySets>
-        <dependencySet>
-            <unpack>true</unpack>
-            <outputFileNameMapping></outputFileNameMapping>
-            <scope>runtime</scope>
-            <includes>
-                <include>org.microemu:microemu-cldc:jar:sources</include>
-                <include>org.microemu:microemu-midp:jar:sources</include>
-                <include>org.microemu:microemu-javase:jar:sources</include>
-                <include>org.microemu:microemu-javase-swing:jar:sources</include>
-            </includes>
-        </dependencySet>
-    </dependencySets>
+    <fileSets>
+        <fileSet>
+            <directory>${basedir}/../microemu-cldc/src/main/java</directory>
+            <outputDirectory></outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../microemu-midp/src/main/java</directory>
+            <outputDirectory></outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../microemu-javase/src/main/java</directory>
+            <outputDirectory></outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../microemu-javase/src/main/resources</directory>
+            <outputDirectory></outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../microemu-javase-swing/src/main/java</directory>
+            <outputDirectory></outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../microemu-javase-swt/src/main/java</directory>
+            <outputDirectory></outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+        </fileSet>
+    </fileSets>
 </assembly>

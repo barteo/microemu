@@ -427,6 +427,7 @@
 
             <build>
                 <plugins>
+                    <!-- jar sources during snapshot build -->
                     <plugin>
                         <inherited>true</inherited>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -472,71 +473,6 @@
             <modules>
                 <module>microemu-webstart</module>
             </modules>
-        </profile>
-
-        <profile>
-            <id>release</id>
-
-            <activation>
-                <property>
-                    <name>performRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <!--
-                         Execute using
-                            mvn -DperformRelease=true install
-                            mvn -P release install
-                         cruisecontrol does:
-                            mvn clean deploy site-deploy -P build,release
-                        -->
-                        <inherited>false</inherited>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>all-sources-jar</id>
-                                <phase>package</phase>
-                                <goals><goal>single</goal></goals>
-                                <configuration>
-                                    <attach>true</attach>
-                                    <descriptors>
-                                        <descriptor>assembly-all-sources.xml</descriptor>
-                                    </descriptors>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <!-- does not work use microemulator module -->
-                    <!--
-                    <plugin>
-                        <inherited>false</inherited>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>copy-all-sources-4download</id>
-                                <phase>site</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <tasks>
-                                        <mkdir dir="${project.build.directory}/site/download"/>
-                                        <copy overwrite="true"
-                                            file="${project.build.directory}/${project.build.finalName}-sources.jar"
-                                            todir="${project.build.directory}/site/download"/>
-                                    </tasks>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    -->
-                </plugins>
-            </build>
         </profile>
 
     </profiles>

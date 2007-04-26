@@ -12,12 +12,6 @@
             <outputDirectory></outputDirectory>
             <outputFileNameMapping></outputFileNameMapping>
             <scope>runtime</scope>
-            <excludes>
-                <exclude>org.microemu:microemu-cldc:jar:sources</exclude>
-                <exclude>org.microemu:microemu-midp:jar:sources</exclude>
-                <exclude>org.microemu:microemu-javase:jar:sources</exclude>
-                <exclude>org.microemu:microemu-javase-swing:jar:sources</exclude>
-            </excludes>
         </dependencySet>
     </dependencySets>
 </assembly>

@@ -95,43 +95,6 @@
                 </property>
             </activation>
 
-            <dependencies>
-            <!-- sources-jar -->
-
-                <dependency>
-                    <groupId>org.microemu</groupId>
-                    <artifactId>microemu-cldc</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                    <optional>true</optional>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.microemu</groupId>
-                    <artifactId>microemu-midp</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                    <optional>true</optional>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.microemu</groupId>
-                    <artifactId>microemu-javase</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                    <optional>true</optional>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.microemu</groupId>
-                    <artifactId>microemu-javase-swing</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>sources</classifier>
-                    <optional>true</optional>
-                </dependency>
-
-            </dependencies>
-
             <build>
                 <plugins>
                     <plugin>
@@ -149,8 +112,19 @@
                                 </configuration>
                             </execution>
                             <execution>
-                                <id>release-jar</id>
-                                <phase>package</phase>
+                                <id>all-sources-gz</id>
+                                <phase>install</phase>
+                                <goals><goal>single</goal></goals>
+                                <configuration>
+                                    <attach>false</attach>
+                                    <descriptors>
+                                        <descriptor>assembly-all-sources.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>release-package-gz</id>
+                                <phase>install</phase>
                                 <goals><goal>single</goal></goals>
                                 <configuration>
                                     <attach>false</attach>
@@ -167,7 +141,7 @@
                         <artifactId>maven-antrun-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>copy-assembly-4download</id>
+                                <id>copy-all-sources-4download</id>
                                 <phase>site</phase>
                                 <goals>
                                     <goal>run</goal>
@@ -176,18 +150,16 @@
                                     <tasks>
                                         <mkdir dir="${project.build.directory}/site/download"/>
                                         <copy overwrite="true"
-                                            file="${project.build.directory}/${project.build.finalName}.tar.gz"
+                                            file="${project.build.directory}/${project.build.finalName}-sources.tar.gz"
                                             todir="${project.build.directory}/site/download"/>
-                                        <!-- hack for main pom -->
                                         <copy overwrite="true"
-                                            file="${basedir}/../target/microemu-${version}-sources.jar"
+                                            file="${project.build.directory}/${project.build.finalName}.tar.gz"
                                             todir="${project.build.directory}/site/download"/>
                                     </tasks>
                                 </configuration>
                             </execution>
                         </executions>
                     </plugin>
-
                 </plugins>
             </build>
         </profile>

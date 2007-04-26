@@ -3,12 +3,12 @@
     <!-- @version $Revision$ ($Author$) $Date$ -->
     <id>sources</id>
     <formats>
-        <format>jar</format>
+        <format>tar.gz</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <directory>.</directory>
+            <directory>${basedir}/..</directory>
             <outputDirectory></outputDirectory>
             <useDefaultExcludes>true</useDefaultExcludes>
             <excludes>

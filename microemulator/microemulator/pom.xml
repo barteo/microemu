@@ -174,14 +174,14 @@
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                        <mkdir dir="${basedir}/microemulator/target/site/download"/>
+                                        <mkdir dir="${project.build.directory}/site/download"/>
                                         <copy overwrite="true"
                                             file="${project.build.directory}/${project.build.finalName}.tar.gz"
-                                            todir="${basedir}/microemulator/target/site/download"/>
+                                            todir="${project.build.directory}/site/download"/>
                                         <!-- hack for main pom -->
                                         <copy overwrite="true"
                                             file="${basedir}/../target/microemu-${version}-sources.jar"
-                                            todir="${basedir}/microemulator/target/site/download"/>
+                                            todir="${project.build.directory}/site/download"/>
                                     </tasks>
                                 </configuration>
                             </execution>

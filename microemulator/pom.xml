@@ -54,7 +54,10 @@
         <module>microemu-extensions</module>
         <module>microemu-examples</module>
         <module>microemulator</module>
+        <!-- ignore for release
         <module>microemu-tests</module>
+        -->
+
         <!-- Only during build on server
             Use mvn -P webstart  to include  microemu-webstart
         -->

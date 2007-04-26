@@ -76,8 +76,8 @@
         </site>
 
         <repository>
-            <id>pyx4j.com-file-development</id>
-            <url>file:///home/apache/pyx4j/maven2</url>
+            <id>pyx4j.com-file-release</id>
+            <url>file:///home/apache/pyx4j/maven2-release</url>
         </repository>
         <snapshotRepository>
             <id>pyx4j.com-file-development</id>
@@ -301,8 +301,10 @@
                         <configuration>
                             <tasks>
                                 <!-- Set build number -->
-                                <replace value="${label}" token="{#build#}" dir="${project.build.directory}/site">
+                                <replace dir="${project.build.directory}/site">
                                     <include name="*.html"></include>
+                                    <replacefilter token="#build#" value="${label}"/>
+                                    <replacefilter token="#version#" value="${version}"/>
                                 </replace>
                                 <copy overwrite="true" failonerror="false"
                                       file="${basedir}/../target/site/css/site-child.css"
@@ -311,9 +313,6 @@
                                 <copy overwrite="true" failonerror="false"
                                       file="${basedir}/../target/site/css/site-child.css"
                                       tofile="${project.build.directory}/site/css/site-child.css"/>
-                                <!--copy overwrite="true" todir="${project.build.directory}/site/css-images" failonerror="false">
-                                    <fileset dir="${basedir}/../target/site/css-images"/>
-                                </copy-->
                             </tasks>
                         </configuration>
                     </execution>
@@ -422,9 +421,22 @@
                 <module>microemu-webstart</module>
             </modules>
 
-            <!--
             <build>
                 <plugins>
+                    <plugin>
+                        <inherited>true</inherited>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+            <!--
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
@@ -445,9 +457,10 @@
                             </execution>
                         </executions>
                     </plugin>
+            -->
                 </plugins>
             </build>
-            -->
+
         </profile>
 
         <profile>
@@ -455,6 +468,71 @@
             <modules>
                 <module>microemu-webstart</module>
             </modules>
+        </profile>
+
+        <profile>
+            <id>release</id>
+
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <!--
+                         Execute using
+                            mvn -DperformRelease=true install
+                            mvn -P release install
+                         cruisecontrol does:
+                            mvn clean deploy site-deploy -P build,release
+                        -->
+                        <inherited>false</inherited>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>all-sources-jar</id>
+                                <phase>package</phase>
+                                <goals><goal>single</goal></goals>
+                                <configuration>
+                                    <attach>true</attach>
+                                    <descriptors>
+                                        <descriptor>assembly-all-sources.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- does not work use microemulator module -->
+                    <!--
+                    <plugin>
+                        <inherited>false</inherited>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-all-sources-4download</id>
+                                <phase>site</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <mkdir dir="${project.build.directory}/site/download"/>
+                                        <copy overwrite="true"
+                                            file="${project.build.directory}/${project.build.finalName}-sources.jar"
+                                            todir="${project.build.directory}/site/download"/>
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    -->
+                </plugins>
+            </build>
         </profile>
 
     </profiles>

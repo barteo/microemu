@@ -16,9 +16,36 @@
 
 * Building Release
 
-    mvn -DperformRelease=true
+    * Test locally
 
-    this is done on build server.
+        mvn clean deploy site-deploy -P build,release -DperformRelease=true -Dlabel=2.0.1
+
+    * Remove all -SNAPSHOT from pom.xml
+
+    * Remove/comment <pluginRepositories> used in poms
+
+    * Update src/changes.xml
+
+    * Comment out sections marked <!--4release--> and <!--4snapshot--> in src/site/site.xml
+
+    * variable demoLocation in microemu-examples/microemu-demo HTTPPanel.java
+
+    * SVN commit
+
+    * on build server!
+      mvn scm:update clean deploy site-deploy -P build,release -DperformRelease=true -Dlabel=2.0.1
+
+    * repository "pyx4j.com-file-release" on build server will sync with http://repo1.maven.org/maven2
+
+    * Upload the context of /home/apache/microemu  to http://microemu.org/
+
+* cruisecontrol
+
+    "me2" Every 1 hour:
+        clean --fail-never -P build|scm:update -P build|clean install -P build
+
+    "me2-nightly" 3AM EST
+        clean --fail-never -P build|scm:update -P build|clean deploy site-deploy -P build,release
 
 * error classpath configuration error, Wrong Injected class detected. microemu-injected module should be after microemu-javase in eclipse
 

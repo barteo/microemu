@@ -91,11 +91,12 @@
 
     <pluginRepositories>
 
+<!--
         <pluginRepository>
             <id>pyx4me-web</id>
-            <url>http://www.pyx4me.com/maven2</url>
+            <url>http://www.pyx4me.com/maven2-snapshot</url>
         </pluginRepository>
-
+-->
         <pluginRepository>
             <id>codehaus.org</id>
             <name>Codehaus Central Repository</name>

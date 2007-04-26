@@ -148,6 +148,7 @@
                 </configuration>
             </plugin>
 
+            <!--
             <plugin>
                 <groupId>com.pyx4me</groupId>
                 <artifactId>gammu-maven-plugin</artifactId>
@@ -155,6 +156,7 @@
                     <gammurc>${env.HOME}/gammurc</gammurc>
                 </configuration>
             </plugin>
+            -->
 
         </plugins>
     </build>

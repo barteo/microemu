@@ -30,11 +30,14 @@ public class SwtMutableImage extends MutableImage
 {
 	public org.eclipse.swt.graphics.Image img;
 	
+	private org.eclipse.swt.graphics.GC gc;
+	
 	
 	public SwtMutableImage(int width, int height) 
 	{
-		img = SwtDeviceComponent.createImage(width, height);
-		SwtDisplayGraphics displayGraphics = new SwtDisplayGraphics(new SwtGraphics(new GC(img)), this);
+		this.img = SwtDeviceComponent.createImage(width, height);
+		this.gc = new GC(this.img);
+		SwtDisplayGraphics displayGraphics = new SwtDisplayGraphics(new SwtGraphics(gc), this);
 		displayGraphics.setColor(0x00ffffff);
 		displayGraphics.fillRect(0, 0, width, height);
 	}
@@ -42,7 +45,7 @@ public class SwtMutableImage extends MutableImage
 
 	public javax.microedition.lcdui.Graphics getGraphics() 
 	{
-		SwtDisplayGraphics displayGraphics = new SwtDisplayGraphics(new SwtGraphics(new GC(img)), this);
+		SwtDisplayGraphics displayGraphics = new SwtDisplayGraphics(new SwtGraphics(gc), this);
 		displayGraphics.setColor(0x00000000);
 		displayGraphics.setClip(0, 0, getWidth(), getHeight());
 		displayGraphics.translate(-displayGraphics.getTranslateX(), -displayGraphics.getTranslateY());

@@ -147,6 +147,7 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>copy-assembly-4download</id>
                         <phase>site</phase>
                         <goals>
                             <goal>run</goal>

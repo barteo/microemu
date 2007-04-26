@@ -17,17 +17,40 @@ Building project using maven
         <repository>
             <id>microemu-web</id>
             <url>http://www.microemu.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+or
+        <repository>
+            <id>pyx4me-web-release</id>
+            <url>http://www.pyx4me.com/maven2-release</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
         </repository>
 ---
 
 * Development snapshot
 
-    The latest snapshot builds can be downloaded from the {{{http://www.pyx4me.com/maven2/}http://www.pyx4me.com/maven2}} MicroEmulator maven 2 snapshot repository.
+    The latest snapshot builds can be downloaded from the {{{http://www.pyx4me.com/maven2-snapshot/}http://www.pyx4me.com/maven2-snapshot}} MicroEmulator maven 2 snapshot repository.
 
 ---
         <repository>
-            <id>pyx4me-web</id>
-            <url>http://www.pyx4me.com/maven2</url>
+            <id>pyx4me-web-snapshot</id>
+            <url>http://www.pyx4me.com/maven2-snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
         </repository>
 ---
 
@@ -37,7 +60,7 @@ Building project using maven
         <dependency>
             <groupId>org.microemu</groupId>
             <artifactId>microemulator</artifactId>
-            <version>2.0.1-SNAPSHOT</version>
+            <version>#version#</version>
             <scope>provided</scope>
         </dependency>
 ---
@@ -48,7 +71,7 @@ Building project using maven
         <dependency>
             <groupId>org.microemu</groupId>
             <artifactId>microemu-javase-applet</artifactId>
-            <version>2.0.1-SNAPSHOT</version>
+            <version>#version#</version>
             <scope>provided</scope>
         </dependency>
 ---
@@ -56,4 +79,4 @@ Building project using maven
     *  <scope provided> defines that MicroEmulator classes are not included in your final application jar
 
 
-   For more information on building J2ME  application using maven2 see {{{http://pyx4me.com/snapshot/pyx4me/pyx4me-maven-plugins/j2me-maven-plugin/introduction.html}j2me-maven-plugin}}
+   For more information on building J2ME  application using maven2 see {{{http://pyx4me.com/pyx4me-maven-plugins/j2me-maven-plugin/introduction.html}j2me-maven-plugin}}

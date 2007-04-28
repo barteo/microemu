@@ -42,6 +42,7 @@ import org.microemu.app.util.MIDletSystemProperties;
 import org.microemu.app.util.MRUList;
 import org.microemu.app.util.MidletURLReference;
 import org.microemu.device.impl.DeviceImpl;
+import org.microemu.device.impl.Rectangle;
 import org.microemu.log.Logger;
 
 public class Config {
@@ -324,53 +325,38 @@ public class Config {
 		}
 	}
 
-	public static int getWindowX() {
-		int defaultResult = 0;
-
+	public static Rectangle getWindow(String name, Rectangle defaultWindow) {
 		XMLElement windowsXml = configXml.getChild("windows");
 		if (windowsXml == null) {
-			return defaultResult;
+			return defaultWindow;
 		}
 
-		XMLElement mainXml = windowsXml.getChild("main");
+		XMLElement mainXml = windowsXml.getChild(name);
 		if (mainXml == null) {
-			return defaultResult;
+			return defaultWindow;
 		}
 
-		return mainXml.getChildInteger("x", defaultResult);
+		Rectangle window = new Rectangle();
+		window.x = mainXml.getChildInteger("x", defaultWindow.x);
+		window.y = mainXml.getChildInteger("y", defaultWindow.y);
+		window.width = mainXml.getChildInteger("width", defaultWindow.width);
+		window.height = mainXml.getChildInteger("height", defaultWindow.height);
+		
+		return window;
 	}
 
-	public static void setWindowX(int windowX) {
+	public static void setWindow(String name, Rectangle window) {
 		XMLElement windowsXml = configXml.getChildOrNew("windows");
-		XMLElement mainXml = windowsXml.getChildOrNew("main");
-		XMLElement xXml = mainXml.getChildOrNew("x");
-		xXml.setContent(String.valueOf(windowX));
-		saveConfig();
-	}
-
-	public static int getWindowY() {
-		int defaultResult = 0;
-
-		XMLElement windowsXml = configXml.getChild("windows");
-		if (windowsXml == null) {
-			return defaultResult;
-		}
-
-		XMLElement mainXml = windowsXml.getChild("main");
-		if (mainXml == null) {
-			return defaultResult;
-		}
-
-		return mainXml.getChildInteger("y", defaultResult);
-	}
-
-	public static void setWindowY(int windowY) {
-		XMLElement windowsXml = configXml.getChildOrNew("windows");
-		XMLElement mainXml = windowsXml.getChildOrNew("main");
-		XMLElement yXml = mainXml.getChildOrNew("y");
-
-		yXml.setContent(String.valueOf(windowY));
-
+		XMLElement mainXml = windowsXml.getChildOrNew(name);
+		XMLElement xml = mainXml.getChildOrNew("x");
+		xml.setContent(String.valueOf(window.x));
+		xml = mainXml.getChildOrNew("y");
+		xml.setContent(String.valueOf(window.y));
+		xml = mainXml.getChildOrNew("width");
+		xml.setContent(String.valueOf(window.width));
+		xml = mainXml.getChildOrNew("height");
+		xml.setContent(String.valueOf(window.height));
+		
 		saveConfig();
 	}
 

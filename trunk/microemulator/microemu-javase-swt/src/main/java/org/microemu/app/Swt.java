@@ -59,10 +59,10 @@ import org.microemu.device.DeviceFactory;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.device.impl.DeviceImpl;
+import org.microemu.device.impl.Rectangle;
 import org.microemu.device.swt.SwtDeviceDisplay;
 import org.microemu.device.swt.SwtFontManager;
 import org.microemu.device.swt.SwtInputMethod;
-import org.microemu.log.Logger;
 
 public class Swt extends Common
 {
@@ -146,9 +146,11 @@ public class Swt extends Common
 	{    
 		public void handleEvent(Event e)
 		{
-			Config.setWindowX(shell.getLocation().x);
-			Config.setWindowY(shell.getLocation().x);
-			Config.saveConfig();
+			Config.setWindow("main", new Rectangle(
+			    	shell.getLocation().x,
+			    	shell.getLocation().y,
+			    	shell.getSize().x,
+			    	shell.getSize().y));
 
 			System.exit(0);
 		}    
@@ -279,7 +281,8 @@ public class Swt extends Common
 		    
 		Config.loadConfig(null, emulatorContext);
 		
-		shell.setLocation(Config.getWindowX(), Config.getWindowY());
+		Rectangle window = Config.getWindow("main", new Rectangle(0, 0, 160, 120));
+		shell.setLocation(window.x, window.y);
 		
 		shell.addKeyListener(keyListener);
 

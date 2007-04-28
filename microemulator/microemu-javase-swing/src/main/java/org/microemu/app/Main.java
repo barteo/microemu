@@ -29,8 +29,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -67,6 +65,7 @@ import org.microemu.app.ui.swing.JadUrlPanel;
 import org.microemu.app.ui.swing.SwingDeviceComponent;
 import org.microemu.app.ui.swing.SwingDialogWindow;
 import org.microemu.app.ui.swing.SwingErrorMessageDialogPanel;
+import org.microemu.app.ui.swing.SwingLogConsoleDialog;
 import org.microemu.app.ui.swing.SwingSelectDevicePanel;
 import org.microemu.app.util.AppletProducer;
 import org.microemu.app.util.DeviceEntry;
@@ -79,6 +78,7 @@ import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.device.MutableImage;
 import org.microemu.device.impl.DeviceImpl;
+import org.microemu.device.impl.Rectangle;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEFontManager;
 import org.microemu.device.j2se.J2SEInputMethod;
@@ -116,7 +116,11 @@ public class Main extends JFrame {
 	
 	private JCheckBoxMenuItem menuMIDletNetworkConnection;
 	
+	private JCheckBoxMenuItem menuLogConsole;
+	
 	private SwingDeviceComponent devicePanel;
+	
+	private SwingLogConsoleDialog logConsoleDialog;
 
 	private DeviceEntry deviceEntry;
 	
@@ -389,7 +393,19 @@ public class Main extends JFrame {
   		
   	};
 
-	private ActionListener menuExitListener = new ActionListener() {
+  	private ActionListener menuLogConsoleListener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			if (logConsoleDialog == null) {
+				logConsoleDialog = new SwingLogConsoleDialog(Main.this);
+				logConsoleDialog.pack();
+				Rectangle window = Config.getWindow("logConsole", new Rectangle(0, 0, 640, 240));
+				logConsoleDialog.setBounds(window.x, window.y, window.width, window.height);
+			}
+			logConsoleDialog.setVisible(!logConsoleDialog.isVisible());
+		}
+	};
+
+  	private ActionListener menuExitListener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 	    	synchronized (Main.this) {
 		    	if (encoder != null) {
@@ -398,9 +414,19 @@ public class Main extends JFrame {
 		    	}
 	    	}
 	    	
-			Config.setWindowX(Main.this.getX());
-			Config.setWindowY(Main.this.getY());
-			Config.saveConfig();
+	    	if (logConsoleDialog != null) {
+				Config.setWindow("logConsole", new Rectangle(
+	    				logConsoleDialog.getX(),
+	    				logConsoleDialog.getY(),
+	    				logConsoleDialog.getWidth(),
+	    				logConsoleDialog.getHeight()));
+	    	}	    	
+			Config.setWindow("main", new Rectangle(
+			    	Main.this.getX(),
+			    	Main.this.getY(),
+			    	Main.this.getWidth(),
+			    	Main.this.getHeight()));
+
 			System.exit(0);
 		}
 	};
@@ -546,7 +572,12 @@ public class Main extends JFrame {
     	menuMIDletNetworkConnection.addActionListener(menuMIDletNetworkConnectionListener);
     	menuOptions.add(menuMIDletNetworkConnection);
     	
-		menuBar.add(menuFile);
+    	menuLogConsole = new JCheckBoxMenuItem("Log console");
+    	menuLogConsole.setState(false);
+    	menuLogConsole.addActionListener(menuLogConsoleListener);
+    	menuOptions.add(menuLogConsole);
+
+    	menuBar.add(menuFile);
 		menuBar.add(menuOptions);
 		setJMenuBar(menuBar);
 
@@ -558,7 +589,8 @@ public class Main extends JFrame {
 
 		Config.loadConfig(defaultDevice, emulatorContext);
 
-		this.setLocation(Config.getWindowX(), Config.getWindowY());
+		Rectangle window = Config.getWindow("main", new Rectangle(0, 0, 160, 120));
+		this.setLocation(window.x, window.y);
 
 		getContentPane().add(createContents(getContentPane()), "Center");
 

@@ -34,6 +34,14 @@ public class Rectangle extends Shape {
 	public Rectangle() {
 		this.initialized = false;
 	}
+	
+	public Rectangle(int x, int y, int width, int height) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.initialized = true;
+	}
 
 	public Rectangle(Rectangle rect) {
 		this.x = rect.x;

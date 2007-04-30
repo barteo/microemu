@@ -211,9 +211,11 @@ public class Main extends JFrame {
 				// try to get from distribution home location
 				String resource = MIDletClassLoader.getClassResourceName(this.getClass().getName());
 				URL url = this.getClass().getClassLoader().getResource(resource);
-				String path = url.toExternalForm();
-				String mainJarFileName = path.substring(0, path.length() - resource.length());
-				File appletJarFile = new File(new File(mainJarFileName).getParent(), "me-applet.jar");
+				String path = url.getPath();
+				int prefix = path.indexOf(':');
+				String mainJarFileName = path.substring(prefix + 1, path.length() - resource.length());
+				File appletJarDir = new File(new File(mainJarFileName).getParent(), "lib");
+				File appletJarFile = new File(appletJarDir, "microemu-javase-applet.jar");
 				if (!appletJarFile.exists()) {
 					appletJarFile = null;
 				}

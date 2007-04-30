@@ -397,6 +397,11 @@ public class Main extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			if (logConsoleDialog == null) {
 				logConsoleDialog = new SwingLogConsoleDialog(Main.this);
+				logConsoleDialog.addWindowListener(new WindowAdapter() {
+					public void windowClosing(WindowEvent e) {
+						menuLogConsole.setState(false);
+					}
+				});
 				logConsoleDialog.pack();
 				Rectangle window = Config.getWindow("logConsole", new Rectangle(0, 0, 640, 240));
 				logConsoleDialog.setBounds(window.x, window.y, window.width, window.height);

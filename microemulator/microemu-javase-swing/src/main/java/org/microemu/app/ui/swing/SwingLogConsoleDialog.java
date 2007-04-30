@@ -21,40 +21,48 @@
  */
 package org.microemu.app.ui.swing;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class SwingLogConsoleDialog extends JDialog {
+public class SwingLogConsoleDialog extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
 	private JTextArea logArea = new JTextArea();
 
 	public SwingLogConsoleDialog(Frame owner) {
-		super(owner, "Log console");
-
-		Container pane = getContentPane();
-		pane.setLayout(new BorderLayout());
+		super("Log console");
 		
-		JPanel north = new JPanel();
-		JButton clear = new JButton("Clear");
-		clear.addActionListener(new ActionListener() {
+		setIconImage(owner.getIconImage());
+		
+		JMenuBar menuBar = new JMenuBar();		
+		JMenu menu = new JMenu("Menu");
+		
+		JMenuItem menuClear = new JMenuItem("Clear");
+		menuClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				logArea.setText("");
+				SwingLogConsoleDialog.this.logArea.setText("");				
 			}
 		});
-		north.add(clear);		
-		pane.add(north, BorderLayout.NORTH);
+		menu.add(menuClear);
 		
-		pane.add(logArea, BorderLayout.CENTER);
+		menuBar.add(menu);		
+		setJMenuBar(menuBar);
+
+		getContentPane().add(new JScrollPane(this.logArea));
+	}
+	
+	public void log(String message) {
+		logArea.append(message);
+		logArea.setCaretPosition(logArea.getText().length());
 	}
 
 }

@@ -265,7 +265,7 @@ public class Main extends JFrame {
 				if (!allowOverride(htmlOutputFile)) {
 					return;
 				}
-				File appletPackageOutputFile = new File(pathFile, "me-applet.jar");
+				File appletPackageOutputFile = new File(pathFile, "microemu-javase-applet.jar");
 				if (!allowOverride(appletPackageOutputFile)) {
 					return;
 				}

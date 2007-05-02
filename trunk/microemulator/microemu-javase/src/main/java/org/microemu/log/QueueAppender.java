@@ -21,47 +21,31 @@
  */
 package org.microemu.log;
 
-import java.io.PrintStream;
+import java.util.LinkedList;
+import java.util.List;
 
-/**
- * @author vlads
- * 
- */
-public class StdOutAppender implements LoggerAppender {
+public class QueueAppender implements LoggerAppender {
 
-	public static boolean enabled = true;
-	
-	public static String formatLocation(StackTraceElement ste) {
-		if (ste == null) {
-			return "";
-		}
-		// Make Line# clickable in eclipse
-		return ste.getClassName() + "." + ste.getMethodName() + "(" + ste.getFileName() + ":" + ste.getLineNumber()
-				+ ")";
+	private int buferSize;
+
+	private List queue = new LinkedList();
+
+	public QueueAppender(int buferSize) {
+		this.buferSize = buferSize;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.microemu.log.LoggerAppender#append(org.microemu.log.LoggingEvent)
-	 */
 	public void append(LoggingEvent event) {
-		if (!enabled) {
-			return;
+		queue.add(event);
+		if (queue.size() > buferSize) {
+			queue.remove(0);
 		}
-		PrintStream out = System.out; 
-    	if (event.getLevel() == LoggingEvent.ERROR) {
-    		out = System.err;
-    	}
-    	String data = "";
-    	if (event.hasData()) {
-    		data = " [" + event.getFormatedData() + "]";
-    	}
-    	out.println(event.getMessage() + data +  "\n\t  " + formatLocation(event.getLocation()));
-    	if (event.getThrowable() != null) {
-    		event.getThrowable().printStackTrace(out);
-    	}
+	}
 
+	public LoggingEvent poll() {
+		if (queue.size() == 0) {
+			return null;
+		}
+		return (LoggingEvent) queue.remove(0);
 	}
 
 }

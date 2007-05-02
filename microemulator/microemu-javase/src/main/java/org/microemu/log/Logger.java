@@ -59,6 +59,7 @@ public class Logger {
         logFunctionsSet.add("debug");
         logFunctionsSet.add("log");
         logFunctionsSet.add("error");
+        logFunctionsSet.add("fatal");
         logFunctionsSet.add("info");
         logFunctionsSet.add("warn");
     }
@@ -270,7 +271,7 @@ public class Logger {
 		loggerAppenders.add(newAppender);
 	}
 	
-	public static void removeAppender(LoggerAppender newAppender) {
-		loggerAppenders.remove(newAppender);
+	public static void removeAppender(LoggerAppender appender) {
+		loggerAppenders.remove(appender);
 	}
 }

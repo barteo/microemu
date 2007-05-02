@@ -84,6 +84,7 @@ import org.microemu.device.j2se.J2SEFontManager;
 import org.microemu.device.j2se.J2SEInputMethod;
 import org.microemu.device.j2se.J2SEMutableImage;
 import org.microemu.log.Logger;
+import org.microemu.log.QueueAppender;
 import org.microemu.util.JadMidletEntry;
 
 public class Main extends JFrame {
@@ -121,6 +122,8 @@ public class Main extends JFrame {
 	private SwingDeviceComponent devicePanel;
 	
 	private SwingLogConsoleDialog logConsoleDialog;
+	
+	private QueueAppender logQueueAppender;
 
 	private DeviceEntry deviceEntry;
 	
@@ -398,7 +401,7 @@ public class Main extends JFrame {
   	private ActionListener menuLogConsoleListener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			if (logConsoleDialog == null) {
-				logConsoleDialog = new SwingLogConsoleDialog(Main.this);
+				logConsoleDialog = new SwingLogConsoleDialog(Main.this, Main.this.logQueueAppender);
 				logConsoleDialog.addWindowListener(new WindowAdapter() {
 					public void windowClosing(WindowEvent e) {
 						menuLogConsole.setState(false);
@@ -515,6 +518,10 @@ public class Main extends JFrame {
 	}
 
 	public Main(DeviceEntry defaultDevice) {
+		
+		this.logQueueAppender = new QueueAppender(1024);
+		Logger.addAppender(logQueueAppender);
+		
 		JMenuBar menuBar = new JMenuBar();
 
 		JMenu menuFile = new JMenu("File");

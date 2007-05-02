@@ -16,6 +16,8 @@
                 <exclude>**/.settings/**</exclude>
                 <exclude>**/*.log</exclude>
                 <exclude>**/.*</exclude>
+                <exclude>build.properties</exclude>
+                <exclude>build.xml</exclude>
             </excludes>
         </fileSet>
     </fileSets>

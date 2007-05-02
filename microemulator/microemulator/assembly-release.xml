@@ -8,8 +8,8 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <outputDirectory/>
             <directory>${basedir}/..</directory>
+            <outputDirectory>${artifactId}-${version}</outputDirectory>
             <includes>
                 <include>LICENSE</include>
                 <include>CREDITS</include>
@@ -21,52 +21,56 @@
     <files>
         <file>
             <source>${basedir}/target/microemulator-${project.version}.jar</source>
-            <destName>microemulator.jar</destName>
+            <destName>${artifactId}-${version}/microemulator.jar</destName>
+        </file>
+        <file>
+            <source>${basedir}/target/microemulator-${project.version}-sources.jar</source>
+            <destName>${artifactId}-${version}/microemulator-sources.jar</destName>
         </file>
         <file>
             <source>${basedir}/../microemu-javase-applet/target/microemu-javase-applet-${project.version}.jar</source>
-            <destName>lib/microemu-javase-applet.jar</destName>
+            <destName>${artifactId}-${version}/lib/microemu-javase-applet.jar</destName>
         </file>
         <file>
             <source>${basedir}/../microemu-extensions/microemu-device-large/target/microemu-device-large-${project.version}.jar</source>
-            <destName>devices/microemu-device-large.jar</destName>
+            <destName>${artifactId}-${version}/devices/microemu-device-large.jar</destName>
         </file>
         <file>
             <source>${basedir}/../microemu-extensions/microemu-device-minimum/target/microemu-device-minimum-${project.version}.jar</source>
-            <destName>devices/microemu-device-minimum.jar</destName>
+            <destName>${artifactId}-${version}/devices/microemu-device-minimum.jar</destName>
         </file>
         <file>
             <source>${basedir}/../microemu-extensions/microemu-jsr-75/target/microemu-jsr-75-${project.version}.jar</source>
-            <destName>lib/microemu-jsr-75.jar</destName>
+            <destName>${artifactId}-${version}/lib/microemu-jsr-75.jar</destName>
         </file>
         <file>
             <source>${basedir}/../microemu-extensions/microemu-jsr-82/target/microemu-jsr-82-${project.version}.jar</source>
-            <destName>lib/microemu-jsr-82.jar</destName>
+            <destName>${artifactId}-${version}/lib/microemu-jsr-82.jar</destName>
         </file>
         <file>
             <source>${basedir}/../microemu-extensions/microemu-jsr-120/target/microemu-jsr-120-${project.version}.jar</source>
-            <destName>lib/microemu-jsr-120.jar</destName>
+            <destName>${artifactId}-${version}/lib/microemu-jsr-120.jar</destName>
         </file>
         <file>
             <source>${basedir}/../microemu-extensions/microemu-jsr-135/target/microemu-jsr-135-${project.version}.jar</source>
-            <destName>lib/microemu-jsr-135.jar</destName>
+            <destName>${artifactId}-${version}/lib/microemu-jsr-135.jar</destName>
         </file>
         <file>
             <source>${basedir}/../microemu-extensions/microemu-nokiaui/target/microemu-nokiaui-${project.version}.jar</source>
-            <destName>lib/microemu-nokiaui.jar</destName>
+            <destName>${artifactId}-${version}/lib/microemu-nokiaui.jar</destName>
         </file>
         <file>
             <source>${basedir}/../microemu-extensions/microemu-siemensapi/target/microemu-siemensapi-${project.version}.jar</source>
-            <destName>lib/microemu-siemensapi.jar</destName>
+            <destName>${artifactId}-${version}/lib/microemu-siemensapi.jar</destName>
         </file>
 
         <file>
             <source>${basedir}/../microemu-examples/microemu-demo/target/microemu-demo-${project.version}-me.jar</source>
-            <destName>apps/microemu-demo.jar</destName>
+            <destName>${artifactId}-${version}/apps/microemu-demo.jar</destName>
         </file>
         <file>
             <source>${basedir}/../microemu-examples/microemu-demo/microemu-demo.html</source>
-            <destName>microemu-demo.html</destName>
+            <destName>${artifactId}-${version}/microemu-demo.html</destName>
         </file>
     </files>
 </assembly>

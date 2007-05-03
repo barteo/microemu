@@ -143,6 +143,7 @@ Makefile = svn:eol-style=native;svn:keywords=Date Author Id Revision
 *.ora = svn:mime-type=text/plain;svn:eol-style=native;svn:keywords=Date Author Id Revision
 *.version = svn:mime-type=text/plain;svn:eol-style=native;svn:keywords=Date Author Id Revision
 *.xml = svn:mime-type=text/xml;svn:eol-style=native;svn:keywords=Date Author Id Revision
+*.launch = svn:mime-type=text/xml;svn:eol-style=native
 *.ent = svn:mime-type=text/plain;svn:eol-style=native;svn:keywords=Date Author Id Revision
 *.dtd = svn:mime-type=text/plain;svn:eol-style=native;svn:keywords=Date Author Id Revision
 *.xsd = svn:mime-type=text/xml;svn:eol-style=native;svn:keywords=Date Author Id Revision

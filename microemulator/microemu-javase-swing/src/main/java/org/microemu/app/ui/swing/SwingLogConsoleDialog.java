@@ -27,6 +27,8 @@ import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.JCheckBoxMenuItem;
@@ -47,102 +49,108 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final boolean tests = true;
-  	
+	private static final boolean tests = false;
+
 	private LogTextArea logArea;
-	
+
 	private int testEventCounter = 0;
-	
+
 	public SwingLogConsoleDialog(Frame owner, QueueAppender logQueueAppender) {
 		super("Log console");
-		
+
 		setIconImage(owner.getIconImage());
-		
-		JMenuBar menuBar = new JMenuBar();		
+
+		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Log");
-		
+
 		JMenuItem menuClear = new JMenuItem("Clear");
 		menuClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SwingLogConsoleDialog.this.logArea.setText("");				
+				SwingLogConsoleDialog.this.logArea.setText("");
 			}
 		});
 		menu.add(menuClear);
-		
+
 		final JCheckBoxMenuItem menuStdOut = new JCheckBoxMenuItem("Write to std Out");
 		menuStdOut.setState(StdOutAppender.enabled);
-		menuStdOut.addActionListener(new ActionListener() {    
-	  		public void actionPerformed(ActionEvent e) {
-	  			StdOutAppender.enabled = menuStdOut.getState();
-	  		}
-	  	});
-	  	menu.add(menuStdOut);
-		
-	  	
-		menuBar.add(menu);		
-		
+		menuStdOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				StdOutAppender.enabled = menuStdOut.getState();
+			}
+		});
+		menu.add(menuStdOut);
+
+		menuBar.add(menu);
+
 		if (tests) {
 			JMenu testMenu = new JMenu("Tests");
 			JMenuItem testLog = new JMenuItem("Log 10 events");
 			testLog.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					for (int i = 0; i < 10; i++) {
-						log(testEventCounter++ + " " + new Date()+ "\n");
-					}				
+						log(testEventCounter++ + " " + new Date() + "\n\t data tests.......\n");
+					}
 				}
 			});
 			testMenu.add(testLog);
 			menuBar.add(testMenu);
 		}
-		
+
 		setJMenuBar(menuBar);
 
 		this.logArea = new LogTextArea(20, 40, 1000);
 		JScrollPane scrollPane = new JScrollPane(this.logArea);
 		scrollPane.setAutoscrolls(false);
-		
-		getContentPane().add(new JScrollPane(scrollPane));
-		
+
+		getContentPane().add(scrollPane);
+
 		LoggingEvent event = null;
 		while ((event = logQueueAppender.poll()) != null) {
 			append(event);
 		}
-		
+
 		Logger.removeAppender(logQueueAppender);
 		Logger.addAppender(this);
 	}
-	
+
 	public void log(String message) {
-		logArea.append(message);
-		//logArea.setCaretPosition(logArea.getText().length());
+		synchronized (logArea) {
+			logArea.append(message);
+		}
 	}
 
 	private String formatLocation(StackTraceElement ste) {
 		if (ste == null) {
 			return "";
 		}
-		return ste.getClassName() + "." + ste.getMethodName() + "(" + ste.getFileName() + ":" + ste.getLineNumber() + ")";
+		return ste.getClassName() + "." + ste.getMethodName() + "(" + ste.getFileName() + ":" + ste.getLineNumber()
+				+ ")";
 	}
-	
+
+	private String formatEventTime(long eventTime) {
+		DateFormat format = new SimpleDateFormat("HH:mm:ss.SSS ");
+		return format.format(new Date(eventTime));
+	}
+
 	public void append(LoggingEvent event) {
-		StringBuffer bug = new StringBuffer(); 
+		StringBuffer bug = new StringBuffer(formatEventTime(event.getEventTime()));
 		if (event.getLevel() == LoggingEvent.ERROR) {
 			bug.append("Error:");
-    	}
+		}
 		bug.append(event.getMessage());
-    	if (event.hasData()) {
-    		bug.append(" [").append(event.getFormatedData()).append("]");
-    	}
-    	bug.append("\n\t  ").append(formatLocation(event.getLocation()));
-    	if (event.getThrowable() != null) {
-    		OutputStream out = new ByteArrayOutputStream();
-    		PrintStream stream = new PrintStream(out);
-    		event.getThrowable().printStackTrace(stream);
-    		stream.flush();
-    		bug.append(out.toString());
-    	}
-    	bug.append("\n");
-    	log(bug.toString());
+		if (event.hasData()) {
+			bug.append(" [").append(event.getFormatedData()).append("]");
+		}
+		bug.append("\n\t  ").append(formatLocation(event.getLocation()));
+		if (event.getThrowable() != null) {
+			OutputStream out = new ByteArrayOutputStream();
+			PrintStream stream = new PrintStream(out);
+			event.getThrowable().printStackTrace(stream);
+			stream.flush();
+			bug.append(out.toString());
+		}
+		bug.append("\n");
+		log(bug.toString());
 	}
 
 }

@@ -17,7 +17,7 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  @version $Id: DropTransferHandler.java 1104 2007-03-10 17:30:40Z vlads $
+ *  @version $Id$
  */
 package org.microemu.app.ui.swing;
 
@@ -27,6 +27,7 @@ import java.awt.event.ActionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Date;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
@@ -34,8 +35,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
+import org.microemu.app.ui.swing.logconsole.LogTextArea;
 import org.microemu.log.Logger;
 import org.microemu.log.LoggerAppender;
 import org.microemu.log.LoggingEvent;
@@ -45,9 +46,13 @@ import org.microemu.log.StdOutAppender;
 public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 
 	private static final long serialVersionUID = 1L;
-	
-	private JTextArea logArea = new JTextArea();
 
+	private static final boolean tests = true;
+  	
+	private LogTextArea logArea;
+	
+	private int testEventCounter = 0;
+	
 	public SwingLogConsoleDialog(Frame owner, QueueAppender logQueueAppender) {
 		super("Log console");
 		
@@ -73,10 +78,30 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 	  	});
 	  	menu.add(menuStdOut);
 		
+	  	
 		menuBar.add(menu);		
+		
+		if (tests) {
+			JMenu testMenu = new JMenu("Tests");
+			JMenuItem testLog = new JMenuItem("Log 10 events");
+			testLog.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					for (int i = 0; i < 10; i++) {
+						log(testEventCounter++ + " " + new Date()+ "\n");
+					}				
+				}
+			});
+			testMenu.add(testLog);
+			menuBar.add(testMenu);
+		}
+		
 		setJMenuBar(menuBar);
 
-		getContentPane().add(new JScrollPane(this.logArea));
+		this.logArea = new LogTextArea(20, 40, 1000);
+		JScrollPane scrollPane = new JScrollPane(this.logArea);
+		scrollPane.setAutoscrolls(false);
+		
+		getContentPane().add(new JScrollPane(scrollPane));
 		
 		LoggingEvent event = null;
 		while ((event = logQueueAppender.poll()) != null) {
@@ -89,7 +114,7 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 	
 	public void log(String message) {
 		logArea.append(message);
-		logArea.setCaretPosition(logArea.getText().length());
+		//logArea.setCaretPosition(logArea.getText().length());
 	}
 
 	private String formatLocation(StackTraceElement ste) {

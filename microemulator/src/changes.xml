@@ -17,7 +17,6 @@
         <action dev="vlads" type="add">Have two (or more) emulators to have different configurations and share commong config file and so on...</action>
         <action dev="vlads" type="add">Use skin included in Web start</action>
         <action dev="vlads" type="add">Progress bar Asynchronous non blocking loading of MIDlet jar</action>
-        <action dev="vlads" type="update">restore ant build</action>
         <action dev="barteo" type="add">Start ME2 as child windows from another java program.</action>
     </release>
 

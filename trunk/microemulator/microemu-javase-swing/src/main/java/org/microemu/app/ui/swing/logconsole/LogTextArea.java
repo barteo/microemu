@@ -34,7 +34,7 @@ public class LogTextArea extends JTextArea {
 
 	private static final long serialVersionUID = 1L;
 
-	private int maxLines = 20;
+	//private int maxLines = 20;
 
 	private LogTextCaret caret;
 
@@ -42,17 +42,27 @@ public class LogTextArea extends JTextArea {
 		super(rows, columns);
 		caret = new LogTextCaret();
 		setCaret(caret);
-		this.maxLines = maxLines;
+		//this.maxLines = maxLines;
 		setEditable(false);
+	}
+
+	public void setText(String t) {
+		super.setText(t);
+		caret.setVisibilityAdjustment(true);
 	}
 
 	public void append(String str) {
 
-		JViewport viewport = (JViewport) getParent();
-		boolean scrollToBottom = viewport.getViewPosition().getY() == (getHeight() - viewport.getHeight());
-		caret.setVisibilityAdjustment(scrollToBottom);
-
 		super.append(str);
+		
+		JViewport viewport = (JViewport) getParent();
+		boolean scrollToBottom = Math.abs(viewport.getViewPosition().getY() - (getHeight() - viewport.getHeight())) < 100;
+
+		caret.setVisibilityAdjustment(scrollToBottom);
+		
+		if (scrollToBottom) {
+			setCaretPosition(getText().length());
+		}
 
 		//		if (getLineCount() > maxLines) {
 		//			Document doc = getDocument();

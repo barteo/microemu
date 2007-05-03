@@ -36,22 +36,23 @@
     <release version="2.0.1-SNAPSHOT" date="Release date TBD 2007-05-XX" description="">
         <action dev="barteo" type="remove">DROP Java 1.3 support</action>
         <action dev="vlads" type="add">Project version control system moved to SVN</action>
-        <action dev="barteo" type="update">Refactor project source directory for a new modules strucutre</action>
+        <action dev="barteo" type="update">Refactor project source directory for a new modules structure</action>
         <action dev="vlads" type="add">Project build system moved to maven2</action>
         <action dev="vlads" type="add">Project Continuous Integration System using cruisecontrol on Windows XP and Linux Fedora Code 6</action>
         <action dev="vlads" type="add">New Log system to replace System.out.println</action>
-        <action dev="vlads" type="add">Bytcode classloader preprocessor using ObjectWeb ASM</action>
+        <action dev="vlads" type="add">Bytecode classloader preprocessor using ObjectWeb ASM</action>
         <action dev="vlads" type="add">MIDletOutputStreamRedirector to redirect MIDlet System.out.println to MicroEmulator Log system</action>
         <action dev="vlads" type="add">FileConnection API (JSR-75)</action>
         <action dev="vlads" type="add">Java Security aware connection framework</action>
         <action dev="vlads" type="update">Fixed Web Start security problems for RecordStore and skin files</action>
         <action dev="vlads" type="add">Drag And Drop JAD file to MicroEmulator application</action>
-        <action dev="vlads" type="add">Recently opend JAD URLs in menu</action>
+        <action dev="vlads" type="add">Recently opened JAD URLs in menu</action>
         <action dev="vlads" type="add">new command line option: --impl {JSR implementation class name}</action>
         <action dev="vlads" type="add">new command line option: --appclasspath {MIDlet CLASSPATH}</action>
         <action dev="vlads" type="add">new command line option: --appclass {library class name}</action>
-        <action dev="barteo" type="add">Prepare for WEB, Bytcode preprocessor in Application to enable MIDlet access to System properties when running in applect</action>
+        <action dev="barteo" type="add">Prepare for WEB, Bytecode preprocessor in Application to enable MIDlet access to System properties when running in applect</action>
         <action dev="vlads" type="update">new microemu Distribution modules</action>
+        <action dev="barteo" type="add">Capture device display into animated gif file</action>
     </release>
 
     <release version="2.0.0" date="2007-01-29" description="First MIDP 2.0 release">

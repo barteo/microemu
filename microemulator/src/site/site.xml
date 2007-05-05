@@ -44,7 +44,10 @@
 
             <item name="Download" href="#">
                 <!--4snapshot-->
+                <!--
                 <item name="Snapshot" href="http://www.microemu.org/microemulator/download/"/>
+                -->
+
                 <item name="Releases" href="http://sourceforge.net/project/showfiles.php?group_id=30014"/>
                 <item name="Maven" href="http://www.microemu.org/maven.html"/>
                 <item name="SVN Access" href="source-repository.html"/>

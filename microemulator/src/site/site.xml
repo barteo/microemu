@@ -23,14 +23,14 @@
         </links>
 
         <!--4release-->
+        <!--
         <menu name="Ver #version#" inherit="top"/>
+        -->
 
         <!--4snapshot-->
-        <!--
         <menu name="Ver #build#" inherit="top">
-            <item name="Release 2.0.0" href="http://microemu.org/"/>
+            <item name="Release 2.0.1" href="http://microemu.org/"/>
         </menu>
-        -->
 
         <menu ref="parent" />
 
@@ -44,9 +44,7 @@
 
             <item name="Download" href="#">
                 <!--4snapshot-->
-                <!--
                 <item name="Snapshot" href="http://www.microemu.org/microemulator/download/"/>
-                -->
 
                 <item name="Releases" href="http://sourceforge.net/project/showfiles.php?group_id=30014"/>
                 <item name="Maven" href="http://www.microemu.org/maven.html"/>
@@ -55,7 +53,9 @@
             </item>
 
             <!--4release-->
+            <!--
             <item name="Preview 2.0.2" href="http://pyx4j.com/snapshot/microemu/" />
+            -->
             <item name="Changes and Plans" href="http://www.microemu.org/changes-report.html" />
         </menu>
 

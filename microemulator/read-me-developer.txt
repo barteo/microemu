@@ -39,6 +39,12 @@
 
     * Upload the context of /home/apache/microemu  to http://microemu.org/
 
+    * Create Tag in SVN
+
+    * Update version to  (x+1)-SNAPSHOT
+
+    * Update src/site/site.xml
+
 * cruisecontrol
 
     "me2" Every 1 hour:

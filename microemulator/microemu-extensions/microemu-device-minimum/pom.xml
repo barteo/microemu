@@ -34,7 +34,7 @@
                             <tasks>
                                 <copy overwrite="true"
                                     file="${project.build.directory}/${project.build.finalName}.jar"
-                                    tofile="${project.build.directory}/site/minimum.jar"/>
+                                    tofile="${project.build.directory}/site/${artifactId}.jar"/>
                             </tasks>
                         </configuration>
                     </execution>

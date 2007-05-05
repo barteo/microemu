@@ -45,8 +45,8 @@ public class HTTPPanel extends BaseExamplesForm {
 	
 	// See file src/site/resources/test/index.php
 	static final String demoLocation =
-		// "http://pyx4j.com/test/";
-		"http://www.microemu.org/test/";
+		"http://pyx4j.com/test/";
+		//"http://www.microemu.org/test/";
 	
 	TextField url;
 	

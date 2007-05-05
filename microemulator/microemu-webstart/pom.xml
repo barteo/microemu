@@ -19,6 +19,14 @@
 
     <description>microemu-webstart</description>
 
+    <distributionManagement>
+        <!-- no-deployment in repository -->
+        <repository>
+            <id>pyx4j.com-no-deployment</id>
+            <url>file:///${basedir}/target/tmp</url>
+        </repository>
+    </distributionManagement>
+
     <dependencies>
 
         <!--

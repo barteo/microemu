@@ -7,7 +7,7 @@
     <section name="MicroEmulator running as applet">
 
         <div align="center">
-            <applet code="org.microemu.applet.Main" width="226" height="471" archive="microemu-javase-applet/me-applet.jar,microemu-examples/microemu-demo/simpledemo.jar">
+            <applet code="org.microemu.applet.Main" width="226" height="471" archive="microemu-javase-applet/microemu-javase-applet.jar,microemu-examples/microemu-demo/microemu-demo.jar">
                 <param name="midlet" value="org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet"/>
             </applet>
         </div>

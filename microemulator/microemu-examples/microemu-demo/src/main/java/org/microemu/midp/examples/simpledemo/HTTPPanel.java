@@ -44,8 +44,9 @@ public class HTTPPanel extends BaseExamplesForm {
 	static final Command goCommand = new Command("Go", Command.OK, 1);
 	
 	// See file src/site/resources/test/index.php
-	static final String demoLocation = "http://pyx4j.com/test/";
-	//"http://www.microemu.org/test/";
+	static final String demoLocation =
+		// "http://pyx4j.com/test/";
+		"http://www.microemu.org/test/";
 	
 	TextField url;
 	

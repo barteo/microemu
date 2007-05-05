@@ -86,7 +86,7 @@
 
     <profiles>
         <profile>
-            <id>release</id>
+            <id>build</id>
 
             <activation>
                 <property>

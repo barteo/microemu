@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.microemu</groupId>
         <artifactId>microemu</artifactId>
-        <version>2.0.1</version><!--me-version-->
+        <version>2.0.2-SNAPSHOT</version><!--me-version-->
         <relativePath>../pom.xml</relativePath>
     </parent>
 

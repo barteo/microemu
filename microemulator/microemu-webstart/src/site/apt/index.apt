@@ -19,7 +19,7 @@ MicroEmulator Web Start
 *---------------------------+-----------+
 | {{{http://wintermute.de/wap/extended/5ud0ku.jad}A Sudoku Game}}  |  <<<{{{open/wintermute.de/wap/extended/5ud0ku.jnlp}\u00bbOpen}}>>>
 *-----------------------+-----------+
-| {{{../microemu-examples/microemu-demo/simpledemo.jad}MicroEmulator Demo}}
+| {{{../microemu-examples/microemu-demo/microemu-demo.jad}MicroEmulator Demo}}
 *-----------------------+-----------+
 | {{{../microemu-examples/microemu-fcview/microemu-fcview.jad}MicroEmulator JSR-75 Demo}}
 *-----------------------+-----------+

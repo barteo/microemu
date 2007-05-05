@@ -89,6 +89,18 @@
                 <jnlpPrefix>snapshot-</jnlpPrefix>
             </properties>
         </profile>
+        <profile>
+            <id>release_webstart</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <properties>
+                <jnlpPrefix></jnlpPrefix>
+            </properties>
+        </profile>
     </profiles>
 
     <build>

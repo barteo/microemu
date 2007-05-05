@@ -1,0 +1,80 @@
+ @version $Revision$ ($Author$) $Date$
+
+
+* Build
+
+   We are using maven2 to build project
+
+    To build project you need this environment variables:
+    JAVA_HOME, SWT_HOME (to build swt module) and WTK_HOME to compile and test MIDlets
+
+   To create Eclipse projects run:
+     mvn eclipse:clean eclipse:eclipse -DdownloadSources=true
+
+   To run build without tests:
+     mvn -Dmaven.test.skip=true
+
+* Building Release
+
+    * Test locally
+
+        mvn clean deploy site-deploy -P build,release -DperformRelease=true -Dlabel=2.0.1
+
+    * Remove all -SNAPSHOT from pom.xml
+
+    * Remove/comment <pluginRepositories> used in poms
+
+    * Update src/changes.xml
+
+    * Comment out sections marked <!--4release--> and <!--4snapshot--> in src/site/site.xml
+
+    * variable demoLocation in microemu-examples/microemu-demo HTTPPanel.java
+
+    * SVN commit
+
+    * on build server!
+      mvn scm:update clean deploy site-deploy -P build,release -DperformRelease=true -Dlabel=2.0.1
+
+    * repository "pyx4j.com-file-release" on build server will sync with http://repo1.maven.org/maven2
+
+    * Upload the context of /home/apache/microemu  to http://microemu.org/
+
+* cruisecontrol
+
+    "me2" Every 1 hour:
+        clean --fail-never -P build|scm:update -P build|clean install -P build
+
+    "me2-nightly" 3AM EST
+        clean --fail-never -P build|scm:update -P build|clean deploy site-deploy -P build,release
+
+* error classpath configuration error, Wrong Injected class detected. microemu-injected module should be after microemu-javase in eclipse
+
+  This is the problem that order of dependancies in maven is undefined.
+
+  To solve: In eclipse edit project  microemu-javase-swing  move microemu-injected down.
+
+  In fact it should not even be there as project (bug in maven-eclipse plugin), only jar microemu-injected-2.0.1-SNAPSHOT-inject.jar is required!
+  The best option to remove this dependacncy from eclipse project.
+
+
+* Building applet
+
+  This describe procedure for building applet.
+
+  We run proguard 3 times with deferent options
+   on microemu-cldc and microemu-midp we need to preserve all API declarations
+   on microemu-javase+microemu-javase-swing assembly we just need to preserve main applet class.
+
+* Building Web Start
+
+   We are using signed Web Start.
+   The microemu-webstart module is created to be build by primary ME2 developers only because it involves signing jars with our keys.
+   The module can still be used by other as reference. Please see microemu-webstart\key.txt
+
+   microemu-webstart module is not part of regular build
+   To build webstart module use
+    mvn -P webstart
+   When building all application.
+   This is because some users may get ME2 SVN tree and try to compile.
+   The microemu-webstart will fail for them.
+

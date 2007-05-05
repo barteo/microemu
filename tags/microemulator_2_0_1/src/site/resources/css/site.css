@@ -1,0 +1,8 @@
+#breadcrumbs {
+	overflow: hidden;
+	padding: 3px 10px 3px 20px;
+	background-image: url(../css-images/breadcrumbs.png);
+	background-repeat: repeat-x;
+	border: none;
+	background-color: #fff !important;
+}

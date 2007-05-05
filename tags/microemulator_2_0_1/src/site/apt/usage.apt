@@ -1,0 +1,131 @@
+~~ @version $Revision$ ($Author$) $Date$
+~~ See this file format http://maven.apache.org/guides/mini/guide-apt-format.html
+
+                                    ------------------
+                                    Usage
+
+
+Running j2me application with MicroEmulator
+
+* Starting MIDlet from command line
+
+    [[1]] Use MainClass
+
+---
+java org.microemu.app.Main (MIDlet application main class)
+or
+java org.microemu.app.Main (MIDlet jad file)
+---
+
+        * microemulator.jar must be in CLASSPATH
+
+        []
+
+---
+java -cp microemulator.jar;YourApp.jar org.microemu.app.Main com.yourcompany.YourMidlet
+or
+java -cp microemulator.jar org.microemu.app.Main path2yourApp/YourApp.jad
+---
+
+
+    [[2]] Use microemulator.jar
+
+---
+java -jar microemulator.jar (MIDlet application main class)
+or
+java -jar microemulator.jar (MIDlet jad file)
+---
+
+        * (MIDlet application main class) parameter is optional, if used MIDlet application jar file must be in CLASSPATH,
+
+        * (MIDlet jad file) must have .jad extension,
+
+        * to support Nokia UI include microemu-nokiaui.jar to the CLASSPATH,
+
+        * to support Siemens API include microemu-siemensapi.jar to the CLASSPATH.
+
+        []
+
+---
+java -cp microemulator.jar;microemu-nokiaui.jar;YourApp.jar org.microemu.app.Main com.yourcompany.YourMidlet
+or
+java -jar microemulator.jar -cp microemu-siemensapi.jar http://wwww.yourcompany.com/download/YourApp-sim.jad
+---
+
+    MicroEmulator command line options
+
+        * --rms [memory | file]
+            persistent or not RecordStoreManager manager
+
+        * --device | -d <device class or xml>
+            specify device skin.
+
+        * --classpath | -cp  <CLASSPATH>  Extensions class path entries
+
+        * --appclasspath | -appcp <CLASSPATH> for MIDlet application components if any; ignored when opening .jad
+
+        * --appclass <library class name> for appclasspath auto detection from system classpath; ignored when opening .jad
+
+        * ({MIDlet class name} | {jad file location})
+
+        []
+
+    Other examples
+
+---
+java -cp microemulator.jar;microemu-device-large.jar org.microemu.app.Main --device org/microemu/device/large/device.xml http://wintermute.de/wap/5ud0ku.jad
+
+java -jar microemulator.jar -cp microemu-device-large.jar --device org/microemu/device/large/device.xml http://wintermute.de/wap/5ud0ku.jad
+---
+
+    MicroEmulator with JSR
+
+---
+java -cp microemulator.jar;bluecove-1.2.2.jar org.microemu.app.Main btbrowserv20.jad
+or
+java -jar microemulator.jar -cp bluecove-1.2.2.jar btbrowserv20.jad
+---
+
+
+* Building and debugging a java project using MicroEmulator and Eclipse
+
+    All you need to do is to configure Run Command to start Emulator Directly from the IDE.
+
+    Click on your project, go to Run > Run.
+
+    Double click "Java Application" to create a run type. Name this new run command.
+
+    For Main class, put in> org.microemu.app.Main
+    and select "Include libraries when searching for main class" .
+
+[images/eclipse-main.png] Java Main class
+
+    Click the "Argument" tab and this under Program arguments enter you MIDlet class name.
+
+[images/eclipse-arguments.png] Java Argument class
+
+    If your MIDlet project includes other projects or libraries that are compiled differently and included in you final application. e.g. XML or Log libraries.
+    Then you need to add aditional configuration option. MicroEmulator will use the same MIDlet classloader for this clases. If not specified this classes would be loaded by the same classloader as MicroEmulator.
+
+---
+--appclasspath /home/bob/work/framework0.1.jar;/home/bob/work/core/target/classes org.app.MainMIDlet
+---
+
+    More convenient option is to let MicroEmulator detect the location of the classes in project classpath.
+    Only one class name from each library or project needs to be specified.
+
+---
+--appclass org.framework.OneClass --appclass org.core.AnotherClass org.app.MainMIDlet
+---
+
+    Finally, go to the class path, add your project (done already by default), and add microemulator.jar (under User Entries)
+
+
+*  Integration of MicroEmulator into Eclipse EclipseME project
+
+   The described above approach is working when your project is {{{http://eclipseme.org/}EclipseME}} project.
+   In this case you need to specify Runtime JRE.
+
+    Select Execution Environment: J2SE-1.4, J2SE-1.5 or JavaSE-1.6
+
+[images/eclipse-jre.png] Java Execution Environment

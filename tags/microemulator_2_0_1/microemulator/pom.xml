@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0">
+    <!-- @version $Revision$ ($Author$) $Date$ -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.microemu</groupId>
+        <artifactId>microemu</artifactId>
+        <version>2.0.1</version><!--me-version-->
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>microemulator</artifactId>
+    <name>microemulator</name>
+    <packaging>pom</packaging>
+
+    <description>MicroEmulator one jar assembly for distribution</description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-javase-swing</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-javase-swt</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Used for ready for applet Preprocessor should be only in pakaged jar -->
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-injected</artifactId>
+            <version>${project.version}</version>
+            <classifier>inject</classifier>
+            <optional>true</optional>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <!-- app jar-with-dependencies -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                       <id>jar-with-dependencies</id>
+                       <phase>package</phase>
+                       <goals><goal>single</goal></goals>
+                       <configuration>
+                           <attach>true</attach>
+                           <appendAssemblyId>false</appendAssemblyId>
+                           <descriptors>
+                               <descriptor>assembly-app.xml</descriptor>
+                           </descriptors>
+                           <archive>
+                                <manifest>
+                                    <mainClass>org.microemu.app.Main</mainClass>
+                                </manifest>
+                                <!-- this does not work, bug http://jira.codehaus.org/browse/MASSEMBLY-188 -->
+                                <manifestEntries>
+                                    <Version>${label}</Version>
+                                    <Build-Time>${cctimestamp}</Build-Time>
+                                    <Build-Time>${cctimestamp}</Build-Time>
+                                    <Implementation-Version2>${pom.version}</Implementation-Version2>
+                                    <SVN-Revision>${scm.revision}</SVN-Revision>
+                                </manifestEntries>
+                            </archive>
+                       </configuration>
+                    </execution>
+               </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sources-jar</id>
+                                <phase>package</phase>
+                                <goals><goal>single</goal></goals>
+                                <configuration>
+                                    <attach>true</attach>
+                                    <descriptors>
+                                        <descriptor>assembly-sources.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>all-sources-gz</id>
+                                <phase>install</phase>
+                                <goals><goal>single</goal></goals>
+                                <configuration>
+                                    <attach>false</attach>
+                                    <descriptors>
+                                        <descriptor>assembly-all-sources.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>release-package-gz</id>
+                                <phase>install</phase>
+                                <goals><goal>single</goal></goals>
+                                <configuration>
+                                    <attach>false</attach>
+                                    <appendAssemblyId>false</appendAssemblyId>
+                                    <descriptors>
+                                        <descriptor>assembly-release.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-all-sources-4download</id>
+                                <phase>site</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <mkdir dir="${project.build.directory}/site/download"/>
+                                        <copy overwrite="true"
+                                            file="${project.build.directory}/${project.build.finalName}-sources.tar.gz"
+                                            todir="${project.build.directory}/site/download"/>
+                                        <copy overwrite="true"
+                                            file="${project.build.directory}/${project.build.finalName}.tar.gz"
+                                            todir="${project.build.directory}/site/download"/>
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
+
+</project>

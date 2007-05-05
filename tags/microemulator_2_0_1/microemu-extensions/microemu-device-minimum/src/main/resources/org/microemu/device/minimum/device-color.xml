@@ -1,0 +1,23 @@
+<?xml version="1.0"	encoding="ISO-8859-1"?>
+<device	name="Minimum device color"
+	extends= "device.xml"
+	xmlns="http://www.microemu.org/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.microemu.org/2.0/	http://www.microemu.org/2.0/device.xsd">
+	<display>
+		<iscolor>true</iscolor>
+		<numcolors>65536</numcolors>
+		<numalphalevels>256</numalphalevels>
+		<foreground>000000</foreground>
+		<background>ffffff</background>
+		<icon name="up">
+			<img name="pressed" src="up.png"/>
+		</icon>
+		<icon name="down">
+			<img name="pressed" src="down.png"/>
+		</icon>
+	</display>
+	<input>
+		<haspointerevents>true</haspointerevents>
+		<haspointermotionevents>true</haspointermotionevents>
+		<hasrepeatevents>true</hasrepeatevents>
+	</input>
+</device>

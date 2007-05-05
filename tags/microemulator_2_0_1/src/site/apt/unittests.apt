@@ -1,0 +1,55 @@
+~~ @version $Revision$ ($Author$) $Date$
+~~ See this file format http://maven.apache.org/guides/mini/guide-apt-format.html
+
+                                    ------------------
+                                    Testing J2ME  Application using MicroEmulator
+
+
+Testing j2me application with MicroEmulator
+
+* Introduction
+
+     If you're a Java developer, you're familiar with the {{{http://www.junit.org/}JUnit}} project, an open source unit testing framework for Java.
+     With JUnit you write simple classes (test cases) that have a number of methods that use assertions to test various aspects of your code.
+     The only question is that you need to run J2ME test differently.
+
+    * <<J2MEUnit>> or SE Mobile JUnit approach.
+
+        Use UnitTest library adapted for JavaME. And run the application in MicroEmulator. The only benefit of this approach is ability to run the same tests on real device.
+
+        {{{http://j2meunit.sourceforge.net/}J2MEUnit}} is a Java 2 Micro Edition (J2ME) library containing a unit testing framework for J2ME applications.
+        ~~Also read {{{http://developers.sun.com/techtopics/mobility/midp/articles/test/}Qusay H. Mahmoud Article}}
+
+        {{{http://developer.sonyericsson.com/site/global/newsandevents/latestnews/newsjuly06/p_mobile_juint1.0_javame_cldc.jsp}Sony Ericsson Mobile JUnit 1.0 for Java ME CLDC phones}}
+
+
+    * <<Original JUnit>> approach
+
+       Significant part of application code is not related to UI presentation and can be executed without MIDlet's.
+       Usually this is persistence communications and calculation layers of application.
+
+       If you selected {{{http://www-128.ibm.com/developerworks/wireless/library/wi-arch6/}MVC design pattern}}
+       then <Model> is the perfect target for testing with MicroEmulator.
+       In any case probably your complex application already contains multiple modules (jars) that are finally linked to
+       with MIDlet in application. Test them separately before you build MIDlet.
+
+       Build and run UnitTests that are executing you application logic with microemulator-2.0.jar in you classpath. All classes that are using Generic Connection Framework will run perfectly under J2SE without initialization.
+       This way it is much simple to integrate tests into automatic build process and is easier to test complex scenarios.
+
+       Don't forget that you will have added benefits of reporting and coverage that comes with standard tools like Eclipse, Emma, Clove.
+
+
+    * <<{{{http://pyx4me.com/snapshot/pyx4me/pyx4me-cldcunit/}CLDCUnit}}>> J2ME JUnit base test framework.
+
+        CLDCUnit can be used as original JUnit when running tests with Java J2SE. Simply create regular JUnit test that extends <junit.framework.TestCase> and run in Eclipse or Maven.
+
+        Because Java 2 Micro Edition (J2ME) dos not have reflection API CLDCUnit needs aditional step to build process that will create reflection data. Bytecode instrumentation is used. Result of the build can be executed on real device.
+
+        CLDCUnit project is created by MicroEmulator Team member.
+
+~~~* Running headless emulator
+
+
+
+
+

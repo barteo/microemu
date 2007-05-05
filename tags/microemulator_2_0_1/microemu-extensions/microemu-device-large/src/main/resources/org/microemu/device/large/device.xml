@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<device name="Large device"
+		xmlns="http://www.microemu.org/2.0/"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.microemu.org/2.0/ http://www.microemu.org/2.0/device.xsd">
+	<img name="normal" src="normal.png"/>
+	<img name="over" src="over.png"/>
+	<img name="pressed" src="pressed.png"/>
+	<display>
+		<iscolor>true</iscolor>
+		<numcolors>65536</numcolors>
+		<numalphalevels>256</numalphalevels>
+		<foreground>000000</foreground>
+		<background>ffffff</background>
+		<rectangle>
+			<x>26</x>
+			<y>51</y>
+			<width>240</width>
+			<height>320</height>
+		</rectangle>
+		<!-- Like Sony-Ericsson/W900 -->
+		<paintable>
+			<x>0</x>
+			<y>27</y>
+			<width>240</width>
+			<height>266</height>
+		</paintable>
+		<icon name="up">
+			<paintable>
+				<x>114</x>
+				<y>295</y>
+				<width>12</width>
+				<height>12</height>
+			</paintable>
+			<img name="normal" src="/org/microemu/device/default/up.png"/>
+			<img name="pressed" src="/org/microemu/device/default/up-pressed.png"/>
+		</icon>
+		<icon name="down">
+			<paintable>
+				<x>114</x>
+				<y>306</y>
+				<width>12</width>
+				<height>12</height>
+			</paintable>
+			<img name="normal" src="/org/microemu/device/default/down.png"/>
+			<img name="pressed" src="/org/microemu/device/default/down-pressed.png"/>
+		</icon>
+		<status name="input">
+			<paintable>
+				<x>3</x>
+				<y>3</y>
+				<width>14</width>
+				<height>7</height>
+			</paintable>
+			<img name="123" src="/org/microemu/device/default/123.png"/>
+			<img name="ABC" src="/org/microemu/device/default/abc_upper.png"/>
+			<img name="abc" src="/org/microemu/device/default/abc_lower.png"/>
+		</status>
+	</display>
+	<fonts hint="antialiasing">
+		<font face="system" style="plain" size="small">
+			<system name="SansSerif" style="plain" size="10"/>
+		</font>
+		<font face="system" style="plain" size="medium">
+			<system name="SansSerif" style="plain" size="12"/>
+		</font>
+		<font face="system" style="plain" size="large">
+			<system name="SansSerif" style="plain" size="14"/>
+		</font>
+		<font face="system" style="bold" size="small">
+			<system name="SansSerif" style="bold" size="10"/>
+		</font>
+		<font face="system" style="bold" size="medium">
+			<system name="SansSerif" style="bold" size="12"/>
+		</font>
+		<font face="system" style="bold" size="large">
+			<system name="SansSerif" style="bold" size="14"/>
+		</font>
+		<font face="system" style="italic" size="small">
+			<system name="SansSerif" style="italic" size="10"/>
+		</font>
+		<font face="system" style="italic" size="medium">
+			<system name="SansSerif" style="italic" size="12"/>
+		</font>
+		<font face="system" style="italic" size="large">
+			<system name="SansSerif" style="italic" size="14"/>
+		</font>
+		<font face="system" style="bold,italic" size="small">
+			<system name="SansSerif" style="bold,italic" size="10"/>
+		</font>
+		<font face="system" style="bold,italic" size="medium">
+			<system name="SansSerif" style="bold,italic" size="12"/>
+		</font>
+		<font face="system" style="bold,italic" size="large">
+			<system name="SansSerif" style="bold,italic" size="14"/>
+		</font>
+		<font face="monospace" style="plain" size="small">
+			<system name="Monospaced" style="plain" size="10"/>
+		</font>
+		<font face="monospace" style="plain" size="medium">
+			<system name="Monospaced" style="plain" size="12"/>
+		</font>
+		<font face="monospace" style="plain" size="large">
+			<system name="Monospaced" style="plain" size="14"/>
+		</font>
+		<font face="monospace" style="bold" size="small">
+			<system name="Monospaced" style="bold" size="10"/>
+		</font>
+		<font face="monospace" style="bold" size="medium">
+			<system name="Monospaced" style="bold" size="12"/>
+		</font>
+		<font face="monospace" style="bold" size="large">
+			<system name="Monospaced" style="bold" size="14"/>
+		</font>
+		<font face="monospace" style="italic" size="small">
+			<system name="Monospaced" style="italic" size="10"/>
+		</font>
+		<font face="monospace" style="italic" size="medium">
+			<system name="Monospaced" style="italic" size="12"/>
+		</font>
+		<font face="monospace" style="italic" size="large">
+			<system name="Monospaced" style="italic" size="14"/>
+		</font>
+		<font face="monospace" style="bold,italic" size="small">
+			<system name="Monospaced" style="bold,italic" size="10"/>
+		</font>
+		<font face="monospace" style="bold,italic" size="medium">
+			<system name="Monospaced" style="bold,italic" size="12"/>
+		</font>
+		<font face="monospace" style="bold,italic" size="large">
+			<system name="Monospaced" style="bold,italic" size="14"/>
+		</font>
+		<font face="proportional" style="plain" size="small">
+			<system name="SansSerif" style="plain" size="10"/>
+		</font>
+		<font face="proportional" style="plain" size="medium">
+			<system name="SansSerif" style="plain" size="12"/>
+		</font>
+		<font face="proportional" style="plain" size="large">
+			<system name="SansSerif" style="plain" size="14"/>
+		</font>
+		<font face="proportional" style="bold" size="small">
+			<system name="SansSerif" style="bold" size="10"/>
+		</font>
+		<font face="proportional" style="bold" size="medium">
+			<system name="SansSerif" style="bold" size="12"/>
+		</font>
+		<font face="proportional" style="bold" size="large">
+			<system name="SansSerif" style="bold" size="14"/>
+		</font>
+		<font face="proportional" style="italic" size="small">
+			<system name="SansSerif" style="italic" size="10"/>
+		</font>
+		<font face="proportional" style="italic" size="medium">
+			<system name="SansSerif" style="italic" size="12"/>
+		</font>
+		<font face="proportional" style="italic" size="large">
+			<system name="SansSerif" style="italic" size="14"/>
+		</font>
+		<font face="proportional" style="bold,italic" size="small">
+			<system name="SansSerif" style="bold,italic" size="10"/>
+		</font>
+		<font face="proportional" style="bold,italic" size="medium">
+			<system name="SansSerif" style="bold,italic" size="12"/>
+		</font>
+		<font face="proportional" style="bold,italic" size="large">
+			<system name="SansSerif" style="bold,italic" size="14"/>
+		</font>
+	</fonts>
+	<input>
+		<haspointerevents>true</haspointerevents>
+		<haspointermotionevents>true</haspointermotionevents>
+		<hasrepeatevents>true</hasrepeatevents>
+		<softbutton name="SOFT1" key="VK_F1" keyCode="-6" alignment="LEFT">
+			<polygon>
+				<point x="44" y="396" />
+				<point x="109" y="395" />
+				<point x="100" y="408" />
+				<point x="100" y="420" />
+				<point x="107" y="431" />
+				<point x="45" y="431" />
+			</polygon>
+			<paintable>
+				<x>1</x>
+				<y>293</y>
+				<width>112</width>
+				<height>23</height>
+			</paintable>
+			<font face="system" style="bold" size="large"/>
+			<command>BACK</command>
+			<command>EXIT</command>
+			<command>CANCEL</command>
+			<command>STOP</command>
+		</softbutton>
+		<softbutton name="SOFT2" key="VK_F2" keyCode="-7" alignment="RIGHT">
+			<polygon>
+				<point x="180" y="394" />
+				<point x="249" y="393" />
+				<point x="249" y="431" />
+				<point x="181" y="431" />
+				<point x="189" y="421" />
+				<point x="189" y="407" />
+			</polygon>
+			<paintable>
+				<x>126</x>
+				<y>293</y>
+				<width>112</width>
+				<height>23</height>
+			</paintable>
+			<font face="system" style="bold" size="large"/>
+			<command>OK</command>
+			<command>SCREEN</command>
+			<command>ITEM</command>
+			<command>HELP</command>
+		</softbutton>
+		<button name="LEFT" key="VK_LEFT" keyCode="-3">
+			<polygon>
+				<point x="101" y="408" />
+				<point x="109" y="398" />
+				<point x="119" y="391" />
+				<point x="119" y="436" />
+				<point x="107" y="429" />
+				<point x="101" y="420" />
+			</polygon>
+		</button>
+		<button name="RIGHT" key="VK_RIGHT" keyCode="-4">
+			<polygon>
+				<point x="167" y="390" />
+				<point x="182" y="399" />
+				<point x="189" y="407" />
+				<point x="189" y="420" />
+				<point x="182" y="430" />
+				<point x="169" y="438" />
+			</polygon>
+		</button>
+		<button name="UP" key="VK_UP" keyCode="-1">
+			<rectangle>
+				<x>120</x>
+				<y>382</y>
+				<width>46</width>
+				<height>17</height>
+			</rectangle>
+		</button>
+		<button name="DOWN" key="VK_DOWN" keyCode="-2">
+			<rectangle>
+				<x>120</x>
+				<y>430</y>
+				<width>46</width>
+				<height>17</height>
+			</rectangle>
+		</button>
+		<button name="SELECT" key="VK_ENTER" keyCode="-5">
+			<rectangle>
+				<x>128</x>
+				<y>399</y>
+				<width>34</width>
+				<height>32</height>
+			</rectangle>
+		</button>
+		<button name="0" key="VK_0">
+			<chars>
+				<char/>
+				<char>0</char>
+			</chars>
+			<rectangle>			
+				<x>112</x>
+				<y>558</y>
+				<width>66</width>
+				<height>35</height>
+			</rectangle>
+		</button>
+		<button name="1" key="VK_1">
+			<chars>
+				<char>.</char>
+				<char>,</char>
+				<char>?</char>
+				<char>!</char>
+				<char>:</char>
+				<char>;</char>
+				<char>-</char>
+				<char>+</char>
+				<char>#</char>
+				<char>*</char>
+				<char>(</char>
+				<char>)</char>
+				<char>'</char>
+				<char>"</char>
+				<char>_</char>
+				<char>@</char>
+				<char>&amp;</char>
+				<char>$</char>
+				<char>%</char>
+				<char>/</char>
+				<char>&lt;</char>
+				<char>&gt;</char>
+				<char>=</char>
+				<char>1</char>
+			</chars>
+			<chars input="123">
+				<char>1</char>
+				<char>.</char>
+				<char>-</char>
+				<char>(</char>
+				<char>)</char>
+				<char>+</char>
+			</chars>
+			<rectangle>
+				<x>36</x>
+				<y>441</y>
+				<width>60</width>
+				<height>36</height>
+			</rectangle>
+		</button>
+		<button name="2" key="VK_2">
+			<chars>
+				<char>a</char>
+				<char>b</char>
+				<char>c</char>
+				<char>2</char>
+			</chars>
+			<rectangle>
+				<x>115</x>
+				<y>447</y>
+				<width>61</width>
+				<height>36</height>
+			</rectangle>
+		</button>
+		<button name="3" key="VK_3">
+			<chars>
+				<char>d</char>
+				<char>e</char>
+				<char>f</char>
+				<char>3</char>
+			</chars>
+			<rectangle>			
+				<x>194</x>
+				<y>440</y>
+				<width>60</width>
+				<height>36</height>
+			</rectangle>
+		</button>
+		<button name="4" key="VK_4">
+			<chars>
+				<char>g</char>
+				<char>h</char>
+				<char>i</char>
+				<char>4</char>
+			</chars>
+			<rectangle>
+				<x>36</x>
+				<y>480</y>
+				<width>61</width>
+				<height>36</height>
+			</rectangle>
+		</button>
+		<button name="5" key="VK_5">
+			<chars>
+				<char>j</char>
+				<char>k</char>
+				<char>l</char>
+				<char>5</char>
+			</chars>
+			<rectangle>
+				<x>115</x>
+				<y>482</y>
+				<width>61</width>
+				<height>36</height>
+			</rectangle>
+		</button>
+		<button name="6" key="VK_6">
+			<chars>
+				<char>m</char>
+				<char>n</char>
+				<char>o</char>
+				<char>6</char>
+			</chars>
+			<rectangle>			
+				<x>194</x>
+				<y>478</y>
+				<width>60</width>
+				<height>36</height>
+			</rectangle>
+		</button>
+		<button name="7" key="VK_7">
+			<chars>
+				<char>p</char>
+				<char>q</char>
+				<char>r</char>
+				<char>s</char>
+				<char>7</char>
+			</chars>
+			<rectangle>
+				<x>36</x>
+				<y>516</y>
+				<width>61</width>
+				<height>36</height>
+			</rectangle>
+		</button>
+		<button name="8" key="VK_8">
+			<chars>
+				<char>t</char>
+				<char>u</char>
+				<char>v</char>
+				<char>8</char>
+			</chars>
+			<rectangle>
+				<x>115</x>
+				<y>522</y>
+				<width>61</width>
+				<height>36</height>
+			</rectangle>
+		</button>
+		<button name="9" key="VK_9">
+			<chars>
+				<char>w</char>
+				<char>x</char>
+				<char>y</char>
+				<char>z</char>
+				<char>9</char>
+			</chars>
+			<rectangle>
+				<x>194</x>
+				<y>517</y>
+				<width>61</width>
+				<height>36</height>
+			</rectangle>
+		</button>
+		<button name="ASTERISK" key="VK_MULTIPLY">
+			<chars>
+				<char>*</char>
+				<char>+</char>
+			</chars>
+			<rectangle>
+				<x>36</x>
+				<y>555</y>
+				<width>61</width>
+				<height>36</height>
+			</rectangle>
+		</button>
+		<button name="POUND" key="VK_MODECHANGE">
+			<rectangle>
+				<x>194</x>
+				<y>554</y>
+				<width>61</width>
+				<height>36</height>
+			</rectangle>
+		</button>
+	</input>
+</device>

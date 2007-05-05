@@ -77,10 +77,10 @@
             <id>test-site</id>
             <url>file:///home/apache/microemu</url>
         </site>
-
+        <!-- see profile release -->
         <repository>
-            <id>pyx4j.com-file-release</id>
-            <url>file:///home/apache/pyx4j/maven2-release</url>
+            <id>pyx4j.com-file-development</id>
+            <url>file:///home/apache/pyx4j/maven2</url>
         </repository>
         <snapshotRepository>
             <id>pyx4j.com-file-development</id>
@@ -420,6 +420,33 @@
     </reporting>
 
     <profiles>
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+
+            <distributionManagement>
+                <site>
+                    <id>me2-release-site</id>
+                    <url>file:///home/apache/microemu-release</url>
+                </site>
+
+                <repository>
+                    <id>pyx4j.com-file-release</id>
+                    <url>file:///home/apache/pyx4j/maven2-release</url>
+                </repository>
+
+            </distributionManagement>
+
+            <modules>
+                <module>microemu-webstart</module>
+            </modules>
+        </profile>
+
         <profile>
             <!-- We will support ant build, Ant Runs with Java 1.4, 5 and 6 -->
             <id>build</id>

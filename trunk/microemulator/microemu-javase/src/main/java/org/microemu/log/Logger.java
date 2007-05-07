@@ -104,6 +104,7 @@ public class Logger {
 			    	}
 			    }
 			}
+			return ste[ste.length - 1];
 		} catch (Throwable e) {
 			java13 = true;
 		}

@@ -95,6 +95,9 @@ public class SwtButton implements Button
       if (result == null) {
           result = (char[]) inputToChars.get("common");
       }
+      if (result == null) {
+          result = new char[0];
+      }
       
       return result;
   }

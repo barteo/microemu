@@ -18,7 +18,7 @@
 
     * Test locally
 
-        mvn clean deploy site-deploy -P build,release -DperformRelease=true -Dlabel=2.0.1
+        mvn clean deploy site-deploy -P release -DperformRelease=true -Dlabel=2.0.2
 
     * Remove all -SNAPSHOT from pom.xml
 
@@ -28,22 +28,29 @@
 
     * Comment out sections marked <!--4release--> and <!--4snapshot--> in src/site/site.xml
 
-    * variable demoLocation in microemu-examples/microemu-demo HTTPPanel.java
+    * Update variable demoLocation in microemu-examples/microemu-demo HTTPPanel.java
 
     * SVN commit
 
-    * on build server!
-      mvn scm:update clean deploy site-deploy -P build,release -DperformRelease=true -Dlabel=2.0.1
+    * On build server (CruiseControl)  https://pyx4j.com/cruisecontrol/ start  "me2-release"
+      It will execute:
+        mvn clean --fail-never -P release
+        mvn scm:update -P release
+        mvn clean deploy site-deploy -P release -DperformRelease=true
 
-    * repository "pyx4j.com-file-release" on build server will sync with http://repo1.maven.org/maven2
+    * repository "pyx4j.com-file-release" (http://pyx4j.com/maven2-release/) on build server will sync with http://repo1.maven.org/maven2
 
-    * Upload the context of /home/apache/microemu  to http://microemu.org/
+    * Upload the context of /home/apache/microemu (http://pyx4j.com/snapshot/microemu-release)  to http://microemu.org/
+
+    * Upload the distribution jars microemulator-2.X.X-sources.tar.gz and microemulator-2.X.X.tar.gz to sf.net
+
+       Files location: http://pyx4j.com/snapshot/microemu-release/microemulator/download/
 
     * Create Tag in SVN
 
     * Update version to  (x+1)-SNAPSHOT
 
-    * Update src/site/site.xml
+    * Update src/site/site.xml reverse changes for <!--4release--> and <!--4snapshot-->
 
 * cruisecontrol
 
@@ -51,7 +58,7 @@
         clean --fail-never -P build|scm:update -P build|clean install -P build
 
     "me2-nightly" 3AM EST
-        clean --fail-never -P build|scm:update -P build|clean deploy site-deploy -P build,release
+        clean --fail-never -P build|scm:update -P build|clean deploy site-deploy -P build
 
 * error classpath configuration error, Wrong Injected class detected. microemu-injected module should be after microemu-javase in eclipse
 

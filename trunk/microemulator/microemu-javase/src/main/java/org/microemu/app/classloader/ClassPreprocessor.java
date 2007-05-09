@@ -38,9 +38,9 @@ public class ClassPreprocessor {
 	public static byte[] instrument(final InputStream classInputStream, InstrumentationConfig config) {
 		try {
 			ClassReader cr = new ClassReader(classInputStream);
-			ClassWriter cw = new ClassWriter(false);
+			ClassWriter cw = new ClassWriter(0);
 			ClassVisitor cv = new ChangeCallsClassVisitor(cw, config);
-			cr.accept(cv, false);
+			cr.accept(cv, 0);
 			return cw.toByteArray();
 		} catch (IOException e) {
 			Logger.error("Error loading MIDlet class", e);

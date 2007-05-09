@@ -22,81 +22,69 @@
 
 package org.microemu.device.j2se;
 
-import java.awt.Toolkit;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
 import org.microemu.log.Logger;
 
 public class J2SEImmutableImage extends javax.microedition.lcdui.Image {
-	private java.awt.Image img;
-	private int width;
-	private int height;
+    private BufferedImage img;
 
-	public J2SEImmutableImage(java.awt.Image image) {
-		img = image;
-		width = -1;
-		height = -1;
-	}
+    private int width;
 
-	public J2SEImmutableImage(J2SEMutableImage image) {
-		img = Toolkit.getDefaultToolkit().createImage(
-				image.getImage().getSource());
-	}
+    private int height;
 
-	public int getHeight() {
-		if (height == -1) {
-			init();
-		}
-		
-		return height;
-	}
+    public J2SEImmutableImage(BufferedImage image) {
+        this.img = image;
+        this.width = image.getWidth();
+        this.height = image.getHeight();
+    }
 
-	public java.awt.Image getImage() {
-		return img;
-	}
+    public J2SEImmutableImage(J2SEMutableImage image) {
+        this.width = image.getWidth();
+        this.height = image.getHeight();
+        this.img = new BufferedImage(this.width, this.height, ((BufferedImage) image.getImage()).getType());
+        Graphics g = this.img.getGraphics();
+        g.drawImage(image.getImage(), 0, 0, null);
+    }
 
-	public int getWidth() {
-		if (width == -1) {
-			init();
-		}
-		
-		return width;
-	}
+    public int getHeight() {
+        return height;
+    }
 
-	public void getRGB(int[] argb, int offset, int scanlength, int x, int y,
-			int width, int height) {
+    public BufferedImage getImage() {
+        return img;
+    }
 
-		if (width <= 0 || height <= 0)
-			return;
-		if (x < 0 || y < 0 || x + width > getWidth()
-				|| y + height > getHeight())
-			throw new IllegalArgumentException(
-					"Specified area exceeds bounds of image");
-		if ((scanlength < 0 ? -scanlength : scanlength) < width)
-			throw new IllegalArgumentException(
-					"abs value of scanlength is less than width");
-		if (argb == null)
-			throw new NullPointerException("null rgbData");
-		if (offset < 0 || offset + width > argb.length)
-			throw new ArrayIndexOutOfBoundsException();
-		if (scanlength < 0) {
-			if (offset + scanlength * (height - 1) < 0)
-				throw new ArrayIndexOutOfBoundsException();
-		} else {
-			if (offset + scanlength * (height - 1) + width > argb.length)
-				throw new ArrayIndexOutOfBoundsException();
-		}
+    public int getWidth() {
+        return width;
+    }
 
-		try {
-			(new java.awt.image.PixelGrabber(img, x, y, width, height, argb,
-					offset, scanlength)).grabPixels();
-		} catch (InterruptedException e) {
-			Logger.error(e);
-		}
-	}
-	
-	private synchronized void init() {
-		width = img.getWidth(null);
-		height = img.getHeight(null);
-	}
+    public void getRGB(int[] argb, int offset, int scanlength, int x, int y, int width, int height) {
+
+        if (width <= 0 || height <= 0)
+            return;
+        if (x < 0 || y < 0 || x + width > getWidth() || y + height > getHeight())
+            throw new IllegalArgumentException("Specified area exceeds bounds of image");
+        if ((scanlength < 0 ? -scanlength : scanlength) < width)
+            throw new IllegalArgumentException("abs value of scanlength is less than width");
+        if (argb == null)
+            throw new NullPointerException("null rgbData");
+        if (offset < 0 || offset + width > argb.length)
+            throw new ArrayIndexOutOfBoundsException();
+        if (scanlength < 0) {
+            if (offset + scanlength * (height - 1) < 0)
+                throw new ArrayIndexOutOfBoundsException();
+        } else {
+            if (offset + scanlength * (height - 1) + width > argb.length)
+                throw new ArrayIndexOutOfBoundsException();
+        }
+
+        try {
+            (new java.awt.image.PixelGrabber(img, x, y, width, height, argb, offset, scanlength)).grabPixels();
+        } catch (InterruptedException e) {
+            Logger.error(e);
+        }
+    }
 
 }

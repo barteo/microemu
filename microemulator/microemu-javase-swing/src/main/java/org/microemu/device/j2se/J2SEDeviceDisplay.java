@@ -81,6 +81,8 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl {
 
     public J2SEDeviceDisplay(EmulatorContext context) {
         this.context = context;
+        
+        ImageIO.setUseCache(false);
     }
 
     public MutableImage getDisplayImage() {

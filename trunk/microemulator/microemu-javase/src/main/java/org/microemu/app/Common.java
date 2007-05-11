@@ -155,10 +155,6 @@ public class Common implements MicroEmulator, CommonInterface {
 		return launcher;
 	}
 
-	public void loadMidlet(String name, Class midletClass) {
-		launcher.addMIDletEntry(new MIDletEntry(name, midletClass));
-	}
-
 	public static void dispose()
 	{
 		try {
@@ -417,7 +413,7 @@ public class Common implements MicroEmulator, CommonInterface {
 			for (Enumeration e = jad.getMidletEntries().elements(); e.hasMoreElements();) {
 				JadMidletEntry jadEntry = (JadMidletEntry) e.nextElement();
 				Class midletClass = midletClassLoader.loadClass(jadEntry.getClassName());
-				loadMidlet(jadEntry.getName(), midletClass);
+				launcher.addMIDletEntry(new MIDletEntry(jadEntry.getName(), midletClass));
 			}
 			startLauncher(null);
 			setStatusBar("");

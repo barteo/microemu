@@ -282,8 +282,8 @@ public class Main extends Applet implements MicroEmulator
         String value = null;
         if (key.equals("microedition.platform")) {
             value = "MicroEmulator";
-        } else if (key.equals("microedition.profile")) {
-            value = "MIDP-1.0";
+        } else if (key.equals("microedition.profiles")) {
+            value = "MIDP-2.0";
         } else if (key.equals("microedition.configuration")) {
             value = "CLDC-1.0";
         } else if (key.equals("microedition.locale")) {

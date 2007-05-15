@@ -30,11 +30,11 @@ import java.io.PrintStream;
  * This code is added to MIDlet application to solve problems while running in applet.
  * The code is attached to application jar.
  * 
- * You need to use "Prepare for Applet" in MicroEmulator Tools Menu.
+ * You need to use "Save for Web..." in MicroEmulator Tools Menu.
  * The result jar is safe to run on any other Emulator or device. 
  * 
  * This class is not used while application is running in Applet with MicroEmulator. 
- * Different class with the same name is used from me-apple.jar.    
+ * Different class with the same name is used from microemu-javase-applet.jar.    
  */
 public final class Injected {
 

@@ -4,6 +4,20 @@
 ~~ See this file format http://maven.apache.org/maven-1.x/plugins/faq/  and http://maven.apache.org/maven-1.x/plugins/xdoc/
 -->
 <faqs title="Frequently Asked Questions">
+
+    <part id="applet">
+        <title>Applet</title>
+
+        <faq id="proxy">
+            <question>
+                My application in applet, it throws the ava.security.AccessControlException: access denied (java.util.PropertyPermission ... read)
+            </question>
+            <answer>
+                Applet security restriction do not allow calls to System.getProperty(). You should try to use "Save for Web..." menu in main MicroEmulator application.
+            </answer>
+        </faq>
+    </part>
+
     <part id="general">
         <title>Compilation</title>
 

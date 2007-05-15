@@ -49,7 +49,7 @@ java -jar microemulator.jar (MIDlet jad file)
 ---
 java -cp microemulator.jar;microemu-nokiaui.jar;YourApp.jar org.microemu.app.Main com.yourcompany.YourMidlet
 or
-java -jar microemulator.jar -cp microemu-siemensapi.jar http://wwww.yourcompany.com/download/YourApp-sim.jad
+java -cp microemulator.jar;microemu-siemensapi.jar org.microemu.app.Main http://wwww.yourcompany.com/download/YourApp-sim.jad
 ---
 
     MicroEmulator command line options
@@ -74,16 +74,12 @@ java -jar microemulator.jar -cp microemu-siemensapi.jar http://wwww.yourcompany.
 
 ---
 java -cp microemulator.jar;microemu-device-large.jar org.microemu.app.Main --device org/microemu/device/large/device.xml http://wintermute.de/wap/5ud0ku.jad
-
-java -jar microemulator.jar -cp microemu-device-large.jar --device org/microemu/device/large/device.xml http://wintermute.de/wap/5ud0ku.jad
 ---
 
     MicroEmulator with JSR
 
 ---
-java -cp microemulator.jar;bluecove-1.2.2.jar org.microemu.app.Main btbrowserv20.jad
-or
-java -jar microemulator.jar -cp bluecove-1.2.2.jar btbrowserv20.jad
+java -cp microemulator.jar;bluecove-1.2.3.jar org.microemu.app.Main btbrowserv20.jad
 ---
 
 

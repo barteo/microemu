@@ -6,14 +6,23 @@
 
 Application demonstration in web browser applet
 
-  Your application should run without any changes inside applet.
+  In general your application should run without any changes inside applet.
 
   * Keep it in mind that if your j2me application requires HTTP access the applet must be signed.
   By default the applet will only communicate with the host the applet came from (your website).
 
-  * Applet do not allow calls to System.getProperty();
+  * Applet do not allow calls to System.getProperty() use "Save for Web...".
 
   []
+
+"Save for Web..."
+
+   "Save for Web..." function (in menu of main MicroEmulator application) does bytcode preprocessing of your application.
+
+   We are adding new class org.microemu.Injected to new JAR. Calls to System.getProperty(), System.out, System.err and getResourceAsStream are redirected to MicroEmulator Injected class.
+
+   The resulting JAR is safe to run on any other Emulator or device. Different Injected class with the same name is used when application is running under MicroEmulator.
+
 
 Embedding applet into html page
 
@@ -55,7 +64,7 @@ Embedding applet into html page
 
     * Large phone is org/microemu/device/large/device.xml
 
-    []
+   []
 
     Remember to include the new device jar into the applet archive tag
 

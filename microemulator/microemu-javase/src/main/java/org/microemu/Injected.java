@@ -35,7 +35,7 @@ import org.microemu.log.Logger;
  *
  * This code is added to MIDlet application to solve problems with security policy  while running in Applet and Webstart.
  * Also solves resource resource loading paterns commonly used in MIDlet and not aceptable in Java SE application
- * The calls to this code is injected by ClassLoader or "Prepare for Applet".
+ * The calls to this code is injected by ClassLoader or "Save for Web...".
  * 
  * This class is used instead injected one when application is running in Applet with MicroEmulator. 
  *

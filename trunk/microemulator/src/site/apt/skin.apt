@@ -19,6 +19,16 @@ Custom Skin Creation for MicroEmulator
     The Device class for a Skin is optional: you only need to provide xml descriptor and images and package them in jar.
     We have also created the {{{http://pyx4j.com/snapshot/pyx4me/pyx4me-devices/}Another Skin collection}}, however, its images can only be used with the vendor's special permission.
 
+*  MicroEmulator Skins
+
+    * {{{skin-images.html#Default}Default}} 176x220 Full Screen and 176x176 Normal Canvas,  Skin 226x471.
+
+    * {{{skin-images.html#Minimum}Minimum}} 128x128 Full Screen and 128x96 Normal Canvas,  Skin 157x285. microemu-device-minimum.jar
+
+    * {{{skin-images.html#Large}Large}} 240x320 Full Screen and 240x266 Normal Canvas,  Skin 292x618. microemu-device-large.jar
+
+    []
+
 * Installing Skin in MicroEmulator
 
     *  Start MicroEmulator

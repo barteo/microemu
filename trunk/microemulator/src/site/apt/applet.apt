@@ -28,11 +28,11 @@ Embedding applet into html page
 
   MicroEmulator comes with three differend Skins:
 
-    * Default 176x220 Full Screen and 176x176 Normal Canvas,  Skin 226x471.
+    * {{{skin-images.html#Default}Default}} 176x220 Full Screen and 176x176 Normal Canvas,  Skin 226x471.
 
-    * Minimum 128x128 Full Screen and 128x96 Normal Canvas,  Skin 157x285. minimum.jar
+    * {{{skin-images.html#Minimum}Minimum}} 128x128 Full Screen and 128x96 Normal Canvas,  Skin 157x285. microemu-device-minimum.jar
 
-    * Large 240x320 Full Screen and 240x266 Normal Canvas,  Skin 292x618. large.jar
+    * {{{skin-images.html#Large}Large}} 240x320 Full Screen and 240x266 Normal Canvas,  Skin 292x618. microemu-device-large.jar
 
     []
 

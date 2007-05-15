@@ -31,7 +31,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -125,8 +124,8 @@ public class Common implements MicroEmulator, CommonInterface {
     public String getAppProperty(String key) {
 		if (key.equals("microedition.platform")) {
 			return "MicroEmulator";
-		} else if (key.equals("microedition.profile")) {
-			return "MIDP-1.0";
+		} else if (key.equals("microedition.profiles")) {
+			return "MIDP-2.0";
 		} else if (key.equals("microedition.configuration")) {
 			return "CLDC-1.0";
 		} else if (key.equals("microedition.locale")) {

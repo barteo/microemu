@@ -17,7 +17,7 @@ Application demonstration in web browser applet
 
 "Save for Web..."
 
-   "Save for Web..." function (in menu of main MicroEmulator application) does bytcode preprocessing of your application.
+   "Save for Web..." function (in menu of main MicroEmulator application) does bytecode preprocessing of your application.
 
    We are adding new class org.microemu.Injected to new JAR. Calls to System.getProperty(), System.out, System.err and getResourceAsStream are redirected to MicroEmulator Injected class.
 

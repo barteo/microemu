@@ -36,6 +36,10 @@ public class KeyCanvasPanel extends BaseExamplesCanvas {
 
 	int sameKeyCount = 0;
 	
+	int lastKeyRepeatedKeyCode = 0;
+	
+	int keyRepeatedCount = 0;
+	
 	String lastKeyEvent = null;
 	
 	Vector keysHistory = new Vector();
@@ -109,8 +113,14 @@ public class KeyCanvasPanel extends BaseExamplesCanvas {
 	}
 
 	public void keyRepeated(int keyCode) {
-		lastKeyEvent = "keyRepeated";
+		if (lastKeyRepeatedKeyCode == keyCode) {
+			keyRepeatedCount ++;
+		} else {
+			keyRepeatedCount = 1;
+		}
+		lastKeyEvent = "keyRepeated (" + keyRepeatedCount + ")";
 		lastKeyCode = keyCode;
+		lastKeyRepeatedKeyCode = keyCode;
 		repaint();
 	}
 

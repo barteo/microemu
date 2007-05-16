@@ -67,7 +67,7 @@ public class MIDletSystemProperties {
 		initialized = true;
 		// This are set in Config
 		//setProperty("microedition.configuration", "CLDC-1.1");
-		//setProperty("microedition.configuration", "MIDP-2.0");
+		//setProperty("microedition.profiles", "MIDP-2.0");
 		setProperty("microedition.platform", "MicroEmulator");
 		setProperty("microedition.encoding", getSystemProperty("file.encoding"));
 	}

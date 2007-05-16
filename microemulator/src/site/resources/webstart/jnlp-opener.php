@@ -27,7 +27,7 @@
 
     $patern = '<!--jadRewrite-->';
 
-    $jnlpFileName = "microemu-webstart/demo.jnlp";
+    $jnlpFileName = "../microemu-webstart/demo.jnlp";
     $fh = fopen($jnlpFileName, 'r');
     $xml = fread($fh, filesize($jnlpFileName));
     fclose($fh);

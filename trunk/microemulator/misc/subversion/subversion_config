@@ -117,7 +117,7 @@ enable-auto-props = yes
 *.initd = svn:executable;svn:eol-style=native;svn:keywords=Date Author Id Revision
 *.cmd = svn:mime-type=text/plain;svn:eol-style=CRLF;svn:keywords=Date Author Id Revision
 *.bat = svn:mime-type=text/plain;svn:eol-style=CRLF;svn:keywords=Date Author Id Revision
-Makefile = svn:eol-style=native;svn:keywords=Date Author Id Revision
+Makefile = svn:mime-type=text/plain;svn:eol-style=native;svn:keywords=Date Author Id Revision
 *.obj = svn:mime-type=application/octet-stream
 *.bin = svn:mime-type=application/octet-stream
 *.bmp = svn:mime-type=image/bmp
@@ -137,6 +137,7 @@ Makefile = svn:eol-style=native;svn:keywords=Date Author Id Revision
 *.zip = svn:mime-type=application/zip
 *.txt = svn:mime-type=text/plain;svn:eol-style=native;svn:keywords=Date Author Id Revision
 *.php = svn:mime-type=text/plain;svn:eol-style=native;svn:keywords=Date Author Id Revision
+.htaccess = svn:mime-type=text/plain;svn:eol-style=native
 *.apt = svn:mime-type=text/plain;svn:eol-style=native;svn:keywords=Date Author Id Revision
 *.fml = svn:mime-type=text/xml;svn:eol-style=native;svn:keywords=Date Author Id Revision
 *.csv = svn:mime-type=text/plain;svn:eol-style=native;svn:keywords=Date Author Id Revision

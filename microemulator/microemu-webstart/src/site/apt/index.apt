@@ -19,9 +19,9 @@ MicroEmulator Web Start
 *---------------------------+-----------+
 | {{{http://wintermute.de/wap/extended/5ud0ku.jad}A Sudoku Game}}  |  <<<{{{open/wintermute.de/wap/extended/5ud0ku.jnlp}\u00bbOpen}}>>>
 *-----------------------+-----------+
-| {{{../microemu-examples/microemu-demo/microemu-demo.jad}MicroEmulator Demo}}
+| {{{../microemu-examples/microemu-demo/microemu-demo.jad}MicroEmulator Demo}} |  <<<{{{open-local/~/microemu-examples/microemu-demo/microemu-demo.jnlp}\u00bbOpen}}>>>
 *-----------------------+-----------+
-| {{{../microemu-examples/microemu-fcview/microemu-fcview.jad}MicroEmulator JSR-75 Demo}}
+| {{{../microemu-examples/microemu-fcview/microemu-fcview.jad}MicroEmulator JSR-75 Demo}} |  <<<{{{open-local/~/microemu-examples/microemu-fcview/microemu-fcview.jnlp}\u00bbOpen}}>>>
 *-----------------------+-----------+
 | {{{http://www.google.com/gmm/apps/v1.4.4/L1/gmaps-Sony_Ericsson-W810_L1.jad}Google Maps for Sony Ericsson}} |  <<<{{{open/www.google.com/gmm/apps/v1.4.4/L1/gmaps-Sony_Ericsson-W810_L1.jnlp}\u00bbOpen}}>>>
 *-----------------------+-----------+

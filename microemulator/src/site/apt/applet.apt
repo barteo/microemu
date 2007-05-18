@@ -19,9 +19,11 @@ Application demonstration in web browser applet
 
    "Save for Web..." function (in menu of main MicroEmulator application) does bytecode preprocessing of your application.
 
-   We are adding new class org.microemu.Injected to new JAR. Calls to System.getProperty(), System.out, System.err and getResourceAsStream are redirected to MicroEmulator Injected class.
+   We are adding new class {{{http://microemulator.svn.sourceforge.net/viewvc/microemulator/trunk/microemulator/microemu-injected/src/main/java/org/microemu/Injected.java?view=markup}org.microemu.Injected}} to new JAR.
+   Calls to System.getProperty(), System.out, System.err and getResourceAsStream are redirected to MicroEmulator Injected class.
 
-   The resulting JAR is safe to run on any other Emulator or device. Different Injected class with the same name is used when application is running under MicroEmulator.
+   The resulting JAR is safe to run on any other Emulator or device. Different {{{http://microemulator.svn.sourceforge.net/viewvc/microemulator/trunk/microemulator/microemu-javase/src/main/java/org/microemu/Injected.java?view=markup}Injected}} class
+   with the same name is used when application is running under MicroEmulator.
 
 
 Embedding applet into html page

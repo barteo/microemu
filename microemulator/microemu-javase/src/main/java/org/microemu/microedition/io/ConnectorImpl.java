@@ -103,9 +103,11 @@ public class ConnectorImpl extends ConnectorAdapter {
     
 	private Connection openSecure(String name, int mode, boolean timeouts) throws IOException {
 		String className = null;
+		String protocol = null;
 		try {
 			try {
-				className = "org.microemu.cldc." + name.substring(0, name.indexOf(':')) + ".Connection";
+				protocol = name.substring(0, name.indexOf(':'));
+				className = "org.microemu.cldc." + protocol + ".Connection";
 				Class cl = Class.forName(className);
 				Object inst = cl.newInstance();
 				if (inst instanceof ConnectionImplementation) {
@@ -115,13 +117,14 @@ public class ConnectorImpl extends ConnectorAdapter {
 				}
 			} catch (ClassNotFoundException e) {
 				try {
-					className = "com.sun.cdc.io.j2me." + name.substring(0, name.indexOf(':')) + ".Protocol";
+					className = "com.sun.cdc.io.j2me." + protocol + ".Protocol";
 					Class cl = Class.forName(className);
 					ConnectionBaseInterface base = (ConnectionBaseInterface) cl.newInstance();
 					return base.openPrim(name.substring(name.indexOf(':') + 1), mode, timeouts);
 				} catch (ClassNotFoundException ex) {
-					Logger.debug("connection class not found");
-					throw new ConnectionNotFoundException();
+					Logger.debug("connection [" + protocol +  "] class not found", e);
+					Logger.debug("connection [" + protocol +  "] class not found", ex);
+					throw new ConnectionNotFoundException("connection [" + protocol +  "] class not found");
 				}
 			}
 		} catch (InstantiationException e) {

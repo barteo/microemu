@@ -30,6 +30,7 @@ import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Vector;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
@@ -37,6 +38,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 
 import org.microemu.app.ui.swing.logconsole.LogTextArea;
 import org.microemu.log.Logger;
@@ -52,9 +54,32 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 	private static final boolean tests = false;
 
 	private LogTextArea logArea;
+	
+	private Vector logLinesQueue = new Vector();
 
 	private int testEventCounter = 0;
 
+	private class SwingLogUpdater implements Runnable {
+
+		private String getNextLine() {
+			synchronized (logLinesQueue) {
+				if (logLinesQueue.isEmpty()) {
+					return null;
+				}
+				String line = (String)logLinesQueue.firstElement();
+				logLinesQueue.removeElementAt(0);
+				return line;
+			}
+		}
+		
+		public void run() {
+			String line;
+			while ((line = getNextLine()) != null) {
+				logArea.append(line);
+			}
+		}
+	}
+	
 	public SwingLogConsoleDialog(Frame owner, QueueAppender logQueueAppender) {
 		super("Log console");
 
@@ -114,8 +139,15 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 	}
 
 	public void log(String message) {
-		synchronized (logArea) {
-			logArea.append(message);
+		boolean createUpdater = false;
+		synchronized (logLinesQueue) {
+			if (logLinesQueue.isEmpty()) {
+				createUpdater = true; 
+			}
+			logLinesQueue.addElement(message);
+		}
+		if (createUpdater) {
+			SwingUtilities.invokeLater(new SwingLogUpdater());
 		}
 	}
 

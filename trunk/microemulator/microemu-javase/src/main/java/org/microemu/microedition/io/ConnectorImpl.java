@@ -27,6 +27,7 @@ import java.security.AccessControlContext;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
+import java.util.Vector;
 
 import javax.microedition.io.Connection;
 import javax.microedition.io.ConnectionNotFoundException;
@@ -82,14 +83,32 @@ public class ConnectorImpl extends ConnectorAdapter {
 		}
 	}
 	
+    private static Class[] getAllInterfaces(Class klass) {
+    	Vector allInterfaces = new Vector();
+    	Class parent = klass;
+    	while (parent != null) {
+    		Class[] interfaces = parent.getInterfaces();
+    		for (int i = 0; i < interfaces.length; i++) {
+    			allInterfaces.add(interfaces[i]);
+    		}
+    		parent = parent.getSuperclass();
+    	}
+    	
+    	return (Class[])allInterfaces.toArray(new Class[allInterfaces.size()]);
+    }
+    
     private Connection openSecureProxy(String name, int mode, boolean timeouts, boolean needPrivilegedCalls) throws IOException {
-    	Connection origConnection =  openSecure(name, mode, timeouts);
+    	Connection origConnection = openSecure(name, mode, timeouts);
     	Class connectionClass = null;
-    	Class[] interfaces = origConnection.getClass().getInterfaces();
+    	Class[] interfaces = getAllInterfaces(origConnection.getClass());
     	for (int i = 0; i < interfaces.length; i++) {
     		if (Connection.class.isAssignableFrom(interfaces[i])) {
     			connectionClass = interfaces[i];
     			break;
+    		} else if (interfaces[i].getClass().getName().equals(Connection.class.getName())) {
+    			Logger.debugClassLoader("ME2 Connection.class", Connection.class);
+    			Logger.debugClassLoader(name + " Connection.class", interfaces[i]);
+    			Logger.error("Connection interface loaded by different ClassLoader");
     		}
 		}
     	if (connectionClass == null) {
@@ -97,7 +116,7 @@ public class ConnectorImpl extends ConnectorAdapter {
     	}
     	return (Connection) Proxy.newProxyInstance(
     			 ConnectorImpl.class.getClassLoader(), 
-                 interfaces, 
+    			 interfaces, 
                  new ConnectionInvocationHandler(origConnection, needPrivilegedCalls));
     }
     

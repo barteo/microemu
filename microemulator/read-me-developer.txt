@@ -34,9 +34,9 @@
 
     * On build server (CruiseControl)  https://pyx4j.com/cruisecontrol/ start  "me2-release"
       It will execute:
-        mvn clean --fail-never -P release
-        mvn scm:update -P release
-        mvn clean deploy site-deploy -P release -DperformRelease=true
+        mvn -o clean --fail-never -P release
+        mvn -o scm:update -P release
+        mvn -o clean deploy site-deploy -P release -DperformRelease=true
 
     * repository "pyx4j.com-file-release" (http://pyx4j.com/maven2-release/) on build server will sync with http://repo1.maven.org/maven2
 

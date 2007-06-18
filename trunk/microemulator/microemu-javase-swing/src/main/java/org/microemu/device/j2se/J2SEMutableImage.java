@@ -31,7 +31,7 @@ import org.microemu.log.Logger;
 
 public class J2SEMutableImage extends MutableImage
 {
-	private java.awt.Image img;
+	private BufferedImage img;
 	private PixelGrabber grabber = null;
 	private int[] pixels;
 
@@ -64,7 +64,7 @@ public class J2SEMutableImage extends MutableImage
 
 	public int getHeight()
 	{
-		return img.getHeight(null);
+		return img.getHeight();
 	}
 
 
@@ -76,7 +76,7 @@ public class J2SEMutableImage extends MutableImage
 
 	public int getWidth()
 	{
-		return img.getWidth(null);
+		return img.getWidth();
 	}
 
 

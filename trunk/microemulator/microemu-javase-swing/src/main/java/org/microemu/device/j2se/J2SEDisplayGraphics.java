@@ -50,10 +50,7 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
 
     private javax.microedition.lcdui.Font currentFont = javax.microedition.lcdui.Font.getDefaultFont();
 
-    // TODO implement image filter as color space
-    /*
-    private ColorSpace colorSpace;
-     */
+    private java.awt.image.RGBImageFilter filter;
 
     // Andres Navarro
     public J2SEDisplayGraphics(java.awt.Graphics2D a_g, MutableImage a_image)
@@ -73,18 +70,15 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
             this.g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
         }
 
-        // TODO implement image filter as color space
-        /*
         if (device.getDeviceDisplay().isColor()) {
-        	colorSpace = new RGBImageFilter();
+            this.filter = new RGBImageFilter();
         } else {
-        	if (device.getDeviceDisplay().numColors() == 2) {
-        		colorSpace = new BWImageFilter();
-        	} else {
-        		colorSpace = new GrayImageFilter();
-        	}
+            if (device.getDeviceDisplay().numColors() == 2) {
+                this.filter = new BWImageFilter();
+            } else {
+                this.filter = new GrayImageFilter();
+            }
         }
-         */
     }
 
     public MutableImage getImage() {
@@ -98,11 +92,7 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
     public void setColor(int RGB) {
         color = RGB;
 
-        // TODO implement image filter as color space
-        /*
-        g.setColor(new Color(colorSpace.fromRGB(0, 0, color)));
-         */
-        g.setColor(new Color(RGB));
+        g.setColor(new Color(filter.filterRGB(0, 0, color)));
     }
 
     public javax.microedition.lcdui.Font getFont() {

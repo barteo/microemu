@@ -22,41 +22,104 @@
 
 package org.microemu.device.j2se;
 
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.image.ImageObserver;
 
 import org.microemu.log.Logger;
 
 public class J2SEImmutableImage extends javax.microedition.lcdui.Image {
-    private BufferedImage img;
+    private Image img;
 
     private int width;
 
     private int height;
 
-    public J2SEImmutableImage(BufferedImage image) {
+    public J2SEImmutableImage(Image image) {
         this.img = image;
-        this.width = image.getWidth();
-        this.height = image.getHeight();
+        this.width = -1;
+        this.height = -1;
     }
 
     public J2SEImmutableImage(J2SEMutableImage image) {
-        this.width = image.getWidth();
-        this.height = image.getHeight();
-        this.img = new BufferedImage(this.width, this.height, ((BufferedImage) image.getImage()).getType());
-        Graphics g = this.img.getGraphics();
-        g.drawImage(image.getImage(), 0, 0, null);
+        img = Toolkit.getDefaultToolkit().createImage(image.getImage().getSource());
+        this.width = -1;
+        this.height = -1;
     }
 
     public int getHeight() {
+        if (height == -1) {
+            ImageObserver observer = new ImageObserver() {
+                public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+                    if ((infoflags & ImageObserver.WIDTH) != 0) {
+                        J2SEImmutableImage.this.width = width;
+                    }
+                    if ((infoflags & ImageObserver.HEIGHT) != 0) {
+                        synchronized (this) {
+                            J2SEImmutableImage.this.height = height;
+                            this.notify();
+                        }
+                        return false;
+                    }
+
+                    return true;
+                }                
+            };
+            synchronized (observer) {
+                // Fix for http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4905411 (Java < 1.5)
+                try {
+                    height = img.getHeight(observer);
+                } catch (NullPointerException ex) {
+                }
+                if (height == -1) {
+                    try {
+                        observer.wait();
+                    } catch (InterruptedException ex) {
+                    }
+                }
+            }
+        }
+        
         return height;
     }
 
-    public BufferedImage getImage() {
+    public Image getImage() {
         return img;
     }
 
     public int getWidth() {
+        if (width == -1) {
+            ImageObserver observer = new ImageObserver() {
+                public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+                    if ((infoflags & ImageObserver.HEIGHT) != 0) {
+                        J2SEImmutableImage.this.height = height;
+                    }
+                    if ((infoflags & ImageObserver.WIDTH) != 0) {
+                        synchronized (this) {
+                            J2SEImmutableImage.this.width = width;
+                            this.notify();
+                        }
+                        return false;
+                    }
+
+                    return true;
+                }                
+            };
+            synchronized (observer) {
+                // Fix for http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4905411 (Java < 1.5)
+                try {
+                    width = img.getWidth(observer);
+                } catch (NullPointerException ex) {
+                }
+                if (width == -1) {
+                    try {
+                        observer.wait();
+                    } catch (InterruptedException ex) {
+                    }
+                }
+            }
+        }
+        
         return width;
     }
 

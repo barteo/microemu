@@ -24,7 +24,11 @@ package org.microemu.device.j2se;
 
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.MediaTracker;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageFilter;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +37,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import javax.imageio.ImageIO;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Image;
@@ -81,8 +84,6 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl {
 
     public J2SEDeviceDisplay(EmulatorContext context) {
         this.context = context;
-        
-        ImageIO.setUseCache(false);
     }
 
     public MutableImage getDisplayImage() {
@@ -282,15 +283,19 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl {
 
         img.setRGB(0, 0, width, height, rgb, 0, width);
 
-        // TODO implement image filter as color space
-        /*
-         * if (isColor()) { colorSpace = new RGBImageFilter(); } else { if
-         * (numColors() == 2) { colorSpace = new BWImageFilter(); } else {
-         * colorSpace = new GrayImageFilter(); } } ColorConvertOp oper = new
-         * ColorConvertOp(colorSpace, null); return new
-         * J2SEImmutableImage(oper.filter(img, null));
-         */
-        return new J2SEImmutableImage(img);
+        // now apply the corresponding filter
+        ImageFilter filter;
+        if (isColor()) {
+            filter = new RGBImageFilter();
+        } else {
+            if (numColors() == 2) {
+                filter = new BWImageFilter();
+            } else {
+                filter = new GrayImageFilter();
+            }
+        }
+        FilteredImageSource imageSource = new FilteredImageSource(img.getSource(), filter);
+        return new J2SEImmutableImage(Toolkit.getDefaultToolkit().createImage(imageSource));
     }
 
     public Image createImage(Image image, int x, int y, int width, int height, int transform) {
@@ -485,7 +490,18 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl {
     }
 
     public Image createSystemImage(URL url) throws IOException {
-        BufferedImage resultImage = ImageIO.read(url);
+        java.awt.Image resultImage = Toolkit.getDefaultToolkit().createImage(url);
+
+        // TODO not elegant solution, maybe use ImageObserver in image.getWitdth(..) instead
+        MediaTracker mediaTracker = new MediaTracker(new java.awt.Canvas());
+        mediaTracker.addImage(resultImage, 0);
+        try {
+            mediaTracker.waitForID(0);
+        } catch (InterruptedException ex) {
+        }
+        if (mediaTracker.isErrorID(0)) {
+            throw new IOException();
+        }
 
         return new J2SEImmutableImage(resultImage);
     }
@@ -510,17 +526,49 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl {
     }
 
     private Image getImage(InputStream is) throws IOException {
-        BufferedImage image = ImageIO.read(is);
+        final int EXTEND = 1024;
+        byte[] imageBytes = new byte[1024];
+        int num;
+        int start = 0;
+        while ((num = is.read(imageBytes, start, imageBytes.length - start)) == EXTEND) {
+            byte[] newImageBytes = new byte[imageBytes.length + EXTEND];
+            System.arraycopy(imageBytes, 0, newImageBytes, 0, imageBytes.length);
+            imageBytes = newImageBytes;
+            start += EXTEND;
+        }
+        if (num != 0) {
+            byte[] newImageBytes = new byte[imageBytes.length - EXTEND + num];
+            System.arraycopy(imageBytes, 0, newImageBytes, 0, imageBytes.length - EXTEND + num);
+            imageBytes = newImageBytes;
+        }
 
-        // TODO implement image filter as color space
-        /*
-         * ColorSpace colorSpace; if (isColor()) { colorSpace = new
-         * RGBImageFilter(); } else { if (numColors() == 2) { colorSpace = new
-         * BWImageFilter(); } else { colorSpace = new GrayImageFilter(); } }
-         * ColorConvertOp oper = new ColorConvertOp(colorSpace, null); return
-         * new J2SEImmutableImage(oper.filter(image, null));
-         */
-        return new J2SEImmutableImage(image);
+        java.awt.Image image = Toolkit.getDefaultToolkit().createImage(imageBytes);
+
+        ImageFilter filter;
+        if (isColor()) {
+            filter = new RGBImageFilter();
+        } else {
+            if (numColors() == 2) {
+                filter = new BWImageFilter();
+            } else {
+                filter = new GrayImageFilter();
+            }
+        }
+        FilteredImageSource imageSource = new FilteredImageSource(image.getSource(), filter);
+        java.awt.Image resultImage = Toolkit.getDefaultToolkit().createImage(imageSource);
+
+        // TODO not elegant solution, maybe use ImageObserver in image.getWitdth(..) instead
+        MediaTracker mediaTracker = new MediaTracker(new java.awt.Canvas());
+        mediaTracker.addImage(resultImage, 0);
+        try {
+            mediaTracker.waitForID(0);
+        } catch (InterruptedException ex) {
+        }
+        if (mediaTracker.isErrorID(0)) {
+            throw new IOException();
+        }
+
+        return new J2SEImmutableImage(resultImage);
     }
 
     public Button createButton(String name, org.microemu.device.impl.Shape shape, int keyCode, String keyName,

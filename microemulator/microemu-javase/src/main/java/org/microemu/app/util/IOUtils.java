@@ -61,6 +61,14 @@ public class IOUtils {
 		return "file:" + path;
 	}
 	
+	public static String getCanonicalFileClassLoaderURL(File file) {
+		String url = getCanonicalFileURL(file);
+		if ((file.isDirectory()) && (!url.endsWith("/"))) {
+			url += "/";
+		}
+		return url;
+	}
+	
 	public static void copyFile(File src, File dst) throws IOException {
 		FileInputStream fis = null;
 		try {

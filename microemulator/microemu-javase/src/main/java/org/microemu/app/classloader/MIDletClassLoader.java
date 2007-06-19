@@ -90,6 +90,9 @@ public class MIDletClassLoader extends URLClassLoader {
 		String resource = getClassResourceName(className);
 		URL url = getParent().getResource(resource);
 		if (url == null) {
+			url = this.getResource(resource);
+		}
+		if (url == null) {
 			throw new MalformedURLException("Unable to find class " + className + " URL");
 		}
 		String path = url.toExternalForm();

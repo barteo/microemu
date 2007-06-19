@@ -36,6 +36,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -671,15 +672,18 @@ public class Common implements MicroEmulator, CommonInterface {
 			} else {
 				MIDletClassLoader classLoader = createMIDletClassLoader();
 				try {
+					for (Iterator iter = appclasspath.iterator(); iter.hasNext();) {
+						String path = (String)iter.next();
+						StringTokenizer st = new StringTokenizer(path, File.pathSeparator);
+						while (st.hasMoreTokens()) {
+							classLoader.addURL(new URL(IOUtils.getCanonicalFileClassLoaderURL(new File(st.nextToken()))));
+						}
+					}	
 					classLoader.addClassURL(test);
 					for (Iterator iter = appclasses.iterator(); iter.hasNext();) {
 						classLoader.addClassURL((String) iter.next());
 						
 					}
-					for (Iterator iter = appclasspath.iterator(); iter.hasNext();) {
-						// TODO add appclasspath parts separators and path with spaces ''
-						classLoader.addURL(new URL(IOUtils.getCanonicalFileURL(new File((String)iter.next()))));
-					}					
 					
 					midletClass = classLoader.loadClass(test);
 				} catch (MalformedURLException e) {

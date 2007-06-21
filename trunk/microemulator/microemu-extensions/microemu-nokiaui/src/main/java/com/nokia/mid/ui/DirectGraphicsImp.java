@@ -24,6 +24,7 @@ package com.nokia.mid.ui;
 
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.game.Sprite;
 
 import org.microemu.device.DisplayGraphics;
 import org.microemu.device.MutableImage;
@@ -54,10 +55,35 @@ public class DirectGraphicsImp implements DirectGraphics{
         if(img == null) {
             throw new NullPointerException();
         }
-        if(anchor >= 64 || manipulation != 0) {
+        int transform;
+        switch (manipulation) {
+            case FLIP_HORIZONTAL:
+                transform = Sprite.TRANS_MIRROR_ROT180;
+                break;
+            case FLIP_VERTICAL:
+                transform = Sprite.TRANS_MIRROR;
+                break;
+            case ROTATE_90:
+                transform = Sprite.TRANS_ROT90;
+                break;
+            case ROTATE_180:
+                transform = Sprite.TRANS_ROT180;
+                break;
+            case ROTATE_270:
+                transform = Sprite.TRANS_ROT270;
+                break;
+            default:
+                transform = -1;
+        }
+        if(anchor >= 64 || transform == -1) {
             throw new IllegalArgumentException();
         } else {
-            graphics.drawImage(img, x + graphics.getTranslateX(), y + graphics.getTranslateY(), anchor);
+            graphics.drawRegion(
+                    img, 
+                    x + graphics.getTranslateX(), y + graphics.getTranslateY(), 
+                    img.getWidth(), img.getHeight(), 
+                    transform, 
+                    x + graphics.getTranslateX(), y + graphics.getTranslateY(), anchor);
             return;
         }
     }

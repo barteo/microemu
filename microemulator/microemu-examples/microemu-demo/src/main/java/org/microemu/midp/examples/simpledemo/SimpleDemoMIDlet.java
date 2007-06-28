@@ -62,6 +62,7 @@ public class SimpleDemoMIDlet extends MIDlet implements CommandListener {
 			screenPanels = new Displayable[] {
 					new AlertPanel(),
 					new CanvasPanel(),
+					new GameCanvasPanel(),
 					new KeyCanvasPanel(),
 					new PointerCanvasPanel(),
 					new DateFieldPanel(),

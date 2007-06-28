@@ -31,4 +31,5 @@ public interface GameCanvasKeyAccess {
     void recordKeyPressed(GameCanvas canvas, int gameCode);
     void recordKeyReleased(GameCanvas canvas, int gameCode);
     void setActualKeyState(GameCanvas canvas, int keyState);
+    void initBuffer();
 }

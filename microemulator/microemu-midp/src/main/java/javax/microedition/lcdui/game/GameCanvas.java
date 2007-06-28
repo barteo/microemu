@@ -30,6 +30,7 @@ import org.microemu.MIDletBridge;
 /**
  *
  * @author Andres Navarro
+ * @author radoshi
  */
 public abstract class GameCanvas extends Canvas {
     // keystate constants
@@ -80,6 +81,10 @@ public abstract class GameCanvas extends Canvas {
                 actualKeyState = keyState;
             }
         }
+        
+        public void initBuffer() {
+            offscreenBuffer = Image.createImage(getWidth(), getHeight());
+        }
     }
     
     /** Creates a new instance of GameCanvas */
@@ -111,13 +116,12 @@ public abstract class GameCanvas extends Canvas {
         // For example this methods fail if the paint method is
         // overriden with something else
         repaint(x, y, width, height);
-        serviceRepaints();
     }
 
     public void flushGraphics() {
+    	
         // NOTE see comment at the other flushGraphics method
         repaint();
-        serviceRepaints();
     }
 
     public int getKeyStates() {

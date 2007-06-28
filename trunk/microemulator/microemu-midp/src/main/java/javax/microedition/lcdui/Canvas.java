@@ -22,6 +22,11 @@
  
 package javax.microedition.lcdui;
 
+import javax.microedition.lcdui.game.GameCanvas;
+
+import org.microemu.GameCanvasKeyAccess;
+import org.microemu.MIDletBridge;
+
 
 public abstract class Canvas extends Displayable
 {
@@ -160,6 +165,11 @@ public abstract class Canvas extends Displayable
     public void setFullScreenMode(boolean mode) {
     	if (this.fullScreenMode != mode) {
     		this.fullScreenMode = mode;
+    		
+    		if (this instanceof GameCanvas) {
+    		    GameCanvasKeyAccess access = MIDletBridge.getMIDletAccess().getGameCanvasKeyAccess();
+    		    access.initBuffer();
+    		}
     		
     		if (currentDisplay != null) {
     			sizeChanged(getWidth(), getHeight());

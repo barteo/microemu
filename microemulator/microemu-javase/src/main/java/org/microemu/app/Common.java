@@ -78,8 +78,6 @@ import org.microemu.util.JadMidletEntry;
 import org.microemu.util.JadProperties;
 import org.microemu.util.MemoryRecordStoreManager;
 
-//import com.barteo.emulator.app.capture.Capturer;
-
 public class Common implements MicroEmulator, CommonInterface {
 	
 	private static Common instance;
@@ -99,6 +97,8 @@ public class Common implements MicroEmulator, CommonInterface {
 	private ResponseInterfaceListener responseInterfaceListener = null;
 
 	private ExtensionsClassLoader extensionsClassLoader;
+
+	private boolean useSystemClassLoader = false;
 	
 	public Common(EmulatorContext context) {
 		instance = this;
@@ -648,6 +648,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		String propertiesJad = null;
 		
 		Iterator it = params.iterator();
+		
 		while (it.hasNext()) {
 			String test = (String) it.next();
 			it.remove();
@@ -669,27 +670,37 @@ public class Common implements MicroEmulator, CommonInterface {
 				} catch (IOException exception) {
 					Logger.error("Cannot load " + test + " URL", exception);
 				}
-			} else {
-				MIDletClassLoader classLoader = createMIDletClassLoader();
-				try {
-					for (Iterator iter = appclasspath.iterator(); iter.hasNext();) {
-						String path = (String)iter.next();
-						StringTokenizer st = new StringTokenizer(path, File.pathSeparator);
-						while (st.hasMoreTokens()) {
-							classLoader.addURL(new URL(IOUtils.getCanonicalFileClassLoaderURL(new File(st.nextToken()))));
-						}
-					}	
-					classLoader.addClassURL(test);
-					for (Iterator iter = appclasses.iterator(); iter.hasNext();) {
-						classLoader.addClassURL((String) iter.next());
-						
+			} else if (test.equals("--usesystemclassloader")) {				
+				useSystemClassLoader = true;
+			} else {				
+				if (!useSystemClassLoader) {
+    				MIDletClassLoader classLoader = createMIDletClassLoader();
+    				try {
+    					for (Iterator iter = appclasspath.iterator(); iter.hasNext();) {
+    						String path = (String)iter.next();
+    						StringTokenizer st = new StringTokenizer(path, File.pathSeparator);
+    						while (st.hasMoreTokens()) {
+    							classLoader.addURL(new URL(IOUtils.getCanonicalFileClassLoaderURL(new File(st.nextToken()))));
+    						}
+    					}	
+    					classLoader.addClassURL(test);
+    					for (Iterator iter = appclasses.iterator(); iter.hasNext();) {
+    						classLoader.addClassURL((String) iter.next());
+    						
+    					}
+    					
+    					midletClass = classLoader.loadClass(test);
+    				} catch (MalformedURLException e) {
+    					Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
+    				} catch (ClassNotFoundException e) {
+    					Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
+    				}
+				} else {					
+					try {
+						midletClass = instance.getClass().getClassLoader().loadClass(test);
+					} catch (ClassNotFoundException e) {
+						Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
 					}
-					
-					midletClass = classLoader.loadClass(test);
-				} catch (MalformedURLException e) {
-					Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
-				} catch (ClassNotFoundException e) {
-					Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
 				}
 			}
 		}
@@ -725,6 +736,7 @@ public class Common implements MicroEmulator, CommonInterface {
 			"[(--classpath|-cp) <JSR CLASSPATH>]\n" +
 			"[(--appclasspath|--appcp) <MIDlet CLASSPATH>]\n" +
 			"[--appclass <library class name>]\n" +
+			"[--usesystemclassloader] \n" +
 			"(({MIDlet class name} [--propertiesjad {jad file location}]) | {jad file location})";
 	}
 

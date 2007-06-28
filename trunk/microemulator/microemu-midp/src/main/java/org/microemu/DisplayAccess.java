@@ -48,8 +48,6 @@ public interface DisplayAccess
 	
 	boolean isFullScreenMode();
 	
-	boolean isRepaintPending();
-	
 	void serviceRepaints();
   
 	Displayable getCurrent();

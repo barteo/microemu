@@ -74,7 +74,7 @@
     <distributionManagement>
         <site>
             <id>test-site</id>
-            <url>file:///home/apache/microemu</url>
+            <url>file:///home/barteo/Desktop/bak/microemu</url>
         </site>
         <!-- see profile release -->
         <repository>
@@ -83,7 +83,7 @@
         </repository>
         <snapshotRepository>
             <id>pyx4j.com-file-development</id>
-            <url>file:///home/apache/pyx4j/maven2</url>
+            <url>file:///home/barteo/Desktop/bak/pyx4j/maven2</url>
         </snapshotRepository>
 
     </distributionManagement>
@@ -241,6 +241,12 @@
             <roles>
                 <role>Designer</role>
             </roles>
+        </contributor>
+
+        <contributor>
+            <name>Rushabh Doshi</name>
+            <email>radoshi@cs.stanford.edu</email>
+            <organization>Pelago, Inc</organization>
         </contributor>
 
         <!-- template for new contributor

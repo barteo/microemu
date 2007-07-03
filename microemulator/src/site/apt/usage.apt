@@ -125,3 +125,7 @@ java -cp microemulator.jar;bluecove-1.2.3.jar org.microemu.app.Main btbrowserv20
     Select Execution Environment: J2SE-1.4, J2SE-1.5 or JavaSE-1.6
 
 [images/eclipse-jre.png] Java Execution Environment
+
+  As of EclipseME version 1.7.0 it has its own support for MicroEmulator.
+  Import MicroEmulator installation directory using Window -> Preferences -> J2ME -> Device Management
+  Then just select MicroEmulator as J2ME Device using EclipseME menus and properties.

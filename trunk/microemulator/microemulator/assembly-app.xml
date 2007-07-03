@@ -8,6 +8,36 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <dependencySets>
         <dependencySet>
+            <excludes>
+                <exclude>backport-util-concurrent:backport-util-concurrent</exclude>
+            </excludes>
+            <unpack>true</unpack>
+            <outputDirectory></outputDirectory>
+            <outputFileNameMapping></outputFileNameMapping>
+            <scope>runtime</scope>
+        </dependencySet>
+        <dependencySet>
+            <includes>
+                <include>backport-util-concurrent:backport-util-concurrent</include>
+            </includes>
+            <unpackOptions>
+                <includes>
+                    <include>edu/emory/mathcs/backport/java/util/AbstractCollection*.class</include>
+                    <include>edu/emory/mathcs/backport/java/util/AbstractQueue*.class</include>
+                    <include>edu/emory/mathcs/backport/java/util/Arrays*.class</include>
+                    <include>edu/emory/mathcs/backport/java/util/Queue*.class</include>
+                    <include>edu/emory/mathcs/backport/java/util/concurrent/BlockingQueue*.class</include>
+                    <include>edu/emory/mathcs/backport/java/util/concurrent/LinkedBlockingQueue*.class</include>
+                    <include>edu/emory/mathcs/backport/java/util/concurrent/Semaphore*.class</include>
+                    <include>edu/emory/mathcs/backport/java/util/concurrent/TimeUnit*.class</include>
+                    <include>edu/emory/mathcs/backport/java/util/concurrent/helpers/FIFOWaitQueue*.class</include>
+                    <include>edu/emory/mathcs/backport/java/util/concurrent/helpers/NanoTimer*.class</include>
+                    <include>edu/emory/mathcs/backport/java/util/concurrent/helpers/ThreadHelpers*.class</include>
+                    <include>edu/emory/mathcs/backport/java/util/concurrent/helpers/Utils*.class</include>
+                    <include>edu/emory/mathcs/backport/java/util/concurrent/helpers/WaitQueue*.class</include>
+                    <include>edu/emory/mathcs/backport/java/util/concurrent/locks/Condition*.class</include>
+                </includes>
+            </unpackOptions>
             <unpack>true</unpack>
             <outputDirectory></outputDirectory>
             <outputFileNameMapping></outputFileNameMapping>

@@ -8,9 +8,9 @@
 MIDlet ClassLoader
 
     MicroEmulator is using special ClassLoader to load MIDlet midlet classes and resources.
-    This ClassLoader is not used when application is running as applet or --appclassloader=system (--usesystemclassloader) specified.
+    This ClassLoader is not used when application is running as applet or TBD --appclassloader=system (--usesystemclassloader) specified.
 
-    MIDlet ClassLoader has folowing functionality
+    MIDlet ClassLoader has following functionality
 
     * bytecode preprocessing/instrumentation
 
@@ -29,13 +29,17 @@ MIDlet ClassLoader
 
     * --appclass <library class name> for appclasspath auto detection from system classpath; ignored when opening .jad
 
-    * --appclassloader=system (--usesystemclassloader)
+    * TBD --appclassloader=strict  Default configuration
+
+    * TBD --appclassloader=system (--usesystemclassloader) Disable use of MIDlet ClassLoader. May be usefull for debug.
+
+    * TBD --appclassloader=delegating Allow MIDlet to load any classes or resources not found in appclasspath from parent class loader.
 
 
     MIDlet ClassLoader allow MIDlet to load classes only from MIDlet jar or --appclasspath. Classes from java. and javax.microedition. are loaded from parent class loader e.g. ClassLoader of MicroEmulator application.
 
     Argument --appclass is a helper for --appclasspath. If your MIDlet application classes are already in system classpath when starting MicroEmulator
-    then --appclass will find the location URL of this classe (directory or jar) and add this URL to MIDletClassLoader then same as --appclasspath.
+    then --appclass will find the location URL of this class (directory or jar) and add this URL to MIDletClassLoader then same as --appclasspath.
 
     MicroEmulator usage
 
@@ -59,10 +63,10 @@ Bytecode preprocessing
 
    * Calls to System.getProperty(), are redirected to Injected.class to enable java system properties change in WebStart application.
 
-   * class.getResourceAsStream are redirected to solve resource loading paterns commonly used in MIDlets and not aceptable in Java SE application
+   * class.getResourceAsStream are redirected to solve resource loading patterns commonly used in MIDlets and not acceptable in Java SE application
      when System class is called to load MIDlet resource
 
-   * Timers and Threads created by MIDlet are controled by MicroEmulator and are terminated when MIDlet ends.
+   * Timers and Threads created by MIDlet are controlled by MicroEmulator and are terminated when MIDlet ends.
      {{{http://microemulator.svn.sourceforge.net/viewvc/microemulator/trunk/microemulator/microemu-javase/src/main/java/org/microemu/app/util/MIDletTimer.java?view=markup}MIDletTimer}}
      and {{{http://microemulator.svn.sourceforge.net/viewvc/microemulator/trunk/microemulator/microemu-javase/src/main/java/org/microemu/app/util/MIDletThread.java?view=markup}MIDletThread}}
      would be used in your application.

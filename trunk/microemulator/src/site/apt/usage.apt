@@ -101,7 +101,7 @@ java -cp microemulator.jar;bluecove-1.2.3.jar org.microemu.app.Main btbrowserv20
 [images/eclipse-arguments.png] Java Argument class
 
     If your MIDlet project includes other projects or libraries that are compiled differently and included in you final application. e.g. XML or Log libraries.
-    Then you need to add aditional configuration option. MicroEmulator will use the same MIDlet classloader for this clases. If not specified this classes would be loaded by the same classloader as MicroEmulator.
+    Then you need to add aditional configuration option. MicroEmulator will use the same {{{classloader}MIDlet classloader}} for this clases. If not specified this classes would be loaded by the same classloader as MicroEmulator e.g. SystemClassLoader.
 
 ---
 --appclasspath /home/bob/work/framework0.1.jar;/home/bob/work/core/target/classes org.app.MainMIDlet

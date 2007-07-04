@@ -8,7 +8,7 @@
 MIDlet ClassLoader
 
     MicroEmulator is using special ClassLoader to load MIDlet midlet classes and resources.
-    This ClassLoader is not used when application is running as applet or TBD --appclassloader=system (--usesystemclassloader) specified.
+    This ClassLoader is not used when application is running as applet or < --appclassloader system> specified.
 
     MIDlet ClassLoader has following functionality
 
@@ -20,26 +20,28 @@ MIDlet ClassLoader
 
     * Enforce resource loading order.
 
-    * Enforce static initializers in MIDlet. Each time you start MIDlet new ClassLoader is created. TODO.
+    * Enforce static initializers in MIDlet. Each time you start MIDlet new ClassLoader is created.
 
 
     ClassLoader configuration
 
-    * --appclasspath | -appcp <CLASSPATH> for MIDlet application components if any; ignored when opening .jad
+    * < --appclasspath> | <-appcp CLASSPATH> \u00bb for MIDlet application components if any; ignored when opening .jad
 
-    * --appclass <library class name> for appclasspath auto detection from system classpath; ignored when opening .jad
+    * < --appclass library.class.name> \u00bb for appclasspath auto detection from system classpath; ignored when opening .jad
 
-    * TBD --appclassloader=strict  Default configuration
+    * < --appclassloader strict>  \u00bb Default configuration
 
-    * TBD --appclassloader=system (--usesystemclassloader) Disable use of MIDlet ClassLoader. May be usefull for debug.
+    * < --appclassloader delegating>  \u00bb Allow MIDlet to load any classes or resources not found in appclasspath from parent class loader.
 
-    * TBD --appclassloader=delegating Allow MIDlet to load any classes or resources not found in appclasspath from parent class loader.
+    * < --appclassloader system> \u00bb Disable use of MIDlet ClassLoader and use only System class loader. May be usefull for debug.
 
 
-    MIDlet ClassLoader allow MIDlet to load classes only from MIDlet jar or --appclasspath. Classes from java. and javax.microedition. are loaded from parent class loader e.g. ClassLoader of MicroEmulator application.
 
-    Argument --appclass is a helper for --appclasspath. If your MIDlet application classes are already in system classpath when starting MicroEmulator
-    then --appclass will find the location URL of this class (directory or jar) and add this URL to MIDletClassLoader then same as --appclasspath.
+
+    MIDlet ClassLoader allow MIDlet to load classes only from MIDlet jar or <--appclasspath>. Classes from java. and javax.microedition. are loaded from parent class loader e.g. ClassLoader of MicroEmulator application.
+
+    Argument <--appclass> is a helper for <--appclasspath>. If your MIDlet application classes are already in system classpath when starting MicroEmulator
+    then --appclass will find the location URL of this class (directory or jar) and add this URL to MIDletClassLoader then same as <--appclasspath>.
 
     MicroEmulator usage
 

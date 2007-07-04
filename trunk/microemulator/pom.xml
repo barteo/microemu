@@ -43,6 +43,14 @@
 		<developerConnection>scm:svn:https://microemulator.svn.sourceforge.net/svnroot/microemulator/trunk/microemulator</developerConnection>
 	</scm>
 
+    <mailingLists>
+        <mailingList>
+            <name>microemulator-developers</name>
+            <post>microemulator-developers@googlegroups.com</post>
+            <archive>http://groups.google.com/group/microemulator-developers</archive>
+        </mailingList>
+    </mailingLists>
+
     <modules>
         <module>microemu-cldc</module>
         <module>microemu-midp</module>

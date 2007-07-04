@@ -21,6 +21,7 @@
  */
 package org.microemu.app.classloader;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -31,8 +32,11 @@ import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.StringTokenizer;
 
+import org.microemu.app.util.IOUtils;
 import org.microemu.log.Logger;
 
 /**
@@ -58,6 +62,8 @@ public class MIDletClassLoader extends URLClassLoader {
 	public static boolean enhanceCatchBlock = false;  
 	
 	private final static boolean debug = false;
+
+	private boolean delegatingToParent = false;
 	
 	private InstrumentationConfig config;
 	
@@ -65,6 +71,16 @@ public class MIDletClassLoader extends URLClassLoader {
 	
 	/* The context to be used when loading classes and resources */
     private AccessControlContext acc;
+    
+    private static class LoadClassByParentException extends ClassNotFoundException {
+		
+    	public LoadClassByParentException(String name) {
+			super(name);
+		}
+
+		private static final long serialVersionUID = 1L;
+    	
+    }
     
 	public MIDletClassLoader(ClassLoader parent) {
 		super(new URL[]{}, parent);
@@ -80,6 +96,19 @@ public class MIDletClassLoader extends URLClassLoader {
 //		noPreporcessingNames = new HashSet();
 //	}
 	
+	public void configure(MIDletClassLoaderConfig clConfig) throws MalformedURLException {
+		for (Iterator iter = clConfig.appclasspath.iterator(); iter.hasNext();) {
+			String path = (String)iter.next();
+			StringTokenizer st = new StringTokenizer(path, File.pathSeparator);
+			while (st.hasMoreTokens()) {
+				this.addURL(new URL(IOUtils.getCanonicalFileClassLoaderURL(new File(st.nextToken()))));
+			}
+		}	
+		for (Iterator iter = clConfig.appclasses.iterator(); iter.hasNext();) {
+			this.addClassURL((String) iter.next());
+		}
+		this.delegatingToParent = (clConfig.delegationType == MIDletClassLoaderConfig.DELEGATION_DELEGATING);
+	}
     /**
      * Appends the Class Location URL to the list of URLs to search for
      * classes and resources.
@@ -102,7 +131,7 @@ public class MIDletClassLoader extends URLClassLoader {
 		addURL(new URL(path.substring(0, path.length() - resource.length())));
     }
 	
-	public static URL getClassURL(ClassLoader parent, String className) throws MalformedURLException {
+	static URL getClassURL(ClassLoader parent, String className) throws MalformedURLException {
 		String resource = getClassResourceName(className);
 		URL url = parent.getResource(resource);
 		if (url == null) {
@@ -155,13 +184,17 @@ public class MIDletClassLoader extends URLClassLoader {
 					Logger.debug("loadClass not found", name);
 				}
 			} catch (ClassNotFoundException e) {
-				if (traceSystemClassLoading) {
-					Logger.info("Load system class", name);
-				}
-				// This will call our findClass again if Class is not found in parent
-				result = super.loadClass(name, false);
-				if (result == null) {
-					throw new ClassNotFoundException(name);
+				
+				if ((e instanceof LoadClassByParentException) || this.delegatingToParent) {
+					if (traceSystemClassLoading) {
+						Logger.info("Load system class", name);
+					}
+					// This will call our findClass again if Class is not found
+					// in parent
+					result = super.loadClass(name, false);
+					if (result == null) {
+						throw new ClassNotFoundException(name);
+					}
 				}
 			}
 		}
@@ -182,7 +215,7 @@ public class MIDletClassLoader extends URLClassLoader {
      * <p> Search order is reverse to standard implemenation</p>
      * 
      * <p> This method will first use {@link #findResource(String)} to find the resource. 
-     * That failing, this method will NOT invoke the parent class loader. </p>
+     * That failing, this method will NOT invoke the parent class loader if delegatingToParent=false. </p>
      *
      * @param  name
      *         The resource name
@@ -197,7 +230,11 @@ public class MIDletClassLoader extends URLClassLoader {
 		try {
 			return (URL) AccessController.doPrivileged(new PrivilegedExceptionAction() {
 				public Object run() {
-					return findResource(name);
+					URL url = findResource(name);
+					if (delegatingToParent && (getParent() != null)) {
+					    url = getParent().getResource(name);
+					}
+					return url;
 				}
 			}, acc);
 		} catch (PrivilegedActionException e) {
@@ -232,22 +269,22 @@ public class MIDletClassLoader extends URLClassLoader {
 
 	}
 	
-	public boolean allowClassLoad(String className) {
+	public boolean classLoadByParent(String className) {
+		/* This java standard */
 		if (className.startsWith("java.")) {
-			return false;
+			return true;
 		}
-		/* No real device support overloading this package */
+		/* No real device allow overloading this package */
 		if (className.startsWith("javax.microedition.")) {
-			return false;
+			return true;
 		}
-//		Class loadedByParent = getParent().findLoadedClass(className);
-//		if (loadedByParent != null) {
-//			return false;
-//		}
+		if (className.startsWith("javax.")) {
+			return true;
+		}
 		if (noPreporcessingNames.contains(className)) {
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	/**
@@ -270,8 +307,8 @@ public class MIDletClassLoader extends URLClassLoader {
 		if (debug) {
 			Logger.debug("findClass", name);
 		}
-		if (!allowClassLoad(name)) {
-			throw new ClassNotFoundException(name);
+		if (classLoadByParent(name)) {
+			throw new LoadClassByParentException(name);
 		}
 		InputStream is;
 		try {

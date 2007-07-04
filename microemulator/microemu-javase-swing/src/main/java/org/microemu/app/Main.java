@@ -62,6 +62,7 @@ import org.microemu.app.ui.swing.DropTransferHandler;
 import org.microemu.app.ui.swing.ExtensionFileFilter;
 import org.microemu.app.ui.swing.JMRUMenu;
 import org.microemu.app.ui.swing.JadUrlPanel;
+import org.microemu.app.ui.swing.SwingAboutDialog;
 import org.microemu.app.ui.swing.SwingDeviceComponent;
 import org.microemu.app.ui.swing.SwingDialogWindow;
 import org.microemu.app.ui.swing.SwingErrorMessageDialogPanel;
@@ -415,6 +416,12 @@ public class Main extends JFrame {
 		}
 	};
 
+  	private ActionListener menuAboutListener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			SwingDialogWindow.show(Main.this, "About", new SwingAboutDialog(), false);
+		}
+	};
+	
   	private ActionListener menuExitListener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 	    	synchronized (Main.this) {
@@ -591,8 +598,15 @@ public class Main extends JFrame {
     	menuLogConsole.addActionListener(menuLogConsoleListener);
     	menuOptions.add(menuLogConsole);
 
+    	JMenu menuHelp = new JMenu("Help");
+    	JMenuItem menuAbout = new JMenuItem("About");
+    	menuAbout.addActionListener(menuAboutListener);
+    	menuHelp.add(menuAbout);
+    	
+    	
     	menuBar.add(menuFile);
 		menuBar.add(menuOptions);
+		menuBar.add(menuHelp);
 		setJMenuBar(menuBar);
 
 		setTitle("MicroEmulator");

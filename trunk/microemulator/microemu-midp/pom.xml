@@ -60,6 +60,13 @@
                     <proguardInclude>${basedir}/proguard.conf</proguardInclude>
                     <attach>true</attach>
                     <attachArtifactClassifier>4applet</attachArtifactClassifier>
+                    <assembly>
+                        <inclusions>
+                            <inclusion>
+                                <groupId>backport-util-concurrent</groupId><artifactId>backport-util-concurrent</artifactId>
+                            </inclusion>
+                        </inclusions>
+                    </assembly>
                     <libs>
                         <lib>${java.home}/lib/rt.jar</lib>
                     </libs>

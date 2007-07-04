@@ -54,17 +54,17 @@ java -cp microemulator.jar;microemu-siemensapi.jar org.microemu.app.Main http://
 
     MicroEmulator command line options
 
-        * --rms [memory | file]
-            persistent or not RecordStoreManager manager
+        * < --rms [memory | file]>  \u00bb            persistent or not RecordStoreManager manager
 
-        * --device | -d <device class or xml>
-            specify device skin.
+        * < --device | -d device_class_or_xml> \u00bb          specify device skin.
 
-        * --classpath | -cp  <CLASSPATH>  Extensions class path entries
+        * < --classpath | -cp CLASSPATH>  \u00bb Extensions class path entries
 
-        * --appclasspath | -appcp <CLASSPATH> for MIDlet application components if any; ignored when opening .jad
+        * < --appclasspath | -appcp CLASSPATH> \u00bb for MIDlet application components if any; ignored when opening .jad
 
-        * --appclass <library class name> for appclasspath auto detection from system classpath; ignored when opening .jad
+        * < --appclass library.class.name> \u00bb for appclasspath auto detection from system classpath; ignored when opening .jad
+
+        * < --appclassloader strict|delegating|system>  \u00bb {{{classloader.html}MIDlet classloader}} configuration
 
         * ({MIDlet class name} | {jad file location})
 

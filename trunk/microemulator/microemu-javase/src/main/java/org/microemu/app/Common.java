@@ -55,6 +55,7 @@ import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
 import org.microemu.app.classloader.ExtensionsClassLoader;
 import org.microemu.app.classloader.MIDletClassLoader;
+import org.microemu.app.classloader.MIDletClassLoaderConfig;
 import org.microemu.app.launcher.Launcher;
 import org.microemu.app.ui.Message;
 import org.microemu.app.ui.ResponseInterfaceListener;
@@ -65,6 +66,7 @@ import org.microemu.app.util.IOUtils;
 import org.microemu.app.util.MIDletResourceLoader;
 import org.microemu.app.util.MIDletSystemProperties;
 import org.microemu.app.util.MIDletThread;
+import org.microemu.app.util.MIDletTimer;
 import org.microemu.app.util.MidletURLReference;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
@@ -617,6 +619,8 @@ public class Common implements MicroEmulator, CommonInterface {
 			Logger.error("classpath configuration error, Wrong Injected class detected. microemu-injected module should be after microemu-javase in eclipse");
 		}
 		mcl.disableClassPreporcessing(Injected.class);
+		mcl.disableClassPreporcessing(MIDletThread.class);
+		mcl.disableClassPreporcessing(MIDletTimer.class);
 		MIDletResourceLoader.classLoader = mcl;
 		return mcl;
 	}
@@ -643,66 +647,79 @@ public class Common implements MicroEmulator, CommonInterface {
 
 	public void initMIDlet(List params, boolean startMidlet) {
 		Class midletClass = null;
-		Vector appclasses = new Vector();
-		Vector appclasspath = new Vector();
+		MIDletClassLoaderConfig clConfig = new MIDletClassLoaderConfig();
 		String propertiesJad = null;
 		
 		Iterator it = params.iterator();
 		
-		while (it.hasNext()) {
-			String test = (String) it.next();
-			it.remove();
-			if ((test.equals("--appclasspath")) || (test.equals("-appclasspath"))  || (test.equals("-appcp"))) {
-				appclasspath.add(it.next());
+		try {
+			while (it.hasNext()) {
+				String test = (String) it.next();
 				it.remove();
-			} else if (test.equals("--appclass")) {
-				appclasses.add(it.next());
-				it.remove();
-			} else if (test.equals("--propertiesjad")) {
-				File file = new File((String) it.next());
-				propertiesJad = file.exists() ? IOUtils.getCanonicalFileURL(file) : test;
-				it.remove();
-			} else if (midletClass == null && test.endsWith(".jad")) {
-				try {
-					File file = new File(test);
-					String url = file.exists() ? IOUtils.getCanonicalFileURL(file) : test;
-					openJadUrl(url);
-				} catch (IOException exception) {
-					Logger.error("Cannot load " + test + " URL", exception);
-				}
-			} else if (test.equals("--usesystemclassloader")) {				
-				useSystemClassLoader = true;
-			} else {				
-				if (!useSystemClassLoader) {
-    				MIDletClassLoader classLoader = createMIDletClassLoader();
-    				try {
-    					for (Iterator iter = appclasspath.iterator(); iter.hasNext();) {
-    						String path = (String)iter.next();
-    						StringTokenizer st = new StringTokenizer(path, File.pathSeparator);
-    						while (st.hasMoreTokens()) {
-    							classLoader.addURL(new URL(IOUtils.getCanonicalFileClassLoaderURL(new File(st.nextToken()))));
-    						}
-    					}	
-    					classLoader.addClassURL(test);
-    					for (Iterator iter = appclasses.iterator(); iter.hasNext();) {
-    						classLoader.addClassURL((String) iter.next());
-    						
-    					}
-    					
-    					midletClass = classLoader.loadClass(test);
-    				} catch (MalformedURLException e) {
-    					Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
-    				} catch (ClassNotFoundException e) {
-    					Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
-    				}
-				} else {					
+				if ((test.equals("--appclasspath")) || (test.equals("-appclasspath")) || (test.equals("-appcp"))) {
+					if (clConfig == null) {
+						throw new ConfigurationException("Wrong command line argument order");
+					}
+					clConfig.addAppClassPath((String) it.next());
+					it.remove();
+				} else if (test.equals("--appclass")) {
+					if (clConfig == null) {
+						throw new ConfigurationException("Wrong command line argument order");
+					}
+					clConfig.addAppClass((String) it.next());
+					it.remove();
+				} else if (test.equals("--propertiesjad")) {
+					File file = new File((String) it.next());
+					propertiesJad = file.exists() ? IOUtils.getCanonicalFileURL(file) : test;
+					it.remove();
+				} else if (midletClass == null && test.endsWith(".jad")) {
 					try {
-						midletClass = instance.getClass().getClassLoader().loadClass(test);
-					} catch (ClassNotFoundException e) {
-						Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
+						File file = new File(test);
+						String url = file.exists() ? IOUtils.getCanonicalFileURL(file) : test;
+						openJadUrl(url);
+					} catch (IOException exception) {
+						Logger.error("Cannot load " + test + " URL", exception);
+					}
+				} else if (test.equals("--appclassloader")) {
+					if (clConfig == null) {
+						Message.error("Error", "Wrong command line argument order");
+						break;
+					}
+					clConfig.setDelegationType((String) it.next());
+					it.remove();
+				} else if (test.equals("--usesystemclassloader")) {
+					useSystemClassLoader = true;
+					clConfig.setDelegationType("system");
+				} else {
+					useSystemClassLoader = clConfig.isClassLoaderDisabled();
+					if (!useSystemClassLoader) {
+						MIDletClassLoader classLoader = createMIDletClassLoader();
+						try {
+							classLoader.configure(clConfig);
+							clConfig = null;
+							classLoader.addClassURL(test);
+
+							midletClass = classLoader.loadClass(test);
+						} catch (MalformedURLException e) {
+							Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
+							return;
+						} catch (ClassNotFoundException e) {
+							Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
+							return;
+						}
+					} else {
+						try {
+							midletClass = instance.getClass().getClassLoader().loadClass(test);
+						} catch (ClassNotFoundException e) {
+							Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
+							return;
+						}
 					}
 				}
 			}
+		} catch (ConfigurationException e) {
+			Message.error("Error", e.getMessage(), e);
+			return;
 		}
 		
 		if (midletClass != null && propertiesJad != null) {
@@ -736,7 +753,7 @@ public class Common implements MicroEmulator, CommonInterface {
 			"[(--classpath|-cp) <JSR CLASSPATH>]\n" +
 			"[(--appclasspath|--appcp) <MIDlet CLASSPATH>]\n" +
 			"[--appclass <library class name>]\n" +
-			"[--usesystemclassloader] \n" +
+			"[--appclassloader strict|delegating|system] \n" +
 			"(({MIDlet class name} [--propertiesjad {jad file location}]) | {jad file location})";
 	}
 

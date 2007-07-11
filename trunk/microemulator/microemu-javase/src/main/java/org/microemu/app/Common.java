@@ -36,8 +36,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.StringTokenizer;
-import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipException;
@@ -102,6 +100,10 @@ public class Common implements MicroEmulator, CommonInterface {
 
 	private boolean useSystemClassLoader = false;
 	
+	protected boolean autoTests = false;
+	
+	private Object destroyNotify = new Object(); 
+	
 	public Common(EmulatorContext context) {
 		instance = this;
 		this.emulatorContext = context;
@@ -146,11 +148,16 @@ public class Common implements MicroEmulator, CommonInterface {
 	}
 
 	public void notifyDestroyed(MIDletContext midletContext) {
+		Logger.debug("notifyDestroyed");
 		startLauncher(midletContext);
 	}
 
 	public void destroyMIDletContext(MIDletContext midletContext) {
+		Logger.debug("destroyMIDletContext");
 		MIDletThread.contextDestroyed(midletContext);
+		synchronized (destroyNotify) {
+			destroyNotify.notifyAll();
+		}
 	}
 	
 	public Launcher getLauncher() {
@@ -193,21 +200,121 @@ public class Common implements MicroEmulator, CommonInterface {
 	
 	public static void openJadUrl(String urlString)
 			throws IOException {
-		openJadUrl(urlString, createMIDletClassLoader());
+		
+		if (!getInstance().autoTests) {
+			openJadUrl(urlString, createMIDletClassLoader());
+		} else {
+			getInstance().runAutoTests(urlString);
+		}
 	}
 
-	public static void openJadUrl(String urlString, MIDletClassLoader midletClassLoader)
+	private void runAutoTests(final String urlString) {
+		final Common common = getInstance();
+		Thread t = new Thread("AutoTestsThread") {
+			public void run() {
+				boolean firstJad = true;
+				do {
+					common.jad.clear();
+					Logger.debug("AutoTests open jad", urlString);
+					try {
+						common.jad = loadJadProperties(urlString);
+					} catch (IOException e) {
+						if (firstJad) {
+							Logger.debug(e);
+						} else {
+							Logger.debug("AutoTests no more tests");
+						}
+						break;
+					}
+					firstJad = false;
+
+					JadMidletEntry jadMidletEntry;
+					Iterator it = common.jad.getMidletEntries().iterator();
+					if (!it.hasNext()) {
+						Message.error("MIDlet Suite has no entries");
+						break;
+					}
+					jadMidletEntry = (JadMidletEntry) it.next();
+					String midletClassName = jadMidletEntry.getClassName();
+
+					boolean firstJar = true;
+					do {
+						MIDletClassLoader midletClassLoader = createMIDletClassLoader();
+						String tmpURL = saveJar2TmpFile(urlString, firstJar);
+						if (tmpURL == null) {
+							Logger.debug("AutoTests no new jar");
+							break;
+						}
+						firstJar = false;
+						Class midletClass;
+						try {
+							loadJar(urlString, tmpURL, midletClassLoader);
+							midletClass = midletClassLoader.loadClass(midletClassName);
+						} catch (ClassNotFoundException e) {
+							Logger.debug(e);
+							break;
+						}
+						Logger.debug("AutoTests start class", midletClassName);
+						MIDletContext context = startMidlet(midletClass, null);
+						//TODO Proper test If this is still active conetex.
+						if (MIDletBridge.getMIDletContext() == context) {
+							synchronized (destroyNotify) {
+								try {
+									destroyNotify.wait();
+								} catch (InterruptedException e) {
+									return;
+								}
+							}
+						}
+						while (MIDletThread.hasRunningThreads(context)) {
+							try {
+								Thread.sleep(100);
+							} catch (InterruptedException e) {
+								break;
+							}
+						}
+						Logger.debug("AutoTests ends");
+					} while (true);
+
+				} while (true);
+			}
+		};
+		
+		t.start();
+	}
+	
+	protected String saveJar2TmpFile(String jarUrl, boolean reportError) {
+		InputStream is = null;
+		try {
+			URL url = new URL(jad.getJarURL());
+			URLConnection conn= url.openConnection();
+			is = conn.getInputStream();
+			File tmp = File.createTempFile("me2-", ".jar");
+			tmp.deleteOnExit();
+			IOUtils.copyToFile(is, tmp);
+			return IOUtils.getCanonicalFileClassLoaderURL(tmp);
+		} catch (IOException e) {
+			if (reportError) {
+				Message.error("Unable to open jar " + jarUrl, e);
+			}
+			return null;
+		} finally {
+			IOUtils.closeQuietly(is);
+		}		
+	}
+	
+	private static void openJadUrl(String urlString, MIDletClassLoader midletClassLoader)
 			throws IOException {
 		try {
 			Logger.debug("openJad", urlString);
 			setStatusBar("Loading...");
-			getInstance().jad.clear();
-			getInstance().jad = loadJadProperties(urlString);
+			Common common = getInstance();
+			common.jad.clear();
+			common.jad = loadJadProperties(urlString);
 			
-			getInstance().loadFromJad(urlString, midletClassLoader);
+			common.loadJar(urlString, common.jad.getJarURL(), midletClassLoader);
 			
-			Config.getUrlsMRU().push(new MidletURLReference(getInstance().jad.getSuiteName(), urlString));
-			
+			Config.getUrlsMRU().push(new MidletURLReference(common.jad.getSuiteName(), urlString));
 		} catch (MalformedURLException ex) {
 			throw ex;
 		} catch (ClassNotFoundException ex) {
@@ -222,7 +329,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		}
 	}
 
-	public void startMidlet(Class midletClass, MIDletAccess previousMidletAccess) {
+	public MIDletContext startMidlet(Class midletClass, MIDletAccess previousMidletAccess) {
 		try {
 			if (previousMidletAccess != null) {
 				previousMidletAccess.destroyApp(true);
@@ -242,13 +349,13 @@ public class Common implements MicroEmulator, CommonInterface {
 				Object object = midletClass.newInstance();
 				if (!(object instanceof MIDlet)) {
 					Message.error(errorTitle, "Class " + midletClass.getName() + " should extend MIDlet");
-					return;
+					return null;
 				}
 				m = (MIDlet) object;
 			} catch (Throwable e) {
 				Message.error(errorTitle, "Unable to create MIDlet, " + Message.getCauseMessage(e), e);
 				MIDletBridge.destroyMIDletContext(context);
-				return;
+				return null;
 			}
 			
 			try {
@@ -258,9 +365,11 @@ public class Common implements MicroEmulator, CommonInterface {
 				context.getMIDletAccess().startApp();
 				
 				launcher.setCurrentMIDlet(m);
+				return context;
 			} catch (Throwable e) {
 				Message.error(errorTitle, "Unable to start MIDlet, " + Message.getCauseMessage(e), e);
 				MIDletBridge.destroyMIDletContext(context);
+				return null;
 			}
 
 		} finally {
@@ -359,11 +468,11 @@ public class Common implements MicroEmulator, CommonInterface {
 		}		
 	}
 	
-	protected void loadFromJad(String jadUrl, MIDletClassLoader midletClassLoader) throws ClassNotFoundException {
-		if (jad.getJarURL() == null) {
+	protected void loadJar(String jadUrl, String jarUrl, MIDletClassLoader midletClassLoader) throws ClassNotFoundException {
+		if (jarUrl == null) {
 			throw new ClassNotFoundException("Cannot find MIDlet-Jar-URL property in jad");
 		}
-		Logger.debug("openJar", jad.getJarURL());
+		Logger.debug("openJar", jarUrl);
 		
 		// Close Current MIDlet before oppening new one.
 		MIDletContext previousMidletContext = MIDletBridge.getMIDletContext();
@@ -376,10 +485,10 @@ public class Common implements MicroEmulator, CommonInterface {
 		try {
 			URL url = null;
 			try {
-				url = new URL(jad.getJarURL());
+				url = new URL(jarUrl);
 			} catch (MalformedURLException ex) {
 				try {
-					url = new URL(jadUrl.substring(0, jadUrl.lastIndexOf('/') + 1) + jad.getJarURL());
+					url = new URL(jadUrl.substring(0, jadUrl.lastIndexOf('/') + 1) + jarUrl);
 					// TODO check if IOUtils.getCanonicalFileURL is needed
 					jad.setCorrectedJarURL(url.toExternalForm());
 					Logger.debug("openJar url", url);

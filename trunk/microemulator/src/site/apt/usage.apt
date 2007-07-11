@@ -66,6 +66,8 @@ java -cp microemulator.jar;microemu-siemensapi.jar org.microemu.app.Main http://
 
         * < --appclassloader strict|delegating|system>  \u00bb {{{classloader.html}MIDlet classloader}} configuration
 
+        * < -Xautotest:{JAD file url} >  Run MIDlet in autotest mode
+
         * ({MIDlet class name} | {jad file location})
 
         []

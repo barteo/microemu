@@ -64,12 +64,38 @@ public class TestMain implements Runnable {
 		
 		try {
 			Class.forName("javax.microedition.NotAccessible");
-			throw new RuntimeException("Can acess java.microedition from MIDlet jar using Class.forName" );
+			throw new RuntimeException("Can acess java.microedition from MIDlet jar using Class.forName");
 		} catch (ClassNotFoundException e) {
 			if (verbose) {
 				System.out.println("no acess to java.microedition in MIDlet jar OK " + e.toString());
 			}
 		} 
+		
+		String runnerName = "org.DynamicallyLoadedRunner";
+		Class drunner;
+		try {
+			drunner = Class.forName(runnerName);
+			if (verbose) {
+				System.out.println("Class.forName("+ runnerName +") OK ");
+			}
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("Can't load "+ runnerName +" from MIDlet jar using Class.forName", e);
+		}
+		Object r;
+		try {
+			r = drunner.newInstance();
+			if (verbose) {
+				System.out.println("Class.forName("+ runnerName +").newInstance() OK ");
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Can't create "+ runnerName +" from MIDlet jar using Class.forName", e);
+		}
+		
+		((Runnable)r).run();
+		if (!DynamicallyLoadedStatus.runnerSuccess) {
+			throw new RuntimeException("Can execute DynamicallyLoadedRunner from MIDlet jar" );
+		}
+		
 		
 		System.out.println("All tests OK");
 	}

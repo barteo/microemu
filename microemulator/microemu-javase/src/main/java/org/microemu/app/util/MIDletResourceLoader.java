@@ -25,6 +25,7 @@ import java.io.InputStream;
 
 import org.microemu.Injected;
 import org.microemu.log.Logger;
+import org.microemu.util.ThreadUtils;
 
 /**
  * @author vlads
@@ -49,8 +50,6 @@ public class MIDletResourceLoader {
 	 */
 	public static ClassLoader classLoader;
 	
-	private static boolean java13 = false;
-	
 	private static final String FQCN = Injected.class.getName();
 	
 	public static InputStream getResourceAsStream(Class origClass, String resourceName)  {
@@ -62,18 +61,9 @@ public class MIDletResourceLoader {
 		}
 		if (classLoader != origClass.getClassLoader()) {
 			// showWarning
-			if (!java13) {
-				try {
-					StackTraceElement[] ste = new Throwable().getStackTrace();
-					for (int i = 0; i < ste.length - 1; i++) {
-						if (FQCN.equals(ste[i].getClassName())) {
-							StackTraceElement callLocation = ste[i + 1];
-							Logger.warn("attempt to load resource [" + resourceName + "] using System ClasslLoader from " + callLocation.toString());
-						}
-					}
-				} catch (Throwable e) {
-					java13 = true;
-				}
+			String callLocation  = ThreadUtils.getCallLocation(FQCN);
+			if (callLocation != null) {
+				Logger.warn("attempt to load resource [" + resourceName + "] using System ClasslLoader from " + callLocation);
 			}
 		}
 			

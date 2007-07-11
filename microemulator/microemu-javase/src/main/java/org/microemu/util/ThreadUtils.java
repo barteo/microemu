@@ -26,6 +26,8 @@ import java.util.Timer;
 
 public class ThreadUtils {
 
+	private static boolean java13 = false;
+	
 	/**
      * Creates a new timer whose associated thread has the specified name in Java 1.5.
 	 * 
@@ -42,4 +44,24 @@ public class ThreadUtils {
 		}
 	}
 
+	public static String getCallLocation(String fqn) {
+		if (!java13) {
+			try {
+				StackTraceElement[] ste = new Throwable().getStackTrace();
+				for (int i = 0; i < ste.length - 1; i++) {
+					if (fqn.equals(ste[i].getClassName())) {
+						StackTraceElement callLocation = ste[i + 1];
+						String nextClassName = callLocation.getClassName();
+						if (nextClassName.equals(fqn)) {
+							continue;
+						}
+						return callLocation.toString();
+					}
+				}
+			} catch (Throwable e) {
+				java13 = true;
+			}
+		}
+		return null;
+	}
 }

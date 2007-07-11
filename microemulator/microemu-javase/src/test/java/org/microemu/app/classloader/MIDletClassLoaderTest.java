@@ -27,6 +27,7 @@ import java.net.URLClassLoader;
 
 import junit.framework.TestCase;
 
+import org.microemu.Injected;
 import org.microemu.app.util.EventCatureLoggerAppender;
 import org.microemu.app.util.IOUtils;
 import org.microemu.app.util.MIDletResourceLoader;
@@ -92,12 +93,13 @@ public class MIDletClassLoaderTest extends TestCase {
 		URL jarURL = parent.getResource(TEST_APP_JAR);
 		assertNotNull("Can't find app jar", jarURL);
 		
-		//System.setProperty("test.verbose", "1");
+		System.setProperty("test.verbose", "1");
 		
 		MIDletSystemProperties.setProperty("test.property1", "1");
 		MIDletSystemProperties.setProperty("microedition.platform", null);
 		
 		MIDletClassLoader mcl = new MIDletClassLoader(parent);
+		mcl.disableClassPreporcessing(Injected.class);
 		MIDletResourceLoader.classLoader = mcl;
 		mcl.addURL(jarURL);
 		

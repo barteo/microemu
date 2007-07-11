@@ -274,6 +274,10 @@ public class MIDletClassLoader extends URLClassLoader {
 		if (className.startsWith("java.")) {
 			return true;
 		}
+		/* This is required when Class.forName().newInstance() used to create instances with inheritance*/
+		if (className.startsWith("sun.reflect.")) {
+			return true;
+		}
 		/* No real device allow overloading this package */
 		if (className.startsWith("javax.microedition.")) {
 			return true;

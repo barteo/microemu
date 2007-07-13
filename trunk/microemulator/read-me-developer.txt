@@ -5,8 +5,9 @@
 
    We are using maven2 to build project
 
-    To build project you need this environment variables:
+   To build project you need this environment variables:
     JAVA_HOME, SWT_HOME (to build swt module) and WTK_HOME to compile and test MIDlets
+   Also You may need to set MAVEN_OPTS=-Xmx256M if you are getting java.lang.OutOfMemoryError during build
 
    To create Eclipse projects run:
      mvn eclipse:clean eclipse:eclipse -DdownloadSources=true

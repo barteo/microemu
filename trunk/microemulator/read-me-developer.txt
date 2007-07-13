@@ -15,7 +15,12 @@
    To run build without tests:
      mvn -Dmaven.test.skip=true
 
-* Building Release
+   To build distribution assembly e.g. microemulator-2.X.X.tar.gz:
+     mvn -DperformRelease=true
+
+     distribution pakage would be created in microemulator\target\microemulator-2.X.X.tar.gz
+
+* Building official Release by the MicroEmulator team.
 
     * Test locally
 
@@ -23,7 +28,7 @@
 
     * Remove all -SNAPSHOT from pom.xml
 
-    * Remove/comment <pluginRepositories> used in poms
+    * Remove/comment SNAPSHOT <pluginRepositories> used in poms if any.
 
     * Update src/changes.xml
 

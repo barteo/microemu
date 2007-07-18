@@ -113,7 +113,7 @@ enable-auto-props = yes
 *.h = svn:mime-type=text/plain;svn:eol-style=native;svn:keywords=Date Author Id Revision
 *.dsp = svn:eol-style=CRLF
 *.dsw = svn:eol-style=CRLF
-*.sh = svn:executable;svn:eol-style=native;svn:keywords=Date Author Id Revision
+*.sh = svn:executable;svn:eol-style=LF;svn:keywords=Date Author Id Revision
 *.initd = svn:executable;svn:eol-style=native;svn:keywords=Date Author Id Revision
 *.cmd = svn:mime-type=text/plain;svn:eol-style=CRLF;svn:keywords=Date Author Id Revision
 *.bat = svn:mime-type=text/plain;svn:eol-style=CRLF;svn:keywords=Date Author Id Revision

@@ -6,3 +6,11 @@
 	border: none;
 	background-color: #fff !important;
 }
+
+#poweredByOhloh img {
+  display:block;
+  margin: 20px 0 20px 12px;
+  border: 1px solid black;
+  width: 100px;
+  height: 16px;
+}

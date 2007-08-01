@@ -337,6 +337,11 @@
                                     <replacetoken><![CDATA[</body>]]></replacetoken>
                                     <replacevalue><![CDATA[<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script><script type="text/javascript">_uacct = "UA-1249205-1";urchinTracker();</script></body>]]></replacevalue>
                                 </replace>
+                                <replace dir="${project.build.directory}/site">
+                                    <include name="*.html"></include>
+                                    <replacetoken><![CDATA["Metrics" id="poweredBy"]]></replacetoken>
+                                    <replacevalue><![CDATA["Metrics" id="poweredByOhloh"]]></replacevalue>
+                                </replace>
                                 <copy overwrite="true" failonerror="false"
                                       file="${basedir}/../target/site/css/site-child.css"
                                       tofile="${project.build.directory}/site/css/site.css"/>

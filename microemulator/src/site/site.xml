@@ -17,6 +17,21 @@
         <href>http://sourceforge.net/projects/microemulator/</href>
     </bannerRight>
 
+    <poweredBy>
+        <logo
+            name="Hosted on SF.net"
+            href="http://sourceforge.net/projects/microemulator/"
+            img="http://sourceforge.net/sflogo.php?group_id=30014&amp;amp;type=1"/>
+        <logo
+            name="Built by Maven"
+            href="http://maven.apache.org"
+            img="images/logos/maven-feather.png"/>
+         <logo
+            name="Metrics"
+            href="http://www.ohloh.net/projects/6490"
+            img="http://www.ohloh.net/projects/6490/badge.gif" />
+    </poweredBy>
+
     <body>
         <links>
             <item name="Live examples" href="http://www.microemu.org/demo.html"/>

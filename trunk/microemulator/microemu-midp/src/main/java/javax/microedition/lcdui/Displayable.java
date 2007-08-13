@@ -154,6 +154,8 @@ public abstract class Displayable
     public void setTitle(String s) 
     {
         title.setText(s);
+        
+        repaint();
     }        
     
 

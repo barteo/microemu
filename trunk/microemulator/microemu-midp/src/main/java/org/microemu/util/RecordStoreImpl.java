@@ -180,8 +180,12 @@ public class RecordStoreImpl extends RecordStore
 		    throw new RecordStoreNotOpenException();
 		}
 		
-		// FIXME invalid size 
-		return records.size();
+		int size = 0;
+		for (Enumeration keys = records.keys(); keys.hasMoreElements(); ) {
+			
+			size += ((byte[]) records.get(keys.nextElement())).length;
+		}
+		return size;
 	}
 
 

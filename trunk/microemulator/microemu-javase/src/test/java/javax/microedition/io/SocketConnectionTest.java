@@ -32,39 +32,112 @@ public class SocketConnectionTest extends BaseGCFTestCase {
 	
 	private static final String loopbackPort = "9127";
 	
+	private static final String serverPort = "7127";
 	
-	public void testLoopback() throws IOException {
+	
+	private void runLoopbackTest(String url) throws IOException {
+		System.out.println("Connecting to " + url);
+		SocketConnection sc = (SocketConnection) Connector.open(url);
 		
-		SocketConnection sc = (SocketConnection) Connector.open("socket://" + loopbackHost + ":" + loopbackPort);
-		
-		sc.setSocketOption(SocketConnection.LINGER, 5);
+		try {
+			sc.setSocketOption(SocketConnection.LINGER, 5);
 
-		InputStream is = sc.openInputStream();
-		OutputStream os = sc.openOutputStream();
+			InputStream is = sc.openInputStream();
+			OutputStream os = sc.openOutputStream();
 
-		String testData = "OK\r\n"; 
-		
-		os.write(testData.getBytes());
-		os.flush();
-		
-		StringBuffer buf = new StringBuffer(); 
-		
-		int ch = 0;
-		int count = 0;
-		while (ch != -1) {
-			ch = is.read();
-			buf.append((char)ch);
-			count ++;
-			if (count >= testData.length()) {
-				break;
+			String testData = "OK\r\n"; 
+			
+			os.write(testData.getBytes());
+			os.flush();
+			
+			StringBuffer buf = new StringBuffer(); 
+			
+			int ch = 0;
+			int count = 0;
+			while (ch != -1) {
+				ch = is.read();
+				buf.append((char)ch);
+				count ++;
+				if (count >= testData.length()) {
+					break;
+				}
 			}
+
+			assertEquals("Data received", buf.toString(), testData);
+			
+			is.close();
+			os.close();
+		} finally {
+			sc.close();
 		}
 
-		assertEquals("Data received", buf.toString(), testData);
+	}
+	
+	public void testLoopback() throws IOException {
+		runLoopbackTest("socket://" + loopbackHost + ":" + loopbackPort);
+	}
+	
+	private class ServerThread extends Thread {
 		
-		is.close();
-		os.close();
-		sc.close();
+		ServerSocketConnection scn;
+		
+		boolean started = true;
+		
+		boolean finished = true;
+		
+		ServerThread(ServerSocketConnection scn) {
+			super.setDaemon(true);
+			this.scn = scn;
+		}
+		
+		public void run() {
+			try {
+				// Wait for a connection.
+				SocketConnection sc = (SocketConnection) scn.acceptAndOpen();
+				
+				InputStream is = sc.openInputStream();
+				OutputStream os = sc.openOutputStream();
+				
+				int ch = 0;
+				int count = 0;
+				while (ch != -1) {
+					ch = is.read();
+					if (ch == -1) {
+						break;
+					}
+					os.write(ch);
+					os.flush();
+					count ++;
+				}
+			} catch(IOException e) {
+				e.printStackTrace();
+			} finally {
+				finished = true;
+			}
+		}
+	}
+	
+	static public void assertNotEquals(String message, String expected, String actual) {
+		assertFalse(message + " [" + expected + " == "+ actual + "]", expected.equals(actual));
+	}
+	
+	public void testServerSocketConnection() throws IOException, InterruptedException {
+		ServerSocketConnection scn = (ServerSocketConnection) Connector.open("socket://:" + serverPort);
 
+		try {
+			ServerThread t = new ServerThread(scn);
+			t.start();
+			while (!t.started) {
+				Thread.sleep(20);
+			}
+			assertEquals("Server Port", Integer.valueOf(serverPort).intValue(), scn.getLocalPort());
+			assertNotEquals("Server Host", "0.0.0.0", scn.getLocalAddress());
+			assertNotEquals("Server Host", "localhost", scn.getLocalAddress());
+			assertNotEquals("Server Host", "127.0.0.1", scn.getLocalAddress());
+			
+			runLoopbackTest("socket://" + scn.getLocalAddress() + ":" + scn.getLocalPort());
+		} finally {
+			scn.close();
+		}
 	}
 }

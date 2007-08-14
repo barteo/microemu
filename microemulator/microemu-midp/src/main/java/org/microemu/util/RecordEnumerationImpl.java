@@ -19,6 +19,8 @@
 
 package org.microemu.util;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -179,27 +181,40 @@ public class RecordEnumerationImpl implements RecordEnumeration
     {
         enumerationRecords.removeAllElements();
 
-        int position;
+        //
+        // filter
+        //
         for (Enumeration e = recordStoreImpl.records.keys(); e.hasMoreElements();) {
             Object key = e.nextElement();
-            if (filter != null && !filter.matches((byte[]) recordStoreImpl.records.get(key))) {
+            byte[] data = (byte[]) recordStoreImpl.records.get(key);
+            if (filter != null && !filter.matches(data)) {
                 continue;
             }
-            byte[] tmp_data = (byte[]) recordStoreImpl.records.get(key);
-            // here should be better sorting
-            if (comparator != null) {
-                for (position = 0; position < enumerationRecords.size(); position++) {
-                    if (comparator.compare(tmp_data, ((EnumerationRecord) enumerationRecords.elementAt(position)).value) == RecordComparator.FOLLOWS) {
-                        break;
-                    }
-                }
-            } else {
-                position = enumerationRecords.size();
-            }
-            enumerationRecords.insertElementAt(
-                    new EnumerationRecord(((Integer) key).intValue(), tmp_data), position);
+            enumerationRecords.add(new EnumerationRecord(	((Integer) key).intValue(),
+															data));
         }
-        currentRecord = 0;
+
+        // 
+        // sort
+        //
+		if (comparator != null) {
+			Collections.sort(enumerationRecords, new Comparator() {
+
+				public int compare(Object lhs, Object rhs) {
+
+					int compare = comparator.compare(((EnumerationRecord) lhs).value,
+					                                 ((EnumerationRecord) rhs).value);
+					if (compare == RecordComparator.EQUIVALENT)
+						return 0;
+					else if (compare == RecordComparator.FOLLOWS)
+						return 1;
+					else
+						return -1;
+
+				}
+
+			});
+		}
     }
 
 

@@ -33,6 +33,7 @@
             <plugin>
                 <groupId>com.pyx4me</groupId>
                 <artifactId>j2me-maven-plugin</artifactId>
+                <version>${pyx4meVersion}</version>
                 <executions>
                    <execution>
                         <!-- Phase before package -->

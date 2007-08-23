@@ -39,14 +39,14 @@
         <dependency>
             <groupId>com.pyx4me</groupId>
             <artifactId>cldcunit</artifactId>
-            <version>2.0.1-SNAPSHOT</version>
+            <version>${pyx4meVersion}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>com.pyx4me</groupId>
             <artifactId>cldcunit-se</artifactId>
-            <version>2.0.1-SNAPSHOT</version>
+            <version>${pyx4meVersion}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -112,7 +112,7 @@
                     <dependency>
                         <groupId>com.pyx4me</groupId>
                         <artifactId>cldcunit-instrument</artifactId>
-                       <version>2.0.1-SNAPSHOT</version>
+                       <version>${pyx4meVersion}</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -121,6 +121,7 @@
             <plugin>
                 <groupId>com.pyx4me</groupId>
                 <artifactId>j2me-maven-plugin</artifactId>
+                <version>${pyx4meVersion}</version>
                 <executions>
                    <execution>
                         <goals>
@@ -152,6 +153,7 @@
             <plugin>
                 <groupId>com.pyx4me</groupId>
                 <artifactId>gammu-maven-plugin</artifactId>
+                <version>${pyx4meVersion}</version>
                 <configuration>
                     <gammurc>${env.HOME}/gammurc</gammurc>
                 </configuration>

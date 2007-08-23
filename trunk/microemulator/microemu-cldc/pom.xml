@@ -23,6 +23,7 @@
             <plugin>
                 <groupId>com.pyx4me</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
+                <version>${pyx4meVersion}</version>
                 <executions>
                    <execution>
                        <phase>package</phase>

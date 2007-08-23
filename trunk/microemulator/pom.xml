@@ -115,12 +115,12 @@
 
     <pluginRepositories>
 
-<!--
+<!-- 4snapshot -->
         <pluginRepository>
             <id>pyx4me-web</id>
             <url>http://www.pyx4me.com/maven2-snapshot</url>
         </pluginRepository>
--->
+
         <pluginRepository>
             <id>codehaus.org</id>
             <name>Codehaus Central Repository</name>
@@ -128,6 +128,11 @@
         </pluginRepository>
 
     </pluginRepositories>
+
+    <properties>
+        <buildLabel>${version}</buildLabel>
+        <pyx4meVersion>2.0.2-SNAPSHOT</pyx4meVersion>
+    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -465,10 +470,6 @@
             </plugin>
        </plugins>
     </reporting>
-
-    <properties>
-        <buildLabel>${version}</buildLabel>
-    </properties>
 
     <profiles>
         <profile>

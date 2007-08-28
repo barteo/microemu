@@ -52,10 +52,9 @@ public class Graphics {
 		implementationError();
 	}
 
-	public void drawArc(int x, int y, int width, int height, int startAngle,
-			int arcAngle) {
-		implementationError();
-	}
+	public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
+        implementationError();
+    }
 
 	public void drawChar(char character, int x, int y, int anchor) {
 		char[] carr = new char[1];
@@ -63,10 +62,9 @@ public class Graphics {
 		drawString(new String(carr), x, y, anchor);
 	}
 
-	public void drawChars(char[] data, int offset, int length, int x, int y,
-			int anchor) {
-		drawString(new String(data, offset, length), x, y, anchor);
-	}
+	public void drawChars(char[] data, int offset, int length, int x, int y, int anchor) {
+        drawString(new String(data, offset, length), x, y, anchor);
+    }
 
 	public void drawImage(Image img, int x, int y, int anchor) {
 		implementationError();
@@ -80,33 +78,29 @@ public class Graphics {
 		implementationError();
 	}
 
-	public void drawRoundRect(int x, int y, int width, int height,
-			int arcWidth, int arcHeight) {
-		implementationError();
-	}
+	public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
+        implementationError();
+    }
 
 	public void drawString(String str, int x, int y, int anchor) {
 		implementationError();
 	}
 
-	public void drawSubstring(String str, int offset, int len, int x, int y,
-			int anchor) {
-		drawString(str.substring(offset, offset + len), x, y, anchor);
-	}
+	public void drawSubstring(String str, int offset, int len, int x, int y, int anchor) {
+        drawString(str.substring(offset, offset + len), x, y, anchor);
+    }
 
-	public void fillArc(int x, int y, int width, int height, int startAngle,
-			int arcAngle) {
-		implementationError();
-	}
+    public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
+        implementationError();
+    }
 
 	public void fillRect(int x, int y, int width, int height) {
 		implementationError();
 	}
 
-	public void fillRoundRect(int x, int y, int width, int height,
-			int arcWidth, int arcHeight) {
-		implementationError();
-	}
+	public void fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
+        implementationError();
+    }
 
 	public int getBlueComponent() {
 		return getColor() & 255;

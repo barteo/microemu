@@ -531,13 +531,20 @@ public class Display {
     }
 
     public int getColor(int colorSpecifier) {
-        // TODO implement
-        return 0;
+        // TODO implement better
+        switch (colorSpecifier) {
+        case COLOR_BACKGROUND:
+        case COLOR_HIGHLIGHTED_FOREGROUND:
+        case COLOR_HIGHLIGHTED_BORDER:
+            return 0xFFFFFF;
+        default:
+            return 0x000000;
+        }
     }
 
     public int getBorderStyle(boolean highlighted) {
-        // TODO implement;
-        return Graphics.SOLID;
+        // TODO implement better
+        return highlighted ? Graphics.DOTTED : Graphics.SOLID;
     }
 
     public int getBestImageWidth(int imageType) {

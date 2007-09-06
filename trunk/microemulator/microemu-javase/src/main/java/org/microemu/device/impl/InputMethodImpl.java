@@ -182,6 +182,10 @@ public abstract class InputMethodImpl extends InputMethod implements Runnable {
 	}
 
 	protected char[] filterInputMode(char[] chars) {
+	    if (chars == null) {
+	        return new char[0];
+	    }
+	    
 		int inputMode = getInputMode();
 		char[] result = new char[chars.length];
 		int i, j;

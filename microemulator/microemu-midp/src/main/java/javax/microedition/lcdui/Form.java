@@ -61,7 +61,7 @@ public class Form extends Screen
 	{
 		verifyItem(item);
 
-		if (numOfItems + 1 == items.length) {
+		if (numOfItems + 1 >= items.length) {
 			Item newitems[] = new Item[numOfItems + 4];
 			System.arraycopy(items, 0, newitems, 0, numOfItems);
 			items = newitems;

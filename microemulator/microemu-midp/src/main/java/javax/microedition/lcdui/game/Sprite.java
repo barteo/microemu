@@ -272,8 +272,10 @@ public class Sprite extends Layer {
     
     public void setFrame(int frame) {
         int l = (sequence == null)? rows*cols : sequence.length; 
-        if (frame < 0 || frame >= l)
+        if (frame < 0 || frame >= l) {
             throw new IndexOutOfBoundsException();
+        }
+        this.frame = frame;
     }
     
     public void nextFrame() {

@@ -47,9 +47,10 @@ public class J2SEMutableImage extends MutableImage
 
 	public javax.microedition.lcdui.Graphics getGraphics()
 	{
-		J2SEDisplayGraphics displayGraphics = new J2SEDisplayGraphics((java.awt.Graphics2D)img.getGraphics(), this);
+        java.awt.Graphics2D g = (java.awt.Graphics2D) img.getGraphics();
+        g.setClip(0, 0, getWidth(), getHeight());
+        J2SEDisplayGraphics displayGraphics = new J2SEDisplayGraphics(g, this);
 		displayGraphics.setColor(0x00000000);
-		displayGraphics.setClip(0, 0, getWidth(), getHeight());
 		displayGraphics.translate(-displayGraphics.getTranslateX(), -displayGraphics.getTranslateY());
 		
 		return displayGraphics;

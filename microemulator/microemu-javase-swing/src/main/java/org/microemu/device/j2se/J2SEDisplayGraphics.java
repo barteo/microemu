@@ -27,12 +27,11 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.util.HashMap;
 
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
 
-import org.microemu.DisplayAccess;
-import org.microemu.MIDletBridge;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.DisplayGraphics;
@@ -47,6 +46,12 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
     private MutableImage image;
 
     private int color = 0;
+    
+    // TODO use IntHashMap
+    private HashMap colorCache = new HashMap();
+    
+    // Access to the AWT clip is expensive in memory allocation 
+    private Rectangle clip;
 
     private javax.microedition.lcdui.Font currentFont = javax.microedition.lcdui.Font.getDefaultFont();
 
@@ -58,6 +63,8 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
     {
         this.g = a_g;
         this.image = a_image;
+        
+        this.clip = a_g.getClipBounds();
 
         Device device = DeviceFactory.getDevice();
         J2SEFontManager fontManager = (J2SEFontManager) device.getFontManager();
@@ -91,8 +98,13 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
 
     public void setColor(int RGB) {
         color = RGB;
-
-        g.setColor(new Color(filter.filterRGB(0, 0, color)));
+        
+        Color awtColor = (Color) colorCache.get(new Integer(RGB));
+        if (awtColor == null) {
+            awtColor = new Color(filter.filterRGB(0, 0, color));
+            colorCache.put(new Integer(RGB), awtColor);
+        }
+        g.setColor(awtColor);
     }
 
     public javax.microedition.lcdui.Font getFont() {
@@ -108,48 +120,31 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
 
     public void clipRect(int x, int y, int width, int height) {
         g.clipRect(x, y, width, height);
+        clip = g.getClipBounds();
     }
 
     public void setClip(int x, int y, int width, int height) {
         g.setClip(x, y, width, height);
+        clip.x = x;
+        clip.y = y;
+        clip.width = width;
+        clip.height = height;
     }
 
     public int getClipX() {
-        Rectangle rect = g.getClipBounds();
-        if (rect == null) {
-            return 0;
-        } else {
-            return rect.x;
-        }
+        return clip.x;
     }
 
     public int getClipY() {
-        Rectangle rect = g.getClipBounds();
-        if (rect == null) {
-            return 0;
-        } else {
-            return rect.y;
-        }
+        return clip.y;
     }
 
     public int getClipHeight() {
-        Rectangle rect = g.getClipBounds();
-        if (rect == null) {
-            DisplayAccess da = MIDletBridge.getMIDletAccess().getDisplayAccess();
-            return da.getCurrent().getHeight();
-        } else {
-            return rect.height;
-        }
+        return clip.height;
     }
 
     public int getClipWidth() {
-        Rectangle rect = g.getClipBounds();
-        if (rect == null) {
-            DisplayAccess da = MIDletBridge.getMIDletAccess().getDisplayAccess();
-            return da.getCurrent().getWidth();
-        } else {
-            return rect.width;
-        }
+        return clip.width;
     }
 
     public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) {

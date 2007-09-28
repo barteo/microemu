@@ -22,11 +22,14 @@
 package org.microemu.util;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.Timer;
 
 public class ThreadUtils {
 
 	private static boolean java13 = false;
+	
+	private static boolean java14 = false;
 	
 	/**
      * Creates a new timer whose associated thread has the specified name in Java 1.5.
@@ -63,5 +66,25 @@ public class ThreadUtils {
 			}
 		}
 		return null;
+	}
+	
+	public static String getTreadStackTrace(Thread t) {
+		if (java14) {
+			return "";
+		}
+		try {
+			// Java 1.5 thread.getStackTrace();
+			Method m = t.getClass().getMethod("getStackTrace", null);
+			
+			StackTraceElement[] trace = (StackTraceElement[])m.invoke(t, null);
+			StringBuffer b = new StringBuffer();  
+			for (int i=0; i < trace.length; i++) {
+			    b.append("\n\tat ").append(trace[i]);
+			}
+			return b.toString();
+		} catch (Throwable e) {
+			java14 = true;
+			return "";
+		}
 	}
 }

@@ -21,6 +21,12 @@
  */
 package javax.microedition.io.file;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import javax.microedition.io.Connector;
 
 import junit.framework.TestCase;
@@ -82,5 +88,129 @@ public class FileConnectionTest extends TestCase {
 		assertEquals("file:///test/dir1/f1.txt", fconn.getURL());
 		
 		fconn.close();
+	}
+	
+	public void testFileWrite() throws Exception {
+		final String fileName = "file:///test/dir1/write.txt";
+		FileConnection fconn = null;
+		DataOutputStream dos = null;
+		DataInputStream dis = null;
+		final String testData = "TestData";
+		try {
+			fconn = (FileConnection) Connector.open(fileName);
+			dos = fconn.openDataOutputStream();
+			dos.writeChars(testData);
+			dos.close();
+			dos = null;
+			
+			dis = fconn.openDataInputStream();
+			StringBuffer data = new StringBuffer();
+			for(int i = 0; i < testData.length(); i ++) {
+				data.append(dis.readChar()); 
+			}
+			assertEquals(testData, data.toString());
+			dis.close();
+		} finally {
+			if (dos != null) {
+				dos.close();
+			}
+			if (dis != null) {
+				dis.close();
+			}
+			if (fconn != null) {
+				fconn.close();
+			}
+		}
+	}
+
+	public void testFileTruncate() throws Exception {
+		final String fileName = "file:///test/dir1/truncate.txt";
+		FileConnection fconn = null;
+		InputStream is = null;
+		OutputStream os = null;
+		final String testDataBase = "Test";
+		final String testData = testDataBase + "Data";
+		try {
+			fconn = (FileConnection) Connector.open(fileName);
+			
+			os = fconn.openOutputStream();
+			os.write(testData.getBytes());
+			os.close();
+			os = null;
+			
+			fconn.truncate(testDataBase.length());
+			
+			is = fconn.openInputStream();
+			StringBuffer data = new StringBuffer();
+			for(int i = 0; i < testDataBase.length(); i ++) {
+				data.append((char)is.read()); 
+			}
+			assertEquals(testDataBase, data.toString());
+			
+			assertEquals("available", 0, is.available());
+			
+			try {
+				int eof = is.read();
+				if (eof != -1) {
+					fail("End of File expected");
+				}
+			} catch (IOException eof) {
+			}
+			is.close();
+			
+		} finally {
+			if (is != null) {
+				is.close();
+			}
+			if (os != null) {
+				os.close();
+			}
+			if (fconn != null) {
+				fconn.close();
+			}
+		}
+	}
+	
+	public void testFileAppend() throws Exception {
+		final String fileName = "file:///test/dir1/append.txt";
+		FileConnection fconn = null;
+		InputStream is = null;
+		OutputStream os = null;
+		final String testDataBase = "Test";
+		final String testData = testDataBase + "Data";
+		final String testDataAppend = "Append";
+		final String testDataAppended = testDataBase +  testDataAppend;
+		try {
+			fconn = (FileConnection) Connector.open(fileName);
+			
+			os = fconn.openOutputStream();
+			os.write(testData.getBytes());
+			os.close();
+			os = null;
+			
+			os = fconn.openOutputStream(testDataBase.length());
+			os.write(testDataAppend.getBytes());
+			os.close();
+			os = null;
+			
+			is = fconn.openInputStream();
+			StringBuffer data = new StringBuffer();
+			for(int i = 0; i < testDataAppended.length(); i ++) {
+				data.append((char)is.read()); 
+			}
+			assertEquals(testDataAppended, data.toString());
+			is.close();
+			
+		} finally {
+			if (is != null) {
+				is.close();
+			}
+			if (os != null) {
+				os.close();
+			}
+			if (fconn != null) {
+				fconn.close();
+			}
+		}
 	}
 }

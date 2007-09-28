@@ -130,7 +130,7 @@ public class MIDletClassLoaderTest extends TestCase {
 		assertNotNull("got event", lastEvent);
 		assertNotNull("got message", lastEvent.getMessage());
 		System.out.println("[" +lastEvent.getMessage() + "]");
-		assertTrue("error message", lastEvent.getMessage().contains("MIDlet caught"));
+		assertTrue("error message", lastEvent.getMessage().indexOf("MIDlet caught") != -1);
 	}
 	
 	public void testEnhanceCatchBlock() throws Exception {

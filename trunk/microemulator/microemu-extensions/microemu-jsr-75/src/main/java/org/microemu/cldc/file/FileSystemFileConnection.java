@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.lang.reflect.Method;
 import java.security.AccessControlContext;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -68,6 +69,8 @@ public class FileSystemFileConnection implements FileConnection {
 	/* The context to be used when acessing filesystem */
     private AccessControlContext acc;
 	
+    private static boolean java15 = false;
+    
 	FileSystemFileConnection(String name) throws IOException {
 		// <host>/<path>
 		int hostEnd = name.indexOf(DIR_SEP);
@@ -408,7 +411,7 @@ public class FileSystemFileConnection implements FileConnection {
 		return openOutputStream(false);
 	}
 	
-	private OutputStream openOutputStream(boolean append) throws IOException {
+	private OutputStream openOutputStream(final boolean append) throws IOException {
 		throwClosed();
 		throwOpenDirectory();
 		
@@ -420,7 +423,7 @@ public class FileSystemFileConnection implements FileConnection {
 		 */
 		this.opendOutputStream = (OutputStream)doPrivilegedIO(new PrivilegedExceptionAction() {
 			public Object run() throws IOException {
-				return new FileOutputStream(file) {
+				return new FileOutputStream(file, append) {
 					public void close() throws IOException {
 						FileSystemFileConnection.this.opendOutputStream = null;
 						super.close();
@@ -471,9 +474,32 @@ public class FileSystemFileConnection implements FileConnection {
 		throwClosed();
 	}
 
+	private void fileSetJava16(String mehtodName, final Boolean param) throws IOException {
+		if (java15) {
+			throw new IOException("Not supported on Java version < 6");
+		}
+		// Use Java6 function in reflection.
+		try {
+			final Method setWritable = file.getClass().getMethod(mehtodName, new Class[] {boolean.class});
+			doPrivilegedIO(new PrivilegedExceptionAction() {
+				public Object run() throws IOException {
+					try {
+						setWritable.invoke(file, new Object[]{param});
+					} catch (Exception e) {
+						throw new IOException(e.getCause().getMessage());
+					}
+					file.setReadOnly();
+					return null;
+				}
+			});
+		} catch (NoSuchMethodException e) {
+			java15 = true;
+		}
+	}
+	
 	public void setReadable(boolean readable) throws IOException {
 		throwClosed();
-		// TODO use Java6 function in reflection.
+		fileSetJava16("setReadable", new Boolean(readable));
 	}
 
 	public void setWritable(boolean writable) throws IOException {
@@ -485,8 +511,9 @@ public class FileSystemFileConnection implements FileConnection {
 					return null;
 				}
 			});
+		} else {
+			fileSetJava16("setWritable", new Boolean(writable));	
 		}
-		// TODO use Java6 function in reflection.
 	}
 
 	public void truncate(final long byteOffset) throws IOException {

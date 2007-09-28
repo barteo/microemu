@@ -39,8 +39,6 @@ public class MIDletThread extends Thread {
 
 	public static int graceTerminationPeriod = 5000;
 	
-	private static boolean java14 = false;
-	
 	private static final String THREAD_NAME_PREFIX = "MIDletThread-";
 	
 	private static boolean terminator = false;
@@ -145,7 +143,7 @@ public class MIDletThread extends Thread {
 						}
 					}
 					if (t.isAlive()) {
-						Logger.warn("MIDlet thread [" + t.getName() + "] still running" + t.printStackTrace());
+						Logger.warn("MIDlet thread [" + t.getName() + "] still running" + ThreadUtils.getTreadStackTrace(t));
 						if (t.callLocation != null) {
 							Logger.info("this thread [" + t.getName() + "] was created from " + t.callLocation);
 						}
@@ -160,21 +158,4 @@ public class MIDletThread extends Thread {
 		terminator = false;
 	}
 
-	private String printStackTrace() {
-		if (java14) {
-			return "";
-		}
-		try {
-			// TODO Move to ThreadUtils and make compile on Java 1.4
-			StackTraceElement[] trace = this.getStackTrace();
-			StringBuffer b = new StringBuffer();  
-			for (int i=0; i < trace.length; i++) {
-			    b.append("\n\tat ").append(trace[i]);
-			}
-			return b.toString();
-		} catch (Throwable e) {
-			java14 = true;
-			return "";
-		}
-	}
 }

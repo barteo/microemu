@@ -20,275 +20,224 @@
  *  Contributor(s):
  *    3GLab
  */
- 
+
 package javax.microedition.lcdui;
 
-//TODO implement pointer events
-public class List extends Screen implements Choice
-{
+// TODO implement pointer events
+public class List extends Screen implements Choice {
 
-  public static final Command SELECT_COMMAND = new Command("", Command.SCREEN, 0);
-  
-  ChoiceGroup choiceGroup;
-  
-  private Command selCommand;  
-  private int initialPressedItem;
-  
-  
-  public List(String title, int listType)
-  {
-  	super(title);
-  	
-  		if (listType != Choice.IMPLICIT &&
-  				listType != Choice.MULTIPLE &&
-  				listType != Choice.EXCLUSIVE)
-  			throw new IllegalArgumentException("Illegal list type");
+    public static final Command SELECT_COMMAND = new Command("", Command.SCREEN, 0);
 
-  		if (listType == Choice.IMPLICIT) {
-  			// this is necessary because IMPLICIT is not
-  			// a valid ChoiceGroup type
-  			choiceGroup = new ChoiceGroup(null, Choice.EXCLUSIVE);
-  			choiceGroup.choiceType = Choice.IMPLICIT;
-  		} else {
-  	  		choiceGroup = new ChoiceGroup(null, listType);
-  		}
-  			
-		choiceGroup.setOwner(this);
-		choiceGroup.setFocus(true);
-		
-		this.selCommand = SELECT_COMMAND;
-		this.initialPressedItem = -1;
-  }
-  
-  
-	public List(String title, int listType, String[] stringElements, Image[] imageElements)
-	{
-    super(title);
-    
-	if (listType == Choice.IMPLICIT) {
-		// this is necessary because IMPLICIT is not
-		// a valid ChoiceGroup type,
-		// exlusive is used because it has a default
-		// selected value
-		choiceGroup = new ChoiceGroup(null, Choice.EXCLUSIVE, stringElements, imageElements);
-		choiceGroup.choiceType = Choice.IMPLICIT;        
-        for (int i = 0; i < size(); i++) {
-            set(i, getString(i), null);
+    ChoiceGroup choiceGroup;
+
+    private Command selCommand;
+
+    private int initialPressedItem;
+
+    public List(String title, int listType) {
+        super(title);
+
+        if (listType != Choice.IMPLICIT && listType != Choice.MULTIPLE && listType != Choice.EXCLUSIVE)
+            throw new IllegalArgumentException("Illegal list type");
+
+        if (listType == Choice.IMPLICIT) {
+            // this is necessary because IMPLICIT is not
+            // a valid ChoiceGroup type
+            choiceGroup = new ChoiceGroup(null, Choice.EXCLUSIVE);
+            choiceGroup.choiceType = Choice.IMPLICIT;
+        } else {
+            choiceGroup = new ChoiceGroup(null, listType);
         }
-	} else {
-		choiceGroup = new ChoiceGroup(null, listType, stringElements, imageElements);
-	}
-    	choiceGroup.setOwner(this);
-		choiceGroup.setFocus(true);
-		
-		this.selCommand = SELECT_COMMAND;
-		this.initialPressedItem = -1;
-	}
-						
 
-  public int append(String stringPart, Image imagePart) 
-  {
-    return choiceGroup.append(stringPart, imagePart);
-  }
-    
+        choiceGroup.setOwner(this);
+        choiceGroup.setFocus(true);
 
-  public void delete(int elementNum) 
-  {
-    choiceGroup.delete(elementNum);
-  }
-  
-  public void deleteAll()
-  {
-	  choiceGroup.deleteAll();
-  }
-  
-  public int getFitPolicy() 
-  {
-	  return choiceGroup.getFitPolicy();
-  }
-  
-  public Font getFont(int elementNum)
-  {
-	  return choiceGroup.getFont(elementNum);
-  }
-
-  public Image getImage(int elementNum) 
-  {
-    return choiceGroup.getImage(elementNum);
-  }
-    
-
-  public int getSelectedFlags(boolean[] selectedArray_return) 
-  {
-    return choiceGroup.getSelectedFlags(selectedArray_return);
-  }
-    
-
-  public int getSelectedIndex() 
-  {
-    return choiceGroup.getSelectedIndex();
-  }
-    
-  
-  public String getString(int elementNum) 
-  {
-    return choiceGroup.getString(elementNum);
-  }
-    
-  
-  public void insert(int elementNum, String stringPart, Image imagePart) 
-  {
-    choiceGroup.insert(elementNum, stringPart, imagePart);
-  }
-    
-  
-  public boolean isSelected(int elementNum) 
-  {
-    return choiceGroup.isSelected(elementNum);
-  }
-  
-  
-  public void removeCommand(Command cmd)
-  {
-	  // TODO implement
-	  super.removeCommand(cmd);
-  }
-    
-  
-  public void set(int elementNum, String stringPart, Image imagePart) {
-    choiceGroup.set(elementNum, stringPart, imagePart);    
-  }
-  
-  public void setFitPolicy(int policy) 
-  {
-	  choiceGroup.setFitPolicy(policy);
-  }
-  
-  public void setFont(int elementNum, Font font)
-  {
-	choiceGroup.setFont(elementNum, font);  
-  }
-  
-  
-  public void setSelectCommand(Command command)
-  {
-	  selCommand = command;
-  }
-    
-  
-  public void setSelectedFlags(boolean[] selectedArray) 
-  {
-    choiceGroup.setSelectedFlags(selectedArray);    
-  }
-    
-  
-  public void setSelectedIndex(int elementNum, boolean selected) 
-  {
-    choiceGroup.setSelectedIndex(elementNum, selected);    
-  }
-  
-  
-  public void setTicker(Ticker ticker)
-  {
-	  super.setTicker(ticker);
-	  // TODO size of changed probably
-  }
-  
-  
-  public void setTitle(String s)
-  {
-	  // TODO implement
-	  super.setTitle(s);
-  }
-    
-  
-  void keyPressed(int keyCode)
-  {
-    if(Display.getGameAction(keyCode) == Canvas.FIRE 
-        && choiceGroup.select() && super.getCommandListener() != null
-        && choiceGroup.choiceType == Choice.IMPLICIT) {
-      super.getCommandListener().commandAction(selCommand, this);
-    } else {
-      super.keyPressed(keyCode);
+        this.selCommand = SELECT_COMMAND;
+        this.initialPressedItem = -1;
     }
-  }
-  
-    
-  	void pointerPressed(int x, int y) {
-		// TODO currently only IMPLICIT type is implemented
-  		Ticker ticker = getTicker();
-  		if (ticker != null) {
-  			y -= ticker.getHeight();
-  		}
-  		y -= title.getHeight();
-  		y -= 1;
-  		if (y >= 0 && y < viewPortHeight) {
-	  		int pressedItem = choiceGroup.getItemIndexAt(x, y + viewPortY);
-	  		if (pressedItem != -1) {
-	  			setSelectedIndex(pressedItem, true);  	
-	  			initialPressedItem = pressedItem;
-	  		}
-  		}
-  	}
 
+    public List(String title, int listType, String[] stringElements, Image[] imageElements) {
+        super(title);
 
-	void pointerReleased(int x, int y) {
-		// TODO currently only IMPLICIT type is implemented
-  		Ticker ticker = getTicker();
-  		if (ticker != null) {
-  			y -= ticker.getHeight();
-  		}
-  		y -= title.getHeight();
-  		y -= 1;
-  		if (y >= 0 && y < viewPortHeight) {
-	  		int releasedItem = choiceGroup.getItemIndexAt(x, y + viewPortY);
-	  		if (releasedItem != -1) {
-	  			if (releasedItem == initialPressedItem
-	  					&& super.getCommandListener() != null
-	  					&& choiceGroup.choiceType == Choice.IMPLICIT) { 
-	  				super.getCommandListener().commandAction(SELECT_COMMAND, this);
-	  			}
-	  		}
-  		}
-	}
+        if (listType == Choice.IMPLICIT) {
+            // this is necessary because IMPLICIT is not
+            // a valid ChoiceGroup type,
+            // exlusive is used because it has a default
+            // selected value
+            choiceGroup = new ChoiceGroup(null, Choice.EXCLUSIVE, stringElements, imageElements);
+            choiceGroup.choiceType = Choice.IMPLICIT;
+            for (int i = 0; i < size(); i++) {
+                set(i, getString(i), null);
+            }
+        } else {
+            choiceGroup = new ChoiceGroup(null, listType, stringElements, imageElements);
+        }
+        choiceGroup.setOwner(this);
+        choiceGroup.setFocus(true);
 
+        this.selCommand = SELECT_COMMAND;
+        this.initialPressedItem = -1;
+    }
 
-	int paintContent(Graphics g) 
-	{
-		return choiceGroup.paint(g);
-	}
+    public int append(String stringPart, Image imagePart) {
+        return choiceGroup.append(stringPart, imagePart);
+    }
 
-	
-	public int size() 
-	{
-		return choiceGroup.size();
-	}
+    public void delete(int elementNum) {
+        choiceGroup.delete(elementNum);
+    }
 
-	void showNotify() {
-		super.showNotify();
+    public void deleteAll() {
+        choiceGroup.deleteAll();
+    }
 
-		int selectedItemIndex = getSelectedIndex();
-		int heightToItem = choiceGroup.getHeightToItem(selectedItemIndex);		
-		int heightAfterItem = heightToItem;
-		if (selectedItemIndex >= 0) {
-		    heightAfterItem += choiceGroup.getItemHeight(selectedItemIndex);
-		}
-		if (viewPortY > heightToItem) {
-			viewPortY = heightToItem;
-		} else if ((viewPortY + viewPortHeight) < heightAfterItem) {
-			viewPortY = heightAfterItem - viewPortHeight;
-		}
-	}
+    public int getFitPolicy() {
+        return choiceGroup.getFitPolicy();
+    }
 
+    public Font getFont(int elementNum) {
+        return choiceGroup.getFont(elementNum);
+    }
 
-	int traverse(int gameKeyCode, int top, int bottom) 
-	{
-		int traverse = choiceGroup.traverse(gameKeyCode, top, bottom, true);
-		if (traverse == Item.OUTOFITEM) {
-			return 0;
-		} else {
-			return traverse;
-		}
-	}
+    public Image getImage(int elementNum) {
+        return choiceGroup.getImage(elementNum);
+    }
+
+    public int getSelectedFlags(boolean[] selectedArray_return) {
+        return choiceGroup.getSelectedFlags(selectedArray_return);
+    }
+
+    public int getSelectedIndex() {
+        return choiceGroup.getSelectedIndex();
+    }
+
+    public String getString(int elementNum) {
+        return choiceGroup.getString(elementNum);
+    }
+
+    public void insert(int elementNum, String stringPart, Image imagePart) {
+        choiceGroup.insert(elementNum, stringPart, imagePart);
+    }
+
+    public boolean isSelected(int elementNum) {
+        return choiceGroup.isSelected(elementNum);
+    }
+
+    public void removeCommand(Command cmd) {
+        // TODO implement
+        super.removeCommand(cmd);
+    }
+
+    public void set(int elementNum, String stringPart, Image imagePart) {
+        choiceGroup.set(elementNum, stringPart, imagePart);
+    }
+
+    public void setFitPolicy(int policy) {
+        choiceGroup.setFitPolicy(policy);
+    }
+
+    public void setFont(int elementNum, Font font) {
+        choiceGroup.setFont(elementNum, font);
+    }
+
+    public void setSelectCommand(Command command) {
+        selCommand = command;
+    }
+
+    public void setSelectedFlags(boolean[] selectedArray) {
+        choiceGroup.setSelectedFlags(selectedArray);
+    }
+
+    public void setSelectedIndex(int elementNum, boolean selected) {
+        choiceGroup.setSelectedIndex(elementNum, selected);
+    }
+
+    public void setTicker(Ticker ticker) {
+        super.setTicker(ticker);
+        // TODO size of changed probably
+    }
+
+    public void setTitle(String s) {
+        // TODO implement
+        super.setTitle(s);
+    }
+
+    void keyPressed(int keyCode) {
+        if (Display.getGameAction(keyCode) == Canvas.FIRE && choiceGroup.select() && super.getCommandListener() != null
+                && choiceGroup.choiceType == Choice.IMPLICIT) {
+            super.getCommandListener().commandAction(selCommand, this);
+        } else {
+            super.keyPressed(keyCode);
+        }
+    }
+
+    void pointerPressed(int x, int y) {
+        // TODO currently only IMPLICIT type is implemented
+        Ticker ticker = getTicker();
+        if (ticker != null) {
+            y -= ticker.getHeight();
+        }
+        y -= title.getHeight();
+        y -= 1;
+        if (y >= 0 && y < viewPortHeight) {
+            int pressedItem = choiceGroup.getItemIndexAt(x, y + viewPortY);
+            if (pressedItem != -1) {
+                setSelectedIndex(pressedItem, true);
+                initialPressedItem = pressedItem;
+            }
+        }
+    }
+
+    void pointerReleased(int x, int y) {
+        // TODO currently only IMPLICIT type is implemented
+        Ticker ticker = getTicker();
+        if (ticker != null) {
+            y -= ticker.getHeight();
+        }
+        y -= title.getHeight();
+        y -= 1;
+        if (y >= 0 && y < viewPortHeight) {
+            int releasedItem = choiceGroup.getItemIndexAt(x, y + viewPortY);
+            if (releasedItem != -1) {
+                if (releasedItem == initialPressedItem && super.getCommandListener() != null
+                        && choiceGroup.choiceType == Choice.IMPLICIT) {
+                    super.getCommandListener().commandAction(SELECT_COMMAND, this);
+                }
+            }
+        }
+    }
+
+    int paintContent(Graphics g) {
+        return choiceGroup.paint(g);
+    }
+
+    public int size() {
+        return choiceGroup.size();
+    }
+
+    void showNotify() {
+        super.showNotify();
+
+        int selectedItemIndex = getSelectedIndex();
+        int heightToItem = choiceGroup.getHeightToItem(selectedItemIndex);
+        int heightAfterItem = heightToItem;
+        if (selectedItemIndex >= 0) {
+            heightAfterItem += choiceGroup.getItemHeight(selectedItemIndex);
+        }
+        if (viewPortY > heightToItem) {
+            viewPortY = heightToItem;
+        } else if ((viewPortY + viewPortHeight) < heightAfterItem) {
+            viewPortY = heightAfterItem - viewPortHeight;
+        }
+    }
+
+    int traverse(int gameKeyCode, int top, int bottom) {
+        int traverse = choiceGroup.traverse(gameKeyCode, top, bottom, true);
+        if (traverse == Item.OUTOFITEM) {
+            return 0;
+        } else {
+            return traverse;
+        }
+    }
 
 }

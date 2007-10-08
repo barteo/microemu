@@ -23,7 +23,6 @@
 
 package javax.microedition.lcdui;
 
-// TODO implement pointer events
 public class List extends Screen implements Choice {
 
     public static final Command SELECT_COMMAND = new Command("", Command.SCREEN, 0);
@@ -172,7 +171,6 @@ public class List extends Screen implements Choice {
     }
 
     void pointerPressed(int x, int y) {
-        // TODO currently only IMPLICIT type is implemented
         Ticker ticker = getTicker();
         if (ticker != null) {
             y -= ticker.getHeight();
@@ -182,21 +180,24 @@ public class List extends Screen implements Choice {
         if (y >= 0 && y < viewPortHeight) {
             int pressedItem = choiceGroup.getItemIndexAt(x, y + viewPortY);
             if (pressedItem != -1) {
-                setSelectedIndex(pressedItem, true);
+                if (choiceGroup.choiceType == Choice.MULTIPLE) {
+                    setSelectedIndex(pressedItem, !isSelected(pressedItem));
+                } else {
+                    setSelectedIndex(pressedItem, true);
+                }
                 initialPressedItem = pressedItem;
             }
         }
     }
 
     void pointerReleased(int x, int y) {
-        // TODO currently only IMPLICIT type is implemented
         Ticker ticker = getTicker();
         if (ticker != null) {
             y -= ticker.getHeight();
         }
         y -= title.getHeight();
         y -= 1;
-        if (y >= 0 && y < viewPortHeight) {
+        if (y >= 0 && y < viewPortHeight && choiceGroup.choiceType == Choice.IMPLICIT) {
             int releasedItem = choiceGroup.getItemIndexAt(x, y + viewPortY);
             if (releasedItem != -1) {
                 if (releasedItem == initialPressedItem && super.getCommandListener() != null

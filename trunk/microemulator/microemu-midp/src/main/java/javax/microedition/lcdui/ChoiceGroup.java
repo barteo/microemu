@@ -420,6 +420,7 @@ public class ChoiceGroup extends Item implements Choice
 			throw new IndexOutOfBoundsException();
 		}
 
+        highlightedItemIndex = elementNum;
 		if ((choiceType == Choice.EXCLUSIVE ||
 				choiceType == Choice.POPUP) && selected) {
 			for (int i = 0; i < numOfItems; i++) {
@@ -434,7 +435,6 @@ public class ChoiceGroup extends Item implements Choice
 			repaint();
 		} else if (choiceType == Choice.IMPLICIT) {
 		    if (selected) {
-		        highlightedItemIndex = elementNum;
 				items[elementNum].setSelectedState(selected);
 				repaint();
 		    }
@@ -475,15 +475,12 @@ public class ChoiceGroup extends Item implements Choice
 	 */
 	int getItemIndexAt(int x, int y)
 	{
-		// TODO currently only IMPLICIT type is implemented
 		x -= super.getHeight();
-		if (choiceType == Choice.IMPLICIT) {
-			int testY = 0;
-			for (int i = 0; i < numOfItems; i++) {
-				testY += items[i].getHeight();
-				if (y < testY) {
-					return i;
-				}
+		int testY = 0;
+		for (int i = 0; i < numOfItems; i++) {
+			testY += items[i].getHeight();
+			if (y < testY) {
+				return i;
 			}
 		}
 		

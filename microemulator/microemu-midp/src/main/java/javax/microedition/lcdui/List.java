@@ -267,8 +267,12 @@ public class List extends Screen implements Choice
 	void showNotify() {
 		super.showNotify();
 
-		int heightToItem = choiceGroup.getHeightToItem(getSelectedIndex());
-		int heightAfterItem = heightToItem + choiceGroup.getItemHeight(getSelectedIndex());
+		int selectedItemIndex = getSelectedIndex();
+		int heightToItem = choiceGroup.getHeightToItem(selectedItemIndex);		
+		int heightAfterItem = heightToItem;
+		if (selectedItemIndex >= 0) {
+		    heightAfterItem += choiceGroup.getItemHeight(selectedItemIndex);
+		}
 		if (viewPortY > heightToItem) {
 			viewPortY = heightToItem;
 		} else if ((viewPortY + viewPortHeight) < heightAfterItem) {

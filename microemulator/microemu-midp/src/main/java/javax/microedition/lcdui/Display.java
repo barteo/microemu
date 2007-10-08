@@ -299,7 +299,11 @@ public class Display {
 
         public void paint(Graphics g) {
             if (current != null) {
-                current.paint(g);
+                try {
+                    current.paint(g);
+                } catch (Throwable th) {
+                    th.printStackTrace();
+                }
                 g.translate(-g.getTranslateX(), -g.getTranslateY());
             }
         }

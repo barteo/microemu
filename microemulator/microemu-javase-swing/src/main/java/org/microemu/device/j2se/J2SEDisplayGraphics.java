@@ -55,7 +55,7 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
 
     private javax.microedition.lcdui.Font currentFont = javax.microedition.lcdui.Font.getDefaultFont();
 
-    private java.awt.image.RGBImageFilter filter;
+    private java.awt.image.RGBImageFilter filter = null;
 
     // Andres Navarro
     public J2SEDisplayGraphics(java.awt.Graphics2D a_g, MutableImage a_image)
@@ -77,10 +77,14 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
             this.g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
         }
 
-        if (device.getDeviceDisplay().isColor()) {
-            this.filter = new RGBImageFilter();
+        J2SEDeviceDisplay display = (J2SEDeviceDisplay) device.getDeviceDisplay();
+        if (display.isColor()) {
+            if (display.backgroundColor.getRed() != 255 || display.backgroundColor.getGreen() != 255 || display.backgroundColor.getBlue() != 255 ||
+                    display.foregroundColor.getRed() != 0 || display.foregroundColor.getGreen() != 0 || display.foregroundColor.getBlue() != 0) {
+                this.filter = new RGBImageFilter();
+            }
         } else {
-            if (device.getDeviceDisplay().numColors() == 2) {
+            if (display.numColors() == 2) {
                 this.filter = new BWImageFilter();
             } else {
                 this.filter = new GrayImageFilter();
@@ -101,7 +105,11 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
         
         Color awtColor = (Color) colorCache.get(new Integer(RGB));
         if (awtColor == null) {
-            awtColor = new Color(filter.filterRGB(0, 0, color));
+            if (filter != null) {
+                awtColor = new Color(filter.filterRGB(0, 0, color));
+            } else {
+                awtColor = new Color(RGB);
+            }
             colorCache.put(new Integer(RGB), awtColor);
         }
         g.setColor(awtColor);

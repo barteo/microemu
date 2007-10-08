@@ -284,9 +284,12 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl {
         img.setRGB(0, 0, width, height, rgb, 0, width);
 
         // now apply the corresponding filter
-        ImageFilter filter;
+        ImageFilter filter = null;
         if (isColor()) {
-            filter = new RGBImageFilter();
+            if (backgroundColor.getRed() != 255 || backgroundColor.getGreen() != 255 || backgroundColor.getBlue() != 255 ||
+                    foregroundColor.getRed() != 0 || foregroundColor.getGreen() != 0 || foregroundColor.getBlue() != 0) {
+                filter = new RGBImageFilter();
+            }
         } else {
             if (numColors() == 2) {
                 filter = new BWImageFilter();
@@ -294,8 +297,12 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl {
                 filter = new GrayImageFilter();
             }
         }
-        FilteredImageSource imageSource = new FilteredImageSource(img.getSource(), filter);
-        return new J2SEImmutableImage(Toolkit.getDefaultToolkit().createImage(imageSource));
+        if (filter != null) {
+            FilteredImageSource imageSource = new FilteredImageSource(img.getSource(), filter);
+            return new J2SEImmutableImage(Toolkit.getDefaultToolkit().createImage(imageSource));
+        } else {
+            return new J2SEImmutableImage(img);
+        }
     }
 
     public Image createImage(Image image, int x, int y, int width, int height, int transform) {
@@ -544,9 +551,12 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl {
 
         java.awt.Image image = Toolkit.getDefaultToolkit().createImage(imageBytes);
 
-        ImageFilter filter;
+        ImageFilter filter = null;
         if (isColor()) {
-            filter = new RGBImageFilter();
+            if (backgroundColor.getRed() != 255 || backgroundColor.getGreen() != 255 || backgroundColor.getBlue() != 255 ||
+                    foregroundColor.getRed() != 0 || foregroundColor.getGreen() != 0 || foregroundColor.getBlue() != 0) {
+                filter = new RGBImageFilter();
+            }
         } else {
             if (numColors() == 2) {
                 filter = new BWImageFilter();
@@ -554,8 +564,13 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl {
                 filter = new GrayImageFilter();
             }
         }
-        FilteredImageSource imageSource = new FilteredImageSource(image.getSource(), filter);
-        java.awt.Image resultImage = Toolkit.getDefaultToolkit().createImage(imageSource);
+        java.awt.Image resultImage;
+        if (filter != null) {
+            FilteredImageSource imageSource = new FilteredImageSource(image.getSource(), filter);
+            resultImage = Toolkit.getDefaultToolkit().createImage(imageSource);
+        } else {
+            resultImage = image;
+        }
 
         // TODO not elegant solution, maybe use ImageObserver in image.getWitdth(..) instead
         MediaTracker mediaTracker = new MediaTracker(new java.awt.Canvas());

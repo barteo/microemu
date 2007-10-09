@@ -21,7 +21,6 @@
  */
 package org.microemu.tests;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -32,7 +31,7 @@ import javax.microedition.lcdui.Graphics;
  * @author vlads
  *
  */
-public class PreporcessorTestCanvas  extends BaseTestsCanvas {
+public class PreporcessorTestCanvas extends BaseTestsCanvas {
 
 	public static final boolean enabled = true;
 	
@@ -67,6 +66,18 @@ public class PreporcessorTestCanvas  extends BaseTestsCanvas {
 			writeln(g, line++, "failure");
 			writeln(g, line++, e.toString());
 		}
+		
+		try {
+			String resourceName = "resource-path-text.txt";
+			String expected = "not absolute";
+			
+			String result = verifyLoadStrings(PreporcessorTestCanvas.class.getResourceAsStream(resourceName), "App.class. " +  resourceName, expected);
+
+			writeln(g, line++, "loaded " + result);
+		} catch (Throwable e) {
+			writeln(g, line++, "failure");
+			writeln(g, line++, e.toString());
+		}
 	}
 	
 	private String verifyLoadStrings(InputStream inputstream, String resourceName, String expected) {	
@@ -74,6 +85,8 @@ public class PreporcessorTestCanvas  extends BaseTestsCanvas {
 			if (expected == null) {
 				System.out.println("OK - Resource not found " + resourceName);
 				return "{not found}";
+			} else {
+				System.err.println("Resource not found " + resourceName);
 			}
 			throw new RuntimeException("Resource not found " + resourceName);
 		} else {
@@ -82,13 +95,18 @@ public class PreporcessorTestCanvas  extends BaseTestsCanvas {
 			}
 		}
 		try {
-			BufferedReader r = new BufferedReader(new InputStreamReader(inputstream));
-			String value = r.readLine();
-			if (!expected.equals(value)) {
+			InputStreamReader r = new InputStreamReader(inputstream);
+			StringBuffer value = new StringBuffer();
+			int b;
+			while ((b = r.read()) != -1) {
+				value.append((char)b);
+			}
+			if (!expected.equals(value.toString())) {
 				throw new RuntimeException("Unexpected resource " + resourceName + " value [" + value + "]\nexpected [" + expected + "]");
 			}
-			return value;
+			return value.toString();
 		} catch (IOException e) {
+			e.printStackTrace();
 			throw new RuntimeException("Resource read error " + resourceName, e);
 		} finally {
 			try {

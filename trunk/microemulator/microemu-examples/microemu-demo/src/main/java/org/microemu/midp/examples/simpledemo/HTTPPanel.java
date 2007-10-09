@@ -44,9 +44,7 @@ public class HTTPPanel extends BaseExamplesForm {
 	static final Command goCommand = new Command("Go", Command.OK, 1);
 	
 	// See file src/site/resources/test/index.php
-	static final String demoLocation =
-		"http://pyx4j.com/test/";
-		//"http://www.microemu.org/test/";
+	static String demoLocation;
 	
 	TextField url;
 	
@@ -58,6 +56,13 @@ public class HTTPPanel extends BaseExamplesForm {
 	
 	public HTTPPanel() {
 		super("HTTP Connection");
+		
+		String host = SimpleDemoMIDlet.instance.getAppProperty("microemu.accessible.host");
+		if (host == null) {
+			demoLocation = "http://www.microemu.org/test/";
+		} else {
+			demoLocation = "http://" + host + "/test/";
+		}
 		
 		append(url = new TextField("URL:", demoLocation, 128, TextField.URL));
 		append(message = new StringItem("Message:", null));

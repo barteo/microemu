@@ -17,7 +17,7 @@ Custom Skin Creation for MicroEmulator
 
     The Skin of MicroEmulator is described in the device.xml file. There are skins for different devices packaged with product distribution so you can rename the existing skin to start a new one.
     The Device class for a Skin is optional: you only need to provide xml descriptor and images and package them in jar.
-    We have also created the {{{http://pyx4j.com/snapshot/pyx4me/pyx4me-devices/}Another Skin collection}}, however, its images can only be used with the vendor's special permission.
+    We have also created the {{{http://pyx4me.com/pyx4me-devices/}Another Skin collection}}, however, its images can only be used with the vendor's special permission.
 
 *  MicroEmulator Skins
 

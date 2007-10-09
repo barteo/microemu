@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp
   spec="1.0+"
-  codebase="http://pyx4j.com/snapshot/microemu/microemu-webstart">
+  codebase="http://snapshot-microemu.pyx4j.com/microemu-webstart">
   <information>
     <title>MicroEmulator</title>
     <vendor>Bartek Teodorczyk & Vlad Skarzhevskyy</vendor>

@@ -69,7 +69,7 @@
 
             <!--4release-->
             <!--
-            <item name="Preview 2.0.2" href="http://pyx4j.com/snapshot/microemu/" />
+            <item name="Preview 2.0.2" href="http://snapshot-microemu.pyx4j.com/" />
             -->
             <item name="Changes and Plans" href="http://www.microemu.org/changes-report.html" />
         </menu>

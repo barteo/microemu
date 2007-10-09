@@ -72,6 +72,11 @@ public class Main extends Applet implements MicroEmulator
     private JadProperties manifest = new JadProperties();
 
     private SwingDeviceComponent devicePanel;
+    
+    /**
+     * Host name accessible by MIDlet
+     */
+    private String accessibleHost;
 
     private EmulatorContext emulatorContext = new EmulatorContext()
     {
@@ -119,6 +124,11 @@ public class Main extends Applet implements MicroEmulator
         MIDletSystemProperties.applyToJavaSystemProperties = false;	
         MIDletBridge.setMicroEmulator(this);
 
+        URL baseURL = getCodeBase();
+        if (baseURL != null) {
+        	accessibleHost = baseURL.getHost();
+        }
+        
         recordStoreManager = new MemoryRecordStoreManager();
 
         setLayout(new BorderLayout());
@@ -290,6 +300,10 @@ public class Main extends Applet implements MicroEmulator
             value = Locale.getDefault().getLanguage();
         } else if (key.equals("microedition.encoding")) {
             value = System.getProperty("file.encoding");
+        } else if (key.equals("microemu.applet")) {
+            value = "true";
+        } else if (key.equals("microemu.accessible.host")) {
+            value = accessibleHost;
         } else if (getParameter(key) != null) {
             value = getParameter(key);
         } else {

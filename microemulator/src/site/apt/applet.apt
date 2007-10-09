@@ -8,8 +8,8 @@ Application demonstration in web browser applet
 
   In general your application should run without any changes inside applet.
 
-  * Keep it in mind that if your j2me application requires HTTP access the applet must be signed.
-  By default the applet will only communicate with the host the applet came from (your website).
+  * Keep it in mind that if your j2me application requires HTTP access to any site the applet and application jars must be signed.
+  By default the applet will only communicate with the host the applet came from (your website). See {{{#MIDlet.getAppProperty}MIDlet.getAppProperty}}.
 
   * Applet do not allow calls to System.getProperty() use "Save for Web...".
 
@@ -25,6 +25,7 @@ Application demonstration in web browser applet
    The resulting JAR is safe to run on any other Emulator or device. Different {{{http://microemulator.svn.sourceforge.net/viewvc/microemulator/trunk/microemulator/microemu-javase/src/main/java/org/microemu/Injected.java?view=markup}Injected}} class
    with the same name is used when application is running under MicroEmulator.
 
+    []
 
 Embedding applet into html page
 
@@ -108,5 +109,25 @@ Embedding applet into html page
 ---
 
 
+{MIDlet.getAppProperty}
 
+    Function MIDlet.getAppProperty(String) is extended with additional properties so your MIDP application can be made aware of applet runtime environment.
+
+    * "microemu.applet" the value would be "true" when application is running in applet
+
+    * "microemu.accessible.host" the host name the applet is loaded from. This is the only host your application can communicate with while runing in applet.
+
+    * Other named parameter from the applet HTML tag.
+
+        Example:
+
+            getAppProperty("demoServiceURL");
+
+---
+<applet code="org.microemu.applet.Main"
+		width=226 height=471 archive="microemu-javase-applet.jar,(MIDlet application jar)">
+	<param name="midlet" value="(MIDlet application main class)">
+	<param name="demoServiceURL" value="http://mycompany.com/appdemo/service.php">
+</applet>
+---
 

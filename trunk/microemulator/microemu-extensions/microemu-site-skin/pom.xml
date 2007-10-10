@@ -13,4 +13,16 @@
 
     <description>microemu-site-skin</description>
 
+    <distributionManagement>
+        <!-- no-deployment -->
+        <repository>
+            <id>pyx4j.com-no-deployment</id>
+            <url>file:///${basedir}/target/tmp</url>
+        </repository>
+        <snapshotRepository>
+            <id>pyx4j.com-no-deployment</id>
+            <url>file:///${basedir}/target/tmp</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 </project>

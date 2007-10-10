@@ -5,6 +5,12 @@
 
     <publishDate position="left" format="MM-dd-yyyy HH:mm z 'GMT'Z" />
 
+    <skin>
+        <groupId>org.microemu</groupId>
+        <artifactId>microemu-site-skin</artifactId>
+        <version>1.0</version>
+    </skin>
+
     <bannerLeft>
             <name>J2ME Device Emulator</name>
             <src>http://www.microemu.org/images/logo.png</src>
@@ -26,10 +32,11 @@
             name="Built by Maven"
             href="http://maven.apache.org"
             img="images/logos/maven-feather.png"/>
-         <logo
+         <!-- This is done in skin -->
+         <!--logo
             name="Metrics"
             href="http://www.ohloh.net/projects/6490"
-            img="http://www.ohloh.net/projects/6490/badge.gif" />
+            img="http://www.ohloh.net/projects/6490/badge.gif" /-->
     </poweredBy>
 
     <body>

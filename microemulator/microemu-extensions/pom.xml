@@ -21,6 +21,8 @@
 
 
     <modules>
+        <module>microemu-site-skin</module>
+
         <module>microemu-device-large</module>
         <module>microemu-device-minimum</module>
         <module>microemu-jsr-75</module>

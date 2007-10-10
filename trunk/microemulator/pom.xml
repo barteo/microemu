@@ -182,7 +182,7 @@
             <dependency>
                 <groupId>jboss</groupId>
                 <artifactId>javassist</artifactId>
-                <version>3.3.ga</version>
+                <version>3.4.ga</version>
                 <scope>test</scope>
             </dependency>
 

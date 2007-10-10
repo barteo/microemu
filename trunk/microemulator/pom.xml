@@ -357,13 +357,6 @@
                                     <replacefilter token="#build#" value="${buildLabel}"/>
                                     <replacefilter token="#version#" value="${version}"/>
                                 </replace>
-                                <copy overwrite="true" failonerror="false"
-                                      file="${basedir}/../target/site/css/site-child.css"
-                                      tofile="${project.build.directory}/site/css/site.css"/>
-                                <!-- this done for deep child modules  -->
-                                <copy overwrite="true" failonerror="false"
-                                      file="${basedir}/../target/site/css/site-child.css"
-                                      tofile="${project.build.directory}/site/css/site-child.css"/>
                             </tasks>
                         </configuration>
                     </execution>

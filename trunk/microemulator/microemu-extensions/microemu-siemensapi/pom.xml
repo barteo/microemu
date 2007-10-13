@@ -18,4 +18,13 @@
 
     <description>siemensapi</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-javase</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
 </project>

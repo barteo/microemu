@@ -69,6 +69,7 @@
     </mailingLists>
 
     <modules>
+        <module>api</module>
         <module>microemu-cldc</module>
         <module>microemu-midp</module>
         <module>microemu-injected</module>

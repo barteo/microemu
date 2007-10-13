@@ -113,12 +113,32 @@
 
     </distributionManagement>
 
+<!-- 4snapshot -->
+    <repositories>
+        <repository>
+            <id>pyx4me-web</id>
+            <url>http://www.pyx4me.com/maven2-snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
     <pluginRepositories>
 
 <!-- 4snapshot -->
         <pluginRepository>
             <id>pyx4me-web</id>
             <url>http://www.pyx4me.com/maven2-snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
         </pluginRepository>
 
         <pluginRepository>

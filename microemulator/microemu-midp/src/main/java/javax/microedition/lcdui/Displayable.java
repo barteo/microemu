@@ -28,27 +28,28 @@ import org.microemu.device.DeviceFactory;
 
 public abstract class Displayable
 {
-	protected Device device;
+	Device device;
 	
 	boolean sizeChangedDeferredRequest;
 	
 	Display currentDisplay = null;
     
-    boolean fullScreenMode;
+	boolean fullScreenMode;
 
-    private Ticker ticker;
+    Ticker ticker;
     
     // TODO make private
-    protected StringComponent title;
+    StringComponent title;
     // TODO make private
-    protected int viewPortY;
+    int viewPortY;
     // TODO make private
-    protected int viewPortHeight;
+    int viewPortHeight;
     
     /**
      * @associates Command 
      */
 	private Vector commands = new Vector();
+	
 	private CommandListener listener = null;
 
     

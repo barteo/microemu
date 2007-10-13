@@ -38,9 +38,10 @@
         </dependency>
 
         <dependency>
-            <groupId>jboss</groupId>
-            <artifactId>javassist</artifactId>
+            <groupId>net.sf.jour</groupId>
+            <artifactId>jour-instrument</artifactId>
             <scope>test</scope>
+            <optional>true</optional>
         </dependency>
 
     </dependencies>
@@ -71,19 +72,6 @@
                     <libs>
                         <lib>${java.home}/lib/rt.jar</lib>
                     </libs>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <systemProperties>
-                        <!-- Used for APIDeclarations Tests -->
-                        <property>
-                            <name>WTK_HOME</name>
-                            <value>${env.WTK_HOME}</value>
-                        </property>
-                    </systemProperties>
                 </configuration>
             </plugin>
         </plugins>

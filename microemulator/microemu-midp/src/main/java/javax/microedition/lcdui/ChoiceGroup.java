@@ -25,13 +25,16 @@ package javax.microedition.lcdui;
 
 public class ChoiceGroup extends Item implements Choice
 {
-    protected int choiceType;
+    int choiceType;
 
     private ChoiceItem items[] = new ChoiceItem[4];
+    
     private int numOfItems = 0;
   
     private int fitPolicy;
+    
     private int highlightedItemIndex = -1;  
+    
     private List popupList;
 
 	private static byte multiOff[] = {

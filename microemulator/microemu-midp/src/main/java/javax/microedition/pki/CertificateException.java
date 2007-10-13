@@ -23,7 +23,9 @@ import java.io.IOException;
 
 public class CertificateException extends IOException {
 
-	public static final byte BAD_EXTENSIONS = 1;
+    private static final long serialVersionUID = 1L;
+
+    public static final byte BAD_EXTENSIONS = 1;
 	public static final byte CERTIFICATE_CHAIN_TOO_LONG = 2;
 	public static final byte EXPIRED = 3;
 	public static final byte UNAUTHORIZED_INTERMEDIATE_CA = 4;

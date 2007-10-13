@@ -21,6 +21,8 @@
  */
 package javax.obex;
 
+import javax.microedition.io.Connection;
+
 import net.sf.jour.signature.SignatureTestCase;
 
 /**
@@ -30,9 +32,13 @@ import net.sf.jour.signature.SignatureTestCase;
 public class JSR82APIObexDeclarationsTest extends SignatureTestCase {
 
     public String getAPIPath() {
-        return getClassPath(Authenticator.class);
+        return getClassPath(SessionNotifier.class);
     }
 
+    public String getSupportingJarsPath() {
+        return getClassPath(Connection.class);
+    }
+    
     public String getSignatureXMLPath() {
         return "jsr82-obex-signature.xml";
     }

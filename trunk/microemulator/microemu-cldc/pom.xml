@@ -18,6 +18,24 @@
 
     <description>cldc interfaces</description>
 
+    <dependencies>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <scope>test</scope>
+                <optional>true</optional>
+            </dependency>
+
+            <dependency>
+                <groupId>net.sf.jour</groupId>
+                <artifactId>jour-instrument</artifactId>
+                <scope>test</scope>
+                <optional>true</optional>
+            </dependency>
+
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

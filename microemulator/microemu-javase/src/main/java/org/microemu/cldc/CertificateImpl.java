@@ -36,15 +36,11 @@ public class CertificateImpl implements Certificate {
 	}
 
 	public long getNotAfter() {
-		long current = System.currentTimeMillis();
-		
-		return (cert.getNotAfter().getTime() - current);
+		return cert.getNotAfter().getTime();
 	}
 
 	public long getNotBefore() {
-		long current = System.currentTimeMillis();
-		
-		return (cert.getNotBefore().getTime() - current);
+		return cert.getNotBefore().getTime();
 	}
 
 	public String getSerialNumber() {

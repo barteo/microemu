@@ -33,7 +33,7 @@
         <module>microemu-siemensapi</module>
     </modules>
 
-
+    <!--
     <dependencies>
         <dependency>
             <groupId>org.microemu</groupId>
@@ -42,5 +42,6 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+    -->
 
 </project>

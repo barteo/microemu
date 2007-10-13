@@ -16,6 +16,38 @@
     <artifactId>microemu-jsr-82</artifactId>
     <name>microemu-jsr-82</name>
 
-    <description>jsr-82</description>
+    <description>jsr-82 - Java APIs for Bluetooth</description>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <dependencies>
+
+            <dependency>
+                <groupId>org.microemu</groupId>
+                <artifactId>microemu-cldc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <scope>test</scope>
+                <optional>true</optional>
+            </dependency>
+
+            <dependency>
+                <groupId>net.sf.jour</groupId>
+                <artifactId>jour-instrument</artifactId>
+                <scope>test</scope>
+                <optional>true</optional>
+            </dependency>
+
+    </dependencies>
 
 </project>

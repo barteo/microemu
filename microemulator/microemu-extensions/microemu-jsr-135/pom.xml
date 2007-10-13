@@ -18,4 +18,28 @@
 
     <description>jsr-135</description>
 
+    <dependencies>
+
+            <dependency>
+                <groupId>org.microemu</groupId>
+                <artifactId>microemu-midp</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+<!--
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <scope>test</scope>
+                <optional>true</optional>
+            </dependency>
+
+            <dependency>
+                <groupId>net.sf.jour</groupId>
+                <artifactId>jour-instrument</artifactId>
+                <scope>test</scope>
+                <optional>true</optional>
+            </dependency>
+-->
+    </dependencies>
+
 </project>

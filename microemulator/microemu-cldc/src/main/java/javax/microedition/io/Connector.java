@@ -36,6 +36,10 @@ public class Connector {
 
 	public static final int READ_WRITE = 3;
 
+	private Connector() {
+	    
+	}
+	
 	public static Connection open(String name) throws IOException {
 		return ImplFactory.getCGFImplementation(name).open(name);
 	}

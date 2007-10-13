@@ -28,6 +28,12 @@ import org.microemu.device.DeviceFactory;
 
 public class Image
 {
+
+//    TODO there should be a public constructors
+//    private Image() {
+//        
+//    }
+    
 	public static Image createImage(int width, int height)
 	{
 		if (width <= 0 || height <= 0) {

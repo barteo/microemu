@@ -29,6 +29,10 @@ public class RecordStore
 	
 	public static final int AUTHMODE_ANY = 1;
 	
+//	TODO there should be a public constructors
+//	private RecordStore() {
+//	    
+//	}
 	
 	public static void deleteRecordStore(String recordStoreName)
 			throws RecordStoreException, RecordStoreNotFoundException

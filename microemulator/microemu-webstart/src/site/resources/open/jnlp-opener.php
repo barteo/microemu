@@ -23,14 +23,26 @@
 
     header('Content-Type: application/x-java-jnlp-file');
 
-    $jadURL = 'http://' . $_GET['app-url'] . '.jad';
+    $appURL = $_GET['app-url'];
+    $jadURL = 'http://' . $appURL . '.jad';
 
     $patern = '<!--jadRewrite-->';
 
-    $jnlpFileName = "../demo.jnlp";
-    $fh = fopen($jnlpFileName, 'r');
-    $xml = fread($fh, filesize($jnlpFileName));
+    $jnlpFileName = "demo.jnlp";
+
+    $jnlpRewritDir = "open/";
+
+    $jnlpFilePath = "../" . $jnlpFileName;
+    $fh = fopen($jnlpFilePath, 'r');
+    $xml = fread($fh, filesize($jnlpFilePath));
     fclose($fh);
     $xml = ereg_replace($patern . '.+' . $patern, '<argument>' . $jadURL . '</argument>', $xml);
+
+    if (strlen($appURL) > 0) {
+        $patern_href = 'href="' . $jnlpFileName . '"';
+        $new_href = 'href="' . $jnlpRewritDir . $appURL . '.jnlp"';
+        $xml = str_replace($patern_href, $new_href, $xml);
+    }
+
     echo($xml);
 ?>

@@ -690,8 +690,16 @@ public class Main extends JFrame {
 		}
 		
 		List params = new ArrayList();
+		StringBuffer debugArgs = new StringBuffer();
 		for (int i = 0; i < args.length; i++) {
 			params.add(args[i]);
+			if (debugArgs.length() != 0) {
+			    debugArgs.append(", ");
+			}
+			debugArgs.append("[").append(args[i]).append("]");
+		}
+		if (args.length > 0) {
+		    Logger.debug("arguments", debugArgs.toString());
 		}
 
 		Common.initParams(params);

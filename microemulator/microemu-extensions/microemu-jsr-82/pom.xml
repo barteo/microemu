@@ -50,4 +50,18 @@
 
     </dependencies>
 
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <links>
+                        <link>http://java.sun.com/j2se/1.4.2/docs/api</link>
+                    </links>
+                    <bottom><![CDATA[JSR-82 Javadocs licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0<a> Copyright &#169; 2001-2007 Motorola, Inc.  ALL RIGHTS RESERVED.]]></bottom>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
 </project>

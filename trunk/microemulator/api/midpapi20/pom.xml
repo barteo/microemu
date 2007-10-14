@@ -18,4 +18,14 @@
 
     <description>MicroEmulator SDK MIDP 2.0 API modules based on sources from phoneME</description>
 
+    <dependencies>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>cldcapi11</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+    </dependencies>
+
 </project>

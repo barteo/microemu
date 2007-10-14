@@ -484,6 +484,7 @@ public class List extends Screen implements Choice {
      * </TR>
      * </TABLE>
      * @param cmd the command to be removed
+     * @since MIDP 2.0
      *
      */
     public void removeCommand(Command cmd) {
@@ -540,6 +541,7 @@ public class List extends Screen implements Choice {
      *
      * @param command the command to be used for an <code>IMPLICIT</code> list
      * selection action, or <code>null</code> if there is none
+     * @since MIDP 2.0
      *
      */
     public void setSelectCommand(Command command) {
@@ -558,6 +560,7 @@ public class List extends Screen implements Choice {
      * @param fitPolicy preferred content fit policy for choice elements
      * @throws IllegalArgumentException if <code>fitPolicy</code> is invalid
      * @see #getFitPolicy
+     * @since MIDP 2.0
      */
     public void setFitPolicy(int fitPolicy) {
         throw new RuntimeException("STUB");
@@ -573,6 +576,7 @@ public class List extends Screen implements Choice {
      * @return one of {@link #TEXT_WRAP_DEFAULT}, {@link #TEXT_WRAP_ON}, or
      * {@link #TEXT_WRAP_OFF}
      * @see #setFitPolicy
+     * @since MIDP 2.0
      */
     public int getFitPolicy() {
         throw new RuntimeException("STUB");
@@ -596,6 +600,7 @@ public class List extends Screen implements Choice {
      * @param font the preferred font to use to render the element
      * @throws IndexOutOfBoundsException if <code>elementNum</code> is invalid
      * @see #getFont
+     * @since MIDP 2.0
      */
     public void setFont(int elementNum, Font font) {
         throw new RuntimeException("STUB");
@@ -617,8 +622,39 @@ public class List extends Screen implements Choice {
      * @return the preferred font to use to render the element
      * @throws IndexOutOfBoundsException if <code>elementNum</code> is invalid
      * @see #setFont(int elementNum, Font font)
+     * @since MIDP 2.0
      */
     public Font getFont(int elementNum) {
+        throw new RuntimeException("STUB");
+    }
+    
+    /* (non-Javadoc)
+     * @see javax.microedition.lcdui.Displayable#setTitle(String)
+     */
+    /**
+     * @since MIDP 2.0
+     */
+    public void setTitle(String s) {
+        throw new RuntimeException("STUB");
+    }
+    
+    /* (non-Javadoc)
+     * @see javax.microedition.lcdui.Displayable#setTicker(Ticker)
+     */ 
+    /** 
+     * @since MIDP 2.0
+     */
+    public void setTicker(Ticker ticker) {
+        throw new RuntimeException("STUB");
+    }
+    
+    /* (non-Javadoc)
+     * @see javax.microedition.lcdui.Displayable#getTicker()
+     */
+    /**
+     * @since MIDP 2.0
+     */
+    public Ticker getTicker() {
         throw new RuntimeException("STUB");
     }
 }

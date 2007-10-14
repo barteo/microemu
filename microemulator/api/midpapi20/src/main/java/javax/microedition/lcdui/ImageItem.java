@@ -74,6 +74,36 @@ package javax.microedition.lcdui;
 
 public class ImageItem extends Item {
 
+    /** 
+     * @see Item#LAYOUT_DEFAULT
+     */
+    public static final int LAYOUT_DEFAULT = Item.LAYOUT_DEFAULT;
+
+    /** 
+     * @see Item#LAYOUT_LEFT
+     */
+    public static final int LAYOUT_LEFT = Item.LAYOUT_LEFT;
+
+    /** 
+     * @see Item#LAYOUT_RIGHT
+     */
+    public static final int LAYOUT_RIGHT = Item.LAYOUT_RIGHT;
+
+    /** 
+     * @see Item#LAYOUT_CENTER
+     */
+    public static final int LAYOUT_CENTER = Item.LAYOUT_CENTER;
+
+    /** 
+     * @see Item#LAYOUT_NEWLINE_BEFORE
+     */
+    public static final int LAYOUT_NEWLINE_BEFORE = Item.LAYOUT_NEWLINE_BEFORE;
+
+    /** 
+     * @see Item#LAYOUT_NEWLINE_AFTER
+     */
+    public static final int LAYOUT_NEWLINE_AFTER = Item.LAYOUT_NEWLINE_AFTER;
+    
     /**
      * Creates a new <code>ImageItem</code> with the given label, image, layout
      * directive, and alternate text string.  Calling this constructor is 
@@ -141,7 +171,7 @@ public class ImageItem extends Item {
      * @param appearanceMode the appearance mode of the <code>ImageItem</code>,
      * one of {@link #PLAIN}, {@link #HYPERLINK}, or {@link #BUTTON}
      * @throws IllegalArgumentException if <code>appearanceMode</code> invalid
-     *
+     * @since MIDP 2.0
      */
     public ImageItem(String label, Image image, int layout, String altText,
                      int appearanceMode) {
@@ -251,7 +281,7 @@ public class ImageItem extends Item {
      *
      * @return the appearance mode value,
      * one of {@link #PLAIN}, {@link #HYPERLINK}, or {@link #BUTTON}
-     * 
+     * @since MIDP 2.0
      */
     public int getAppearanceMode() {
         throw new RuntimeException("STUB");

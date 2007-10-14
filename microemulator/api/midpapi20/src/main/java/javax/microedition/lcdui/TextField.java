@@ -412,7 +412,7 @@ public class TextField extends Item {
      * size for the text object.</p>
      *
      * <P>Constant <code>5</code> is assigned to <code>DECIMAL</code>.</P>
-     *
+     * @since MIDP 2.0
      */
     public static final int DECIMAL = 5;
 
@@ -471,7 +471,7 @@ public class TextField extends Item {
      * by using the bit-wise <code>OR</code> operator (<code>|</code>).
      *
      * <p>Constant <code>0x20000</code> is assigned to <code>UNEDITABLE</code>.
-     *
+     * @since MIDP 2.0
      */
     public static final int UNEDITABLE = 0x20000;
 
@@ -487,7 +487,7 @@ public class TextField extends Item {
      *
      * <p>Constant <code>0x40000</code> is assigned to
      * <code>SENSITIVE</code>.</p>
-     *
+     * @since MIDP 2.0
      */
     public static final int SENSITIVE = 0x40000;
 
@@ -506,7 +506,7 @@ public class TextField extends Item {
      *
      * <P>Constant <code>0x80000</code> is assigned to
      * <code>NON_PREDICTIVE</code>.</P>
-     *
+     * @since MIDP 2.0
      */
     public static final int NON_PREDICTIVE = 0x80000;
 
@@ -530,7 +530,7 @@ public class TextField extends Item {
      *
      * <p>Constant <code>0x100000</code> is assigned to
      * <code>INITIAL_CAPS_WORD</code>.
-     *
+     * @since MIDP 2.0
      */
     public static final int INITIAL_CAPS_WORD = 0x100000;
 
@@ -554,7 +554,7 @@ public class TextField extends Item {
      *
      * <p>Constant <code>0x200000</code> is assigned to
      * <code>INITIAL_CAPS_SENTENCE</code>.
-     *
+     * @since MIDP 2.0
      */
     public static final int INITIAL_CAPS_SENTENCE = 0x200000;
 
@@ -885,7 +885,7 @@ public class TextField extends Item {
      *
      * @param characterSubset a string naming a Unicode character subset,
      * or <code>null</code>
-     *
+     * @since MIDP 2.0
      */
     public void setInitialInputMode(String characterSubset) {
         throw new RuntimeException("STUB");

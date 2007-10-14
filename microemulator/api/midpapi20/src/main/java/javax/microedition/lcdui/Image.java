@@ -26,6 +26,9 @@
 
 package javax.microedition.lcdui;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 
 /**
  * The <code>Image</code> class is used to hold graphical image
@@ -438,7 +441,7 @@ public class Image {
      * <code>height</code> is zero or less
      * @throws IllegalArgumentException if the <code>transform</code>
      * is not valid
-     *
+     * @since MIDP 2.0
      */
     public static Image createImage(Image image,
                                     int x, int y, int width, int height,
@@ -636,10 +639,96 @@ public class Image {
      *             if the absolute value of scanlength is less than width
      * @throws NullPointerException -
      *             if rgbData is null
+     * @since MIDP 2.0             
      */
     public void getRGB(int[] rgbData, int offset, int scanlength,
 		       int x, int y, int width, int height) {
         throw new RuntimeException("STUB");
     }
+    
+    /**
+     * Creates an immutable image from decoded image data obtained from an
+     * InputStream. This method blocks until all image data has been read and
+     * decoded. After this method completes (whether by returning or by throwing
+     * an exception) the stream is left open and its current position is
+     * undefined.
+     * 
+     * @param stream - the resource containing the image data in one of the supported image formats
+     * @return the created image
+     * @throws IOException - if an I/O error occurs, if the image data cannot be loaded, or if the image data cannot be decoded
+     * @throws NullPointerException - if stream is null
+     * @since MIDP 2.0
+     */
+    public static Image createImage(InputStream stream) throws IOException {
+        throw new RuntimeException("STUB");
+    }
 
+    /**
+     * Creates an immutable image from a sequence of ARGB values, specified as
+     * 0xAARRGGBB. The ARGB data within the rgb array is arranged horizontally
+     * from left to right within each row, row by row from top to bottom. If
+     * processAlpha is true, the high-order byte specifies opacity; that is,
+     * 0x00RRGGBB specifies a fully transparent pixel and 0xFFRRGGBB specifies a
+     * fully opaque pixel. Intermediate alpha values specify semitransparency.
+     * If the implementation does not support alpha blending for image rendering
+     * operations, it must replace any semitransparent pixels with fully
+     * transparent pixels. (See Alpha Processing for further discussion.) If
+     * processAlpha is false, the alpha values are ignored and all pixels must
+     * be treated as fully opaque.
+     * 
+     * Consider P(a,b) to be the value of the pixel located at column a and row
+     * b of the Image, where rows and columns are numbered downward from the top
+     * starting at zero, and columns are numbered rightward from the left
+     * starting at zero. This operation can then be defined as:
+     * <p>
+     * <TABLE BORDER="2">
+     * <TR>
+     * <TD ROWSPAN="1" COLSPAN="1">
+     * 
+     * <pre><code>
+     *     P(a, b) = rgb[a + b * width];
+     * </code></pre>
+     * 
+     * </TD>
+     * </TR>
+     * </TABLE>
+     * 
+     * for
+     * <TABLE BORDER="2">
+     * <TR>
+     * <TD ROWSPAN="1" COLSPAN="1">
+     * 
+     * <pre><code>
+     *      0 <= a < width
+     *      0 <= b < height
+     * </code></pre>
+     * 
+     * </TD>
+     * </TR>
+     * </TABLE>
+     * 
+     * @param rgb
+     *            an array of ARGB values that composes the image
+     * @param width
+     *            the width of the image
+     * @param height
+     *            the height of the image
+     * @param processAlpha
+     *            true if rgb has an alpha channel, false if all pixels are
+     *            fully opaque
+     * @return the created image
+     * @throws NullPointerException -
+     *             if rgb is null
+     * @throws IllegalArgumentException -
+     *             if either width or height is zero or less
+     * @throws ArrayIndexOutOfBoundsException -
+     *             if the length of rgb is less than width * height
+     * @since MIDP 2.0
+     */
+    public static Image createRGBImage(int[] rgb,
+            int width,
+            int height,
+            boolean processAlpha) {
+        throw new RuntimeException("STUB");
+    }
 }

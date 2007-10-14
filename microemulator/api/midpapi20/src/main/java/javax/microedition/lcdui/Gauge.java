@@ -169,7 +169,7 @@ public class Gauge extends Item {
      * as the return value of <code>getMaxValue()</code>.
      * <P>
      * The value of <code>INDEFINITE</code> is <code>-1</code>.</P>
-     *
+     * @since MIDP 2.0
      */
     public static final int INDEFINITE = -1;
     
@@ -186,7 +186,7 @@ public class Gauge extends Item {
      *
      * <p>The value of <code>CONTINUOUS_IDLE</code> is
      * <code>0</code>.</p>
-     * 
+     * @since MIDP 2.0 
      */
     public static final int CONTINUOUS_IDLE = 0;
 
@@ -203,7 +203,7 @@ public class Gauge extends Item {
      *
      * <p>The value of <code>INCREMENTAL_IDLE</code> is
      * <code>1</code>.</p>
-     * 
+     * @since MIDP 2.0 
      */
     public static final int INCREMENTAL_IDLE = 1;
     
@@ -223,7 +223,7 @@ public class Gauge extends Item {
      *
      * <p>The value of <code>CONTINUOUS_RUNNING</code> is
      * <code>2</code>.</p>
-     *
+     * @since MIDP 2.0
      */
     public static final int CONTINUOUS_RUNNING = 2;
     
@@ -243,7 +243,7 @@ public class Gauge extends Item {
      *
      * <p> The value of <code>INCREMENTAL_UPDATING</code> is
      * <code>3</code>.</p>
-     *
+     * @since MIDP 2.0
      */
     public static final int INCREMENTAL_UPDATING = 3;
 
@@ -332,6 +332,7 @@ public class Gauge extends Item {
      * @throws IllegalStateException if this <code>Item</code> is
      * contained within an <code>Alert</code>
      * @see #getLayout
+     * @since MIDP 2.0
      */
     public void setLayout(int layout) {
         throw new RuntimeException("STUB");
@@ -357,6 +358,7 @@ public class Gauge extends Item {
      * @throws IllegalStateException if this <code>Item</code> is contained
      * within an <code>Alert</code>
      * @throws NullPointerException if cmd is <code>null</code>
+     * @since MIDP 2.0
      */
     public void addCommand(Command cmd) {
         throw new RuntimeException("STUB");
@@ -375,6 +377,7 @@ public class Gauge extends Item {
      * @param l the new listener, or <code>null</code>.
      * @throws IllegalStateException if this <code>Item</code> is contained
      * within an <code>Alert</code>
+     * @since MIDP 2.0
      */
     public void setItemCommandListener(ItemCommandListener l) {
         throw new RuntimeException("STUB");
@@ -409,6 +412,7 @@ public class Gauge extends Item {
      * within an <code>Alert</code>
      * @see #getPreferredHeight
      * @see #getPreferredWidth
+     * @since MIDP 2.0
      */
     public void setPreferredSize(int width, int height) {
         throw new RuntimeException("STUB");
@@ -444,6 +448,7 @@ public class Gauge extends Item {
      *
      * @throws IllegalStateException if this <code>Item</code> is contained
      * within an <code>Alert</code>
+     * @since MIDP 2.0
      */
     public void setDefaultCommand(Command cmd) {
         throw new RuntimeException("STUB");

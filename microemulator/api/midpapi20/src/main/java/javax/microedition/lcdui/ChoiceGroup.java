@@ -407,6 +407,7 @@ public class ChoiceGroup extends Item implements Choice {
      * @param fitPolicy preferred content fit policy for choice elements
      * @throws IllegalArgumentException if <code>fitPolicy</code> is invalid
      * @see #getFitPolicy
+     * @since MIDP 2.0
      */
     public void setFitPolicy(int fitPolicy) {
         throw new RuntimeException("STUB");
@@ -422,6 +423,7 @@ public class ChoiceGroup extends Item implements Choice {
      * @return one of {@link #TEXT_WRAP_DEFAULT}, {@link #TEXT_WRAP_ON}, or
      * {@link #TEXT_WRAP_OFF}
      * @see #setFitPolicy
+     * @since MIDP 2.0
      */
     public int getFitPolicy() {
         throw new RuntimeException("STUB");
@@ -445,6 +447,7 @@ public class ChoiceGroup extends Item implements Choice {
      * @param font the preferred font to use to render the element
      * @throws IndexOutOfBoundsException if <code>elementNum</code> is invalid
      * @see #getFont
+     * @since MIDP 2.0
      */
     public void setFont(int elementNum, Font font) {
         throw new RuntimeException("STUB");
@@ -466,6 +469,7 @@ public class ChoiceGroup extends Item implements Choice {
      * @return the preferred font to use to render the element
      * @throws IndexOutOfBoundsException if <code>elementNum</code> is invalid
      * @see #setFont(int elementNum, Font font)
+     * @since MIDP 2.0
      */
     public Font getFont(int elementNum) {
         throw new RuntimeException("STUB");

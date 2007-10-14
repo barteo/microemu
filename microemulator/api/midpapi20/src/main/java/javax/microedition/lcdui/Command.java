@@ -368,6 +368,7 @@ public class Command {
      * <code>null</code>
      * @throws IllegalArgumentException if the <code>commandType</code> is an
      * invalid type
+     * @since MIDP 2.0
      * 
      */
     public Command(String shortLabel, String longLabel, int commandType,
@@ -392,7 +393,7 @@ public class Command {
      * @return the <code>Command's</code> long label, or
      * <code>null</code> if the <code>Command</code> has no long
      * label
-     * 
+     * @since MIDP 2.0
      */
     public String getLongLabel() {
         throw new RuntimeException("STUB");

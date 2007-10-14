@@ -1228,6 +1228,7 @@ public class Graphics {
      * @throws IllegalArgumentException if <code>anchor</code> is invalid
      * @throws IllegalArgumentException if the region to be copied exceeds
      * the bounds of the source image
+     * @since MIDP 2.0
      */
     public void drawRegion(Image src, 
                            int x_src, int y_src,
@@ -1305,7 +1306,7 @@ public class Graphics {
      * <code>Graphics</code> object is the display device
      * @throws IllegalArgumentException if the region to be copied exceeds
      * the bounds of the source image
-     *
+     * @since MIDP 2.0
      */
     public synchronized void copyArea(int x_src, int y_src, 
                                       int width, int height,
@@ -1324,7 +1325,7 @@ public class Graphics {
      * @param y2 the y coordinate of the second vertex of the triangle
      * @param x3 the x coordinate of the third vertex of the triangle
      * @param y3 the y coordinate of the third vertex of the triangle
-     *
+     * @since MIDP 2.0
      */
     public void fillTriangle(int x1, int y1, 
                              int x2, int y2,
@@ -1425,7 +1426,7 @@ public class Graphics {
      * will attempt to access an element of <code>rgbData</code>
      * whose index is either negative or beyond its length
      * @throws NullPointerException if <code>rgbData</code> is <code>null</code>
-     *
+     * @since MIDP 2.0
      */
     public void drawRGB(int[] rgbData, int offset, int scanlength,
                         int x, int y, int width, int height,
@@ -1447,7 +1448,7 @@ public class Graphics {
      * byte is ignored)
      * @return the corresponding color that will be displayed on the device's
      * screen (in <code>0x00RRGGBB</code> format)
-     *
+     * @since MIDP 2.0
      */
     public int getDisplayColor(int color) {
         throw new RuntimeException("STUB");

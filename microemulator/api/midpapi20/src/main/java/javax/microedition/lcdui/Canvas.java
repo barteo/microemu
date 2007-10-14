@@ -610,7 +610,7 @@ public abstract class Canvas extends Displayable {
      *
      * @param mode <code>true</code> if the <code>Canvas</code>
      * is to be in full screen mode, <code>false</code> otherwise
-     *
+     * @since MIDP 2.0
      */
     public void setFullScreenMode(boolean mode) {
         throw new RuntimeException("STUB");
@@ -957,6 +957,7 @@ public abstract class Canvas extends Displayable {
      * <code>Canvas</code>
      * @param h the new height in pixels of the drawable area of
      * the <code>Canvas</code>
+     * @since MIDP 2.0
      */ 
     protected void sizeChanged(int w, int h) {
         throw new RuntimeException("STUB");

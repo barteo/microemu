@@ -358,7 +358,7 @@ abstract public class Item {
      * should follow the default layout policy of its container.
      *
      * <P>Value <code>0</code> is assigned to <code>LAYOUT_DEFAULT</code>.</P>
-     *
+     * @since MIDP 2.0
      */
     public final static int LAYOUT_DEFAULT = 0;
 
@@ -367,6 +367,7 @@ abstract public class Item {
      * left-aligned layout.
      *
      * <P>Value <code>1</code> is assigned to <code>LAYOUT_LEFT</code>.</P>
+     * @since MIDP 2.0
      */
     public final static int LAYOUT_LEFT = 1;
 
@@ -375,6 +376,7 @@ abstract public class Item {
      * right-aligned layout.
      *
      * <P>Value <code>2</code> is assigned to <code>LAYOUT_RIGHT</code>.</P>
+     * @since MIDP 2.0
      */
     public final static int LAYOUT_RIGHT = 2;
 
@@ -383,6 +385,7 @@ abstract public class Item {
      * horizontally centered layout.
      *
      * <P>Value <code>3</code> is assigned to <code>LAYOUT_CENTER</code>.</P>
+     * @since MIDP 2.0
      */
     public final static int LAYOUT_CENTER = 3;
 
@@ -391,6 +394,7 @@ abstract public class Item {
      * top-aligned layout.
      *
      * <P>Value <code>0x10</code> is assigned to <code>LAYOUT_TOP</code>.</P>
+     * @since MIDP 2.0
      */
     public final static int LAYOUT_TOP = 0x10;
 
@@ -399,6 +403,7 @@ abstract public class Item {
      * bottom-aligned layout.
      *
      * <P>Value <code>0x20</code> is assigned to <code>LAYOUT_BOTTOM</code>.</P>
+     * @since MIDP 2.0
      */
     public final static int LAYOUT_BOTTOM = 0x20;
 
@@ -408,6 +413,7 @@ abstract public class Item {
      *
      * <P>Value <code>0x30</code> is assigned to 
      * <code>LAYOUT_VCENTER</code>.</P>
+     * @since MIDP 2.0
      */
     public final static int LAYOUT_VCENTER = 0x30;
 
@@ -417,6 +423,7 @@ abstract public class Item {
      *
      * <P>Value <code>0x100</code> is assigned to 
      * <code>LAYOUT_NEWLINE_BEFORE</code>.</P>
+     * @since MIDP 2.0
      */
     public final static int LAYOUT_NEWLINE_BEFORE = 0x100;
 
@@ -428,6 +435,7 @@ abstract public class Item {
      *
      * <P>Value <code>0x200</code> is assigned to 
      * <code>LAYOUT_NEWLINE_AFTER</code>.</P>
+     * @since MIDP 2.0
      */
     public final static int LAYOUT_NEWLINE_AFTER = 0x200;
 
@@ -436,6 +444,7 @@ abstract public class Item {
      * width may be reduced to its minimum width.
      *
      *<P>Value <code>0x400</code> is assigned to <code>LAYOUT_SHRINK</code></P>
+     * @since MIDP 2.0
      */
     public final static int LAYOUT_SHRINK = 0x400;
 
@@ -444,6 +453,7 @@ abstract public class Item {
      * width may be increased to fill available space.
      *
      *<P>Value <code>0x800</code> is assigned to <code>LAYOUT_EXPAND</code>.</P>
+     * @since MIDP 2.0
      */
     public final static int LAYOUT_EXPAND = 0x800;
 
@@ -453,6 +463,7 @@ abstract public class Item {
      *
      * <P>Value <code>0x1000</code> is assigned to
      * <code>LAYOUT_VSHRINK</code>.</P>
+     * @since MIDP 2.0
      */
     public final static int LAYOUT_VSHRINK = 0x1000;
 
@@ -462,6 +473,7 @@ abstract public class Item {
      *
      * <P>Value <code>0x2000</code> is assigned to 
      * <code>LAYOUT_VEXPAND</code>.</P>
+     * @since MIDP 2.0
      */
     public final static int LAYOUT_VEXPAND = 0x2000;
 
@@ -473,6 +485,7 @@ abstract public class Item {
      *
      * <P>Value <code>0x4000</code> is assigned to
      * <code>LAYOUT_2</code>.</P>
+     * @since MIDP 2.0
      * 
      */
     public static final int LAYOUT_2 = 0x4000;
@@ -482,6 +495,7 @@ abstract public class Item {
      * a normal appearance.
      *
      * <P>Value <code>0</code> is assigned to <code>PLAIN</code>.</P>
+     * @since MIDP 2.0
      */
     public final static int PLAIN = 0;
 
@@ -489,6 +503,7 @@ abstract public class Item {
      * An appearance mode value indicating that the <code>Item</code>
      * is to appear as a hyperlink.
      * <P>Value <code>1</code> is assigned to <code>HYPERLINK</code>.</P>
+     * @since MIDP 2.0
      */
     public final static int HYPERLINK = 1;
 
@@ -496,6 +511,7 @@ abstract public class Item {
      * An appearance mode value indicating that the <code>Item</code>
      * is to appear as a button.
      * <P>Value <code>2</code> is assigned to <code>BUTTON</code>.</P>
+     * @since MIDP 2.0
      */
     public final static int BUTTON = 2;
 
@@ -546,6 +562,7 @@ abstract public class Item {
      * Gets the layout directives used for placing the item.
      * @return a combination of layout directive values
      * @see #setLayout
+     * @since MIDP 2.0
      */
     public int getLayout() {
         throw new RuntimeException("STUB");
@@ -563,6 +580,7 @@ abstract public class Item {
      * @throws IllegalStateException if this <code>Item</code> is
      * contained within an <code>Alert</code>
      * @see #getLayout
+     * @since MIDP 2.0
      */
     public void setLayout(int layout) {
         throw new RuntimeException("STUB");
@@ -588,6 +606,7 @@ abstract public class Item {
      * @throws IllegalStateException if this <code>Item</code> is contained
      * within an <code>Alert</code>
      * @throws NullPointerException if cmd is <code>null</code>
+     * @since MIDP 2.0
      */
     public void addCommand(Command cmd) {
         throw new RuntimeException("STUB");
@@ -621,6 +640,7 @@ abstract public class Item {
      *
      *
      * @param cmd the command to be removed
+     * @since MIDP 2.0
      */
     public void removeCommand(Command cmd) {
         throw new RuntimeException("STUB");
@@ -639,6 +659,7 @@ abstract public class Item {
      * @param l the new listener, or <code>null</code>.
      * @throws IllegalStateException if this <code>Item</code> is contained
      * within an <code>Alert</code>
+     * @since MIDP 2.0
      */
     public void setItemCommandListener(ItemCommandListener l) {
         throw new RuntimeException("STUB");
@@ -657,6 +678,7 @@ abstract public class Item {
      * @return the preferred width of the Item
      * @see #getPreferredHeight
      * @see #setPreferredSize
+     * @since MIDP 2.0
      */
     public int getPreferredWidth() {
         throw new RuntimeException("STUB");
@@ -675,6 +697,7 @@ abstract public class Item {
      * @return the preferred height of the <code>Item</code>
      * @see #getPreferredWidth
      * @see #setPreferredSize
+     * @since MIDP 2.0
      */
     public int getPreferredHeight() {
         throw new RuntimeException("STUB");
@@ -709,6 +732,7 @@ abstract public class Item {
      * within an <code>Alert</code>
      * @see #getPreferredHeight
      * @see #getPreferredWidth
+     * @since MIDP 2.0
      */
     public void setPreferredSize(int width, int height) {
         throw new RuntimeException("STUB");
@@ -721,6 +745,7 @@ abstract public class Item {
      * See <a href="#sizes">Item Sizes</a> for a complete discussion.
      * 
      * @return the minimum width of the item
+     * @since MIDP 2.0
      */
     public int getMinimumWidth() {
         throw new RuntimeException("STUB");
@@ -733,6 +758,7 @@ abstract public class Item {
      * See <a href="#sizes">Item Sizes</a> for a complete discussion.
      *
      * @return the minimum height of the item
+     * @since MIDP 2.0
      */
     public int getMinimumHeight() {
         throw new RuntimeException("STUB");
@@ -768,6 +794,7 @@ abstract public class Item {
      *
      * @throws IllegalStateException if this <code>Item</code> is contained
      * within an <code>Alert</code>
+     * @since MIDP 2.0
      */
     public void setDefaultCommand(Command cmd) {
         throw new RuntimeException("STUB");
@@ -813,6 +840,7 @@ abstract public class Item {
      *
      * @throws IllegalStateException if the <code>Item</code> is not owned
      * by a <code>Form</code>
+     * @since MIDP 2.0
      */
     public void notifyStateChanged() { 
         throw new RuntimeException("STUB");

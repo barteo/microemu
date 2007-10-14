@@ -2347,10 +2347,8 @@
 		<method modifiers="public" name="setTicker" return="void">
 			<parameter type="javax.microedition.lcdui.Ticker" />
 		</method>
-		<!--
-			<method modifiers="public" name="getTicker"
+		<method modifiers="public" name="getTicker"
 			return="javax.microedition.lcdui.Ticker" />
-		-->
 		<method modifiers="public" name="setTitle" return="void">
 			<parameter type="java.lang.String" />
 		</method>

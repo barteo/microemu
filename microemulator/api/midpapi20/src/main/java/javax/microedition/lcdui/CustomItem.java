@@ -344,7 +344,7 @@ package javax.microedition.lcdui;
  * <p>The fonts used should be retrieved from {@link Font#getFont}.
  * This will allow them to match the fonts used by other items
  * on the device for a consistent visual appearance. </p>
- *
+ * @since MIDP 2.0
  */
 abstract public class CustomItem extends Item {
 

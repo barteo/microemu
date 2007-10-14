@@ -411,20 +411,17 @@ public class TextBox extends Screen {
         throw new RuntimeException("STUB");
     }
 
-    /* (non-Javadoc)
-     * @see javax.microedition.lcdui.Displayable#setTitle(String)
-     */
+
     /**
+     * @inheritDoc
      * @since MIDP 2.0
      */
     public void setTitle(String s) {
         throw new RuntimeException("STUB");
     }
     
-    /* (non-Javadoc)
-     * @see javax.microedition.lcdui.Displayable#setTicker(Ticker)
-     */ 
     /** 
+     * @inheritDoc
      * @since MIDP 2.0
      */
     public void setTicker(Ticker ticker) {

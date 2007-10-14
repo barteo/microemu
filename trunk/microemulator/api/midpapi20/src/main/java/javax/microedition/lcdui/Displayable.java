@@ -90,6 +90,7 @@ public abstract class Displayable {
      * <code>null</code> if there is no title.
      * @return the title of the instance, or <code>null</code> if no title
      * @see #setTitle
+     * @since MIDP 2.0
      */
     public String getTitle() {
         throw new RuntimeException("STUB");
@@ -116,6 +117,7 @@ public abstract class Displayable {
      *
      * @param s the new title, or <code>null</code> for no title
      * @see #getTitle
+     * @since MIDP 2.0
      */
     public void setTitle(String s) {
         throw new RuntimeException("STUB");
@@ -126,6 +128,7 @@ public abstract class Displayable {
      * @return ticker object used, or <code>null</code> if no
      * ticker is present
      * @see #setTicker
+     * @since MIDP 2.0
      */
     public Ticker getTicker() {
         throw new RuntimeException("STUB");
@@ -157,6 +160,7 @@ public abstract class Displayable {
      *
      * @param ticker the ticker object used on this screen
      * @see #getTicker
+     * @since MIDP 2.0
      */
     public void setTicker(Ticker ticker) {
         throw new RuntimeException("STUB");
@@ -245,6 +249,7 @@ public abstract class Displayable {
      * <code>Displayable</code> object has not yet been shown.
      * 
      * @return width of the area available to the application
+     * @since MIDP 2.0
      */
     public int getWidth() {
         throw new RuntimeException("STUB");
@@ -261,6 +266,7 @@ public abstract class Displayable {
      * <code>Displayable</code> object has not yet been shown.
      * 
      * @return height of the area available to the application
+     * @since MIDP 2.0
      */
     public int getHeight() {
         throw new RuntimeException("STUB");
@@ -314,6 +320,7 @@ public abstract class Displayable {
      * 
      * @param w the new width in pixels of the available area
      * @param h the new height in pixels of the available area
+     * @since MIDP 2.0
      */ 
     protected void sizeChanged(int w, int h) {
         // this method is intended to be overridden by the application

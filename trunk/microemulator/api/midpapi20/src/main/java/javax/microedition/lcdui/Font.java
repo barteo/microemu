@@ -157,6 +157,7 @@ public final class Font {
      * <code>FONT_STATIC_TEXT</code> has the value <code>0</code>.
      *
      * @see #getFont(int fontSpecifier)
+     * @since MIDP 2.0
      */
     public static final int FONT_STATIC_TEXT = 0;
 
@@ -167,6 +168,7 @@ public final class Font {
      * <code>FONT_INPUT_TEXT</code> has the value <code>1</code>.
      *
      * @see #getFont(int fontSpecifier)
+     * @since MIDP 2.0
      */
     public static final int FONT_INPUT_TEXT = 1;
 
@@ -182,6 +184,7 @@ public final class Font {
      * @return font that corresponds to the passed in font specifier
      * @throws IllegalArgumentException if <code>fontSpecifier</code> is not 
      * a valid fontSpecifier
+     * @since MIDP 2.0
      */
     public static Font getFont(int fontSpecifier) {
         throw new RuntimeException("STUB");

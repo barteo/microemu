@@ -234,6 +234,7 @@ public class Alert extends Screen {
      * effect.  However, <code>DISMISS_COMMAND</code> is treated as an
      * ordinary <code>Command</code> if
      * it is used with other <code>Displayable</code> types.</p>
+     * @since MIDP 2.0
      *
      */
     public final static Command DISMISS_COMMAND =
@@ -481,6 +482,7 @@ public class Alert extends Screen {
      * @throws IllegalArgumentException if <code>indicator</code> does not
      * meet the restrictions for its use in an <code>Alert</code>
      * @see #getIndicator
+     * @since MIDP 2.0
      */
     public void setIndicator(Gauge indicator) {
 
@@ -494,6 +496,7 @@ public class Alert extends Screen {
      * or <code>null</code> if 
      * there is none
      * @see #setIndicator
+     * @since MIDP 2.0
      */
     public Gauge getIndicator() {
         throw new RuntimeException("STUB");

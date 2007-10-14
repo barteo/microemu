@@ -565,7 +565,7 @@ public class Form extends Screen {
      * Deletes all the items from this <code>Form</code>, leaving
      * it with zero items.
      * This method does nothing if the <code>Form</code> is already empty.
-     *
+     * @since MIDP 2.0
      */
     public void deleteAll() {
         throw new RuntimeException("STUB");
@@ -641,6 +641,7 @@ public class Form extends Screen {
      * The <code>Items</code> of the <code>Form</code> are
      * laid out to fit within this width.
      * @return the width of the <code>Form</code> in pixels
+     * @since MIDP 2.0
      */
     public int getWidth() {
         throw new RuntimeException("STUB");
@@ -655,6 +656,7 @@ public class Form extends Screen {
      * affected by the presence or absence of the ticker, title, or commands.
      * @return the height of the displayable area of the 
      * <code>Form</code> in pixels
+     * @since MIDP 2.0
      */
     public int getHeight() {
         throw new RuntimeException("STUB");

@@ -405,12 +405,31 @@ public class TextBox extends Screen {
      *
      * @param characterSubset a string naming a Unicode character subset,
      * or <code>null</code>
-     *
+     * @since MIDP 2.0
      */
     public void setInitialInputMode(String characterSubset) {
         throw new RuntimeException("STUB");
     }
 
+    /* (non-Javadoc)
+     * @see javax.microedition.lcdui.Displayable#setTitle(String)
+     */
+    /**
+     * @since MIDP 2.0
+     */
+    public void setTitle(String s) {
+        throw new RuntimeException("STUB");
+    }
+    
+    /* (non-Javadoc)
+     * @see javax.microedition.lcdui.Displayable#setTicker(Ticker)
+     */ 
+    /** 
+     * @since MIDP 2.0
+     */
+    public void setTicker(Ticker ticker) {
+        throw new RuntimeException("STUB");
+    }
 }
 
 

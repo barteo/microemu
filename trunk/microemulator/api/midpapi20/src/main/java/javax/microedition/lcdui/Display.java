@@ -226,6 +226,7 @@ public class Display {
      *
      * @see #getBestImageWidth(int imageType)
      * @see #getBestImageHeight(int imageType)
+     * @since MIDP 2.0
      */
     public static final int LIST_ELEMENT = 1;
 
@@ -236,6 +237,7 @@ public class Display {
      *
      * @see #getBestImageWidth(int imageType)
      * @see #getBestImageHeight(int imageType)
+     * @since MIDP 2.0
      */
     public static final int CHOICE_GROUP_ELEMENT = 2;
 
@@ -246,6 +248,7 @@ public class Display {
      *
      * @see #getBestImageWidth(int imageType)
      * @see #getBestImageHeight(int imageType)
+     * @since MIDP 2.0
      */
     public static final int ALERT = 3;
 
@@ -259,6 +262,7 @@ public class Display {
      * <code>COLOR_BACKGROUND</code> has the value <code>0</code>.
      *
      * @see #getColor
+     * @since MIDP 2.0
      */
     public static final int COLOR_BACKGROUND = 0;
 
@@ -273,6 +277,7 @@ public class Display {
      * <p> <code>COLOR_FOREGROUND</code> has the value <code>1</code>.
      *
      * @see #getColor
+     * @since MIDP 2.0
      */
     public static final int COLOR_FOREGROUND = 1;
 
@@ -287,6 +292,7 @@ public class Display {
      * <code>COLOR_HIGHLIGHTED_BACKGROUND</code> has the value <code>2</code>.
      *
      * @see #getColor
+     * @since MIDP 2.0
      */
     public static final int COLOR_HIGHLIGHTED_BACKGROUND = 2;
 
@@ -304,6 +310,7 @@ public class Display {
      * <code>COLOR_HIGHLIGHTED_FOREGROUND</code> has the value <code>3</code>.
      *
      * @see #getColor
+     * @since MIDP 2.0
      */
     public static final int COLOR_HIGHLIGHTED_FOREGROUND = 3;
 
@@ -319,6 +326,7 @@ public class Display {
      * <p> <code>COLOR_BORDER</code> has the value <code>4</code>.
      *
      * @see #getColor
+     * @since MIDP 2.0
      */
     public static final int COLOR_BORDER = 4;
 
@@ -334,6 +342,7 @@ public class Display {
      * <p> <code>COLOR_HIGHLIGHTED_BORDER</code> has the value <code>5</code>.
      *
      * @see #getColor
+     * @since MIDP 2.0
      */
     public static final int COLOR_HIGHLIGHTED_BORDER = 5;
 
@@ -379,6 +388,7 @@ public class Display {
      * @return color in the form of <code>0x00RRGGBB</code>
      * @throws IllegalArgumentException if <code>colorSpecifier</code>
      * is not a valid color specifier
+     * @since MIDP 2.0
      */
     public int getColor(int colorSpecifier) {
         throw new RuntimeException("STUB");
@@ -398,6 +408,7 @@ public class Display {
      * requested is for the
      * non-highlighted state
      * @return {@link Graphics#DOTTED} or {@link Graphics#SOLID}
+     * @since MIDP 2.0
      */
     public int getBorderStyle(boolean highlighted) {
         throw new RuntimeException("STUB");
@@ -437,6 +448,7 @@ public class Display {
      * Processing</a>.
      *
      * @return number of alpha levels supported
+     * @since MIDP 2.0
      */
     public int numAlphaLevels() {
         throw new RuntimeException("STUB");
@@ -654,6 +666,7 @@ public class Display {
      * @throws IllegalStateException if the item is owned by an
      * <code>Alert</code>
      * @throws NullPointerException if <code>item</code> is <code>null</code>
+     * @since MIDP 2.0
      */
     public void setCurrentItem(Item item) {
         throw new RuntimeException("STUB");
@@ -791,7 +804,7 @@ public class Display {
      *          <CODE>false</CODE> otherwise
      *
      * @throws IllegalArgumentException if <code>duration</code> is negative
-     *
+     * @since MIDP 2.0
      */
     public boolean flashBacklight(int duration) {
         throw new RuntimeException("STUB");
@@ -829,7 +842,7 @@ public class Display {
      *          <CODE>false</CODE> otherwise
      *
      * @throws IllegalArgumentException if <code>duration</code> is negative
-     *
+     * @since MIDP 2.0
      */
     public boolean vibrate(int duration) {
         throw new RuntimeException("STUB");
@@ -846,6 +859,7 @@ public class Display {
      * @return the best image width for the image type, may be zero if
      * there is no best size; must not be negative
      * @throws IllegalArgumentException if <code>imageType</code> is illegal
+     * @since MIDP 2.0
      */
     public int getBestImageWidth(int imageType) {
         throw new RuntimeException("STUB");
@@ -862,6 +876,7 @@ public class Display {
      * @return the best image height for the image type, may be zero if
      * there is no best size; must not be negative
      * @throws IllegalArgumentException if <code>imageType</code> is illegal
+     * @since MIDP 2.0
      */
     public int getBestImageHeight(int imageType) {
         throw new RuntimeException("STUB");

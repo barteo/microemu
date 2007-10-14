@@ -95,6 +95,7 @@ public class StringItem extends Item {
      * @param appearanceMode the appearance mode of the <code>StringItem</code>,
      * one of {@link #PLAIN}, {@link #HYPERLINK}, or {@link #BUTTON}
      * @throws IllegalArgumentException if <code>appearanceMode</code> invalid
+     * @since MIDP 2.0
      * 
      */
     public StringItem(java.lang.String label,
@@ -133,7 +134,7 @@ public class StringItem extends Item {
      *
      * @return the appearance mode value,
      * one of {@link #PLAIN}, {@link #HYPERLINK}, or {@link #BUTTON}
-     * 
+     * @since MIDP 2.0
      */
     public int getAppearanceMode() {
         throw new RuntimeException("STUB");
@@ -153,6 +154,7 @@ public class StringItem extends Item {
      * @param font the preferred font to use to render this
      *             <code>StringItem</code>
      * @see #getFont
+     * @since MIDP 2.0
      */
     public void setFont(Font font) {
         throw new RuntimeException("STUB");
@@ -170,6 +172,7 @@ public class StringItem extends Item {
      * @return the preferred font to use to render this
      *         <code>StringItem</code>
      * @see #setFont
+     * @since MIDP 2.0
      */
     public Font getFont() {
         throw new RuntimeException("STUB");
@@ -204,6 +207,7 @@ public class StringItem extends Item {
      * within an <code>Alert</code>
      * @see #getPreferredHeight
      * @see #getPreferredWidth
+     * @since MIDP 2.0
      */
     public void setPreferredSize(int width, int height) {
         throw new RuntimeException("STUB");

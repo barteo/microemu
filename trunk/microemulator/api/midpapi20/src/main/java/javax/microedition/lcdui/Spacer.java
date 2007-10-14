@@ -50,6 +50,7 @@ import java.lang.IllegalArgumentException;
  * <code>Spacer</code> is restricted to
  * always be <code>null</code>, and the application is not allowed
  * to change it.</p>
+ * @since MIDP 2.0
  * 
  */
 

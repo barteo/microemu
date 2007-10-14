@@ -35,6 +35,7 @@ package javax.microedition.lcdui;
  * <code>ItemCommandListener</code> that had been set on the
  * <code>Item</code> with a call to
  * {@link Item#setItemCommandListener setItemCommandListener()}.
+ * @since MIDP 2.0
  *
  */
 public interface ItemCommandListener {

@@ -274,7 +274,7 @@ public interface Choice {
      * <P>The <code>POPUP</code> type is not valid for {@link List} objects.</P>
      *
      * <P>Value <code>4</code> is assigned to <code>POPUP</code>.</P>
-     *
+     * @since MIDP 2.0
      */
     public static final int POPUP = 4;
 
@@ -287,6 +287,7 @@ public interface Choice {
      *
      * @see #getFitPolicy
      * @see #setFitPolicy
+     * @since MIDP 2.0
      */
     public static final int TEXT_WRAP_DEFAULT = 0;
 
@@ -300,6 +301,7 @@ public interface Choice {
      * 
      * @see #getFitPolicy
      * @see #setFitPolicy
+     * @since MIDP 2.0
      */
     public static final int TEXT_WRAP_ON = 1;
 
@@ -319,6 +321,7 @@ public interface Choice {
      * 
      * @see #getFitPolicy
      * @see #setFitPolicy
+     * @since MIDP 2.0
      */
     public static final int TEXT_WRAP_OFF = 2;
 
@@ -414,7 +417,7 @@ public interface Choice {
      * Deletes all elements from this <code>Choice</code>, leaving it
      * with zero elements.
      * This method does nothing if the <code>Choice</code> is already empty.
-     *
+     * @since MIDP 2.0
      */
     public void deleteAll();
   
@@ -600,6 +603,7 @@ public interface Choice {
      * @param fitPolicy preferred content fit policy for choice elements
      * @throws IllegalArgumentException if <code>fitPolicy</code> is invalid
      * @see #getFitPolicy
+     * @since MIDP 2.0
      */
     public void setFitPolicy(int fitPolicy);
 
@@ -614,6 +618,7 @@ public interface Choice {
      * @return one of {@link #TEXT_WRAP_DEFAULT}, {@link #TEXT_WRAP_ON}, or
      * {@link #TEXT_WRAP_OFF}
      * @see #setFitPolicy
+     * @since MIDP 2.0
      */
     public int getFitPolicy();
 
@@ -635,6 +640,7 @@ public interface Choice {
      * @param font the preferred font to use to render the element
      * @throws IndexOutOfBoundsException if <code>elementNum</code> is invalid
      * @see #getFont
+     * @since MIDP 2.0
      */
     public void setFont(int elementNum, Font font);
 
@@ -654,6 +660,7 @@ public interface Choice {
      * @return the preferred font to use to render the element
      * @throws IndexOutOfBoundsException if <code>elementNum</code> is invalid
      * @see #setFont
+     * @since MIDP 2.0
      */
     public Font getFont(int elementNum);
 

@@ -19,7 +19,7 @@ java -cp "%SIGNATURE_TOOL_CP%" net.sf.jour.SignatureGenerator --src %WTK_HOME%\l
 java -cp "%SIGNATURE_TOOL_CP%" net.sf.jour.SignatureGenerator --src %WTK_HOME%\lib\cldcapi10.jar  --packages javax.microedition.io --dst cldcapi10-javax.microedition.io-signature.xml
 java -cp "%SIGNATURE_TOOL_CP%" net.sf.jour.SignatureGenerator --src %WTK_HOME%\lib\cldcapi11.jar  --packages java;javax --dst cldcapi11-signature.xml
 java -cp "%SIGNATURE_TOOL_CP%" net.sf.jour.SignatureGenerator --src %WTK_HOME%\lib\cldcapi11.jar  --packages javax.microedition.io --dst cldcapi11-javax.microedition.io-signature.xml
-java -cp "%SIGNATURE_TOOL_CP%" net.sf.jour.SignatureGenerator --src %WTK_HOME%\lib\midpapi20.jar  --packages javax.microedition --dst midpapi20-signature.xml --jars %WTK_HOME%\lib\cldcapi11.jar;%WTK_HOME%\lib\mmapi.jar;%WTK_HOME%\lib\wma20.jar;%WTK_HOME%\lib\satsa-pki.jar
+java -cp "%SIGNATURE_TOOL_CP%" net.sf.jour.SignatureGenerator --src %WTK_HOME%\lib\midpapi20.jar  --packages java;javax.microedition --dst midpapi20-signature.xml --jars %WTK_HOME%\lib\cldcapi11.jar;%WTK_HOME%\lib\mmapi.jar;%WTK_HOME%\lib\wma20.jar;%WTK_HOME%\lib\satsa-pki.jar
 
 java -cp "%SIGNATURE_TOOL_CP%" net.sf.jour.SignatureGenerator --src %WTK_HOME%\lib\jsr082.jar  --packages javax.bluetooth --dst jsr82-signature.xml --jars %WTK_HOME%\lib\cldcapi11.jar
 java -cp "%SIGNATURE_TOOL_CP%" net.sf.jour.SignatureGenerator --src %WTK_HOME%\lib\jsr082.jar  --packages javax.obex --dst jsr82-obex-signature.xml --jars %WTK_HOME%\lib\cldcapi11.jar

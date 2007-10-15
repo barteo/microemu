@@ -123,7 +123,7 @@ public class Object {
      * @see     java.util.Hashtable
      */
     public boolean equals(Object obj) {
-        return (this == obj);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -148,7 +148,7 @@ public class Object {
      * @return  a string representation of the object.
      */
     public String toString() {
-        return getClass().getName() + "@" + Integer.toHexString(hashCode());
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -327,27 +327,7 @@ public class Object {
      *             current thread is cleared when this exception is thrown.
      */
     public final void wait(long timeout, int nanos) throws InterruptedException {
-        if (timeout < 0) {
-            throw new IllegalArgumentException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                       "timeout value is negative"
-/* #endif */
-            );
-        }
-
-        if (nanos < 0 || nanos > 999999) {
-            throw new IllegalArgumentException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                       "nanosecond timeout value out of range"
-/* #endif */
-            );
-        }
-
-        if (nanos >= 500000 || (nanos != 0 && timeout == 0)) {
-            timeout++;
-        }
-
-        wait(timeout);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -378,7 +358,7 @@ public class Object {
      * @see        java.lang.Object#notifyAll()
      */
     public final void wait() throws InterruptedException {
-        wait(0);
+        throw new RuntimeException("STUB");
     }
 
 }

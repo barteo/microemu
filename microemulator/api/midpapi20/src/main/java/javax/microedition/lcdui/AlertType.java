@@ -120,14 +120,4 @@ public class AlertType {
     public boolean playSound(Display display) {
         throw new RuntimeException("STUB");
     }
-
-    /**
-     * Create a new AlertType given the type identifier
-     *
-     * @param type  The type of the new AlertType
-     */
-    AlertType(int type) {
-        throw new RuntimeException("STUB");
-    }
-
 }

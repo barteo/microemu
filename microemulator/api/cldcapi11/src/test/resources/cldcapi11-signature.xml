@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- @version $Id$ -->
 <signature>
 	<class extends="java.io.InputStream" modifiers="public"
 		name="java.io.ByteArrayInputStream">
@@ -371,11 +372,6 @@
 			return="void">
 			<exception name="java.io.IOException" />
 			<parameter type="java.lang.String" />
-		</method>
-		<method modifiers="static final" name="writeUTF" return="int">
-			<exception name="java.io.IOException" />
-			<parameter type="java.lang.String" />
-			<parameter type="java.io.DataOutput" />
 		</method>
 		<field modifiers="protected" name="out"
 			type="java.io.OutputStream" />
@@ -803,8 +799,6 @@
 			<parameter type="char" />
 			<parameter type="int" />
 		</method>
-		<method modifiers="static" name="caseConverter"
-			return="com.sun.cldc.i18n.uclc.DefaultCaseConverter" />
 		<field constant-value="2" modifiers="public static final"
 			name="MIN_RADIX" type="int" />
 		<field constant-value="36" modifiers="public static final"
@@ -813,8 +807,6 @@
 			name="MIN_VALUE" type="char" />
 		<field constant-value="65535" modifiers="public static final"
 			name="MAX_VALUE" type="char" />
-		<field modifiers="static" name="cc"
-			type="com.sun.cldc.i18n.uclc.DefaultCaseConverter" />
 	</class>
 	<class modifiers="public final" name="java.lang.Class">
 		<method modifiers="public" name="toString"
@@ -843,12 +835,6 @@
 		<method modifiers="public" name="getResourceAsStream"
 			return="java.io.InputStream">
 			<parameter type="java.lang.String" />
-		</method>
-		<method name="initialize" return="void">
-			<exception name="java.lang.Throwable" />
-		</method>
-		<method name="verify" return="void">
-			<exception name="java.lang.Throwable" />
 		</method>
 	</class>
 	<class extends="java.lang.RuntimeException" modifiers="public"
@@ -922,10 +908,8 @@
 			name="NaN" type="double" />
 		<field constant-value="1.7976931348623157E308"
 			modifiers="public static final" name="MAX_VALUE" type="double" />
-		<field 
-		    constant-value="4.94065645841246544e-324"
-		    modifiers="public static final" name="MIN_VALUE"
-			type="double" />
+		<field constant-value="4.94065645841246544e-324"
+			modifiers="public static final" name="MIN_VALUE" type="double" />
 	</class>
 	<class extends="java.lang.Throwable" modifiers="public"
 		name="java.lang.Error">
@@ -1109,7 +1093,6 @@
 			modifiers="public static final" name="MIN_VALUE" type="int" />
 		<field constant-value="2147483647"
 			modifiers="public static final" name="MAX_VALUE" type="int" />
-		<field modifiers="static final" name="digits" type="char[]" />
 	</class>
 	<class extends="java.lang.Exception" modifiers="public"
 		name="java.lang.InterruptedException">
@@ -1400,11 +1383,6 @@
 		<constructor modifiers="public">
 			<parameter type="java.lang.StringBuffer" />
 		</constructor>
-		<constructor>
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="char[]" />
-		</constructor>
 		<method modifiers="public" name="length" return="int" />
 		<method modifiers="public" name="charAt" return="char">
 			<parameter type="int" />
@@ -1668,8 +1646,6 @@
 			return="java.lang.StringBuffer" />
 		<method modifiers="public" name="toString"
 			return="java.lang.String" />
-		<method modifiers="final" name="setShared" return="void" />
-		<method modifiers="final" name="getValue" return="char[]" />
 	</class>
 	<class extends="java.lang.IndexOutOfBoundsException"
 		modifiers="public" name="java.lang.StringIndexOutOfBoundsException">

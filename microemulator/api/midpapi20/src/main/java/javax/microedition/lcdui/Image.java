@@ -250,16 +250,10 @@ import java.io.InputStream;
 
 public class Image {
 
-    /**
-     * Valid transforms possible are 0 - 7
-     */
-    static final int INVALID_TRANSFORM_BITS = 0xFFFFFFF8;
-
-    /**
-     * Transform swap axis bit is the 3 bit
-     */
-    static final int TRANSFORM_SWAP_AXIS = 4;
-
+    Image() {
+        
+    }
+    
     /**
      * Creates a new, mutable image for off-screen drawing. Every pixel
      * within the newly created image is white.  The width and height of the
@@ -446,7 +440,6 @@ public class Image {
     public static Image createImage(Image image,
                                     int x, int y, int width, int height,
                                     int transform) {
-
         throw new RuntimeException("STUB");
     }
 

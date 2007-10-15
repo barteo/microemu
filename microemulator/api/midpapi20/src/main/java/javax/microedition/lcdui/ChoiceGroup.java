@@ -64,7 +64,8 @@ public class ChoiceGroup extends Item implements Choice {
      * @see Choice#POPUP
      */
     public ChoiceGroup(String label, int choiceType) {
-        this(label, choiceType, new String[] {}, null);
+        super(label);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -126,36 +127,6 @@ public class ChoiceGroup extends Item implements Choice {
      */
     public ChoiceGroup(String label, int choiceType,
                        String[] stringElements, Image[] imageElements) {
-
-        this(label, choiceType, stringElements, imageElements, false);
-    }
-
-    /**
-     * Special constructor used by List
-     *
-     * @param label the item's label (see {@link Item Item})
-     * @param choiceType EXCLUSIVE or MULTIPLE
-     * @param stringElements set of strings specifying the string parts of the
-     * ChoiceGroup elements
-     * @param imageElements set of images specifying the image parts of
-     * the ChoiceGroup elements
-     * @param implicitAllowed Flag to allow implicit selection
-     *
-     * @throws NullPointerException if stringElements is null
-     * @throws NullPointerException if the stringElements array contains
-     * any null elements
-     * @throws IllegalArgumentException if the imageElements array is non-null
-     * and has a different length from the stringElements array
-     * @throws IllegalArgumentException if choiceType is neither
-     * EXCLUSIVE nor MULTIPLE
-     * @throws IllegalArgumentException if any image in the imageElements
-     * array is mutable
-     *
-     * @see Choice#EXCLUSIVE
-     * @see Choice#MULTIPLE
-     * @see Choice#IMPLICIT
-     */
-    ChoiceGroup(String label, int choiceType, String[] stringElements, Image[] imageElements, boolean implicitAllowed) {
         super(label);
         throw new RuntimeException("STUB");
     }

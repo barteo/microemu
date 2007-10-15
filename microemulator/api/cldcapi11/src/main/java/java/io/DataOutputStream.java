@@ -51,7 +51,7 @@ class DataOutputStream extends OutputStream implements DataOutput {
      *                use.
      */
     public DataOutputStream(OutputStream out) {
-        this.out = out;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -64,7 +64,7 @@ class DataOutputStream extends OutputStream implements DataOutput {
      * @exception  IOException  if an I/O error occurs.
      */
     public void write(int b) throws IOException {
-        out.write(b);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -77,7 +77,7 @@ class DataOutputStream extends OutputStream implements DataOutput {
      * @exception  IOException  if an I/O error occurs.
      */
     public void write(byte b[], int off, int len) throws IOException {
-        out.write(b, off, len);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -90,7 +90,7 @@ class DataOutputStream extends OutputStream implements DataOutput {
      * @exception  IOException  if an I/O error occurs.
      */
     public void flush() throws IOException {
-        out.flush();
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -104,11 +104,7 @@ class DataOutputStream extends OutputStream implements DataOutput {
      * @exception  IOException  if an I/O error occurs.
      */
     public void close() throws IOException {
-        try {
-            flush();
-        } catch (IOException e) {
-        }
-        out.close();
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -121,7 +117,7 @@ class DataOutputStream extends OutputStream implements DataOutput {
      * @exception  IOException  if an I/O error occurs.
      */
     public final void writeBoolean(boolean v) throws IOException {
-        write(v ? 1 : 0);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -132,7 +128,7 @@ class DataOutputStream extends OutputStream implements DataOutput {
      * @exception  IOException  if an I/O error occurs.
      */
     public final void writeByte(int v) throws IOException {
-        write(v);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -143,8 +139,7 @@ class DataOutputStream extends OutputStream implements DataOutput {
      * @exception  IOException  if an I/O error occurs.
      */
     public final void writeShort(int v) throws IOException {
-        write((v >>> 8) & 0xFF);
-        write((v >>> 0) & 0xFF);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -155,8 +150,7 @@ class DataOutputStream extends OutputStream implements DataOutput {
      * @exception  IOException  if an I/O error occurs.
      */
     public final void writeChar(int v) throws IOException {
-        write((v >>> 8) & 0xFF);
-        write((v >>> 0) & 0xFF);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -167,10 +161,7 @@ class DataOutputStream extends OutputStream implements DataOutput {
      * @exception  IOException  if an I/O error occurs.
      */
     public final void writeInt(int v) throws IOException {
-        write((v >>> 24) & 0xFF);
-        write((v >>> 16) & 0xFF);
-        write((v >>>  8) & 0xFF);
-        write((v >>>  0) & 0xFF);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -181,14 +172,7 @@ class DataOutputStream extends OutputStream implements DataOutput {
      * @exception  IOException  if an I/O error occurs.
      */
     public final void writeLong(long v) throws IOException {
-        write((int)(v >>> 56) & 0xFF);
-        write((int)(v >>> 48) & 0xFF);
-        write((int)(v >>> 40) & 0xFF);
-        write((int)(v >>> 32) & 0xFF);
-        write((int)(v >>> 24) & 0xFF);
-        write((int)(v >>> 16) & 0xFF);
-        write((int)(v >>>  8) & 0xFF);
-        write((int)(v >>>  0) & 0xFF);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -203,7 +187,7 @@ class DataOutputStream extends OutputStream implements DataOutput {
      * @since      CLDC 1.1
      */
     public final void writeFloat(float v) throws IOException {
-        writeInt(Float.floatToIntBits(v));
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -218,7 +202,7 @@ class DataOutputStream extends OutputStream implements DataOutput {
      * @since      CLDC 1.1
      */
     public final void writeDouble(double v) throws IOException {
-        writeLong(Double.doubleToLongBits(v));
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -231,12 +215,7 @@ class DataOutputStream extends OutputStream implements DataOutput {
      * @see        java.io.DataOutputStream#writeChar(int)
      */
     public final void writeChars(String s) throws IOException {
-        int len = s.length();
-        for (int i = 0 ; i < len ; i++) {
-            int v = s.charAt(i);
-            write((v >>> 8) & 0xFF);
-            write((v >>> 0) & 0xFF);
-        }
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -254,66 +233,8 @@ class DataOutputStream extends OutputStream implements DataOutput {
      * @exception  IOException  if an I/O error occurs.
      */
     public final void writeUTF(String str) throws IOException {
-        writeUTF(str, this);
+        throw new RuntimeException("STUB");
     }
 
-    /**
-     * Writes a string to the specified DataOutput using UTF-8 encoding in a
-     * machine-independent manner.
-     * <p>
-     * First, two bytes are written to out as if by the <code>writeShort</code>
-     * method giving the number of bytes to follow. This value is the number of
-     * bytes actually written out, not the length of the string. Following the
-     * length, each character of the string is output, in sequence, using the
-     * UTF-8 encoding for the character.
-     *
-     * @param      str   a string to be written.
-     * @param      out   destination to write to
-     * @return     The number of bytes written out.
-     * @exception  IOException  if an I/O error occurs.
-     */
-    static final int writeUTF(String str, DataOutput out) throws IOException {
-        int strlen = str.length();
-        int utflen = 0;
-        char[] charr = new char[strlen];
-        int c, count = 0;
-
-        str.getChars(0, strlen, charr, 0);
-
-        for (int i = 0; i < strlen; i++) {
-            c = charr[i];
-            if ((c >= 0x0001) && (c <= 0x007F)) {
-                utflen++;
-            } else if (c > 0x07FF) {
-                utflen += 3;
-            } else {
-                utflen += 2;
-            }
-        }
-
-        if (utflen > 65535) {
-            throw new UTFDataFormatException();
-        }
-
-        byte[] bytearr = new byte[utflen+2];
-        bytearr[count++] = (byte) ((utflen >>> 8) & 0xFF);
-        bytearr[count++] = (byte) ((utflen >>> 0) & 0xFF);
-        for (int i = 0; i < strlen; i++) {
-            c = charr[i];
-            if ((c >= 0x0001) && (c <= 0x007F)) {
-                bytearr[count++] = (byte) c;
-            } else if (c > 0x07FF) {
-                bytearr[count++] = (byte) (0xE0 | ((c >> 12) & 0x0F));
-                bytearr[count++] = (byte) (0x80 | ((c >>  6) & 0x3F));
-                bytearr[count++] = (byte) (0x80 | ((c >>  0) & 0x3F));
-            } else {
-                bytearr[count++] = (byte) (0xC0 | ((c >>  6) & 0x1F));
-                bytearr[count++] = (byte) (0x80 | ((c >>  0) & 0x3F));
-            }
-        }
-        out.write(bytearr);
-
-        return utflen + 2;
-    }
 
 }

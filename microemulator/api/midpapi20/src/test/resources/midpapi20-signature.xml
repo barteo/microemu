@@ -51,18 +51,6 @@
 		<method modifiers="public" name="cancel" return="boolean" />
 		<method modifiers="public" name="scheduledExecutionTime"
 			return="long" />
-		<field modifiers="final" name="lock" type="java.lang.Object" />
-		<field name="state" type="int" />
-		<field constant-value="0" modifiers="static final" name="VIRGIN"
-			type="int" />
-		<field constant-value="1" modifiers="static final"
-			name="SCHEDULED" type="int" />
-		<field constant-value="2" modifiers="static final"
-			name="EXECUTED" type="int" />
-		<field constant-value="3" modifiers="static final"
-			name="CANCELLED" type="int" />
-		<field name="nextExecutionTime" type="long" />
-		<field name="period" type="long" />
 	</class>
 	<interface modifiers="public"
 		name="javax.microedition.io.CommConnection">
@@ -254,6 +242,7 @@
 	</interface>
 	<class modifiers="public"
 		name="javax.microedition.io.PushRegistry">
+		<constructor modifiers="private" />
 		<method modifiers="public static" name="registerConnection"
 			return="void">
 			<exception name="java.lang.ClassNotFoundException" />
@@ -429,62 +418,17 @@
 			return="void">
 			<parameter type="javax.microedition.lcdui.CommandListener" />
 		</method>
-		<method name="callShowNotify" return="void">
-			<parameter type="javax.microedition.lcdui.Display" />
-		</method>
-		<method name="callHideNotify" return="void">
-			<parameter type="javax.microedition.lcdui.Display" />
-		</method>
-		<method name="setImageImpl" return="void">
-			<parameter type="javax.microedition.lcdui.Image" />
-		</method>
-		<method name="callPaint" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="java.lang.Object" />
-		</method>
-		<method name="layout" return="void" />
-		<method name="setReturnScreen" return="void">
-			<parameter type="javax.microedition.lcdui.Displayable" />
-		</method>
-		<method name="isConformantIndicator" return="boolean">
-			<parameter type="javax.microedition.lcdui.Gauge" />
-		</method>
-		<method name="callKeyPressed" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyRepeated" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="scrollViewport" return="boolean">
-			<parameter type="int" />
-		</method>
 		<field constant-value="-2" modifiers="public static final"
 			name="FOREVER" type="int" />
 		<field modifiers="public static final" name="DISMISS_COMMAND"
 			type="javax.microedition.lcdui.Command" />
-		<field name="implicitListener"
-			type="javax.microedition.lcdui.CommandListener" />
 	</class>
 	<class modifiers="public"
 		name="javax.microedition.lcdui.AlertType">
 		<constructor modifiers="protected" />
-		<constructor>
-			<parameter type="int" />
-		</constructor>
 		<method modifiers="public" name="playSound" return="boolean">
 			<parameter type="javax.microedition.lcdui.Display" />
 		</method>
-		<method name="getType" return="int" />
-		<field constant-value="1" modifiers="static final"
-			name="ALERT_INFO" type="int" />
-		<field constant-value="2" modifiers="static final"
-			name="ALERT_WARN" type="int" />
-		<field constant-value="3" modifiers="static final"
-			name="ALERT_ERR" type="int" />
-		<field constant-value="4" modifiers="static final"
-			name="ALERT_ALRM" type="int" />
-		<field constant-value="5" modifiers="static final"
-			name="ALERT_CFM" type="int" />
 		<field modifiers="public static final" name="INFO"
 			type="javax.microedition.lcdui.AlertType" />
 		<field modifiers="public static final" name="WARNING"
@@ -512,8 +456,8 @@
 		</method>
 		<method modifiers="public" name="getKeyName"
 			return="java.lang.String">
-			<parameter type="int" />
 			<exception name="java.lang.IllegalArgumentException" />
+			<parameter type="int" />
 		</method>
 		<method modifiers="public" name="getGameAction" return="int">
 			<parameter type="int" />
@@ -567,47 +511,6 @@
 			return="void">
 			<parameter type="int" />
 			<parameter type="int" />
-		</method>
-		<method name="callShowNotify" return="void">
-			<parameter type="javax.microedition.lcdui.Display" />
-		</method>
-		<method name="callHideNotify" return="void">
-			<parameter type="javax.microedition.lcdui.Display" />
-		</method>
-		<method name="callPaint" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="java.lang.Object" />
-		</method>
-		<method name="callSizeChanged" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callKeyPressed" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyReleased" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyRepeated" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callPointerPressed" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callPointerReleased" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callPointerDragged" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="addEmbeddedVideo" return="void">
-			<parameter type="java.lang.Object" />
-		</method>
-		<method name="removeEmbeddedVideo" return="void">
-			<parameter type="java.lang.Object" />
 		</method>
 		<!--
 			<method modifiers="public" name="setCommandListener"
@@ -755,13 +658,6 @@
 			<parameter type="java.lang.String[]" />
 			<parameter type="javax.microedition.lcdui.Image[]" />
 		</constructor>
-		<constructor>
-			<parameter type="java.lang.String" />
-			<parameter type="int" />
-			<parameter type="java.lang.String[]" />
-			<parameter type="javax.microedition.lcdui.Image[]" />
-			<parameter type="boolean" />
-		</constructor>
 		<method modifiers="public" name="size" return="int" />
 		<method modifiers="public" name="getString"
 			return="java.lang.String">
@@ -818,50 +714,6 @@
 			return="javax.microedition.lcdui.Font">
 			<parameter type="int" />
 		</method>
-		<method name="equateNLA" return="boolean" />
-		<method name="equateNLB" return="boolean" />
-		<method name="callMinimumWidth" return="int" />
-		<method name="callPreferredWidth" return="int">
-			<parameter type="int" />
-		</method>
-		<method name="callMinimumHeight" return="int" />
-		<method name="callPreferredHeight" return="int">
-			<parameter type="int" />
-		</method>
-		<method name="callPaint" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callTraverse" return="boolean">
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int[]" />
-		</method>
-		<method name="callTraverseOut" return="void" />
-		<method name="callKeyPressed" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="getType" return="int" />
-		<method name="setSelectedIndexImpl" return="void">
-			<parameter type="int" />
-			<parameter type="boolean" />
-		</method>
-		<method name="shouldSkipTraverse" return="boolean" />
-		<field name="isList" type="boolean" />
-		<field constant-value="16" modifiers="static final"
-			name="PREFERRED_IMG_W" type="int" />
-		<field constant-value="16" modifiers="static final"
-			name="PREFERRED_IMG_H" type="int" />
-		<field constant-value="24" modifiers="static final"
-			name="MAX_IMG_W" type="int" />
-		<field constant-value="24" modifiers="static final"
-			name="MAX_IMG_H" type="int" />
-		<field constant-value="12" modifiers="static final"
-			name="MIN_IMG_W" type="int" />
-		<field constant-value="12" modifiers="static final"
-			name="MIN_IMG_H" type="int" />
 	</class>
 	<class modifiers="public" name="javax.microedition.lcdui.Command">
 		<constructor modifiers="public">
@@ -881,10 +733,6 @@
 			return="java.lang.String" />
 		<method modifiers="public" name="getCommandType" return="int" />
 		<method modifiers="public" name="getPriority" return="int" />
-		<method name="getID" return="int" />
-		<method name="setInternalID" return="void">
-			<parameter type="int" />
-		</method>
 		<field constant-value="1" modifiers="public static final"
 			name="SCREEN" type="int" />
 		<field constant-value="2" modifiers="public static final"
@@ -901,10 +749,6 @@
 			name="EXIT" type="int" />
 		<field constant-value="8" modifiers="public static final"
 			name="ITEM" type="int" />
-		<field name="shortLabel" type="java.lang.String" />
-		<field name="longLabel" type="java.lang.String" />
-		<field name="commandType" type="int" />
-		<field name="priority" type="int" />
 	</class>
 	<interface modifiers="public"
 		name="javax.microedition.lcdui.CommandListener">
@@ -995,53 +839,6 @@
 		</method>
 		<method modifiers="protected" name="showNotify" return="void" />
 		<method modifiers="protected" name="hideNotify" return="void" />
-		<method name="callPreferredWidth" return="int">
-			<parameter type="int" />
-		</method>
-		<method name="callPreferredHeight" return="int">
-			<parameter type="int" />
-		</method>
-		<method name="callMinimumWidth" return="int" />
-		<method name="callMinimumHeight" return="int" />
-		<method name="callSizeChanged" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callPaint" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callTraverse" return="boolean">
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int[]" />
-		</method>
-		<method name="callTraverseOut" return="void" />
-		<method name="callKeyPressed" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyReleased" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyRepeated" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callPointerPressed" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callPointerReleased" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callPointerDragged" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callShowNotify" return="void" />
-		<method name="callHideNotify" return="void" />
 		<field constant-value="1" modifiers="protected static final"
 			name="TRAVERSE_HORIZONTAL" type="int" />
 		<field constant-value="2" modifiers="protected static final"
@@ -1081,62 +878,12 @@
 		<method modifiers="public" name="setInputMode" return="void">
 			<parameter type="int" />
 		</method>
-		<method name="equateNLA" return="boolean" />
-		<method name="equateNLB" return="boolean" />
-		<method name="saveDate" return="void">
-			<parameter type="java.util.Date" />
-		</method>
-		<method name="callMinimumWidth" return="int" />
-		<method name="callPreferredWidth" return="int">
-			<parameter type="int" />
-		</method>
-		<method name="callMinimumHeight" return="int" />
-		<method name="callPreferredHeight" return="int">
-			<parameter type="int" />
-		</method>
-		<method name="callPaint" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callTraverse" return="boolean">
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int[]" />
-		</method>
-		<method name="callTraverseOut" return="void" />
-		<method name="callKeyPressed" return="void">
-			<parameter type="int" />
-		</method>
-		<method modifiers="static" name="ampmString"
-			return="java.lang.String">
-			<parameter type="java.util.Calendar" />
-		</method>
-		<method modifiers="static" name="dayOfWeekString"
-			return="java.lang.String">
-			<parameter type="java.util.Calendar" />
-		</method>
-		<method name="toString" return="java.lang.String">
-			<parameter type="int" />
-		</method>
-		<method modifiers="static" name="cos" return="int">
-			<parameter type="int" />
-		</method>
-		<method modifiers="static" name="sin" return="int">
-			<parameter type="int" />
-		</method>
 		<field constant-value="1" modifiers="public static final"
 			name="DATE" type="int" />
 		<field constant-value="2" modifiers="public static final"
 			name="TIME" type="int" />
 		<field constant-value="3" modifiers="public static final"
 			name="DATE_TIME" type="int" />
-		<field modifiers="static final" name="EPOCH"
-			type="java.util.Date" />
-		<field modifiers="static final" name="MONTH_NAMES"
-			type="java.lang.String[]" />
-		<field modifiers="static final" name="TRIG_TABLE" type="int[]" />
 	</class>
 	<class modifiers="public" name="javax.microedition.lcdui.Display">
 		<constructor>
@@ -1186,79 +933,6 @@
 			return="int">
 			<parameter type="int" />
 		</method>
-		<method name="setCurrentImpl" return="void">
-			<parameter type="javax.microedition.lcdui.Displayable" />
-		</method>
-		<method name="screenChange" return="void">
-			<parameter type="javax.microedition.lcdui.Displayable" />
-		</method>
-		<method name="clearAlert" return="void">
-			<parameter type="javax.microedition.lcdui.Displayable" />
-		</method>
-		<method name="playAlertSound" return="boolean">
-			<parameter type="javax.microedition.lcdui.AlertType" />
-		</method>
-		<method name="emuPlayAlertSound" return="void">
-			<parameter type="javax.microedition.lcdui.AlertType" />
-		</method>
-		<method name="invalidate" return="void">
-			<parameter type="javax.microedition.lcdui.Item" />
-		</method>
-		<method name="itemStateChanged" return="void">
-			<parameter type="javax.microedition.lcdui.Item" />
-		</method>
-		<method name="getMIDlet"
-			return="javax.microedition.midlet.MIDlet" />
-		<method name="repaintImpl" return="void">
-			<parameter type="javax.microedition.lcdui.Displayable" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="java.lang.Object" />
-		</method>
-		<method name="serviceRepaints" return="void">
-			<parameter type="javax.microedition.lcdui.Displayable" />
-		</method>
-		<method name="repaint" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="java.lang.Object" />
-		</method>
-		<method modifiers="static" name="getKeyCode" return="int">
-			<parameter type="int" />
-		</method>
-		<method modifiers="static" name="getGameAction" return="int">
-			<parameter type="int" />
-		</method>
-		<method modifiers="static" name="getSystemKey" return="int">
-			<parameter type="int" />
-		</method>
-		<method modifiers="static" name="getKeyName"
-			return="java.lang.String">
-			<parameter type="int" />
-		</method>
-		<method name="updateCommandSet" return="void" />
-		<method name="isShown" return="boolean">
-			<parameter type="javax.microedition.lcdui.Displayable" />
-		</method>
-		<method modifiers="static" name="handleThrowable"
-			return="void">
-			<parameter type="java.lang.Throwable" />
-		</method>
-		<method name="setVerticalScroll" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="setInputMode" return="void">
-			<parameter type="int" />
-		</method>
-		<method modifiers="static" name="isGraphicsDisplay"
-			return="boolean">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-		</method>
 		<field constant-value="1" modifiers="public static final"
 			name="LIST_ELEMENT" type="int" />
 		<field constant-value="2" modifiers="public static final"
@@ -1277,39 +951,6 @@
 			name="COLOR_BORDER" type="int" />
 		<field constant-value="5" modifiers="public static final"
 			name="COLOR_HIGHLIGHTED_BORDER" type="int" />
-		<field modifiers="static final" name="LCDUILock"
-			type="java.lang.Object" />
-		<field modifiers="static final" name="calloutLock"
-			type="java.lang.Object" />
-		<field modifiers="static final" name="WIDTH" type="int" />
-		<field modifiers="static final" name="HEIGHT" type="int" />
-		<field modifiers="static final" name="ADORNEDHEIGHT" type="int" />
-		<field modifiers="static final" name="ERASE_COLOR" type="int" />
-		<field constant-value="11513775" modifiers="static final"
-			name="BORDER_COLOR" type="int" />
-		<field constant-value="6316128" modifiers="static final"
-			name="BORDER_H_COLOR" type="int" />
-		<field modifiers="static final" name="DISPLAY_DEPTH" type="int" />
-		<field modifiers="static final" name="DISPLAY_IS_COLOR"
-			type="boolean" />
-		<field modifiers="static final" name="POINTER_SUPPORTED"
-			type="boolean" />
-		<field modifiers="static final" name="MOTION_SUPPORTED"
-			type="boolean" />
-		<field modifiers="static final" name="REPEAT_SUPPORTED"
-			type="boolean" />
-		<field modifiers="static final" name="IS_DOUBLE_BUFFERED"
-			type="boolean" />
-		<field modifiers="static final" name="FG_COLOR" type="int" />
-		<field modifiers="static final" name="BG_H_COLOR" type="int" />
-		<field modifiers="static final" name="FG_H_COLOR" type="int" />
-		<field modifiers="static final" name="ALPHA_LEVELS" type="int" />
-		<field modifiers="static final" name="KEYCODE_UP" type="int" />
-		<field modifiers="static final" name="KEYCODE_DOWN" type="int" />
-		<field modifiers="static final" name="KEYCODE_LEFT" type="int" />
-		<field modifiers="static final" name="KEYCODE_RIGHT" type="int" />
-		<field modifiers="static final" name="KEYCODE_SELECT"
-			type="int" />
 	</class>
 	<class modifiers="public abstract"
 		name="javax.microedition.lcdui.Displayable">
@@ -1342,127 +983,14 @@
 			<parameter type="int" />
 			<parameter type="int" />
 		</method>
-		<method name="commitPendingInteraction" return="void" />
-		<method name="invalidate" return="void">
-			<parameter type="javax.microedition.lcdui.Item" />
-		</method>
-		<method name="callInvalidate" return="void">
-			<parameter type="javax.microedition.lcdui.Item" />
-		</method>
-		<method name="itemStateChanged" return="void">
-			<parameter type="javax.microedition.lcdui.Item" />
-		</method>
-		<method name="setTickerImpl" return="void">
-			<parameter type="javax.microedition.lcdui.Ticker" />
-		</method>
-		<method name="setTitleImpl" return="void">
-			<parameter type="java.lang.String" />
-		</method>
-		<method name="callSizeChanged" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callPaint" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="java.lang.Object" />
-		</method>
-		<method name="paintTicker" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-		</method>
-		<method name="paintTitle" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-		</method>
-		<method name="layout" return="void" />
-		<method name="fullScreenMode" return="void">
-			<parameter type="boolean" />
-		</method>
-		<method name="callKeyPressed" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyRepeated" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyReleased" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyTyped" return="void">
-			<parameter type="char" />
-		</method>
-		<method name="callPointerPressed" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callPointerDragged" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callPointerReleased" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method modifiers="final" name="callRepaint" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="java.lang.Object" />
-		</method>
-		<method modifiers="final" name="callRepaint" return="void" />
-		<method modifiers="final" name="repaintContents" return="void" />
-		<method name="setVerticalScroll" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="getVerticalScrollPosition" return="int" />
-		<method name="getVerticalScrollProportion" return="int" />
-		<method name="callShowNotify" return="void">
-			<parameter type="javax.microedition.lcdui.Display" />
-		</method>
-		<method name="callHideNotify" return="void">
-			<parameter type="javax.microedition.lcdui.Display" />
-		</method>
-		<method name="getCommands"
-			return="javax.microedition.lcdui.Command[]" />
-		<method name="getCommandCount" return="int" />
-		<method name="getCurrentItem"
-			return="javax.microedition.lcdui.Item" />
-		<method name="getCommandListener"
-			return="javax.microedition.lcdui.CommandListener" />
-		<method name="addCommandImpl" return="void">
-			<parameter type="javax.microedition.lcdui.Command" />
-		</method>
-		<method name="removeCommandImpl" return="void">
-			<parameter type="javax.microedition.lcdui.Command" />
-		</method>
-		<method name="updateCommandSet" return="void" />
-		<method name="grabFullScreen" return="void">
-			<parameter type="boolean" />
-		</method>
-		<field name="currentDisplay"
-			type="javax.microedition.lcdui.Display" />
-		<field name="commands"
-			type="javax.microedition.lcdui.Command[]" />
-		<field name="numCommands" type="int" />
-		<field name="listener"
-			type="javax.microedition.lcdui.CommandListener" />
-		<field constant-value="0" modifiers="static final" name="X"
-			type="int" />
-		<field constant-value="1" modifiers="static final" name="Y"
-			type="int" />
-		<field constant-value="2" modifiers="static final" name="WIDTH"
-			type="int" />
-		<field constant-value="3" modifiers="static final" name="HEIGHT"
-			type="int" />
-		<field name="viewport" type="int[]" />
-		<field name="fullScreenMode" type="boolean" />
-		<field name="sizeChangeOccurred" type="boolean" />
-		<field name="paintDelegate"
-			type="javax.microedition.lcdui.Displayable" />
-		<field modifiers="static final" name="TITLE_HEIGHT" type="int" />
 	</class>
 	<class modifiers="public final"
 		name="javax.microedition.lcdui.Font">
-		<constructor modifiers="private" />
+		<constructor modifiers="private">
+			<parameter type="int" />
+			<parameter type="int" />
+			<parameter type="int" />
+		</constructor>
 		<method modifiers="public static" name="getFont"
 			return="javax.microedition.lcdui.Font">
 			<parameter type="int" />
@@ -1568,103 +1096,6 @@
 		<method modifiers="public" name="size" return="int" />
 		<method modifiers="public" name="getWidth" return="int" />
 		<method modifiers="public" name="getHeight" return="int" />
-		<method name="commitPendingInteraction" return="void" />
-		<method name="setCurrentItem" return="void">
-			<parameter type="javax.microedition.lcdui.Item" />
-		</method>
-		<method name="callShowNotify" return="void">
-			<parameter type="javax.microedition.lcdui.Display" />
-		</method>
-		<method name="callHideNotify" return="void">
-			<parameter type="javax.microedition.lcdui.Display" />
-		</method>
-		<method name="callKeyPressed" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyReleased" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyRepeated" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyTyped" return="void">
-			<parameter type="char" />
-		</method>
-		<method name="callPointerPressed" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callPointerReleased" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callPointerDragged" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="traverse" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="formTraverse" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="setTraverseIndex" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="itemTraverse" return="boolean">
-			<parameter type="int" />
-		</method>
-		<method name="scrollForBounds" return="boolean">
-			<parameter type="int" />
-			<parameter type="int[]" />
-		</method>
-		<method name="scrollForTraversal" return="boolean">
-			<parameter type="int" />
-			<parameter type="int[]" />
-		</method>
-		<method name="layout" return="void" />
-		<method name="callPaint" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="java.lang.Object" />
-		</method>
-		<method name="paintItem" return="void">
-			<parameter type="javax.microedition.lcdui.Item" />
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="int[]" />
-		</method>
-		<method name="paintTraversalIndicator" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="getCurrentItem"
-			return="javax.microedition.lcdui.Item" />
-		<method name="callInvalidate" return="void">
-			<parameter type="javax.microedition.lcdui.Item" />
-		</method>
-		<method name="callItemStateChanged" return="void">
-			<parameter type="javax.microedition.lcdui.Item" />
-		</method>
-		<field modifiers="final" name="TRAVERSE_HORIZONTAL"
-			type="boolean" />
-		<field modifiers="final" name="TRAVERSE_VERTICAL"
-			type="boolean" />
-		<field constant-value="4" modifiers="static final"
-			name="CELL_SPACING" type="int" />
-		<field constant-value="0" modifiers="static final"
-			name="ONE_PIXEL_BOX" type="int" />
-		<field constant-value="1" modifiers="static final"
-			name="TRIANGLE_CORNERS" type="int" />
-		<field constant-value="0" modifiers="static final"
-			name="TRAVERSE_INDICATOR" type="int" />
-		<field constant-value="6316128" modifiers="static final"
-			name="TRAVERSE_INDICATOR_COLOR" type="int" />
-		<field constant-value="3" modifiers="static final"
-			name="LAYOUT_HMASK" type="int" />
-		<field constant-value="48" modifiers="static final"
-			name="LAYOUT_VMASK" type="int" />
 	</class>
 	<class extends="javax.microedition.lcdui.Item" modifiers="public"
 		name="javax.microedition.lcdui.Gauge">
@@ -1707,33 +1138,6 @@
 		<method modifiers="public" name="getMaxValue" return="int" />
 		<method modifiers="public" name="isInteractive"
 			return="boolean" />
-		<method name="equateNLA" return="boolean" />
-		<method name="equateNLB" return="boolean" />
-		<method name="callMinimumWidth" return="int" />
-		<method name="callPreferredWidth" return="int">
-			<parameter type="int" />
-		</method>
-		<method name="callMinimumHeight" return="int" />
-		<method name="callPreferredHeight" return="int">
-			<parameter type="int" />
-		</method>
-		<method name="callTraverse" return="boolean">
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int[]" />
-		</method>
-		<method name="callTraverseOut" return="void" />
-		<method name="callPaint" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="modifyValue" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callShowNotify" return="void" />
-		<method name="callHideNotify" return="void" />
 		<field constant-value="-1" modifiers="public static final"
 			name="INDEFINITE" type="int" />
 		<field constant-value="0" modifiers="public static final"
@@ -1926,17 +1330,6 @@
 			return="int">
 			<parameter type="int" />
 		</method>
-		<method modifiers="static" name="getGraphics"
-			return="javax.microedition.lcdui.Graphics">
-			<parameter type="javax.microedition.lcdui.Image" />
-		</method>
-		<method name="reset" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="reset" return="void" />
 		<field constant-value="1" modifiers="public static final"
 			name="HCENTER" type="int" />
 		<field constant-value="2" modifiers="public static final"
@@ -1955,7 +1348,6 @@
 			name="SOLID" type="int" />
 		<field constant-value="1" modifiers="public static final"
 			name="DOTTED" type="int" />
-		<field name="destination" type="javax.microedition.lcdui.Image" />
 	</class>
 	<class modifiers="public" name="javax.microedition.lcdui.Image">
 		<constructor />
@@ -2014,9 +1406,6 @@
 			<parameter type="int" />
 			<parameter type="int" />
 		</method>
-		<field name="width" type="int" />
-		<field name="height" type="int" />
-		<field name="imgData" type="int" />
 	</class>
 	<class extends="javax.microedition.lcdui.Item" modifiers="public"
 		name="javax.microedition.lcdui.ImageItem">
@@ -2049,33 +1438,6 @@
 		</method>
 		<method modifiers="public" name="getAppearanceMode"
 			return="int" />
-		<method name="callMinimumWidth" return="int" />
-		<method name="callPreferredWidth" return="int">
-			<parameter type="int" />
-		</method>
-		<method name="callMinimumHeight" return="int" />
-		<method name="callPreferredHeight" return="int">
-			<parameter type="int" />
-		</method>
-		<method name="callPaint" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callKeyPressed" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="addCommandImpl" return="void">
-			<parameter type="javax.microedition.lcdui.Command" />
-		</method>
-		<method name="removeCommandImpl" return="void">
-			<parameter type="javax.microedition.lcdui.Command" />
-		</method>
-		<method name="shouldSkipTraverse" return="boolean" />
-		<method name="setItemCommandListenerImpl" return="void">
-			<parameter
-				type="javax.microedition.lcdui.ItemCommandListener" />
-		</method>
 		<field constant-value="0" modifiers="public static final"
 			name="LAYOUT_DEFAULT" type="int" />
 		<field constant-value="1" modifiers="public static final"
@@ -2114,10 +1476,6 @@
 			<parameter
 				type="javax.microedition.lcdui.ItemCommandListener" />
 		</method>
-		<method name="setItemCommandListenerImpl" return="void">
-			<parameter
-				type="javax.microedition.lcdui.ItemCommandListener" />
-		</method>
 		<method modifiers="public" name="getPreferredWidth"
 			return="int" />
 		<method modifiers="public" name="getPreferredHeight"
@@ -2135,111 +1493,6 @@
 		</method>
 		<method modifiers="public" name="notifyStateChanged"
 			return="void" />
-		<method name="commitPendingInteraction" return="void" />
-		<method name="getLabelHeight" return="int">
-			<parameter type="int" />
-		</method>
-		<method name="getLabelWidth" return="int" />
-		<method modifiers="abstract" name="callPreferredWidth"
-			return="int">
-			<parameter type="int" />
-		</method>
-		<method modifiers="abstract" name="callPreferredHeight"
-			return="int">
-			<parameter type="int" />
-		</method>
-		<method modifiers="abstract" name="callMinimumWidth"
-			return="int" />
-		<method modifiers="abstract" name="callMinimumHeight"
-			return="int" />
-		<method name="shouldHShrink" return="boolean" />
-		<method name="shouldHExpand" return="boolean" />
-		<method name="shouldVShrink" return="boolean" />
-		<method name="shouldVExpand" return="boolean" />
-		<method name="equateNLA" return="boolean" />
-		<method name="equateNLB" return="boolean" />
-		<method name="shouldSkipTraverse" return="boolean" />
-		<method modifiers="abstract" name="callPaint" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="repaint" return="void" />
-		<method name="repaint" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="paintLabel" return="int">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="int" />
-		</method>
-		<method name="callSizeChanged" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="invalidate" return="void" />
-		<method name="callTraverse" return="boolean">
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int[]" />
-		</method>
-		<method name="callTraverseOut" return="void" />
-		<method name="callKeyPressed" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyTyped" return="void">
-			<parameter type="char" />
-		</method>
-		<method name="callKeyReleased" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyRepeated" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callPointerPressed" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callPointerReleased" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callPointerDragged" return="void">
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callShowNotify" return="void" />
-		<method name="callHideNotify" return="void" />
-		<method name="drawButtonBorder" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="boolean" />
-		</method>
-		<method name="addCommandImpl" return="void">
-			<parameter type="javax.microedition.lcdui.Command" />
-		</method>
-		<method name="removeCommandImpl" return="void">
-			<parameter type="javax.microedition.lcdui.Command" />
-		</method>
-		<method name="getCommands"
-			return="javax.microedition.lcdui.Command[]" />
-		<method name="getCommandCount" return="int" />
-		<method name="getItemCommandListener"
-			return="javax.microedition.lcdui.ItemCommandListener" />
-		<method modifiers="final" name="getOwner"
-			return="javax.microedition.lcdui.Screen" />
-		<method name="setOwner" return="void">
-			<parameter type="javax.microedition.lcdui.Screen" />
-		</method>
-		<method name="setLayoutImpl" return="void">
-			<parameter type="int" />
-		</method>
 		<field constant-value="0" modifiers="public static final"
 			name="LAYOUT_DEFAULT" type="int" />
 		<field constant-value="1" modifiers="public static final"
@@ -2274,45 +1527,6 @@
 			name="HYPERLINK" type="int" />
 		<field constant-value="2" modifiers="public static final"
 			name="BUTTON" type="int" />
-		<field constant-value="0" modifiers="static final" name="X"
-			type="int" />
-		<field constant-value="1" modifiers="static final" name="Y"
-			type="int" />
-		<field constant-value="2" modifiers="static final" name="WIDTH"
-			type="int" />
-		<field constant-value="3" modifiers="static final" name="HEIGHT"
-			type="int" />
-		<field modifiers="static final" name="VALID_LAYOUT" type="int" />
-		<field name="bounds" type="int[]" />
-		<field name="hasFocus" type="boolean" />
-		<field name="visible" type="boolean" />
-		<field name="sizeChanged" type="boolean" />
-		<field name="commandListener"
-			type="javax.microedition.lcdui.ItemCommandListener" />
-		<field name="label" type="java.lang.String" />
-		<field name="owner" type="javax.microedition.lcdui.Screen" />
-		<field name="layout" type="int" />
-		<field name="defaultCommand"
-			type="javax.microedition.lcdui.Command" />
-		<field name="numCommands" type="int" />
-		<field name="lockedWidth" type="int" />
-		<field name="lockedHeight" type="int" />
-		<field constant-value="false" modifiers="static final"
-			name="LABEL_BOLD_ON_TRAVERSE" type="boolean" />
-		<field constant-value="2" modifiers="static final"
-			name="BUTTON_PAD" type="int" />
-		<field constant-value="3" modifiers="static final"
-			name="BUTTON_BORDER" type="int" />
-		<field constant-value="11513775" modifiers="static final"
-			name="LIGHT_GRAY_COLOR" type="int" />
-		<field constant-value="6316128" modifiers="static final"
-			name="DARK_GRAY_COLOR" type="int" />
-		<field modifiers="static final" name="LABEL_FONT"
-			type="javax.microedition.lcdui.Font" />
-		<field constant-value="2" modifiers="static final"
-			name="LABEL_PAD" type="int" />
-		<field modifiers="static final" name="LABEL_HEIGHT" type="int" />
-		<field modifiers="static final" name="DEFAULT_WIDTH" type="int" />
 	</class>
 	<interface modifiers="public"
 		name="javax.microedition.lcdui.ItemCommandListener">
@@ -2415,25 +1629,6 @@
 			return="javax.microedition.lcdui.Font">
 			<parameter type="int" />
 		</method>
-		<method name="callShowNotify" return="void">
-			<parameter type="javax.microedition.lcdui.Display" />
-		</method>
-		<method name="callHideNotify" return="void">
-			<parameter type="javax.microedition.lcdui.Display" />
-		</method>
-		<method name="callKeyPressed" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callPaint" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="java.lang.Object" />
-		</method>
-		<method name="callInvalidate" return="void">
-			<parameter type="javax.microedition.lcdui.Item" />
-		</method>
-		<method name="callItemStateChanged" return="void">
-			<parameter type="javax.microedition.lcdui.Item" />
-		</method>
 		<field modifiers="public static final" name="SELECT_COMMAND"
 			type="javax.microedition.lcdui.Command" />
 	</class>
@@ -2443,19 +1638,6 @@
 		<constructor>
 			<parameter type="java.lang.String" />
 		</constructor>
-		<method name="layout" return="void" />
-		<method name="repaintItem" return="void">
-			<parameter type="javax.microedition.lcdui.Item" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callPaint" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="java.lang.Object" />
-		</method>
-		<method name="setVerticalScroll" return="void" />
 	</class>
 	<class extends="javax.microedition.lcdui.Item" modifiers="public"
 		name="javax.microedition.lcdui.Spacer">
@@ -2477,20 +1659,6 @@
 		</method>
 		<method modifiers="public" name="setLabel" return="void">
 			<parameter type="java.lang.String" />
-		</method>
-		<method name="callMinimumWidth" return="int" />
-		<method name="callPreferredWidth" return="int">
-			<parameter type="int" />
-		</method>
-		<method name="callMinimumHeight" return="int" />
-		<method name="callPreferredHeight" return="int">
-			<parameter type="int" />
-		</method>
-		<method name="shouldSkipTraverse" return="boolean" />
-		<method name="callPaint" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="int" />
-			<parameter type="int" />
 		</method>
 	</class>
 	<class extends="javax.microedition.lcdui.Item" modifiers="public"
@@ -2520,31 +1688,6 @@
 			return="void">
 			<parameter type="int" />
 			<parameter type="int" />
-		</method>
-		<method name="callMinimumWidth" return="int" />
-		<method name="callPreferredWidth" return="int">
-			<parameter type="int" />
-		</method>
-		<method name="callMinimumHeight" return="int" />
-		<method name="callPreferredHeight" return="int">
-			<parameter type="int" />
-		</method>
-		<method name="equateNLB" return="boolean" />
-		<method name="equateNLA" return="boolean" />
-		<method name="shouldSkipTraverse" return="boolean" />
-		<method name="callPaint" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="callKeyPressed" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="addCommandImpl" return="void">
-			<parameter type="javax.microedition.lcdui.Command" />
-		</method>
-		<method name="removeCommandImpl" return="void">
-			<parameter type="javax.microedition.lcdui.Command" />
 		</method>
 	</class>
 	<class extends="javax.microedition.lcdui.Screen" modifiers="public"
@@ -2603,35 +1746,6 @@
 		<method modifiers="public" name="setTicker" return="void">
 			<parameter type="javax.microedition.lcdui.Ticker" />
 		</method>
-		<method name="commitPendingInteraction" return="void" />
-		<method name="callShowNotify" return="void">
-			<parameter type="javax.microedition.lcdui.Display" />
-		</method>
-		<method name="callHideNotify" return="void">
-			<parameter type="javax.microedition.lcdui.Display" />
-		</method>
-		<method name="callInvalidate" return="void">
-			<parameter type="javax.microedition.lcdui.Item" />
-		</method>
-		<method name="callItemStateChanged" return="void">
-			<parameter type="javax.microedition.lcdui.Item" />
-		</method>
-		<method name="callKeyPressed" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyReleased" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyRepeated" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyTyped" return="void">
-			<parameter type="char" />
-		</method>
-		<method name="callPaint" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="java.lang.Object" />
-		</method>
 	</class>
 	<class extends="javax.microedition.lcdui.Item" modifiers="public"
 		name="javax.microedition.lcdui.TextField">
@@ -2683,52 +1797,6 @@
 			return="void">
 			<parameter type="java.lang.String" />
 		</method>
-		<method name="commitPendingInteraction" return="void" />
-		<method name="equateNLA" return="boolean" />
-		<method name="equateNLB" return="boolean" />
-		<method name="callMinimumWidth" return="int" />
-		<method name="callPreferredWidth" return="int">
-			<parameter type="int" />
-		</method>
-		<method name="callMinimumHeight" return="int" />
-		<method name="callPreferredHeight" return="int">
-			<parameter type="int" />
-		</method>
-		<method name="callPaint" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="validateCursor" return="void" />
-		<method name="keyEntered" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyPressed" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyReleased" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyRepeated" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="callKeyTyped" return="void">
-			<parameter type="char" />
-		</method>
-		<method name="moveCursor" return="boolean">
-			<parameter type="int" />
-		</method>
-		<method name="callTraverse" return="boolean">
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int[]" />
-		</method>
-		<method name="callTraverseOut" return="void" />
-		<method name="callHideNotify" return="void" />
-		<method name="setBorder" return="void">
-			<parameter type="boolean" />
-		</method>
 		<!--
 			<method modifiers="public" name="setLabel" return="void">
 			<parameter type="java.lang.String" />
@@ -2760,17 +1828,6 @@
 			name="INITIAL_CAPS_SENTENCE" type="int" />
 		<field constant-value="65535" modifiers="public static final"
 			name="CONSTRAINT_MASK" type="int" />
-		<field name="buffer"
-			type="com.sun.midp.lcdui.DynamicCharacterArray" />
-		<field name="cursor" type="com.sun.midp.lcdui.TextCursor" />
-		<field name="currentInputChar" type="char" />
-		<field name="oldNumChars" type="int" />
-		<field name="multiLine" type="boolean" />
-		<field name="hasBorder" type="boolean" />
-		<field name="usePreferredX" type="boolean" />
-		<field name="initialInputMode" type="java.lang.String" />
-		<field name="inputHandler"
-			type="com.sun.midp.lcdui.InputMethodHandler" />
 	</class>
 	<class modifiers="public" name="javax.microedition.lcdui.Ticker">
 		<constructor modifiers="public">
@@ -2781,16 +1838,6 @@
 		</method>
 		<method modifiers="public" name="getString"
 			return="java.lang.String" />
-		<method name="paintContent" return="void">
-			<parameter type="javax.microedition.lcdui.Graphics" />
-		</method>
-		<method name="reset" return="void" />
-		<field constant-value="250" modifiers="static final"
-			name="TICK_RATE" type="long" />
-		<field modifiers="static final" name="PREFERRED_HEIGHT"
-			type="int" />
-		<field constant-value="2" modifiers="static final"
-			name="DECORATION_HEIGHT" type="int" />
 	</class>
 	<class extends="javax.microedition.lcdui.Canvas"
 		modifiers="public abstract"
@@ -2857,17 +1904,6 @@
 			return="void">
 			<parameter type="javax.microedition.lcdui.Graphics" />
 		</method>
-		<method name="setWidthImpl" return="void">
-			<parameter type="int" />
-		</method>
-		<method name="setHeightImpl" return="void">
-			<parameter type="int" />
-		</method>
-		<field name="x" type="int" />
-		<field name="y" type="int" />
-		<field name="width" type="int" />
-		<field name="height" type="int" />
-		<field name="visible" type="boolean" />
 	</class>
 	<class modifiers="public"
 		name="javax.microedition.lcdui.game.LayerManager">
@@ -2972,16 +2008,6 @@
 			<parameter type="int" />
 			<parameter type="boolean" />
 		</method>
-		<method name="getTransformedPtX" return="int">
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
-		<method name="getTransformedPtY" return="int">
-			<parameter type="int" />
-			<parameter type="int" />
-			<parameter type="int" />
-		</method>
 		<field constant-value="0" modifiers="public static final"
 			name="TRANS_NONE" type="int" />
 		<field constant-value="5" modifiers="public static final"
@@ -2998,24 +2024,6 @@
 			name="TRANS_MIRROR_ROT180" type="int" />
 		<field constant-value="4" modifiers="public static final"
 			name="TRANS_MIRROR_ROT270" type="int" />
-		<field name="sourceImage" type="javax.microedition.lcdui.Image" />
-		<field name="numberFrames" type="int" />
-		<field name="frameCoordsX" type="int[]" />
-		<field name="frameCoordsY" type="int[]" />
-		<field name="srcFrameWidth" type="int" />
-		<field name="srcFrameHeight" type="int" />
-		<field name="frameSequence" type="int[]" />
-		<field name="dRefX" type="int" />
-		<field name="dRefY" type="int" />
-		<field name="collisionRectX" type="int" />
-		<field name="collisionRectY" type="int" />
-		<field name="collisionRectWidth" type="int" />
-		<field name="collisionRectHeight" type="int" />
-		<field name="t_currentTransformation" type="int" />
-		<field name="t_collisionRectX" type="int" />
-		<field name="t_collisionRectY" type="int" />
-		<field name="t_collisionRectWidth" type="int" />
-		<field name="t_collisionRectHeight" type="int" />
 	</class>
 	<class extends="javax.microedition.lcdui.game.Layer"
 		modifiers="public" name="javax.microedition.lcdui.game.TiledLayer">
@@ -3070,9 +2078,6 @@
 		<method modifiers="public final" name="paint" return="void">
 			<parameter type="javax.microedition.lcdui.Graphics" />
 		</method>
-		<field name="sourceImage" type="javax.microedition.lcdui.Image" />
-		<field name="tileSetX" type="int[]" />
-		<field name="tileSetY" type="int[]" />
 	</class>
 	<interface modifiers="public"
 		name="javax.microedition.media.Control" />
@@ -3087,6 +2092,7 @@
 	</interface>
 	<class modifiers="public final"
 		name="javax.microedition.media.Manager">
+		<constructor modifiers="private" />
 		<method modifiers="public static"
 			name="getSupportedContentTypes" return="java.lang.String[]">
 			<parameter type="java.lang.String" />
@@ -3123,8 +2129,6 @@
 			<parameter
 			type="javax.microedition.media.protocol.DataSource" />
 			</method>
-		-->
-		<!--
 			<method modifiers="public static" name="getSystemTimeBase"
 			return="javax.microedition.media.TimeBase" />
 		-->
@@ -3273,15 +2277,6 @@
 			type="java.lang.String" />
 		-->
 	</interface>
-	<!--
-		<class name="javax.microedition.media.SystemTimeBase">
-		<implements>
-		<interface name="javax.microedition.media.TimeBase" />
-		</implements>
-		<constructor />
-		<method modifiers="public" name="getTime" return="long" />
-		</class>
-	-->
 	<interface modifiers="public"
 		name="javax.microedition.media.control.ToneControl">
 		<implements>
@@ -3443,10 +2438,6 @@
 		<method modifiers="public" name="getCertificate"
 			return="javax.microedition.pki.Certificate" />
 		<method modifiers="public" name="getReason" return="byte" />
-		<method modifiers="static" name="getMessageForReason"
-			return="java.lang.String">
-			<parameter type="int" />
-		</method>
 		<field constant-value="1" modifiers="public static final"
 			name="BAD_EXTENSIONS" type="byte" />
 		<field constant-value="2" modifiers="public static final"
@@ -3573,6 +2564,7 @@
 	</interface>
 	<class modifiers="public"
 		name="javax.microedition.rms.RecordStore">
+		<constructor modifiers="private" />
 		<method modifiers="public static" name="deleteRecordStore"
 			return="void">
 			<exception
@@ -3743,35 +2735,10 @@
 			<parameter type="javax.microedition.rms.RecordComparator" />
 			<parameter type="boolean" />
 		</method>
-		<method name="isOpen" return="boolean" />
-		<method modifiers="static" name="getInt" return="int">
-			<parameter type="byte[]" />
-			<parameter type="int" />
-		</method>
-		<method modifiers="static" name="getLong" return="long">
-			<parameter type="byte[]" />
-			<parameter type="int" />
-		</method>
-		<method modifiers="static" name="putInt" return="int">
-			<parameter type="int" />
-			<parameter type="byte[]" />
-			<parameter type="int" />
-		</method>
-		<method modifiers="static" name="putLong" return="int">
-			<parameter type="long" />
-			<parameter type="byte[]" />
-			<parameter type="int" />
-		</method>
-		<method name="getRecordIDs" return="int[]" />
-		<method modifiers="static" name="getBytesQuota" return="int">
-			<parameter type="int" />
-		</method>
-		<method modifiers="static" name="addLatency" return="void" />
 		<field constant-value="0" modifiers="public static final"
 			name="AUTHMODE_PRIVATE" type="int" />
 		<field constant-value="1" modifiers="public static final"
 			name="AUTHMODE_ANY" type="int" />
-		<field name="rsLock" type="java.lang.Object" />
 	</class>
 	<class extends="java.lang.Exception" modifiers="public"
 		name="javax.microedition.rms.RecordStoreException">
@@ -3804,4 +2771,69 @@
 		</constructor>
 		<constructor modifiers="public" />
 	</class>
+	<!--
+		<class modifiers="public final"
+		name="javax.microedition.securityservice.CMSMessageSignatureService">
+		<method modifiers="public static final" name="sign"
+		return="byte[]">
+		<exception
+		name="javax.microedition.securityservice.CMSMessageSignatureServiceException" />
+		<exception
+		name="javax.microedition.pki.UserCredentialManagerException" />
+		<parameter type="java.lang.String" />
+		<parameter type="int" />
+		<parameter type="java.lang.String[]" />
+		<parameter type="java.lang.String" />
+		</method>
+		<method modifiers="public static final" name="authenticate"
+		return="byte[]">
+		<exception
+		name="javax.microedition.securityservice.CMSMessageSignatureServiceException" />
+		<exception
+		name="javax.microedition.pki.UserCredentialManagerException" />
+		<parameter type="byte[]" />
+		<parameter type="int" />
+		<parameter type="java.lang.String[]" />
+		<parameter type="java.lang.String" />
+		</method>
+		<method modifiers="public static final" name="authenticate"
+		return="byte[]">
+		<exception
+		name="javax.microedition.securityservice.CMSMessageSignatureServiceException" />
+		<exception
+		name="javax.microedition.pki.UserCredentialManagerException" />
+		<parameter type="java.lang.String" />
+		<parameter type="int" />
+		<parameter type="java.lang.String[]" />
+		<parameter type="java.lang.String" />
+		</method>
+		<field constant-value="1" modifiers="public static final"
+		name="SIG_INCLUDE_CONTENT" type="int" />
+		<field constant-value="2" modifiers="public static final"
+		name="SIG_INCLUDE_CERTIFICATE" type="int" />
+		</class>
+		<class extends="java.lang.Exception" modifiers="public final"
+		name="javax.microedition.securityservice.CMSMessageSignatureServiceException">
+		<constructor modifiers="public">
+		<parameter type="byte" />
+		</constructor>
+		<method modifiers="public" name="getReason" return="byte" />
+		<field constant-value="1" modifiers="public static final"
+		name="CRYPTO_FAILURE" type="byte" />
+		<field constant-value="2" modifiers="public static final"
+		name="CRYPTO_FORMAT_ERROR" type="byte" />
+		<field constant-value="3" modifiers="public static final"
+		name="CRYPTO_NO_DETACHED_SIG" type="byte" />
+		<field constant-value="4" modifiers="public static final"
+		name="CRYPTO_NO_OPAQUE_SIG" type="byte" />
+		<field constant-value="5" modifiers="public static final"
+		name="SE_BUSY" type="byte" />
+		<field constant-value="6" modifiers="public static final"
+		name="SE_FAILURE" type="byte" />
+		<field constant-value="7" modifiers="public static final"
+		name="SE_CRYPTO_FAILURE" type="byte" />
+		<field constant-value="8" modifiers="public static final"
+		name="CRYPTO_NO_CERTIFICATE" type="byte" />
+		</class>
+	-->
 </signature>

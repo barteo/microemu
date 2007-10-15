@@ -53,6 +53,7 @@ public class InputStreamReader extends Reader {
      * @param  is   An InputStream
      */
     public InputStreamReader(InputStream is) {
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -79,7 +80,7 @@ public class InputStreamReader extends Reader {
      * @exception  IOException  If an I/O error occurs
      */
     public int read() throws IOException {
-        return 0;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -95,7 +96,7 @@ public class InputStreamReader extends Reader {
      * @exception  IOException  If an I/O error occurs
      */
     public int read(char cbuf[], int off, int len) throws IOException {
-        return 0;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -109,7 +110,7 @@ public class InputStreamReader extends Reader {
      * @exception  IOException  If an I/O error occurs
      */
     public long skip(long n) throws IOException {
-        return 0;
+        throw new RuntimeException("STUB");
     }
 
     /**

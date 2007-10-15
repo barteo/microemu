@@ -49,17 +49,19 @@ public abstract class Reference {
      *           <code>null</code> if this reference object has been cleared
      */
     public Object get() {
-        return null;
+        throw new RuntimeException("STUB");
     }
 
     /**
      * Clears this reference object.
      */
     public void clear() {
+        throw new RuntimeException("STUB");
     }
 
     /* -- Constructors -- */
 
     Reference(Object referent) {
+        throw new RuntimeException("STUB");
     }
 }

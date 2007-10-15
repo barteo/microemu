@@ -60,8 +60,7 @@ class Stack extends Vector {
      * @see     java.util.Vector#addElement
      */
     public Object push(Object item) {
-        addElement(item);
-        return item;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -73,13 +72,7 @@ class Stack extends Vector {
      * @exception  EmptyStackException  if this stack is empty.
      */
     public synchronized Object pop() {
-        Object obj;
-        int    len = size();
-
-        obj = peek();
-        removeElementAt(len - 1);
-
-        return obj;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -91,13 +84,7 @@ class Stack extends Vector {
      * @exception  EmptyStackException  if this stack is empty.
      */
     public synchronized Object peek() {
-        int len = size();
-
-        if (len == 0) {
-            throw new EmptyStackException();
-        }
-
-        return elementAt(len - 1);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -107,7 +94,7 @@ class Stack extends Vector {
      *          no items; <code>false</code> otherwise.
      */
     public boolean empty() {
-        return size() == 0;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -125,13 +112,7 @@ class Stack extends Vector {
      *          indicates that the object is not on the stack.
      */
     public synchronized int search(Object o) {
-        int i = lastIndexOf(o);
-
-        if (i >= 0) {
-            return size() - i;
-        }
-
-        return -1;
+        throw new RuntimeException("STUB");
     }
 
 }

@@ -66,12 +66,16 @@ package javax.microedition.lcdui;
  */
 public abstract class Screen extends Displayable  {
 
+    Screen() {
+        
+    }
+    
     /**
      * Creates a new Screen object with the given title and with no ticker.
      *
      * @param title the Screen's title, or null for no title
      */
     Screen(String title) {
-        super(title);
+        throw new RuntimeException("STUB");
     }
 }

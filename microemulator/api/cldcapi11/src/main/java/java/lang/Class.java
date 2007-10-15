@@ -70,7 +70,7 @@ class Class {
      * @return a string representation of this class object.
      */
     public String toString() {
-        return (isInterface() ? "interface " :  "class ") + getName();
+        throw new RuntimeException("STUB");
     }
 
     /**

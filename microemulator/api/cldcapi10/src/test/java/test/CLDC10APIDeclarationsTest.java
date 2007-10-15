@@ -21,6 +21,7 @@
  */
 package test;
 
+import net.sf.jour.signature.APICompareConfig;
 import net.sf.jour.signature.SignatureTestCase;
 
 /**
@@ -37,6 +38,12 @@ public class CLDC10APIDeclarationsTest extends SignatureTestCase {
         return false;
     }
 
+    public APICompareConfig getAPICompareConfig() {
+        APICompareConfig c = new APICompareConfig();
+        c.allowPackageAPIextension = false;
+        return c;
+    }
+    
     public String getSignatureXMLPath() {
         return "cldcapi10-signature.xml";
     }

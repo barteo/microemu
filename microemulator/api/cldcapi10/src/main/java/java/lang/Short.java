@@ -56,7 +56,7 @@ class Short {
      *                contain a parsable short.
      */
     public static short parseShort(String s) throws NumberFormatException {
-      return parseShort(s, 10);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -73,10 +73,7 @@ class Short {
      */
     public static short parseShort(String s, int radix)
       throws NumberFormatException {
-      int i = Integer.parseInt(s, radix);
-      if (i < MIN_VALUE || i > MAX_VALUE)
-          throw new NumberFormatException();
-      return (short)i;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -85,6 +82,7 @@ class Short {
      * @param value     the initial value of the Short
      */
     public Short(short value) {
+        throw new RuntimeException("STUB");
     }
 
     /**

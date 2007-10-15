@@ -275,7 +275,7 @@ public final class StringBuffer {
      * @see     java.lang.StringBuffer#append(java.lang.String)
      */
     public synchronized StringBuffer append(Object obj) {
-        return append(String.valueOf(obj));
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -299,7 +299,7 @@ public final class StringBuffer {
      * @return  a reference to this <code>StringBuffer</code>.
      */
      public synchronized StringBuffer append(String str) {
-       return this;
+         throw new RuntimeException("STUB");
      }
  
     /**
@@ -319,7 +319,7 @@ public final class StringBuffer {
      * @return  a reference to this <code>StringBuffer</code> object.
      */
     public synchronized StringBuffer append(char str[]) {
-        return this;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -342,7 +342,7 @@ public final class StringBuffer {
      * @return  a reference to this <code>StringBuffer</code> object.
      */
     public synchronized StringBuffer append(char str[], int offset, int len) {
-        return this;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -359,7 +359,7 @@ public final class StringBuffer {
      * @see     java.lang.StringBuffer#append(java.lang.String)
      */
     public StringBuffer append(boolean b) {
-        return append(String.valueOf(b));
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -378,7 +378,7 @@ public final class StringBuffer {
      * @return  a reference to this <code>StringBuffer</code> object.
      */
     public synchronized StringBuffer append(char c) {
-        return this;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -395,7 +395,7 @@ public final class StringBuffer {
      * @see     java.lang.StringBuffer#append(java.lang.String)
      */
    public StringBuffer append(int i) {
-       return append(String.valueOf(i));
+       throw new RuntimeException("STUB");
    }
 
     /**
@@ -412,7 +412,7 @@ public final class StringBuffer {
      * @see     java.lang.StringBuffer#append(java.lang.String)
      */
     public StringBuffer append(long l) {
-        return append(String.valueOf(l));
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -431,7 +431,7 @@ public final class StringBuffer {
      * @since      1.2
      */
     public synchronized StringBuffer delete(int start, int end) {
-        return this;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -447,7 +447,7 @@ public final class StringBuffer {
      * @since       1.2
      */
     public synchronized StringBuffer deleteCharAt(int index) {
-        return this;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -472,7 +472,7 @@ public final class StringBuffer {
      * @see        java.lang.StringBuffer#length()
      */
     public synchronized StringBuffer insert(int offset, Object obj) {
-        return insert(offset, String.valueOf(obj));
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -508,7 +508,7 @@ public final class StringBuffer {
      * @see        java.lang.StringBuffer#length()
      */
     public synchronized StringBuffer insert(int offset, String str) {
-        return this;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -533,7 +533,7 @@ public final class StringBuffer {
      * @exception  StringIndexOutOfBoundsException  if the offset is invalid.
      */
     public synchronized StringBuffer insert(int offset, char str[]) {
-        return this;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -558,7 +558,7 @@ public final class StringBuffer {
      * @see        java.lang.StringBuffer#length()
      */
     public StringBuffer insert(int offset, boolean b) {
-        return insert(offset, String.valueOf(b));
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -586,7 +586,7 @@ public final class StringBuffer {
      * @see        java.lang.StringBuffer#length()
      */
     public synchronized StringBuffer insert(int offset, char c) {
-        return this;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -611,7 +611,7 @@ public final class StringBuffer {
      * @see        java.lang.StringBuffer#length()
      */
     public StringBuffer insert(int offset, int i) {
-        return insert(offset, String.valueOf(i));
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -636,7 +636,7 @@ public final class StringBuffer {
      * @see        java.lang.StringBuffer#length()
      */
     public StringBuffer insert(int offset, long l) {
-        return insert(offset, String.valueOf(l));
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -653,7 +653,7 @@ public final class StringBuffer {
      * @since   JDK1.0.2
      */
     public synchronized StringBuffer reverse() {
-        return this;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -676,7 +676,7 @@ public final class StringBuffer {
      * @return  a string representation of the string buffer.
      */
    public String toString() {
-       return new String(this);
+       throw new RuntimeException("STUB");
    }
 
 }

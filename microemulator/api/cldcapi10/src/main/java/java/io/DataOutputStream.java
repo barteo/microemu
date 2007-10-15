@@ -206,23 +206,4 @@ class DataOutputStream extends OutputStream implements DataOutput {
         throw new RuntimeException("STUB");
     }
 
-    /**
-     * Writes a string to the specified DataOutput using UTF-8 encoding in a
-     * machine-independent manner.
-     * <p>
-     * First, two bytes are written to out as if by the <code>writeShort</code>
-     * method giving the number of bytes to follow. This value is the number of
-     * bytes actually written out, not the length of the string. Following the
-     * length, each character of the string is output, in sequence, using the
-     * UTF-8 encoding for the character.
-     *
-     * @param      str   a string to be written.
-     * @param      out   destination to write to
-     * @return     The number of bytes written out.
-     * @exception  IOException  if an I/O error occurs.
-     */
-    static final int writeUTF(String str, DataOutput out) throws IOException {
-        throw new RuntimeException("STUB");
-    }
-
 }

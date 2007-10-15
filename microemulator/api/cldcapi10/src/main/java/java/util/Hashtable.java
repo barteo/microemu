@@ -118,7 +118,7 @@ class Hashtable {
      * @since   JDK1.0
      */
     public boolean isEmpty() {
-        return true;
+        throw new RuntimeException("STUB");
     }
 
     /**

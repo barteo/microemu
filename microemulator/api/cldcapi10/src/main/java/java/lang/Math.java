@@ -39,7 +39,9 @@ public final strictfp class Math {
     /**
      * Don't let anyone instantiate this class.
      */
-    private Math() {}
+    private Math() {
+        throw new RuntimeException("STUB");
+    }
 
     /**
      * Returns the absolute value of an <code>int</code> value.
@@ -56,7 +58,7 @@ public final strictfp class Math {
      * @see     java.lang.Integer#MIN_VALUE
      */
     public static int abs(int a) {
-        return (a < 0) ? -a : a;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -74,7 +76,7 @@ public final strictfp class Math {
      * @see     java.lang.Long#MIN_VALUE
      */
     public static long abs(long a) {
-        return (a < 0) ? -a : a;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -89,7 +91,7 @@ public final strictfp class Math {
      * @see     java.lang.Long#MAX_VALUE
      */
     public static int max(int a, int b) {
-        return (a >= b) ? a : b;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -104,7 +106,7 @@ public final strictfp class Math {
      * @see     java.lang.Long#MAX_VALUE
      */
     public static long max(long a, long b) {
-        return (a >= b) ? a : b;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -118,7 +120,7 @@ public final strictfp class Math {
      * @see     java.lang.Long#MIN_VALUE
      */
     public static int min(int a, int b) {
-        return (a <= b) ? a : b;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -133,7 +135,7 @@ public final strictfp class Math {
      * @see     java.lang.Long#MIN_VALUE
      */
     public static long min(long a, long b) {
-        return (a <= b) ? a : b;
+        throw new RuntimeException("STUB");
     }
 
 }

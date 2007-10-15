@@ -40,9 +40,13 @@ public class KeyCanvasPanel extends BaseExamplesCanvas {
 	
 	int keyRepeatedCount = 0;
 	
+	long keyRepeatedTime = 0;
+	
 	String lastKeyEvent = null;
 	
 	Vector keysHistory = new Vector();
+	
+	boolean debug = false;
 	
 	static { 		
 		initActionNames();
@@ -103,24 +107,44 @@ public class KeyCanvasPanel extends BaseExamplesCanvas {
 		}
 		lastKeyCode = keyCode;
 		lastKeyEvent = "keyPressed";
+		if (debug) {
+		    System.out.println(lastKeyEvent + " " + keyCode);
+		}
 		repaint();
 	}
 	
 	public void keyReleased(int keyCode) {
 		lastKeyEvent = "keyReleased";
 		lastKeyCode = keyCode;
+		if (debug) {
+            System.out.println(lastKeyEvent + " " + keyCode);
+        }
+		keyRepeatedCount = 1;
+        keyRepeatedTime = 0;
 		repaint();
 	}
 
 	public void keyRepeated(int keyCode) {
+	    long keyRepeatedDellay = 0;
 		if (lastKeyRepeatedKeyCode == keyCode) {
 			keyRepeatedCount ++;
+			if (keyRepeatedTime != 0) {
+			    keyRepeatedDellay = System.currentTimeMillis() - keyRepeatedTime; 
+			}
+            keyRepeatedTime = System.currentTimeMillis();
 		} else {
 			keyRepeatedCount = 1;
+			keyRepeatedTime = 0;
 		}
 		lastKeyEvent = "keyRepeated (" + keyRepeatedCount + ")";
+		if (keyRepeatedDellay != 0) {
+		    lastKeyEvent += " " + keyRepeatedDellay + " ms";
+		}
 		lastKeyCode = keyCode;
 		lastKeyRepeatedKeyCode = keyCode;
+		if (debug) {
+            System.out.println(lastKeyEvent + " " + keyCode);
+        }
 		repaint();
 	}
 

@@ -186,66 +186,28 @@ public class TiledLayer extends Layer {
      * @throws IllegalArgumentException if the <code>image</code>
      * height is not an integer multiple of the <code>tileHeight</code>
      */
-    public TiledLayer(int columns, int rows, Image image, int tileWidth,
-		      int tileHeight) {
-	// IllegalArgumentException will be thrown 
-	// in the Layer super-class constructor
-        super(columns < 1 || tileWidth < 1 ? -1 : columns * tileWidth, 
-	         rows < 1 || tileHeight < 1 ? -1 : rows * tileHeight);
-
-        // if img is null img.getWidth() will throw NullPointerException
-        if (((image.getWidth() % tileWidth) != 0) || 
-            ((image.getHeight() % tileHeight) != 0)) {
-             throw new IllegalArgumentException();
-	}
-        this.columns = columns;
-	this.rows = rows;
-
-        cellMatrix = new int[rows][columns];
-
-        int noOfFrames = 
-            (image.getWidth() / tileWidth) * (image.getHeight() / tileHeight);
-        // the zero th index is left empty for transparent tile
-        // so it is passed in  createStaticSet as noOfFrames + 1
-        // Also maintain static indices is true
-	// all elements of cellMatrix[][] 
-	// are set to zero by new, so maintainIndices = true
-        createStaticSet(image,  noOfFrames + 1, tileWidth, tileHeight, true);
+    public TiledLayer(int columns, int rows, Image image, int tileWidth, int tileHeight) {
+        super(0, 0);
+        throw new RuntimeException("STUB");
     }
 
     /**
-     * Creates a new animated tile and returns the index that refers
-     * to the new animated tile.  It is initially associated with
-     * the specified tile index (either a static tile or 0).
+     * Creates a new animated tile and returns the index that refers to the new
+     * animated tile. It is initially associated with the specified tile index
+     * (either a static tile or 0).
      * <P>
-     * The indices for animated tiles are always negative.  The first
-     * animated tile shall have the index -1, the second, -2, etc.  
-     *
-     * @param staticTileIndex the index of the associated tile 
-     * (must be <code>0</code> or a valid static tile index)
+     * The indices for animated tiles are always negative. The first animated
+     * tile shall have the index -1, the second, -2, etc.
+     * 
+     * @param staticTileIndex
+     *            the index of the associated tile (must be <code>0</code> or
+     *            a valid static tile index)
      * @return the index of newly created animated tile
-     * @throws IndexOutOfBoundsException if the 
-     * <code>staticTileIndex</code> is invalid
+     * @throws IndexOutOfBoundsException
+     *             if the <code>staticTileIndex</code> is invalid
      */
     public int createAnimatedTile(int staticTileIndex) {
-        // checks static tile 
-        if (staticTileIndex < 0 || staticTileIndex >= numberOfTiles) { 
-	    throw new IndexOutOfBoundsException();
-	}
-
-        if (anim_to_static == null) {
-	    anim_to_static = new int[4];
-	    numOfAnimTiles = 1;
-        } else if (numOfAnimTiles == anim_to_static.length) {
-	    // grow anim_to_static table if needed 
-	    int new_anim_tbl[] = new int[anim_to_static.length * 2];
-	    System.arraycopy(anim_to_static, 0, 
-                         new_anim_tbl, 0, anim_to_static.length);
-	    anim_to_static = new_anim_tbl;
-	}
-	anim_to_static[numOfAnimTiles] = staticTileIndex;
-	numOfAnimTiles++;
-        return (-(numOfAnimTiles - 1));
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -262,18 +224,7 @@ public class TiledLayer extends Layer {
      *
      */
     public void setAnimatedTile(int animatedTileIndex, int staticTileIndex) {
-        // checks static tile
-        if (staticTileIndex < 0 || staticTileIndex >= numberOfTiles) {  
-	    throw new IndexOutOfBoundsException();
-	}
-        // do animated tile index check
-	animatedTileIndex = - animatedTileIndex;
-	if (anim_to_static == null || animatedTileIndex <= 0 
-            || animatedTileIndex >= numOfAnimTiles) { 
-	    throw new IndexOutOfBoundsException();
-        }
-
-        anim_to_static[animatedTileIndex] = staticTileIndex;
+        throw new RuntimeException("STUB");
 
     }
 
@@ -290,13 +241,7 @@ public class TiledLayer extends Layer {
      * @see #setAnimatedTile
      */
     public int getAnimatedTile(int animatedTileIndex) {
-        animatedTileIndex = - animatedTileIndex;
-        if (anim_to_static == null || animatedTileIndex <= 0 
-                   || animatedTileIndex >= numOfAnimTiles) { 
-	    throw new IndexOutOfBoundsException();
-        }
-	
-        return anim_to_static[animatedTileIndex];
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -316,25 +261,7 @@ public class TiledLayer extends Layer {
      * @see #fillCells
      */
     public void setCell(int col, int row, int tileIndex) {
-
-        if (col < 0 || col >= this.columns || row < 0 || row >= this.rows) {
-            throw new IndexOutOfBoundsException();
-        }
-
-	if (tileIndex > 0) {
-            // do checks for static tile 
-            if (tileIndex >= numberOfTiles) { 
-	        throw new IndexOutOfBoundsException();
-	    }
-	} else if (tileIndex < 0) {
-            // do animated tile index check
-	    if (anim_to_static == null ||
-                (-tileIndex) >= numOfAnimTiles) { 
-	        throw new IndexOutOfBoundsException();
-            }
-	}
-
-        cellMatrix[row][col] = tileIndex;
+        throw new RuntimeException("STUB");
  
     }
 
@@ -354,10 +281,7 @@ public class TiledLayer extends Layer {
      * @see #fillCells
      */
     public int getCell(int col, int row) {
-        if (col < 0 || col >= this.columns || row < 0 || row >= this.rows) {
-            throw new IndexOutOfBoundsException();
-        }
-        return cellMatrix[row][col];
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -385,36 +309,7 @@ public class TiledLayer extends Layer {
      */
     public void fillCells(int col, int row, int numCols, int numRows,
                           int tileIndex) {
-
-
-	if (numCols < 0 || numRows < 0) {
-            throw new IllegalArgumentException();
-	}
-
-        if (col < 0 || col >= this.columns || row < 0 || row >= this.rows ||
-	    col + numCols > this.columns || row + numRows > this.rows) {
-            throw new IndexOutOfBoundsException();
-        }
-
-	if (tileIndex > 0) {
-            // do checks for static tile 
-            if (tileIndex >= numberOfTiles) { 
-	        throw new IndexOutOfBoundsException();
-	    }
-	} else if (tileIndex < 0) {
-            // do animated tile index check
-	    if (anim_to_static == null || 
-                (-tileIndex) >= numOfAnimTiles) { 
-	            throw new IndexOutOfBoundsException();
-            }
-	}
-
-        for (int rowCount = row; rowCount < row + numRows; rowCount++) {
-            for (int columnCount = col; 
-                     columnCount < col + numCols; columnCount++) {
-                cellMatrix[rowCount][columnCount] = tileIndex;
-            }
-        }
+        throw new RuntimeException("STUB");
     }
 
 
@@ -424,7 +319,7 @@ public class TiledLayer extends Layer {
      * <code>TiledLayer</code> grid
      */
     public final int getCellWidth() {
-        return cellWidth;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -433,7 +328,7 @@ public class TiledLayer extends Layer {
      * <code>TiledLayer</code> grid
      */
     public final int getCellHeight() {
-        return cellHeight;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -444,7 +339,7 @@ public class TiledLayer extends Layer {
      * <code>TiledLayer</code> grid
      */
     public final int getColumns() {
-        return columns;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -455,7 +350,7 @@ public class TiledLayer extends Layer {
      * <code>TiledLayer</code> grid
      */
     public final int getRows() {
-        return rows;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -487,28 +382,7 @@ public class TiledLayer extends Layer {
      *  height is not an integer  multiple of the <code>tileHeight</code>
      */
     public void setStaticTileSet(Image image, int tileWidth, int tileHeight) {
-        // if img is null img.getWidth() will throw NullPointerException
-        if (tileWidth < 1 || tileHeight < 1 ||
-	    ((image.getWidth() % tileWidth) != 0) || 
-            ((image.getHeight() % tileHeight) != 0)) {
-             throw new IllegalArgumentException();
-	}
-        setWidthImpl(columns * tileWidth);
-	setHeightImpl(rows * tileHeight);
-
-        int noOfFrames = 
-          (image.getWidth() / tileWidth) * (image.getHeight() / tileHeight);
-
-        // the zero th index is left empty for transparent tile
-        // so it is passed in  createStaticSet as noOfFrames + 1
-
-	if (noOfFrames >= (numberOfTiles - 1)) {
-	    // maintain static indices
-	    createStaticSet(image, noOfFrames + 1, tileWidth, tileHeight, true);
-	} else {
-            createStaticSet(image, noOfFrames + 1, tileWidth, 
-                                tileHeight, false);
-	}	
+        throw new RuntimeException("STUB");	
     }
 
     /**
@@ -531,204 +405,6 @@ public class TiledLayer extends Layer {
      * @throws NullPointerException if <code>g</code> is <code>null</code>
      */
     public final void paint(Graphics g) {
-
-        if (g == null) {
-            throw new NullPointerException();
-        }
-
-        if (visible) {
-	    int startColumn = 0;
-	    int endColumn = this.columns;
-	    int startRow = 0;
-	    int endRow = this.rows;
-
-	    // calculate the number of columns left of the clip
-	    int number = (g.getClipX() - this.x) / cellWidth;
-	    if (number > 0) {
-		startColumn = number;
-	    }
-
-	    // calculate the number of columns right of the clip
-	    int endX = this.x + (this.columns * cellWidth);
-	    int endClipX = g.getClipX() + g.getClipWidth();
-	    number = (endX - endClipX) / cellWidth;
-	    if (number > 0) {
-		endColumn -= number;
-	    }
-
-	    // calculate the number of rows above the clip
-	    number = (g.getClipY() - this.y) / cellHeight;
-	    if (number > 0) {
-		startRow = number;
-	    }
-
-	    // calculate the number of rows below the clip
-	    int endY = this.y + (this.rows * cellHeight);
-	    int endClipY = g.getClipY() + g.getClipHeight();
-	    number = (endY - endClipY) / cellHeight;
-	    if (number > 0) {
-		endRow -= number;
-	    }
-
-	    // paint all visible cells
-	    int tileIndex = 0;
-
-	    // y-coordinate
-	    int ty        = this.y + (startRow * cellHeight);
-            for (int row = startRow; 
-		 row < endRow; row++, ty += cellHeight) {
-
-	        // reset the x-coordinate at the beginning of every row
-                // x-coordinate to draw tile into
-	        int tx = this.x + (startColumn * cellWidth);
-                for (int column = startColumn; column < endColumn; 
-		    column++, tx += cellWidth) {
-		
-                    tileIndex = cellMatrix[row][column];
-	            // check the indices 
-		    // if animated get the corresponding 
-		    // static index from anim_to_static table
-		    if (tileIndex == 0) { // transparent tile
-			continue;
-                    } else if (tileIndex < 0) {
-                        tileIndex = getAnimatedTile(tileIndex);
-		    }
-
-		    g.drawRegion(sourceImage, 
-				 tileSetX[tileIndex], 
-				 tileSetY[tileIndex], 
-				 cellWidth, cellHeight,
-				 Sprite.TRANS_NONE,
-				 tx, ty,
-				 Graphics.TOP | Graphics.LEFT);
-
-                }
-            }
-	}
+        throw new RuntimeException("STUB");
     }
-
-    // private implementation
-
-    /**
-     * create the Image Array.
-     *
-     * @param image Image to use for creating the static tile set
-     * @param noOfFrames total number of frames
-     * @param tileWidth The width, in pixels, of a single tile
-     * @param tileHeight The height, in pixels, of a single tile
-     * @param maintainIndices 
-     */
-
-    private void createStaticSet(Image image, int noOfFrames, int tileWidth, 
-                      int tileHeight, boolean maintainIndices) {
-
-        cellWidth = tileWidth;
-        cellHeight = tileHeight;
-
-	int imageW = image.getWidth();
-	int imageH = image.getHeight();
-
-	sourceImage = image;
-
-	numberOfTiles = noOfFrames;
-	tileSetX = new int[numberOfTiles];
-	tileSetY = new int[numberOfTiles];
-	
-	if (!maintainIndices) {
-            // populate cell matrix, all the indices are 0 to begin with
-            for (rows = 0; rows < cellMatrix.length; rows++) {
-                int totalCols = cellMatrix[rows].length;
-                for (columns = 0; columns < totalCols; columns++) {
-                    cellMatrix[rows][columns] = 0;
-                }
-            }
-	    // delete animated tiles
-	    anim_to_static = null;
-	} 
-
-        int currentTile = 1;
-
-        for (int locY = 0; locY < imageH; locY += tileHeight) {
-            for (int locX = 0; locX < imageW; locX += tileWidth) {
-
-		tileSetX[currentTile] = locX;
-		tileSetY[currentTile] = locY;
-
-                currentTile++;
-            }
-        }
-    }
-
-    /** 
-     * the overall height of the TiledLayer grid
-     */
-    private int cellHeight; // = 0;
-    /** 
-     * the overall cell width of the TiledLayer grid
-     */
-    private int cellWidth; // = 0;
-
-    /** 
-     * The num of rows of the TiledLayer grid.
-     */
-    private int rows; // = 0;
-
-    /** 
-     * the num of columns in the TiledLayer grid
-     */
-    private int columns; // = 0;
-
-    /** 
-     * int array for storing row and column of cell
-     *
-     * it contains the tile Index for both static and animated tiles
-     */
-    private int[][] cellMatrix; // = null;
-
-    /**
-     * Source image for tiles
-     */
-    // package access as it is used by Pixel level Collision
-    // detection with a Sprite
-    Image sourceImage; // = null;
-    
-    /**
-     * no. of tiles
-     */
-    private int numberOfTiles; // = 0;
-
-    /**
-     * X co-ordinate definitions for individual frames into the source image
-     */
-    // package access as it is used by Pixel level Collision
-    // detection with a Sprite
-    int[] tileSetX;
-
-    /**
-     * Y co-ordinate definitions for individual frames into the source image
-     */ 
-    // package access as it is used by Pixel level Collision
-    // detection with a Sprite
-    int[] tileSetY;
-    
-    /** 
-     * Table to map from animated Index to static Index
-     * 0th location is unused.
-     * anim --> static Index
-     * -1 --> 21
-     * -2 --> 34
-     * -3 --> 45
-     * for now keep 0 the location of the table empty instead of computing
-     * -index make index +ve and access this Table.
-     *  
-     */
-    private int[] anim_to_static; // = null;
-
-    /** 
-     * total number of animated tiles. This variable is also used as 
-     * index in the above table to add new entries to the anim_to_static table.
-     * initialized to 1 when table is created.
-     */
-    private int numOfAnimTiles; // = 0
-
 }

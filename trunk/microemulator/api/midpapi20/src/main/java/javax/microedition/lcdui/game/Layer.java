@@ -58,8 +58,7 @@ public abstract class Layer {
      *
      */
     Layer(int width, int height) {
-        setWidthImpl(width);
-        setHeightImpl(height);
+        throw new RuntimeException("STUB");
     }	
 
     /**
@@ -75,8 +74,7 @@ public abstract class Layer {
      *
      */
     public void setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -95,8 +93,7 @@ public abstract class Layer {
      *
      */
     public void move(int dx, int dy) {	
-        x += dx;
-        y += dy;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -110,7 +107,7 @@ public abstract class Layer {
      *
      */
     public final int getX() {
-        return x;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -124,7 +121,7 @@ public abstract class Layer {
      *
      */
     public final int getY() {
-        return y;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -134,7 +131,7 @@ public abstract class Layer {
      *
      **/
     public final int getWidth() {
-	return width;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -144,7 +141,7 @@ public abstract class Layer {
      *
      **/
     public final int getHeight() {
-	return height;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -157,7 +154,7 @@ public abstract class Layer {
      *
      */
     public void setVisible(boolean visible) {
-        this.visible = visible;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -168,7 +165,7 @@ public abstract class Layer {
      *
      */
     public final boolean isVisible() {
-        return visible;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -190,67 +187,6 @@ public abstract class Layer {
      * @throws NullPointerException if <code>g</code> is <code>null</code>
      */
     public abstract void paint(Graphics g);
-
-    /**
-     * Sets the current width of this layer, in pixels.  The Layer's width is
-     * used to determine its bounds for rendering purposes.
-     * @param width The width in pixels
-     * @throws IllegalArgumentException if the specified width is less than 0
-     * @see #setHeightImpl
-     * @see #getHeight
-     * @see #getWidth
-     *
-     **/
-    void setWidthImpl(int width) { 
-        if (width < 0) {
-            throw new IllegalArgumentException();
-        }
-        this.width = width;
-    }
-
-
-    /**
-     * Sets the current height of this layer, in pixels.  The Layer's height
-     * is used to determine its bounds for rendering purposes.
-     * @param height The height in pixels
-     * @throws IllegalArgumentException if the specified height is less than 0
-     * @see #setWidthImpl
-     * @see #getHeight
-     * @see #getWidth
-     *
-     **/
-    void setHeightImpl(int height) {
-        if (height < 0) {
-            throw new IllegalArgumentException();
-        }
-        this.height = height;
-    }
-
-    /**
-     * position of layer in x offset 
-     */
-    int x; // = 0;
-
-    /**
-     * position of layer in y offset 
-     */
-    int y; // = 0;
-
-    /**
-     * width of layer 
-     */
-    int width; // = 0;
-
-    /**
-     * height of layer
-     */
-    int height; // = 0;
-
-    /** 
-     * If the Layer is visible it will be drawn when <code>paint</code>
-     * is called.
-     */
-    boolean visible = true;
 
 }
 

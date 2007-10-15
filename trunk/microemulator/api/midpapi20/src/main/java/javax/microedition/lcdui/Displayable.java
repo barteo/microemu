@@ -58,33 +58,13 @@ package javax.microedition.lcdui;
 
 public abstract class Displayable {
 
-// ************************************************************
-//  public member variables
-// ************************************************************
-
-// ************************************************************
-//  protected member variables
-// ************************************************************
-
     /**
      * Create a new Displayable
      */
     Displayable() {
-    }
-
-    /**
-     * Create a new Displayable with a passed in title
-     *
-     * @param title the Displayable's title, or null for no title
-     */
-    Displayable(String title) {
         throw new RuntimeException("STUB");
     }
-
-// ************************************************************
-//  public methods
-// ************************************************************
-
+    
     /**
      * Gets the title of the <code>Displayable</code>. Returns
      * <code>null</code> if there is no title.

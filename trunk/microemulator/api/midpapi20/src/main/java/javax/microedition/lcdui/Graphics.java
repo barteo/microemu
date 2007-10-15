@@ -519,19 +519,7 @@ public class Graphics {
     /**
      * Create a Graphics object
      */
-    Graphics() {
-    }
-
-    /**
-     * Sets the width and height member variables of this
-     * Graphics object to reflect the correct values e.g. for
-     * clipping correctly
-     *
-     * @param w the width of this Graphics object
-     * @param h the height of this Graphics object
-     */
-    void setDimensions(int w, int h) {
-        throw new RuntimeException("STUB");
+    Graphics(int x, int y) {
     }
 
     /**
@@ -774,19 +762,6 @@ public class Graphics {
      * @see #setClip(int, int, int, int)
      */
     public synchronized int getClipHeight() {
-        throw new RuntimeException("STUB");
-    }
-
-    /**
-     * Internal routine to get the clip in a single call. The input
-     * parameter must be a 4 element integer array. The values of the
-     * array upon return will be equal to the same values as would be
-     * returned from getClipX(), getClipY(), getClipX()+getClipWidth(), 
-     * and getClipY()+getClipHeight().
-     *
-     * @param region a four element array to hold the clip rectangle
-     */
-    void getClip(int[] region) {
         throw new RuntimeException("STUB");
     }
 

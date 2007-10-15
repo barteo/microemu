@@ -16,6 +16,7 @@
 		</constructor>
 	</class>
 	<class modifiers="public" name="javax.microedition.io.Connector">
+		<constructor modifiers="private" />
 		<method modifiers="public static" name="open"
 			return="javax.microedition.io.Connection">
 			<exception name="java.io.IOException" />

@@ -56,7 +56,7 @@ public final class Byte {
      *                contain a parsable byte.
      */
     public static byte parseByte(String s) throws NumberFormatException {
-        return parseByte(s, 10);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -72,10 +72,7 @@ public final class Byte {
      */
     public static byte parseByte(String s, int radix)
         throws NumberFormatException {
-        int i = Integer.parseInt(s, radix);
-        if (i < MIN_VALUE || i > MAX_VALUE)
-            throw new NumberFormatException();
-        return (byte)i;
+        throw new RuntimeException("STUB");
     }
 
     /**

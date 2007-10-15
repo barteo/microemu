@@ -215,10 +215,6 @@ import javax.microedition.midlet.MIDlet;
 
 public class Display {
 
-/*
- * ************* public member variables
- */
-
     /**
      * Image type for <code>List</code> element image.
      *
@@ -346,18 +342,10 @@ public class Display {
      */
     public static final int COLOR_HIGHLIGHTED_BORDER = 5;
 
-
-    /**
-     * Initializes the display with an accessor helper class.
-     *
-     * @param ownerName class name of the MIDlet that owns this Display
-     */
-    Display(String ownerName) {
+    
+    Display(MIDlet midlet) {
+        throw new RuntimeException("STUB");
     }
- 
-/*
- * ************* public methods
- */
 
     /**
      * Gets the <code>Display</code> object that is unique to this

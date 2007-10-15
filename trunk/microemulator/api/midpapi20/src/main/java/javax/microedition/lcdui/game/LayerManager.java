@@ -83,7 +83,7 @@ public class LayerManager {
      * Creates a new LayerManager.
      */
     public LayerManager() {
-        setViewWindow(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -99,10 +99,7 @@ public class LayerManager {
      * <code>null</code>
      */
     public void append(Layer l) {
-	// remove the Layer if it is already present
-	// will throw NullPointerException if the Layer is null
-	removeImpl(l);
-        addImpl(l, nlayers);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -125,17 +122,7 @@ public class LayerManager {
      * <code>LayerManager</code>
      */
     public void insert(Layer l, int index) {
-	/* Check for correct arguments:  index in bounds	     */
-	if ((index < 0) || (index > nlayers) || (exist(l) && (index >= nlayers))) {
-	    throw new IndexOutOfBoundsException();
-	}
-
-    // if the Layer is already present
-	// remove it
-	// will throw NullPointerException if the Layer is null
-	removeImpl(l);
-	// insert it at the specified index
-	addImpl(l, index);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -148,10 +135,7 @@ public class LayerManager {
      * to the this <code>LayerManager</code>
      **/
     public Layer getLayerAt(int index) {
-	if ((index < 0) || (index >= nlayers)) {
-	    throw new IndexOutOfBoundsException();
-	}
-	return component[index];
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -160,7 +144,7 @@ public class LayerManager {
      * @return the number of Layers
      */
     public int getSize() {
-	return nlayers;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -173,7 +157,7 @@ public class LayerManager {
      * <code>null</code>
      */
     public void remove(Layer l) {
-	removeImpl(l);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -223,36 +207,7 @@ public class LayerManager {
      * @throws NullPointerException if <code>g</code> is <code>null</code>
      */
     public void paint(Graphics g, int x, int y) {
-
-        // if g == null g.getClipX will throw NullPointerException;
-
-        // save the original clip
-        int clipX = g.getClipX();
-	int clipY = g.getClipY();
-        int clipW = g.getClipWidth();
-        int clipH =  g.getClipHeight();
-
-
-	// translate the LayerManager co-ordinates to Screen co-ordinates
-	g.translate(x - viewX, y - viewY);
-        // set the clip to view window
-        g.clipRect(viewX, viewY, viewWidth, viewHeight);
-
-	// draw last to first
-	for (int i = nlayers; --i >= 0; ) {
-            Layer comp = component[i];
-	    if (comp.visible) {
-                // IMPL NOTE: do this if outside Graphics clip region don't paint
-		// (comp.contains(x - comp.x, y - comp.y)) &&
-	        // paint will happen only in clipped region of view window
-	        comp.paint(g);
-	    }
-	}
-
-	// restore Screen co-ordinates origin and clip
-
-	g.translate(-x + viewX, -y + viewY);
-        g.setClip(clipX, clipY, clipW, clipH);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -278,108 +233,8 @@ public class LayerManager {
      * <code>height</code> is less than <code>0</code>
      */
     public void setViewWindow(int x, int y, int width, int height) {
-
-	if (width < 0 || height < 0) {
-	    throw new IllegalArgumentException();
-	}
-
-	viewX = x;
-        viewY = y;
-        viewWidth = width;
-        viewHeight = height;
+        throw new RuntimeException("STUB");
     }
-
-    /**
-     * add or insert a layer
-     * @param layer      The Layer to be inserted
-     * @param index  the position at which to insert the layer
-     */
-    private void addImpl(Layer layer, int index) {
-	// Add component to list;
-	// allocate new array if necessary.
-
-	if (nlayers == component.length) {
-	    Layer newcomponents[] = new Layer[nlayers + 4];
-	    System.arraycopy(component, 0, newcomponents, 0, nlayers);
-            System.arraycopy(component, index, newcomponents,
-                             index + 1, nlayers - index);
-	    component = newcomponents;
-	} else {
-	    System.arraycopy(component, index, component,
-				 index + 1, nlayers - index);
-	}
-
-	component[index] = layer;
-	nlayers++;
-    }
-
-    /**
-     * Removes the specified Layer from this LayerManager.
-     * @param l The Layer to be removed
-     * @throws NullPointerException if the specified Layer is null
-     **/
-    private void removeImpl(Layer l) {
-        if (l == null) {
-            throw new NullPointerException();
-        }
-        /**
-         * Search backwards, expect that more recent additions
-	 * are more likely to be removed.
-         */
-
-	for (int i = nlayers; --i >= 0; ) {
-	    if (component[i] == l) {
-		    remove(i);
-	    }
-	}
-    }
-
-    /**
-     * Check existence the specified Layer in this LayerManager.
-     * @param l The Layer to be check
-     * @return true if Layer exist
-     **/
-    private boolean exist(Layer l) {
-        if (l == null) {
-            return false;
-        }
-
-        for (int i = nlayers; --i >= 0; ) {
-            if (component[i] == l) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * remove a layer at the specified index.
-     * @param     index    the position at which to insert the layer,
-     */
-    private void remove(int index) {
-	    System.arraycopy(component, index + 1,
-			     component, index,
-			     nlayers - index - 1);
-	    component[--nlayers] = null;
-    }
-
-    /**
-     * The number of layers in this LayerManager.
-     * This value can be null.
-     */
-    private int nlayers; // = 0;
-
-    /** 
-     * The Layers in this LayerManager.
-     * @see #append(Layer)
-     */
-    private Layer component[] = new Layer[4];
-
-    /**
-     * the view window co-ordinates.
-     */
-    private int viewX, viewY, viewWidth, viewHeight; // = 0;
-
 }
 
 

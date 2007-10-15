@@ -21,6 +21,7 @@
  */
 package test;
 
+import net.sf.jour.signature.APICompareConfig;
 import net.sf.jour.signature.SignatureTestCase;
 
 /**
@@ -39,6 +40,12 @@ public class MIDP20APIDeclarationsTest extends SignatureTestCase {
     
     public boolean isUeSystemClassPath() {
         return false;
+    }
+    
+    public APICompareConfig getAPICompareConfig() {
+        APICompareConfig c = new APICompareConfig();
+        c.allowPackageAPIextension = false;
+        return c;
     }
 
     public String getSignatureXMLPath() {

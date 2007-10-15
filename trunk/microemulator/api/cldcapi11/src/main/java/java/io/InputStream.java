@@ -95,7 +95,7 @@ public abstract class InputStream {
      * @see        java.io.InputStream#read(byte[], int, int)
      */
     public int read(byte b[]) throws IOException {
-        return read(b, 0, b.length);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -160,35 +160,7 @@ public abstract class InputStream {
      * @see        java.io.InputStream#read()
      */
     public int read(byte b[], int off, int len) throws IOException {
-        if (b == null) {
-            throw new NullPointerException();
-        } else if ((off < 0) || (off > b.length) || (len < 0) ||
-                   ((off + len) > b.length) || ((off + len) < 0)) {
-            throw new IndexOutOfBoundsException();
-        } else if (len == 0) {
-            return 0;
-        }
-
-        int c = read();
-        if (c == -1) {
-            return -1;
-        }
-        b[off] = (byte)c;
-
-        int i = 1;
-        try {
-            for (; i < len ; i++) {
-                c = read();
-                if (c == -1) {
-                    break;
-                }
-                if (b != null) {
-                    b[off + i] = (byte)c;
-                }
-            }
-        } catch (IOException ee) {
-        }
-        return i;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -210,14 +182,7 @@ public abstract class InputStream {
      * @exception  IOException  if an I/O error occurs.
      */
     public long skip(long n) throws IOException {
-        long m = n;
-        while (m > 0) {
-            if (read() < 0) {
-                break;
-            }
-            --m;
-        }
-        return n-m;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -236,7 +201,7 @@ public abstract class InputStream {
      * @exception  IOException  if an I/O error occurs.
      */
     public int available() throws IOException {
-        return 0;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -322,11 +287,7 @@ public abstract class InputStream {
      * @see     java.io.IOException
      */
     public synchronized void reset() throws IOException {
-        throw new IOException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                       "mark/reset not supported"
-/* #endif */
-            );
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -340,7 +301,7 @@ public abstract class InputStream {
      * @see     java.io.InputStream#reset()
      */
     public boolean markSupported() {
-        return false;
+        throw new RuntimeException("STUB");
     }
 
 }

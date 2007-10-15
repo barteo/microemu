@@ -30,6 +30,13 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <finalName>bytecode-test-app</finalName>
+                </configuration>
+            </plugin>
+
         </plugins>
 
     </build>

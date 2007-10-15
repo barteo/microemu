@@ -56,9 +56,6 @@ public class MIDletResourceLoader {
 		if (traceResourceLoading) {
 			Logger.debug("Loading MIDlet resource", resourceName);
 		}
-		if (resourceName.startsWith("/")) {
-			resourceName = resourceName.substring(1);
-		}
 		if (classLoader != origClass.getClassLoader()) {
 			// showWarning
 			String callLocation  = ThreadUtils.getCallLocation(FQCN);
@@ -66,6 +63,7 @@ public class MIDletResourceLoader {
 				Logger.warn("attempt to load resource [" + resourceName + "] using System ClasslLoader from " + callLocation);
 			}
 		}
+		resourceName = resolveName(origClass, resourceName);
 			
 		InputStream is = classLoader.getResourceAsStream(resourceName);
 		if (is == null) {
@@ -73,4 +71,23 @@ public class MIDletResourceLoader {
 		}
 		return is;
 	}
+
+    private static String resolveName(Class origClass, String name) {
+        if (name == null) {
+            return name;
+        }
+        if (!name.startsWith("/")) {
+            while (origClass.isArray()) {
+                origClass = origClass.getComponentType();
+            }
+            String baseName = origClass.getName();
+            int index = baseName.lastIndexOf('.');
+            if (index != -1) {
+                name = baseName.substring(0, index).replace('.', '/') + "/" +name;
+            }
+        } else {
+            name = name.substring(1);
+        }
+        return name;
+    }
 }

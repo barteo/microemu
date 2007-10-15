@@ -69,7 +69,7 @@ public class PreporcessorTestCanvas extends BaseTestsCanvas {
 		
 		try {
 			String resourceName = "resource-path-text.txt";
-			String expected = "not absolute";
+			String expected = null;
 			
 			String result = verifyLoadStrings(PreporcessorTestCanvas.class.getResourceAsStream(resourceName), "App.class. " +  resourceName, expected);
 
@@ -78,6 +78,18 @@ public class PreporcessorTestCanvas extends BaseTestsCanvas {
 			writeln(g, line++, "failure");
 			writeln(g, line++, e.toString());
 		}
+		
+		try {
+            String resourceName = "resource-package.txt";
+            String expected = "package relative";
+            
+            String result = verifyLoadStrings(PreporcessorTestCanvas.class.getResourceAsStream(resourceName), "App.class. " +  resourceName, expected);
+
+            writeln(g, line++, "loaded " + result);
+        } catch (Throwable e) {
+            writeln(g, line++, "failure");
+            writeln(g, line++, e.toString());
+        }
 	}
 	
 	private String verifyLoadStrings(InputStream inputstream, String resourceName, String expected) {	

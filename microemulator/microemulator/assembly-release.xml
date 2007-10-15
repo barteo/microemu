@@ -44,6 +44,10 @@
             <destName>${artifactId}-${version}/lib/microemu-jsr-75.jar</destName>
         </file>
         <file>
+            <source>${basedir}/../microemu-extensions/microemu-jsr-82/microemu-jsr-82.apache.license-2.0.txt</source>
+            <destName>${artifactId}-${version}/lib/microemu-jsr-82.apache.license-2.0.txt</destName>
+        </file>
+        <file>
             <source>${basedir}/../microemu-extensions/microemu-jsr-82/target/microemu-jsr-82-${project.version}.jar</source>
             <destName>${artifactId}-${version}/lib/microemu-jsr-82.jar</destName>
         </file>
@@ -62,6 +66,35 @@
         <file>
             <source>${basedir}/../microemu-extensions/microemu-siemensapi/target/microemu-siemensapi-${project.version}.jar</source>
             <destName>${artifactId}-${version}/lib/microemu-siemensapi.jar</destName>
+        </file>
+
+        <file>
+            <source>${basedir}/../api/api-libs.license.gpl-2.0.txt</source>
+            <destName>${artifactId}-${version}/lib/api-libs.license.gpl-2.0.txt</destName>
+        </file>
+        <file>
+            <source>${basedir}/../api/cldcapi10/target/cldcapi10-${project.version}.jar</source>
+            <destName>${artifactId}-${version}/lib/cldcapi10.jar</destName>
+        </file>
+        <file>
+            <source>${basedir}/../api/cldcapi10/target/cldcapi10-${project.version}-sources.jar</source>
+            <destName>${artifactId}-${version}/lib/cldcapi10-sources.jar</destName>
+        </file>
+        <file>
+            <source>${basedir}/../api/cldcapi11/target/cldcapi11-${project.version}.jar</source>
+            <destName>${artifactId}-${version}/lib/cldcapi11.jar</destName>
+        </file>
+        <file>
+            <source>${basedir}/../api/cldcapi11/target/cldcapi11-${project.version}-sources.jar</source>
+            <destName>${artifactId}-${version}/lib/cldcapi11-sources.jar</destName>
+        </file>
+        <file>
+            <source>${basedir}/../api/midpapi20/target/midpapi20-${project.version}.jar</source>
+            <destName>${artifactId}-${version}/lib/midpapi20.jar</destName>
+        </file>
+        <file>
+            <source>${basedir}/../api/midpapi20/target/midpapi20-${project.version}-sources.jar</source>
+            <destName>${artifactId}-${version}/lib/midpapi20-sources.jar</destName>
         </file>
 
         <file>

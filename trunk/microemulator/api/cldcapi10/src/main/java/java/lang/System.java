@@ -222,20 +222,6 @@ public final class System {
      * @exception  IllegalArgumentException if <code>key</code> is empty.
      */
     public static String getProperty(String key) {
-        if (key == null) {
-            throw new NullPointerException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                       "key can't be null"
-/* #endif */
-            );
-        }
-        if (key.equals("")) {
-            throw new IllegalArgumentException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                       "key can't be empty"
-/* #endif */
-            );
-        }
         throw new RuntimeException("STUB");
     }
 
@@ -257,7 +243,7 @@ public final class System {
      * @see        java.lang.Runtime#exit(int)
      */
     public static void exit(int status) {
-        Runtime.getRuntime().exit(status);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -279,7 +265,7 @@ public final class System {
      * @see     java.lang.Runtime#gc()
      */
     public static void gc() {
-        Runtime.getRuntime().gc();
+        throw new RuntimeException("STUB");
     }
 
 }

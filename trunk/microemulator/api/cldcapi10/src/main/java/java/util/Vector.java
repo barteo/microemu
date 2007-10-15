@@ -177,7 +177,7 @@ class Vector {
      * @since   JDK1.0
      */
     public boolean isEmpty() {
-        return true;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -231,7 +231,7 @@ class Vector {
      * @since   JDK1.0
      */
     public synchronized int indexOf(Object elem, int index) {
-        return -1;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -261,7 +261,7 @@ class Vector {
      * @since   JDK1.0
      */
     public synchronized int lastIndexOf(Object elem, int index) {
-        return -1;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -315,14 +315,7 @@ class Vector {
      * @since      JDK1.0
      */
     public synchronized void setElementAt(Object obj, int index) {
-        if (index >= elementCount) {
-            throw new ArrayIndexOutOfBoundsException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                       index + " >= " + elementCount
-/* #endif */
-            );
-        }
-        elementData[index] = obj;
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -340,6 +333,7 @@ class Vector {
      * @since      JDK1.0
      */
     public synchronized void removeElementAt(int index) {
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -359,6 +353,7 @@ class Vector {
      * @since      JDK1.0
      */
     public synchronized void insertElementAt(Object obj, int index) {
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -370,6 +365,7 @@ class Vector {
      * @since   JDK1.0
      */
     public synchronized void addElement(Object obj) {
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -393,6 +389,7 @@ class Vector {
      * @since   JDK1.0
      */
     public synchronized void removeAllElements() {
+        throw new RuntimeException("STUB");
     }
 
     /**

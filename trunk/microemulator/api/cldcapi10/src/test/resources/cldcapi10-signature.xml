@@ -337,11 +337,6 @@
 			<exception name="java.io.IOException" />
 			<parameter type="java.lang.String" />
 		</method>
-		<method modifiers="static final" name="writeUTF" return="int">
-			<exception name="java.io.IOException" />
-			<parameter type="java.lang.String" />
-			<parameter type="java.io.DataOutput" />
-		</method>
 		<field modifiers="protected" name="out"
 			type="java.io.OutputStream" />
 	</class>
@@ -752,8 +747,6 @@
 			<parameter type="char" />
 			<parameter type="int" />
 		</method>
-		<method modifiers="static" name="caseConverter"
-			return="com.sun.cldc.i18n.uclc.DefaultCaseConverter" />
 		<field constant-value="2" modifiers="public static final"
 			name="MIN_RADIX" type="int" />
 		<field constant-value="36" modifiers="public static final"
@@ -762,8 +755,6 @@
 			name="MIN_VALUE" type="char" />
 		<field constant-value="65535" modifiers="public static final"
 			name="MAX_VALUE" type="char" />
-		<field modifiers="static" name="cc"
-			type="com.sun.cldc.i18n.uclc.DefaultCaseConverter" />
 	</class>
 	<class modifiers="public final" name="java.lang.Class">
 		<method modifiers="public" name="toString"
@@ -925,7 +916,6 @@
 			modifiers="public static final" name="MIN_VALUE" type="int" />
 		<field constant-value="2147483647"
 			modifiers="public static final" name="MAX_VALUE" type="int" />
-		<field modifiers="static final" name="digits" type="char[]" />
 	</class>
 	<class extends="java.lang.Exception" modifiers="public"
 		name="java.lang.InterruptedException">
@@ -1374,8 +1364,6 @@
 			return="java.lang.StringBuffer" />
 		<method modifiers="public" name="toString"
 			return="java.lang.String" />
-		<method modifiers="final" name="setShared" return="void" />
-		<method modifiers="final" name="getValue" return="char[]" />
 	</class>
 	<class extends="java.lang.IndexOutOfBoundsException"
 		modifiers="public" name="java.lang.StringIndexOutOfBoundsException">

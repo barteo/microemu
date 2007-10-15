@@ -54,18 +54,6 @@ public final class Integer {
     public static final int   MAX_VALUE = 0x7fffffff;
 
     /**
-     * All possible chars for representing a number as a String
-     */
-    final static char[] digits = {
-        '0' , '1' , '2' , '3' , '4' , '5' ,
-        '6' , '7' , '8' , '9' , 'a' , 'b' ,
-        'c' , 'd' , 'e' , 'f' , 'g' , 'h' ,
-        'i' , 'j' , 'k' , 'l' , 'm' , 'n' ,
-        'o' , 'p' , 'q' , 'r' , 's' , 't' ,
-        'u' , 'v' , 'w' , 'x' , 'y' , 'z'
-    };
-
-    /**
      * Creates a string representation of the first argument in the
      * radix specified by the second argument.
      * <p>
@@ -103,29 +91,7 @@ public final class Integer {
      * @see     java.lang.Character#MIN_RADIX
      */
     public static String toString(int i, int radix) {
-
-        if (radix < Character.MIN_RADIX || radix > Character.MAX_RADIX)
-            radix = 10;
-
-        char buf[] = new char[33];
-        boolean negative = (i < 0);
-        int charPos = 32;
-
-        if (!negative) {
-            i = -i;
-        }
-
-        while (i <= -radix) {
-            buf[charPos--] = digits[-(i % radix)];
-            i = i / radix;
-        }
-        buf[charPos] = digits[-i];
-
-        if (negative) {
-            buf[--charPos] = '-';
-        }
-
-        return new String(buf, charPos, (33 - charPos));
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -219,7 +185,7 @@ public final class Integer {
      * @return  a string representation of the argument in base&nbsp;10.
      */
     public static String toString(int i) {
-        return toString(i, 10);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -270,105 +236,7 @@ public final class Integer {
     public static int parseInt(String s, int radix)
                 throws NumberFormatException
     {
-        if (s == null) {
-            throw new NumberFormatException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                       "null"
-/* #endif */
-            );
-        }
-
-        if (radix < Character.MIN_RADIX) {
-            throw new NumberFormatException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                       "radix " + radix + " less than Character.MIN_RADIX"
-/* #endif */
-            );
-        }
-
-        if (radix > Character.MAX_RADIX) {
-            throw new NumberFormatException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                       "radix " + radix + " greater than Character.MAX_RADIX"
-/* #endif */
-            );
-        }
-
-        int result = 0;
-        boolean negative = false;
-        int i = 0, max = s.length();
-        int limit;
-        int multmin;
-        int digit;
-
-        if (max > 0) {
-            if (s.charAt(0) == '-') {
-                negative = true;
-                limit = Integer.MIN_VALUE;
-                i++;
-            } else {
-                limit = -Integer.MAX_VALUE;
-            }
-            multmin = limit / radix;
-            if (i < max) {
-                digit = Character.digit(s.charAt(i++),radix);
-                if (digit < 0) {
-                    throw new NumberFormatException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                               s
-/* #endif */
-                    );
-                } else {
-                    result = -digit;
-                }
-            }
-            while (i < max) {
-                // Accumulating negatively avoids surprises near MAX_VALUE
-                digit = Character.digit(s.charAt(i++),radix);
-                if (digit < 0) {
-                    throw new NumberFormatException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                               s
-/* #endif */
-                    );
-                }
-                if (result < multmin) {
-                    throw new NumberFormatException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                               s
-/* #endif */
-                    );
-                }
-                result *= radix;
-                if (result < limit + digit) {
-                    throw new NumberFormatException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                               s
-/* #endif */
-                    );
-                }
-                result -= digit;
-            }
-        } else {
-            throw new NumberFormatException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                       s
-/* #endif */
-            );
-        }
-        if (negative) {
-            if (i > 1) {
-                return result;
-            } else {    /* Only got "-" */
-                throw new NumberFormatException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                           s
-/* #endif */
-                );
-            }
-        } else {
-            return -result;
-        }
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -386,7 +254,7 @@ public final class Integer {
      *               parsable integer.
      */
     public static int parseInt(String s) throws NumberFormatException {
-        return parseInt(s,10);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -414,7 +282,7 @@ public final class Integer {
      *             parsed as an <code>int</code>.
      */
     public static Integer valueOf(String s, int radix) throws NumberFormatException {
-        return new Integer(parseInt(s,radix));
+        throw new RuntimeException("STUB");
     }
 
     /**

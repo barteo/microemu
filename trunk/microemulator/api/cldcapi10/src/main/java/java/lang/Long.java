@@ -89,28 +89,7 @@ public final class Long {
      * @see     java.lang.Character#MIN_RADIX
      */
     public static String toString(long i, int radix) {
-        if (radix < Character.MIN_RADIX || radix > Character.MAX_RADIX)
-            radix = 10;
-
-        char[] buf = new char[65];
-        int charPos = 64;
-        boolean negative = (i < 0);
-
-        if (!negative) {
-            i = -i;
-        }
-
-        while (i <= -radix) {
-            buf[charPos--] = Integer.digits[(int)(-(i % radix))];
-            i = i / radix;
-        }
-        buf[charPos] = Integer.digits[(int)(-i)];
-
-        if (negative) {
-            buf[--charPos] = '-';
-        }
-
-        return new String(buf, charPos, (65 - charPos));
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -124,7 +103,7 @@ public final class Long {
      * @return  a string representation of the argument in base&nbsp;10.
      */
     public static String toString(long i) {
-        return toString(i, 10);
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -181,104 +160,7 @@ public final class Long {
     public static long parseLong(String s, int radix)
               throws NumberFormatException
     {
-      if (s == null) {
-          throw new NumberFormatException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                     "null"
-/* #endif */
-          );
-      }
-
-      if (radix < Character.MIN_RADIX) {
-          throw new NumberFormatException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                     "radix " + radix + " less than Character.MIN_RADIX"
-/* #endif */
-          );
-      }
-      if (radix > Character.MAX_RADIX) {
-          throw new NumberFormatException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                       "radix " + radix + " greater than Character.MAX_RADIX"
-/* #endif */
-          );
-      }
-
-      long result = 0;
-      boolean negative = false;
-      int i = 0, max = s.length();
-      long limit;
-      long multmin;
-      int digit;
-
-      if (max > 0) {
-          if (s.charAt(0) == '-') {
-              negative = true;
-              limit = Long.MIN_VALUE;
-              i++;
-          } else {
-              limit = -Long.MAX_VALUE;
-          }
-          multmin = limit / radix;
-            if (i < max) {
-                digit = Character.digit(s.charAt(i++),radix);
-              if (digit < 0) {
-                  throw new NumberFormatException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                             s
-/* #endif */
-                  );
-              } else {
-                  result = -digit;
-              }
-          }
-          while (i < max) {
-              // Accumulating negatively avoids surprises near MAX_VALUE
-              digit = Character.digit(s.charAt(i++),radix);
-              if (digit < 0) {
-                  throw new NumberFormatException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                             s
-/* #endif */
-                  );
-              }
-              if (result < multmin) {
-                  throw new NumberFormatException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                             s
-/* #endif */
-                  );
-              }
-              result *= radix;
-              if (result < limit + digit) {
-                  throw new NumberFormatException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                             s
-/* #endif */
-                  );
-              }
-              result -= digit;
-          }
-      } else {
-          throw new NumberFormatException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                     s
-/* #endif */
-          );
-      }
-      if (negative) {
-          if (i > 1) {
-              return result;
-          } else {    /* Only got "-" */
-              throw new NumberFormatException(
-/* #ifdef VERBOSE_EXCEPTIONS */
-/// skipped                         s
-/* #endif */
-              );
-          }
-      } else {
-          return -result;
-      }
+        throw new RuntimeException("STUB");
     }
 
     /**
@@ -300,7 +182,7 @@ public final class Long {
      *               parsable <code>long</code>.
      */
     public static long parseLong(String s) throws NumberFormatException {
-      throw new RuntimeException("STUB");
+        throw new RuntimeException("STUB");
     }
 
 

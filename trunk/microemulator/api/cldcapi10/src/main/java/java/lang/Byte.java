@@ -56,7 +56,7 @@ public final class Byte {
      *                contain a parsable byte.
      */
     public static byte parseByte(String s) throws NumberFormatException {
-      return parseByte(s, 10);
+        throw new RuntimeException("STUB");
     }
 
     /**

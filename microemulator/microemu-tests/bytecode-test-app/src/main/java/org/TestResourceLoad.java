@@ -67,6 +67,13 @@ public class TestResourceLoad implements Runnable {
 		
 	}
 
+	public void packageResources() {
+
+        String resourceName = "resource-package.txt";
+        String expected = "package relative";
+        verifyLoadStrings(TestResourceLoad.class.getResourceAsStream(resourceName), "this.class " + resourceName,
+                expected);
+    }
 	
 	private void verifyLoadStrings(InputStream inputstream, String resourceName, String expected) {	
 		if (inputstream == null) {
@@ -107,6 +114,7 @@ public class TestResourceLoad implements Runnable {
 		loadStringsUsingSystemClassLoaded();
 		multipleResources();
 		accessTest();
+		packageResources();
 		
 	}
 	

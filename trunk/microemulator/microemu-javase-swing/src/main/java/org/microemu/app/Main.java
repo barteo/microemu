@@ -597,6 +597,16 @@ public class Main extends JFrame {
     	menuLogConsole.setState(false);
     	menuLogConsole.addActionListener(menuLogConsoleListener);
     	menuOptions.add(menuLogConsole);
+    	
+    	menuOptions.addSeparator();
+    	JCheckBoxMenuItem menuShowMouseCoordinates = new JCheckBoxMenuItem("Mouse coordinates");
+    	menuShowMouseCoordinates.setState(false);
+    	menuShowMouseCoordinates.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                devicePanel.switchShowMouseCoordinates();
+            }
+        });
+    	menuOptions.add(menuShowMouseCoordinates);
 
     	JMenu menuHelp = new JMenu("Help");
     	JMenuItem menuAbout = new JMenuItem("About");

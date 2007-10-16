@@ -548,7 +548,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		return instance;
 	}
 
-	private static void setStatusBar(String text) {
+	public static void setStatusBar(String text) {
 		if (statusBarListener != null) {
 			statusBarListener.statusBarChanged(text);
 		}

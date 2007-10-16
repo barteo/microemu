@@ -15,12 +15,15 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *  
+ *  @version $Id$
  */
 
 package org.microemu.app.ui.swing;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -39,8 +42,10 @@ import org.microemu.DisplayAccess;
 import org.microemu.DisplayComponent;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
+import org.microemu.app.Common;
 import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.Device;
+import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.MutableImage;
 import org.microemu.device.impl.InputMethodImpl;
@@ -62,11 +67,16 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 	
 	private DisplayRepaintListener displayRepaintListener;
 	
+    private boolean showMouseCoordinates = false;
+    
+    private Point pressedPoint = new Point();
+    
 	private MouseAdapter mouseListener = new MouseAdapter() {
 
 		public void mousePressed(MouseEvent e) {
 			deviceComponent.requestFocus();
-
+			pressedPoint = e.getPoint();
+            
 			if (MIDletBridge.getCurrentMIDlet() == null) {
 				return;
 			}
@@ -103,13 +113,8 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 						}
 					}
 				}
-				if (fullScreenMode) {
-					inputMethod.pointerPressed(e.getX(), e.getY());
-				} else {
-					org.microemu.device.impl.Rectangle pb = ((J2SEDeviceDisplay) device.getDeviceDisplay())
-							.getDisplayPaintable();
-					inputMethod.pointerPressed(e.getX() - pb.x, e.getY() - pb.y);
-				}
+				Point p = deviceCoordinate(device.getDeviceDisplay(), e.getPoint());
+                inputMethod.pointerPressed(p.x, p.y);
 			}
 		}
 
@@ -138,13 +143,8 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 					}
 					initialPressedSoftButton = null;
 				}
-				if (fullScreenMode) {
-					inputMethod.pointerReleased(e.getX(), e.getY());
-				} else {
-					org.microemu.device.impl.Rectangle pb = ((J2SEDeviceDisplay) device.getDeviceDisplay())
-							.getDisplayPaintable();
-					inputMethod.pointerReleased(e.getX() - pb.x, e.getY() - pb.y);
-				}
+				Point p = deviceCoordinate(device.getDeviceDisplay(), e.getPoint());
+                inputMethod.pointerReleased(p.x, p.y);
 			}
 		}
 
@@ -153,6 +153,15 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 	private MouseMotionListener mouseMotionListener = new MouseMotionListener() {
 
 		public void mouseDragged(MouseEvent e) {
+		    if (showMouseCoordinates) {
+                StringBuffer buf = new StringBuffer();
+                int width = e.getX() - pressedPoint.x;
+                int height = e.getY() - pressedPoint.y;
+                Point p = deviceCoordinate(DeviceFactory.getDevice().getDeviceDisplay(), pressedPoint);
+                buf.append(p.x).append(",").append(p.y).append(" ").append(width).append("x").append(height);
+                Common.setStatusBar(buf.toString());
+            }
+		    
 			Device device = DeviceFactory.getDevice();
 			InputMethodImpl inputMethod = (InputMethodImpl) device.getInputMethod();
 			boolean fullScreenMode = device.getDeviceDisplay().isFullScreenMode();
@@ -175,17 +184,18 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 						}
 					}
 				}
-				if (fullScreenMode) {
-					inputMethod.pointerDragged(e.getX(), e.getY());
-				} else {
-					org.microemu.device.impl.Rectangle pb = ((J2SEDeviceDisplay) device.getDeviceDisplay())
-							.getDisplayPaintable();
-					inputMethod.pointerDragged(e.getX() - pb.x, e.getY() - pb.y);
-				}
+				Point p = deviceCoordinate(device.getDeviceDisplay(), e.getPoint());
+				inputMethod.pointerDragged(p.x, p.y);
 			}
 		}
 
 		public void mouseMoved(MouseEvent e) {
+		    if (showMouseCoordinates) {
+                StringBuffer buf = new StringBuffer();
+                Point p = deviceCoordinate(DeviceFactory.getDevice().getDeviceDisplay(), e.getPoint());
+                buf.append(p.x).append(",").append(p.y);
+                Common.setStatusBar(buf.toString());
+            }
 		}
 
 	};
@@ -211,7 +221,6 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 		}
 
 	};
-
 
 	SwingDisplayComponent(SwingDeviceComponent deviceComponent)
 	{
@@ -320,5 +329,18 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 			displayRepaintListener.repaintInvoked(image);
 		}
 	}
+	
+	Point deviceCoordinate(DeviceDisplay deviceDisplay, Point p) {
+	    if (deviceDisplay.isFullScreenMode()) {
+	        return p;
+	    } else {
+	        org.microemu.device.impl.Rectangle pb = ((J2SEDeviceDisplay)deviceDisplay).getDisplayPaintable();
+	        return new Point(p.x - pb.x, p.y - pb.y);
+	    }
+	}
+	
+	void switchShowMouseCoordinates() {
+        showMouseCoordinates = !showMouseCoordinates;
+    }
 
 }

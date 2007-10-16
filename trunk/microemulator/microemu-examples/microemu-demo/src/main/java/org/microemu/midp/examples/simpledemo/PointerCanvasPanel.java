@@ -86,7 +86,7 @@ public class PointerCanvasPanel extends BaseExamplesCanvas {
 	}
 
 	public void pointerPressed(int x, int y) {
-		lastPointerEvent = "Pressed";
+		lastPointerEvent = "Pressed " + Utils.when();
 		this.ppX = x;
 		this.ppY = y;
 		this.poX = x;
@@ -96,7 +96,7 @@ public class PointerCanvasPanel extends BaseExamplesCanvas {
 	}
 
 	public void pointerReleased(int x, int y) {
-		lastPointerEvent = "Released";
+		lastPointerEvent = "Released " + Utils.when();
 		this.ppX = x;
 		this.ppY = y;
 		pointerPressed = false;
@@ -104,7 +104,7 @@ public class PointerCanvasPanel extends BaseExamplesCanvas {
 	}
 
 	public void pointerDragged(int x, int y) {
-		lastPointerEvent = "Dragged";
+		lastPointerEvent = "Dragged " + Utils.when();
 		this.ppX = x;
 		this.ppY = y;
 		repaint();

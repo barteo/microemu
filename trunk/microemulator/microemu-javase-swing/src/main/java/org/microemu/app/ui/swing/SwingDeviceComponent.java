@@ -51,6 +51,7 @@ import javax.swing.UIManager;
 import org.microemu.CommandManager;
 import org.microemu.DisplayComponent;
 import org.microemu.MIDletBridge;
+import org.microemu.app.Common;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.impl.Rectangle;
@@ -73,11 +74,19 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
     J2SEButton overButton;
     
     J2SEButton pressedButton;
+    
+    private boolean mouseButtonDown = false; 
 
     Image offi;
     
     Graphics offg;
 
+    private boolean showMouseCoordinates = false;
+    
+    private int pressedX;
+    
+    private int pressedY;
+    
     private static class MouseRepeatedTimerTask extends TimerTask {
         
         private static final int DELAY = 100;
@@ -101,7 +110,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
             task.key = key;
             task.inputMethod = inputMethod;
             task.timer = new Timer();
-            task.timer.scheduleAtFixedRate(task, DELAY, DELAY);
+            task.timer.scheduleAtFixedRate(task, 5 * DELAY, DELAY);
         }
         
         static void stop()  {
@@ -114,7 +123,15 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
                 task = null;
             }
         }
-        
+
+        public static void mouseReleased() {
+            if ((task != null) && (task.inputMethod != null)) {
+                task.inputMethod.mouseReleased(task.key);
+                stop();
+            }
+            
+        }
+
         public void run() {
             if (inputMethod != null) {
                 KeyEvent ev = new KeyEvent(source, 0, 0, 0, key, KeyEvent.CHAR_UNDEFINED);
@@ -128,6 +145,10 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 
         public void mousePressed(MouseEvent e) {
             requestFocus();
+            mouseButtonDown = true;
+            pressedX = e.getX();
+            pressedY = e.getY();
+            
             MouseRepeatedTimerTask.stop();
             if (MIDletBridge.getCurrentMIDlet() == null) {
                 return;
@@ -150,18 +171,21 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
                 } else {
                     int key = pressedButton.getKeyCode();
                     KeyEvent ev = new KeyEvent(SwingDeviceComponent.this, 0, 0, 0, key, KeyEvent.CHAR_UNDEFINED);
-                    inputMethod.mousePressed(ev);
+                    inputMethod.keyPressed(ev);
                     MouseRepeatedTimerTask.schedule(SwingDeviceComponent.this, key, inputMethod);
                 }
                 // optimize for some video cards.
-                Rectangle r = pressedButton.getShape().getBounds();
-                repaint(r.x, r.y, r.width, r.height);
+                repaint(pressedButton.getShape().getBounds());
             }
         }
 
         public void mouseReleased(MouseEvent e) {
-            
+            mouseButtonDown = false;
             MouseRepeatedTimerTask.stop();
+            
+            if (pressedButton == null) {
+                return;
+            }
             
             if (MIDletBridge.getCurrentMIDlet() == null) {
                 return;
@@ -173,48 +197,65 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
             if (prevOverButton != null) {
                 int key = prevOverButton.getKeyCode();
                 KeyEvent ev = new KeyEvent(SwingDeviceComponent.this, 0, 0, 0, key, KeyEvent.CHAR_UNDEFINED);
-
                 inputMethod.mouseReleased(ev.getKeyCode());
             }
             pressedButton = null;
             // optimize for some video cards.
             if (prevOverButton != null) {
-                Rectangle r = prevOverButton.getShape().getBounds();
-                repaint(r.x, r.y, r.width, r.height);
+                repaint(prevOverButton.getShape().getBounds());
             } else {
                 repaint();
             }
         }
 
     };
-
+    
     private MouseMotionListener mouseMotionListener = new MouseMotionListener() {
 
         public void mouseDragged(MouseEvent e) {
-            overButton = getButton(e.getX(), e.getY());
+            mouseMoved(e);
         }
 
         public void mouseMoved(MouseEvent e) {
+            if (showMouseCoordinates) {
+                StringBuffer buf = new StringBuffer();
+                if (mouseButtonDown) {
+                    int width = e.getX() - pressedX; 
+                    int height = e.getY() - pressedY;
+                    buf.append(pressedX).append(",").append(pressedY).append(" ").append(width).append("x").append(height);
+                } else {
+                    buf.append(e.getX()).append(",").append(e.getY());
+                }
+                Common.setStatusBar(buf.toString());
+            }
+            
+            if (mouseButtonDown && pressedButton == null) {
+                return;
+            }
+            
             prevOverButton = overButton;
             overButton = getButton(e.getX(), e.getY());
             if (overButton != prevOverButton) {
-                MouseRepeatedTimerTask.stop();
                 // optimize for some video cards.
                 if (prevOverButton != null) {
-                    Rectangle r = prevOverButton.getShape().getBounds();
-                    repaint(r.x, r.y, r.width, r.height);
+                    MouseRepeatedTimerTask.mouseReleased();
+                    pressedButton = null;
+                    repaint(prevOverButton.getShape().getBounds());
                 }
                 if (overButton != null) {
-                    Rectangle r = overButton.getShape().getBounds();
-                    repaint(r.x, r.y, r.width, r.height);
+                    repaint(overButton.getShape().getBounds());
                 }
             } else if (overButton == null) {
-                MouseRepeatedTimerTask.stop();
+                MouseRepeatedTimerTask.mouseReleased();
+                pressedButton = null;
+                if (prevOverButton != null) {
+                    repaint(prevOverButton.getShape().getBounds());
+                }
             }
         }
 
     };
-
+    
     public SwingDeviceComponent() {
         dc = new SwingDisplayComponent(this);
         setLayout(new XYLayout());
@@ -236,6 +277,16 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
         add(dc, new XYConstraints(r.x, r.y, r.width, r.height));
 
         revalidate();
+    }
+    
+    private void repaint(Rectangle r) {
+        repaint(r.x, r.y, r.width, r.height);
+    }
+    
+    public void switchShowMouseCoordinates() {
+        //TODO skin editing mode.
+        //showMouseCoordinates = !showMouseCoordinates;
+        dc.switchShowMouseCoordinates();
     }
 
     public void keyTyped(KeyEvent ev) {
@@ -293,8 +344,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
         if (pressedButton != null) {
             org.microemu.device.impl.Shape shape = pressedButton.getShape();
             if (shape != null) {
-                Rectangle r = shape.getBounds();
-                repaint(r.x, r.y, r.width, r.height);
+                repaint(shape.getBounds());
             }
         } else {
             repaint();
@@ -330,8 +380,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
         if (prevOverButton != null) {
             org.microemu.device.impl.Shape shape = prevOverButton.getShape();
             if (shape != null) {
-                Rectangle r = shape.getBounds();
-                repaint(r.x, r.y, r.width, r.height);
+                repaint(shape.getBounds());
             }
         } else {
             repaint();

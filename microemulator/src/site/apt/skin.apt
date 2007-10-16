@@ -130,7 +130,7 @@ Custom Skin Creation for MicroEmulator
     <button name="SELECT" key="VK_ENTER" keyCode="-5">
 ---
 
-        <<name>> <optional attribute> Identify the button function: SOFT1, SOFT2, SELECT, UP, DOWN, LEFT, RIGHT,  0, 1...9
+        <<name>> <mandatory attribute> Identify the button function: SOFT1, SOFT2, SELECT, UP, DOWN, LEFT, RIGHT,  0, 1...9
 
 *----------+----------+-----------------+---------------------------+
 | name     | key      | Button function |   Canvas.getGameAction(keyCode) |

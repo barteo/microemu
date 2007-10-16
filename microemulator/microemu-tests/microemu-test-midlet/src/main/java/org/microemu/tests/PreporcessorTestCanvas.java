@@ -29,70 +29,75 @@ import javax.microedition.lcdui.Graphics;
 
 /**
  * @author vlads
- *
+ * 
  */
 public class PreporcessorTestCanvas extends BaseTestsCanvas {
 
 	public static final boolean enabled = true;
-	
+
 	public PreporcessorTestCanvas() {
 		super("bytecode test");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.microedition.lcdui.Canvas#paint(javax.microedition.lcdui.Graphics)
 	 */
 	protected void paint(Graphics g) {
 		int width = getWidth();
-        int height = getHeight();
+		int height = getHeight();
 
 		g.setGrayScale(255);
 		g.fillRect(0, 0, width, height);
-		
+
 		g.setColor(0);
 		int line = 0;
 		writeln(g, line++, "bytecode test");
-		
+
 		System.out.println("print data to console");
-		
+
 		try {
 			String resourceName = "/app-data.txt";
 			String expected = "private app-data";
-			
-			String result = verifyLoadStrings(String.class.getResourceAsStream(resourceName), "String.class. " +  resourceName, expected);
+
+			String result = verifyLoadStrings(String.class.getResourceAsStream(resourceName), "String.class. "
+					+ resourceName, expected);
 
 			writeln(g, line++, "loaded " + result);
 		} catch (Throwable e) {
 			writeln(g, line++, "failure");
 			writeln(g, line++, e.toString());
 		}
-		
+
 		try {
 			String resourceName = "resource-path-text.txt";
 			String expected = null;
-			
-			String result = verifyLoadStrings(PreporcessorTestCanvas.class.getResourceAsStream(resourceName), "App.class. " +  resourceName, expected);
+
+			String result = verifyLoadStrings(PreporcessorTestCanvas.class.getResourceAsStream(resourceName),
+					"App.class. " + resourceName, expected);
 
 			writeln(g, line++, "loaded " + result);
 		} catch (Throwable e) {
 			writeln(g, line++, "failure");
 			writeln(g, line++, e.toString());
 		}
-		
-		try {
-            String resourceName = "resource-package.txt";
-            String expected = "package relative";
-            
-            String result = verifyLoadStrings(PreporcessorTestCanvas.class.getResourceAsStream(resourceName), "App.class. " +  resourceName, expected);
 
-            writeln(g, line++, "loaded " + result);
-        } catch (Throwable e) {
-            writeln(g, line++, "failure");
-            writeln(g, line++, e.toString());
-        }
+		try {
+			String resourceName = "resource-package.txt";
+			String expected = "package relative";
+
+			String result = verifyLoadStrings(PreporcessorTestCanvas.class.getResourceAsStream(resourceName),
+					"App.class. " + resourceName, expected);
+
+			writeln(g, line++, "loaded " + result);
+		} catch (Throwable e) {
+			writeln(g, line++, "failure");
+			writeln(g, line++, e.toString());
+		}
 	}
-	
-	private String verifyLoadStrings(InputStream inputstream, String resourceName, String expected) {	
+
+	private String verifyLoadStrings(InputStream inputstream, String resourceName, String expected) {
 		if (inputstream == null) {
 			if (expected == null) {
 				System.out.println("OK - Resource not found " + resourceName);
@@ -111,15 +116,16 @@ public class PreporcessorTestCanvas extends BaseTestsCanvas {
 			StringBuffer value = new StringBuffer();
 			int b;
 			while ((b = r.read()) != -1) {
-				value.append((char)b);
+				value.append((char) b);
 			}
 			if (!expected.equals(value.toString())) {
-				throw new RuntimeException("Unexpected resource " + resourceName + " value [" + value + "]\nexpected [" + expected + "]");
+				throw new RuntimeException("Unexpected resource " + resourceName + " value [" + value + "]\nexpected ["
+						+ expected + "]");
 			}
 			return value.toString();
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Resource read error " + resourceName, e);
+			throw new RuntimeException("Resource read error " + resourceName + " " + e.getMessage());
 		} finally {
 			try {
 				inputstream.close();

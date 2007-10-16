@@ -110,10 +110,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <wtkHome>${env.WTK_HOME}</wtkHome>
                     <useWtkLibs>false</useWtkLibs>
                     <proguard>true</proguard>
                     <obfuscate>false</obfuscate>
+                    <proguardPreverify>true</proguardPreverify>
                     <test>false</test>
                     <jadAttributes>
                         <Created-By>Vlad Skarzhevskyy</Created-By>

@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this library; if not, write to the Free Software Foundation,
  * Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * 
+ * @version $Id$
  */
 
 package org.microemu.device.j2se;
@@ -42,162 +44,153 @@ import org.microemu.device.impl.InputMethodImpl;
 import org.microemu.device.impl.SoftButton;
 import org.microemu.util.ThreadUtils;
 
+public class J2SEInputMethod extends InputMethodImpl {
 
-public class J2SEInputMethod extends InputMethodImpl 
-{
 	private boolean eventAlreadyConsumed;
-	
+
 	private Timer keyRepeatTimer;
-	
+
 	private List repeatModeKeyCodes = new Vector();
-	
+
 	private class KeyRepeatTask extends TimerTask {
 
-        private int repeatModeKeyCode;
+		private int repeatModeKeyCode;
 
-        KeyRepeatTask(int repeatModeKeyCode) {
-            this.repeatModeKeyCode = repeatModeKeyCode;
+		KeyRepeatTask(int repeatModeKeyCode) {
+			this.repeatModeKeyCode = repeatModeKeyCode;
 
-        }
+		}
 
-        public void run() {
-            if (repeatModeKeyCode != Integer.MIN_VALUE) {
-                MIDletAccess ma = MIDletBridge.getMIDletAccess();
-                if (ma == null) {
-                    return;
-                }
+		public void run() {
+			if (repeatModeKeyCode != Integer.MIN_VALUE) {
+				MIDletAccess ma = MIDletBridge.getMIDletAccess();
+				if (ma == null) {
+					return;
+				}
 
-                DisplayAccess da = ma.getDisplayAccess();
-                if (da == null) {
-                    return;
-                }
+				DisplayAccess da = ma.getDisplayAccess();
+				if (da == null) {
+					return;
+				}
 
-                da.keyReleased(repeatModeKeyCode);
-                eventAlreadyConsumed = false;
-                repeatModeKeyCode = Integer.MIN_VALUE;
-            }
-        }
-    };
-	
-	
-	public J2SEInputMethod()
-	{
+				da.keyReleased(repeatModeKeyCode);
+				eventAlreadyConsumed = false;
+				repeatModeKeyCode = Integer.MIN_VALUE;
+			}
+		}
+	};
+
+	public J2SEInputMethod() {
 		super();
-		
+
 		// TODO When InputMethod will be removed from EmulatorContext add:
 		// if (DeviceFactory.getDevice().hasRepeatEvents()) {
 		keyRepeatTimer = ThreadUtils.createTimer("InputKeyRepeatTimer");
 	}
 
-
-	public int getGameAction(int keyCode)
-    {
+	public int getGameAction(int keyCode) {
 		int key = keyCode;
-		
-		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext(); ) {
+
+		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext();) {
 			J2SEButton button = (J2SEButton) it.next();
 			if (button.getKeyCode() == keyCode) {
 				key = button.getKeyboardKey();
 				break;
 			}
 		}
-		
-        switch (key) {
-            case KeyEvent.VK_UP:
-                return Canvas.UP;
 
-            case KeyEvent.VK_DOWN:
-                return Canvas.DOWN;
+		switch (key) {
+		case KeyEvent.VK_UP:
+			return Canvas.UP;
 
-            case KeyEvent.VK_LEFT:
-                return Canvas.LEFT;
+		case KeyEvent.VK_DOWN:
+			return Canvas.DOWN;
 
-            case KeyEvent.VK_RIGHT:
-                return Canvas.RIGHT;
+		case KeyEvent.VK_LEFT:
+			return Canvas.LEFT;
 
-            case KeyEvent.VK_ENTER:
-                return Canvas.FIRE;
+		case KeyEvent.VK_RIGHT:
+			return Canvas.RIGHT;
 
-            case KeyEvent.VK_1:
-            case KeyEvent.VK_A:
-                return Canvas.GAME_A;
+		case KeyEvent.VK_ENTER:
+			return Canvas.FIRE;
 
-            case KeyEvent.VK_3:
-            case KeyEvent.VK_B:
-                return Canvas.GAME_B;
+		case KeyEvent.VK_1:
+		case KeyEvent.VK_A:
+			return Canvas.GAME_A;
 
-            case KeyEvent.VK_7:
-            case KeyEvent.VK_C:
-                return Canvas.GAME_C;
+		case KeyEvent.VK_3:
+		case KeyEvent.VK_B:
+			return Canvas.GAME_B;
 
-            case KeyEvent.VK_9:
-            case KeyEvent.VK_D:
-                return Canvas.GAME_D;
+		case KeyEvent.VK_7:
+		case KeyEvent.VK_C:
+			return Canvas.GAME_C;
 
-            default:
-                return 0;
-        }
-    }
+		case KeyEvent.VK_9:
+		case KeyEvent.VK_D:
+			return Canvas.GAME_D;
 
-	
-    public int getKeyCode(int gameAction)
-    {
-    	int keyCode;
-    	
-        switch (gameAction) {
-            case Canvas.UP:
-                keyCode = KeyEvent.VK_UP;
-                break;
-            case Canvas.DOWN:
-                keyCode = KeyEvent.VK_DOWN;
-                break;
-            case Canvas.LEFT:
-                keyCode = KeyEvent.VK_LEFT;
-                break;
-            case Canvas.RIGHT:
-                keyCode = KeyEvent.VK_RIGHT;
-                break;
-            case Canvas.FIRE:
-                keyCode = KeyEvent.VK_ENTER;
-                break;
-            case Canvas.GAME_A:
-                keyCode = KeyEvent.VK_1;
-                break;
-            case Canvas.GAME_B:
-                keyCode = KeyEvent.VK_3;
-                break;
-            case Canvas.GAME_C:
-                keyCode = KeyEvent.VK_7;
-                break;
-            case Canvas.GAME_D:
-                keyCode = KeyEvent.VK_9;
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-        
-		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext(); ) {
+		default:
+			return 0;
+		}
+	}
+
+	public int getKeyCode(int gameAction) {
+		int keyCode;
+
+		switch (gameAction) {
+		case Canvas.UP:
+			keyCode = KeyEvent.VK_UP;
+			break;
+		case Canvas.DOWN:
+			keyCode = KeyEvent.VK_DOWN;
+			break;
+		case Canvas.LEFT:
+			keyCode = KeyEvent.VK_LEFT;
+			break;
+		case Canvas.RIGHT:
+			keyCode = KeyEvent.VK_RIGHT;
+			break;
+		case Canvas.FIRE:
+			keyCode = KeyEvent.VK_ENTER;
+			break;
+		case Canvas.GAME_A:
+			keyCode = KeyEvent.VK_1;
+			break;
+		case Canvas.GAME_B:
+			keyCode = KeyEvent.VK_3;
+			break;
+		case Canvas.GAME_C:
+			keyCode = KeyEvent.VK_7;
+			break;
+		case Canvas.GAME_D:
+			keyCode = KeyEvent.VK_9;
+			break;
+		default:
+			throw new IllegalArgumentException();
+		}
+
+		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext();) {
 			J2SEButton button = (J2SEButton) it.next();
 			if (button.getKeyboardKey() == keyCode) {
 				keyCode = button.getKeyCode();
 				break;
 			}
 		}
-        
+
 		return keyCode;
-    }
-    
-    
-	public String getKeyName(int keyCode) throws IllegalArgumentException 
-    {
-		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext(); ) {
+	}
+
+	public String getKeyName(int keyCode) throws IllegalArgumentException {
+		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext();) {
 			J2SEButton button = (J2SEButton) it.next();
 			if (button.getKeyCode() == keyCode) {
 				return button.getName();
 			}
 		}
 
-		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext(); ) {
+		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext();) {
 			J2SEButton button = (J2SEButton) it.next();
 			if (button.getKeyboardKey() == keyCode) {
 				return button.getName();
@@ -205,33 +198,31 @@ public class J2SEInputMethod extends InputMethodImpl
 		}
 
 		throw new IllegalArgumentException();
-    }
+	}
 
-    
-	protected boolean commonKeyPressed(KeyEvent ev) 
-	{
+	protected boolean commonKeyPressed(KeyEvent ev) {
 		int keyCode = ev.getKeyCode();
 		if (inputMethodListener == null) {
 			int midpKeyCode;
 			switch (keyCode) {
-				case KeyEvent.VK_BACK_SPACE :
-					return true;
-				case KeyEvent.VK_MULTIPLY :
-					midpKeyCode = Canvas.KEY_STAR;
-					break;
-				case KeyEvent.VK_MODECHANGE :
-					midpKeyCode = Canvas.KEY_POUND;
-					break;
-				default :
-					midpKeyCode = keyCode;
+			case KeyEvent.VK_BACK_SPACE:
+				return true;
+			case KeyEvent.VK_MULTIPLY:
+				midpKeyCode = Canvas.KEY_STAR;
+				break;
+			case KeyEvent.VK_MODECHANGE:
+				midpKeyCode = Canvas.KEY_POUND;
+				break;
+			default:
+				midpKeyCode = keyCode;
 			}
 			switch (ev.getKeyChar()) {
-				case '*' :
-					midpKeyCode = Canvas.KEY_STAR;
-					break;
-				case '#' :
-					midpKeyCode = Canvas.KEY_POUND;
-					break;
+			case '*':
+				midpKeyCode = Canvas.KEY_STAR;
+				break;
+			case '#':
+				midpKeyCode = Canvas.KEY_POUND;
+				break;
 			}
 			MIDletBridge.getMIDletAccess().getDisplayAccess().keyPressed(midpKeyCode);
 			return true;
@@ -241,32 +232,33 @@ public class J2SEInputMethod extends InputMethodImpl
 			MIDletBridge.getMIDletAccess().getDisplayAccess().keyPressed(keyCode);
 			return true;
 		}
-		
+
 		int caret = inputMethodListener.getCaretPosition();
 
 		if (keyCode == KeyEvent.VK_MODECHANGE) {
-            switch (inputMethodListener.getConstraints() & TextField.CONSTRAINT_MASK) {
-            case TextField.ANY :
-            case TextField.EMAILADDR :
-            case TextField.URL :
-                if (getInputMode() == InputMethod.INPUT_123) {
-                    setInputMode(InputMethod.INPUT_ABC_UPPER);
-                } else if (getInputMode() == InputMethod.INPUT_ABC_UPPER) {
-                    setInputMode(InputMethod.INPUT_ABC_LOWER);
-                } else if (getInputMode() == InputMethod.INPUT_ABC_LOWER) {
-                    setInputMode(InputMethod.INPUT_123);
-                }
-                synchronized (this) {
-                    if (lastButton != null) {
-                        caret++;
-                        lastButton = null;
-                        lastButtonCharIndex = -1;
-                    }
-                }
-                InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, inputMethodListener.getText());
-                inputMethodListener.caretPositionChanged(event);
-                break;
-        }
+			switch (inputMethodListener.getConstraints() & TextField.CONSTRAINT_MASK) {
+			case TextField.ANY:
+			case TextField.EMAILADDR:
+			case TextField.URL:
+				if (getInputMode() == InputMethod.INPUT_123) {
+					setInputMode(InputMethod.INPUT_ABC_UPPER);
+				} else if (getInputMode() == InputMethod.INPUT_ABC_UPPER) {
+					setInputMode(InputMethod.INPUT_ABC_LOWER);
+				} else if (getInputMode() == InputMethod.INPUT_ABC_LOWER) {
+					setInputMode(InputMethod.INPUT_123);
+				}
+				synchronized (this) {
+					if (lastButton != null) {
+						caret++;
+						lastButton = null;
+						lastButtonCharIndex = -1;
+					}
+				}
+				InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret,
+						inputMethodListener.getText());
+				inputMethodListener.caretPositionChanged(event);
+				break;
+			}
 			return true;
 		}
 
@@ -281,7 +273,8 @@ public class J2SEInputMethod extends InputMethodImpl
 				lastButton = null;
 				lastButtonCharIndex = -1;
 			}
-			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, inputMethodListener.getText());
+			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret,
+					inputMethodListener.getText());
 			inputMethodListener.caretPositionChanged(event);
 			return true;
 		}
@@ -304,16 +297,16 @@ public class J2SEInputMethod extends InputMethodImpl
 					}
 				}
 			}
-            if (!validate(tmp, inputMethodListener.getConstraints())) {
-                return true;
-            }
-            InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, tmp);
+			if (!validate(tmp, inputMethodListener.getConstraints())) {
+				return true;
+			}
+			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, tmp);
 			inputMethodListener.inputMethodTextChanged(event);
 			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, tmp);
 			inputMethodListener.caretPositionChanged(event);
 			return true;
 		}
-		
+
 		if (keyCode == KeyEvent.VK_DELETE) {
 			String tmp = inputMethodListener.getText();
 			synchronized (this) {
@@ -322,12 +315,13 @@ public class J2SEInputMethod extends InputMethodImpl
 					lastButtonCharIndex = -1;
 				}
 				if (caret != inputMethodListener.getText().length()) {
-					tmp = inputMethodListener.getText().substring(0, caret) + inputMethodListener.getText().substring(caret + 1);
+					tmp = inputMethodListener.getText().substring(0, caret)
+							+ inputMethodListener.getText().substring(caret + 1);
 				}
 			}
-            if (!validate(tmp, inputMethodListener.getConstraints())) {
-                return true;
-            }
+			if (!validate(tmp, inputMethodListener.getConstraints())) {
+				return true;
+			}
 			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, tmp);
 			inputMethodListener.inputMethodTextChanged(event);
 			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, tmp);
@@ -337,10 +331,8 @@ public class J2SEInputMethod extends InputMethodImpl
 
 		return false;
 	}
-	
-	
-	public void keyTyped(KeyEvent ev)
-	{
+
+	public void keyTyped(KeyEvent ev) {
 		if (eventAlreadyConsumed) {
 			return;
 		}
@@ -350,14 +342,13 @@ public class J2SEInputMethod extends InputMethodImpl
 			return;
 		}
 
-		if (inputMethodListener != null && inputMethodListener.getText() != null && inputMethodListener.getText().length() < maxSize) {
+		if (inputMethodListener != null && inputMethodListener.getText() != null
+				&& inputMethodListener.getText().length() < maxSize) {
 			insertText(new Character(c).toString());
 		}
 	}
 
-	
-	public void clipboardPaste(String str) 
-	{
+	public void clipboardPaste(String str) {
 		if (inputMethodListener != null && inputMethodListener.getText() != null
 				&& ((inputMethodListener.getText().length() + str.length()) <= maxSize)) {
 			insertText(str);
@@ -365,79 +356,72 @@ public class J2SEInputMethod extends InputMethodImpl
 
 		eventAlreadyConsumed = true;
 	}
-	
-	
-	public void keyPressed(KeyEvent ev) 
-	{		
+
+	public void keyPressed(KeyEvent ev) {
 		eventAlreadyConsumed = false;
-		
+
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
 			if (repeatModeKeyCodes.contains(new Integer(ev.getKeyCode()))) {
 				MIDletAccess ma = MIDletBridge.getMIDletAccess();
 				if (ma == null) {
 					return;
 				}
-				
+
 				DisplayAccess da = ma.getDisplayAccess();
 				if (da == null) {
 					return;
 				}
 
-				da.keyRepeated(ev.getKeyCode());		
+				da.keyRepeated(ev.getKeyCode());
 				eventAlreadyConsumed = true;
-				
+
 				return;
 			} else {
-			    repeatModeKeyCodes.add(new Integer(ev.getKeyCode()));
+				repeatModeKeyCodes.add(new Integer(ev.getKeyCode()));
 			}
 		}
-		
+
 		// invoke any associated commands, but send the raw key codes instead
 		boolean rawSoftKeys = DeviceFactory.getDevice().getDeviceDisplay().isFullScreenMode();
 		J2SEButton pressedButton = getButton(ev);
 		if (pressedButton != null) {
-		    if (pressedButton instanceof SoftButton && !rawSoftKeys) {
-			    Command cmd = ((SoftButton) pressedButton).getCommand();
-			    if (cmd != null) {
+			if (pressedButton instanceof SoftButton && !rawSoftKeys) {
+				Command cmd = ((SoftButton) pressedButton).getCommand();
+				if (cmd != null) {
 					CommandManager.getInstance().commandAction(cmd);
 					eventAlreadyConsumed = true;
 					return;
-			    }
+				}
 			}
 		}
-		
+
 		if (commonKeyPressed(ev)) {
 			eventAlreadyConsumed = true;
 			return;
 		}
 	}
 
-
-	public void keyReleased(KeyEvent ev) 
-	{		
+	public void keyReleased(KeyEvent ev) {
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
-		    repeatModeKeyCodes.remove(new Integer(ev.getKeyCode()));
+			repeatModeKeyCodes.remove(new Integer(ev.getKeyCode()));
 			keyRepeatTimer.schedule(new KeyRepeatTask(ev.getKeyCode()), 50);
-		} else {		
+		} else {
 			MIDletAccess ma = MIDletBridge.getMIDletAccess();
 			if (ma == null) {
 				return;
 			}
-			
+
 			DisplayAccess da = ma.getDisplayAccess();
 			if (da == null) {
 				return;
 			}
 
-			da.keyReleased(ev.getKeyCode());		
+			da.keyReleased(ev.getKeyCode());
 			eventAlreadyConsumed = false;
 		}
 	}
 
-	
-	
-	public void mousePressed(KeyEvent ev) 
-	{
+	public void mousePressed(KeyEvent ev) {
 		if (commonKeyPressed(ev)) {
 			return;
 		}
@@ -494,10 +478,11 @@ public class J2SEInputMethod extends InputMethodImpl
 						resetKey = false;
 						notify();
 					}
-                    if (!validate(tmp, inputMethodListener.getConstraints())) {
-                        return;
-                    }
-                    InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, tmp);
+					if (!validate(tmp, inputMethodListener.getConstraints())) {
+						return;
+					}
+					InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret,
+							tmp);
 					inputMethodListener.inputMethodTextChanged(event);
 					break;
 				}
@@ -505,14 +490,12 @@ public class J2SEInputMethod extends InputMethodImpl
 		}
 	}
 
-	
-	public void mouseReleased(int keyCode) 
-	{
+	public void mouseReleased(int keyCode) {
 		MIDletAccess ma = MIDletBridge.getMIDletAccess();
 		if (ma == null) {
 			return;
 		}
-		
+
 		DisplayAccess da = ma.getDisplayAccess();
 		if (da == null) {
 			return;
@@ -521,10 +504,8 @@ public class J2SEInputMethod extends InputMethodImpl
 		da.keyReleased(keyCode);
 	}
 
-	
-    public J2SEButton getButton(KeyEvent ev) {
-		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e
-				.hasMoreElements();) {
+	public J2SEButton getButton(KeyEvent ev) {
+		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
 			J2SEButton button = (J2SEButton) e.nextElement();
 			if (ev.getKeyCode() == button.getKeyCode()) {
 				return button;

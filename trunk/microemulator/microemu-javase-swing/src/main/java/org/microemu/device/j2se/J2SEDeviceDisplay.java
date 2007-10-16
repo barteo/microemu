@@ -81,6 +81,8 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl {
     PositionedImage modeAbcUpperImage;
 
     PositionedImage modeAbcLowerImage;
+    
+    boolean resizable;
 
     public J2SEDeviceDisplay(EmulatorContext context) {
         this.context = context;
@@ -216,6 +218,14 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl {
             }
         }
     }
+    
+    public boolean isResizable() {
+        return resizable;
+    }
+    
+    public void setResizable(boolean state) {
+        resizable = state;
+    }    
 
     public Rectangle getDisplayRectangle() {
         return displayRectangle;

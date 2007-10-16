@@ -110,5 +110,9 @@ public interface DeviceDisplayImpl extends DeviceDisplay
      * @param object
      */
     void setModeAbcUpperImage(PositionedImage object);
+    
+    boolean isResizable();
+        
+    void setResizable(boolean state);
 
 }

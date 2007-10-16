@@ -30,6 +30,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -543,23 +544,14 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl {
     }
 
     private Image getImage(InputStream is) throws IOException {
-        final int EXTEND = 1024;
         byte[] imageBytes = new byte[1024];
         int num;
-        int start = 0;
-        while ((num = is.read(imageBytes, start, imageBytes.length - start)) == EXTEND) {
-            byte[] newImageBytes = new byte[imageBytes.length + EXTEND];
-            System.arraycopy(imageBytes, 0, newImageBytes, 0, imageBytes.length);
-            imageBytes = newImageBytes;
-            start += EXTEND;
-        }
-        if (num != 0) {
-            byte[] newImageBytes = new byte[imageBytes.length - EXTEND + num];
-            System.arraycopy(imageBytes, 0, newImageBytes, 0, imageBytes.length - EXTEND + num);
-            imageBytes = newImageBytes;
+        ByteArrayOutputStream ba = new ByteArrayOutputStream();
+        while ((num = is.read(imageBytes)) != -1) {
+            ba.write(imageBytes, 0, num);
         }
 
-        java.awt.Image image = Toolkit.getDefaultToolkit().createImage(imageBytes);
+        java.awt.Image image = Toolkit.getDefaultToolkit().createImage(ba.toByteArray());
 
         ImageFilter filter = null;
         if (isColor()) {

@@ -160,7 +160,7 @@ public final class GameCanvasPanel extends GameCanvas implements CommandListener
     }
 
     protected void keyPressed(int keyCode) {
-
+        int actionCode = getGameAction(keyCode);
         if (keyCode == '1' /* nwCommand */) {
             moveX = -1;
             moveY = -1;
@@ -198,6 +198,22 @@ public final class GameCanvasPanel extends GameCanvas implements CommandListener
             repaint();
         } else if (keyCode == KEY_POUND) {
             moving = !moving;
+        } else if (actionCode == UP) {
+            if (ballMoveY > 0) {
+                ballMoveY = -ballMoveY;
+            }
+        } else if (actionCode == DOWN) {
+            if (ballMoveY < 0) {
+                ballMoveY = -ballMoveY;
+            }
+        } else if (actionCode == LEFT) {
+            if (ballMoveX > 0) {
+                ballMoveX = -ballMoveX;
+            }
+        } else if (actionCode == RIGHT) {
+            if (ballMoveX < 0) {
+                ballMoveX = -ballMoveX;
+            }
         } else if (keyCode == '0' /* backCommand */) {
             SimpleDemoMIDlet.showMenu();
         } else if (fullScreenMode) {

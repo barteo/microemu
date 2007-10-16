@@ -21,8 +21,7 @@
  */
 package org.microemu.midp.examples.simpledemo;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -31,6 +30,8 @@ import javax.microedition.lcdui.Graphics;
 public class KeyCanvasPanel extends BaseExamplesCanvas {
 
 	static Hashtable actionNames = new Hashtable();
+	
+	static Hashtable shortNames = new Hashtable();
 	
 	int lastKeyCode = 0;
 
@@ -42,11 +43,15 @@ public class KeyCanvasPanel extends BaseExamplesCanvas {
 	
 	long keyRepeatedTime = 0;
 	
+	long keyRepeatedInitialDellay = 0;
+	
 	String lastKeyEvent = null;
 	
 	Vector keysHistory = new Vector();
 	
-	boolean debug = false;
+	Vector keysPressed = new Vector();
+	
+	boolean debug = true;
 	
 	static { 		
 		initActionNames();
@@ -74,6 +79,11 @@ public class KeyCanvasPanel extends BaseExamplesCanvas {
 			writeln(g, line++, "As char: " +  (char) lastKeyCode);
 			writeln(g, line++, "GameAction: " + gameActionName(getGameAction(lastKeyCode)));
 			writeln(g, line++, "KeyName: " + getKeyName(lastKeyCode));
+			StringBuffer pressed = new StringBuffer();
+			for(Enumeration en = keysPressed.elements(); en.hasMoreElements(); ) {
+			    pressed.append(en.nextElement());
+			}
+			writeln(g, line++, "Pressed: " + pressed.toString());
 			writeln(g, line++, "Event: " + lastKeyEvent);
 		}
 		if (keysHistory.size() > 0) {
@@ -105,8 +115,10 @@ public class KeyCanvasPanel extends BaseExamplesCanvas {
 			sameKeyCount = 1;
 			logEvent(String.valueOf(keyCode) + " " + getKeyName(keyCode));
 		}
+		keyRepeatedTime = System.currentTimeMillis();
 		lastKeyCode = keyCode;
 		lastKeyEvent = "keyPressed";
+		keysPressed.addElement(shortName(keyCode));
 		if (debug) {
 		    System.out.println(lastKeyEvent + " " + keyCode);
 		}
@@ -119,8 +131,10 @@ public class KeyCanvasPanel extends BaseExamplesCanvas {
 		if (debug) {
             System.out.println(lastKeyEvent + " " + keyCode);
         }
+		keysPressed.removeElement(shortName(keyCode));
 		keyRepeatedCount = 1;
         keyRepeatedTime = 0;
+        keyRepeatedInitialDellay = 0;
 		repaint();
 	}
 
@@ -128,17 +142,18 @@ public class KeyCanvasPanel extends BaseExamplesCanvas {
 	    long keyRepeatedDellay = 0;
 		if (lastKeyRepeatedKeyCode == keyCode) {
 			keyRepeatedCount ++;
-			if (keyRepeatedTime != 0) {
-			    keyRepeatedDellay = System.currentTimeMillis() - keyRepeatedTime; 
-			}
-            keyRepeatedTime = System.currentTimeMillis();
 		} else {
 			keyRepeatedCount = 1;
-			keyRepeatedTime = 0;
 		}
-		lastKeyEvent = "keyRepeated (" + keyRepeatedCount + ")";
+		keyRepeatedDellay = System.currentTimeMillis() - keyRepeatedTime; 
+        if (keyRepeatedInitialDellay == 0) {
+            keyRepeatedInitialDellay = keyRepeatedDellay;
+        }
+        keyRepeatedTime = System.currentTimeMillis();
+        
+		lastKeyEvent = "keyRepeated (" + Utils.d00(keyRepeatedCount) + ")";
 		if (keyRepeatedDellay != 0) {
-		    lastKeyEvent += " " + keyRepeatedDellay + " ms";
+		    lastKeyEvent += " " + keyRepeatedInitialDellay + "/" + keyRepeatedDellay + " ms";
 		}
 		lastKeyCode = keyCode;
 		lastKeyRepeatedKeyCode = keyCode;
@@ -148,21 +163,9 @@ public class KeyCanvasPanel extends BaseExamplesCanvas {
 		repaint();
 	}
 
-	private String d00(int i) {
-        if (i > 9) {
-            return String.valueOf(i);
-        } else {
-            return "0" + String.valueOf(i);
-        }
-    }
-	
 	private void logEvent(String e) {
 		StringBuffer sb = new StringBuffer();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        sb.append(d00(calendar.get(Calendar.HOUR_OF_DAY))).append(":");
-        sb.append(d00(calendar.get(Calendar.MINUTE))).append(":");
-        sb.append(d00(calendar.get(Calendar.SECOND)));
+        sb.append(Utils.when());
         sb.append("   ").append(e);
 		keysHistory.addElement(sb.toString());
 	}
@@ -172,34 +175,45 @@ public class KeyCanvasPanel extends BaseExamplesCanvas {
 		return (String)actionNames.get(new Integer(gameAction));
 	}
 
-	private static void actionName(int keyCode, String name) {
-		actionNames.put(new Integer(keyCode), name);
+	String shortName(int keyCode) {
+	    int gameAction = getGameAction(keyCode);
+        String n = (String)shortNames.get(new Integer(gameAction));
+        if (n != null) {
+            return n;
+        } else {
+            return ""+(char) keyCode;
+        }
+    }
+	
+	private static void actionName(int gameAction, String name, String shortName) {
+		actionNames.put(new Integer(gameAction), name);
+		shortNames.put(new Integer(gameAction), shortName);
 	}
 	
 	private static void initActionNames() {
-		actionName(UP, "UP");
-		actionName(DOWN, "DOWN");
-		actionName(LEFT, "LEFT");
-		actionName(RIGHT, "RIGHT");
-		actionName(FIRE, "FIRE");
+		actionName(UP, "UP", "u");
+		actionName(DOWN, "DOWN", "d");
+		actionName(LEFT, "LEFT", "l");
+		actionName(RIGHT, "RIGHT", "r");
+		actionName(FIRE, "FIRE", "f");
 
-		actionName(GAME_A, "GAME_A");
-		actionName(GAME_B, "GAME_B");
-		actionName(GAME_C, "GAME_C");
-		actionName(GAME_D, "GAME_D");
+		actionName(GAME_A, "GAME_A", "a");
+		actionName(GAME_B, "GAME_B", "b");
+		actionName(GAME_C, "GAME_C", "c");
+		actionName(GAME_D, "GAME_D", "d");
 
-		actionName(KEY_NUM0, "KEY_NUM0");
-		actionName(KEY_NUM1, "KEY_NUM1");
-		actionName(KEY_NUM2, "KEY_NUM2");
-		actionName(KEY_NUM3, "KEY_NUM3");
-		actionName(KEY_NUM4, "KEY_NUM4");
-		actionName(KEY_NUM5, "KEY_NUM5");
-		actionName(KEY_NUM6, "KEY_NUM6");
-		actionName(KEY_NUM7, "KEY_NUM7");
-		actionName(KEY_NUM8, "KEY_NUM8");
-		actionName(KEY_NUM9, "KEY_NUM9");
-		actionName(KEY_STAR, "KEY_STAR");
-		actionName(KEY_POUND, "KEY_POUND");
+		actionName(KEY_NUM0, "KEY_NUM0", "0");
+		actionName(KEY_NUM1, "KEY_NUM1", "1");
+		actionName(KEY_NUM2, "KEY_NUM2", "2");
+		actionName(KEY_NUM3, "KEY_NUM3", "3");
+		actionName(KEY_NUM4, "KEY_NUM4", "4");
+		actionName(KEY_NUM5, "KEY_NUM5", "5");
+		actionName(KEY_NUM6, "KEY_NUM6", "6");
+		actionName(KEY_NUM7, "KEY_NUM7", "7");
+		actionName(KEY_NUM8, "KEY_NUM8", "8");
+		actionName(KEY_NUM9, "KEY_NUM9", "9");
+		actionName(KEY_STAR, "KEY_STAR", "*");
+		actionName(KEY_POUND, "KEY_POUND", "#");
 	}
 
 }

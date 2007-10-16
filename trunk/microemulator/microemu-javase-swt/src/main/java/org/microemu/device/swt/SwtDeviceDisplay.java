@@ -619,5 +619,15 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl
         
         return createRGBImage(rgbTransformedData, width, height, true);
     }
+    
+    public boolean isResizable() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public void setResizable(boolean state) {
+        // TODO Auto-generated method stub
+        
+    }
 
 }

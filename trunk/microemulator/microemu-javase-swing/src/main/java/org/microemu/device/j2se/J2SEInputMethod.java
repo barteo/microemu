@@ -22,8 +22,10 @@ package org.microemu.device.j2se;
 import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Command;
@@ -47,33 +49,35 @@ public class J2SEInputMethod extends InputMethodImpl
 	
 	private Timer keyRepeatTimer;
 	
-	private int repeatModeKeyCode;
+	private List repeatModeKeyCodes = new Vector();
 	
-	private boolean clearRepeatFlag;
-	
-	
-	private class KeyRepeatTask extends TimerTask
-	{
-		public void run() {
-			if (repeatModeKeyCode != Integer.MIN_VALUE) {
-				MIDletAccess ma = MIDletBridge.getMIDletAccess();
-				if (ma == null) {
-					return;
-				}
-				
-				DisplayAccess da = ma.getDisplayAccess();
-				if (da == null) {
-					return;
-				}
+	private class KeyRepeatTask extends TimerTask {
 
-				if (clearRepeatFlag) {
-					da.keyReleased(repeatModeKeyCode);		
-					eventAlreadyConsumed = false;
-					repeatModeKeyCode = Integer.MIN_VALUE;
-				}				
-			}
-		}
-	};
+        private int repeatModeKeyCode;
+
+        KeyRepeatTask(int repeatModeKeyCode) {
+            this.repeatModeKeyCode = repeatModeKeyCode;
+
+        }
+
+        public void run() {
+            if (repeatModeKeyCode != Integer.MIN_VALUE) {
+                MIDletAccess ma = MIDletBridge.getMIDletAccess();
+                if (ma == null) {
+                    return;
+                }
+
+                DisplayAccess da = ma.getDisplayAccess();
+                if (da == null) {
+                    return;
+                }
+
+                da.keyReleased(repeatModeKeyCode);
+                eventAlreadyConsumed = false;
+                repeatModeKeyCode = Integer.MIN_VALUE;
+            }
+        }
+    };
 	
 	
 	public J2SEInputMethod()
@@ -83,8 +87,6 @@ public class J2SEInputMethod extends InputMethodImpl
 		// TODO When InputMethod will be removed from EmulatorContext add:
 		// if (DeviceFactory.getDevice().hasRepeatEvents()) {
 		keyRepeatTimer = ThreadUtils.createTimer("InputKeyRepeatTimer");
-		repeatModeKeyCode = Integer.MIN_VALUE;
-		clearRepeatFlag = false;
 	}
 
 
@@ -370,8 +372,7 @@ public class J2SEInputMethod extends InputMethodImpl
 		eventAlreadyConsumed = false;
 		
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
-			clearRepeatFlag = false;
-			if (repeatModeKeyCode == ev.getKeyCode()) {
+			if (repeatModeKeyCodes.contains(new Integer(ev.getKeyCode()))) {
 				MIDletAccess ma = MIDletBridge.getMIDletAccess();
 				if (ma == null) {
 					return;
@@ -386,9 +387,9 @@ public class J2SEInputMethod extends InputMethodImpl
 				eventAlreadyConsumed = true;
 				
 				return;
+			} else {
+			    repeatModeKeyCodes.add(new Integer(ev.getKeyCode()));
 			}
-			
-			repeatModeKeyCode = ev.getKeyCode();			
 		}
 		
 		// invoke any associated commands, but send the raw key codes instead
@@ -415,8 +416,8 @@ public class J2SEInputMethod extends InputMethodImpl
 	public void keyReleased(KeyEvent ev) 
 	{		
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
-			clearRepeatFlag = true;
-			keyRepeatTimer.schedule(new KeyRepeatTask(), 50);
+		    repeatModeKeyCodes.remove(new Integer(ev.getKeyCode()));
+			keyRepeatTimer.schedule(new KeyRepeatTask(ev.getKeyCode()), 50);
 		} else {		
 			MIDletAccess ma = MIDletBridge.getMIDletAccess();
 			if (ma == null) {

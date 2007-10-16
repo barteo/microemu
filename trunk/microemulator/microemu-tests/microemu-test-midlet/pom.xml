@@ -66,6 +66,9 @@
                 <configuration>
                     <source>1.3</source>
                     <target>1.1</target>
+                    <compilerArguments>
+                        <bootclasspath>${basedir}/../../api/cldcapi11/target/cldcapi11-${project.version}.jar${path.separator}${basedir}/../../api/midpapi20/target/midpapi20-${project.version}.jar</bootclasspath>
+                   </compilerArguments>
                 </configuration>
             </plugin>
 
@@ -109,7 +112,7 @@
                     </execution>
                 </executions>
                 <dependencies>
-                    <dependency>
+                   <dependency>
                         <groupId>com.pyx4me</groupId>
                         <artifactId>cldcunit-instrument</artifactId>
                        <version>${pyx4meVersion}</version>
@@ -130,10 +133,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <wtkHome>${env.WTK_HOME}</wtkHome>
-                    <useWtkLibs>true</useWtkLibs>
-                    <proguard>false</proguard>
+                    <useWtkLibs>false</useWtkLibs>
+                    <proguard>true</proguard>
                     <obfuscate>false</obfuscate>
+                    <proguardPreverify>true</proguardPreverify>
                     <test>false</test>
                     <midlets>
                         <MIDlet>
@@ -146,19 +149,20 @@
                             <test>true</test>
                         </MIDlet>
                     </midlets>
+                    <libs>
+                        <lib>${basedir}/../../api/cldcapi11/target/cldcapi11-${project.version}.jar</lib>
+                        <lib>${basedir}/../../api/midpapi20/target/midpapi20-${project.version}.jar</lib>
+                    </libs>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.microemu</groupId>
+                            <artifactId>microemu-javase-swing</artifactId>
+                            <exclude>true</exclude>
+                            <withTrail>true</withTrail>
+                        </dependency>
+                    </dependencies>
                 </configuration>
             </plugin>
-
-            <!--
-            <plugin>
-                <groupId>com.pyx4me</groupId>
-                <artifactId>gammu-maven-plugin</artifactId>
-                <version>${pyx4meVersion}</version>
-                <configuration>
-                    <gammurc>${env.HOME}/gammurc</gammurc>
-                </configuration>
-            </plugin>
-            -->
 
         </plugins>
     </build>

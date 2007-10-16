@@ -79,7 +79,8 @@
                     <wtkHome>${env.WTK_HOME}</wtkHome>
                     <useWtkLibs>false</useWtkLibs>
                     <proguard>true</proguard>
-                    <obfuscate>true</obfuscate>
+                    <obfuscate>false</obfuscate>
+                    <proguardPreverify>false</proguardPreverify>
                     <proguardInclude>${basedir}/proguard.conf</proguardInclude>
                     <jadAttributes>
                         <Created-By>Bartek Teodorczyk</Created-By>

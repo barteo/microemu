@@ -24,7 +24,7 @@ package org.microemu.tests;
 import javax.microedition.lcdui.Command;
 
 public interface DisplayableUnderTests {
-	
-	public static final Command backCommand = new Command("Back", Command.BACK, 1);
+
+	public static final Command backCommand = new Command("MainMenu", Command.BACK, 1);
 
 }

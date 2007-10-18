@@ -29,41 +29,42 @@ import javax.microedition.lcdui.Displayable;
 
 /**
  * @author vlads
- *
+ * 
  */
 public class ThreadTestsForm extends BaseTestsForm {
 
 	static final Command startThreadCommand = new Command("start Thread", Command.ITEM, 1);
-	
+
 	static final Command stopThreadCommand = new Command("stop Thread", Command.ITEM, 2);
-	
+
 	static final Command startTimerCommand = new Command("start Timer", Command.ITEM, 3);
-	
+
 	static final Command stopTimerCommand = new Command("stop Timer", Command.ITEM, 4);
 
 	private static boolean testTimeronInit = true;
-	
+
 	private Thread thread;
-	
+
 	public ThreadTestsForm() {
 		super("ThreadTests");
 		addCommand(startThreadCommand);
 		addCommand(stopThreadCommand);
-//		addCommand(startTimerCommand);
-//		addCommand(stopTimerCommand);
+		// addCommand(startTimerCommand);
+		// addCommand(stopTimerCommand);
 	}
 
 	public static void onMIDletInit() {
 		if (testTimeronInit) {
 			Timer runAwayTimer = new Timer();
-			runAwayTimer.scheduleAtFixedRate(new TimerTask(){
+			runAwayTimer.scheduleAtFixedRate(new TimerTask() {
 				public void run() {
 					System.out.println("runAwayTimer");
-					
-				}}, 100, 2000);
+
+				}
+			}, 100, 2000);
 		}
 	}
-	
+
 	public void commandAction(Command c, Displayable d) {
 		if (c == startThreadCommand) {
 			thread = new Thread() {
@@ -84,6 +85,8 @@ public class ThreadTestsForm extends BaseTestsForm {
 				thread.interrupt();
 				thread = null;
 			}
+		} else {
+			super.commandAction(c, d);
 		}
 	}
 }

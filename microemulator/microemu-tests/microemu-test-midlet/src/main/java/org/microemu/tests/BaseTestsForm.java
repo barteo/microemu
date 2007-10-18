@@ -25,7 +25,7 @@ import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Form;
 
-public class BaseTestsForm extends Form implements CommandListener, DisplayableUnderTests {
+public abstract class BaseTestsForm extends Form implements CommandListener, DisplayableUnderTests {
 
 	public BaseTestsForm(String title) {
 		super(title);

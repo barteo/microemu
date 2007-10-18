@@ -133,10 +133,11 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <wtkHome>${env.WTK_HOME}</wtkHome>
                     <useWtkLibs>false</useWtkLibs>
-                    <proguard>true</proguard>
+                    <proguard>false</proguard>
                     <obfuscate>false</obfuscate>
-                    <proguardPreverify>true</proguardPreverify>
+                    <proguardPreverify>false</proguardPreverify>
                     <test>true</test>
                     <midlets>
                         <MIDlet>

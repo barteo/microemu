@@ -20,4 +20,4 @@ About microemu-test-midlet
 
 * Try this MIDlet
 
-   Start MicroEmulator Web Start {{{/microemu-webstart/open-local/~/microemu-test-midlet-#version#-test.jnlp}microemu-test-midlet-#version#-test}}
+   Start MicroEmulator Web Start {{{/microemu-webstart/open-local/~/microemu-tests/microemu-test-midlet/microemu-test-midlet-#version#-test.jnlp}microemu-test-midlet-#version#-test}}

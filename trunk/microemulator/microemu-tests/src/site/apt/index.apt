@@ -1,0 +1,15 @@
+~~ @version $Revision$ ($Author$) $Date$
+~~ See this file format http://maven.apache.org/guides/mini/guide-apt-format.html
+
+                                    ------------------
+                                    About microemu-tests
+                                    ------------------
+
+
+About microemu-test-midlet
+
+  MicroEmulator build process includes multiple JUnit tests.  CLDC and MIDP API signature validation is done using {{{http://jour.sourceforge.net/}Jour}}.
+
+  Start MicroEmulator Web Start with {{{/microemu-webstart/open-local/~/microemu-tests/microemu-test-midlet-#version#-test.jnlp}microemu-test-midlet-#version#-test}}.
+  This project tests some MicroEmulator functinality using <<{{{http://snapshot.pyx4me.com/pyx4me-cldcunit/}CLDCUnit}}>> J2ME JUnit base test framework.
+

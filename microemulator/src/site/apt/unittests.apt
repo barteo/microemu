@@ -13,6 +13,17 @@ Testing j2me application with MicroEmulator
      With JUnit you write simple classes (test cases) that have a number of methods that use assertions to test various aspects of your code.
      The only question is that you need to run J2ME test differently.
 
+    * <<{{{http://snapshot.pyx4me.com/pyx4me-cldcunit/}CLDCUnit}}>> J2ME JUnit base test framework.
+
+        CLDCUnit can be used as original JUnit when running tests with Java J2SE. Simply create regular JUnit test that extends <junit.framework.TestCase> and run in Eclipse or Maven.
+
+        Because Java 2 Micro Edition (J2ME) dos not have reflection API CLDCUnit needs aditional step to build process that will create reflection data. Bytecode instrumentation is used. Result of the build can be executed on real device.
+
+        CLDCUnit project is created by MicroEmulator Team member.
+
+        See how it is used to test MicroEmulator in {{{microemu-tests/microemu-test-midlet}microemu-test-midlet}}
+
+
     * <<J2MEUnit>> or SE Mobile JUnit approach.
 
         Use UnitTest library adapted for JavaME. And run the application in MicroEmulator. The only benefit of this approach is ability to run the same tests on real device.
@@ -38,14 +49,6 @@ Testing j2me application with MicroEmulator
 
        Don't forget that you will have added benefits of reporting and coverage that comes with standard tools like Eclipse, Emma, Clove.
 
-
-    * <<{{{http://pyx4me.com/snapshot/pyx4me/pyx4me-cldcunit/}CLDCUnit}}>> J2ME JUnit base test framework.
-
-        CLDCUnit can be used as original JUnit when running tests with Java J2SE. Simply create regular JUnit test that extends <junit.framework.TestCase> and run in Eclipse or Maven.
-
-        Because Java 2 Micro Edition (J2ME) dos not have reflection API CLDCUnit needs aditional step to build process that will create reflection data. Bytecode instrumentation is used. Result of the build can be executed on real device.
-
-        CLDCUnit project is created by MicroEmulator Team member.
 
 ~~~* Running headless emulator
 

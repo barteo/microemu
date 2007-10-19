@@ -133,11 +133,20 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <wtkHome>${env.WTK_HOME}</wtkHome>
+                    <!--wtkHome>${env.WTK_HOME}</wtkHome-->
                     <useWtkLibs>false</useWtkLibs>
-                    <proguard>false</proguard>
+                    <proguard>true</proguard>
                     <obfuscate>false</obfuscate>
-                    <proguardPreverify>false</proguardPreverify>
+                    <proguardPreverify>true</proguardPreverify>
+                    <proguardOptions>
+                        <options>
+                            <option>-overloadaggressively</option>
+                            <option>-dontoptimize</option>
+                            <option>-allowaccessmodification</option>
+                            <option>-dontusemixedcaseclassnames</option>
+                            <option>-keep public interface javax.microedition.*</option>
+                        </options>
+                    </proguardOptions>
                     <test>true</test>
                     <midlets>
                         <MIDlet>
@@ -163,6 +172,16 @@
                         </dependency>
                     </dependencies>
                 </configuration>
+                <!--
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sf.proguard</groupId>
+                        <artifactId>proguard</artifactId>
+                        <version>3.10.1</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
+                -->
             </plugin>
 
             <!-- install jar in project site -->

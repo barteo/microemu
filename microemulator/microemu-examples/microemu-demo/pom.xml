@@ -19,14 +19,14 @@
     <description>demo example</description>
 
     <dependencies>
-
+<!--
         <dependency>
             <groupId>org.microemu</groupId>
             <artifactId>midpapi20</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-
+-->
         <dependency>
             <groupId>org.microemu</groupId>
             <artifactId>microemu-javase-swing</artifactId>
@@ -92,6 +92,15 @@
                     <obfuscate>false</obfuscate>
                     <proguardPreverify>false</proguardPreverify>
                     <proguardInclude>${basedir}/proguard.conf</proguardInclude>
+                    <proguardOptions>
+                        <options>
+                            <option>-overloadaggressively</option>
+                            <option>-dontoptimize</option>
+                            <option>-allowaccessmodification</option>
+                            <option>-defaultpackage 'me2e'</option>
+                            <option>-dontusemixedcaseclassnames</option>
+                        </options>
+                    </proguardOptions>
                     <jadAttributes>
                         <Created-By>Bartek Teodorczyk</Created-By>
                     </jadAttributes>

@@ -34,24 +34,24 @@ import javax.microedition.midlet.MIDletStateChangeException;
 
 public class MainTestMIDlet extends MIDlet implements CommandListener, MIDletUnderTests {
 
-	static final Command exitCommand = new Command("Exit", Command.EXIT, 1);
+	// static final Command exitCommand = MIDletUnderTests.exitCommand;
 
 	List menuList = null;
 
 	Vector testPanels;
-	
+
 	static {
 		System.out.println("MainTestMIDlet static init");
 		ThreadTestsForm.onMIDletInit();
 	}
-	
+
 	public MainTestMIDlet() {
-		
+
 	}
 
 	protected void startApp() throws MIDletStateChangeException {
 		Manager.midletInstance = this;
-		
+
 		if (menuList == null) {
 			testPanels = new Vector();
 			testPanels.addElement(new ItemsOnForm());
@@ -82,11 +82,11 @@ public class MainTestMIDlet extends MIDlet implements CommandListener, MIDletUnd
 		}
 		setCurrentDisplayable(menuList);
 	}
-	
+
 	public void commandAction(Command c, Displayable d) {
 		if (d == menuList) {
 			if (c == List.SELECT_COMMAND) {
-				setCurrentDisplayable((Displayable)testPanels.elementAt(menuList.getSelectedIndex()));
+				setCurrentDisplayable((Displayable) testPanels.elementAt(menuList.getSelectedIndex()));
 			} else if (c == exitCommand) {
 				try {
 					destroyApp(true);
@@ -96,23 +96,21 @@ public class MainTestMIDlet extends MIDlet implements CommandListener, MIDletUnd
 			}
 		}
 	}
-	
+
 	public void showMainPage() {
 		setCurrentDisplayable(menuList);
 	}
-	
+
 	public void setCurrentDisplayable(Displayable nextDisplayable) {
 		Display display = Display.getDisplay(this);
-		//Displayable current = display.getCurrent();
+		// Displayable current = display.getCurrent();
 		display.setCurrent(nextDisplayable);
 	}
-	
+
 	protected void destroyApp(boolean unconditional) throws MIDletStateChangeException {
 	}
 
 	protected void pauseApp() {
 	}
-
-
 
 }

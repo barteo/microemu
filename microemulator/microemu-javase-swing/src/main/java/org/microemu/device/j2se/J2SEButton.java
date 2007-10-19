@@ -73,6 +73,18 @@ public class J2SEButton implements Button {
 		return keyCode;
 	}
 
+	public int[] getKeyCodes() {
+		return new int[] { keyCode };
+	}
+
+	/**
+	 * CharCodes do not depends on InputMode. This is computer keyboard codes
+	 * when it is impossible to map to VK keys.
+	 */
+	public char[] getCharCodes() {
+		return new char[0];
+	}
+
 	public char[] getChars(int inputMode) {
 		char[] result = null;
 		switch (inputMode) {

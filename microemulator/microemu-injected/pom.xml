@@ -45,12 +45,23 @@
                 </executions>
                 <configuration>
                     <attach>false</attach>
-                    <wtkHome>${env.WTK_HOME}</wtkHome>
-                    <proguard>true</proguard>
-                    <obfuscate>true</obfuscate>
-                    <proguardInclude>${basedir}/proguard.conf</proguardInclude>
+                    <useWtkLibs>false</useWtkLibs>
+                    <!--wtkHome>${env.WTK_HOME}</wtkHome-->
+                    <proguardPreverify>true</proguardPreverify>
+                    <proguard>false</proguard>
+                    <obfuscate>false</obfuscate>
+                    <proguardOptions>
+                        <options>
+                            <option>-dontoptimize</option>
+                            <option>-keepclasseswithmembers public class org.microemu.* { *; }</option>
+                        </options>
+                    </proguardOptions>
                     <jarfile>microemu-injected</jarfile>
                     <classifier>none</classifier>
+                    <libs>
+                        <lib>${basedir}/../api/cldcapi11/target/cldcapi11-${project.version}.jar</lib>
+                        <!--lib>${basedir}/../api/midpapi20/target/midpapi20-${project.version}.jar</lib-->
+                    </libs>
                 </configuration>
             </plugin>
 

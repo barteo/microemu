@@ -31,6 +31,7 @@ import java.util.WeakHashMap;
 
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
+import org.microemu.device.impl.ButtonName;
 import org.microemu.device.impl.SoftButton;
 
 /**
@@ -48,6 +49,8 @@ public class J2SEDeviceButtonsHelper {
 		Map keyCodes = new HashMap();
 
 		Map charCodes = new HashMap();
+
+		Map functions = new HashMap();
 	}
 
 	public static SoftButton getSoftButton(MouseEvent ev) {
@@ -82,7 +85,7 @@ public class J2SEDeviceButtonsHelper {
 		if (button != null) {
 			return button;
 		}
-		return (J2SEButton) inf.charCodes.get(Integer.valueOf(ev.getKeyCode()));
+		return (J2SEButton) inf.keyCodes.get(Integer.valueOf(ev.getKeyCode()));
 	}
 
 	private static DeviceInformation getDeviceInformation() {
@@ -101,14 +104,21 @@ public class J2SEDeviceButtonsHelper {
 		DeviceInformation inf = new DeviceInformation();
 		for (Enumeration en = dev.getButtons().elements(); en.hasMoreElements();) {
 			J2SEButton button = (J2SEButton) en.nextElement();
-			int keyCodes[] = button.getKeyCodes();
+			int keyCodes[] = button.getKeyboardKeyCodes();
 			for (int i = 0; i < keyCodes.length; i++) {
 				inf.keyCodes.put(Integer.valueOf(keyCodes[i]), button);
 			}
-			char charCodes[] = button.getCharCodes();
+			char charCodes[] = button.getKeyboardCharCodes();
 			for (int i = 0; i < charCodes.length; i++) {
-				inf.keyCodes.put(Integer.valueOf(charCodes[i]), button);
+				inf.charCodes.put(Integer.valueOf(charCodes[i]), button);
 			}
+			inf.functions.put(button.getFunctionalName(), button);
+		}
+		if (inf.functions.get(ButtonName.DELETE) == null) {
+			dev.getButtons().add(new J2SEButton(ButtonName.DELETE));
+		}
+		if (inf.functions.get(ButtonName.BACK_SPACE) == null) {
+			dev.getButtons().add(new J2SEButton(ButtonName.BACK_SPACE));
 		}
 		return inf;
 	}

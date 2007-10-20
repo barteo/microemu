@@ -36,6 +36,8 @@ import java.util.Map;
  */
 public final class ButtonName {
 
+	private static Map altNames = new HashMap();
+
 	public static final ButtonName SOFT1 = new ButtonName();
 
 	public static final ButtonName SOFT2 = new ButtonName();
@@ -52,9 +54,13 @@ public final class ButtonName {
 
 	public static final ButtonName RIGHT = new ButtonName();
 
-	public static final ButtonName BACK = new ButtonName();
+	// public static final ButtonName BACK = new ButtonName();
 
-	public static final ButtonName CLEAR = new ButtonName();
+	public static final ButtonName BACK_SPACE = new ButtonName();
+
+	public static final ButtonName DELETE = new ButtonName();
+
+	// public static final ButtonName CLEAR = DELETE;
 
 	public static final ButtonName KEY_NUM0 = new ButtonName("0");
 
@@ -80,15 +86,13 @@ public final class ButtonName {
 
 	public static final ButtonName KEY_POUND = new ButtonName(new String[] { "#", "POUND" });
 
-	private static Map altNames = new HashMap();
-
-	private String name;
+	private String name = "n/a";
 
 	public static ButtonName getButtonName(String keyName) {
 		String name = keyName.toUpperCase();
 		try {
 			Field field = ButtonName.class.getField(name);
-			if (field.getClass() == ButtonName.class) {
+			if (field.getType() == ButtonName.class) {
 				return (ButtonName) field.get(null);
 			}
 		} catch (NoSuchFieldException e) {
@@ -107,7 +111,7 @@ public final class ButtonName {
 		// Name all the Buttons by filed name
 		Field[] fields = ButtonName.class.getDeclaredFields();
 		for (int i = 0; i < fields.length; i++) {
-			if (fields[i].getClass() == ButtonName.class) {
+			if (fields[i].getType() == ButtonName.class) {
 				try {
 					((ButtonName) fields[i].get(null)).name = fields[i].getName();
 				} catch (IllegalAccessException e) {
@@ -129,6 +133,10 @@ public final class ButtonName {
 		for (int i = 0; i < names.length; i++) {
 			altNames.put(names[i], this);
 		}
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public String toString() {

@@ -75,8 +75,9 @@ public class J2SEButtonDefaultKeyCodes {
 		code(ButtonName.LEFT, KeyEvent.VK_LEFT, KeyEvent.VK_KP_LEFT);
 		code(ButtonName.RIGHT, KeyEvent.VK_RIGHT, KeyEvent.VK_KP_RIGHT);
 
-		code(ButtonName.BACK, KeyEvent.VK_BACK_SPACE);
-		code(ButtonName.CLEAR, KeyEvent.VK_CLEAR);
+		// code(ButtonName.BACK, KeyEvent.VK_HOME);
+		code(ButtonName.BACK_SPACE, KeyEvent.VK_BACK_SPACE);
+		code(ButtonName.DELETE, KeyEvent.VK_CLEAR, KeyEvent.VK_DELETE);
 
 		code(ButtonName.KEY_NUM0, KeyEvent.VK_0, KeyEvent.VK_NUMPAD0).charCodes = "0";
 		code(ButtonName.KEY_NUM1, KeyEvent.VK_1, KeyEvent.VK_NUMPAD1).charCodes = "1";

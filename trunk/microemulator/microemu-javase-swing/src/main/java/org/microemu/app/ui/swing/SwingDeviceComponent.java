@@ -39,8 +39,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -57,6 +55,7 @@ import org.microemu.device.DeviceFactory;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.SoftButton;
 import org.microemu.device.j2se.J2SEButton;
+import org.microemu.device.j2se.J2SEDeviceButtonsHelper;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEImmutableImage;
 import org.microemu.device.j2se.J2SEInputMethod;
@@ -95,19 +94,19 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 
 		Component source;
 
-		int key;
+		J2SEButton button;
 
 		J2SEInputMethod inputMethod;
 
 		static MouseRepeatedTimerTask task;
 
-		static void schedule(Component source, int key, J2SEInputMethod inputMethod) {
+		static void schedule(Component source, J2SEButton button, J2SEInputMethod inputMethod) {
 			if (task != null) {
 				task.cancel();
 			}
 			task = new MouseRepeatedTimerTask();
 			task.source = source;
-			task.key = key;
+			task.button = button;
 			task.inputMethod = inputMethod;
 			task.timer = new Timer();
 			task.timer.scheduleAtFixedRate(task, 5 * DELAY, DELAY);
@@ -126,7 +125,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 
 		public static void mouseReleased() {
 			if ((task != null) && (task.inputMethod != null)) {
-				task.inputMethod.mouseReleased(task.key);
+				task.inputMethod.buttonReleased(task.button);
 				stop();
 			}
 
@@ -134,8 +133,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 
 		public void run() {
 			if (inputMethod != null) {
-				KeyEvent ev = new KeyEvent(source, 0, 0, 0, key, KeyEvent.CHAR_UNDEFINED);
-				inputMethod.keyPressed(ev);
+				inputMethod.buttonPressed(button);
 			}
 		}
 
@@ -161,7 +159,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 			// instead
 			boolean fullScreenMode = device.getDeviceDisplay().isFullScreenMode();
 
-			pressedButton = getButton(e.getX(), e.getY());
+			pressedButton = J2SEDeviceButtonsHelper.getSkinButton(e);
 			if (pressedButton != null) {
 				if (pressedButton instanceof SoftButton && !fullScreenMode) {
 					Command cmd = ((SoftButton) pressedButton).getCommand();
@@ -169,10 +167,8 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 						CommandManager.getInstance().commandAction(cmd);
 					}
 				} else {
-					int key = pressedButton.getKeyCode();
-					KeyEvent ev = new KeyEvent(SwingDeviceComponent.this, 0, 0, 0, key, KeyEvent.CHAR_UNDEFINED);
-					inputMethod.mousePressed(ev);
-					MouseRepeatedTimerTask.schedule(SwingDeviceComponent.this, key, inputMethod);
+					inputMethod.buttonPressed(pressedButton);
+					MouseRepeatedTimerTask.schedule(SwingDeviceComponent.this, pressedButton, inputMethod);
 				}
 				// optimize for some video cards.
 				repaint(pressedButton.getShape().getBounds());
@@ -193,11 +189,9 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 
 			Device device = DeviceFactory.getDevice();
 			J2SEInputMethod inputMethod = (J2SEInputMethod) device.getInputMethod();
-			J2SEButton prevOverButton = getButton(e.getX(), e.getY());
+			J2SEButton prevOverButton = J2SEDeviceButtonsHelper.getSkinButton(e);
 			if (prevOverButton != null) {
-				int key = prevOverButton.getKeyCode();
-				KeyEvent ev = new KeyEvent(SwingDeviceComponent.this, 0, 0, 0, key, KeyEvent.CHAR_UNDEFINED);
-				inputMethod.mouseReleased(ev.getKeyCode());
+				inputMethod.buttonReleased(prevOverButton);
 			}
 			pressedButton = null;
 			// optimize for some video cards.
@@ -235,7 +229,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 			}
 
 			prevOverButton = overButton;
-			overButton = getButton(e.getX(), e.getY());
+			overButton = J2SEDeviceButtonsHelper.getSkinButton(e);
 			if (overButton != prevOverButton) {
 				// optimize for some video cards.
 				if (prevOverButton != null) {
@@ -285,8 +279,8 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 	}
 
 	public void switchShowMouseCoordinates() {
-		//TODO skin editing mode.
-		//showMouseCoordinates = !showMouseCoordinates;
+		// TODO skin editing mode.
+		// showMouseCoordinates = !showMouseCoordinates;
 		dc.switchShowMouseCoordinates();
 	}
 
@@ -295,7 +289,11 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 			return;
 		}
 
-		((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod()).keyTyped(ev);
+		J2SEInputMethod inputMethod = ((J2SEInputMethod) DeviceFactory.getDevice().getInputMethod());
+		J2SEButton button = inputMethod.getButton(ev);
+		if (button != null) {
+			inputMethod.buttonTyped(button);
+		}
 	}
 
 	public void keyPressed(KeyEvent ev) {
@@ -331,24 +329,14 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 			return;
 		}
 
-		for (Iterator it = device.getButtons().iterator(); it.hasNext();) {
-			J2SEButton button = (J2SEButton) it.next();
-			if (ev.getKeyCode() == button.getKeyboardKey()) {
-				ev.setKeyCode(button.getKeyCode());
-				break;
-			}
-		}
-
-		inputMethod.keyPressed(ev);
-
-		pressedButton = inputMethod.getButton(ev);
-		if (pressedButton != null) {
-			org.microemu.device.impl.Shape shape = pressedButton.getShape();
+		J2SEButton button = inputMethod.getButton(ev);
+		if (button != null) {
+			pressedButton = button;
+			inputMethod.buttonPressed(button);
+			org.microemu.device.impl.Shape shape = button.getShape();
 			if (shape != null) {
 				repaint(shape.getBounds());
 			}
-		} else {
-			repaint();
 		}
 	}
 
@@ -365,16 +353,12 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 		}
 
 		Device device = DeviceFactory.getDevice();
+		J2SEInputMethod inputMethod = (J2SEInputMethod) device.getInputMethod();
 
-		for (Iterator it = device.getButtons().iterator(); it.hasNext();) {
-			J2SEButton button = (J2SEButton) it.next();
-			if (ev.getKeyCode() == button.getKeyboardKey()) {
-				ev.setKeyCode(button.getKeyCode());
-				break;
-			}
+		J2SEButton button = inputMethod.getButton(ev);
+		if (button != null) {
+			inputMethod.buttonReleased(button);
 		}
-
-		((J2SEInputMethod) device.getInputMethod()).keyReleased(ev);
 
 		prevOverButton = pressedButton;
 		pressedButton = null;
@@ -383,8 +367,6 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 			if (shape != null) {
 				repaint(shape.getBounds());
 			}
-		} else {
-			repaint();
 		}
 	}
 
@@ -446,23 +428,6 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 		org.microemu.device.impl.Rectangle r = shape.getBounds();
 		g.drawImage(image, r.x, r.y, r.x + r.width, r.y + r.height, r.x, r.y, r.x + r.width, r.y + r.height, null);
 		g.setClip(clipSave);
-	}
-
-	private J2SEButton getButton(int x, int y) {
-		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
-			J2SEButton button = (J2SEButton) e.nextElement();
-			if (button.getShape() != null) {
-				try {
-					org.microemu.device.impl.Shape tmp = (org.microemu.device.impl.Shape) button.getShape().clone();
-					if (tmp.contains(x, y)) {
-						return button;
-					}
-				} catch (CloneNotSupportedException ex) {
-					Logger.error(ex);
-				}
-			}
-		}
-		return null;
 	}
 
 	public Dimension getPreferredSize() {

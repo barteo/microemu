@@ -40,6 +40,7 @@ import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.InputMethod;
 import org.microemu.device.InputMethodEvent;
+import org.microemu.device.impl.ButtonName;
 import org.microemu.device.impl.InputMethodImpl;
 import org.microemu.device.impl.SoftButton;
 import org.microemu.util.ThreadUtils;
@@ -200,42 +201,30 @@ public class J2SEInputMethod extends InputMethodImpl {
 		throw new IllegalArgumentException();
 	}
 
-	protected boolean commonKeyPressed(KeyEvent ev) {
-		int keyCode = ev.getKeyCode();
-		if (inputMethodListener == null) {
-			int midpKeyCode;
-			switch (keyCode) {
-			case KeyEvent.VK_BACK_SPACE:
-				return true;
-			case KeyEvent.VK_MULTIPLY:
-				midpKeyCode = Canvas.KEY_STAR;
-				break;
-			case KeyEvent.VK_MODECHANGE:
-				midpKeyCode = Canvas.KEY_POUND;
-				break;
-			default:
-				midpKeyCode = keyCode;
-			}
-			switch (ev.getKeyChar()) {
-			case '*':
-				midpKeyCode = Canvas.KEY_STAR;
-				break;
-			case '#':
-				midpKeyCode = Canvas.KEY_POUND;
-				break;
-			}
-			MIDletBridge.getMIDletAccess().getDisplayAccess().keyPressed(midpKeyCode);
-			return true;
+	protected boolean fireInputMethodListener(J2SEButton button) {
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma == null) {
+			return false;
+		}
+		DisplayAccess da = ma.getDisplayAccess();
+		if (da == null) {
+			return false;
 		}
 
-		if (getGameAction(keyCode) == Canvas.UP || getGameAction(keyCode) == Canvas.DOWN) {
-			MIDletBridge.getMIDletAccess().getDisplayAccess().keyPressed(keyCode);
+		if (inputMethodListener == null) {
+			da.keyPressed(button.getKeyCode());
+			return true;
+		}
+		ButtonName functionalName = button.getFunctionalName();
+
+		if (functionalName == ButtonName.UP || functionalName == ButtonName.DOWN) {
+			da.keyPressed(button.getKeyCode());
 			return true;
 		}
 
 		int caret = inputMethodListener.getCaretPosition();
 
-		if (keyCode == KeyEvent.VK_MODECHANGE) {
+		if (button.isModeChange()) {
 			switch (inputMethodListener.getConstraints() & TextField.CONSTRAINT_MASK) {
 			case TextField.ANY:
 			case TextField.EMAILADDR:
@@ -262,12 +251,11 @@ public class J2SEInputMethod extends InputMethodImpl {
 			return true;
 		}
 
-		if (getGameAction(keyCode) == Canvas.LEFT || getGameAction(keyCode) == Canvas.RIGHT) {
+		if (functionalName == ButtonName.LEFT || functionalName == ButtonName.RIGHT) {
 			synchronized (this) {
-				if (getGameAction(keyCode) == Canvas.LEFT && caret > 0) {
+				if ((functionalName == ButtonName.LEFT) && caret > 0) {
 					caret--;
-				}
-				if (getGameAction(keyCode) == Canvas.RIGHT && caret < inputMethodListener.getText().length()) {
+				} else if ((functionalName == ButtonName.RIGHT) && caret < inputMethodListener.getText().length()) {
 					caret++;
 				}
 				lastButton = null;
@@ -279,7 +267,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 			return true;
 		}
 
-		if (keyCode == KeyEvent.VK_BACK_SPACE) {
+		if (functionalName == ButtonName.BACK_SPACE) {
 			String tmp = "";
 			synchronized (this) {
 				if (lastButton != null) {
@@ -307,7 +295,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 			return true;
 		}
 
-		if (keyCode == KeyEvent.VK_DELETE) {
+		if (functionalName == ButtonName.DELETE) {
 			String tmp = inputMethodListener.getText();
 			synchronized (this) {
 				if (lastButton != null) {
@@ -329,23 +317,78 @@ public class J2SEInputMethod extends InputMethodImpl {
 			return true;
 		}
 
+		if (inputMethodListener.getText().length() < maxSize) {
+			String tmp = inputMethodListener.getText();
+			synchronized (this) {
+				lastButtonCharIndex++;
+				char[] buttonChars = filterConstraints(filterInputMode(button.getChars(getInputMode())));
+				if (buttonChars.length > 0) {
+					if (lastButtonCharIndex == buttonChars.length) {
+						if (buttonChars.length == 1) {
+							if (lastButton != null) {
+								caret++;
+							}
+							lastButton = null;
+						} else {
+							lastButtonCharIndex = 0;
+						}
+					}
+					if (lastButton != button) {
+						if (lastButton != null) {
+							caret++;
+						}
+						tmp = "";
+						if (caret > 0) {
+							tmp += inputMethodListener.getText().substring(0, caret);
+						}
+						tmp += buttonChars[0];
+						if (caret < inputMethodListener.getText().length()) {
+							tmp += inputMethodListener.getText().substring(caret);
+						}
+						lastButton = button;
+						lastButtonCharIndex = 0;
+					} else {
+						tmp = "";
+						if (caret > 0) {
+							tmp += inputMethodListener.getText().substring(0, caret);
+						}
+						tmp += buttonChars[lastButtonCharIndex];
+						if (caret < inputMethodListener.getText().length() - 1) {
+							tmp += inputMethodListener.getText().substring(caret + 1);
+						}
+						lastButton = button;
+					}
+				} else {
+					lastButton = null;
+					lastButtonCharIndex = -1;
+				}
+				resetKey = false;
+				notify();
+			}
+			if (!validate(tmp, inputMethodListener.getConstraints())) {
+				return false;
+			}
+			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, tmp);
+			inputMethodListener.inputMethodTextChanged(event);
+		}
 		return false;
 	}
 
-	public void keyTyped(KeyEvent ev) {
+	public void buttonTyped(J2SEButton button) {
 		if (eventAlreadyConsumed) {
 			return;
 		}
-
-		char c = ev.getKeyChar();
-		if (c == '\b') {
-			return;
-		}
-
-		if (inputMethodListener != null && inputMethodListener.getText() != null
-				&& inputMethodListener.getText().length() < maxSize) {
-			insertText(new Character(c).toString());
-		}
+		// TODO verify not required
+		// char c = ev.getKeyChar();
+		// if (c == '\b') {
+		// return;
+		// }
+		//
+		// if (inputMethodListener != null && inputMethodListener.getText() !=
+		// null
+		// && inputMethodListener.getText().length() < maxSize) {
+		// insertText(new Character(c).toString());
+		// }
 	}
 
 	public void clipboardPaste(String str) {
@@ -357,54 +400,47 @@ public class J2SEInputMethod extends InputMethodImpl {
 		eventAlreadyConsumed = true;
 	}
 
-	public void keyPressed(KeyEvent ev) {
+	public void buttonPressed(J2SEButton button) {
 		eventAlreadyConsumed = false;
-
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
-			if (repeatModeKeyCodes.contains(new Integer(ev.getKeyCode()))) {
+			if (repeatModeKeyCodes.contains(new Integer(button.getKeyCode()))) {
 				MIDletAccess ma = MIDletBridge.getMIDletAccess();
 				if (ma == null) {
 					return;
 				}
-
 				DisplayAccess da = ma.getDisplayAccess();
 				if (da == null) {
 					return;
 				}
-
-				da.keyRepeated(ev.getKeyCode());
+				da.keyRepeated(button.getKeyCode());
 				eventAlreadyConsumed = true;
-
 				return;
 			} else {
-				repeatModeKeyCodes.add(new Integer(ev.getKeyCode()));
+				repeatModeKeyCodes.add(new Integer(button.getKeyCode()));
 			}
 		}
 
 		// invoke any associated commands, but send the raw key codes instead
 		boolean rawSoftKeys = DeviceFactory.getDevice().getDeviceDisplay().isFullScreenMode();
-		J2SEButton pressedButton = getButton(ev);
-		if (pressedButton != null) {
-			if (pressedButton instanceof SoftButton && !rawSoftKeys) {
-				Command cmd = ((SoftButton) pressedButton).getCommand();
-				if (cmd != null) {
-					CommandManager.getInstance().commandAction(cmd);
-					eventAlreadyConsumed = true;
-					return;
-				}
+		if (button instanceof SoftButton && !rawSoftKeys) {
+			Command cmd = ((SoftButton) button).getCommand();
+			if (cmd != null) {
+				CommandManager.getInstance().commandAction(cmd);
+				eventAlreadyConsumed = true;
+				return;
 			}
 		}
 
-		if (commonKeyPressed(ev)) {
+		if (fireInputMethodListener(button)) {
 			eventAlreadyConsumed = true;
 			return;
 		}
 	}
 
-	public void keyReleased(KeyEvent ev) {
+	public void buttonReleased(J2SEButton button) {
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
-			repeatModeKeyCodes.remove(new Integer(ev.getKeyCode()));
-			keyRepeatTimer.schedule(new KeyRepeatTask(ev.getKeyCode()), 50);
+			repeatModeKeyCodes.remove(new Integer(button.getKeyCode()));
+			keyRepeatTimer.schedule(new KeyRepeatTask(button.getKeyCode()), 50);
 		} else {
 			MIDletAccess ma = MIDletBridge.getMIDletAccess();
 			if (ma == null) {
@@ -416,100 +452,18 @@ public class J2SEInputMethod extends InputMethodImpl {
 				return;
 			}
 
-			da.keyReleased(ev.getKeyCode());
+			da.keyReleased(button.getKeyCode());
 			eventAlreadyConsumed = false;
 		}
 	}
 
-	public void mousePressed(KeyEvent ev) {
-		if (commonKeyPressed(ev)) {
-			return;
-		}
-
-		if (inputMethodListener.getText().length() < maxSize) {
-			for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
-				J2SEButton button = (J2SEButton) e.nextElement();
-				if (ev.getKeyCode() == button.getKeyCode()) {
-					int caret = inputMethodListener.getCaretPosition();
-					String tmp = inputMethodListener.getText();
-					synchronized (this) {
-						lastButtonCharIndex++;
-						char[] buttonChars = filterConstraints(filterInputMode(button.getChars(getInputMode())));
-						if (buttonChars.length > 0) {
-							if (lastButtonCharIndex == buttonChars.length) {
-								if (buttonChars.length == 1) {
-									if (lastButton != null) {
-										caret++;
-									}
-									lastButton = null;
-								} else {
-									lastButtonCharIndex = 0;
-								}
-							}
-							if (lastButton != button) {
-								if (lastButton != null) {
-									caret++;
-								}
-								tmp = "";
-								if (caret > 0) {
-									tmp += inputMethodListener.getText().substring(0, caret);
-								}
-								tmp += buttonChars[0];
-								if (caret < inputMethodListener.getText().length()) {
-									tmp += inputMethodListener.getText().substring(caret);
-								}
-								lastButton = button;
-								lastButtonCharIndex = 0;
-							} else {
-								tmp = "";
-								if (caret > 0) {
-									tmp += inputMethodListener.getText().substring(0, caret);
-								}
-								tmp += buttonChars[lastButtonCharIndex];
-								if (caret < inputMethodListener.getText().length() - 1) {
-									tmp += inputMethodListener.getText().substring(caret + 1);
-								}
-								lastButton = button;
-							}
-						} else {
-							lastButton = null;
-							lastButtonCharIndex = -1;
-						}
-						resetKey = false;
-						notify();
-					}
-					if (!validate(tmp, inputMethodListener.getConstraints())) {
-						return;
-					}
-					InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret,
-							tmp);
-					inputMethodListener.inputMethodTextChanged(event);
-					break;
-				}
-			}
-		}
-	}
-
-	public void mouseReleased(int keyCode) {
-		MIDletAccess ma = MIDletBridge.getMIDletAccess();
-		if (ma == null) {
-			return;
-		}
-
-		DisplayAccess da = ma.getDisplayAccess();
-		if (da == null) {
-			return;
-		}
-
-		da.keyReleased(keyCode);
-	}
-
 	public J2SEButton getButton(KeyEvent ev) {
+		J2SEButton button = J2SEDeviceButtonsHelper.getButton(ev);
+		if (button != null) {
+			return button;
+		}
 		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
-			J2SEButton button = (J2SEButton) e.nextElement();
-			if (ev.getKeyCode() == button.getKeyCode()) {
-				return button;
-			}
+			button = (J2SEButton) e.nextElement();
 			if (button.isChar(ev.getKeyChar(), getInputMode())) {
 				return button;
 			}

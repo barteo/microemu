@@ -26,19 +26,37 @@ import java.util.Hashtable;
 
 import org.microemu.device.InputMethod;
 import org.microemu.device.impl.Button;
+import org.microemu.device.impl.ButtonDetaultDeviceKeyCodes;
+import org.microemu.device.impl.ButtonName;
 import org.microemu.device.impl.Shape;
 
 public class J2SEButton implements Button {
 
 	private String name;
 
+	private ButtonName functionalName;
+
 	private Shape shape;
 
-	private int keyboardKey;
+	private int[] keyboardKeys;
+
+	private String keyboardCharCodes;
 
 	private int keyCode;
 
 	private Hashtable inputToChars;
+
+	private boolean modeChange;
+
+	/**
+	 * Create special functional buttons. e.g. ButtonName.DELETE and
+	 * ButtonName.BACK_SPACE if not defined in 'device.xml'
+	 * 
+	 * @param name
+	 */
+	J2SEButton(ButtonName functionalName) {
+		this(functionalName.getName(), null, Integer.MIN_VALUE, null, null);
+	}
 
 	/**
 	 * @param name
@@ -51,38 +69,63 @@ public class J2SEButton implements Button {
 	public J2SEButton(String name, Shape shape, int keyCode, String keyName, Hashtable inputToChars) {
 		this.name = name;
 		this.shape = shape;
-		this.keyboardKey = parseKeyboardKey(keyName);
+		this.functionalName = ButtonName.getButtonName(name);
+
+		// TODO make it attribute in device.xml
+		modeChange = (functionalName == ButtonName.KEY_POUND);
 
 		if (keyCode == Integer.MIN_VALUE) {
-			if (keyName != null) {
-				this.keyCode = this.keyboardKey;
-			} else {
-				this.keyCode = -1;
-			}
+			this.keyCode = ButtonDetaultDeviceKeyCodes.getKeyCode(this.functionalName);
 		} else {
 			this.keyCode = keyCode;
 		}
+
+		if (keyName == null) {
+			this.keyboardKeys = J2SEButtonDefaultKeyCodes.getKeyCodes(this.functionalName);
+			// TODO make it attribute in device.xml
+			this.keyboardCharCodes = J2SEButtonDefaultKeyCodes.getCharCodes(this.functionalName);
+		} else {
+			this.keyboardKeys = new int[] { parseKeyboardKey(keyName) };
+		}
+
 		this.inputToChars = inputToChars;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public int getKeyboardKey() {
-		return keyboardKey;
+		if (keyboardKeys.length == 0) {
+			return 0;
+		}
+		return keyboardKeys[0];
 	}
 
 	public int getKeyCode() {
 		return keyCode;
 	}
 
-	public int[] getKeyCodes() {
-		return new int[] { keyCode };
+	public ButtonName getFunctionalName() {
+		return functionalName;
+	}
+
+	public int[] getKeyboardKeyCodes() {
+		return keyboardKeys;
 	}
 
 	/**
 	 * CharCodes do not depends on InputMode. This is computer keyboard codes
 	 * when it is impossible to map to VK keys.
 	 */
-	public char[] getCharCodes() {
-		return new char[0];
+	public char[] getKeyboardCharCodes() {
+		if (keyboardCharCodes == null) {
+			return new char[0];
+		}
+		return keyboardCharCodes.toCharArray();
+	}
+
+	public boolean isModeChange() {
+		return modeChange;
 	}
 
 	public char[] getChars(int inputMode) {
@@ -109,6 +152,9 @@ public class J2SEButton implements Button {
 	}
 
 	public boolean isChar(char c, int inputMode) {
+		if (inputToChars == null) {
+			return false;
+		}
 		c = Character.toLowerCase(c);
 		char[] chars = getChars(inputMode);
 		if (chars != null) {
@@ -130,19 +176,17 @@ public class J2SEButton implements Button {
 		return shape;
 	}
 
-	private int parseKeyboardKey(String keyName) {
+	private static int parseKeyboardKey(String keyName) {
 		int key;
-
 		try {
 			key = KeyEvent.class.getField(keyName).getInt(null);
-		} catch (Exception ex) {
+		} catch (Exception e) {
 			try {
 				key = Integer.parseInt(keyName);
-			} catch (NumberFormatException ex1) {
+			} catch (NumberFormatException e1) {
 				key = -1;
 			}
 		}
-
 		return key;
 	}
 

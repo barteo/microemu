@@ -33,6 +33,7 @@ import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.impl.ButtonName;
 import org.microemu.device.impl.SoftButton;
+import org.microemu.log.Logger;
 
 /**
  * Maps keyboard and mouse events to Buttons
@@ -102,6 +103,7 @@ public class J2SEDeviceButtonsHelper {
 
 	private static DeviceInformation createDeviceInformation(Device dev) {
 		DeviceInformation inf = new DeviceInformation();
+		boolean hasModeChange = false;
 		for (Enumeration en = dev.getButtons().elements(); en.hasMoreElements();) {
 			J2SEButton button = (J2SEButton) en.nextElement();
 			int keyCodes[] = button.getKeyboardKeyCodes();
@@ -113,7 +115,21 @@ public class J2SEDeviceButtonsHelper {
 				inf.charCodes.put(Integer.valueOf(charCodes[i]), button);
 			}
 			inf.functions.put(button.getFunctionalName(), button);
+			if (button.isModeChange()) {
+				hasModeChange = true;
+			}
 		}
+
+		// Correction to missing code in xml
+		if (!hasModeChange) {
+			J2SEButton button = (J2SEButton) inf.functions.get(ButtonName.KEY_POUND);
+			if (button != null) {
+				button.setModeChange();
+			} else {
+				Logger.warn("Device has no ModeChange and POUND buttons");
+			}
+		}
+
 		if (inf.functions.get(ButtonName.DELETE) == null) {
 			dev.getButtons().add(new J2SEButton(ButtonName.DELETE));
 		}

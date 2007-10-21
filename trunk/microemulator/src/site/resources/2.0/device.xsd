@@ -293,12 +293,22 @@
 		</xsd:attribute>
 		<xsd:attribute name="key" type="xsd:string">
 			<xsd:annotation>
-				<xsd:documentation>Computer keyboard key code used to trigger this button.</xsd:documentation>
+				<xsd:documentation>Computer keyboard key codes space separated used to trigger this button.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="keyboardChars" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>Computer keyboard key codes in character (not separated) used to trigger this button.</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
 		<xsd:attribute name="keyCode" type="xsd:string">
 			<xsd:annotation>
 				<xsd:documentation>Keyboard key code passed to Canvas.keyPressed() finction</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="modeChange" type="xsd:boolean">
+			<xsd:annotation>
+				<xsd:documentation>This button is modeChange button for text inputs</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
 	</xsd:complexType>

@@ -38,11 +38,13 @@ import org.microemu.device.impl.SoftButton;
 public class J2SESoftButton extends J2SEButton implements SoftButton {
 
 	public static int LEFT = 1;
+
 	public static int RIGHT = 2;
-	
+
 	private int type;
-	
+
 	private Image normalImage;
+
 	private Image pressedImage;
 
 	private Vector commandTypes = new Vector();
@@ -52,27 +54,28 @@ public class J2SESoftButton extends J2SEButton implements SoftButton {
 	private Rectangle paintable;
 
 	private int alignment;
-	
+
 	private boolean visible;
 
 	private boolean pressed;
-	
+
 	private Font font;
 
 	/**
 	 * @param name
 	 * @param rectangle
-	 * @param keyCode - Integer.MIN_VALUE when unspecified
+	 * @param keyCode -
+	 *            Integer.MIN_VALUE when unspecified
 	 * @param keyName
 	 * @param paintable
 	 * @param alignmentName
 	 * @param commands
 	 * @param font
 	 */
-	public J2SESoftButton(String name, Shape shape, int keyCode, String keyName,
-			Rectangle paintable, String alignmentName, Vector commands, Font font) {
-		super(name, shape, keyCode, keyName, new Hashtable());
-		
+	public J2SESoftButton(String name, Shape shape, int keyCode, String keyboardKeys, Rectangle paintable,
+			String alignmentName, Vector commands, Font font) {
+		super(name, shape, keyCode, keyboardKeys, null, new Hashtable(), false);
+
 		this.type = TYPE_COMMAND;
 
 		this.paintable = paintable;
@@ -97,20 +100,20 @@ public class J2SESoftButton extends J2SEButton implements SoftButton {
 			}
 		}
 	}
-	
+
 	public J2SESoftButton(String name, Rectangle paintable, Image normalImage, Image pressedImage) {
-		super(name, null, Integer.MIN_VALUE, null, null);
-		
+		super(name, null, Integer.MIN_VALUE, null, null, null, false);
+
 		this.type = TYPE_ICON;
-		
+
 		this.paintable = paintable;
 		this.normalImage = normalImage;
 		this.pressedImage = pressedImage;
-		
+
 		this.visible = true;
 		this.pressed = false;
 	}
-	
+
 	public int getType() {
 		return type;
 	}
@@ -160,14 +163,14 @@ public class J2SESoftButton extends J2SEButton implements SoftButton {
 		if (!visible || paintable == null) {
 			return;
 		}
-		
+
 		java.awt.Shape clip = g.getClip();
-		
+
 		g.setClip(paintable.x, paintable.y, paintable.width, paintable.height);
 		if (type == TYPE_COMMAND) {
-			int xoffset = 0;		
+			int xoffset = 0;
 			Device device = DeviceFactory.getDevice();
-			J2SEDeviceDisplay deviceDisplay = (J2SEDeviceDisplay) device.getDeviceDisplay();		
+			J2SEDeviceDisplay deviceDisplay = (J2SEDeviceDisplay) device.getDeviceDisplay();
 			if (pressed) {
 				g.setColor(deviceDisplay.foregroundColor);
 			} else {
@@ -183,16 +186,15 @@ public class J2SESoftButton extends J2SEButton implements SoftButton {
 					}
 					FontMetrics metrics = g.getFontMetrics();
 					if (alignment == RIGHT) {
-						xoffset = paintable.width
-								- metrics.stringWidth(command.getLabel()) - 1;
+						xoffset = paintable.width - metrics.stringWidth(command.getLabel()) - 1;
 					}
 					if (pressed) {
 						g.setColor(deviceDisplay.backgroundColor);
 					} else {
 						g.setColor(deviceDisplay.foregroundColor);
 					}
-					g.drawString(command.getLabel(), paintable.x + xoffset,
-							paintable.y + paintable.height - metrics.getDescent());
+					g.drawString(command.getLabel(), paintable.x + xoffset, paintable.y + paintable.height
+							- metrics.getDescent());
 				}
 			}
 		} else if (type == TYPE_ICON) {
@@ -202,7 +204,7 @@ public class J2SESoftButton extends J2SEButton implements SoftButton {
 				g.drawImage(((J2SEImmutableImage) normalImage).getImage(), paintable.x, paintable.y, null);
 			}
 		}
-		
+
 		g.setClip(clip);
 	}
 

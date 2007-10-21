@@ -29,27 +29,29 @@ import javax.microedition.lcdui.Image;
 
 import org.microemu.device.DeviceDisplay;
 
+public interface DeviceDisplayImpl extends DeviceDisplay {
 
-public interface DeviceDisplayImpl extends DeviceDisplay
-{
-	
-	Image createSystemImage(URL url) throws IOException;  
+	Image createSystemImage(URL url) throws IOException;
 
 	/**
 	 * @param name
 	 * @param shape
-	 * @param keyCode - Integer.MIN_VALUE when unspecified
-	 * @param keyName
+	 * @param keyCode -
+	 *            Integer.MIN_VALUE when unspecified
+	 * @param keyboardKeys
+	 * @param keyboardChars
 	 * @param chars
+	 * @param modeChange
 	 * @return
 	 */
-	Button createButton(
-	        String name, Shape shape, int keyCode, String keyName, Hashtable inputToChars);
-	
+	Button createButton(String name, Shape shape, int keyCode, String keyboardKeys, String keyboardChars,
+			Hashtable inputToChars, boolean modeChange);
+
 	/**
 	 * @param name
 	 * @param rectangle
-	 * @param keyCode - Integer.MIN_VALUE when unspecified
+	 * @param keyCode -
+	 *            Integer.MIN_VALUE when unspecified
 	 * @param keyName
 	 * @param paintable
 	 * @param alignmentName
@@ -57,62 +59,60 @@ public interface DeviceDisplayImpl extends DeviceDisplay
 	 * @param font
 	 * @return
 	 */
-	SoftButton createSoftButton(
-	        String name, Shape shape, int keyCode, String keyName, Rectangle paintable, String alignmentName, Vector commands, Font font);
+	SoftButton createSoftButton(String name, Shape shape, int keyCode, String keyName, Rectangle paintable,
+			String alignmentName, Vector commands, Font font);
 
-	SoftButton createSoftButton(
-			String name, Rectangle paintable, Image normalImage, Image pressedImage);
+	SoftButton createSoftButton(String name, Rectangle paintable, Image normalImage, Image pressedImage);
 
-    /**
-     * @param i
-     */
-    void setNumColors(int i);
+	/**
+	 * @param i
+	 */
+	void setNumColors(int i);
 
-    /**
-     * @param b
-     */
-    void setIsColor(boolean b);
-    
-    
-    void setNumAlphaLevels(int i); 
+	/**
+	 * @param b
+	 */
+	void setIsColor(boolean b);
 
-    /**
-     * @param color
-     */
-    void setBackgroundColor(Color color);
+	void setNumAlphaLevels(int i);
 
-    /**
-     * @param color
-     */
-    void setForegroundColor(Color color);
+	/**
+	 * @param color
+	 */
+	void setBackgroundColor(Color color);
 
-    /**
-     * @param rectangle
-     */
-    void setDisplayRectangle(Rectangle rectangle);
+	/**
+	 * @param color
+	 */
+	void setForegroundColor(Color color);
 
-    /**
-     * @param rectangle
-     */
-    void setDisplayPaintable(Rectangle rectangle);
+	/**
+	 * @param rectangle
+	 */
+	void setDisplayRectangle(Rectangle rectangle);
 
-    /**
-     * @param object
-     */
-    void setMode123Image(PositionedImage object);
+	/**
+	 * @param rectangle
+	 */
+	void setDisplayPaintable(Rectangle rectangle);
 
-    /**
-     * @param object
-     */
-    void setModeAbcLowerImage(PositionedImage object);
+	/**
+	 * @param object
+	 */
+	void setMode123Image(PositionedImage object);
 
-    /**
-     * @param object
-     */
-    void setModeAbcUpperImage(PositionedImage object);
-    
-    boolean isResizable();
-        
-    void setResizable(boolean state);
+	/**
+	 * @param object
+	 */
+	void setModeAbcLowerImage(PositionedImage object);
+
+	/**
+	 * @param object
+	 */
+	void setModeAbcUpperImage(PositionedImage object);
+
+	boolean isResizable();
+
+	void setResizable(boolean state);
 
 }

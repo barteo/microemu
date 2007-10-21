@@ -23,6 +23,7 @@ package org.microemu.device.j2se;
 
 import java.awt.event.KeyEvent;
 import java.util.Hashtable;
+import java.util.StringTokenizer;
 
 import org.microemu.device.InputMethod;
 import org.microemu.device.impl.Button;
@@ -55,7 +56,7 @@ public class J2SEButton implements Button {
 	 * @param name
 	 */
 	J2SEButton(ButtonName functionalName) {
-		this(functionalName.getName(), null, Integer.MIN_VALUE, null, null);
+		this(functionalName.getName(), null, Integer.MIN_VALUE, null, null, null, false);
 	}
 
 	/**
@@ -66,7 +67,8 @@ public class J2SEButton implements Button {
 	 * @param keyName
 	 * @param chars
 	 */
-	public J2SEButton(String name, Shape shape, int keyCode, String keyName, Hashtable inputToChars) {
+	public J2SEButton(String name, Shape shape, int keyCode, String keyboardKeys, String keyboardChars,
+			Hashtable inputToChars, boolean modeChange) {
 		this.name = name;
 		this.shape = shape;
 		this.functionalName = ButtonName.getButtonName(name);
@@ -80,12 +82,30 @@ public class J2SEButton implements Button {
 			this.keyCode = keyCode;
 		}
 
-		if (keyName == null) {
+		if (keyboardKeys != null) {
+			StringTokenizer st = new StringTokenizer(keyboardKeys, " ");
+			while (st.hasMoreTokens()) {
+				int key = parseKeyboardKey(st.nextToken());
+				if (key == -1) {
+					continue;
+				}
+				if (this.keyboardKeys == null) {
+					this.keyboardKeys = new int[1];
+				} else {
+					int[] newKeyboardKeys = new int[this.keyboardKeys.length + 1];
+					System.arraycopy(keyboardKeys, 0, newKeyboardKeys, 0, this.keyboardKeys.length);
+					this.keyboardKeys = newKeyboardKeys;
+				}
+				this.keyboardKeys[this.keyboardKeys.length - 1] = key;
+			}
+		}
+		if ((this.keyboardKeys == null) || (this.keyboardKeys.length == 0)) {
 			this.keyboardKeys = J2SEButtonDefaultKeyCodes.getKeyCodes(this.functionalName);
-			// TODO make it attribute in device.xml
-			this.keyboardCharCodes = J2SEButtonDefaultKeyCodes.getCharCodes(this.functionalName);
+		}
+		if (keyboardChars != null) {
+			this.keyboardCharCodes = keyboardChars;
 		} else {
-			this.keyboardKeys = new int[] { parseKeyboardKey(keyName) };
+			this.keyboardCharCodes = J2SEButtonDefaultKeyCodes.getCharCodes(this.functionalName);
 		}
 
 		this.inputToChars = inputToChars;
@@ -126,6 +146,10 @@ public class J2SEButton implements Button {
 
 	public boolean isModeChange() {
 		return modeChange;
+	}
+
+	void setModeChange() {
+		modeChange = true;
 	}
 
 	public char[] getChars(int inputMode) {

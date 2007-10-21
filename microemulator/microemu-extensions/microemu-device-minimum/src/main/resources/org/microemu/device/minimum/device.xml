@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <device name="Minimum device" xmlns="http://www.microemu.org/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.microemu.org/2.0/ http://www.microemu.org/2.0/device.xsd">
+<!-- @version $Id$ -->		
 	<img name="normal" src="normal.png"/>
 	<img name="over" src="over.png"/>
 	<img name="pressed" src="pressed.png"/>
@@ -52,7 +53,7 @@
 		</status>
 	</display>
 	<input>
-		<softbutton name="SOFT1" key="VK_F1" keyCode="-6" alignment="LEFT">
+		<softbutton name="SOFT1" alignment="LEFT">
 			<polygon>
 				<point x="21" y="153" />
 				<point x="62" y="153" />
@@ -73,7 +74,7 @@
 			<command>CANCEL</command>
 			<command>STOP</command>
 		</softbutton>
-		<softbutton name="SOFT2" key="VK_F2" keyCode="-7" alignment="RIGHT">
+		<softbutton name="SOFT2" alignment="RIGHT">
 			<polygon>
 				<point x="96" y="153" />
 				<point x="138" y="153" />
@@ -93,7 +94,7 @@
 			<command>ITEM</command>
 			<command>HELP</command>
 		</softbutton>
-		<button name="LEFT" key="VK_LEFT" keyCode="-3">
+		<button name="LEFT">
 			<polygon>
 				<point x="53" y="161" />
 				<point x="59" y="156" />
@@ -103,7 +104,7 @@
 				<point x="53" y="169" />
 			</polygon>
 		</button>
-		<button name="RIGHT" key="VK_RIGHT" keyCode="-4">
+		<button name="RIGHT">
 			<polygon>
 				<point x="93" y="153" />
 				<point x="102" y="158" />
@@ -113,7 +114,7 @@
 				<point x="93" y="178" />
 			</polygon>
 		</button>
-		<button name="UP" key="VK_UP" keyCode="-1">
+		<button name="UP">
 			<rectangle>
 				<x>60</x>
 				<y>149</y>
@@ -121,7 +122,7 @@
 				<height>10</height>
 			</rectangle>
 		</button>
-		<button name="DOWN" key="VK_DOWN" keyCode="-2">
+		<button name="DOWN">
 			<rectangle>
 				<x>61</x>
 				<y>173</y>
@@ -129,7 +130,7 @@
 				<height>12</height>
 			</rectangle>
 		</button>
-		<button name="SELECT" key="VK_ENTER" keyCode="-5">
+		<button name="SELECT">
 			<rectangle>
 				<x>68</x>
 				<y>159</y>
@@ -137,7 +138,7 @@
 				<height>14</height>
 			</rectangle>
 		</button>
-		<button name="0" key="VK_0">
+		<button name="0">
 			<chars>
 				<char> </char>
 				<char>0</char>
@@ -149,7 +150,7 @@
 				<height>22</height>
 			</rectangle>
 		</button>
-		<button name="1" key="VK_1">
+		<button name="1">
 			<chars>
 				<char>.</char>
 				<char>,</char>
@@ -191,7 +192,7 @@
 				<height>24</height>
 			</rectangle>
 		</button>
-		<button name="2" key="VK_2">
+		<button name="2">
 			<chars>
 				<char>a</char>
 				<char>b</char>
@@ -205,7 +206,7 @@
 				<height>24</height>
 			</rectangle>
 		</button>
-		<button name="3" key="VK_3">
+		<button name="3">
 			<chars>
 				<char>d</char>
 				<char>e</char>
@@ -219,7 +220,7 @@
 				<height>24</height>
 			</rectangle>
 		</button>
-		<button name="4" key="VK_4">
+		<button name="4">
 			<chars>
 				<char>g</char>
 				<char>h</char>
@@ -233,7 +234,7 @@
 				<height>24</height>
 			</rectangle>
 		</button>
-		<button name="5" key="VK_5">
+		<button name="5">
 			<chars>
 				<char>j</char>
 				<char>k</char>
@@ -247,7 +248,7 @@
 				<height>23</height>
 			</rectangle>
 		</button>
-		<button name="6" key="VK_6">
+		<button name="6">
 			<chars>
 				<char>m</char>
 				<char>n</char>
@@ -261,7 +262,7 @@
 				<height>23</height>
 			</rectangle>
 		</button>
-		<button name="7" key="VK_7">
+		<button name="7">
 			<chars>
 				<char>p</char>
 				<char>q</char>
@@ -276,7 +277,7 @@
 				<height>23</height>
 			</rectangle>
 		</button>
-		<button name="8" key="VK_8">
+		<button name="8">
 			<chars>
 				<char>t</char>
 				<char>u</char>
@@ -290,7 +291,7 @@
 				<height>23</height>
 			</rectangle>
 		</button>
-		<button name="9" key="VK_9">
+		<button name="9">
 			<chars>
 				<char>w</char>
 				<char>x</char>
@@ -305,7 +306,7 @@
 				<height>23</height>
 			</rectangle>
 		</button>
-		<button name="ASTERISK" key="VK_MULTIPLY">
+		<button name="ASTERISK">
 			<chars>
 				<char>*</char>
 				<char>+</char>
@@ -317,7 +318,7 @@
 				<height>23</height>
 			</rectangle>
 		</button>
-		<button name="POUND" key="VK_MODECHANGE">
+		<button name="POUND" modeChange="true">
 			<rectangle>
 				<x>109</x>
 				<y>254</y>

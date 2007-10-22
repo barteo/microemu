@@ -47,9 +47,9 @@ public class J2SEDeviceButtonsHelper {
 
 	private static class DeviceInformation {
 
-		Map keyCodes = new HashMap();
+		Map keyboardKeyCodes = new HashMap();
 
-		Map charCodes = new HashMap();
+		Map keyboardCharCodes = new HashMap();
 
 		Map functions = new HashMap();
 	}
@@ -82,11 +82,11 @@ public class J2SEDeviceButtonsHelper {
 
 	public static J2SEButton getButton(KeyEvent ev) {
 		DeviceInformation inf = getDeviceInformation();
-		J2SEButton button = (J2SEButton) inf.charCodes.get(Integer.valueOf(ev.getKeyChar()));
+		J2SEButton button = (J2SEButton) inf.keyboardCharCodes.get(Integer.valueOf(ev.getKeyChar()));
 		if (button != null) {
 			return button;
 		}
-		return (J2SEButton) inf.keyCodes.get(Integer.valueOf(ev.getKeyCode()));
+		return (J2SEButton) inf.keyboardKeyCodes.get(Integer.valueOf(ev.getKeyCode()));
 	}
 
 	private static DeviceInformation getDeviceInformation() {
@@ -108,11 +108,11 @@ public class J2SEDeviceButtonsHelper {
 			J2SEButton button = (J2SEButton) en.nextElement();
 			int keyCodes[] = button.getKeyboardKeyCodes();
 			for (int i = 0; i < keyCodes.length; i++) {
-				inf.keyCodes.put(Integer.valueOf(keyCodes[i]), button);
+				inf.keyboardKeyCodes.put(Integer.valueOf(keyCodes[i]), button);
 			}
 			char charCodes[] = button.getKeyboardCharCodes();
 			for (int i = 0; i < charCodes.length; i++) {
-				inf.charCodes.put(Integer.valueOf(charCodes[i]), button);
+				inf.keyboardCharCodes.put(Integer.valueOf(charCodes[i]), button);
 			}
 			inf.functions.put(button.getFunctionalName(), button);
 			if (button.isModeChange()) {

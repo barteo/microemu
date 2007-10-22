@@ -49,15 +49,15 @@ public class J2SEInputMethod extends InputMethodImpl {
 
 	private boolean eventAlreadyConsumed;
 
-	private Timer keyRepeatTimer;
+	private Timer keyReleasedDelayTimer;
 
 	private List repeatModeKeyCodes = new Vector();
 
-	private class KeyRepeatTask extends TimerTask {
+	private class KeyReleasedDelayTask extends TimerTask {
 
 		private int repeatModeKeyCode;
 
-		KeyRepeatTask(int repeatModeKeyCode) {
+		KeyReleasedDelayTask(int repeatModeKeyCode) {
 			this.repeatModeKeyCode = repeatModeKeyCode;
 
 		}
@@ -86,10 +86,11 @@ public class J2SEInputMethod extends InputMethodImpl {
 
 		// TODO When InputMethod will be removed from EmulatorContext add:
 		// if (DeviceFactory.getDevice().hasRepeatEvents()) {
-		keyRepeatTimer = ThreadUtils.createTimer("InputKeyRepeatTimer");
+		keyReleasedDelayTimer = ThreadUtils.createTimer("InputKeyReleasedDelayTimer");
 	}
 
 	public int getGameAction(int keyCode) {
+		// TODO fix it
 		int key = keyCode;
 
 		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext();) {
@@ -138,6 +139,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 	}
 
 	public int getKeyCode(int gameAction) {
+		// TODO fix it
 		int keyCode;
 
 		switch (gameAction) {
@@ -184,6 +186,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 	}
 
 	public String getKeyName(int keyCode) throws IllegalArgumentException {
+		// TODO fix it
 		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext();) {
 			J2SEButton button = (J2SEButton) it.next();
 			if (button.getKeyCode() == keyCode) {
@@ -440,7 +443,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 	public void buttonReleased(J2SEButton button) {
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
 			repeatModeKeyCodes.remove(new Integer(button.getKeyCode()));
-			keyRepeatTimer.schedule(new KeyRepeatTask(button.getKeyCode()), 50);
+			keyReleasedDelayTimer.schedule(new KeyReleasedDelayTask(button.getKeyCode()), 50);
 		} else {
 			MIDletAccess ma = MIDletBridge.getMIDletAccess();
 			if (ma == null) {

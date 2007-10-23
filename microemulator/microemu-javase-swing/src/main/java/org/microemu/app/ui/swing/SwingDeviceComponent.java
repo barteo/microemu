@@ -133,7 +133,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 
 		public void run() {
 			if (inputMethod != null) {
-				inputMethod.buttonPressed(button);
+				inputMethod.buttonPressed(button, '\0');
 			}
 		}
 
@@ -167,7 +167,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 						CommandManager.getInstance().commandAction(cmd);
 					}
 				} else {
-					inputMethod.buttonPressed(pressedButton);
+					inputMethod.buttonPressed(pressedButton, '\0');
 					MouseRepeatedTimerTask.schedule(SwingDeviceComponent.this, pressedButton, inputMethod);
 				}
 				// optimize for some video cards.
@@ -332,7 +332,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 		J2SEButton button = inputMethod.getButton(ev);
 		if (button != null) {
 			pressedButton = button;
-			inputMethod.buttonPressed(button);
+			inputMethod.buttonPressed(button, ev.getKeyChar());
 			org.microemu.device.impl.Shape shape = button.getShape();
 			if (shape != null) {
 				repaint(shape.getBounds());

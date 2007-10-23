@@ -56,33 +56,34 @@ import org.microemu.app.util.IOUtils;
 import org.microemu.device.Device;
 import org.microemu.device.impl.DeviceImpl;
 
-
-public class SwtSelectDeviceDialog extends SwtDialog
-{
+public class SwtSelectDeviceDialog extends SwtDialog {
 	private EmulatorContext emulatorContext;
-	  
+
 	private Button btAdd;
+
 	private Button btRemove;
+
 	private Button btDefault;
+
 	private List lsDevices;
+
 	private Vector deviceModel;
+
 	private DeviceEntry selectedEntry;
-  
-	private Listener btAddListener = new Listener()
-	{
+
+	private Listener btAddListener = new Listener() {
 		private FileDialog fileDialog = null;
-    
-		public void handleEvent(Event event)
-		{
+
+		public void handleEvent(Event event) {
 			if (fileDialog == null) {
 				fileDialog = new FileDialog(getShell(), SWT.OPEN);
 				fileDialog.setText("Open device profile file...");
-				fileDialog.setFilterNames(new String[] {"Device profile (*.jar)"});
-				fileDialog.setFilterExtensions(new String[] {"*.jar"});
+				fileDialog.setFilterNames(new String[] { "Device profile (*.jar)" });
+				fileDialog.setFilterExtensions(new String[] { "*.jar" });
 			}
-      
+
 			fileDialog.open();
-			
+
 			if (fileDialog.getFileName() != null) {
 				File file;
 				String manifestDeviceName = null;
@@ -91,7 +92,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 				try {
 					file = new File(fileDialog.getFilterPath(), fileDialog.getFileName());
 					JarFile jar = new JarFile(file);
-					
+
 					Manifest manifest = jar.getManifest();
 					if (manifest != null) {
 						Attributes attrs = manifest.getMainAttributes();
@@ -100,22 +101,24 @@ public class SwtSelectDeviceDialog extends SwtDialog
 
 					for (Enumeration en = jar.entries(); en.hasMoreElements();) {
 						String entry = ((JarEntry) en.nextElement()).getName();
-						if (entry.toLowerCase().endsWith(".xml") || entry.toLowerCase().endsWith("device.txt")) {
+						if ((entry.toLowerCase().endsWith(".xml") || entry.toLowerCase().endsWith("device.txt"))
+								&& !entry.toLowerCase().startsWith("meta-inf")) {
 							descriptorEntries.add(entry);
 						}
 					}
 					jar.close();
 					urls[0] = file.toURL();
 				} catch (IOException ex) {
-					Message.error("Error reading file: " + fileDialog.getFileName() + ", " + Message.getCauseMessage(ex), ex);
+					Message.error("Error reading file: " + fileDialog.getFileName() + ", "
+							+ Message.getCauseMessage(ex), ex);
 					return;
 				}
-					
+
 				if (descriptorEntries.size() == 0) {
 					Message.error("Cannot find any device profile in file: " + fileDialog.getFileName());
 					return;
 				}
-				
+
 				if (descriptorEntries.size() > 1) {
 					manifestDeviceName = null;
 				}
@@ -125,9 +128,7 @@ public class SwtSelectDeviceDialog extends SwtDialog
 				for (Iterator it = descriptorEntries.iterator(); it.hasNext();) {
 					JarEntry entry = (JarEntry) it.next();
 					try {
-						devices.put(
-								entry.getName(),
-								DeviceImpl.create(emulatorContext, classLoader, entry.getName()));
+						devices.put(entry.getName(), DeviceImpl.create(emulatorContext, classLoader, entry.getName()));
 					} catch (IOException ex) {
 						Message.error("Error parsing device profile, " + Message.getCauseMessage(ex), ex);
 						return;
@@ -145,10 +146,10 @@ public class SwtSelectDeviceDialog extends SwtDialog
 					return;
 				}
 
-				try { 
+				try {
 					File deviceFile = new File(Config.getConfigPath(), file.getName());
 					if (deviceFile.exists()) {
-						deviceFile = File.createTempFile("device", ".jar", Config.getConfigPath()); 
+						deviceFile = File.createTempFile("device", ".jar", Config.getConfigPath());
 					}
 					IOUtils.copyFile(file, deviceFile);
 
@@ -174,23 +175,20 @@ public class SwtSelectDeviceDialog extends SwtDialog
 				} catch (IOException ex) {
 					Message.error("Error adding device profile, " + Message.getCauseMessage(ex), ex);
 					return;
-				}				
-				
+				}
+
 			}
 		}
 	};
-  
-	private Listener btRemoveListener = new Listener()
-	{
-		public void handleEvent(Event event)
-		{
+
+	private Listener btRemoveListener = new Listener() {
+		public void handleEvent(Event event) {
 			DeviceEntry entry = (DeviceEntry) deviceModel.elementAt(lsDevices.getSelectionIndex());
-		      
-		    boolean canDeleteFile = true;
+
+			boolean canDeleteFile = true;
 			for (int i = 0; i < deviceModel.size(); i++) {
 				DeviceEntry test = (DeviceEntry) deviceModel.elementAt(i);
-				if (test != entry && test.getFileName() != null
-						&& test.getFileName().equals(entry.getFileName())) {
+				if (test != entry && test.getFileName() != null && test.getFileName().equals(entry.getFileName())) {
 					canDeleteFile = false;
 					break;
 				}
@@ -198,14 +196,14 @@ public class SwtSelectDeviceDialog extends SwtDialog
 			if (canDeleteFile) {
 				File deviceFile = new File(Config.getConfigPath(), entry.getFileName());
 				deviceFile.delete();
-			}		      
+			}
 
 			if (entry.isDefaultDevice()) {
 				for (int i = 0; i < deviceModel.size(); i++) {
 					DeviceEntry tmp = (DeviceEntry) deviceModel.elementAt(i);
 					if (!tmp.canRemove()) {
 						tmp.setDefaultDevice(true);
-						lsDevices.setItem(i, tmp.getName() + " (default)");						
+						lsDevices.setItem(i, tmp.getName() + " (default)");
 						break;
 					}
 				}
@@ -221,11 +219,9 @@ public class SwtSelectDeviceDialog extends SwtDialog
 			Config.removeDeviceEntry(entry);
 		}
 	};
-  
-	private Listener btDefaultListener = new Listener()
-	{
-		public void handleEvent(Event event)
-		{
+
+	private Listener btDefaultListener = new Listener() {
+		public void handleEvent(Event event) {
 			DeviceEntry entry = (DeviceEntry) deviceModel.elementAt(lsDevices.getSelectionIndex());
 			for (int i = 0; i < deviceModel.size(); i++) {
 				DeviceEntry tmp = (DeviceEntry) deviceModel.elementAt(i);
@@ -241,11 +237,9 @@ public class SwtSelectDeviceDialog extends SwtDialog
 			btDefault.setEnabled(false);
 		}
 	};
-	
-	SelectionAdapter lsDevicesListener = new SelectionAdapter()
-	{
-		public void widgetSelected(SelectionEvent e) 
-		{
+
+	SelectionAdapter lsDevicesListener = new SelectionAdapter() {
+		public void widgetSelected(SelectionEvent e) {
 			int index = lsDevices.getSelectionIndex();
 			if (index != -1) {
 				selectedEntry = (DeviceEntry) deviceModel.elementAt(index);
@@ -269,13 +263,11 @@ public class SwtSelectDeviceDialog extends SwtDialog
 		}
 	};
 
-
-	public SwtSelectDeviceDialog(Shell parent, EmulatorContext emulatorContext)
-	{
+	public SwtSelectDeviceDialog(Shell parent, EmulatorContext emulatorContext) {
 		super(parent);
 
-		this.emulatorContext = emulatorContext;  
-		  
+		this.emulatorContext = emulatorContext;
+
 		Vector devs = Config.getDeviceEntries();
 		for (int i = 0; i < devs.size(); i++) {
 			DeviceEntry entry = (DeviceEntry) devs.elementAt(i);
@@ -284,27 +276,23 @@ public class SwtSelectDeviceDialog extends SwtDialog
 			}
 		}
 	}
-  
-  
-	protected void configureShell(Shell shell) 
-	{
+
+	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
 
 		shell.setText("Select device...");
 	}
 
-
-	protected Control createDialogArea(Composite composite) 
-	{
+	protected Control createDialogArea(Composite composite) {
 		GridLayout gridLayout = new GridLayout();
-   	gridLayout.numColumns = 1;
+		gridLayout.numColumns = 1;
 		composite.setLayout(gridLayout);
 
 		Group gpDevices = new Group(composite, SWT.NONE);
 		gpDevices.setText("Installed devices");
 		gridLayout = new GridLayout();
 		gridLayout.numColumns = 1;
-	  gpDevices.setLayout(gridLayout);
+		gpDevices.setLayout(gridLayout);
 		gpDevices.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		lsDevices = new List(gpDevices, SWT.SINGLE | SWT.V_SCROLL);
@@ -315,28 +303,28 @@ public class SwtSelectDeviceDialog extends SwtDialog
 		gridData.heightHint = trim.height;
 		lsDevices.setLayoutData(gridData);
 		lsDevices.addSelectionListener(lsDevicesListener);
-		
+
 		Composite btDevices = new Composite(gpDevices, SWT.NONE);
 		gridLayout = new GridLayout();
 		gridLayout.numColumns = 3;
 		btDevices.setLayout(gridLayout);
 		btDevices.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_CENTER));
-    
+
 		btAdd = new Button(btDevices, SWT.PUSH);
 		btAdd.setText("Add...");
 		btAdd.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_CENTER));
 		btAdd.addListener(SWT.Selection, btAddListener);
-		
+
 		btRemove = new Button(btDevices, SWT.PUSH);
 		btRemove.setText("Remove");
 		btRemove.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_CENTER));
 		btRemove.addListener(SWT.Selection, btRemoveListener);
-		
+
 		btDefault = new Button(btDevices, SWT.PUSH);
 		btDefault.setText("Set as default");
 		btDefault.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_CENTER));
 		btDefault.addListener(SWT.Selection, btDefaultListener);
-    
+
 		Vector devs = Config.getDeviceEntries();
 		deviceModel = new Vector();
 		for (int i = 0; i < devs.size(); i++) {
@@ -352,21 +340,17 @@ public class SwtSelectDeviceDialog extends SwtDialog
 
 		return composite;
 	}
-  
-  
-	protected Control createButtonBar(Composite parent) 
-	{
+
+	protected Control createButtonBar(Composite parent) {
 		Control control = super.createButtonBar(parent);
-		
+
 		lsDevicesListener.widgetSelected(null);
 
 		return control;
 	}
-	
 
-	public DeviceEntry getSelectedDeviceEntry()
-	{
+	public DeviceEntry getSelectedDeviceEntry() {
 		return selectedEntry;
 	}
-    
+
 }

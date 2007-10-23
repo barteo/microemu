@@ -22,6 +22,7 @@
 package org.microemu.device.impl;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.microedition.lcdui.Canvas;
@@ -59,6 +60,19 @@ public abstract class ButtonDetaultDeviceKeyCodes {
 			return code.intValue();
 		}
 		return 0;
+	}
+
+	public static ButtonName getButtonNameByGameAction(int gameAction) {
+		Integer value = Integer.valueOf(gameAction);
+		if (gameActions.containsValue(value)) {
+			for (Iterator iterator = gameActions.entrySet().iterator(); iterator.hasNext();) {
+				Map.Entry v = (Map.Entry) iterator.next();
+				if (v.getValue().equals(value)) {
+					return (ButtonName) v.getKey();
+				}
+			}
+		}
+		throw new IllegalArgumentException("Illegal action " + gameAction);
 	}
 
 	static {

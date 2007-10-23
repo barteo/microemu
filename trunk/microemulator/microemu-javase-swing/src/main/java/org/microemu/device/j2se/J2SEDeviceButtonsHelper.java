@@ -89,6 +89,11 @@ public class J2SEDeviceButtonsHelper {
 		return (J2SEButton) inf.keyboardKeyCodes.get(Integer.valueOf(ev.getKeyCode()));
 	}
 
+	public static J2SEButton getButton(ButtonName functionalName) {
+		DeviceInformation inf = getDeviceInformation();
+		return (J2SEButton) inf.functions.get(functionalName);
+	}
+
 	private static DeviceInformation getDeviceInformation() {
 		Device dev = DeviceFactory.getDevice();
 		DeviceInformation inf;

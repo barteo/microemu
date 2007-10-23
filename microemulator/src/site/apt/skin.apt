@@ -149,10 +149,16 @@ Custom Skin Creation for MicroEmulator
 *----------+----------+-----------------+---------------------------+
 | RIGHT    | VK_RIGHT | Right           | {{{http://java.sun.com/javame/reference/apis/jsr118/javax/microedition/lcdui/Canvas.html#RIGHT}Canvas.RIGHT}}
 *----------+----------+-----------------+---------------------------+
-    Button function assignment base on name or key
+| POUND    | #        |                 |
+*----------+----------+-----------------+---------------------------+
+| ASTERISK | *        |                 |
+*----------+----------+-----------------+---------------------------+
+    Button function and keys assignment base on name
 
         <<key>> attribute is the computer keyboard shortcut which is defined as key. The actual key definitions are virtual key codes, which are defined in J2SE's java.awt.event.KeyEvent class. See the J2SE documentation for details.
-        You can use integer value or String representing KeyEvent field name.
+        You can use integer value or String representing KeyEvent field name. For multiple key codes use space separated list.
+
+        Also <keyboardChars> attribute can be used to define keyboard shortcut. e.g. # and *
 
         <<keyCode>> <optional attribute> is key code reported to MIDP application (Canvas.keyPressed()).
 
@@ -184,7 +190,7 @@ Custom Skin Creation for MicroEmulator
 
         more information can be found in {{{http://www.j2mepolish.org/devices-overview.html}J2ME Polish Device Database}}.
 
-        If <keyCode> is not specified the value would be selected based on the <name> or <key> attributes.
+        If <keyCode> is not specified the value would be selected based on the <name> attribute.
 
 *-----------------+----------+----------+-----------+
 | Button function | name     | key      | keyCode   |
@@ -205,6 +211,8 @@ Custom Skin Creation for MicroEmulator
 *-----------------+----------+----------+-----------+
     Default keyCode assignment
 
+
+        <<modeChange>> boolean value. Itentify one button as mode change button for text inputs. By default <#> but on some phones this can be <*>
 
 * Device class for Skin
 

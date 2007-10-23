@@ -132,7 +132,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 		throw new IllegalArgumentException();
 	}
 
-	protected boolean fireInputMethodListener(J2SEButton button) {
+	protected boolean fireInputMethodListener(J2SEButton button, char keyChar) {
 		MIDletAccess ma = MIDletBridge.getMIDletAccess();
 		if (ma == null) {
 			return false;
@@ -249,11 +249,18 @@ public class J2SEInputMethod extends InputMethodImpl {
 		}
 
 		if (inputMethodListener.getText().length() < maxSize) {
-			String tmp = inputMethodListener.getText();
+			StringBuffer editText = new StringBuffer(inputMethodListener.getText());
 			synchronized (this) {
 				lastButtonCharIndex++;
 				char[] buttonChars = filterConstraints(filterInputMode(button.getChars(getInputMode())));
-				if (buttonChars.length > 0) {
+				if ((keyChar != '\0') && (!Character.isDigit(keyChar))) {
+					// Pass through letters and characters typed on keyboard but
+					// not numbers that are buttons keys (presumably).
+					editText.append(keyChar);
+					caret++;
+					lastButton = null;
+					lastButtonCharIndex = -1;
+				} else if (buttonChars.length > 0) {
 					if (lastButtonCharIndex == buttonChars.length) {
 						if (buttonChars.length == 1) {
 							if (lastButton != null) {
@@ -268,25 +275,15 @@ public class J2SEInputMethod extends InputMethodImpl {
 						if (lastButton != null) {
 							caret++;
 						}
-						tmp = "";
-						if (caret > 0) {
-							tmp += inputMethodListener.getText().substring(0, caret);
-						}
-						tmp += buttonChars[0];
-						if (caret < inputMethodListener.getText().length()) {
-							tmp += inputMethodListener.getText().substring(caret);
+						if (editText.length() < caret) {
+							editText.append(buttonChars[0]);
+						} else {
+							editText.insert(caret, buttonChars[0]);
 						}
 						lastButton = button;
 						lastButtonCharIndex = 0;
 					} else {
-						tmp = "";
-						if (caret > 0) {
-							tmp += inputMethodListener.getText().substring(0, caret);
-						}
-						tmp += buttonChars[lastButtonCharIndex];
-						if (caret < inputMethodListener.getText().length() - 1) {
-							tmp += inputMethodListener.getText().substring(caret + 1);
-						}
+						editText.setCharAt(caret, buttonChars[lastButtonCharIndex]);
 						lastButton = button;
 					}
 				} else {
@@ -296,10 +293,11 @@ public class J2SEInputMethod extends InputMethodImpl {
 				resetKey = false;
 				notify();
 			}
-			if (!validate(tmp, inputMethodListener.getConstraints())) {
+			if (!validate(editText.toString(), inputMethodListener.getConstraints())) {
 				return false;
 			}
-			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, tmp);
+			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, editText
+					.toString());
 			inputMethodListener.inputMethodTextChanged(event);
 		}
 		return false;
@@ -309,17 +307,6 @@ public class J2SEInputMethod extends InputMethodImpl {
 		if (eventAlreadyConsumed) {
 			return;
 		}
-		// TODO verify not required
-		// char c = ev.getKeyChar();
-		// if (c == '\b') {
-		// return;
-		// }
-		//
-		// if (inputMethodListener != null && inputMethodListener.getText() !=
-		// null
-		// && inputMethodListener.getText().length() < maxSize) {
-		// insertText(new Character(c).toString());
-		// }
 	}
 
 	public void clipboardPaste(String str) {
@@ -327,11 +314,10 @@ public class J2SEInputMethod extends InputMethodImpl {
 				&& ((inputMethodListener.getText().length() + str.length()) <= maxSize)) {
 			insertText(str);
 		}
-
 		eventAlreadyConsumed = true;
 	}
 
-	public void buttonPressed(J2SEButton button) {
+	public void buttonPressed(J2SEButton button, char keyChar) {
 		eventAlreadyConsumed = false;
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
 			if (repeatModeKeyCodes.contains(new Integer(button.getKeyCode()))) {
@@ -362,7 +348,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 			}
 		}
 
-		if (fireInputMethodListener(button)) {
+		if (fireInputMethodListener(button, keyChar)) {
 			eventAlreadyConsumed = true;
 			return;
 		}
@@ -393,13 +379,14 @@ public class J2SEInputMethod extends InputMethodImpl {
 		if (button != null) {
 			return button;
 		}
-		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
-			button = (J2SEButton) e.nextElement();
-			if (button.isChar(ev.getKeyChar(), getInputMode())) {
-				return button;
+		if ((getInputMode() != INPUT_NONE) && (getInputMode() != INPUT_123)) {
+			for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
+				button = (J2SEButton) e.nextElement();
+				if (button.isChar(ev.getKeyChar(), getInputMode())) {
+					return button;
+				}
 			}
 		}
 		return null;
 	}
-
 }

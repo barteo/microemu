@@ -63,7 +63,7 @@ public abstract class ButtonDetaultDeviceKeyCodes {
 	}
 
 	public static ButtonName getButtonNameByGameAction(int gameAction) {
-		Integer value = Integer.valueOf(gameAction);
+		Integer value = new Integer(gameAction);
 		if (gameActions.containsValue(value)) {
 			for (Iterator iterator = gameActions.entrySet().iterator(); iterator.hasNext();) {
 				Map.Entry v = (Map.Entry) iterator.next();
@@ -99,11 +99,11 @@ public abstract class ButtonDetaultDeviceKeyCodes {
 	}
 
 	private static void code(ButtonName name, int code) {
-		codes.put(name, Integer.valueOf(code));
+		codes.put(name, new Integer(code));
 	}
 
 	private static void code(ButtonName name, int code, int gameAction) {
 		code(name, code);
-		gameActions.put(name, Integer.valueOf(gameAction));
+		gameActions.put(name, new Integer(gameAction));
 	}
 }

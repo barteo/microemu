@@ -29,7 +29,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
-import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.TextField;
 
@@ -40,6 +39,7 @@ import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.InputMethod;
 import org.microemu.device.InputMethodEvent;
+import org.microemu.device.impl.ButtonDetaultDeviceKeyCodes;
 import org.microemu.device.impl.ButtonName;
 import org.microemu.device.impl.InputMethodImpl;
 import org.microemu.device.impl.SoftButton;
@@ -89,118 +89,46 @@ public class J2SEInputMethod extends InputMethodImpl {
 		keyReleasedDelayTimer = ThreadUtils.createTimer("InputKeyReleasedDelayTimer");
 	}
 
+	/**
+	 * Gets the game action associated with the given key code of the device.
+	 * 
+	 * @return the game action corresponding to this key, or <code>0</code> if
+	 *         none
+	 */
 	public int getGameAction(int keyCode) {
-		// TODO fix it
-		int key = keyCode;
-
 		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext();) {
 			J2SEButton button = (J2SEButton) it.next();
 			if (button.getKeyCode() == keyCode) {
-				key = button.getKeyboardKey();
-				break;
+				return ButtonDetaultDeviceKeyCodes.getGameAction(button.getFunctionalName());
 			}
 		}
-
-		switch (key) {
-		case KeyEvent.VK_UP:
-			return Canvas.UP;
-
-		case KeyEvent.VK_DOWN:
-			return Canvas.DOWN;
-
-		case KeyEvent.VK_LEFT:
-			return Canvas.LEFT;
-
-		case KeyEvent.VK_RIGHT:
-			return Canvas.RIGHT;
-
-		case KeyEvent.VK_ENTER:
-			return Canvas.FIRE;
-
-		case KeyEvent.VK_1:
-		case KeyEvent.VK_A:
-			return Canvas.GAME_A;
-
-		case KeyEvent.VK_3:
-		case KeyEvent.VK_B:
-			return Canvas.GAME_B;
-
-		case KeyEvent.VK_7:
-		case KeyEvent.VK_C:
-			return Canvas.GAME_C;
-
-		case KeyEvent.VK_9:
-		case KeyEvent.VK_D:
-			return Canvas.GAME_D;
-
-		default:
-			return 0;
-		}
+		return 0;
 	}
 
+	/**
+	 * 
+	 * 
+	 * @return a key code corresponding to this game action
+	 * @throws IllegalArgumentException
+	 *             if <code>gameAction</code> is not a valid game action
+	 */
 	public int getKeyCode(int gameAction) {
-		// TODO fix it
-		int keyCode;
-
-		switch (gameAction) {
-		case Canvas.UP:
-			keyCode = KeyEvent.VK_UP;
-			break;
-		case Canvas.DOWN:
-			keyCode = KeyEvent.VK_DOWN;
-			break;
-		case Canvas.LEFT:
-			keyCode = KeyEvent.VK_LEFT;
-			break;
-		case Canvas.RIGHT:
-			keyCode = KeyEvent.VK_RIGHT;
-			break;
-		case Canvas.FIRE:
-			keyCode = KeyEvent.VK_ENTER;
-			break;
-		case Canvas.GAME_A:
-			keyCode = KeyEvent.VK_1;
-			break;
-		case Canvas.GAME_B:
-			keyCode = KeyEvent.VK_3;
-			break;
-		case Canvas.GAME_C:
-			keyCode = KeyEvent.VK_7;
-			break;
-		case Canvas.GAME_D:
-			keyCode = KeyEvent.VK_9;
-			break;
-		default:
-			throw new IllegalArgumentException();
-		}
-
-		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext();) {
-			J2SEButton button = (J2SEButton) it.next();
-			if (button.getKeyboardKey() == keyCode) {
-				keyCode = button.getKeyCode();
-				break;
-			}
-		}
-
-		return keyCode;
+		ButtonName name = ButtonDetaultDeviceKeyCodes.getButtonNameByGameAction(gameAction);
+		return J2SEDeviceButtonsHelper.getButton(name).getKeyCode();
 	}
 
+	/**
+	 * @return a string name for the key
+	 * @throws IllegalArgumentException
+	 *             if <code>keyCode</code> is not a valid key code
+	 */
 	public String getKeyName(int keyCode) throws IllegalArgumentException {
-		// TODO fix it
 		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext();) {
 			J2SEButton button = (J2SEButton) it.next();
 			if (button.getKeyCode() == keyCode) {
 				return button.getName();
 			}
 		}
-
-		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext();) {
-			J2SEButton button = (J2SEButton) it.next();
-			if (button.getKeyboardKey() == keyCode) {
-				return button.getName();
-			}
-		}
-
 		throw new IllegalArgumentException();
 	}
 

@@ -25,6 +25,7 @@
 
         <module>microemu-device-large</module>
         <module>microemu-device-minimum</module>
+        <module>microemu-device-resizable</module>
         <module>microemu-jsr-75</module>
         <module>microemu-jsr-82</module>
         <module>microemu-jsr-120</module>

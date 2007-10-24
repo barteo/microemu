@@ -271,11 +271,18 @@ public class DeviceImpl implements Device {
 
 		((FontManagerImpl) getFontManager()).setAntialiasing(false);
 
+		/*
+		 * parseDisplay have to be performed first to check if device display
+		 * has resizable flag set, parseInput skips rectangle or polygon element
+		 * then, also normalImage, overImage and pressedImage aren't needed
+		 */
+		parseDisplay(classLoader, base, doc.getChild("display"));
+
 		for (Enumeration e = doc.enumerateChildren(); e.hasMoreElements();) {
 			XMLElement tmp = (XMLElement) e.nextElement();
 			if (tmp.getName().equals("system-properties")) {
 				parseSystemProperties(tmp);
-			} else if (tmp.getName().equals("img")) {
+			} else if (tmp.getName().equals("img") && !((DeviceDisplayImpl) getDeviceDisplay()).isResizable()) {
 				try {
 					if (tmp.getStringAttribute("name").equals("normal")) {
 						normalImage = loadImage(classLoader, base, tmp.getStringAttribute("src"));
@@ -288,8 +295,6 @@ public class DeviceImpl implements Device {
 					System.out.println("Cannot load " + tmp.getStringAttribute("src"));
 					return;
 				}
-			} else if (tmp.getName().equals("display")) {
-				parseDisplay(classLoader, base, tmp);
 			} else if (tmp.getName().equals("fonts")) {
 				parseFonts(classLoader, base, tmp);
 			} else if (tmp.getName().equals("input") || tmp.getName().equals("keyboard")) {
@@ -301,6 +306,13 @@ public class DeviceImpl implements Device {
 
 	private void parseDisplay(ClassLoader classLoader, String base, XMLElement tmp) throws IOException {
 		DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) getDeviceDisplay();
+
+		String resizable = tmp.getStringAttribute("resizable", "false");
+		if (resizable.equalsIgnoreCase("true")) {
+			deviceDisplay.setResizable(true);
+		} else {
+			deviceDisplay.setResizable(false);
+		}
 
 		for (Enumeration e_display = tmp.enumerateChildren(); e_display.hasMoreElements();) {
 			XMLElement tmp_display = (XMLElement) e_display.nextElement();
@@ -315,7 +327,12 @@ public class DeviceImpl implements Device {
 			} else if (tmp_display.getName().equals("foreground")) {
 				deviceDisplay.setForegroundColor(new Color(Integer.parseInt(tmp_display.getContent(), 16)));
 			} else if (tmp_display.getName().equals("rectangle")) {
-				deviceDisplay.setDisplayRectangle(getRectangle(tmp_display));
+				Rectangle rect = getRectangle(tmp_display);
+				if (deviceDisplay.isResizable()) {
+					rect.x = 0;
+					rect.y = 0;
+				}
+				deviceDisplay.setDisplayRectangle(rect);
 			} else if (tmp_display.getName().equals("paintable")) {
 				deviceDisplay.setDisplayPaintable(getRectangle(tmp_display));
 			}
@@ -439,6 +456,7 @@ public class DeviceImpl implements Device {
 
 	private void parseInput(XMLElement tmp) {
 		DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) getDeviceDisplay();
+		boolean resizable = deviceDisplay.isResizable();
 
 		for (Enumeration e_keyboard = tmp.enumerateChildren(); e_keyboard.hasMoreElements();) {
 			XMLElement tmp_keyboard = (XMLElement) e_keyboard.nextElement();
@@ -472,9 +490,9 @@ public class DeviceImpl implements Device {
 							}
 						}
 						inputToChars.put(input, charArray);
-					} else if (tmp_button.getName().equals("rectangle")) {
+					} else if (tmp_button.getName().equals("rectangle") && !resizable) {
 						shape = getRectangle(tmp_button);
-					} else if (tmp_button.getName().equals("polygon")) {
+					} else if (tmp_button.getName().equals("polygon") && !resizable) {
 						shape = getPolygon(tmp_button);
 					}
 				}
@@ -491,9 +509,9 @@ public class DeviceImpl implements Device {
 				Font font = null;
 				for (Enumeration e_button = tmp_keyboard.enumerateChildren(); e_button.hasMoreElements();) {
 					XMLElement tmp_button = (XMLElement) e_button.nextElement();
-					if (tmp_button.getName().equals("rectangle")) {
+					if (tmp_button.getName().equals("rectangle") && !resizable) {
 						shape = getRectangle(tmp_button);
-					} else if (tmp_button.getName().equals("polygon")) {
+					} else if (tmp_button.getName().equals("polygon") && !resizable) {
 						shape = getPolygon(tmp_button);
 					} else if (tmp_button.getName().equals("paintable")) {
 						paintable = getRectangle(tmp_button);

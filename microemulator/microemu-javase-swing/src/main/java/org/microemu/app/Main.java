@@ -19,11 +19,17 @@
 
 package org.microemu.app;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -35,8 +41,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.microedition.midlet.MIDletStateChangeException;
+import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -45,12 +54,14 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 
 import org.microemu.DisplayAccess;
 import org.microemu.DisplayComponent;
 import org.microemu.EmulatorContext;
+import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.app.capture.AnimatedGifEncoder;
 import org.microemu.app.classloader.MIDletClassLoader;
@@ -62,9 +73,11 @@ import org.microemu.app.ui.swing.DropTransferHandler;
 import org.microemu.app.ui.swing.ExtensionFileFilter;
 import org.microemu.app.ui.swing.JMRUMenu;
 import org.microemu.app.ui.swing.JadUrlPanel;
+import org.microemu.app.ui.swing.ResizeDeviceDisplayDialog;
 import org.microemu.app.ui.swing.SwingAboutDialog;
 import org.microemu.app.ui.swing.SwingDeviceComponent;
 import org.microemu.app.ui.swing.SwingDialogWindow;
+import org.microemu.app.ui.swing.SwingDisplayComponent;
 import org.microemu.app.ui.swing.SwingErrorMessageDialogPanel;
 import org.microemu.app.ui.swing.SwingLogConsoleDialog;
 import org.microemu.app.ui.swing.SwingSelectDevicePanel;
@@ -78,6 +91,7 @@ import org.microemu.device.DeviceFactory;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.device.MutableImage;
+import org.microemu.device.impl.DeviceDisplayImpl;
 import org.microemu.device.impl.DeviceImpl;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
@@ -89,19 +103,19 @@ import org.microemu.log.QueueAppender;
 import org.microemu.util.JadMidletEntry;
 
 public class Main extends JFrame {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	protected Common common;
 
 	protected SwingSelectDevicePanel selectDevicePanel = null;
 
-	private JadUrlPanel jadUrlPanel;
+	private JadUrlPanel jadUrlPanel = null;
 
 	private JFileChooser saveForWebChooser;
 
 	private JFileChooser fileChooser = null;
-	
+
 	private JFileChooser captureFileChooser = null;
 
 	private JMenuItem menuOpenJADFile;
@@ -111,29 +125,33 @@ public class Main extends JFrame {
 	private JMenuItem menuSelectDevice;
 
 	private JMenuItem menuSaveForWeb;
-	
+
 	private JMenuItem menuStartCapture;
 
-	private JMenuItem menuStopCapture;	
-	
+	private JMenuItem menuStopCapture;
+
 	private JCheckBoxMenuItem menuMIDletNetworkConnection;
-	
+
 	private JCheckBoxMenuItem menuLogConsole;
-	
+
 	private SwingDeviceComponent devicePanel;
-	
+
 	private SwingLogConsoleDialog logConsoleDialog;
-	
+
 	private QueueAppender logQueueAppender;
 
 	private DeviceEntry deviceEntry;
-	
+
 	private AnimatedGifEncoder encoder;
 
 	private JLabel statusBar = new JLabel("Status");
 
+	private JButton resizeButton = new JButton("Resize");
+
+	private ResizeDeviceDisplayDialog resizeDeviceDisplayDialog = null;
+
 	protected EmulatorContext emulatorContext = new EmulatorContext() {
-		
+
 		private InputMethod inputMethod = new J2SEInputMethod();
 
 		private DeviceDisplay deviceDisplay = new J2SEDeviceDisplay(this);
@@ -172,21 +190,24 @@ public class Main extends JFrame {
 
 			int returnVal = fileChooser.showOpenDialog(Main.this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
-					Config.setRecentDirectory("recentJadDirectory", fileChooser.getCurrentDirectory().getAbsolutePath());
-					String url = IOUtils.getCanonicalFileURL(fileChooser.getSelectedFile());
-					Common.openJadUrlSafe(url);
+				Config.setRecentDirectory("recentJadDirectory", fileChooser.getCurrentDirectory().getAbsolutePath());
+				String url = IOUtils.getCanonicalFileURL(fileChooser.getSelectedFile());
+				Common.openJadUrlSafe(url);
 			}
 		}
 	};
 
 	private ActionListener menuOpenJADURLListener = new ActionListener() {
 		public void actionPerformed(ActionEvent ev) {
+			if (jadUrlPanel == null) {
+				jadUrlPanel = new JadUrlPanel();
+			}
 			if (SwingDialogWindow.show(Main.this, "Enter JAD URL:", jadUrlPanel, true)) {
 				Common.openJadUrlSafe(jadUrlPanel.getText());
 			}
 		}
 	};
-	
+
 	private ActionListener menuCloseMidletListener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			common.startLauncher(MIDletBridge.getMIDletContext());
@@ -204,7 +225,8 @@ public class Main extends JFrame {
 				saveForWebChooser.setCurrentDirectory(new File(Config.getRecentDirectory("recentSaveForWebDirectory")));
 			}
 			if (saveForWebChooser.showSaveDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
-				Config.setRecentDirectory("recentSaveForWebDirectory", saveForWebChooser.getCurrentDirectory().getAbsolutePath());
+				Config.setRecentDirectory("recentSaveForWebDirectory", saveForWebChooser.getCurrentDirectory()
+						.getAbsolutePath());
 				File pathFile = saveForWebChooser.getSelectedFile().getParentFile();
 
 				String name = saveForWebChooser.getSelectedFile().getName();
@@ -223,18 +245,19 @@ public class Main extends JFrame {
 				if (!appletJarFile.exists()) {
 					appletJarFile = null;
 				}
-				
+
 				if (appletJarFile == null) {
 					// try to get from maven2 repository
-/*					loc/org/microemu/microemulator/2.0.1-SNAPSHOT/microemulator-2.0.1-20070227.080140-1.jar
-					String version = doRegExpr(mainJarFileName,   );
-					String basePath = "loc/org/microemu/"
-					appletJarFile = new File(basePath + "microemu-javase-applet/" + version + "/microemu-javase-applet" + version + ".jar");
-					if (!appletJarFile.exists()) {
-						appletJarFile = null;
-					}*/
+					/*
+					 * loc/org/microemu/microemulator/2.0.1-SNAPSHOT/microemulator-2.0.1-20070227.080140-1.jar
+					 * String version = doRegExpr(mainJarFileName, ); String
+					 * basePath = "loc/org/microemu/" appletJarFile = new
+					 * File(basePath + "microemu-javase-applet/" + version +
+					 * "/microemu-javase-applet" + version + ".jar"); if
+					 * (!appletJarFile.exists()) { appletJarFile = null; }
+					 */
 				}
-				
+
 				if (appletJarFile == null) {
 					ExtensionFileFilter fileFilter = new ExtensionFileFilter("JAR packages");
 					fileFilter.addExtension("jar");
@@ -243,7 +266,8 @@ public class Main extends JFrame {
 					appletChooser.setDialogTitle("Select MicroEmulator applet jar package...");
 					appletChooser.setCurrentDirectory(new File(Config.getRecentDirectory("recentAppletJarDirectory")));
 					if (appletChooser.showOpenDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
-						Config.setRecentDirectory("recentAppletJarDirectory", appletChooser.getCurrentDirectory().getAbsolutePath());
+						Config.setRecentDirectory("recentAppletJarDirectory", appletChooser.getCurrentDirectory()
+								.getAbsolutePath());
 						appletJarFile = appletChooser.getSelectedFile();
 					} else {
 						return;
@@ -303,8 +327,7 @@ public class Main extends JFrame {
 
 		private boolean allowOverride(File file) {
 			if (file.exists()) {
-				int answer = JOptionPane.showConfirmDialog(Main.this,
-						"Override the file:" + file + "?", "Question?",
+				int answer = JOptionPane.showConfirmDialog(Main.this, "Override the file:" + file + "?", "Question?",
 						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				if (answer == 1 /* no */) {
 					return false;
@@ -314,8 +337,8 @@ public class Main extends JFrame {
 			return true;
 		}
 	};
-	
-  	private ActionListener menuStartCaptureListener = new ActionListener() {
+
+	private ActionListener menuStartCaptureListener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			if (captureFileChooser == null) {
 				ExtensionFileFilter fileFilter = new ExtensionFileFilter("GIF files");
@@ -327,7 +350,8 @@ public class Main extends JFrame {
 			}
 
 			if (captureFileChooser.showSaveDialog(Main.this) == JFileChooser.APPROVE_OPTION) {
-				Config.setRecentDirectory("recentCaptureDirectory", captureFileChooser.getCurrentDirectory().getAbsolutePath());
+				Config.setRecentDirectory("recentCaptureDirectory", captureFileChooser.getCurrentDirectory()
+						.getAbsolutePath());
 				String name = captureFileChooser.getSelectedFile().getName();
 				if (!name.toLowerCase().endsWith(".gif") && name.indexOf('.') == -1) {
 					name = name + ".gif";
@@ -339,10 +363,10 @@ public class Main extends JFrame {
 
 				encoder = new AnimatedGifEncoder();
 				encoder.start(captureFile.getAbsolutePath());
-				
+
 				menuStartCapture.setEnabled(false);
 				menuStopCapture.setEnabled(true);
-				
+
 				emulatorContext.getDisplayComponent().addDisplayRepaintListener(new DisplayRepaintListener() {
 					long start = 0;
 
@@ -361,14 +385,13 @@ public class Main extends JFrame {
 							}
 						}
 					}
-					});
+				});
 			}
 		}
-		
+
 		private boolean allowOverride(File file) {
 			if (file.exists()) {
-				int answer = JOptionPane.showConfirmDialog(Main.this,
-						"Override the file:" + file + "?", "Question?",
+				int answer = JOptionPane.showConfirmDialog(Main.this, "Override the file:" + file + "?", "Question?",
 						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 				if (answer == 1 /* no */) {
 					return false;
@@ -377,29 +400,29 @@ public class Main extends JFrame {
 
 			return true;
 		}
-	};  	
-  	
-  	private ActionListener menuStopCaptureListener = new ActionListener() {    
-  		public void actionPerformed(ActionEvent e) {
-  			menuStopCapture.setEnabled(false);
+	};
 
-  			synchronized (Main.this) {
-	  			encoder.finish();
-	  			encoder = null;
-  			}
-  			
-  			menuStartCapture.setEnabled(true);
-  		}
-  	};
-  	
-  	private ActionListener menuMIDletNetworkConnectionListener = new ActionListener() {    
-  		public void actionPerformed(ActionEvent e) {
-  			org.microemu.cldc.http.Connection.setAllowNetworkConnection(menuMIDletNetworkConnection.getState());
-  		}
-  		
-  	};
+	private ActionListener menuStopCaptureListener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			menuStopCapture.setEnabled(false);
 
-  	private ActionListener menuLogConsoleListener = new ActionListener() {
+			synchronized (Main.this) {
+				encoder.finish();
+				encoder = null;
+			}
+
+			menuStartCapture.setEnabled(true);
+		}
+	};
+
+	private ActionListener menuMIDletNetworkConnectionListener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			org.microemu.cldc.http.Connection.setAllowNetworkConnection(menuMIDletNetworkConnection.getState());
+		}
+
+	};
+
+	private ActionListener menuLogConsoleListener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			if (logConsoleDialog == null) {
 				logConsoleDialog = new SwingLogConsoleDialog(Main.this, Main.this.logQueueAppender);
@@ -416,33 +439,27 @@ public class Main extends JFrame {
 		}
 	};
 
-  	private ActionListener menuAboutListener = new ActionListener() {
+	private ActionListener menuAboutListener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			SwingDialogWindow.show(Main.this, "About", new SwingAboutDialog(), false);
 		}
 	};
-	
-  	private ActionListener menuExitListener = new ActionListener() {
+
+	private ActionListener menuExitListener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-	    	synchronized (Main.this) {
-		    	if (encoder != null) {
-		    		encoder.finish();
-		    		encoder = null;
-		    	}
-	    	}
-	    	
-	    	if (logConsoleDialog != null) {
-				Config.setWindow("logConsole", new Rectangle(
-	    				logConsoleDialog.getX(),
-	    				logConsoleDialog.getY(),
-	    				logConsoleDialog.getWidth(),
-	    				logConsoleDialog.getHeight()));
-	    	}	    	
-			Config.setWindow("main", new Rectangle(
-			    	Main.this.getX(),
-			    	Main.this.getY(),
-			    	Main.this.getWidth(),
-			    	Main.this.getHeight()));
+			synchronized (Main.this) {
+				if (encoder != null) {
+					encoder.finish();
+					encoder = null;
+				}
+			}
+
+			if (logConsoleDialog != null) {
+				Config.setWindow("logConsole", new Rectangle(logConsoleDialog.getX(), logConsoleDialog.getY(),
+						logConsoleDialog.getWidth(), logConsoleDialog.getHeight()));
+			}
+			Config.setWindow("main", new Rectangle(Main.this.getX(), Main.this.getY(), Main.this.getWidth(), Main.this
+					.getHeight()));
 
 			System.exit(0);
 		}
@@ -484,6 +501,8 @@ public class Main extends JFrame {
 
 	private StatusBarListener statusBarListener = new StatusBarListener() {
 		public void statusBarChanged(String text) {
+			FontMetrics metrics = statusBar.getFontMetrics(statusBar.getFont());
+			statusBar.setPreferredSize(new Dimension(metrics.stringWidth(text), metrics.getHeight()));
 			statusBar.setText(text);
 		}
 	};
@@ -498,6 +517,49 @@ public class Main extends JFrame {
 				menuSaveForWeb.setEnabled(state);
 			} else {
 				menuSaveForWeb.setEnabled(false);
+			}
+		}
+	};
+
+	private ComponentListener componentListener = new ComponentAdapter() {
+		Timer timer;
+
+		int count = 0;
+
+		public void componentResized(ComponentEvent e) {
+			count++;
+			DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) DeviceFactory.getDevice().getDeviceDisplay();
+			if (deviceDisplay.isResizable()) {
+				deviceDisplay.setDisplayRectangle(new Rectangle(0, 0, devicePanel.getWidth(), devicePanel.getHeight()));
+				((SwingDisplayComponent) devicePanel.getDisplayComponent()).init();
+				MIDletAccess ma = MIDletBridge.getMIDletAccess();
+				if (ma == null) {
+					return;
+				}
+				DisplayAccess da = ma.getDisplayAccess();
+				if (da != null) {
+					da.sizeChanged(da.getCurrent().getWidth(), da.getCurrent().getHeight());
+					deviceDisplay.repaint(0, 0, deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
+				}
+				devicePanel.revalidate();
+				statusBarListener.statusBarChanged("New size: " + deviceDisplay.getFullWidth() + "x"
+						+ deviceDisplay.getFullHeight());
+				synchronized (statusBarListener) {
+					if (timer == null) {
+						timer = new Timer();
+					}
+					timer.schedule(new CountTimerTask(count) {
+						public void run() {
+							if (counter == count) {
+								Config.setDeviceEntryDisplaySize(deviceEntry, new Rectangle(0, 0, devicePanel
+										.getWidth(), devicePanel.getHeight()));
+								statusBarListener.statusBarChanged("");
+								timer.cancel();
+								timer = null;
+							}
+						}
+					}, 2000);
+				}
 			}
 		}
 	};
@@ -525,10 +587,10 @@ public class Main extends JFrame {
 	}
 
 	public Main(DeviceEntry defaultDevice) {
-		
+
 		this.logQueueAppender = new QueueAppender(1024);
 		Logger.addAppender(logQueueAppender);
-		
+
 		JMenuBar menuBar = new JMenuBar();
 
 		JMenu menuFile = new JMenu("File");
@@ -536,7 +598,7 @@ public class Main extends JFrame {
 		menuOpenJADFile = new JMenuItem("Open JAD File...");
 		menuOpenJADFile.addActionListener(menuOpenJADFileListener);
 		menuFile.add(menuOpenJADFile);
-		
+
 		menuOpenJADURL = new JMenuItem("Open JAD URL...");
 		menuOpenJADURL.addActionListener(menuOpenJADURLListener);
 		menuFile.add(menuOpenJADURL);
@@ -547,19 +609,20 @@ public class Main extends JFrame {
 		menuFile.add(menuItemTmp);
 
 		menuFile.addSeparator();
-		
+
 		JMRUMenu urlsMRU = new JMRUMenu("Recent MIDlets...");
-		urlsMRU.addActionListener( new ActionListener() {
+		urlsMRU.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (event instanceof JMRUMenu.MRUActionEvent) {
-					Common.openJadUrlSafe(((MidletURLReference)((JMRUMenu.MRUActionEvent)event).getSourceMRU()).getUrl());	
+					Common.openJadUrlSafe(((MidletURLReference) ((JMRUMenu.MRUActionEvent) event).getSourceMRU())
+							.getUrl());
 				}
 			}
 		});
-		
+
 		Config.getUrlsMRU().setListener(urlsMRU);
 		menuFile.add(urlsMRU);
-		
+
 		menuFile.addSeparator();
 
 		menuSaveForWeb = new JMenuItem("Save for Web...");
@@ -578,43 +641,42 @@ public class Main extends JFrame {
 		menuSelectDevice = new JMenuItem("Select device...");
 		menuSelectDevice.addActionListener(menuSelectDeviceListener);
 		menuOptions.add(menuSelectDevice);
-		
+
 		menuStartCapture = new JMenuItem("Start capture to GIF...");
-    	menuStartCapture.addActionListener(menuStartCaptureListener);
-    	menuOptions.add(menuStartCapture);
-        
-    	menuStopCapture = new JMenuItem("Stop capture");
-    	menuStopCapture.setEnabled(false);
-    	menuStopCapture.addActionListener(menuStopCaptureListener);
-    	menuOptions.add(menuStopCapture);		
+		menuStartCapture.addActionListener(menuStartCaptureListener);
+		menuOptions.add(menuStartCapture);
 
-    	menuMIDletNetworkConnection = new JCheckBoxMenuItem("MIDlet Network access");
-    	menuMIDletNetworkConnection.setState(true);
-    	menuMIDletNetworkConnection.addActionListener(menuMIDletNetworkConnectionListener);
-    	menuOptions.add(menuMIDletNetworkConnection);
-    	
-    	menuLogConsole = new JCheckBoxMenuItem("Log console");
-    	menuLogConsole.setState(false);
-    	menuLogConsole.addActionListener(menuLogConsoleListener);
-    	menuOptions.add(menuLogConsole);
-    	
-    	menuOptions.addSeparator();
-    	JCheckBoxMenuItem menuShowMouseCoordinates = new JCheckBoxMenuItem("Mouse coordinates");
-    	menuShowMouseCoordinates.setState(false);
-    	menuShowMouseCoordinates.addActionListener( new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                devicePanel.switchShowMouseCoordinates();
-            }
-        });
-    	menuOptions.add(menuShowMouseCoordinates);
+		menuStopCapture = new JMenuItem("Stop capture");
+		menuStopCapture.setEnabled(false);
+		menuStopCapture.addActionListener(menuStopCaptureListener);
+		menuOptions.add(menuStopCapture);
 
-    	JMenu menuHelp = new JMenu("Help");
-    	JMenuItem menuAbout = new JMenuItem("About");
-    	menuAbout.addActionListener(menuAboutListener);
-    	menuHelp.add(menuAbout);
-    	
-    	
-    	menuBar.add(menuFile);
+		menuMIDletNetworkConnection = new JCheckBoxMenuItem("MIDlet Network access");
+		menuMIDletNetworkConnection.setState(true);
+		menuMIDletNetworkConnection.addActionListener(menuMIDletNetworkConnectionListener);
+		menuOptions.add(menuMIDletNetworkConnection);
+
+		menuLogConsole = new JCheckBoxMenuItem("Log console");
+		menuLogConsole.setState(false);
+		menuLogConsole.addActionListener(menuLogConsoleListener);
+		menuOptions.add(menuLogConsole);
+
+		menuOptions.addSeparator();
+		JCheckBoxMenuItem menuShowMouseCoordinates = new JCheckBoxMenuItem("Mouse coordinates");
+		menuShowMouseCoordinates.setState(false);
+		menuShowMouseCoordinates.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				devicePanel.switchShowMouseCoordinates();
+			}
+		});
+		menuOptions.add(menuShowMouseCoordinates);
+
+		JMenu menuHelp = new JMenu("Help");
+		JMenuItem menuAbout = new JMenuItem("About");
+		menuAbout.addActionListener(menuAboutListener);
+		menuHelp.add(menuAbout);
+
+		menuBar.add(menuFile);
 		menuBar.add(menuOptions);
 		menuBar.add(menuHelp);
 		setJMenuBar(menuBar);
@@ -633,19 +695,47 @@ public class Main extends JFrame {
 		getContentPane().add(createContents(getContentPane()), "Center");
 
 		selectDevicePanel = new SwingSelectDevicePanel(emulatorContext);
-		jadUrlPanel = new JadUrlPanel();
 
 		this.common = new Common(emulatorContext);
 		this.common.setStatusBarListener(statusBarListener);
 		this.common.setResponseInterfaceListener(responseInterfaceListener);
 
-		getContentPane().add(statusBar, "South");
+		this.resizeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				if (resizeDeviceDisplayDialog == null) {
+					resizeDeviceDisplayDialog = new ResizeDeviceDisplayDialog();
+				}
+				DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) DeviceFactory.getDevice().getDeviceDisplay();
+				resizeDeviceDisplayDialog.setDeviceDisplaySize(deviceDisplay.getFullWidth(), deviceDisplay
+						.getFullHeight());
+				if (SwingDialogWindow.show(Main.this, "Enter new size...", resizeDeviceDisplayDialog, true)) {
+					deviceDisplay.setDisplayRectangle(new Rectangle(0, 0, resizeDeviceDisplayDialog
+							.getDeviceDisplayWidth(), resizeDeviceDisplayDialog.getDeviceDisplayHeight()));
+					((SwingDisplayComponent) devicePanel.getDisplayComponent()).init();
+					MIDletAccess ma = MIDletBridge.getMIDletAccess();
+					if (ma == null) {
+						return;
+					}
+					DisplayAccess da = ma.getDisplayAccess();
+					if (da != null) {
+						da.sizeChanged(da.getCurrent().getWidth(), da.getCurrent().getHeight());
+						deviceDisplay.repaint(0, 0, deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
+					}
+					pack();
+				}
+			}
+		});
+
+		JPanel statusPanel = new JPanel();
+		statusPanel.setLayout(new BorderLayout());
+		statusPanel.add(statusBar, "West");
+		statusPanel.add(this.resizeButton, "East");
+
+		getContentPane().add(statusPanel, "South");
 
 		Message.addListener(new SwingErrorMessageDialogPanel(this));
 
 		devicePanel.setTransferHandler(new DropTransferHandler());
-		
-		this.setResizable(false);
 	}
 
 	protected Component createContents(Container parent) {
@@ -658,7 +748,7 @@ public class Main extends JFrame {
 
 	public boolean setDevice(DeviceEntry entry) {
 		if (DeviceFactory.getDevice() != null) {
-			//			((J2SEDevice) DeviceFactory.getDevice()).dispose();
+			// ((J2SEDevice) DeviceFactory.getDevice()).dispose();
 		}
 		final String errorTitle = "Error creating device";
 		try {
@@ -669,11 +759,18 @@ public class Main extends JFrame {
 				classLoader = Common.createExtensionsClassLoader(urls);
 			}
 
-			// TODO font manager have to be moved from emulatorContext into device
+			// TODO font manager have to be moved from emulatorContext into
+			// device
 			emulatorContext.getDeviceFontManager().init();
 
 			Device device = DeviceImpl.create(emulatorContext, classLoader, entry.getDescriptorLocation());
 			this.deviceEntry = entry;
+
+			DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) device.getDeviceDisplay();
+			if (deviceDisplay.isResizable()) {
+				Rectangle size = Config.getDeviceEntryDisplaySize(entry);
+				deviceDisplay.setDisplayRectangle(size);
+			}
 			common.setDevice(device);
 			updateDevice();
 			return true;
@@ -689,6 +786,14 @@ public class Main extends JFrame {
 
 	protected void updateDevice() {
 		devicePanel.init();
+		if (((DeviceDisplayImpl) DeviceFactory.getDevice().getDeviceDisplay()).isResizable()) {
+			setResizable(true);
+			resizeButton.setVisible(true);
+		} else {
+			setResizable(false);
+			resizeButton.setVisible(false);
+		}
+
 		pack();
 	}
 
@@ -698,31 +803,44 @@ public class Main extends JFrame {
 		} catch (Exception ex) {
 			Logger.error(ex);
 		}
-		
+
 		List params = new ArrayList();
 		StringBuffer debugArgs = new StringBuffer();
 		for (int i = 0; i < args.length; i++) {
 			params.add(args[i]);
 			if (debugArgs.length() != 0) {
-			    debugArgs.append(", ");
+				debugArgs.append(", ");
 			}
 			debugArgs.append("[").append(args[i]).append("]");
 		}
 		if (args.length > 0) {
-		    Logger.debug("arguments", debugArgs.toString());
+			Logger.debug("arguments", debugArgs.toString());
 		}
 
 		Common.initParams(params);
-		Main app = new Main();
+		final Main app = new Main();
 		app.common.initDevice(params, app.selectDevicePanel.getSelectedDeviceEntry());
+		app.deviceEntry = app.selectDevicePanel.getSelectedDeviceEntry();
 		app.updateDevice();
 
 		app.validate();
 		app.setVisible(true);
 
 		app.common.initMIDlet(params, false);
-		
-	    app.responseInterfaceListener.stateChanged(true);		
+
+		app.addComponentListener(app.componentListener);
+
+		app.responseInterfaceListener.stateChanged(true);
+	}
+
+	private abstract class CountTimerTask extends TimerTask {
+
+		protected int counter;
+
+		public CountTimerTask(int counter) {
+			this.counter = counter;
+		}
+
 	}
 
 }

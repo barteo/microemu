@@ -40,6 +40,10 @@
             <destName>${artifactId}-${version}/devices/microemu-device-minimum.jar</destName>
         </file>
         <file>
+            <source>${basedir}/../microemu-extensions/microemu-device-resizable/target/microemu-device-resizable-${project.version}.jar</source>
+            <destName>${artifactId}-${version}/devices/microemu-device-resizable.jar</destName>
+        </file>
+        <file>
             <source>${basedir}/../microemu-extensions/microemu-jsr-75/target/microemu-jsr-75-${project.version}.jar</source>
             <destName>${artifactId}-${version}/lib/microemu-jsr-75.jar</destName>
         </file>

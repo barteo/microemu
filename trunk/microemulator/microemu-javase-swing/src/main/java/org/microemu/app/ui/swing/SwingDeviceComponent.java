@@ -52,6 +52,7 @@ import org.microemu.MIDletBridge;
 import org.microemu.app.Common;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
+import org.microemu.device.impl.DeviceDisplayImpl;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.SoftButton;
 import org.microemu.device.j2se.J2SEButton;
@@ -269,7 +270,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 		remove(dc);
 
 		Rectangle r = ((J2SEDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay()).getDisplayRectangle();
-		add(dc, new XYConstraints(r.x, r.y, r.width, r.height));
+		add(dc, new XYConstraints(r.x, r.y, -1, -1));
 
 		revalidate();
 	}
@@ -399,7 +400,11 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 			g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
 			return;
 		}
-		offg.drawImage(((J2SEImmutableImage) device.getNormalImage()).getImage(), 0, 0, this);
+	    if (((DeviceDisplayImpl) device.getDeviceDisplay()).isResizable()) {
+	        return;
+	    }
+
+	    offg.drawImage(((J2SEImmutableImage) device.getNormalImage()).getImage(), 0, 0, this);
 
 		if (prevOverButton != null) {
 			org.microemu.device.impl.Shape shape = prevOverButton.getShape();
@@ -438,13 +443,18 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 	}
 
 	public Dimension getPreferredSize() {
-		Device device = DeviceFactory.getDevice();
-		if (device == null) {
-			return new Dimension(0, 0);
-		}
-		javax.microedition.lcdui.Image img = device.getNormalImage();
-
-		return new Dimension(img.getWidth(), img.getHeight());
+  		Device device = DeviceFactory.getDevice();
+  		if (device == null) {
+  			return new Dimension(0, 0);
+  		}
+  		
+  		DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) DeviceFactory.getDevice().getDeviceDisplay();
+  		if (deviceDisplay.isResizable()) {
+  		    return new Dimension(deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
+  		} else {  		
+  		    javax.microedition.lcdui.Image img = device.getNormalImage();  		
+  		    return new Dimension(img.getWidth(), img.getHeight());
+  		}
 	}
 
 }

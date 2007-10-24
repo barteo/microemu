@@ -53,13 +53,13 @@ public class Config {
 	 * emulatorID used for multiple instance of MicroEmulator, now redefine home
 	 */
 	private static String emulatorID;
-	
+
 	private static XMLElement configXml;
 
 	private static DeviceEntry defaultDevice;
 
 	private static EmulatorContext emulatorContext;
-	
+
 	private static MRUList urlsMRU = new MRUList(MidletURLReference.class, "midlet");
 
 	private static File initMEHomePath() {
@@ -80,9 +80,9 @@ public class Config {
 		Config.defaultDevice = defaultDevice;
 		Config.emulatorContext = emulatorContext;
 
-    	File configFile = new File(getConfigPath(), "config2.xml");
+		File configFile = new File(getConfigPath(), "config2.xml");
 		try {
-	    	if (configFile.exists()) {
+			if (configFile.exists()) {
 				loadConfigFile("config2.xml");
 			} else {
 				configFile = new File(getConfigPath(), "config.xml");
@@ -147,11 +147,10 @@ public class Config {
 		configXml.setName("config");
 	}
 
-
 	public static void saveConfig() {
-		
+
 		urlsMRU.save(configXml.getChildOrNew("files").getChildOrNew("recent"));
-		
+
 		File configFile = new File(getConfigPath(), "config2.xml");
 
 		getConfigPath().mkdirs();
@@ -167,32 +166,33 @@ public class Config {
 		}
 	}
 
-    private static void initSystemProperties() {
-    	Map systemProperties = null;
+	private static void initSystemProperties() {
+		Map systemProperties = null;
 
 		for (Enumeration e = configXml.enumerateChildren(); e.hasMoreElements();) {
 			XMLElement tmp = (XMLElement) e.nextElement();
 			if (tmp.getName().equals("system-properties")) {
-				// Permits null values. 
+				// Permits null values.
 				systemProperties = new HashMap();
-				for (Enumeration e_prop = tmp.enumerateChildren(); e_prop.hasMoreElements(); ) {
-		            XMLElement tmp_prop = (XMLElement) e_prop.nextElement();
-		            if (tmp_prop.getName().equals("system-property")) {
-		            	systemProperties.put(tmp_prop.getStringAttribute("name"), tmp_prop.getStringAttribute("value"));
-		            }
-		        }
+				for (Enumeration e_prop = tmp.enumerateChildren(); e_prop.hasMoreElements();) {
+					XMLElement tmp_prop = (XMLElement) e_prop.nextElement();
+					if (tmp_prop.getName().equals("system-property")) {
+						systemProperties.put(tmp_prop.getStringAttribute("name"), tmp_prop.getStringAttribute("value"));
+					}
+				}
 			}
 		}
 
-    	// No <system-properties> in config2.xml
-    	if (systemProperties == null) {
-    		systemProperties = new Properties();
-    		systemProperties.put("microedition.configuration", "CLDC-1.0");
-    		systemProperties.put("microedition.profiles", "MIDP-2.0");
-    		// Ask avetana to ignore MIDP profiles and load JSR-82 implementation dll or so
-    		systemProperties.put("avetana.forceNativeLibrary", Boolean.TRUE.toString());
+		// No <system-properties> in config2.xml
+		if (systemProperties == null) {
+			systemProperties = new Properties();
+			systemProperties.put("microedition.configuration", "CLDC-1.0");
+			systemProperties.put("microedition.profiles", "MIDP-2.0");
+			// Ask avetana to ignore MIDP profiles and load JSR-82
+			// implementation dll or so
+			systemProperties.put("avetana.forceNativeLibrary", Boolean.TRUE.toString());
 
-    		XMLElement propertiesXml = configXml.getChildOrNew("system-properties");
+			XMLElement propertiesXml = configXml.getChildOrNew("system-properties");
 
 			for (Iterator i = systemProperties.entrySet().iterator(); i.hasNext();) {
 				Map.Entry e = (Map.Entry) i.next();
@@ -201,16 +201,16 @@ public class Config {
 				xmlProperty.setAttribute("name", (String) e.getKey());
 			}
 
-    		saveConfig();
-    	}
+			saveConfig();
+		}
 
-       	MIDletSystemProperties.setProperties(systemProperties);
+		MIDletSystemProperties.setProperties(systemProperties);
 	}
 
-  	public static File getConfigPath() {
-  		if (meHome == null) {
-  			meHome = initMEHomePath();
-  		}
+	public static File getConfigPath() {
+		if (meHome == null) {
+			meHome = initMEHomePath();
+		}
 		return meHome;
 	}
 
@@ -218,11 +218,10 @@ public class Config {
 		Vector result = new Vector();
 
 		if (defaultDevice == null) {
-		    defaultDevice =
-	            new DeviceEntry("Default device", null, DeviceImpl.DEFAULT_LOCATION, true, false);
+			defaultDevice = new DeviceEntry("Default device", null, DeviceImpl.DEFAULT_LOCATION, true, false);
 		}
-    	defaultDevice.setDefaultDevice(true);
-    	result.add(defaultDevice);
+		defaultDevice.setDefaultDevice(true);
+		result.add(defaultDevice);
 
 		XMLElement devicesXml = configXml.getChild("devices");
 		if (devicesXml == null) {
@@ -241,12 +240,13 @@ public class Config {
 				String devName = tmp_device.getChildString("name", null);
 				String devFile = tmp_device.getChildString("filename", null);
 				String devClass = tmp_device.getChildString("class", null);
-				String devDescriptor = tmp_device.getChildString("descriptor", null);;
-	            if (devDescriptor == null) {
-	            	result.add(new DeviceEntry(devName, devFile, devDefault, devClass, emulatorContext));
-	            } else {
-	            	result.add(new DeviceEntry(devName, devFile, devDescriptor, devDefault));
-	            }
+				String devDescriptor = tmp_device.getChildString("descriptor", null);
+				;
+				if (devDescriptor == null) {
+					result.add(new DeviceEntry(devName, devFile, devDefault, devClass, emulatorContext));
+				} else {
+					result.add(new DeviceEntry(devName, devFile, devDescriptor, devDefault));
+				}
 			}
 		}
 
@@ -254,7 +254,7 @@ public class Config {
 	}
 
 	public static void addDeviceEntry(DeviceEntry entry) {
-		for (Enumeration en = getDeviceEntries().elements(); en.hasMoreElements(); ) {
+		for (Enumeration en = getDeviceEntries().elements(); en.hasMoreElements();) {
 			DeviceEntry test = (DeviceEntry) en.nextElement();
 			if (test.getDescriptorLocation().equals(entry.getDescriptorLocation())) {
 				return;
@@ -325,6 +325,62 @@ public class Config {
 		}
 	}
 
+	public static Rectangle getDeviceEntryDisplaySize(DeviceEntry entry) {
+		XMLElement devicesXml = configXml.getChild("devices");
+
+		for (Enumeration e_device = devicesXml.enumerateChildren(); e_device.hasMoreElements();) {
+			XMLElement tmp_device = (XMLElement) e_device.nextElement();
+			if (tmp_device.getName().equals("device")) {
+				String testDescriptor = tmp_device.getChildString("descriptor", null);
+				if (testDescriptor.equals(entry.getDescriptorLocation())) {
+					XMLElement rectangleXml = tmp_device.getChild("rectangle");
+					if (rectangleXml != null) {
+						Rectangle result = new Rectangle();
+						result.x = rectangleXml.getChildInteger("x", -1);
+						result.y = rectangleXml.getChildInteger("y", -1);
+						result.width = rectangleXml.getChildInteger("width", -1);
+						result.height = rectangleXml.getChildInteger("height", -1);
+
+						return result;
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	public static void setDeviceEntryDisplaySize(DeviceEntry entry, Rectangle rect) {
+		if (entry == null) {
+			return;
+		}
+		XMLElement devicesXml = configXml.getChild("devices");
+		if (devicesXml == null) {
+			return;
+		}
+
+		for (Enumeration e_device = devicesXml.enumerateChildren(); e_device.hasMoreElements();) {
+			XMLElement tmp_device = (XMLElement) e_device.nextElement();
+			if (tmp_device.getName().equals("device")) {
+				String testDescriptor = tmp_device.getChildString("descriptor", null);
+				if (testDescriptor.equals(entry.getDescriptorLocation())) {
+					XMLElement mainXml = tmp_device.getChildOrNew("rectangle");
+					XMLElement xml = mainXml.getChildOrNew("x");
+					xml.setContent(String.valueOf(rect.x));
+					xml = mainXml.getChildOrNew("y");
+					xml.setContent(String.valueOf(rect.y));
+					xml = mainXml.getChildOrNew("width");
+					xml.setContent(String.valueOf(rect.width));
+					xml = mainXml.getChildOrNew("height");
+					xml.setContent(String.valueOf(rect.height));
+
+					saveConfig();
+					break;
+				}
+			}
+		}
+	}
+
 	public static Rectangle getWindow(String name, Rectangle defaultWindow) {
 		XMLElement windowsXml = configXml.getChild("windows");
 		if (windowsXml == null) {
@@ -341,7 +397,7 @@ public class Config {
 		window.y = mainXml.getChildInteger("y", defaultWindow.y);
 		window.width = mainXml.getChildInteger("width", defaultWindow.width);
 		window.height = mainXml.getChildInteger("height", defaultWindow.height);
-		
+
 		return window;
 	}
 
@@ -356,7 +412,7 @@ public class Config {
 		xml.setContent(String.valueOf(window.width));
 		xml = mainXml.getChildOrNew("height");
 		xml.setContent(String.valueOf(window.height));
-		
+
 		saveConfig();
 	}
 

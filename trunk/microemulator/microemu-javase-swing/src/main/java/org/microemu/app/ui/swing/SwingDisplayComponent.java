@@ -301,14 +301,13 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 		Device device = DeviceFactory.getDevice();
 
 		if (device != null) {
-			if (displayImage == null) {
-				displayImage = new J2SEMutableImage(
-						device.getDeviceDisplay().getFullWidth(), device.getDeviceDisplay().getFullHeight());
-			}
+            synchronized (this) {
+    			if (displayImage == null) {
+    				displayImage = new J2SEMutableImage(
+    						device.getDeviceDisplay().getFullWidth(), device.getDeviceDisplay().getFullHeight());
+    			}
 			
-			synchronized (displayImage) {
 				Graphics gc = displayImage.getImage().getGraphics();
-
 				J2SEDeviceDisplay deviceDisplay = (J2SEDeviceDisplay) device.getDeviceDisplay();
 				deviceDisplay.paintDisplayable(gc, x, y, width, height);
 				if (!deviceDisplay.isFullScreenMode()) {

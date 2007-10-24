@@ -332,11 +332,18 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 		J2SEButton button = inputMethod.getButton(ev);
 		if (button != null) {
 			pressedButton = button;
-			inputMethod.buttonPressed(button, ev.getKeyChar());
+			char keyChar = ev.getKeyChar();
+			// numeric keypad functions as hot keys for buttons only
+			if ((ev.getKeyCode() >= KeyEvent.VK_NUMPAD0) && (ev.getKeyCode() <= KeyEvent.VK_NUMPAD9)) {
+				keyChar = '\0';
+			}
+			inputMethod.buttonPressed(button, keyChar);
 			org.microemu.device.impl.Shape shape = button.getShape();
 			if (shape != null) {
 				repaint(shape.getBounds());
 			}
+		} else {
+			// Logger.debug0x("no button for KeyCode", ev.getKeyCode());
 		}
 	}
 

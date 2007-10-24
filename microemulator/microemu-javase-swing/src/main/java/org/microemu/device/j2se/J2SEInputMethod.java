@@ -253,7 +253,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 			synchronized (this) {
 				lastButtonCharIndex++;
 				char[] buttonChars = filterConstraints(filterInputMode(button.getChars(getInputMode())));
-				if ((keyChar != '\0') && (!Character.isDigit(keyChar))) {
+				if (keyChar != '\0') {
 					// Pass through letters and characters typed on keyboard but
 					// not numbers that are buttons keys (presumably).
 					editText.append(keyChar);

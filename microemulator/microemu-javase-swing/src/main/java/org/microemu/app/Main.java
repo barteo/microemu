@@ -769,7 +769,9 @@ public class Main extends JFrame {
 			DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) device.getDeviceDisplay();
 			if (deviceDisplay.isResizable()) {
 				Rectangle size = Config.getDeviceEntryDisplaySize(entry);
-				deviceDisplay.setDisplayRectangle(size);
+				if (size != null) {
+					deviceDisplay.setDisplayRectangle(size);
+				}
 			}
 			common.setDevice(device);
 			updateDevice();
@@ -821,6 +823,13 @@ public class Main extends JFrame {
 		final Main app = new Main();
 		app.common.initDevice(params, app.selectDevicePanel.getSelectedDeviceEntry());
 		app.deviceEntry = app.selectDevicePanel.getSelectedDeviceEntry();
+		DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) DeviceFactory.getDevice().getDeviceDisplay();
+		if (deviceDisplay.isResizable()) {
+			Rectangle size = Config.getDeviceEntryDisplaySize(app.deviceEntry);
+			if (size != null) {
+				deviceDisplay.setDisplayRectangle(size);
+			}
+		}
 		app.updateDevice();
 
 		app.validate();

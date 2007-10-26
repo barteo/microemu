@@ -3,6 +3,8 @@
         xmlns="http://www.microemu.org/2.0/"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.microemu.org/2.0/ http://www.microemu.org/2.0/device.xsd">
+    <!-- img is used here for the backward compatibility, can be removed in version 3 -->
+    <img name="normal" src="normal.png" />
     <display resizable="true">
         <iscolor>true</iscolor>
         <numcolors>65536</numcolors>

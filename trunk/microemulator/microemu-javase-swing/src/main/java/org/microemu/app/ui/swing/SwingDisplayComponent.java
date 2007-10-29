@@ -54,29 +54,27 @@ import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEInputMethod;
 import org.microemu.device.j2se.J2SEMutableImage;
 
-
-public class SwingDisplayComponent extends JComponent implements DisplayComponent 
-{
+public class SwingDisplayComponent extends JComponent implements DisplayComponent {
 	private static final long serialVersionUID = 1L;
 
 	private SwingDeviceComponent deviceComponent;
-	
+
 	private J2SEMutableImage displayImage = null;
-	
+
 	private SoftButton initialPressedSoftButton;
-	
+
 	private DisplayRepaintListener displayRepaintListener;
-	
-    private boolean showMouseCoordinates = false;
-    
-    private Point pressedPoint = new Point();
-    
+
+	private boolean showMouseCoordinates = false;
+
+	private Point pressedPoint = new Point();
+
 	private MouseAdapter mouseListener = new MouseAdapter() {
 
 		public void mousePressed(MouseEvent e) {
 			deviceComponent.requestFocus();
 			pressedPoint = e.getPoint();
-            
+
 			if (MIDletBridge.getCurrentMIDlet() == null) {
 				return;
 			}
@@ -114,7 +112,7 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 					}
 				}
 				Point p = deviceCoordinate(device.getDeviceDisplay(), e.getPoint());
-                inputMethod.pointerPressed(p.x, p.y);
+				inputMethod.pointerPressed(p.x, p.y);
 			}
 		}
 
@@ -144,24 +142,24 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 					initialPressedSoftButton = null;
 				}
 				Point p = deviceCoordinate(device.getDeviceDisplay(), e.getPoint());
-                inputMethod.pointerReleased(p.x, p.y);
+				inputMethod.pointerReleased(p.x, p.y);
 			}
 		}
 
 	};
-	
+
 	private MouseMotionListener mouseMotionListener = new MouseMotionListener() {
 
 		public void mouseDragged(MouseEvent e) {
-		    if (showMouseCoordinates) {
-                StringBuffer buf = new StringBuffer();
-                int width = e.getX() - pressedPoint.x;
-                int height = e.getY() - pressedPoint.y;
-                Point p = deviceCoordinate(DeviceFactory.getDevice().getDeviceDisplay(), pressedPoint);
-                buf.append(p.x).append(",").append(p.y).append(" ").append(width).append("x").append(height);
-                Common.setStatusBar(buf.toString());
-            }
-		    
+			if (showMouseCoordinates) {
+				StringBuffer buf = new StringBuffer();
+				int width = e.getX() - pressedPoint.x;
+				int height = e.getY() - pressedPoint.y;
+				Point p = deviceCoordinate(DeviceFactory.getDevice().getDeviceDisplay(), pressedPoint);
+				buf.append(p.x).append(",").append(p.y).append(" ").append(width).append("x").append(height);
+				Common.setStatusBar(buf.toString());
+			}
+
 			Device device = DeviceFactory.getDevice();
 			InputMethodImpl inputMethod = (InputMethodImpl) device.getInputMethod();
 			boolean fullScreenMode = device.getDeviceDisplay().isFullScreenMode();
@@ -190,30 +188,28 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 		}
 
 		public void mouseMoved(MouseEvent e) {
-		    if (showMouseCoordinates) {
-                StringBuffer buf = new StringBuffer();
-                Point p = deviceCoordinate(DeviceFactory.getDevice().getDeviceDisplay(), e.getPoint());
-                buf.append(p.x).append(",").append(p.y);
-                Common.setStatusBar(buf.toString());
-            }
+			if (showMouseCoordinates) {
+				StringBuffer buf = new StringBuffer();
+				Point p = deviceCoordinate(DeviceFactory.getDevice().getDeviceDisplay(), e.getPoint());
+				buf.append(p.x).append(",").append(p.y);
+				Common.setStatusBar(buf.toString());
+			}
 		}
 
 	};
-	
-    private MouseWheelListener mouseWheelListener = new MouseWheelListener() {
+
+	private MouseWheelListener mouseWheelListener = new MouseWheelListener() {
 
 		public void mouseWheelMoved(MouseWheelEvent ev) {
 			if (ev.getWheelRotation() > 0) {
 				// down
-				KeyEvent event = new KeyEvent(deviceComponent, 0,
-						System.currentTimeMillis(), 0, KeyEvent.VK_DOWN,
+				KeyEvent event = new KeyEvent(deviceComponent, 0, System.currentTimeMillis(), 0, KeyEvent.VK_DOWN,
 						KeyEvent.CHAR_UNDEFINED);
 				deviceComponent.keyPressed(event);
 				deviceComponent.keyReleased(event);
 			} else {
 				// up
-				KeyEvent event = new KeyEvent(deviceComponent, 0,
-						System.currentTimeMillis(), 0, KeyEvent.VK_UP,
+				KeyEvent event = new KeyEvent(deviceComponent, 0, System.currentTimeMillis(), 0, KeyEvent.VK_UP,
 						KeyEvent.CHAR_UNDEFINED);
 				deviceComponent.keyPressed(event);
 				deviceComponent.keyReleased(event);
@@ -222,59 +218,47 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 
 	};
 
-	SwingDisplayComponent(SwingDeviceComponent deviceComponent)
-	{
+	SwingDisplayComponent(SwingDeviceComponent deviceComponent) {
 		this.deviceComponent = deviceComponent;
 
 		setFocusable(false);
-    	
-    	addMouseListener(mouseListener);
-        addMouseMotionListener(mouseMotionListener);
-        addMouseWheelListener(mouseWheelListener);
-	}
-	
-	
-	public void init()
-	{
-	    displayImage = null;
-	    initialPressedSoftButton = null;
+
+		addMouseListener(mouseListener);
+		addMouseMotionListener(mouseMotionListener);
+		addMouseWheelListener(mouseWheelListener);
 	}
 
+	public void init() {
+		synchronized (this) {
+			displayImage = null;
+			initialPressedSoftButton = null;
+		}
+	}
 
-	public void addDisplayRepaintListener(DisplayRepaintListener l) 
-	{
+	public void addDisplayRepaintListener(DisplayRepaintListener l) {
 		displayRepaintListener = l;
 	}
 
-
-	public void removeDisplayRepaintListener(DisplayRepaintListener l) 
-	{
+	public void removeDisplayRepaintListener(DisplayRepaintListener l) {
 		if (displayRepaintListener == l) {
 			displayRepaintListener = null;
 		}
 	}
 
-
-	public MutableImage getDisplayImage()
-	{
+	public MutableImage getDisplayImage() {
 		return displayImage;
 	}
 
-	
 	public Dimension getPreferredSize() {
-  		Device device = DeviceFactory.getDevice();
-  		if (device == null) {
-  			return new Dimension(0, 0);
-  		}  		
-  		
-  		return new Dimension(
-  				device.getDeviceDisplay().getFullWidth(),
-  				device.getDeviceDisplay().getFullHeight());
+		Device device = DeviceFactory.getDevice();
+		if (device == null) {
+			return new Dimension(0, 0);
+		}
+
+		return new Dimension(device.getDeviceDisplay().getFullWidth(), device.getDeviceDisplay().getFullHeight());
 	}
 
-
-	protected void paintComponent(Graphics g) 
-	{
+	protected void paintComponent(Graphics g) {
 		if (displayImage != null) {
 			synchronized (displayImage) {
 				g.drawImage(displayImage.getImage(), 0, 0, null);
@@ -282,9 +266,7 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 		}
 	}
 
-
-	public void repaintRequest(int x, int y, int width, int height) 
-	{
+	public void repaintRequest(int x, int y, int width, int height) {
 		MIDletAccess ma = MIDletBridge.getMIDletAccess();
 		if (ma == null) {
 			return;
@@ -301,45 +283,46 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 		Device device = DeviceFactory.getDevice();
 
 		if (device != null) {
-            synchronized (this) {
-    			if (displayImage == null) {
-    				displayImage = new J2SEMutableImage(
-    						device.getDeviceDisplay().getFullWidth(), device.getDeviceDisplay().getFullHeight());
-    			}
-			
-				Graphics gc = displayImage.getImage().getGraphics();
-				J2SEDeviceDisplay deviceDisplay = (J2SEDeviceDisplay) device.getDeviceDisplay();
-				deviceDisplay.paintDisplayable(gc, x, y, width, height);
-				if (!deviceDisplay.isFullScreenMode()) {
-					deviceDisplay.paintControls(gc);
+			synchronized (this) {
+				if (displayImage == null) {
+					displayImage = new J2SEMutableImage(device.getDeviceDisplay().getFullWidth(), device
+							.getDeviceDisplay().getFullHeight());
 				}
+
+				synchronized (displayImage) {
+					Graphics gc = displayImage.getImage().getGraphics();
+
+					J2SEDeviceDisplay deviceDisplay = (J2SEDeviceDisplay) device.getDeviceDisplay();
+					deviceDisplay.paintDisplayable(gc, x, y, width, height);
+					if (!deviceDisplay.isFullScreenMode()) {
+						deviceDisplay.paintControls(gc);
+					}
+				}
+
+				fireDisplayRepaint(displayImage);
 			}
-				
-			fireDisplayRepaint(displayImage);
-		}	
+		}
 
 		repaint();
 	}
 
-
-	private void fireDisplayRepaint(MutableImage image)
-	{
+	private void fireDisplayRepaint(MutableImage image) {
 		if (displayRepaintListener != null) {
 			displayRepaintListener.repaintInvoked(image);
 		}
 	}
-	
+
 	Point deviceCoordinate(DeviceDisplay deviceDisplay, Point p) {
-	    if (deviceDisplay.isFullScreenMode()) {
-	        return p;
-	    } else {
-	        org.microemu.device.impl.Rectangle pb = ((J2SEDeviceDisplay)deviceDisplay).getDisplayPaintable();
-	        return new Point(p.x - pb.x, p.y - pb.y);
-	    }
+		if (deviceDisplay.isFullScreenMode()) {
+			return p;
+		} else {
+			org.microemu.device.impl.Rectangle pb = ((J2SEDeviceDisplay) deviceDisplay).getDisplayPaintable();
+			return new Point(p.x - pb.x, p.y - pb.y);
+		}
 	}
-	
+
 	void switchShowMouseCoordinates() {
-        showMouseCoordinates = !showMouseCoordinates;
-    }
+		showMouseCoordinates = !showMouseCoordinates;
+	}
 
 }

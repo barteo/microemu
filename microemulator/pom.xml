@@ -153,7 +153,7 @@
     <properties>
         <buildLabel>${version}</buildLabel>
         <pyx4meVersion>2.0.2-SNAPSHOT</pyx4meVersion>
-        <jourVersion>2.0.1-SNAPSHOT</jourVersion>
+        <jourVersion>2.0.1</jourVersion>
     </properties>
 
     <dependencyManagement>

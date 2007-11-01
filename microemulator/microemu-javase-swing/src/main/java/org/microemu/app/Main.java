@@ -821,8 +821,7 @@ public class Main extends JFrame {
 		}
 
 		final Main app = new Main();
-		app.common.initParams(params);
-		app.common.initDevice(params, app.selectDevicePanel.getSelectedDeviceEntry());
+		app.common.initParams(params, app.selectDevicePanel.getSelectedDeviceEntry());
 		app.deviceEntry = app.selectDevicePanel.getSelectedDeviceEntry();
 		DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) DeviceFactory.getDevice().getDeviceDisplay();
 		if (deviceDisplay.isResizable()) {

@@ -76,7 +76,7 @@
         <module>microemu-javase</module>
         <module>microemu-javase-swing</module>
         <module>microemu-javase-applet</module>
-        <module>microemu-javase-swt</module>
+        <!--module>microemu-javase-swt</module-->
         <module>microemu-extensions</module>
         <module>microemu-examples</module>
         <module>microemulator</module>
@@ -154,6 +154,9 @@
         <buildLabel>${version}</buildLabel>
         <pyx4meVersion>2.0.2-SNAPSHOT</pyx4meVersion>
         <jourVersion>2.0.1</jourVersion>
+        <!-- See OS X profile -->
+        <javaRunTimeJar>${java.home}/lib/rt.jar</javaRunTimeJar>
+        <javaRunTimeSecurityJar>${java.home}/lib/jsse.jar</javaRunTimeSecurityJar>
     </properties>
 
     <dependencyManagement>
@@ -482,6 +485,19 @@
 
     <profiles>
         <profile>
+            <id>osx</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <javaRunTimeJar>${java.home}/../Classes/classes.jar</javaRunTimeJar>
+                <javaRunTimeSecurityJar>${java.home}/../Classes/jsse.jar</javaRunTimeSecurityJar>
+            </properties>
+        </profile>
+
+        <profile>
             <id>release</id>
             <activation>
                 <property>
@@ -509,7 +525,6 @@
         </profile>
 
         <profile>
-            <!-- We will support ant build, Ant Runs with Java 1.4, 5 and 6 -->
             <id>build</id>
             <modules>
                 <module>microemu-webstart</module>

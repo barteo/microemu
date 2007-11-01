@@ -106,6 +106,8 @@ public class Common implements MicroEmulator, CommonInterface {
 
 	private String propertiesJad = null;
 
+	private String midletClassOrJad = null;
+
 	private String jadURL = null;
 
 	private Object destroyNotify = new Object();
@@ -206,6 +208,7 @@ public class Common implements MicroEmulator, CommonInterface {
 	}
 
 	protected void openJadUrl(String urlString) throws IOException {
+		midletClassOrJad = urlString;
 		if (!autoTests) {
 			openJadUrl(urlString, createMIDletClassLoader());
 		} else {
@@ -336,7 +339,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		}
 	}
 
-	public MIDletContext startMidlet(Class midletClass, MIDletAccess previousMidletAccess) {
+	private MIDletContext startMidlet(Class midletClass, MIDletAccess previousMidletAccess) {
 		try {
 			if (previousMidletAccess != null) {
 				previousMidletAccess.destroyApp(true);
@@ -623,48 +626,49 @@ public class Common implements MicroEmulator, CommonInterface {
 		try {
 			while (argsIterator.hasNext()) {
 				String arg = (String) argsIterator.next();
+				argsIterator.remove();
 
 				if ((arg.equals("--help")) || (arg.equals("-help"))) {
 					System.out.println(usage());
 					System.exit(0);
 				} else if (arg.equals("--id")) {
-					argsIterator.remove();
 					Config.setEmulatorID((String) argsIterator.next());
+					argsIterator.remove();
 				} else if ((arg.equals("--appclasspath")) || (arg.equals("-appclasspath")) || (arg.equals("-appcp"))) {
 					if (clConfig == null) {
 						throw new ConfigurationException("Wrong command line argument order");
 					}
-					argsIterator.remove();
 					clConfig.addAppClassPath((String) argsIterator.next());
+					argsIterator.remove();
 				} else if (arg.equals("--appclass")) {
 					if (clConfig == null) {
 						throw new ConfigurationException("Wrong command line argument order");
 					}
-					argsIterator.remove();
 					clConfig.addAppClass((String) argsIterator.next());
+					argsIterator.remove();
 				} else if (arg.startsWith("-Xautotest:")) {
 					autoTests = true;
 					jadURL = arg.substring("-Xautotest:".length());
 				} else if (arg.equals("-Xautotest")) {
 					autoTests = true;
 				} else if (arg.equals("--propertiesjad")) {
-					argsIterator.remove();
 					File file = new File((String) argsIterator.next());
+					argsIterator.remove();
 					propertiesJad = file.exists() ? IOUtils.getCanonicalFileURL(file) : arg;
 				} else if (arg.equals("--appclassloader")) {
 					if (clConfig == null) {
 						Message.error("Error", "Wrong command line argument order");
 						break;
 					}
-					argsIterator.remove();
 					clConfig.setDelegationType((String) argsIterator.next());
+					argsIterator.remove();
 				} else if (arg.equals("--usesystemclassloader")) {
 					useSystemClassLoader = true;
 					clConfig.setDelegationType("system");
 				} else if (arg.equals("-d") || arg.equals("--device")) {
 					if (argsIterator.hasNext()) {
-						argsIterator.remove();
 						String tmpDevice = (String) argsIterator.next();
+						argsIterator.remove();
 						if (!tmpDevice.toLowerCase().endsWith(".xml")) {
 							try {
 								deviceClass = Class.forName(tmpDevice);
@@ -677,8 +681,8 @@ public class Common implements MicroEmulator, CommonInterface {
 					}
 				} else if (arg.equals("--rms")) {
 					if (argsIterator.hasNext()) {
-						argsIterator.remove();
 						String tmpRms = (String) argsIterator.next();
+						argsIterator.remove();
 						if (tmpRms.equals("file")) {
 							paramRecordStoreManager = new FileRecordStoreManager(launcher);
 						} else if (tmpRms.equals("memory")) {
@@ -686,15 +690,14 @@ public class Common implements MicroEmulator, CommonInterface {
 						}
 					}
 				} else if ((arg.equals("--classpath")) || (arg.equals("-classpath")) || (arg.equals("-cp"))) {
-					argsIterator.remove();
 					getExtensionsClassLoader().addClasspath((String) argsIterator.next());
-				} else if (arg.equals("--impl")) {
 					argsIterator.remove();
+				} else if (arg.equals("--impl")) {
 					registerImplementation((String) argsIterator.next());
+					argsIterator.remove();
 				} else {
-					continue;
+					midletClassOrJad = arg;
 				}
-				argsIterator.remove();
 			}
 		} catch (ConfigurationException e) {
 			Message.error("Error", e.getMessage(), e);
@@ -793,28 +796,24 @@ public class Common implements MicroEmulator, CommonInterface {
 		return properties;
 	}
 
-	public void initMIDlet(String midletString, boolean startMidlet) {
-		MIDletClassLoaderConfig clConfig = mIDletClassLoaderConfig;
-		mIDletClassLoaderConfig = null;
+	public void initMIDlet(boolean startMidlet) {
 		Class midletClass = null;
 
-		if (midletString != null && midletString.endsWith(".jad")) {
+		if (midletClassOrJad != null && midletClassOrJad.endsWith(".jad")) {
 			try {
-				File file = new File(midletString);
-				String url = file.exists() ? IOUtils.getCanonicalFileURL(file) : midletString;
+				File file = new File(midletClassOrJad);
+				String url = file.exists() ? IOUtils.getCanonicalFileURL(file) : midletClassOrJad;
 				openJadUrl(url);
 			} catch (IOException exception) {
-				Logger.error("Cannot load " + midletString + " URL", exception);
+				Logger.error("Cannot load " + midletClassOrJad + " URL", exception);
 			}
-		} else if (midletString != null) {
-			mIDletClassLoaderConfig = clConfig;
-			useSystemClassLoader = clConfig.isClassLoaderDisabled();
+		} else if (midletClassOrJad != null) {
+			useSystemClassLoader = mIDletClassLoaderConfig.isClassLoaderDisabled();
 			if (!useSystemClassLoader) {
 				MIDletClassLoader classLoader = createMIDletClassLoader();
 				try {
-					clConfig = null;
-					classLoader.addClassURL(midletString);
-					midletClass = classLoader.loadClass(midletString);
+					classLoader.addClassURL(midletClassOrJad);
+					midletClass = classLoader.loadClass(midletClassOrJad);
 				} catch (MalformedURLException e) {
 					Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
 					return;
@@ -824,14 +823,13 @@ public class Common implements MicroEmulator, CommonInterface {
 				}
 			} else {
 				try {
-					midletClass = instance.getClass().getClassLoader().loadClass(midletString);
+					midletClass = instance.getClass().getClassLoader().loadClass(midletClassOrJad);
 				} catch (ClassNotFoundException e) {
 					Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
 					return;
 				}
 			}
 		}
-		mIDletClassLoaderConfig = clConfig;
 
 		if (autoTests) {
 			if (jadURL != null) {
@@ -850,12 +848,16 @@ public class Common implements MicroEmulator, CommonInterface {
 			if (midletClass == null) {
 				MIDletEntry entry = launcher.getSelectedMidletEntry();
 				if (startMidlet && entry != null) {
-					startMidlet(entry.getMIDletClass(), null);
+					if (MIDletBridge.getMIDletAccess().midlet instanceof Launcher) {
+						startMidlet(entry.getMIDletClass(), null);
+					} else {
+						startMidlet(entry.getMIDletClass(), MIDletBridge.getMIDletAccess());
+					}
 				} else {
 					startLauncher(null);
 				}
 			} else {
-				startMidlet(midletClass, null);
+				startMidlet(midletClass, MIDletBridge.getMIDletAccess());
 			}
 		}
 

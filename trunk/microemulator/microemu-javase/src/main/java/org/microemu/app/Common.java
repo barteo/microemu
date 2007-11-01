@@ -612,8 +612,12 @@ public class Common implements MicroEmulator, CommonInterface {
 		}
 	}
 
-	public void initParams(List params) {
+	public void initParams(List params, DeviceEntry defaultDevice) {
 		MIDletClassLoaderConfig clConfig = new MIDletClassLoaderConfig();
+		Class deviceClass = null;
+		String deviceDescriptorLocation = null;
+		RecordStoreManager paramRecordStoreManager = null;
+
 		Iterator argsIterator = params.iterator();
 
 		try {
@@ -657,6 +661,36 @@ public class Common implements MicroEmulator, CommonInterface {
 				} else if (arg.equals("--usesystemclassloader")) {
 					useSystemClassLoader = true;
 					clConfig.setDelegationType("system");
+				} else if (arg.equals("-d") || arg.equals("--device")) {
+					if (argsIterator.hasNext()) {
+						argsIterator.remove();
+						String tmpDevice = (String) argsIterator.next();
+						if (!tmpDevice.toLowerCase().endsWith(".xml")) {
+							try {
+								deviceClass = Class.forName(tmpDevice);
+							} catch (ClassNotFoundException ex) {
+							}
+						}
+						if (deviceClass == null) {
+							deviceDescriptorLocation = tmpDevice;
+						}
+					}
+				} else if (arg.equals("--rms")) {
+					if (argsIterator.hasNext()) {
+						argsIterator.remove();
+						String tmpRms = (String) argsIterator.next();
+						if (tmpRms.equals("file")) {
+							paramRecordStoreManager = new FileRecordStoreManager(launcher);
+						} else if (tmpRms.equals("memory")) {
+							paramRecordStoreManager = new MemoryRecordStoreManager();
+						}
+					}
+				} else if ((arg.equals("--classpath")) || (arg.equals("-classpath")) || (arg.equals("-cp"))) {
+					argsIterator.remove();
+					getExtensionsClassLoader().addClasspath((String) argsIterator.next());
+				} else if (arg.equals("--impl")) {
+					argsIterator.remove();
+					registerImplementation((String) argsIterator.next());
 				} else {
 					continue;
 				}
@@ -668,52 +702,6 @@ public class Common implements MicroEmulator, CommonInterface {
 		}
 
 		mIDletClassLoaderConfig = clConfig;
-	}
-
-	public void initDevice(List params, DeviceEntry defaultDevice) {
-		RecordStoreManager paramRecordStoreManager = null;
-		Class deviceClass = null;
-		String deviceDescriptorLocation = null;
-
-		Iterator it = params.iterator();
-		while (it.hasNext()) {
-			String tmp = (String) it.next();
-			if (tmp.equals("-d") || tmp.equals("--device")) {
-				it.remove();
-				if (it.hasNext()) {
-					String tmpDevice = (String) it.next();
-					it.remove();
-					if (!tmpDevice.toLowerCase().endsWith(".xml")) {
-						try {
-							deviceClass = Class.forName(tmpDevice);
-						} catch (ClassNotFoundException ex) {
-						}
-					}
-					if (deviceClass == null) {
-						deviceDescriptorLocation = tmpDevice;
-					}
-				}
-			} else if (tmp.equals("--rms")) {
-				it.remove();
-				if (it.hasNext()) {
-					String tmpRms = (String) it.next();
-					it.remove();
-					if (tmpRms.equals("file")) {
-						paramRecordStoreManager = new FileRecordStoreManager(launcher);
-					} else if (tmpRms.equals("memory")) {
-						paramRecordStoreManager = new MemoryRecordStoreManager();
-					}
-				}
-			} else if ((tmp.equals("--classpath")) || (tmp.equals("-classpath")) || (tmp.equals("-cp"))) {
-				it.remove();
-				getExtensionsClassLoader().addClasspath((String) it.next());
-				it.remove();
-			} else if (tmp.equals("--impl")) {
-				it.remove();
-				registerImplementation((String) it.next());
-				it.remove();
-			}
-		}
 
 		// TODO registerImplementations by reading jar files in classpath.
 

@@ -163,7 +163,7 @@ public class Swt extends Common {
 
 				if (MIDletBridge.getCurrentMIDlet() != getLauncher()) {
 					try {
-						startMidlet(MIDletBridge.getCurrentMIDlet().getClass(), MIDletBridge.getMIDletAccess());
+						initMIDlet(true);
 					} catch (Exception ex) {
 						System.err.println(ex);
 					}
@@ -359,7 +359,7 @@ public class Swt extends Common {
 		} catch (NoSuchElementException ex) {
 			midletString = null;
 		}
-		app.initMIDlet(midletString, false);
+		app.initMIDlet(false);
 
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())

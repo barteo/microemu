@@ -53,7 +53,7 @@
                     <attach>true</attach>
                     <attachArtifactClassifier>4applet</attachArtifactClassifier>
                     <libs>
-                        <lib>${java.home}/lib/rt.jar</lib>
+                        <lib>${javaRunTimeJar}</lib>
                     </libs>
                 </configuration>
             </plugin>

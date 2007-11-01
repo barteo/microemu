@@ -70,7 +70,7 @@
                         </inclusions>
                     </assembly>
                     <libs>
-                        <lib>${java.home}/lib/rt.jar</lib>
+                        <lib>${javaRunTimeJar}</lib>
                     </libs>
                 </configuration>
             </plugin>

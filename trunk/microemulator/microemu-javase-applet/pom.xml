@@ -121,8 +121,8 @@
                         </exclusion>
                     </exclusions>
                     <libs>
-                        <lib>${java.home}/lib/rt.jar</lib>
-                        <lib>${java.home}/lib/jsse.jar</lib>
+                        <lib>${javaRunTimeJar}</lib>
+                        <lib>${javaRunTimeSecurityJar}</lib>
                     </libs>
                 </configuration>
             </plugin>

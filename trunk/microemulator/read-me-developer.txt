@@ -21,6 +21,12 @@
 
      distribution pakage would be created in microemulator\target\microemulator-2.X.X.tar.gz
 
+   Running GCF Tests behind firewall
+     Create file $home\.microemulator\tests.properties
+     The file should contain  host name to connect to, e.g.:
+       gcf.no-proxy-test-host=localhost
+     We are using  echo test server. Sources here: https://pyx4j.com/viewvc/pyx4me/pyx4me-host/pyx4me-test-server/
+
 * Building official Release by the MicroEmulator team.
 
     * Test locally

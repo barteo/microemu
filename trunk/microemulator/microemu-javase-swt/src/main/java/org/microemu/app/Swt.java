@@ -347,8 +347,7 @@ public class Swt extends Common {
 		}
 
 		Swt app = new Swt(shell);
-		app.initParams(params);
-		app.initDevice(params, app.selectDeviceDialog.getSelectedDeviceEntry());
+		app.initParams(params, app.selectDeviceDialog.getSelectedDeviceEntry());
 		app.updateDevice();
 
 		shell.pack();

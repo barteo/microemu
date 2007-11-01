@@ -41,6 +41,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -819,8 +820,8 @@ public class Main extends JFrame {
 			Logger.debug("arguments", debugArgs.toString());
 		}
 
-		Common.initParams(params);
 		final Main app = new Main();
+		app.common.initParams(params);
 		app.common.initDevice(params, app.selectDevicePanel.getSelectedDeviceEntry());
 		app.deviceEntry = app.selectDevicePanel.getSelectedDeviceEntry();
 		DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) DeviceFactory.getDevice().getDeviceDisplay();
@@ -835,7 +836,13 @@ public class Main extends JFrame {
 		app.validate();
 		app.setVisible(true);
 
-		app.common.initMIDlet(params, false);
+		String midletString;
+		try {
+			midletString = (String) params.iterator().next();
+		} catch (NoSuchElementException ex) {
+			midletString = null;
+		}
+		app.common.initMIDlet(midletString, false);
 
 		app.addComponentListener(app.componentListener);
 

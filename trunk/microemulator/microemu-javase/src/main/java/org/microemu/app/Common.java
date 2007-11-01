@@ -79,18 +79,18 @@ import org.microemu.util.JadProperties;
 import org.microemu.util.MemoryRecordStoreManager;
 
 public class Common implements MicroEmulator, CommonInterface {
-	
+
+	protected EmulatorContext emulatorContext;
+
+	protected JadProperties jad = new JadProperties();
+
 	private static Common instance;
 
 	private static Launcher launcher;
 
 	private static StatusBarListener statusBarListener = null;
 
-	protected EmulatorContext emulatorContext;
-
-	protected JadProperties jad = new JadProperties();
-
-	protected JadProperties manifest = new JadProperties();
+	private JadProperties manifest = new JadProperties();
 
 	private RecordStoreManager recordStoreManager;
 
@@ -98,22 +98,25 @@ public class Common implements MicroEmulator, CommonInterface {
 
 	private ExtensionsClassLoader extensionsClassLoader;
 
-	MIDletClassLoaderConfig mIDletClassLoaderConfig;
-	
+	private MIDletClassLoaderConfig mIDletClassLoaderConfig;
+
 	private boolean useSystemClassLoader = false;
-	
-	protected boolean autoTests = false;
-	
-	private Object destroyNotify = new Object(); 
-	
+
+	private boolean autoTests = false;
+
+	private Object destroyNotify = new Object();
+
 	public Common(EmulatorContext context) {
 		instance = this;
 		this.emulatorContext = context;
-		
+
 		launcher = new Launcher(this);
 		launcher.setCurrentMIDlet(launcher);
 
-		/* Initialize secutity context for implemenations, May be there are better place for this call */
+		/*
+		 * Initialize secutity context for implemenations, May be there are
+		 * better place for this call
+		 */
 		ImplFactory.instance();
 		ImplFactory.registerGCF(ImplFactory.DEFAULT, new ConnectorImpl());
 
@@ -124,11 +127,11 @@ public class Common implements MicroEmulator, CommonInterface {
 		return recordStoreManager;
 	}
 
-    public void setRecordStoreManager(RecordStoreManager manager) {
-        this.recordStoreManager = manager;
-    }
+	public void setRecordStoreManager(RecordStoreManager manager) {
+		this.recordStoreManager = manager;
+	}
 
-    public String getAppProperty(String key) {
+	public String getAppProperty(String key) {
 		if (key.equals("microedition.platform")) {
 			return "MicroEmulator";
 		} else if (key.equals("microedition.profiles")) {
@@ -146,7 +149,7 @@ public class Common implements MicroEmulator, CommonInterface {
 			result = manifest.getProperty(key);
 		}
 
-        return result;
+		return result;
 	}
 
 	public void notifyDestroyed(MIDletContext midletContext) {
@@ -161,13 +164,12 @@ public class Common implements MicroEmulator, CommonInterface {
 			destroyNotify.notifyAll();
 		}
 	}
-	
+
 	public Launcher getLauncher() {
 		return launcher;
 	}
 
-	public static void dispose()
-	{
+	public static void dispose() {
 		try {
 			MIDletBridge.getMIDletAccess().destroyApp(true);
 		} catch (MIDletStateChangeException ex) {
@@ -176,7 +178,6 @@ public class Common implements MicroEmulator, CommonInterface {
 		// TODO to be removed when event dispatcher will run input method task
 		DeviceFactory.getDevice().getInputMethod().dispose();
 	}
-
 
 	public static boolean isJadExtension(String nameString) {
 		if (nameString == null) {
@@ -188,9 +189,9 @@ public class Common implements MicroEmulator, CommonInterface {
 		}
 		return nameString.substring(end + 1, nameString.length()).toLowerCase(Locale.ENGLISH).equals("jad");
 	}
-	
+
 	/**
-	 * TODO add proper Error handling and display in this function. 
+	 * TODO add proper Error handling and display in this function.
 	 */
 	public static void openJadUrlSafe(String urlString) {
 		try {
@@ -199,7 +200,7 @@ public class Common implements MicroEmulator, CommonInterface {
 			Message.error("Unable to open jad " + urlString, e);
 		}
 	}
-	
+
 	protected void openJadUrl(String urlString) throws IOException {
 		if (!autoTests) {
 			openJadUrl(urlString, createMIDletClassLoader());
@@ -256,7 +257,7 @@ public class Common implements MicroEmulator, CommonInterface {
 						}
 						Logger.debug("AutoTests start class", midletClassName);
 						MIDletContext context = startMidlet(midletClass, null);
-						//TODO Proper test If this is still active conetex.
+						// TODO Proper test If this is still active conetex.
 						if (MIDletBridge.getMIDletContext() == context) {
 							synchronized (destroyNotify) {
 								try {
@@ -277,21 +278,21 @@ public class Common implements MicroEmulator, CommonInterface {
 					} while (true);
 
 				} while (true);
-				
+
 				if (exitAtTheEnd) {
 					System.exit(0);
 				}
 			}
 		};
-		
+
 		t.start();
 	}
-	
+
 	protected String saveJar2TmpFile(String jarUrl, boolean reportError) {
 		InputStream is = null;
 		try {
 			URL url = new URL(jad.getJarURL());
-			URLConnection conn= url.openConnection();
+			URLConnection conn = url.openConnection();
 			is = conn.getInputStream();
 			File tmp = File.createTempFile("me2-", ".jar");
 			tmp.deleteOnExit();
@@ -304,9 +305,9 @@ public class Common implements MicroEmulator, CommonInterface {
 			return null;
 		} finally {
 			IOUtils.closeQuietly(is);
-		}		
+		}
 	}
-	
+
 	private void openJadUrl(String urlString, MIDletClassLoader midletClassLoader) throws IOException {
 		try {
 			Logger.debug("openJad", urlString);
@@ -339,14 +340,14 @@ public class Common implements MicroEmulator, CommonInterface {
 		} catch (Throwable e) {
 			Message.error("Unable to destroy MIDlet, " + Message.getCauseMessage(e), e);
 		}
-		
+
 		MIDletContext context = new MIDletContext();
 		MIDletBridge.setThreadMIDletContext(context);
 		try {
 			MIDlet m;
-			
+
 			final String errorTitle = "Error starting MIDlet";
-			
+
 			try {
 				Object object = midletClass.newInstance();
 				if (!(object instanceof MIDlet)) {
@@ -359,13 +360,13 @@ public class Common implements MicroEmulator, CommonInterface {
 				MIDletBridge.destroyMIDletContext(context);
 				return null;
 			}
-			
+
 			try {
 				if (context.getMIDlet() != m) {
 					throw new Error("MIDlet Context corrupted");
 				}
 				context.getMIDletAccess().startApp();
-				
+
 				launcher.setCurrentMIDlet(m);
 				return context;
 			} catch (Throwable e) {
@@ -391,7 +392,7 @@ public class Common implements MicroEmulator, CommonInterface {
 				Logger.error("destroyApp error", e);
 			}
 		}
-		
+
 		try {
 			MIDletBridge.getMIDletAccess(launcher).startApp();
 			launcher.setCurrentMIDlet(launcher);
@@ -420,7 +421,7 @@ public class Common implements MicroEmulator, CommonInterface {
 	/**
 	 * Show message describing problem with jar if any
 	 */
-	protected boolean describeJarProblem(URL jarUrl , MIDletClassLoader midletClassLoader) {
+	protected boolean describeJarProblem(URL jarUrl, MIDletClassLoader midletClassLoader) {
 		InputStream is = null;
 		JarInputStream jis = null;
 		try {
@@ -454,7 +455,8 @@ public class Common implements MicroEmulator, CommonInterface {
 					return true;
 				}
 				// Read till the end
-				while (jis.getNextJarEntry() != null);
+				while (jis.getNextJarEntry() != null)
+					;
 			} catch (ZipException e) {
 				Message.error("Problem reading jar " + jarUrl, e);
 				return true;
@@ -467,22 +469,23 @@ public class Common implements MicroEmulator, CommonInterface {
 		} finally {
 			IOUtils.closeQuietly(jis);
 			IOUtils.closeQuietly(is);
-		}		
+		}
 	}
-	
-	protected void loadJar(String jadUrl, String jarUrl, MIDletClassLoader midletClassLoader) throws ClassNotFoundException {
+
+	protected void loadJar(String jadUrl, String jarUrl, MIDletClassLoader midletClassLoader)
+			throws ClassNotFoundException {
 		if (jarUrl == null) {
 			throw new ClassNotFoundException("Cannot find MIDlet-Jar-URL property in jad");
 		}
 		Logger.debug("openJar", jarUrl);
-		
+
 		// Close Current MIDlet before oppening new one.
 		MIDletContext previousMidletContext = MIDletBridge.getMIDletContext();
 		if (previousMidletContext != null && !previousMidletContext.isLauncher()) {
-			 MIDletBridge.destroyMIDletContext(previousMidletContext);
+			MIDletBridge.destroyMIDletContext(previousMidletContext);
 		}
 		MIDletBridge.clear();
-		
+
 		setResponseInterface(false);
 		try {
 			URL url = null;
@@ -566,7 +569,7 @@ public class Common implements MicroEmulator, CommonInterface {
 			Class implClass = getExtensionsClassLoader().loadClass(implClassName);
 			if (ImplementationInitialization.class.isAssignableFrom(implClass)) {
 				Object inst = implClass.newInstance();
-				((ImplementationInitialization)inst).registerImplementation();
+				((ImplementationInitialization) inst).registerImplementation();
 				Logger.debug("implementation registered", implClassName);
 			} else {
 				Logger.debug("initialize implementation", implClassName);
@@ -580,14 +583,14 @@ public class Common implements MicroEmulator, CommonInterface {
 					}
 				} catch (NoSuchMethodException e) {
 				}
-				
+
 				if (isStatic) {
 					try {
 						Method getinst = implClass.getMethod("instance", null);
 						if (Modifier.isStatic(getinst.getModifiers())) {
 							getinst.invoke(implClass, null);
 						} else {
-							Logger.debug("No known way to initialize implementation class");	
+							Logger.debug("No known way to initialize implementation class");
 						}
 					} catch (NoSuchMethodException e) {
 						Logger.debug("No known way to initialize implementation class");
@@ -611,7 +614,7 @@ public class Common implements MicroEmulator, CommonInterface {
 			String tmp = (String) it.next();
 			if (tmp.equals("--id")) {
 				it.remove();
-				Config.setEmulatorID((String)it.next());
+				Config.setEmulatorID((String) it.next());
 				it.remove();
 			} else if ((tmp.equals("--help")) || (tmp.equals("-help"))) {
 				System.out.println(usage());
@@ -619,7 +622,7 @@ public class Common implements MicroEmulator, CommonInterface {
 			}
 		}
 	}
-	
+
 	public void initDevice(List params, DeviceEntry defaultDevice) {
 		RecordStoreManager paramRecordStoreManager = null;
 		Class deviceClass = null;
@@ -654,26 +657,23 @@ public class Common implements MicroEmulator, CommonInterface {
 						paramRecordStoreManager = new MemoryRecordStoreManager();
 					}
 				}
-			} else if ((tmp.equals("--classpath")) || (tmp.equals("-classpath"))  || (tmp.equals("-cp"))) {
+			} else if ((tmp.equals("--classpath")) || (tmp.equals("-classpath")) || (tmp.equals("-cp"))) {
 				it.remove();
-				getExtensionsClassLoader().addClasspath((String)it.next());
+				getExtensionsClassLoader().addClasspath((String) it.next());
 				it.remove();
 			} else if (tmp.equals("--impl")) {
 				it.remove();
-				registerImplementation((String)it.next());
+				registerImplementation((String) it.next());
 				it.remove();
 			}
 		}
 
-		//TODO registerImplementations by reading jar files in classpath.
+		// TODO registerImplementations by reading jar files in classpath.
 
 		ClassLoader classLoader = getExtensionsClassLoader();
 		if (deviceDescriptorLocation != null) {
 			try {
-				setDevice(DeviceImpl.create(
-						emulatorContext,
-						classLoader,
-						deviceDescriptorLocation));
+				setDevice(DeviceImpl.create(emulatorContext, classLoader, deviceDescriptorLocation));
 			} catch (IOException ex) {
 				Logger.error(ex);
 			}
@@ -686,10 +686,7 @@ public class Common implements MicroEmulator, CommonInterface {
 						urls[0] = new File(Config.getConfigPath(), defaultDevice.getFileName()).toURI().toURL();
 						classLoader = createExtensionsClassLoader(urls);
 					}
-					setDevice(DeviceImpl.create(
-							emulatorContext,
-							classLoader,
-							defaultDevice.getDescriptorLocation()));
+					setDevice(DeviceImpl.create(emulatorContext, classLoader, defaultDevice.getDescriptorLocation()));
 				} else {
 					DeviceImpl device = (DeviceImpl) deviceClass.newInstance();
 					device.init(emulatorContext);
@@ -719,15 +716,17 @@ public class Common implements MicroEmulator, CommonInterface {
 
 	private static ExtensionsClassLoader getExtensionsClassLoader() {
 		if (instance.extensionsClassLoader == null) {
-			instance.extensionsClassLoader = new ExtensionsClassLoader(new URL[]{}, instance.getClass().getClassLoader());
+			instance.extensionsClassLoader = new ExtensionsClassLoader(new URL[] {}, instance.getClass()
+					.getClassLoader());
 		}
 		return instance.extensionsClassLoader;
 	}
-	
+
 	private MIDletClassLoader createMIDletClassLoader() {
 		MIDletClassLoader mcl = new MIDletClassLoader(getExtensionsClassLoader());
 		if (!Serializable.class.isAssignableFrom(Injected.class)) {
-			Logger.error("classpath configuration error, Wrong Injected class detected. microemu-injected module should be after microemu-javase in eclipse");
+			Logger
+					.error("classpath configuration error, Wrong Injected class detected. microemu-injected module should be after microemu-javase in eclipse");
 		}
 		if (mIDletClassLoaderConfig != null) {
 			try {
@@ -742,14 +741,14 @@ public class Common implements MicroEmulator, CommonInterface {
 		MIDletResourceLoader.classLoader = mcl;
 		return mcl;
 	}
-	
+
 	public static ClassLoader createExtensionsClassLoader(final URL[] urls) {
 		return new ExtensionsClassLoader(urls, getExtensionsClassLoader());
 	}
-	
+
 	private static JadProperties loadJadProperties(String urlString) throws IOException {
 		JadProperties properties = new JadProperties();
-		
+
 		URL url = new URL(urlString);
 		if (url.getUserInfo() == null) {
 			properties.load(url.openStream());
@@ -758,8 +757,8 @@ public class Common implements MicroEmulator, CommonInterface {
 			String userInfo = new String(Base64Coder.encode(url.getUserInfo().getBytes("UTF-8")));
 			cn.setRequestProperty("Authorization", "Basic " + userInfo);
 			properties.load(cn.getInputStream());
-		}		
-		
+		}
+
 		return properties;
 	}
 
@@ -769,7 +768,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		String propertiesJad = null;
 		String jadURL = null;
 		Iterator argsIterator = args.iterator();
-		
+
 		try {
 			while (argsIterator.hasNext()) {
 				String arg = (String) argsIterator.next();
@@ -844,9 +843,9 @@ public class Common implements MicroEmulator, CommonInterface {
 			return;
 		}
 		mIDletClassLoaderConfig = clConfig;
-		
+
 		if (autoTests) {
-			if (jadURL != null) { 
+			if (jadURL != null) {
 				runAutoTests(jadURL, true);
 			}
 		} else {
@@ -873,19 +872,13 @@ public class Common implements MicroEmulator, CommonInterface {
 
 	}
 
-
 	public static String usage() {
-		return
-			"[(-d | --device) ({device descriptor} | {device class name}) ] \n" +
-			"[--rms (file | memory)] \n" +
-			"[--id EmulatorID ] \n" +
-			"[--impl {JSR implementation class name}]\n" +
-			"[(--classpath|-cp) <JSR CLASSPATH>]\n" +
-			"[(--appclasspath|--appcp) <MIDlet CLASSPATH>]\n" +
-			"[--appclass <library class name>]\n" +
-			"[--appclassloader strict|delegating|system] \n" +
-			"[-Xautotest:<JAD file url>\n" +
-			"(({MIDlet class name} [--propertiesjad {jad file location}]) | {jad file location})";
+		return "[(-d | --device) ({device descriptor} | {device class name}) ] \n" + "[--rms (file | memory)] \n"
+				+ "[--id EmulatorID ] \n" + "[--impl {JSR implementation class name}]\n"
+				+ "[(--classpath|-cp) <JSR CLASSPATH>]\n" + "[(--appclasspath|--appcp) <MIDlet CLASSPATH>]\n"
+				+ "[--appclass <library class name>]\n" + "[--appclassloader strict|delegating|system] \n"
+				+ "[-Xautotest:<JAD file url>\n"
+				+ "(({MIDlet class name} [--propertiesjad {jad file location}]) | {jad file location})";
 	}
 
 }

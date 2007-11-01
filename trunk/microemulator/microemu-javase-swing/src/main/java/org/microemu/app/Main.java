@@ -484,7 +484,7 @@ public class Main extends JFrame {
 				}
 				if (restartMidlet == 0) {
 					try {
-						common.startMidlet(MIDletBridge.getCurrentMIDlet().getClass(), MIDletBridge.getMIDletAccess());
+						common.initMIDlet(true);
 					} catch (Exception ex) {
 						System.err.println(ex);
 					}
@@ -841,7 +841,7 @@ public class Main extends JFrame {
 		} catch (NoSuchElementException ex) {
 			midletString = null;
 		}
-		app.common.initMIDlet(midletString, false);
+		app.common.initMIDlet(false);
 
 		app.addComponentListener(app.componentListener);
 

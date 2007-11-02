@@ -91,7 +91,7 @@
                 </executions>
                 <configuration>
                     <wtkHome>${env.WTK_HOME}</wtkHome>
-                    <useWtkLibs>${wtkNotSupported}</useWtkLibs>
+                    <useWtkLibs>false</useWtkLibs>
                     <proguard>false</proguard>
                     <obfuscate>false</obfuscate>
                     <proguardPreverify>${wtkNotSupported}</proguardPreverify>

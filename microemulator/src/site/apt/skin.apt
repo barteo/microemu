@@ -62,8 +62,18 @@ Custom Skin Creation for MicroEmulator
 * device.xml Elements
 
     The following section describes the mobile device descriptor elements defined in the device.xml file.
-    See Schema for device.xml {{{2.0/device.xsd}http://www.microemu.org/2.0/device.xsd}} and {{{2.0/xsd-doc/index.html}XML Schema Documentation}}.
+    See Schema for device.xml {{{2.0.2/device.xsd}http://www.microemu.org/2.0.2/device.xsd}} and {{{2.0.2/xsd-doc/index.html}XML Schema Documentation}}.
 ~~     or {{{2.0/device.xsd.html}XML Schema Documentation}}..
+
+    *  Backwards compatibility <xmlns> attribute of device identify MicroEmulator device schema version.
+
+        * xmlns="http://www.microemu.org/2.0/"
+
+           Buttons key attr defines its function
+
+        * xmlns="http://www.microemu.org/2.0.2/"
+
+           Buttons name attr defines its function
 
     The root element for device.xml is <device>. It contains <img> images making up the skin, <display> and <fonts> definition and finally <input> descriptor.
 
@@ -74,7 +84,7 @@ Custom Skin Creation for MicroEmulator
         Example:
 
 ---
-<device name="Extended minimum device, color, pointer, moto like keys" extends="/org/microemu/device/minimum/device.xml">
+<device xmlns="http://www.microemu.org/2.0.2/" name="Extended minimum device, color, pointer, moto like keys" extends="/org/microemu/device/minimum/device.xml">
     <display>
         <iscolor>true</iscolor>
         <numcolors>65536</numcolors>
@@ -130,7 +140,7 @@ Custom Skin Creation for MicroEmulator
     <button name="SELECT" key="VK_ENTER" keyCode="-5">
 ---
 
-        <<name>> <mandatory attribute> Identify the button function: SOFT1, SOFT2, SELECT, UP, DOWN, LEFT, RIGHT,  0, 1...9
+        <<name>> <mandatory attribute> (Since 2.0.2) Identify the button function: SOFT1, SOFT2, SELECT, UP, DOWN, LEFT, RIGHT,  0, 1...9
 
 *----------+----------+-----------------+---------------------------+
 | name     | key      | Button function |   Canvas.getGameAction(keyCode) |
@@ -157,6 +167,8 @@ Custom Skin Creation for MicroEmulator
 
         <<key>> attribute is the computer keyboard shortcut which is defined as key. The actual key definitions are virtual key codes, which are defined in J2SE's java.awt.event.KeyEvent class. See the J2SE documentation for details.
         You can use integer value or String representing KeyEvent field name. For multiple key codes use space separated list.
+
+        When schema <2.0> is used this attribute identify button functions.
 
         Also <keyboardChars> attribute can be used to define keyboard shortcut. e.g. # and *
 

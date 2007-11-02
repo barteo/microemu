@@ -36,6 +36,10 @@
 
     </dependencies>
 
+    <properties>
+        <wtkNotSupported>false</wtkNotSupported>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -87,10 +91,10 @@
                 </executions>
                 <configuration>
                     <wtkHome>${env.WTK_HOME}</wtkHome>
-                    <useWtkLibs>false</useWtkLibs>
+                    <useWtkLibs>${wtkNotSupported}</useWtkLibs>
                     <proguard>false</proguard>
                     <obfuscate>false</obfuscate>
-                    <proguardPreverify>false</proguardPreverify>
+                    <proguardPreverify>${wtkNotSupported}</proguardPreverify>
                     <proguardInclude>${basedir}/proguard.conf</proguardInclude>
                     <proguardOptions>
                         <options>
@@ -165,5 +169,19 @@
 
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>osx</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <wtkNotSupported>true</wtkNotSupported>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

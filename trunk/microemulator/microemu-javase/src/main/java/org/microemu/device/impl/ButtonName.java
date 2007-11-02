@@ -44,15 +44,15 @@ public final class ButtonName {
 
 	public static final ButtonName SOFT3 = new ButtonName();
 
-	public static final ButtonName SELECT = new ButtonName();
+	public static final ButtonName SELECT = new ButtonName("SEL");
 
-	public static final ButtonName UP = new ButtonName();
+	public static final ButtonName UP = new ButtonName("U");
 
-	public static final ButtonName DOWN = new ButtonName();
+	public static final ButtonName DOWN = new ButtonName("D");
 
-	public static final ButtonName LEFT = new ButtonName();
+	public static final ButtonName LEFT = new ButtonName("L");
 
-	public static final ButtonName RIGHT = new ButtonName();
+	public static final ButtonName RIGHT = new ButtonName("R");
 
 	// public static final ButtonName BACK = new ButtonName();
 

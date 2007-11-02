@@ -28,12 +28,14 @@
             <optional>true</optional>
         </dependency>
 
+        <!--
         <dependency>
             <groupId>org.microemu</groupId>
             <artifactId>microemu-javase-swt</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
+        -->
 
         <!-- Used for ready for applet Preprocessor should be only in pakaged jar -->
         <dependency>

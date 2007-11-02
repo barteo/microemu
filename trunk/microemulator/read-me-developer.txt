@@ -21,6 +21,8 @@
 
      distribution pakage would be created in microemulator\target\microemulator-2.X.X.tar.gz
 
+   Module microemu-javase-swt is not built by default. To activate its build add property buildByMicroEmulatorTeam to settings.xml
+
    Running GCF Tests behind firewall
      Create file $home\.microemulator\tests.properties
      The file should contain  host name to connect to, e.g.:

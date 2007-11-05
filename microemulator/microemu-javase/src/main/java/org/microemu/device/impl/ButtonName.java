@@ -88,8 +88,8 @@ public final class ButtonName {
 
 	private String name = "n/a";
 
-	public static ButtonName getButtonName(String keyName) {
-		String name = keyName.toUpperCase();
+	public static ButtonName getButtonName(String functionName) {
+		String name = functionName.toUpperCase();
 		try {
 			Field field = ButtonName.class.getField(name);
 			if (field.getType() == ButtonName.class) {
@@ -102,6 +102,7 @@ public final class ButtonName {
 		if (btn == null) {
 			// User defined button
 			btn = new ButtonName();
+			btn.name = functionName;
 		}
 
 		return btn;

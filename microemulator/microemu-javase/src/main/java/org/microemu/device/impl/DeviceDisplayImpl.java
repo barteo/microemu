@@ -44,8 +44,8 @@ public interface DeviceDisplayImpl extends DeviceDisplay {
 	 * @param modeChange
 	 * @return
 	 */
-	Button createButton(String name, Shape shape, int keyCode, String keyboardKeys, String keyboardChars,
-			Hashtable inputToChars, boolean modeChange);
+	Button createButton(int skinVersion, String name, Shape shape, int keyCode, String keyboardKeys,
+			String keyboardChars, Hashtable inputToChars, boolean modeChange);
 
 	/**
 	 * @param name
@@ -59,10 +59,10 @@ public interface DeviceDisplayImpl extends DeviceDisplay {
 	 * @param font
 	 * @return
 	 */
-	SoftButton createSoftButton(String name, Shape shape, int keyCode, String keyName, Rectangle paintable,
-			String alignmentName, Vector commands, Font font);
+	SoftButton createSoftButton(int skinVersion, String name, Shape shape, int keyCode, String keyName,
+			Rectangle paintable, String alignmentName, Vector commands, Font font);
 
-	SoftButton createSoftButton(String name, Rectangle paintable, Image normalImage, Image pressedImage);
+	SoftButton createSoftButton(int skinVersion, String name, Rectangle paintable, Image normalImage, Image pressedImage);
 
 	/**
 	 * @param i

@@ -592,18 +592,20 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl {
 		return new J2SEImmutableImage(resultImage);
 	}
 
-	public Button createButton(String name, org.microemu.device.impl.Shape shape, int keyCode, String keyboardKeys,
-			String keyboardChars, Hashtable inputToChars, boolean modeChange) {
-		return new J2SEButton(name, shape, keyCode, keyboardKeys, keyboardChars, inputToChars, modeChange);
+	public Button createButton(int skinVersion, String name, org.microemu.device.impl.Shape shape, int keyCode,
+			String keyboardKeys, String keyboardChars, Hashtable inputToChars, boolean modeChange) {
+		return new J2SEButton(skinVersion, name, shape, keyCode, keyboardKeys, keyboardChars, inputToChars, modeChange);
 	}
 
-	public SoftButton createSoftButton(String name, Shape shape, int keyCode, String keyboardKeys, Rectangle paintable,
-			String alignmentName, Vector commands, javax.microedition.lcdui.Font font) {
-		return new J2SESoftButton(name, shape, keyCode, keyboardKeys, paintable, alignmentName, commands, font);
+	public SoftButton createSoftButton(int skinVersion, String name, Shape shape, int keyCode, String keyboardKeys,
+			Rectangle paintable, String alignmentName, Vector commands, javax.microedition.lcdui.Font font) {
+		return new J2SESoftButton(skinVersion, name, shape, keyCode, keyboardKeys, paintable, alignmentName, commands,
+				font);
 	}
 
-	public SoftButton createSoftButton(String name, Rectangle paintable, Image normalImage, Image pressedImage) {
-		return new J2SESoftButton(name, paintable, normalImage, pressedImage);
+	public SoftButton createSoftButton(int skinVersion, String name, Rectangle paintable, Image normalImage,
+			Image pressedImage) {
+		return new J2SESoftButton(skinVersion, name, paintable, normalImage, pressedImage);
 	}
 
 }

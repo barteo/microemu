@@ -42,6 +42,8 @@ public class J2SEButtonDefaultKeyCodes {
 
 	private static Map codes = new HashMap();
 
+	private static Map backwardCompatibleNames = new HashMap();
+
 	private static class KeyInformation {
 
 		int[] keyCodes;
@@ -97,6 +99,7 @@ public class J2SEButtonDefaultKeyCodes {
 		KeyInformation info = new KeyInformation();
 		info.keyCodes = new int[] { code };
 		codes.put(name, info);
+		backwardCompatibleNames.put(Integer.valueOf(code), name);
 		return info;
 	}
 
@@ -104,6 +107,11 @@ public class J2SEButtonDefaultKeyCodes {
 		KeyInformation info = new KeyInformation();
 		info.keyCodes = new int[] { code1, code2 };
 		codes.put(name, info);
+		backwardCompatibleNames.put(Integer.valueOf(code1), name);
 		return info;
+	}
+
+	public static ButtonName getBackwardCompatibleName(int keyboardKey) {
+		return (ButtonName) backwardCompatibleNames.get(Integer.valueOf(keyboardKey));
 	}
 }

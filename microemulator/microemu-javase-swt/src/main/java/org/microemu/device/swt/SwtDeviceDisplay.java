@@ -392,17 +392,18 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl {
 		return new SwtImmutableImage(SwtDeviceComponent.createImage(is, filter));
 	}
 
-	public Button createButton(String name, Shape shape, int keyCode, String keyboardKeys, String keyboardChars,
-			Hashtable inputToChars, boolean modeChange) {
+	public Button createButton(int skinVersion, String name, Shape shape, int keyCode, String keyboardKeys,
+			String keyboardChars, Hashtable inputToChars, boolean modeChange) {
 		return new SwtButton(name, shape, keyCode, keyboardKeys, inputToChars);
 	}
 
-	public SoftButton createSoftButton(String name, Shape shape, int keyCode, String keyName, Rectangle paintable,
-			String alignmentName, Vector commands, javax.microedition.lcdui.Font font) {
+	public SoftButton createSoftButton(int skinVersion, String name, Shape shape, int keyCode, String keyName,
+			Rectangle paintable, String alignmentName, Vector commands, javax.microedition.lcdui.Font font) {
 		return new SwtSoftButton(name, shape, keyCode, keyName, paintable, alignmentName, commands, font);
 	}
 
-	public SoftButton createSoftButton(String name, Rectangle paintable, Image normalImage, Image pressedImage) {
+	public SoftButton createSoftButton(int skinVersion, String name, Rectangle paintable, Image normalImage,
+			Image pressedImage) {
 		return new SwtSoftButton(name, paintable, normalImage, pressedImage);
 	}
 

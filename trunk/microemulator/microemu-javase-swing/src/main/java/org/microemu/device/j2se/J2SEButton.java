@@ -56,7 +56,7 @@ public class J2SEButton implements Button {
 	 * @param name
 	 */
 	J2SEButton(ButtonName functionalName) {
-		this(functionalName.getName(), null, Integer.MIN_VALUE, null, null, null, false);
+		this(20002, functionalName.getName(), null, Integer.MIN_VALUE, null, null, null, false);
 	}
 
 	/**
@@ -67,14 +67,24 @@ public class J2SEButton implements Button {
 	 * @param keyName
 	 * @param chars
 	 */
-	public J2SEButton(String name, Shape shape, int keyCode, String keyboardKeys, String keyboardChars,
-			Hashtable inputToChars, boolean modeChange) {
+	public J2SEButton(int skinVersion, String name, Shape shape, int keyCode, String keyboardKeys,
+			String keyboardChars, Hashtable inputToChars, boolean modeChange) {
 		this.name = name;
 		this.shape = shape;
-		this.functionalName = ButtonName.getButtonName(name);
+		if (skinVersion >= NAME_RIMARY_SINCE_SKIN_VERSION) {
+			this.functionalName = ButtonName.getButtonName(name);
+		} else {
+			this.functionalName = J2SEButtonDefaultKeyCodes.getBackwardCompatibleName(parseKeyboardKey(keyboardKeys));
+			if (this.functionalName == null) {
+				this.functionalName = ButtonName.getButtonName(name);
+			}
+		}
 
-		// TODO make it attribute in device.xml
-		modeChange = (functionalName == ButtonName.KEY_POUND);
+		if (skinVersion >= NAME_RIMARY_SINCE_SKIN_VERSION) {
+			this.modeChange = modeChange;
+		} else {
+			this.modeChange = (functionalName == ButtonName.KEY_POUND);
+		}
 
 		if (keyCode == Integer.MIN_VALUE) {
 			this.keyCode = ButtonDetaultDeviceKeyCodes.getKeyCode(this.functionalName);

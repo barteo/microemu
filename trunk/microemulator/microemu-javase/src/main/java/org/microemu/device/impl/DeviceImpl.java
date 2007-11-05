@@ -48,6 +48,7 @@ import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 
 public class DeviceImpl implements Device {
+
 	private String name;
 
 	private EmulatorContext context;
@@ -70,6 +71,8 @@ public class DeviceImpl implements Device {
 	private boolean hasRepeatEvents;
 
 	private Map systemProperties;
+
+	private int skinVersion;
 
 	public static final String DEFAULT_LOCATION = "org/microemu/device/default/device.xml";
 
@@ -265,6 +268,8 @@ public class DeviceImpl implements Device {
 			name = base;
 		}
 
+		loadSkinVersion(doc);
+
 		hasPointerEvents = false;
 		hasPointerMotionEvents = false;
 		hasRepeatEvents = false;
@@ -300,6 +305,19 @@ public class DeviceImpl implements Device {
 			} else if (tmp.getName().equals("input") || tmp.getName().equals("keyboard")) {
 				// "keyboard" is for backward compatibility
 				parseInput(tmp);
+			}
+		}
+	}
+
+	private void loadSkinVersion(XMLElement doc) {
+		String xmlns = doc.getStringAttribute("xmlns");
+		if (xmlns == null) {
+			skinVersion = 20000;
+		} else {
+			if (xmlns.endsWith("/2.0.2/")) {
+				skinVersion = 20002;
+			} else {
+				skinVersion = 20000;
 			}
 		}
 	}
@@ -343,10 +361,10 @@ public class DeviceImpl implements Device {
 				if (tmp_display.getStringAttribute("name").equals("up")
 						|| tmp_display.getStringAttribute("name").equals("down")) {
 					// deprecated, moved to icon
-					SoftButton icon = deviceDisplay.createSoftButton(tmp_display.getStringAttribute("name"),
-							getRectangle(tmp_display.getChild("paintable")), loadImage(classLoader, base, tmp_display
-									.getStringAttribute("src")), loadImage(classLoader, base, tmp_display
-									.getStringAttribute("src")));
+					SoftButton icon = deviceDisplay.createSoftButton(skinVersion, tmp_display
+							.getStringAttribute("name"), getRectangle(tmp_display.getChild("paintable")), loadImage(
+							classLoader, base, tmp_display.getStringAttribute("src")), loadImage(classLoader, base,
+							tmp_display.getStringAttribute("src")));
 					getSoftButtons().addElement(icon);
 				} else if (tmp_display.getStringAttribute("name").equals("mode")) {
 					// deprecated, moved to status
@@ -374,7 +392,7 @@ public class DeviceImpl implements Device {
 						}
 					}
 				}
-				SoftButton icon = deviceDisplay.createSoftButton(tmp_display.getStringAttribute("name"),
+				SoftButton icon = deviceDisplay.createSoftButton(skinVersion, tmp_display.getStringAttribute("name"),
 						getRectangle(tmp_display.getChild("paintable")), iconNormalImage, iconPressedImage);
 				if (icon.getName().equals("up")) {
 					icon.setCommand(CommandManager.CMD_SCREEN_UP);
@@ -498,8 +516,8 @@ public class DeviceImpl implements Device {
 				}
 				int keyCode = tmp_keyboard.getIntAttribute("keyCode", Integer.MIN_VALUE);
 				getButtons().addElement(
-						deviceDisplay.createButton(tmp_keyboard.getStringAttribute("name"), shape, keyCode,
-								tmp_keyboard.getStringAttribute("key"), tmp_keyboard
+						deviceDisplay.createButton(skinVersion, tmp_keyboard.getStringAttribute("name"), shape,
+								keyCode, tmp_keyboard.getStringAttribute("key"), tmp_keyboard
 										.getStringAttribute("keyboardChars"), inputToChars, tmp_keyboard
 										.getBooleanAttribute("modeChange", false)));
 			} else if (tmp_keyboard.getName().equals("softbutton")) {
@@ -523,9 +541,10 @@ public class DeviceImpl implements Device {
 					}
 				}
 				int keyCode = tmp_keyboard.getIntAttribute("keyCode", Integer.MIN_VALUE);
-				SoftButton button = deviceDisplay.createSoftButton(tmp_keyboard.getStringAttribute("name"), shape,
-						keyCode, tmp_keyboard.getStringAttribute("key"), paintable, tmp_keyboard
-								.getStringAttribute("alignment"), commands, font);
+				SoftButton button = deviceDisplay.createSoftButton(skinVersion,
+						tmp_keyboard.getStringAttribute("name"), shape, keyCode,
+						tmp_keyboard.getStringAttribute("key"), paintable,
+						tmp_keyboard.getStringAttribute("alignment"), commands, font);
 				getButtons().addElement(button);
 				getSoftButtons().addElement(button);
 			}

@@ -72,9 +72,9 @@ public class J2SESoftButton extends J2SEButton implements SoftButton {
 	 * @param commands
 	 * @param font
 	 */
-	public J2SESoftButton(String name, Shape shape, int keyCode, String keyboardKeys, Rectangle paintable,
-			String alignmentName, Vector commands, Font font) {
-		super(name, shape, keyCode, keyboardKeys, null, new Hashtable(), false);
+	public J2SESoftButton(int skinVersion, String name, Shape shape, int keyCode, String keyboardKeys,
+			Rectangle paintable, String alignmentName, Vector commands, Font font) {
+		super(skinVersion, name, shape, keyCode, keyboardKeys, null, new Hashtable(), false);
 
 		this.type = TYPE_COMMAND;
 
@@ -101,8 +101,8 @@ public class J2SESoftButton extends J2SEButton implements SoftButton {
 		}
 	}
 
-	public J2SESoftButton(String name, Rectangle paintable, Image normalImage, Image pressedImage) {
-		super(name, null, Integer.MIN_VALUE, null, null, null, false);
+	public J2SESoftButton(int skinVersion, String name, Rectangle paintable, Image normalImage, Image pressedImage) {
+		super(skinVersion, name, null, Integer.MIN_VALUE, null, null, null, false);
 
 		this.type = TYPE_ICON;
 

@@ -21,13 +21,12 @@
     </release>
 
     <release version="2.0.2 TODO" date="date not defined" description="Plans for next Release">
-        <action dev="vlads" type="add">Import stubs and API docs from PhoneME project.</action>
     </release>
 
-    <!--
     <release version="2.0.2-SNAPSHOT" date="Release date not defined" description="">
+        <action dev="vlads" type="add">Import stubs and API docs from PhoneME project.</action>
+        <action dev="vlads" type="add">device.xml skin version 2.0.2. Buttons name attr defines its function.</action>
     </release>
-    -->
 
     <release version="2.0.1" date="2007-05-05" description="">
         <action dev="vlads,barteo" type="add">Logger Window and Error Dialog message to show exceptions</action>

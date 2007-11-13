@@ -50,8 +50,10 @@ public class ImageItem extends Item {
 		// may throw IllegalArgumentException
 		// (that is the intentended behaviour)
 		setLayout(layout);
-		if (appearanceMode != ImageItem.PLAIN && appearanceMode != ImageItem.PLAIN && appearanceMode != ImageItem.PLAIN)
+		if (appearanceMode != ImageItem.PLAIN && appearanceMode != ImageItem.HYPERLINK
+				&& appearanceMode != ImageItem.BUTTON) {
 			throw new IllegalArgumentException();
+		}
 
 		setImage(img);
 		this.altText = altText;

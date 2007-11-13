@@ -17,41 +17,40 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 package javax.microedition.lcdui;
 
-public class ImageItem extends Item
-{
+public class ImageItem extends Item {
 
 	public static final int LAYOUT_DEFAULT = 0;
+
 	public static final int LAYOUT_LEFT = 1;
+
 	public static final int LAYOUT_RIGHT = 2;
+
 	public static final int LAYOUT_CENTER = 3;
+
 	public static final int LAYOUT_NEWLINE_BEFORE = 0x100;
+
 	public static final int LAYOUT_NEWLINE_AFTER = 0x200;
 
 	Image img;
 
 	String altText;
-	
-	private int appearanceMode;
 
+	private int appearanceMode;
 
 	public ImageItem(String label, Image img, int layout, String altText) {
 		this(label, img, layout, altText, ImageItem.PLAIN);
 	}
 
-	public ImageItem(String label, Image img, int layout, String altText, 
-			int appearanceMode)
-	{
+	public ImageItem(String label, Image img, int layout, String altText, int appearanceMode) {
 		super(label);
-		
+
 		// may throw IllegalArgumentException
 		// (that is the intentended behaviour)
 		setLayout(layout);
-		if (appearanceMode != ImageItem.PLAIN &&
-				appearanceMode != ImageItem.PLAIN &&
-				appearanceMode != ImageItem.PLAIN)
+		if (appearanceMode != ImageItem.PLAIN && appearanceMode != ImageItem.PLAIN && appearanceMode != ImageItem.PLAIN)
 			throw new IllegalArgumentException();
 
 		setImage(img);
@@ -59,62 +58,47 @@ public class ImageItem extends Item
 		this.appearanceMode = appearanceMode;
 	}
 
+	public String getAltText() {
+		return altText;
+	}
 
-  public String getAltText()
-  {
-    return altText;
-  }
+	public int getAppearanceMode() {
+		return this.appearanceMode;
+	}
 
-  public int getAppearanceMode() {
-	  return this.appearanceMode;
-  }
-  
-  public Image getImage()
-  {
-    return img;
-  }
+	public Image getImage() {
+		return img;
+	}
 
+	public int getLayout() {
+		return super.getLayout();
+	}
 
-  public int getLayout()
-  {
-    return super.getLayout();
-  }
+	public void setAltText(String text) {
+		altText = text;
+	}
 
-
-  public void setAltText(String text)
-  {
-    altText = text;
-  }
-
-
-  	public void setImage(Image img)
-  	{
+	public void setImage(Image img) {
 		if (img != null && img.isMutable()) {
 			img = Image.createImage(img);
 		}
 		this.img = img;
-  		repaint();
-  	}
+		repaint();
+	}
 
+	public void setLayout(int layout) {
+		super.setLayout(layout);
+	}
 
-  	public void setLayout(int layout)
-  	{
-  		super.setLayout(layout);
- 	}
-
-
-	int getHeight()
-	{
+	int getHeight() {
 		if (img == null) {
 			return super.getHeight();
-		} else { 
+		} else {
 			return super.getHeight() + img.getHeight();
 		}
 	}
 
-
-  int paint(Graphics g)
-  {
+	int paint(Graphics g) {
 		super.paintContent(g);
 
 		if (img != null) {
@@ -122,11 +106,9 @@ public class ImageItem extends Item
 			if (layout == LAYOUT_DEFAULT || layout == LAYOUT_LEFT) {
 				g.drawImage(img, 0, 0, Graphics.LEFT | Graphics.TOP);
 			} else if (layout == LAYOUT_RIGHT) {
-				g.drawImage(img, owner.getWidth(), 0, 
-        	  Graphics.RIGHT | Graphics.TOP);
+				g.drawImage(img, owner.getWidth(), 0, Graphics.RIGHT | Graphics.TOP);
 			} else if (layout == LAYOUT_CENTER) {
-				g.drawImage(img, owner.getWidth() / 2, 0, 
-        	  Graphics.HCENTER | Graphics.TOP);
+				g.drawImage(img, owner.getWidth() / 2, 0, Graphics.HCENTER | Graphics.TOP);
 			} else {
 				g.drawImage(img, 0, 0, Graphics.LEFT | Graphics.TOP);
 			}
@@ -136,9 +118,7 @@ public class ImageItem extends Item
 		return getHeight();
 	}
 
-
-	int traverse(int gameKeyCode, int top, int bottom, boolean action)
-	{
+	int traverse(int gameKeyCode, int top, int bottom, boolean action) {
 		Font f = Font.getDefaultFont();
 
 		if (gameKeyCode == Canvas.UP) {

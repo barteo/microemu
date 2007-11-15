@@ -106,27 +106,41 @@ public class ChoiceGroup extends Item implements Choice
 	private static final Image imgRadioOn = Image.createImage(radioOn, 0, radioOn.length);
 
 
-  public ChoiceGroup(String label, int choiceType)
-  {
+	public ChoiceGroup(String label, int choiceType) 
+	{
+		this(label, choiceType, true);
+	}
+
+
+	public ChoiceGroup(String label, int choiceType, String[] stringElements, Image[] imageElements)
+	{
+		this(label, choiceType, stringElements, imageElements, true);
+	}
+
+
+	ChoiceGroup(String label, int choiceType, boolean validateChoiceType)
+	{
 		super(label);
-		if (choiceType != Choice.POPUP &&
-				choiceType != Choice.MULTIPLE &&
-				choiceType != Choice.EXCLUSIVE)
-			throw new IllegalArgumentException("Illegal choice type");
+
+		if (validateChoiceType) {
+			if (choiceType != Choice.POPUP && choiceType != Choice.MULTIPLE && choiceType != Choice.EXCLUSIVE) {
+				throw new IllegalArgumentException("Illegal choice type");
+			}
+		}
 		this.choiceType = choiceType;
-		if(choiceType == Choice.POPUP) {
-			// POPUP has a hidden List to implement it's 
+		if (choiceType == Choice.POPUP) {
+			// POPUP has a hidden List to implement it's
 			// behaviour
 			popupList = new List(label, Choice.IMPLICIT);
 			popupList.setCommandListener(new ImplicitListener());
 		}
-  }
+	}
 
 
-  // XXX imageElements is ignored.
-	public ChoiceGroup(String label, int choiceType, String[] stringElements, Image[] imageElements)
+	// XXX imageElements is ignored.
+	ChoiceGroup(String label, int choiceType, String[] stringElements, Image[] imageElements, boolean validateChoiceType)
 	{
-		this(label, choiceType);
+		this(label, choiceType, validateChoiceType);
 
 		for (int i = 0; i < stringElements.length; i++) {
 			if (imageElements == null) {
@@ -137,7 +151,7 @@ public class ChoiceGroup extends Item implements Choice
 		}
 	}
 
-
+	
 	public int append(String stringPart, Image imagePart)
   {
 		insert(numOfItems, stringPart, imagePart);
@@ -213,7 +227,7 @@ public class ChoiceGroup extends Item implements Choice
 			throw new IndexOutOfBoundsException();
 		}
 
-    return null;
+    return items[elementNum].getImage();
   }
 
 
@@ -648,6 +662,8 @@ public class ChoiceGroup extends Item implements Choice
   {
     private boolean selected;
     private Font font;
+    Image box;
+           
 
     ChoiceItem(String label, Image image, String text)
     {
@@ -659,6 +675,67 @@ public class ChoiceGroup extends Item implements Choice
     Font getFont() {
     	return font;
     }
+    
+    	public void setImage(Image img)
+	{
+                this.img = img;
+		
+                int width = 0;
+                if (box != null) width+=box.getWidth();
+                if (this.img != null) width+=img.getWidth();
+                if (width > 0) width+=2;
+                stringComponent.setWidthDecreaser(width);
+	}
+
+	int getHeight()
+	{
+                int height =  0;
+                if (box != null) height = box.getHeight();                
+		if (img != null && img.getHeight() > height) {
+			height = img.getHeight();
+                }
+		if (stringComponent.getHeight() > height) {
+                            height = stringComponent.getHeight();                
+		}
+                return height;
+	}
+
+  int paint(Graphics g)
+  {
+		if (stringComponent == null) {
+			return 0;
+		}
+
+                int widthAddition = 0;
+		if (box != null) {
+			g.drawImage(box, 0, 0, Graphics.LEFT | Graphics.TOP);
+			if (img != null) {
+                            widthAddition = box.getWidth();
+                            g.translate(box.getWidth(), 0);
+                        }
+                        else {
+                            widthAddition = box.getWidth() + 2;
+                            g.translate(box.getWidth() + 2, 0);
+                        }
+		}
+                
+                
+		if (img != null) {
+                        widthAddition += img.getWidth() + 2;
+			g.drawImage(img, 0, 0, Graphics.LEFT | Graphics.TOP);
+			g.translate(img.getWidth() + 2, 0);
+		}
+
+		int y = stringComponent.paint(g);
+
+		if (widthAddition != 0) {
+			g.translate(-widthAddition, 0);
+		}
+
+		return y;
+  }
+        
+        
     
     boolean isSelected()
     {
@@ -679,7 +756,7 @@ public class ChoiceGroup extends Item implements Choice
       selected = state;
       
       if (choiceType != Choice.IMPLICIT && choiceType != Choice.POPUP) {
-				setImage(Choice.EXCLUSIVE  == choiceType ? 
+            box = (Choice.EXCLUSIVE  == choiceType ? 
 						(state? imgRadioOn:imgRadioOff) : (state? imgMultiOn:imgMultiOff));
       }
     }

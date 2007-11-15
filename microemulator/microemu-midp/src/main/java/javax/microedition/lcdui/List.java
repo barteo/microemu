@@ -40,10 +40,7 @@ public class List extends Screen implements Choice {
             throw new IllegalArgumentException("Illegal list type");
 
         if (listType == Choice.IMPLICIT) {
-            // this is necessary because IMPLICIT is not
-            // a valid ChoiceGroup type
-            choiceGroup = new ChoiceGroup(null, Choice.EXCLUSIVE);
-            choiceGroup.choiceType = Choice.IMPLICIT;
+            choiceGroup = new ChoiceGroup(null, Choice.IMPLICIT, false);
         } else {
             choiceGroup = new ChoiceGroup(null, listType);
         }
@@ -59,12 +56,7 @@ public class List extends Screen implements Choice {
         super(title);
 
         if (listType == Choice.IMPLICIT) {
-            // this is necessary because IMPLICIT is not
-            // a valid ChoiceGroup type,
-            // exlusive is used because it has a default
-            // selected value
-            choiceGroup = new ChoiceGroup(null, Choice.EXCLUSIVE, stringElements, imageElements);
-            choiceGroup.choiceType = Choice.IMPLICIT;
+            choiceGroup = new ChoiceGroup(null, Choice.IMPLICIT, stringElements, imageElements, false);
             for (int i = 0; i < size(); i++) {
                 set(i, getString(i), null);
             }

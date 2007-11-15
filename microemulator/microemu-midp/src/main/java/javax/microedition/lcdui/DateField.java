@@ -130,11 +130,7 @@ public class DateField extends Item
     
     this.mode = mode;
 
-    // ChoiceGroup can't be IMPLICIT so we have to cheat
-    // a little DON'T TRY THIS AT HOME!!
-    //dateTime = new ChoiceGroup(label, Choice.IMPLICIT);
-    dateTime = new ChoiceGroup(label, Choice.EXCLUSIVE);
-    dateTime.choiceType = Choice.IMPLICIT;
+    dateTime = new ChoiceGroup(label, Choice.IMPLICIT, false);
     if ((mode & DATE) != 0) {
       dateTime.append("[date]", null);
     }

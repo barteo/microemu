@@ -798,6 +798,8 @@ public class Main extends JFrame {
 		}
 
 		pack();
+
+		devicePanel.requestFocus();
 	}
 
 	public static void main(String args[]) {

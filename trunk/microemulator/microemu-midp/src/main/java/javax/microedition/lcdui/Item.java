@@ -283,10 +283,14 @@ public abstract class Item
   }
 	
 	
-  void setOwner(Screen owner)
-  {
-    this.owner = owner;
-  }
+  	void setOwner(Screen owner) 
+  	{
+		this.owner = owner;
+
+		if (owner == null) {
+			setFocus(false);
+		}
+	}
 	
 	
 	boolean select()

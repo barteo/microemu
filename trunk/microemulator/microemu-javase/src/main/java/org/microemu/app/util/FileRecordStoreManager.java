@@ -33,11 +33,13 @@ import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Hashtable;
 
+import javax.microedition.rms.RecordListener;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreNotFoundException;
 import javax.microedition.rms.RecordStoreNotOpenException;
 
+import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
 import org.microemu.app.Config;
 import org.microemu.app.launcher.Launcher;
@@ -45,16 +47,18 @@ import org.microemu.log.Logger;
 import org.microemu.util.RecordStoreImpl;
 
 public class FileRecordStoreManager implements RecordStoreManager {
-	
+
 	private final static String RECORD_STORE_SUFFIX = ".rs";
 
 	private Launcher launcher;
 
 	private Hashtable testOpenRecordStores = new Hashtable();
 
+	private RecordListener recordListener = null;
+
 	/* The context to be used when accessing files in Webstart */
-    private AccessControlContext acc;
-	
+	private AccessControlContext acc;
+
 	private FilenameFilter filter = new FilenameFilter() {
 		public boolean accept(File dir, String name) {
 			if (name.endsWith(RECORD_STORE_SUFFIX)) {
@@ -65,16 +69,21 @@ public class FileRecordStoreManager implements RecordStoreManager {
 		}
 	};
 
-	public FileRecordStoreManager(Launcher launcher) {
-		this.launcher = launcher;
+	public void init(MicroEmulator emulator) {
+		this.launcher = emulator.getLauncher();
 		this.acc = AccessController.getContext();
+	}
+
+	public String getName() {
+		return "File record store";
 	}
 
 	private File getSuiteFolder() {
 		return new File(Config.getConfigPath(), "suite-" + launcher.getSuiteName());
 	}
-	
-	public void deleteRecordStore(String recordStoreName) throws RecordStoreNotFoundException, RecordStoreException {
+
+	public void deleteRecordStore(final String recordStoreName) throws RecordStoreNotFoundException,
+			RecordStoreException {
 		final File storeFile = new File(getSuiteFolder(), recordStoreName + RECORD_STORE_SUFFIX);
 
 		RecordStoreImpl recordStoreImpl = (RecordStoreImpl) testOpenRecordStores.get(storeFile.getName());
@@ -92,6 +101,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 			AccessController.doPrivileged(new PrivilegedExceptionAction() {
 				public Object run() throws FileNotFoundException {
 					storeFile.delete();
+					fireRecordStoreListener(RecordListener.RECORDSTORE_DELETE, recordStoreName);
 					return null;
 				}
 			}, acc);
@@ -115,8 +125,13 @@ public class FileRecordStoreManager implements RecordStoreManager {
 			saveToDisk(storeFile, recordStoreImpl);
 		}
 		recordStoreImpl.setOpen(true);
+		if (recordListener != null) {
+			recordStoreImpl.addRecordListener(recordListener);
+		}
 
 		testOpenRecordStores.put(storeFile.getName(), recordStoreImpl);
+
+		fireRecordStoreListener(RecordListener.RECORDSTORE_OPEN, recordStoreName);
 
 		return recordStoreImpl;
 	}
@@ -124,7 +139,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 	public String[] listRecordStores() {
 		String[] result;
 		try {
-			result = (String[])AccessController.doPrivileged(new PrivilegedExceptionAction() {
+			result = (String[]) AccessController.doPrivileged(new PrivilegedExceptionAction() {
 				public Object run() {
 					return getSuiteFolder().list(filter);
 				}
@@ -146,7 +161,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 	}
 
 	public void saveChanges(RecordStoreImpl recordStoreImpl) throws RecordStoreNotOpenException, RecordStoreException {
-		
+
 		File storeFile = new File(getSuiteFolder(), recordStoreImpl.getName() + RECORD_STORE_SUFFIX);
 
 		saveToDisk(storeFile, recordStoreImpl);
@@ -176,13 +191,13 @@ public class FileRecordStoreManager implements RecordStoreManager {
 			}, acc);
 		} catch (PrivilegedActionException e) {
 			if (e.getCause() instanceof FileNotFoundException) {
-				throw (FileNotFoundException)e.getCause(); 
+				throw (FileNotFoundException) e.getCause();
 			}
 			Logger.error("Unable access file " + recordStoreFile, e);
 			throw new FileNotFoundException();
 		}
 	}
-	
+
 	private RecordStoreImpl loadFromDiskSecure(File recordStoreFile) throws FileNotFoundException {
 		RecordStoreImpl store = null;
 		try {
@@ -207,14 +222,15 @@ public class FileRecordStoreManager implements RecordStoreManager {
 			}, acc);
 		} catch (PrivilegedActionException e) {
 			if (e.getCause() instanceof RecordStoreException) {
-				throw (RecordStoreException)e.getCause(); 
+				throw (RecordStoreException) e.getCause();
 			}
 			Logger.error("Unable access file " + recordStoreFile, e);
 			throw new RecordStoreException();
 		}
 	}
-	
-	private void saveToDiskSecure(final  File recordStoreFile, final  RecordStoreImpl recordStore) throws RecordStoreException {
+
+	private void saveToDiskSecure(final File recordStoreFile, final RecordStoreImpl recordStore)
+			throws RecordStoreException {
 		if (!recordStoreFile.getParentFile().exists()) {
 			if (!recordStoreFile.getParentFile().mkdirs()) {
 				throw new RecordStoreException("Unable to create recordStore directory");
@@ -235,4 +251,13 @@ public class FileRecordStoreManager implements RecordStoreManager {
 		return 1024 * 1024;
 	}
 
+	public void setRecordListener(RecordListener recordListener) {
+		this.recordListener = recordListener;
+	}
+
+	public void fireRecordStoreListener(int type, String recordStoreName) {
+		if (recordListener != null) {
+			recordListener.recordStoreEvent(type, System.currentTimeMillis(), recordStoreName);
+		}
+	}
 }

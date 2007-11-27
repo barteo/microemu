@@ -549,7 +549,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		return DeviceFactory.getDevice();
 	}
 
-	protected void setDevice(Device device) {
+	public void setDevice(Device device) {
 		MIDletSystemProperties.setDevice(device);
 		DeviceFactory.setDevice(device);
 	}
@@ -684,7 +684,7 @@ public class Common implements MicroEmulator, CommonInterface {
 						String tmpRms = (String) argsIterator.next();
 						argsIterator.remove();
 						if (tmpRms.equals("file")) {
-							paramRecordStoreManager = new FileRecordStoreManager(launcher);
+							paramRecordStoreManager = new FileRecordStoreManager();
 						} else if (tmpRms.equals("memory")) {
 							paramRecordStoreManager = new MemoryRecordStoreManager();
 						}
@@ -741,7 +741,22 @@ public class Common implements MicroEmulator, CommonInterface {
 
 		if (getRecordStoreManager() == null) {
 			if (paramRecordStoreManager == null) {
-				setRecordStoreManager(new FileRecordStoreManager(launcher));
+				String className = Config.getRecordStoreManagerClassName();
+				if (className != null) {
+					try {
+						Class clazz = Class.forName(className);
+						setRecordStoreManager((RecordStoreManager) clazz.newInstance());
+					} catch (ClassNotFoundException ex) {
+						Logger.error(ex);
+					} catch (InstantiationException ex) {
+						Logger.error(ex);
+					} catch (IllegalAccessException ex) {
+						Logger.error(ex);
+					}
+				}
+				if (getRecordStoreManager() == null) {
+					setRecordStoreManager(new FileRecordStoreManager());
+				}
 			} else {
 				setRecordStoreManager(paramRecordStoreManager);
 			}

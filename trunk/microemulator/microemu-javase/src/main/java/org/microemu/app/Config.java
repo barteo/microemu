@@ -381,6 +381,41 @@ public class Config {
 		}
 	}
 
+	public static String getRecordStoreManagerClassName() {
+		XMLElement recordStoreManagerXml = configXml.getChild("recordStoreManager");
+		if (recordStoreManagerXml == null) {
+			return null;
+		}
+
+		return recordStoreManagerXml.getStringAttribute("class");
+	}
+
+	public static void setRecordStoreManagerClassName(String className) {
+		XMLElement recordStoreManagerXml = configXml.getChildOrNew("recordStoreManager");
+		recordStoreManagerXml.setAttribute("class", className);
+
+		saveConfig();
+	}
+
+	public static boolean isWindowOnStart(String name) {
+		XMLElement windowsXml = configXml.getChild("windows");
+		if (windowsXml == null) {
+			return false;
+		}
+
+		XMLElement mainXml = windowsXml.getChild(name);
+		if (mainXml == null) {
+			return false;
+		}
+
+		String attr = mainXml.getStringAttribute("onstart", "false");
+		if (attr.trim().toLowerCase().equals("true")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public static Rectangle getWindow(String name, Rectangle defaultWindow) {
 		XMLElement windowsXml = configXml.getChild("windows");
 		if (windowsXml == null) {
@@ -401,9 +436,14 @@ public class Config {
 		return window;
 	}
 
-	public static void setWindow(String name, Rectangle window) {
+	public static void setWindow(String name, Rectangle window, boolean onStart) {
 		XMLElement windowsXml = configXml.getChildOrNew("windows");
 		XMLElement mainXml = windowsXml.getChildOrNew(name);
+		if (onStart) {
+			mainXml.setAttribute("onstart", "true");
+		} else {
+			mainXml.removeAttribute("onstart");
+		}
 		XMLElement xml = mainXml.getChildOrNew("x");
 		xml.setContent(String.valueOf(window.x));
 		xml = mainXml.getChildOrNew("y");

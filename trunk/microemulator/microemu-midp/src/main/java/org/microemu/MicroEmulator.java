@@ -22,9 +22,13 @@
 
 package org.microemu;
 
+import org.microemu.app.launcher.Launcher;
+
 public interface MicroEmulator {
 
 	RecordStoreManager getRecordStoreManager();
+	
+	Launcher getLauncher();
 
 	String getAppProperty(String key);
 

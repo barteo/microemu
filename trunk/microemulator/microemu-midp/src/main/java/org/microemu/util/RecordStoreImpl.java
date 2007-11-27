@@ -132,7 +132,9 @@ public class RecordStoreImpl extends RecordStore
 		if (recordListeners != null) {
 			recordListeners.removeAllElements();
 		}	
-		open = false;
+		recordStoreManager.fireRecordStoreListener(RecordListener.RECORDSTORE_CLOSE, this.getName());
+
+		open = false;		
 	}
 
     
@@ -269,7 +271,7 @@ public class RecordStoreImpl extends RecordStore
 		
         recordStoreManager.saveChanges(this);
 		
-		fireAddedRecordListener(curRecordID);
+		fireRecordListener(RecordListener.RECORD_ADD, curRecordID);
 		
 		return curRecordID;
 	}
@@ -292,7 +294,7 @@ public class RecordStoreImpl extends RecordStore
 		
         recordStoreManager.saveChanges(this);
 		
-		fireDeletedRecordListener(recordId);
+		fireRecordListener(RecordListener.RECORD_DELETE, recordId);
 	}
 
 
@@ -323,6 +325,8 @@ public class RecordStoreImpl extends RecordStore
 		    System.arraycopy(records.get(new Integer(recordId)), 0, buffer,
 		            offset, recordSize);
 		}
+		
+		fireRecordListener(RecordListener.RECORD_READ, recordId);
 		
 		return recordSize;
 	}
@@ -369,7 +373,7 @@ public class RecordStoreImpl extends RecordStore
 		
         recordStoreManager.saveChanges(this);
 		
-		fireChangedRecordListener(recordId);
+		fireRecordListener(RecordListener.RECORD_CHANGE, recordId);
 	}
 
 
@@ -397,33 +401,15 @@ public class RecordStoreImpl extends RecordStore
     }
 
 
-    private void fireAddedRecordListener(int recordId)
+    private void fireRecordListener(int type, int recordId)
     {
+    	long timestamp = System.currentTimeMillis();
+    	
     	if (recordListeners != null) { 
 	        for (Enumeration e = recordListeners.elements(); e.hasMoreElements();) {
-	            ((RecordListener) e.nextElement()).recordAdded(this, recordId);
+	            ((RecordListener) e.nextElement()).recordEvent(type, timestamp, this, recordId);
 	        }
     	}
     }
-
-  
-    private void fireChangedRecordListener(int recordId)
-    {
-    	if (recordListeners != null) {
-	        for (Enumeration e = recordListeners.elements(); e.hasMoreElements();) {
-	            ((RecordListener) e.nextElement()).recordChanged(this, recordId);
-	        }
-    	}
-    }
-
-  
-    private void fireDeletedRecordListener(int recordId)
-    {
-    	if (recordListeners != null) {
-	        for (Enumeration e = recordListeners.elements(); e.hasMoreElements();) {
-	            ((RecordListener) e.nextElement()).recordDeleted(this, recordId);
-	        }
-    	}
-    }
-          
+                
 }

@@ -18,6 +18,7 @@
  */
 package org.microemu;
 
+import javax.microedition.rms.RecordListener;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreNotFoundException;
@@ -26,6 +27,8 @@ import javax.microedition.rms.RecordStoreNotOpenException;
 import org.microemu.util.RecordStoreImpl;
 
 public interface RecordStoreManager {
+	
+	String getName();
 
 	void deleteRecordStore(String recordStoreName) throws RecordStoreNotFoundException, RecordStoreException;
 
@@ -40,11 +43,15 @@ public interface RecordStoreManager {
 	/**
 	 * Initialize RMS Manager before starting MIDlet 
 	 */
-	void init();
+	void init(MicroEmulator emulator);
 
 	/**
 	 * Delete all record stores.
 	 */
 	void deleteStores();
+
+	void setRecordListener(RecordListener recordListener);
+	
+	void fireRecordStoreListener(int type, String recordStoreName);
 
 }

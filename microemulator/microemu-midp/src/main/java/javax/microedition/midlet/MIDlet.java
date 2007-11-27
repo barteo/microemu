@@ -41,7 +41,7 @@ public abstract class MIDlet {
 
 		public void startApp() throws MIDletStateChangeException {
 			MIDletBridge.setCurrentMIDlet(midlet);
-			MIDletBridge.getRecordStoreManager().init();
+			MIDletBridge.getRecordStoreManager().init(MIDletBridge.getMicroEmulator());
 			midlet.startApp();
 		}
 

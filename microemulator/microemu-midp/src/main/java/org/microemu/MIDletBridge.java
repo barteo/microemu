@@ -52,6 +52,10 @@ public class MIDletBridge {
 		MIDletBridge.emulator = emulator;
 	}
 	
+	public static MicroEmulator getMicroEmulator() {
+		return emulator;
+	}
+	
 	public static void setThreadMIDletContext(MIDletContext midletContext) {
 		threadMIDletContexts.set(midletContext);
 	}

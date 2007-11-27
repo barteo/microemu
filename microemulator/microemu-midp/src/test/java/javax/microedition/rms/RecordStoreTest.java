@@ -13,6 +13,7 @@ import java.util.Hashtable;
 
 import junit.framework.TestCase;
 
+import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
 import org.microemu.util.RecordStoreImpl;
 
@@ -27,10 +28,21 @@ public final class RecordStoreTest extends TestCase {
 
 		private final Hashtable stores = new Hashtable();
 
+		private RecordListener recordListener = null;
+		
+		public void init(MicroEmulator emulator) {			
+		}
+		
+		public String getName() {
+			return this.getClass().toString();
+		}
+
 		public void deleteRecordStore(String name)	throws RecordStoreNotFoundException,
 													RecordStoreException {
 
 			stores.remove(name);
+			
+			fireRecordStoreListener(RecordListener.RECORDSTORE_DELETE, name);
 		}
 
 		public void deleteStores() {
@@ -61,13 +73,20 @@ public final class RecordStoreTest extends TestCase {
 		public RecordStore openRecordStore(	String recordStoreName,
 											boolean createIfNecessary) throws RecordStoreException {
 
-			if (stores.contains(recordStoreName))
-				return (RecordStore) stores.get(recordStoreName);
+			if (stores.contains(recordStoreName)) {
+				RecordStoreImpl store = (RecordStoreImpl) stores.get(recordStoreName);
+				fireRecordStoreListener(RecordListener.RECORDSTORE_OPEN, recordStoreName);
+				return store;
+			}
 
 			if (createIfNecessary) {
 
-				RecordStore store = new RecordStoreImpl(this, recordStoreName);
+				RecordStoreImpl store = new RecordStoreImpl(this, recordStoreName);
+				if (recordListener != null) {
+					store.addRecordListener(recordListener);
+				}
 				stores.put(recordStoreName, store);
+				fireRecordStoreListener(RecordListener.RECORDSTORE_OPEN, recordStoreName);
 				return store;
 			}
 
@@ -80,6 +99,15 @@ public final class RecordStoreTest extends TestCase {
 
 		}
 
+		public void setRecordListener(RecordListener recordListener) {
+			this.recordListener = recordListener;
+		}
+
+		public void fireRecordStoreListener(int type, String recordStoreName) {
+			if (recordListener != null) {
+				recordListener.recordStoreEvent(type, System.currentTimeMillis(), recordStoreName);
+			}
+		}
 	}
 
 	private RecordStoreManager rsm;

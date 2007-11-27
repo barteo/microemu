@@ -25,7 +25,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -33,6 +32,7 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import javax.microedition.rms.RecordEnumeration;
+import javax.microedition.rms.RecordListener;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreNotFoundException;
@@ -40,6 +40,7 @@ import javax.microedition.rms.RecordStoreNotOpenException;
 
 import netscape.javascript.JSObject;
 
+import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
 import org.microemu.log.Logger;
 import org.microemu.util.Base64Coder;
@@ -50,6 +51,8 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 	private static final int MAX_SPLIT_COOKIES = 5; // max 10
 
 	private static final int MAX_COOKIE_SIZE = 4096 * 3 / 4; // Base64
+
+	private RecordListener recordListener = null;
 
 	private Applet applet;
 
@@ -63,14 +66,20 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 		this.applet = applet;
 
 		Calendar c = Calendar.getInstance();
-	    c.add(java.util.Calendar.YEAR, 1);
-	    SimpleDateFormat format = new SimpleDateFormat("EEE, dd-MM-yyyy hh:mm:ss z");
-	    this.expires = "; Max-Age=" + (60 * 60 * 24 * 365);
-System.out.println("CookieRecordStoreManager: " + this.expires);
+		c.add(java.util.Calendar.YEAR, 1);
+		SimpleDateFormat format = new SimpleDateFormat("EEE, dd-MM-yyyy hh:mm:ss z");
+		this.expires = "; Max-Age=" + (60 * 60 * 24 * 365);
+		System.out.println("CookieRecordStoreManager: " + this.expires);
 	}
 
-	public void deleteRecordStore(String recordStoreName)
-			throws RecordStoreNotFoundException, RecordStoreException {
+	public void init(MicroEmulator emulator) {
+	}
+
+	public String getName() {
+		return this.getClass().toString();
+	}
+
+	public void deleteRecordStore(String recordStoreName) throws RecordStoreNotFoundException, RecordStoreException {
 		CookieContent cookieContent = (CookieContent) cookies.get(recordStoreName);
 		if (cookieContent == null) {
 			throw new RecordStoreNotFoundException(recordStoreName);
@@ -78,24 +87,27 @@ System.out.println("CookieRecordStoreManager: " + this.expires);
 
 		removeCookie(recordStoreName, cookieContent);
 		cookies.remove(recordStoreName);
-System.out.println("deleteRecordStore: " + recordStoreName);
+
+		fireRecordStoreListener(RecordListener.RECORDSTORE_DELETE, recordStoreName);
+
+		System.out.println("deleteRecordStore: " + recordStoreName);
 	}
 
 	public void deleteStores() {
-		for (Iterator it = cookies.keySet().iterator(); it.hasNext(); ) {
+		for (Iterator it = cookies.keySet().iterator(); it.hasNext();) {
 			try {
 				deleteRecordStore((String) it.next());
 			} catch (RecordStoreException ex) {
 				Logger.error(ex);
 			}
 		}
-System.out.println("deleteStores:");
+		System.out.println("deleteStores:");
 	}
 
 	public void init() {
-        JSObject window = (JSObject) JSObject.getWindow(applet);
-        document =  (JSObject) window.getMember("document");
-        cookies = new HashMap();
+		JSObject window = (JSObject) JSObject.getWindow(applet);
+		document = (JSObject) window.getMember("document");
+		cookies = new HashMap();
 
 		String load = (String) document.getMember("cookie");
 		if (load != null) {
@@ -120,16 +132,17 @@ System.out.println("deleteStores:");
 							} catch (NumberFormatException ex) {
 							}
 						}
-System.out.println("init: " + token.substring(0, index) + "(" + token.substring(index + 2) + ")");
+						System.out.println("init: " + token.substring(0, index) + "(" + token.substring(index + 2)
+								+ ")");
 					}
 				}
 			}
 		}
-System.out.println("init: " + cookies.size());
-    }
+		System.out.println("init: " + cookies.size());
+	}
 
 	public String[] listRecordStores() {
-System.out.println("listRecordStores:");
+		System.out.println("listRecordStores:");
 		String[] result = (String[]) cookies.keySet().toArray();
 
 		if (result.length == 0) {
@@ -139,44 +152,45 @@ System.out.println("listRecordStores:");
 		return result;
 	}
 
-	public RecordStore openRecordStore(String recordStoreName,
-			boolean createIfNecessary) throws RecordStoreNotFoundException {
+	public RecordStore openRecordStore(String recordStoreName, boolean createIfNecessary)
+			throws RecordStoreNotFoundException {
 		RecordStoreImpl result;
 
 		CookieContent load = (CookieContent) cookies.get(recordStoreName);
 		if (load != null) {
 			try {
 				byte[] data = Base64Coder.decode(load.toCharArray());
-				result = new RecordStoreImpl(this, new DataInputStream(
-						new ByteArrayInputStream(data)));
+				result = new RecordStoreImpl(this, new DataInputStream(new ByteArrayInputStream(data)));
 			} catch (IOException ex) {
 				Logger.error(ex);
 				throw new RecordStoreNotFoundException(ex.getMessage());
 			}
-System.out.println("openRecordStore: " + recordStoreName + " (" + load.getParts().length + ")");
+			System.out.println("openRecordStore: " + recordStoreName + " (" + load.getParts().length + ")");
 		} else {
-            if (!createIfNecessary) { 
-                throw new RecordStoreNotFoundException(recordStoreName); 
-            }
-            result = new RecordStoreImpl(this, recordStoreName);
-System.out.println("openRecordStore: " + recordStoreName + " (" + load + ")");
+			if (!createIfNecessary) {
+				throw new RecordStoreNotFoundException(recordStoreName);
+			}
+			result = new RecordStoreImpl(this, recordStoreName);
+			System.out.println("openRecordStore: " + recordStoreName + " (" + load + ")");
 		}
 		result.setOpen(true);
+		if (recordListener != null) {
+			result.addRecordListener(recordListener);
+		}
+
+		fireRecordStoreListener(RecordListener.RECORDSTORE_OPEN, recordStoreName);
 
 		return result;
 	}
 
-	public void saveChanges(RecordStoreImpl recordStoreImpl)
-			throws RecordStoreNotOpenException {
-	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	public void saveChanges(RecordStoreImpl recordStoreImpl) throws RecordStoreNotOpenException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(baos);
 		try {
 			recordStoreImpl.write(dos);
-			CookieContent cookieContent =
-				new CookieContent(Base64Coder.encode(baos.toByteArray()));
+			CookieContent cookieContent = new CookieContent(Base64Coder.encode(baos.toByteArray()));
 
-			CookieContent previousCookie =
-				(CookieContent) cookies.get(recordStoreImpl.getName());
+			CookieContent previousCookie = (CookieContent) cookies.get(recordStoreImpl.getName());
 			if (previousCookie != null) {
 				removeCookie(recordStoreImpl.getName(), previousCookie);
 			}
@@ -185,18 +199,15 @@ System.out.println("openRecordStore: " + recordStoreName + " (" + load + ")");
 
 			String[] parts = cookieContent.getParts();
 			if (parts.length == 1) {
-				document.setMember(
-						"cookie",
-						"x" + recordStoreImpl.getName() + "=a" + parts[0] + expires);
+				document.setMember("cookie", "x" + recordStoreImpl.getName() + "=a" + parts[0] + expires);
 			} else {
 				for (int i = 0; i < parts.length; i++) {
-					document.setMember(
-							"cookie",
-							i + recordStoreImpl.getName() + "=a" + parts[i] + expires);
+					document.setMember("cookie", i + recordStoreImpl.getName() + "=a" + parts[i] + expires);
 				}
 			}
 
-System.out.println("saveChanges: " + recordStoreImpl.getName() + " (" + cookieContent.getParts().length + ")");
+			System.out.println("saveChanges: " + recordStoreImpl.getName() + " (" + cookieContent.getParts().length
+					+ ")");
 		} catch (IOException ex) {
 			Logger.error(ex);
 		}
@@ -216,7 +227,7 @@ System.out.println("saveChanges: " + recordStoreImpl.getName() + " (" + cookieCo
 		}
 
 		// TODO Auto-generated method stub
-System.out.println("getSizeAvailable: " + size);
+		System.out.println("getSizeAvailable: " + size);
 		return size;
 	}
 
@@ -226,12 +237,10 @@ System.out.println("getSizeAvailable: " + size);
 			document.setMember("cookie", "x" + recordStoreName + "=r");
 		} else {
 			for (int i = 0; i < parts.length; i++) {
-				document.setMember(
-						"cookie",
-						i + recordStoreName + "=r");
+				document.setMember("cookie", i + recordStoreName + "=r");
 			}
 		}
-System.out.println("removeCookie: " + recordStoreName);
+		System.out.println("removeCookie: " + recordStoreName);
 	}
 
 	private class CookieContent {
@@ -242,14 +251,14 @@ System.out.println("removeCookie: " + recordStoreName);
 
 		public CookieContent(char[] buffer) {
 			parts = new String[buffer.length / MAX_COOKIE_SIZE + 1];
-System.out.println("CookieContent(before): " + parts.length);
+			System.out.println("CookieContent(before): " + parts.length);
 			int index = 0;
 			for (int i = 0; i < parts.length; i++) {
 				int size = MAX_COOKIE_SIZE;
 				if (index + size > buffer.length) {
 					size = buffer.length - index;
 				}
-System.out.println("CookieContent: " + i + "," + index + "," + size);
+				System.out.println("CookieContent: " + i + "," + index + "," + size);
 				parts[i] = new String(buffer, index, size);
 				index += size;
 			}
@@ -265,13 +274,13 @@ System.out.println("CookieContent: " + i + "," + index + "," + size);
 					parts = newParts;
 				}
 			}
-System.out.println("setPart: " + index + "," + parts.length);
+			System.out.println("setPart: " + index + "," + parts.length);
 
 			parts[index] = content;
 		}
 
 		public String[] getParts() {
-System.out.println("getParts: " + parts);
+			System.out.println("getParts: " + parts);
 			return parts;
 		}
 
@@ -285,7 +294,7 @@ System.out.println("getParts: " + parts);
 
 			int index = 0;
 			for (int i = 0; i < parts.length; i++) {
-System.out.println("toCharArray: " + i + "," + index + "," + size + "," + parts[i].length());
+				System.out.println("toCharArray: " + i + "," + index + "," + size + "," + parts[i].length());
 				System.arraycopy(parts[i].toCharArray(), 0, result, index, parts[i].length());
 				index += parts[i].length();
 			}
@@ -294,4 +303,13 @@ System.out.println("toCharArray: " + i + "," + index + "," + size + "," + parts[
 		}
 	}
 
+	public void setRecordListener(RecordListener recordListener) {
+		this.recordListener = recordListener;
+	}
+
+	public void fireRecordStoreListener(int type, String recordStoreName) {
+		if (recordListener != null) {
+			recordListener.recordStoreEvent(type, System.currentTimeMillis(), recordStoreName);
+		}
+	}
 }

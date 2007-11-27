@@ -74,6 +74,7 @@ import org.microemu.app.ui.swing.DropTransferHandler;
 import org.microemu.app.ui.swing.ExtensionFileFilter;
 import org.microemu.app.ui.swing.JMRUMenu;
 import org.microemu.app.ui.swing.JadUrlPanel;
+import org.microemu.app.ui.swing.RecordStoreManagerDialog;
 import org.microemu.app.ui.swing.ResizeDeviceDisplayDialog;
 import org.microemu.app.ui.swing.SwingAboutDialog;
 import org.microemu.app.ui.swing.SwingDeviceComponent;
@@ -135,9 +136,13 @@ public class Main extends JFrame {
 
 	private JCheckBoxMenuItem menuLogConsole;
 
+	private JCheckBoxMenuItem menuRecordStoreManager;
+
 	private SwingDeviceComponent devicePanel;
 
 	private SwingLogConsoleDialog logConsoleDialog;
+
+	private RecordStoreManagerDialog recordStoreManagerDialog;
 
 	private QueueAppender logQueueAppender;
 
@@ -194,6 +199,9 @@ public class Main extends JFrame {
 				Config.setRecentDirectory("recentJadDirectory", fileChooser.getCurrentDirectory().getAbsolutePath());
 				String url = IOUtils.getCanonicalFileURL(fileChooser.getSelectedFile());
 				Common.openJadUrlSafe(url);
+				if (recordStoreManagerDialog != null) {
+					recordStoreManagerDialog.refresh();
+				}
 			}
 		}
 	};
@@ -205,6 +213,9 @@ public class Main extends JFrame {
 			}
 			if (SwingDialogWindow.show(Main.this, "Enter JAD URL:", jadUrlPanel, true)) {
 				Common.openJadUrlSafe(jadUrlPanel.getText());
+				if (recordStoreManagerDialog != null) {
+					recordStoreManagerDialog.refresh();
+				}
 			}
 		}
 	};
@@ -423,6 +434,23 @@ public class Main extends JFrame {
 
 	};
 
+	private ActionListener menuRecordStoreManagerListener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			if (recordStoreManagerDialog == null) {
+				recordStoreManagerDialog = new RecordStoreManagerDialog(Main.this, common);
+				recordStoreManagerDialog.addWindowListener(new WindowAdapter() {
+					public void windowClosing(WindowEvent e) {
+						menuRecordStoreManager.setState(false);
+					}
+				});
+				recordStoreManagerDialog.pack();
+				Rectangle window = Config.getWindow("recordStoreManager", new Rectangle(0, 0, 640, 320));
+				recordStoreManagerDialog.setBounds(window.x, window.y, window.width, window.height);
+			}
+			recordStoreManagerDialog.setVisible(!recordStoreManagerDialog.isVisible());
+		}
+	};
+
 	private ActionListener menuLogConsoleListener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			if (logConsoleDialog == null) {
@@ -433,7 +461,7 @@ public class Main extends JFrame {
 					}
 				});
 				logConsoleDialog.pack();
-				Rectangle window = Config.getWindow("logConsole", new Rectangle(0, 0, 640, 240));
+				Rectangle window = Config.getWindow("logConsole", new Rectangle(0, 0, 640, 320));
 				logConsoleDialog.setBounds(window.x, window.y, window.width, window.height);
 			}
 			logConsoleDialog.setVisible(!logConsoleDialog.isVisible());
@@ -457,10 +485,15 @@ public class Main extends JFrame {
 
 			if (logConsoleDialog != null) {
 				Config.setWindow("logConsole", new Rectangle(logConsoleDialog.getX(), logConsoleDialog.getY(),
-						logConsoleDialog.getWidth(), logConsoleDialog.getHeight()));
+						logConsoleDialog.getWidth(), logConsoleDialog.getHeight()), logConsoleDialog.isVisible());
+			}
+			if (recordStoreManagerDialog != null) {
+				Config.setWindow("recordStoreManager", new Rectangle(recordStoreManagerDialog.getX(),
+						recordStoreManagerDialog.getY(), recordStoreManagerDialog.getWidth(), recordStoreManagerDialog
+								.getHeight()), recordStoreManagerDialog.isVisible());
 			}
 			Config.setWindow("main", new Rectangle(Main.this.getX(), Main.this.getY(), Main.this.getWidth(), Main.this
-					.getHeight()));
+					.getHeight()), true);
 
 			System.exit(0);
 		}
@@ -617,6 +650,9 @@ public class Main extends JFrame {
 				if (event instanceof JMRUMenu.MRUActionEvent) {
 					Common.openJadUrlSafe(((MidletURLReference) ((JMRUMenu.MRUActionEvent) event).getSourceMRU())
 							.getUrl());
+					if (recordStoreManagerDialog != null) {
+						recordStoreManagerDialog.refresh();
+					}
 				}
 			}
 		});
@@ -656,6 +692,11 @@ public class Main extends JFrame {
 		menuMIDletNetworkConnection.setState(true);
 		menuMIDletNetworkConnection.addActionListener(menuMIDletNetworkConnectionListener);
 		menuOptions.add(menuMIDletNetworkConnection);
+
+		menuRecordStoreManager = new JCheckBoxMenuItem("Record Store Manager");
+		menuRecordStoreManager.setState(false);
+		menuRecordStoreManager.addActionListener(menuRecordStoreManagerListener);
+		menuOptions.add(menuRecordStoreManager);
 
 		menuLogConsole = new JCheckBoxMenuItem("Log console");
 		menuLogConsole.setState(false);
@@ -836,6 +877,15 @@ public class Main extends JFrame {
 
 		app.validate();
 		app.setVisible(true);
+
+		if (Config.isWindowOnStart("logConsole")) {
+			app.menuLogConsoleListener.actionPerformed(null);
+			app.menuLogConsole.setSelected(true);
+		}
+		if (Config.isWindowOnStart("recordStoreManager")) {
+			app.menuRecordStoreManagerListener.actionPerformed(null);
+			app.menuRecordStoreManager.setSelected(true);
+		}
 
 		String midletString;
 		try {

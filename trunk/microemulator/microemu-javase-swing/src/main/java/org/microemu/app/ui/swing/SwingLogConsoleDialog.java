@@ -54,7 +54,7 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 	private static final boolean tests = false;
 
 	private LogTextArea logArea;
-	
+
 	private Vector logLinesQueue = new Vector();
 
 	private int testEventCounter = 0;
@@ -66,12 +66,12 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 				if (logLinesQueue.isEmpty()) {
 					return null;
 				}
-				String line = (String)logLinesQueue.firstElement();
+				String line = (String) logLinesQueue.firstElement();
 				logLinesQueue.removeElementAt(0);
 				return line;
 			}
 		}
-		
+
 		public void run() {
 			String line;
 			while ((line = getNextLine()) != null) {
@@ -79,11 +79,12 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 			}
 		}
 	}
-	
+
 	public SwingLogConsoleDialog(Frame owner, QueueAppender logQueueAppender) {
 		super("Log console");
 
 		setIconImage(owner.getIconImage());
+		setFocusableWindowState(false);
 
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Log");
@@ -142,7 +143,7 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 		boolean createUpdater = false;
 		synchronized (logLinesQueue) {
 			if (logLinesQueue.isEmpty()) {
-				createUpdater = true; 
+				createUpdater = true;
 			}
 			logLinesQueue.addElement(message);
 		}

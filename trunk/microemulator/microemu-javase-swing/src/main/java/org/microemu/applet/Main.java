@@ -43,6 +43,7 @@ import org.microemu.MIDletBridge;
 import org.microemu.MIDletContext;
 import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
+import org.microemu.app.launcher.Launcher;
 import org.microemu.app.ui.swing.SwingDeviceComponent;
 import org.microemu.app.util.MIDletResourceLoader;
 import org.microemu.app.util.MIDletSystemProperties;
@@ -59,186 +60,170 @@ import org.microemu.util.JadMidletEntry;
 import org.microemu.util.JadProperties;
 import org.microemu.util.MemoryRecordStoreManager;
 
-
-public class Main extends Applet implements MicroEmulator
-{
+public class Main extends Applet implements MicroEmulator {
 
 	private static final long serialVersionUID = 1L;
 
 	private MIDlet midlet = null;
 
-    private RecordStoreManager recordStoreManager;
+	private RecordStoreManager recordStoreManager;
 
-    private JadProperties manifest = new JadProperties();
+	private JadProperties manifest = new JadProperties();
 
-    private SwingDeviceComponent devicePanel;
-    
-    /**
-     * Host name accessible by MIDlet
-     */
-    private String accessibleHost;
+	private SwingDeviceComponent devicePanel;
 
-    private EmulatorContext emulatorContext = new EmulatorContext()
-    {
-        private InputMethod inputMethod = new J2SEInputMethod();
+	/**
+	 * Host name accessible by MIDlet
+	 */
+	private String accessibleHost;
 
-        private DeviceDisplay deviceDisplay = new J2SEDeviceDisplay(this);
+	private EmulatorContext emulatorContext = new EmulatorContext() {
+		private InputMethod inputMethod = new J2SEInputMethod();
 
-        private FontManager fontManager = new J2SEFontManager();
+		private DeviceDisplay deviceDisplay = new J2SEDeviceDisplay(this);
 
-        public DisplayComponent getDisplayComponent()
-        {
-            return devicePanel.getDisplayComponent();
-        }
+		private FontManager fontManager = new J2SEFontManager();
 
-        public InputMethod getDeviceInputMethod()
-        {
-            return inputMethod;
-        }
+		public DisplayComponent getDisplayComponent() {
+			return devicePanel.getDisplayComponent();
+		}
 
-        public DeviceDisplay getDeviceDisplay()
-        {
-            return deviceDisplay;
-        }
+		public InputMethod getDeviceInputMethod() {
+			return inputMethod;
+		}
 
-        public FontManager getDeviceFontManager()
-        {
-            return fontManager;
-        }
-    };
+		public DeviceDisplay getDeviceDisplay() {
+			return deviceDisplay;
+		}
 
+		public FontManager getDeviceFontManager() {
+			return fontManager;
+		}
+	};
 
-    public Main()
-    {
-        devicePanel = new SwingDeviceComponent();
-        devicePanel.addKeyListener(devicePanel);
-    }
+	public Main() {
+		devicePanel = new SwingDeviceComponent();
+		devicePanel.addKeyListener(devicePanel);
+	}
 
+	public void init() {
+		if (midlet != null) {
+			return;
+		}
 
-    public void init()
-    {
-        if (midlet != null) {
-            return;
-        }
+		MIDletSystemProperties.applyToJavaSystemProperties = false;
+		MIDletBridge.setMicroEmulator(this);
 
-        MIDletSystemProperties.applyToJavaSystemProperties = false;	
-        MIDletBridge.setMicroEmulator(this);
+		URL baseURL = getCodeBase();
+		if (baseURL != null) {
+			accessibleHost = baseURL.getHost();
+		}
 
-        URL baseURL = getCodeBase();
-        if (baseURL != null) {
-        	accessibleHost = baseURL.getHost();
-        }
-        
-        recordStoreManager = new MemoryRecordStoreManager();
+		recordStoreManager = new MemoryRecordStoreManager();
 
-        setLayout(new BorderLayout());
-        add(devicePanel, "Center");
+		setLayout(new BorderLayout());
+		add(devicePanel, "Center");
 
-        DeviceImpl device;
-        String deviceParameter = getParameter("device");
-        if (deviceParameter == null) {
-            device = new DeviceImpl();
-            DeviceFactory.setDevice(device);
-            device.init(emulatorContext);
-        } else {
-            try {
-               Class cl = Class.forName(deviceParameter);
-                device = (DeviceImpl) cl.newInstance();
-                DeviceFactory.setDevice(device);
-                device.init(emulatorContext);
-            } catch (ClassNotFoundException ex) {
+		DeviceImpl device;
+		String deviceParameter = getParameter("device");
+		if (deviceParameter == null) {
+			device = new DeviceImpl();
+			DeviceFactory.setDevice(device);
+			device.init(emulatorContext);
+		} else {
+			try {
+				Class cl = Class.forName(deviceParameter);
+				device = (DeviceImpl) cl.newInstance();
+				DeviceFactory.setDevice(device);
+				device.init(emulatorContext);
+			} catch (ClassNotFoundException ex) {
 				try {
-					device = DeviceImpl.create(
-							emulatorContext,
-							Main.class.getClassLoader(),
-							deviceParameter);
+					device = DeviceImpl.create(emulatorContext, Main.class.getClassLoader(), deviceParameter);
 					DeviceFactory.setDevice(device);
 				} catch (IOException ex1) {
-	                Logger.error(ex);
-	                return;
+					Logger.error(ex);
+					return;
 				}
-            } catch (IllegalAccessException ex) {
-                Logger.error(ex);
-                return;
-            } catch (InstantiationException ex) {
-                Logger.error(ex);
-                return;
-            }
-        }
+			} catch (IllegalAccessException ex) {
+				Logger.error(ex);
+				return;
+			} catch (InstantiationException ex) {
+				Logger.error(ex);
+				return;
+			}
+		}
 
-        devicePanel.init();
+		devicePanel.init();
 
-        manifest.clear();
-        try {
-            URL url = getClass().getClassLoader().getResource(
-                    "META-INF/MANIFEST.MF");
-            manifest.load(url.openStream());
-            if (manifest.getProperty("MIDlet-Name") == null) {
-                manifest.clear();
-            }
-        } catch (IOException e) {
-            Logger.error(e);
-        }
+		manifest.clear();
+		try {
+			URL url = getClass().getClassLoader().getResource("META-INF/MANIFEST.MF");
+			manifest.load(url.openStream());
+			if (manifest.getProperty("MIDlet-Name") == null) {
+				manifest.clear();
+			}
+		} catch (IOException e) {
+			Logger.error(e);
+		}
 
-        // load jad
-        String midletClassName = null;
-        String jadFile = getParameter("jad");
-        if (jadFile != null) {
-            InputStream jadInputStream = null;
-            try {
-                URL jad = new URL(getCodeBase(), jadFile);
-                jadInputStream = jad.openStream();
-                manifest.load(jadInputStream);
-                Vector entries = manifest.getMidletEntries();
-                // only load the first (no midlet suite support anyway)
-                if (entries.size() > 0) {
-                    JadMidletEntry entry = (JadMidletEntry) entries.elementAt(0);
-                    midletClassName = entry.getClassName();
-                }
-            } catch (IOException e) {
-            } finally {
-                if (jadInputStream != null) {
-                    try {
-                        jadInputStream.close();
-                    } catch (IOException e1) {
-                    }
-                }
-            }
-        }
+		// load jad
+		String midletClassName = null;
+		String jadFile = getParameter("jad");
+		if (jadFile != null) {
+			InputStream jadInputStream = null;
+			try {
+				URL jad = new URL(getCodeBase(), jadFile);
+				jadInputStream = jad.openStream();
+				manifest.load(jadInputStream);
+				Vector entries = manifest.getMidletEntries();
+				// only load the first (no midlet suite support anyway)
+				if (entries.size() > 0) {
+					JadMidletEntry entry = (JadMidletEntry) entries.elementAt(0);
+					midletClassName = entry.getClassName();
+				}
+			} catch (IOException e) {
+			} finally {
+				if (jadInputStream != null) {
+					try {
+						jadInputStream.close();
+					} catch (IOException e1) {
+					}
+				}
+			}
+		}
 
-        if (midletClassName == null) {
-            midletClassName = getParameter("midlet");
-            if (midletClassName == null) {
-                Logger.debug("There is no midlet parameter");
-                return;
-            }
-        }
+		if (midletClassName == null) {
+			midletClassName = getParameter("midlet");
+			if (midletClassName == null) {
+				Logger.debug("There is no midlet parameter");
+				return;
+			}
+		}
 
-        // Applet is using only one classLoader
-        MIDletResourceLoader.classLoader = this.getClass().getClassLoader();
-        Class midletClass;
-        try {
-            midletClass = Class.forName(midletClassName);
-        } catch (ClassNotFoundException ex) {
-            Logger.error("Cannot find " + midletClassName + " MIDlet class");
-            return;
-        }
+		// Applet is using only one classLoader
+		MIDletResourceLoader.classLoader = this.getClass().getClassLoader();
+		Class midletClass;
+		try {
+			midletClass = Class.forName(midletClassName);
+		} catch (ClassNotFoundException ex) {
+			Logger.error("Cannot find " + midletClassName + " MIDlet class");
+			return;
+		}
 
-        try {
-            midlet = (MIDlet) midletClass.newInstance();
-        } catch (Exception ex) {
-            Logger.error("Cannot initialize " + midletClass + " MIDlet class", ex);
-            return;
-        }
+		try {
+			midlet = (MIDlet) midletClass.newInstance();
+		} catch (Exception ex) {
+			Logger.error("Cannot initialize " + midletClass + " MIDlet class", ex);
+			return;
+		}
 
-        Image tmpImg = DeviceFactory.getDevice().getNormalImage();
-        resize(tmpImg.getWidth(), tmpImg.getHeight());
+		Image tmpImg = DeviceFactory.getDevice().getNormalImage();
+		resize(tmpImg.getWidth(), tmpImg.getHeight());
 
-        return;
-    }
+		return;
+	}
 
-
-    public void start() {
+	public void start() {
 		devicePanel.requestFocus();
 
 		new Thread("midlet_starter") {
@@ -260,93 +245,78 @@ public class Main extends Applet implements MicroEmulator
 		timer.start();
 	}
 
+	public void stop() {
+		MIDletBridge.getMIDletAccess(midlet).pauseApp();
+	}
 
-    public void stop()
-    {
-        MIDletBridge.getMIDletAccess(midlet).pauseApp();
-    }
-
-
-    public void destroy()
-    {
-        try {
-            MIDletBridge.getMIDletAccess(midlet).destroyApp(true);
-        } catch (MIDletStateChangeException ex) {
-            System.err.println(ex);
-        }
-    }
-
-
-    public RecordStoreManager getRecordStoreManager()
-    {
-        return recordStoreManager;
-    }
-
-
-    public String getAppProperty(String key)
-    {
-	    if (key.equals("applet")) {
-			return "yes";
-	    }
-
-        String value = null;
-        if (key.equals("microedition.platform")) {
-            value = "MicroEmulator";
-        } else if (key.equals("microedition.profiles")) {
-            value = "MIDP-2.0";
-        } else if (key.equals("microedition.configuration")) {
-            value = "CLDC-1.0";
-        } else if (key.equals("microedition.locale")) {
-            value = Locale.getDefault().getLanguage();
-        } else if (key.equals("microedition.encoding")) {
-            value = System.getProperty("file.encoding");
-        } else if (key.equals("microemu.applet")) {
-            value = "true";
-        } else if (key.equals("microemu.accessible.host")) {
-            value = accessibleHost;
-        } else if (getParameter(key) != null) {
-            value = getParameter(key);
-        } else {
-            value = manifest.getProperty(key);
-        }
-
-        return value;
-    }
-
-
-    public boolean platformRequest(String url)
-    {
+	public void destroy() {
 		try {
-		    getAppletContext().showDocument(new URL(url), "mini");
+			MIDletBridge.getMIDletAccess(midlet).destroyApp(true);
+		} catch (MIDletStateChangeException ex) {
+			System.err.println(ex);
+		}
+	}
+
+	public RecordStoreManager getRecordStoreManager() {
+		return recordStoreManager;
+	}
+
+	public String getAppProperty(String key) {
+		if (key.equals("applet")) {
+			return "yes";
+		}
+
+		String value = null;
+		if (key.equals("microedition.platform")) {
+			value = "MicroEmulator";
+		} else if (key.equals("microedition.profiles")) {
+			value = "MIDP-2.0";
+		} else if (key.equals("microedition.configuration")) {
+			value = "CLDC-1.0";
+		} else if (key.equals("microedition.locale")) {
+			value = Locale.getDefault().getLanguage();
+		} else if (key.equals("microedition.encoding")) {
+			value = System.getProperty("file.encoding");
+		} else if (key.equals("microemu.applet")) {
+			value = "true";
+		} else if (key.equals("microemu.accessible.host")) {
+			value = accessibleHost;
+		} else if (getParameter(key) != null) {
+			value = getParameter(key);
+		} else {
+			value = manifest.getProperty(key);
+		}
+
+		return value;
+	}
+
+	public boolean platformRequest(String url) {
+		try {
+			getAppletContext().showDocument(new URL(url), "mini");
 		} catch (Exception e) {
-	    }
+		}
 		return false;
-    }
+	}
 
+	public void notifyDestroyed(MIDletContext midletContext) {
+	}
 
+	public void destroyMIDletContext(MIDletContext midletContext) {
 
-    public void notifyDestroyed(MIDletContext midletContext)
-    {
-    }
-    
-    public void destroyMIDletContext(MIDletContext midletContext) {
-    	
-    }
+	}
 
+	public Launcher getLauncher() {
+		return null;
+	}
 
-    public String getAppletInfo()
-    {
-        return "Title: MicroEmulator \nAuthor: Bartek Teodorczyk, 2001";
-    }
+	public String getAppletInfo() {
+		return "Title: MicroEmulator \nAuthor: Bartek Teodorczyk, 2001";
+	}
 
+	public String[][] getParameterInfo() {
+		String[][] info = { { "midlet", "MIDlet class name", "The MIDlet class name. This field is mandatory." }, };
 
-    public String[][] getParameterInfo()
-    {
-        String[][] info = {
-                { "midlet", "MIDlet class name", "The MIDlet class name. This field is mandatory." },
-        };
-
-        return info;
-    }
+		return info;
+	}
 
 }

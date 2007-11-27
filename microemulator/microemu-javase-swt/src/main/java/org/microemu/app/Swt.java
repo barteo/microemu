@@ -140,7 +140,7 @@ public class Swt extends Common {
 	protected Listener menuExitListener = new Listener() {
 		public void handleEvent(Event e) {
 			Config.setWindow("main", new Rectangle(shell.getLocation().x, shell.getLocation().y, shell.getSize().x,
-					shell.getSize().y));
+					shell.getSize().y), true);
 
 			System.exit(0);
 		}

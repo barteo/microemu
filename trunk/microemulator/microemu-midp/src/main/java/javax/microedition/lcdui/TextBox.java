@@ -51,10 +51,9 @@ public class TextBox extends Screen {
 			return TextBox.this.getString();
 		}
 
-        public int getConstraints()
-        {
-            return TextBox.this.getConstraints();
-        }
+		public int getConstraints() {
+			return TextBox.this.getConstraints();
+		}
 	};
 
 	public TextBox(String title, String text, int maxSize, int constraints) {
@@ -117,7 +116,7 @@ public class TextBox extends Screen {
 	public void setTicker(Ticker ticker) {
 		// TODO implement
 	}
-	
+
 	public void setTitle(String s) {
 		super.setTitle(s);
 	}
@@ -127,8 +126,7 @@ public class TextBox extends Screen {
 	}
 
 	void hideNotify() {
-		DeviceFactory.getDevice().getInputMethod().removeInputMethodListener(
-				inputMethodListener);
+		DeviceFactory.getDevice().getInputMethod().removeInputMethodListener(inputMethodListener);
 		super.hideNotify();
 	}
 
@@ -149,10 +147,8 @@ public class TextBox extends Screen {
 		StringComponent tmp = tf.stringComponent;
 		if (tmp.getCharPositionY(position) < viewPortY) {
 			viewPortY = tmp.getCharPositionY(position);
-		} else if (tmp.getCharPositionY(position) + tmp.getCharHeight() > viewPortY
-				+ viewPortHeight - 6) {
-			viewPortY = tmp.getCharPositionY(position) + tmp.getCharHeight()
-					- (viewPortHeight - 6);
+		} else if (tmp.getCharPositionY(position) + tmp.getCharHeight() > viewPortY + viewPortHeight - 6) {
+			viewPortY = tmp.getCharPositionY(position) + tmp.getCharHeight() - (viewPortHeight - 6);
 		}
 	}
 

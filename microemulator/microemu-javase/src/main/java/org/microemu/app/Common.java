@@ -158,6 +158,10 @@ public class Common implements MicroEmulator, CommonInterface {
 		return result;
 	}
 
+	public InputStream getResourceAsStream(String name) {
+		return emulatorContext.getResourceAsStream(name);
+	}
+
 	public void notifyDestroyed(MIDletContext midletContext) {
 		Logger.debug("notifyDestroyed");
 		startLauncher(midletContext);

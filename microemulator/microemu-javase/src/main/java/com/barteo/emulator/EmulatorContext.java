@@ -19,18 +19,21 @@
 
 package com.barteo.emulator;
 
+import java.io.InputStream;
+
 import org.microemu.DisplayComponent;
+import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 
 /*
  * @deprecated use org.microemu.EmulatorContext
- */ 
+ */
 public class EmulatorContext implements org.microemu.EmulatorContext {
-	
+
 	private org.microemu.EmulatorContext context;
-	 
+
 	public EmulatorContext(org.microemu.EmulatorContext context) {
 		this.context = context;
 	}
@@ -50,5 +53,9 @@ public class EmulatorContext implements org.microemu.EmulatorContext {
 	public DisplayComponent getDisplayComponent() {
 		return context.getDisplayComponent();
 	}
-	
+
+	public InputStream getResourceAsStream(String name) {
+		return MIDletBridge.getCurrentMIDlet().getClass().getResourceAsStream(name);
+	}
+
 }

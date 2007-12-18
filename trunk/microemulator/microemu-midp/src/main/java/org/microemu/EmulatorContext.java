@@ -19,6 +19,8 @@
 
 package org.microemu;
 
+import java.io.InputStream;
+
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
@@ -32,5 +34,7 @@ public interface EmulatorContext {
 	DeviceDisplay getDeviceDisplay();
 
 	FontManager getDeviceFontManager();
+	
+	InputStream getResourceAsStream(String name);
 
 }

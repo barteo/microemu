@@ -22,6 +22,8 @@
 
 package org.microemu;
 
+import java.io.InputStream;
+
 import org.microemu.app.launcher.Launcher;
 
 public interface MicroEmulator {
@@ -31,6 +33,8 @@ public interface MicroEmulator {
 	Launcher getLauncher();
 
 	String getAppProperty(String key);
+	
+	InputStream getResourceAsStream(String name);
 
 	void notifyDestroyed(MIDletContext midletContext);
 

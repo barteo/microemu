@@ -25,6 +25,7 @@
 
 package org.microemu;
 
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -119,6 +120,11 @@ public class MIDletBridge {
 	public static String getAppProperty(String key) {
 		return emulator.getAppProperty(key);
 	}
+	
+	public static InputStream getResourceAsStream(String name) {
+		return emulator.getResourceAsStream(name);
+	}
+
 
 	public static void notifyDestroyed() {
 		MIDletContext midletContext = getMIDletContext();

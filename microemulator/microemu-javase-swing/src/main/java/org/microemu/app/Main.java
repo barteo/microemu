@@ -36,6 +36,7 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -178,6 +179,10 @@ public class Main extends JFrame {
 
 		public FontManager getDeviceFontManager() {
 			return fontManager;
+		}
+
+		public InputStream getResourceAsStream(String name) {
+			return MIDletBridge.getCurrentMIDlet().getClass().getResourceAsStream(name);
 		}
 	};
 

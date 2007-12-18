@@ -99,6 +99,10 @@ public class Main extends Applet implements MicroEmulator {
 		public FontManager getDeviceFontManager() {
 			return fontManager;
 		}
+
+		public InputStream getResourceAsStream(String name) {
+			return getClass().getResourceAsStream(name);
+		}
 	};
 
 	public Main() {
@@ -288,6 +292,10 @@ public class Main extends Applet implements MicroEmulator {
 		}
 
 		return value;
+	}
+
+	public InputStream getResourceAsStream(String name) {
+		return emulatorContext.getResourceAsStream(name);
 	}
 
 	public boolean platformRequest(String url) {

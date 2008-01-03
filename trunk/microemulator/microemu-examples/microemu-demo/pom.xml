@@ -37,7 +37,7 @@
     </dependencies>
 
     <properties>
-        <wtkNotSupported>false</wtkNotSupported>
+        <wtkNotSupported>true</wtkNotSupported>
     </properties>
 
     <build>
@@ -90,7 +90,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <wtkHome>${env.WTK_HOME}</wtkHome>
+                    <!--wtkHome>${env.WTK_HOME}</wtkHome-->
                     <useWtkLibs>false</useWtkLibs>
                     <proguard>false</proguard>
                     <obfuscate>false</obfuscate>

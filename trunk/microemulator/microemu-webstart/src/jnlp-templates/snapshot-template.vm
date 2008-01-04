@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp
   spec="1.0+"
-  codebase="http://snapshot-microemu.pyx4j.com/microemu-webstart"
+  codebase="http://snapshot.microemu.org/microemu-webstart"
   href="demo.jnlp">
   <information>
     <title>MicroEmulator</title>

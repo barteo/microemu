@@ -52,7 +52,7 @@ MicroEmulator
 
 * Support for JSRs in development environment using additional libraries
 
-    * Bluetooth APIs for Java (JSR 82) using {{{http://www.avetana-gmbh.de/avetana-gmbh/produkte/jsr82.eng.xml}avetana JSR-82 implementation}} or {{{http://code.google.com/p/bluecove/}BlueCove}} on windows
+    * Bluetooth APIs for Java (JSR 82) using {{{http://bluecove.org/}BlueCove}} or {{{http://www.avetana-gmbh.de/avetana-gmbh/produkte/jsr82.eng.xml}avetana JSR-82 implementation}}
 
     * Location API for J2ME (JSR 179) using OpenLAPI {{{http://www.openlapi.com}openlapi.com}}
 

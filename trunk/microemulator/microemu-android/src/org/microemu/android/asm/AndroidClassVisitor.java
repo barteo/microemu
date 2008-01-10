@@ -5,8 +5,11 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
 
 public class AndroidClassVisitor extends ClassAdapter {
+	
+	boolean isMidlet;
 	
 	public class AndroidMethodVisitor extends MethodAdapter {
 
@@ -19,6 +22,13 @@ public class AndroidClassVisitor extends ClassAdapter {
 		}	
 
 		public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+			if (isMidlet && opcode == Opcodes.INVOKEVIRTUAL) {
+				if ((name.equals("getResourceAsStream")) && (owner.equals("java/lang/Class"))) {							
+					mv.visitMethodInsn(Opcodes.INVOKESTATIC, fixPackage("org/microemu/MIDletBridge"), name, fixPackage("(Ljava/lang/Class;Ljava/lang/String;)Ljava/io/InputStream;"));
+					return;
+				}
+			}
+			
 			mv.visitMethodInsn(opcode, fixPackage(owner), name, fixPackage(desc));
 		}
 
@@ -28,8 +38,10 @@ public class AndroidClassVisitor extends ClassAdapter {
 		
 	}
 
-	public AndroidClassVisitor(ClassVisitor cv) {
+	public AndroidClassVisitor(ClassVisitor cv, boolean isMidlet) {
 		super(cv);
+		
+		this.isMidlet = isMidlet;
 	}
 
     public void visit(final int version, final int access, String name, final String signature, String superName, final String[] interfaces) {

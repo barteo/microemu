@@ -82,6 +82,7 @@
         <java classname="org.microemu.android.asm.AndroidProducer">            
             <arg value="${midlet.jar}"/>
             <arg value="${outdir-libs}/midlet.jar"/>
+            <arg value="midlet"/>
             <classpath>
                 <pathelement path="${outdir-producer}"/>
                 <pathelement location="${asm.jar}"/>

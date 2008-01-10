@@ -54,6 +54,7 @@ import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.IOUtils;
 import org.microemu.device.Device;
 import org.microemu.device.impl.DeviceImpl;
+import org.microemu.device.j2se.J2SEDevice;
 
 public class SwingSelectDevicePanel extends SwingDialogPanel {
 	private static final long serialVersionUID = 1L;
@@ -133,7 +134,8 @@ public class SwingSelectDevicePanel extends SwingDialogPanel {
 				for (Iterator it = descriptorEntries.iterator(); it.hasNext();) {
 					String entryName = (String) it.next();
 					try {
-						devices.put(entryName, DeviceImpl.create(emulatorContext, classLoader, entryName));
+						devices.put(entryName, DeviceImpl.create(emulatorContext, classLoader, entryName,
+								J2SEDevice.class));
 					} catch (IOException e) {
 						Message.error("Error parsing device profile, " + Message.getCauseMessage(e), e);
 						return;

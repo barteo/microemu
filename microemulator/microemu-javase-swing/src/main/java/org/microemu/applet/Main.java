@@ -52,6 +52,7 @@ import org.microemu.device.DeviceFactory;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.device.impl.DeviceImpl;
+import org.microemu.device.j2se.J2SEDevice;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEFontManager;
 import org.microemu.device.j2se.J2SEInputMethod;
@@ -131,7 +132,7 @@ public class Main extends Applet implements MicroEmulator {
 		DeviceImpl device;
 		String deviceParameter = getParameter("device");
 		if (deviceParameter == null) {
-			device = new DeviceImpl();
+			device = new J2SEDevice();
 			DeviceFactory.setDevice(device);
 			device.init(emulatorContext);
 		} else {
@@ -142,7 +143,8 @@ public class Main extends Applet implements MicroEmulator {
 				device.init(emulatorContext);
 			} catch (ClassNotFoundException ex) {
 				try {
-					device = DeviceImpl.create(emulatorContext, Main.class.getClassLoader(), deviceParameter);
+					device = DeviceImpl.create(emulatorContext, Main.class.getClassLoader(), deviceParameter,
+							J2SEDevice.class);
 					DeviceFactory.setDevice(device);
 				} catch (IOException ex1) {
 					Logger.error(ex);

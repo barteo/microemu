@@ -7,11 +7,14 @@ import java.util.Vector;
 import javax.microedition.android.lcdui.Image;
 
 import org.microemu.EmulatorContext;
+import org.microemu.android.device.ui.AndroidCanvasUI;
 import org.microemu.android.device.ui.AndroidTextBoxUI;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
+import org.microemu.device.ui.CanvasUI;
+import org.microemu.device.ui.DisplayableUI;
 import org.microemu.device.ui.TextBoxUI;
 import org.microemu.device.ui.UIFactory;
 
@@ -25,10 +28,30 @@ public class AndroidDevice implements Device {
 	
 	private UIFactory ui = new UIFactory() {
 
+		public DisplayableUI createAlertUI() {
+			// TODO Not yet implemented
+			return new AndroidCanvasUI(activity);
+		}
+
+		public CanvasUI createCanvasUI() {
+			// TODO Auto-generated method stub
+			return new AndroidCanvasUI(activity);
+		}
+
+		public DisplayableUI createFormUI() {
+			// TODO Not yet implemented
+			return new AndroidCanvasUI(activity);
+		}
+
+		public DisplayableUI createListUI() {
+			// TODO Not yet implemented
+			return new AndroidCanvasUI(activity);
+		}
+		
 		public TextBoxUI createTextBoxUI() {
 			return new AndroidTextBoxUI(activity);
 		}
-		
+
 	};
 	
 	private Map systemProperties = new HashMap();

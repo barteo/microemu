@@ -188,7 +188,7 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 
 	public int getHeight() {
 		// TODO Auto-generated method stub
-		return displayRectangleHeight - 20;
+		return displayRectangleHeight;
 	}
 
 	public int getWidth() {

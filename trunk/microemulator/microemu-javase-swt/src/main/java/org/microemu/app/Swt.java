@@ -62,6 +62,7 @@ import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.device.impl.DeviceImpl;
 import org.microemu.device.impl.Rectangle;
+import org.microemu.device.swt.SwtDevice;
 import org.microemu.device.swt.SwtDeviceDisplay;
 import org.microemu.device.swt.SwtFontManager;
 import org.microemu.device.swt.SwtInputMethod;
@@ -327,7 +328,8 @@ public class Swt extends Common {
 			// device
 			emulatorContext.getDeviceFontManager().init();
 
-			Device device = DeviceImpl.create(emulatorContext, classLoader, entry.getDescriptorLocation());
+			Device device = DeviceImpl.create(emulatorContext, classLoader, entry.getDescriptorLocation(),
+					SwtDevice.class);
 			this.deviceEntry = entry;
 			setDevice(device);
 			updateDevice();
@@ -352,7 +354,7 @@ public class Swt extends Common {
 		}
 
 		Swt app = new Swt(shell);
-		app.initParams(params, app.selectDeviceDialog.getSelectedDeviceEntry());
+		app.initParams(params, app.selectDeviceDialog.getSelectedDeviceEntry(), SwtDevice.class);
 		app.updateDevice();
 
 		shell.pack();

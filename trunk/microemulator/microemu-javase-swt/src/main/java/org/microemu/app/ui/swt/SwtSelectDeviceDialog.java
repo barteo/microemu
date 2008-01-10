@@ -55,6 +55,7 @@ import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.IOUtils;
 import org.microemu.device.Device;
 import org.microemu.device.impl.DeviceImpl;
+import org.microemu.device.swt.SwtDevice;
 
 public class SwtSelectDeviceDialog extends SwtDialog {
 	private EmulatorContext emulatorContext;
@@ -128,7 +129,8 @@ public class SwtSelectDeviceDialog extends SwtDialog {
 				for (Iterator it = descriptorEntries.iterator(); it.hasNext();) {
 					JarEntry entry = (JarEntry) it.next();
 					try {
-						devices.put(entry.getName(), DeviceImpl.create(emulatorContext, classLoader, entry.getName()));
+						devices.put(entry.getName(), DeviceImpl.create(emulatorContext, classLoader, entry.getName(),
+								SwtDevice.class));
 					} catch (IOException ex) {
 						Message.error("Error parsing device profile, " + Message.getCauseMessage(ex), ex);
 						return;

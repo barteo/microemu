@@ -47,7 +47,7 @@ import org.microemu.device.DeviceDisplay;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 
-public class DeviceImpl implements Device {
+public abstract class DeviceImpl implements Device {
 
 	private String name;
 
@@ -90,8 +90,8 @@ public class DeviceImpl implements Device {
 		softButtons = new Vector();
 	}
 
-	public static DeviceImpl create(EmulatorContext context, ClassLoader classLoader, String descriptorLocation)
-			throws IOException {
+	public static DeviceImpl create(EmulatorContext context, ClassLoader classLoader, String descriptorLocation,
+			Class defaultDeviceClass) throws IOException {
 		XMLElement doc = loadDeviceDescriptor(classLoader, descriptorLocation);
 		// saveDevice(doc);
 		DeviceImpl device = null;
@@ -113,10 +113,15 @@ public class DeviceImpl implements Device {
 		}
 
 		if (device == null) {
-			device = new DeviceImpl();
+			try {
+				device = (DeviceImpl) defaultDeviceClass.newInstance();
+			} catch (InstantiationException ex) {
+				throw new IOException(ex.getMessage());
+			} catch (IllegalAccessException ex) {
+				throw new IOException(ex.getMessage());
+			}
 		}
 		device.context = context;
-
 		device.loadConfig(classLoader, besourceBase(descriptorLocation), doc);
 
 		return device;

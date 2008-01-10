@@ -619,7 +619,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		}
 	}
 
-	public void initParams(List params, DeviceEntry defaultDevice) {
+	public void initParams(List params, DeviceEntry defaultDevice, Class defaultDeviceClass) {
 		MIDletClassLoaderConfig clConfig = new MIDletClassLoaderConfig();
 		Class deviceClass = null;
 		String deviceDescriptorLocation = null;
@@ -715,7 +715,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		ClassLoader classLoader = getExtensionsClassLoader();
 		if (deviceDescriptorLocation != null) {
 			try {
-				setDevice(DeviceImpl.create(emulatorContext, classLoader, deviceDescriptorLocation));
+				setDevice(DeviceImpl.create(emulatorContext, classLoader, deviceDescriptorLocation, defaultDeviceClass));
 			} catch (IOException ex) {
 				Logger.error(ex);
 			}
@@ -728,7 +728,8 @@ public class Common implements MicroEmulator, CommonInterface {
 						urls[0] = new File(Config.getConfigPath(), defaultDevice.getFileName()).toURI().toURL();
 						classLoader = createExtensionsClassLoader(urls);
 					}
-					setDevice(DeviceImpl.create(emulatorContext, classLoader, defaultDevice.getDescriptorLocation()));
+					setDevice(DeviceImpl.create(emulatorContext, classLoader, defaultDevice.getDescriptorLocation(),
+							defaultDeviceClass));
 				} else {
 					DeviceImpl device = (DeviceImpl) deviceClass.newInstance();
 					device.init(emulatorContext);

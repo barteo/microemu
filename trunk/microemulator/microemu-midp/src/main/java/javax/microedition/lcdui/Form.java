@@ -25,6 +25,8 @@ package javax.microedition.lcdui;
 
 import java.util.Vector;
 
+import org.microemu.device.DeviceFactory;
+
 //TODO implement pointer events
 public class Form extends Screen 
 {
@@ -36,7 +38,8 @@ public class Form extends Screen
 	
 	public Form(String title) 
 	{
-		super(title);
+		super(title, DeviceFactory.getDevice().getUIFactory().createFormUI());
+		
 		focusItemIndex = -2;
 	}
 

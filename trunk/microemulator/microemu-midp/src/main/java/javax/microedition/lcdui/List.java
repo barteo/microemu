@@ -23,6 +23,8 @@
 
 package javax.microedition.lcdui;
 
+import org.microemu.device.DeviceFactory;
+
 public class List extends Screen implements Choice {
 
     public static final Command SELECT_COMMAND = new Command("", Command.SCREEN, 0);
@@ -34,7 +36,7 @@ public class List extends Screen implements Choice {
     private int initialPressedItem;
 
     public List(String title, int listType) {
-        super(title);
+        super(title, DeviceFactory.getDevice().getUIFactory().createListUI());
 
         if (listType != Choice.IMPLICIT && listType != Choice.MULTIPLE && listType != Choice.EXCLUSIVE)
             throw new IllegalArgumentException("Illegal list type");
@@ -53,7 +55,7 @@ public class List extends Screen implements Choice {
     }
 
     public List(String title, int listType, String[] stringElements, Image[] imageElements) {
-        super(title);
+        super(title, DeviceFactory.getDevice().getUIFactory().createListUI());
 
         if (listType == Choice.IMPLICIT) {
             choiceGroup = new ChoiceGroup(null, Choice.IMPLICIT, stringElements, imageElements, false);

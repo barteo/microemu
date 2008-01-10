@@ -286,4 +286,9 @@ public class Logger {
 	public static void removeAppender(LoggerAppender appender) {
 		loggerAppenders.remove(appender);
 	}
+
+	public static void removeAllAppenders() {
+		loggerAppenders.clear();
+	}
+
 }

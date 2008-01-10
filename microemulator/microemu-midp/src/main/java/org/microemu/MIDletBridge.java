@@ -121,7 +121,7 @@ public class MIDletBridge {
 		return emulator.getAppProperty(key);
 	}
 	
-	public static InputStream getResourceAsStream(String name) {
+	public static InputStream getResourceAsStream(Class origClass, String name) {
 		return emulator.getResourceAsStream(name);
 	}
 

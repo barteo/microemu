@@ -97,6 +97,7 @@ import org.microemu.device.MutableImage;
 import org.microemu.device.impl.DeviceDisplayImpl;
 import org.microemu.device.impl.DeviceImpl;
 import org.microemu.device.impl.Rectangle;
+import org.microemu.device.j2se.J2SEDevice;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEFontManager;
 import org.microemu.device.j2se.J2SEInputMethod;
@@ -810,7 +811,8 @@ public class Main extends JFrame {
 			// device
 			emulatorContext.getDeviceFontManager().init();
 
-			Device device = DeviceImpl.create(emulatorContext, classLoader, entry.getDescriptorLocation());
+			Device device = DeviceImpl.create(emulatorContext, classLoader, entry.getDescriptorLocation(),
+					J2SEDevice.class);
 			this.deviceEntry = entry;
 
 			DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) device.getDeviceDisplay();
@@ -869,7 +871,7 @@ public class Main extends JFrame {
 		}
 
 		final Main app = new Main();
-		app.common.initParams(params, app.selectDevicePanel.getSelectedDeviceEntry());
+		app.common.initParams(params, app.selectDevicePanel.getSelectedDeviceEntry(), J2SEDevice.class);
 		app.deviceEntry = app.selectDevicePanel.getSelectedDeviceEntry();
 		DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) DeviceFactory.getDevice().getDeviceDisplay();
 		if (deviceDisplay.isResizable()) {

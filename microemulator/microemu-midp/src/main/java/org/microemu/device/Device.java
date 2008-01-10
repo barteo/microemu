@@ -25,38 +25,42 @@ import java.util.Vector;
 
 import javax.microedition.lcdui.Image;
 
+import org.microemu.device.ui.UIFactory;
+
 public interface Device {
 
-	public abstract void init();
+	void init();
 
-	public abstract void destroy();
+	void destroy();
 
-	public abstract String getName();
+	String getName();
 
-	public abstract InputMethod getInputMethod();
+	InputMethod getInputMethod();
 
-	public abstract FontManager getFontManager();
+	FontManager getFontManager();
 
-	public abstract DeviceDisplay getDeviceDisplay();
+	DeviceDisplay getDeviceDisplay();
+	
+	UIFactory getUIFactory();
 
-	public abstract Image getNormalImage();
+	Image getNormalImage();
 
-	public abstract Image getOverImage();
+	Image getOverImage();
 
-	public abstract Image getPressedImage();
+	Image getPressedImage();
 
-	public abstract Vector getSoftButtons();
+	Vector getSoftButtons();
 
-	public abstract Vector getButtons();
+	Vector getButtons();
 
-	public abstract boolean hasPointerEvents();
+	boolean hasPointerEvents();
 
-	public abstract boolean hasPointerMotionEvents();
+	boolean hasPointerMotionEvents();
 
-	public abstract boolean hasRepeatEvents();
+	boolean hasRepeatEvents();
 
-	public abstract boolean vibrate(int duration);
+	boolean vibrate(int duration);
 
-	public abstract Map getSystemProperties();
+	Map getSystemProperties();
 
 }

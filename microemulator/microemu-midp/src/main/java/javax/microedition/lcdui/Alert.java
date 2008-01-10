@@ -23,6 +23,8 @@
  
 package javax.microedition.lcdui;
 
+import org.microemu.device.DeviceFactory;
+
 
 public class Alert extends Screen
 {
@@ -63,7 +65,8 @@ public class Alert extends Screen
 
 	public Alert(String title, String alertText, Image alertImage, AlertType alertType)
 	{
-		super(title);
+		super(title, DeviceFactory.getDevice().getUIFactory().createAlertUI());
+		
 		setTimeout(getDefaultTimeout());
 		this.alertContent = new ImageStringItem(null, alertImage, alertText);
 		setType(alertType);

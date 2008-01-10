@@ -37,6 +37,7 @@ import org.microemu.device.DeviceFactory;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.device.MutableImage;
+import org.microemu.device.ui.UIFactory;
 
 /**
  * @author radoshi
@@ -53,7 +54,7 @@ public class DisplayTest extends TestCase {
 		 */
 		public MockDisplayable() {
 
-			super("Mock");
+			super("Mock", null);
 		}
 
 		final void paint(Graphics g) {
@@ -278,6 +279,11 @@ public class DisplayTest extends TestCase {
 		}
 
 		public InputMethod getInputMethod() {
+
+			return null;
+		}
+
+		public UIFactory getUIFactory() {
 
 			return null;
 		}

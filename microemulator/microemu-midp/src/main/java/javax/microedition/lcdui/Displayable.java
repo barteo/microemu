@@ -23,6 +23,7 @@ import java.util.Vector;
 
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
+import org.microemu.device.ui.DisplayableUI;
 
 
 
@@ -45,6 +46,8 @@ public abstract class Displayable
     // TODO make private
     int viewPortHeight;
     
+    protected DisplayableUI ui;
+    
     /**
      * @associates Command 
      */
@@ -53,9 +56,10 @@ public abstract class Displayable
 	private CommandListener listener = null;
 
     
-    Displayable(String title) 
+    Displayable(String title, DisplayableUI ui) 
     {
         this.title = new StringComponent(title);
+        this.ui = ui;
         
         this.device = DeviceFactory.getDevice();
         this.sizeChangedDeferredRequest = false;        
@@ -63,29 +67,30 @@ public abstract class Displayable
     }
     
 
-	public void addCommand(Command cmd)
-	{
-    // Check that its not the same command
-    for (int i=0; i<commands.size(); i++) {
-      if (cmd == (Command)commands.elementAt(i)) {
-        // Its the same just return
+	public void addCommand(Command cmd) {
+		// Check that its not the same command
+		for (int i = 0; i < commands.size(); i++) {
+			if (cmd == (Command) commands.elementAt(i)) {
+				// Its the same just return
 				return;
 			}
 		}
 
-    // Now insert it in order
-    boolean inserted = false;
-    for (int i=0; i<commands.size(); i++) {
-      if (cmd.getPriority() < ((Command)commands.elementAt(i)).getPriority()) {
-        commands.insertElementAt(cmd, i);
-        inserted = true;
-        break;
-      }
-    }
-    if (inserted == false) {
-      // Not inserted just place it at the end
-      commands.addElement(cmd);
-    }
+		// Now insert it in order
+		boolean inserted = false;
+		for (int i = 0; i < commands.size(); i++) {
+			if (cmd.getPriority() < ((Command) commands.elementAt(i)).getPriority()) {
+				commands.insertElementAt(cmd, i);
+				inserted = true;
+				break;
+			}
+		}
+		if (inserted == false) {
+			// Not inserted just place it at the end
+			commands.addElement(cmd);
+		}
+		
+		ui.addCommand(cmd);
 
 		if (isShown()) {
 			currentDisplay.updateCommands();
@@ -96,6 +101,8 @@ public abstract class Displayable
 	public void removeCommand(Command cmd)
 	{
 		commands.removeElement(cmd);
+		
+		ui.removeCommand(cmd);
 
 		if (isShown()) {
 			currentDisplay.updateCommands();
@@ -163,6 +170,8 @@ public abstract class Displayable
 	public void setCommandListener(CommandListener l)
 	{
 		listener = l;
+		
+		ui.setCommandListener(l);
 	}
 	
 	
@@ -192,7 +201,9 @@ public abstract class Displayable
 
 
 	final void hideNotify(Display d)
-	{
+	{		
+		ui.hideNotify();
+
 		hideNotify();
 	}
 
@@ -264,8 +275,10 @@ public abstract class Displayable
         	sizeChanged(getWidth(), getHeight());
         	sizeChangedDeferredRequest = false;
         }
-
+		
 		showNotify();
+
+		ui.showNotify();		
 	}
 
 }

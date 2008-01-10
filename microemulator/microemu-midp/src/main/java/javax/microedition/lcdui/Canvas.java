@@ -26,6 +26,7 @@ import javax.microedition.lcdui.game.GameCanvas;
 
 import org.microemu.GameCanvasKeyAccess;
 import org.microemu.MIDletBridge;
+import org.microemu.device.DeviceFactory;
 
 
 public abstract class Canvas extends Displayable
@@ -58,7 +59,7 @@ public abstract class Canvas extends Displayable
 
 	protected Canvas()
 	{
-        super(null);
+        super(null, DeviceFactory.getDevice().getUIFactory().createCanvasUI());
 	}
 
 

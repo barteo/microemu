@@ -57,7 +57,8 @@ public class TextBox extends Screen {
 	};
 
 	public TextBox(String title, String text, int maxSize, int constraints) {
-		super(title);
+		super(title, DeviceFactory.getDevice().getUIFactory().createTextBoxUI());
+		
 		tf = new TextField(null, text, maxSize, constraints);
 	}
 

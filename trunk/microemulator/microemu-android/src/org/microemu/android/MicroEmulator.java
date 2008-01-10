@@ -129,7 +129,7 @@ public class MicroEmulator extends Activity {
         common = new Common(emulatorContext);
         common.setRecordStoreManager(new AndroidRecordStoreManager(this));
         common.setDevice(new AndroidDevice(emulatorContext, this));        
-        common.initParams(params, null);
+        common.initParams(params, null, AndroidDevice.class);
                
         setContentView(devicePanel);
         

@@ -17,16 +17,16 @@ import org.objectweb.asm.ClassWriter;
 
 public class AndroidProducer {
 
-	private static byte[] instrument(final InputStream classInputStream) throws IOException {
+	private static byte[] instrument(final InputStream classInputStream, boolean isMidlet) throws IOException {
 		ClassReader cr = new ClassReader(classInputStream);
 		ClassWriter cw = new ClassWriter(0);
-		ClassVisitor cv = new AndroidClassVisitor(cw);
+		ClassVisitor cv = new AndroidClassVisitor(cw, isMidlet);
 		cr.accept(cv, 0);
 
 		return cw.toByteArray();
     }
 
-	public static void processJar(File jarInputFile, File jarOutputFile) throws IOException {
+	public static void processJar(File jarInputFile, File jarOutputFile, boolean isMidlet) throws IOException {
 		JarInputStream jis = null;
 		JarOutputStream jos = null;
 		try {
@@ -60,7 +60,7 @@ public class AndroidProducer {
 					byte[] outputBuffer = inputBuffer;
 					int outputSize = size;
 					if (name.endsWith(".class")) {					
-				        outputBuffer = instrument(new ByteArrayInputStream(inputBuffer, 0, size));
+				        outputBuffer = instrument(new ByteArrayInputStream(inputBuffer, 0, size), isMidlet);
 				        outputSize = outputBuffer.length;
 				        name = AndroidClassVisitor.fixPackage(name);
 					}
@@ -75,11 +75,15 @@ public class AndroidProducer {
 	}
 	
 	public static void main(String args[]) {
-		if (args.length != 2) {
-			System.out.println("usage: AndroidProducer <infile> <outfile>");
+		if (args.length < 2 || args.length > 3) {
+			System.out.println("usage: AndroidProducer <infile> <outfile> [midlet]");
 		} else {
+			boolean isMidlet = false;
+			if (args.length == 3 && args[2].toLowerCase().equals("midlet")) {
+				isMidlet = true;
+			}
 			try {
-				processJar(new File(args[0]), new File(args[1]));
+				processJar(new File(args[0]), new File(args[1]), isMidlet);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

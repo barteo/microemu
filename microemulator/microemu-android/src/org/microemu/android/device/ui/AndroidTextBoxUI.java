@@ -9,19 +9,20 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 	
 	private Activity activity;
 	
+	private TextView view;
+	
 	public AndroidTextBoxUI(Activity activity) {
 		this.activity = activity;
+		
+		this.view = new TextView(activity);
+		this.view.setText("AndroidTextBoxUI");
 	}
 
 	public void hideNotify() {
-System.out.println("AndroidTextBoxUI::hideNotify");
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void showNotify() {
-System.out.println("AndroidTextBoxUI::showNotify");
-		activity.setContentView(new TextView(activity));
+		activity.setContentView(view);
 	}
 
 }

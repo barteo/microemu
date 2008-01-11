@@ -22,6 +22,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -50,6 +51,11 @@ public class AndroidDisplayComponent extends View implements DisplayComponent {
 			return false;
 		}
 		
+		// KEYCODE_SOFT_LEFT == menu key 
+		if (keyCode == KeyEvent.KEYCODE_SOFT_LEFT) {
+			return false;
+		}
+		
 		Device device = DeviceFactory.getDevice();
 		((AndroidInputMethod) device.getInputMethod()).buttonPressed(event);
 		
@@ -59,6 +65,11 @@ public class AndroidDisplayComponent extends View implements DisplayComponent {
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		if (MIDletBridge.getCurrentMIDlet() == null) {
+			return false;
+		}
+
+		// KEYCODE_SOFT_LEFT == menu key 
+		if (keyCode == KeyEvent.KEYCODE_SOFT_LEFT) {
 			return false;
 		}
 

@@ -38,34 +38,36 @@ import org.microemu.log.Logger;
 import com.sun.cdc.io.ConnectionBaseInterface;
 
 /**
- * @author vlads
- * Original MicroEmulator implementation of javax.microedition.Connector
+ * @author vlads Original MicroEmulator implementation of
+ *         javax.microedition.Connector
+ * 
+ * TODO integrate with ImplementationInitialization
  */
 public class ConnectorImpl extends ConnectorAdapter {
 
 	/* The context to be used when loading classes */
-    private AccessControlContext acc;
-    
-    // TODO make this configurable
+	private AccessControlContext acc;
+
+	// TODO make this configurable
 	public static boolean debugConnectionInvocations = false;
-    
-	private final boolean needPrivilegedCalls = isWebstart();  
-	
-    public ConnectorImpl() {
-    	acc = AccessController.getContext();
-    }
-    
-    private static boolean isWebstart() {
-    	try {
+
+	private final boolean needPrivilegedCalls = isWebstart();
+
+	public ConnectorImpl() {
+		acc = AccessController.getContext();
+	}
+
+	private static boolean isWebstart() {
+		try {
 			return (System.getProperty("javawebstart.version") != null);
 		} catch (SecurityException e) {
 			// This is the case for Applet.
 			return false;
 		}
-    }
-    
-    public Connection open(final String name, final int mode, final boolean timeouts) throws IOException {
-    	try {
+	}
+
+	public Connection open(final String name, final int mode, final boolean timeouts) throws IOException {
+		try {
 			return (Connection) AccessController.doPrivileged(new PrivilegedExceptionAction() {
 				public Object run() throws IOException {
 					if (debugConnectionInvocations || needPrivilegedCalls) {
@@ -82,44 +84,43 @@ public class ConnectorImpl extends ConnectorAdapter {
 			throw new IOException(e.toString());
 		}
 	}
-	
-    private static Class[] getAllInterfaces(Class klass) {
-    	Vector allInterfaces = new Vector();
-    	Class parent = klass;
-    	while (parent != null) {
-    		Class[] interfaces = parent.getInterfaces();
-    		for (int i = 0; i < interfaces.length; i++) {
-    			allInterfaces.add(interfaces[i]);
-    		}
-    		parent = parent.getSuperclass();
-    	}
-    	
-    	return (Class[])allInterfaces.toArray(new Class[allInterfaces.size()]);
-    }
-    
-    private Connection openSecureProxy(String name, int mode, boolean timeouts, boolean needPrivilegedCalls) throws IOException {
-    	Connection origConnection = openSecure(name, mode, timeouts);
-    	Class connectionClass = null;
-    	Class[] interfaces = getAllInterfaces(origConnection.getClass());
-    	for (int i = 0; i < interfaces.length; i++) {
-    		if (Connection.class.isAssignableFrom(interfaces[i])) {
-    			connectionClass = interfaces[i];
-    			break;
-    		} else if (interfaces[i].getClass().getName().equals(Connection.class.getName())) {
-    			Logger.debugClassLoader("ME2 Connection.class", Connection.class);
-    			Logger.debugClassLoader(name + " Connection.class", interfaces[i]);
-    			Logger.error("Connection interface loaded by different ClassLoader");
-    		}
+
+	private static Class[] getAllInterfaces(Class klass) {
+		Vector allInterfaces = new Vector();
+		Class parent = klass;
+		while (parent != null) {
+			Class[] interfaces = parent.getInterfaces();
+			for (int i = 0; i < interfaces.length; i++) {
+				allInterfaces.add(interfaces[i]);
+			}
+			parent = parent.getSuperclass();
 		}
-    	if (connectionClass == null) {
-    		throw new ClassCastException(origConnection.getClass().getName() + " Connection expected");
-    	}
-    	return (Connection) Proxy.newProxyInstance(
-    			 ConnectorImpl.class.getClassLoader(), 
-    			 interfaces, 
-                 new ConnectionInvocationHandler(origConnection, needPrivilegedCalls));
-    }
-    
+
+		return (Class[]) allInterfaces.toArray(new Class[allInterfaces.size()]);
+	}
+
+	private Connection openSecureProxy(String name, int mode, boolean timeouts, boolean needPrivilegedCalls)
+			throws IOException {
+		Connection origConnection = openSecure(name, mode, timeouts);
+		Class connectionClass = null;
+		Class[] interfaces = getAllInterfaces(origConnection.getClass());
+		for (int i = 0; i < interfaces.length; i++) {
+			if (Connection.class.isAssignableFrom(interfaces[i])) {
+				connectionClass = interfaces[i];
+				break;
+			} else if (interfaces[i].getClass().getName().equals(Connection.class.getName())) {
+				Logger.debugClassLoader("ME2 Connection.class", Connection.class);
+				Logger.debugClassLoader(name + " Connection.class", interfaces[i]);
+				Logger.error("Connection interface loaded by different ClassLoader");
+			}
+		}
+		if (connectionClass == null) {
+			throw new ClassCastException(origConnection.getClass().getName() + " Connection expected");
+		}
+		return (Connection) Proxy.newProxyInstance(ConnectorImpl.class.getClassLoader(), interfaces,
+				new ConnectionInvocationHandler(origConnection, needPrivilegedCalls));
+	}
+
 	private Connection openSecure(String name, int mode, boolean timeouts) throws IOException {
 		String className = null;
 		String protocol = null;
@@ -141,9 +142,9 @@ public class ConnectorImpl extends ConnectorAdapter {
 					ConnectionBaseInterface base = (ConnectionBaseInterface) cl.newInstance();
 					return base.openPrim(name.substring(name.indexOf(':') + 1), mode, timeouts);
 				} catch (ClassNotFoundException ex) {
-					Logger.debug("connection [" + protocol +  "] class not found", e);
-					Logger.debug("connection [" + protocol +  "] class not found", ex);
-					throw new ConnectionNotFoundException("connection [" + protocol +  "] class not found");
+					Logger.debug("connection [" + protocol + "] class not found", e);
+					Logger.debug("connection [" + protocol + "] class not found", ex);
+					throw new ConnectionNotFoundException("connection [" + protocol + "] class not found");
 				}
 			}
 		} catch (InstantiationException e) {

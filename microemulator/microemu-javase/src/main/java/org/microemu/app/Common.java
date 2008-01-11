@@ -33,9 +33,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipException;
@@ -98,6 +101,8 @@ public class Common implements MicroEmulator, CommonInterface {
 
 	private ExtensionsClassLoader extensionsClassLoader;
 
+	private Vector extensions = new Vector();
+
 	private MIDletClassLoaderConfig mIDletClassLoaderConfig;
 
 	private boolean useSystemClassLoader = false;
@@ -124,6 +129,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		 * better place for this call
 		 */
 		ImplFactory.instance();
+		// TODO integrate with ImplementationInitialization
 		ImplFactory.registerGCF(ImplFactory.DEFAULT, new ConnectorImpl());
 
 		MIDletBridge.setMicroEmulator(this);
@@ -164,6 +170,7 @@ public class Common implements MicroEmulator, CommonInterface {
 
 	public void notifyDestroyed(MIDletContext midletContext) {
 		Logger.debug("notifyDestroyed");
+		notifyImplementationMIDletDestroyed();
 		startLauncher(midletContext);
 	}
 
@@ -379,6 +386,7 @@ public class Common implements MicroEmulator, CommonInterface {
 				context.getMIDletAccess().startApp();
 
 				launcher.setCurrentMIDlet(m);
+				notifyImplementationMIDletStart();
 				return context;
 			} catch (Throwable e) {
 				Message.error(errorTitle, "Unable to start MIDlet, " + Message.getCauseMessage(e), e);
@@ -574,14 +582,20 @@ public class Common implements MicroEmulator, CommonInterface {
 		}
 	}
 
-	private void registerImplementation(String implClassName) {
+	private void registerImplementation(String implClassName, Map properties) {
 		final String errorText = "Implementation initialization";
 		try {
 			Class implClass = getExtensionsClassLoader().loadClass(implClassName);
 			if (ImplementationInitialization.class.isAssignableFrom(implClass)) {
 				Object inst = implClass.newInstance();
-				((ImplementationInitialization) inst).registerImplementation();
+				Map parameters = new HashMap();
+				parameters.put(ImplementationInitialization.PARAM_EMULATOR_ID, Config.getEmulatorID());
+				if (properties != null) {
+					parameters.putAll(properties);
+				}
+				((ImplementationInitialization) inst).registerImplementation(parameters);
 				Logger.debug("implementation registered", implClassName);
+				extensions.add(inst);
 			} else {
 				Logger.debug("initialize implementation", implClassName);
 				boolean isStatic = true;
@@ -616,6 +630,28 @@ public class Common implements MicroEmulator, CommonInterface {
 			Logger.error(errorText, e);
 		} catch (IllegalAccessException e) {
 			Logger.error(errorText, e);
+		}
+	}
+
+	public void loadImplementationsFromConfig() {
+		Map extensions = Config.getExtensions();
+		for (Iterator iterator = extensions.entrySet().iterator(); iterator.hasNext();) {
+			Map.Entry entry = (Map.Entry) iterator.next();
+			registerImplementation((String) entry.getKey(), (Map) entry.getValue());
+		}
+	}
+
+	public void notifyImplementationMIDletStart() {
+		for (Iterator iterator = extensions.iterator(); iterator.hasNext();) {
+			ImplementationInitialization impl = (ImplementationInitialization) iterator.next();
+			impl.notifyMIDletStart();
+		}
+	}
+
+	public void notifyImplementationMIDletDestroyed() {
+		for (Iterator iterator = extensions.iterator(); iterator.hasNext();) {
+			ImplementationInitialization impl = (ImplementationInitialization) iterator.next();
+			impl.notifyMIDletDestroyed();
 		}
 	}
 
@@ -697,7 +733,7 @@ public class Common implements MicroEmulator, CommonInterface {
 					getExtensionsClassLoader().addClasspath((String) argsIterator.next());
 					argsIterator.remove();
 				} else if (arg.equals("--impl")) {
-					registerImplementation((String) argsIterator.next());
+					registerImplementation((String) argsIterator.next(), null);
 					argsIterator.remove();
 				} else {
 					midletClassOrJad = arg;

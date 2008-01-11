@@ -21,12 +21,41 @@
  */
 package org.microemu.microedition;
 
+import java.util.Map;
+
 /**
  * @author vlads
- *
+ * 
+ * Optional JSR implementation can be plugged to Emulator using this interfaces.
+ * See module microemu-jsr-75 as example
+ * 
+ * Relevant MicroEmulator command line option
+ * 
+ * <pre>
+ *  --impl JSR_implementation_class_name Initialize and register optional JSR implementation class.
+ * </pre>
+ * 
  */
 public interface ImplementationInitialization {
 
-	public void registerImplementation();
-	
+	public static final String PARAM_EMULATOR_ID = "emulatorID";
+
+	/**
+	 * 
+	 * Call implementation initialization inside secure context.
+	 * 
+	 * @param parameters
+	 *            Map of configuration options
+	 */
+	public void registerImplementation(Map parameters);
+
+	/**
+	 * Called when MIDlet started
+	 */
+	public void notifyMIDletStart();
+
+	/**
+	 * Called when MIDlet exits or destroyed
+	 */
+	public void notifyMIDletDestroyed();
 }

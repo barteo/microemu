@@ -736,6 +736,7 @@ public class Main extends JFrame {
 		addWindowListener(windowListener);
 
 		Config.loadConfig(defaultDevice, emulatorContext);
+		this.common.loadImplementationsFromConfig();
 
 		Rectangle window = Config.getWindow("main", new Rectangle(0, 0, 160, 120));
 		this.setLocation(window.x, window.y);

@@ -21,22 +21,26 @@
  */
 package org.microemu.cldc.file;
 
+import java.util.Map;
+
 import org.microemu.app.util.MIDletSystemProperties;
 import org.microemu.microedition.ImplFactory;
 import org.microemu.microedition.ImplementationInitialization;
 
 /**
  * @author vlads
- *
+ * 
  */
 public class FileSystem implements ImplementationInitialization {
 
 	public static final String detectionProperty = "microedition.io.file.FileConnection.version";
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.microemu.microedition.ImplementationInitialization#registerImplementation()
 	 */
-	public void registerImplementation() {
+	public void registerImplementation(Map parameters) {
 		ImplFactory.registerGCF("file", new FileSystemConnectorImpl());
 		ImplFactory.register(FileSystemRegistryDelegate.class, FileSystemRegistryImpl.class);
 		MIDletSystemProperties.setProperty(detectionProperty, "1.0");
@@ -46,6 +50,22 @@ public class FileSystem implements ImplementationInitialization {
 		MIDletSystemProperties.clearProperty(detectionProperty);
 		ImplFactory.unregistedGCF("file", impl);
 		ImplFactory.unregister(FileSystemRegistryDelegate.class, FileSystemRegistryImpl.class);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.microemu.microedition.ImplementationInitialization#notifyMIDletStart()
+	 */
+	public void notifyMIDletStart() {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.microemu.microedition.ImplementationInitialization#notifyMIDletDestroyed()
+	 */
+	public void notifyMIDletDestroyed() {
 	}
 
 }

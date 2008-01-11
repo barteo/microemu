@@ -21,19 +21,37 @@
  */
 package org.microemu.cldc.file;
 
+import java.util.Map;
+
 import org.microemu.microedition.ImplementationInitialization;
 
 /**
- * @author vlads
- *
+ * @author vlads TODO
  */
-public class InMemory implements ImplementationInitialization  {
+public class InMemory implements ImplementationInitialization {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.microemu.microedition.ImplementationInitialization#registerImplementation()
 	 */
-	public void registerImplementation() {
-		// TODO Auto-generated method stub
+	public void registerImplementation(Map parameters) {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.microemu.microedition.ImplementationInitialization#notifyMIDletStart()
+	 */
+	public void notifyMIDletStart() {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.microemu.microedition.ImplementationInitialization#notifyMIDletDestroyed()
+	 */
+	public void notifyMIDletDestroyed() {
 	}
 
 }

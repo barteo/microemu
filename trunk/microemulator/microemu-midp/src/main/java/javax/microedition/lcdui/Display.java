@@ -36,6 +36,7 @@ import org.microemu.DisplayAccess;
 import org.microemu.GameCanvasKeyAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
+import org.microemu.device.ui.DisplayableUI;
 
 import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
@@ -310,6 +311,15 @@ public class Display {
 
         public Displayable getCurrent() {
             return getDisplay().getCurrent();
+        }
+
+        public DisplayableUI getCurrentUI() {
+        	Displayable current = getCurrent();        	
+        	if (current == null) {
+        		return null;
+        	} else {
+        		return current.ui;
+        	}
         }
 
         public boolean isFullScreenMode() {

@@ -24,6 +24,8 @@ import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Graphics;
 
+import org.microemu.device.ui.DisplayableUI;
+
 
 public interface DisplayAccess
 {
@@ -50,7 +52,10 @@ public interface DisplayAccess
 	
 	void serviceRepaints();
   
+	// TODO try to change all calls to getCurrent to use getCurrentUI, then remove getCurrent
 	Displayable getCurrent();
+
+	DisplayableUI getCurrentUI();
 
 	void setCurrent(Displayable d);
 	

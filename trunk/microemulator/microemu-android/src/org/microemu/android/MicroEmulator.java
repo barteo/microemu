@@ -5,13 +5,21 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import javax.microedition.android.lcdui.Command;
+import javax.microedition.android.lcdui.CommandListener;
+
+import org.microemu.DisplayAccess;
 import org.microemu.DisplayComponent;
 import org.microemu.EmulatorContext;
+import org.microemu.MIDletAccess;
+import org.microemu.MIDletBridge;
 import org.microemu.android.device.AndroidDevice;
 import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.android.device.AndroidFontManager;
 import org.microemu.android.device.AndroidInputMethod;
+import org.microemu.android.device.ui.AndroidDisplayableUI;
 import org.microemu.android.ui.AndroidDisplayComponent;
 import org.microemu.android.util.AndroidLoggerAppender;
 import org.microemu.android.util.AndroidRecordStoreManager;
@@ -23,6 +31,7 @@ import org.microemu.log.Logger;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.Window;
 
 public class MicroEmulator extends Activity {
@@ -138,5 +147,38 @@ public class MicroEmulator extends Activity {
         common.getLauncher().setSuiteName(midletClassName);
         common.initMIDlet(true);
     }
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma == null) {
+			return false;
+		}
+		final DisplayAccess da = ma.getDisplayAccess();
+		if (da == null) {
+			return false;
+		}
+		AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getCurrentUI();
+		if (ui == null) {
+			return false;
+		}		
+		
+		menu.clear();	
+		boolean result = false;
+		final CommandListener l = ui.getCommandListener();
+		for (Iterator it = ui.getCommands().iterator(); it.hasNext(); ) {
+			result = true;
+			final Command cmd = (Command) it.next();
+			menu.add(0, 0, cmd.getLabel(), new Runnable() {
+				public void run() {
+					if (l != null) {
+						l.commandAction(cmd, da.getCurrent());
+					}
+				}				
+			});
+		}
+
+		return result;
+	}
 
 }

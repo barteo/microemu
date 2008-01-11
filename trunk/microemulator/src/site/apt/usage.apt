@@ -66,7 +66,11 @@ java -cp microemulator.jar;microemu-siemensapi.jar org.microemu.app.Main http://
 
         * < --appclassloader strict|delegating|system>  \u00bb {{{classloader.html}MIDlet classloader}} configuration
 
-        * < -Xautotest:{JAD file url} >  Run MIDlet in autotest mode
+        * < -Xautotest:{JAD file url} > \u00bb  Run MIDlet in autotest mode
+
+        * < --id EmulatorID> \u00bb    Set emulator instance ID. Enables multiple instance of Emulator with different config file $home/.microemulator/EmulatorID/config2.xml
+
+        * < --impl {JSR implementation class name}> \u00bb Initialize and register optional JSR implementation or Extension class.
 
         * ({MIDlet class name} | {jad file location})
 

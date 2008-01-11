@@ -166,6 +166,12 @@ public class Config {
 		}
 	}
 
+	static Map getExtensions() {
+		Map extensions = new HashMap();
+		// TODO
+		return extensions;
+	}
+
 	private static void initSystemProperties() {
 		Map systemProperties = null;
 

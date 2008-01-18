@@ -736,7 +736,6 @@ public class Main extends JFrame {
 		addWindowListener(windowListener);
 
 		Config.loadConfig(defaultDevice, emulatorContext);
-		this.common.loadImplementationsFromConfig();
 
 		Rectangle window = Config.getWindow("main", new Rectangle(0, 0, 160, 120));
 		this.setLocation(window.x, window.y);
@@ -748,6 +747,7 @@ public class Main extends JFrame {
 		this.common = new Common(emulatorContext);
 		this.common.setStatusBarListener(statusBarListener);
 		this.common.setResponseInterfaceListener(responseInterfaceListener);
+		this.common.loadImplementationsFromConfig();
 
 		this.resizeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {

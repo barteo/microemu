@@ -43,7 +43,9 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 		return l;
 	}
 	
+	//
 	// DisplayableUI
+	//
 
 	public void addCommand(Command cmd) {
 		commands.add(cmd);

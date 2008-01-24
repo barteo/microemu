@@ -41,7 +41,6 @@ import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.android.device.AndroidFontManager;
 import org.microemu.android.device.AndroidInputMethod;
 import org.microemu.android.device.ui.AndroidDisplayableUI;
-import org.microemu.android.ui.AndroidDisplayComponent;
 import org.microemu.android.util.AndroidLoggerAppender;
 import org.microemu.android.util.AndroidRecordStoreManager;
 import org.microemu.app.Common;
@@ -70,7 +69,9 @@ public class MicroEmulator extends Activity {
 		private FontManager fontManager = new AndroidFontManager();
 
 		public DisplayComponent getDisplayComponent() {
-			return devicePanel;
+			// TODO consider removal of EmulatorContext.getDisplayComponent()
+			System.out.println("MicroEmulator.emulatorContext::getDisplayComponent()");
+			return null;
 		}
 
 		public InputMethod getDeviceInputMethod() {
@@ -100,9 +101,6 @@ public class MicroEmulator extends Activity {
 				
 	};
 	
-	// TODO rename class & field name
-	private AndroidDisplayComponent devicePanel;
-
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle icicle) {
@@ -151,8 +149,6 @@ public class MicroEmulator extends Activity {
         params.add("--usesystemclassloader");
         params.add(midletClassName);
         
-        devicePanel = new AndroidDisplayComponent(this);
-        
         ((AndroidDeviceDisplay) emulatorContext.getDeviceDisplay()).displayRectangleWidth = 320;
         ((AndroidDeviceDisplay) emulatorContext.getDeviceDisplay()).displayRectangleHeight = 220;
         
@@ -161,8 +157,6 @@ public class MicroEmulator extends Activity {
         common.setDevice(new AndroidDevice(emulatorContext, this));        
         common.initParams(params, null, AndroidDevice.class);
                
-        setContentView(devicePanel);
-        
         System.setProperty("microedition.platform", "microemulator-android");
 
         common.getLauncher().setSuiteName(midletClassName);

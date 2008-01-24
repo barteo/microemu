@@ -24,7 +24,6 @@ package org.microemu.android.device;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.microedition.android.lcdui.Displayable;
 import javax.microedition.android.lcdui.Graphics;
 import javax.microedition.android.lcdui.Image;
 import javax.microedition.android.lcdui.game.Sprite;
@@ -33,11 +32,17 @@ import org.microemu.DisplayAccess;
 import org.microemu.EmulatorContext;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
+import org.microemu.android.device.ui.AndroidCanvasUI;
+import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
+import org.microemu.device.DeviceFactory;
 import org.microemu.device.MutableImage;
+import org.microemu.device.ui.CanvasUI;
+import org.microemu.device.ui.DisplayableUI;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.view.View;
 
 public class AndroidDeviceDisplay implements DeviceDisplay {
 	
@@ -235,7 +240,7 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 	}
 
 	public void repaint(int x, int y, int width, int height) {
-		context.getDisplayComponent().repaintRequest(x, y, width, height);
+		paintDisplayable(x, y, width, height);
 	}
 
 	public void setScrollDown(boolean arg0) {
@@ -248,7 +253,7 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 
 	}
 
-	public void paintDisplayable(Graphics g, int x, int y, int width, int height) {
+	public void paintDisplayable(int x, int y, int width, int height) {
 		MIDletAccess ma = MIDletBridge.getMIDletAccess();
 		if (ma == null) {
 			return;
@@ -257,7 +262,7 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 		if (da == null) {
 			return;
 		}
-		Displayable current = da.getCurrent();
+		DisplayableUI current = da.getCurrentUI();
 		if (current == null) {
 			return;
 		}
@@ -269,10 +274,33 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 		// 		|| ((Canvas) current).getHeight() != displayRectangle.height) {
 		// 	g.translate(displayPaintable.x, displayPaintable.y);
 		// }
-		g.clipRect(x, y, x + width, y + height);
 		// TODO
 		// Font oldf = g.getFont();
-		ma.getDisplayAccess().paint(g);
+		if (current instanceof CanvasUI) {
+			Device device = DeviceFactory.getDevice();
+			
+			// TODO take region size into account
+			if (device != null) {
+				synchronized (current) {
+					Image displayImage = ((AndroidCanvasUI) current).getImage();
+					synchronized (displayImage) {
+						Graphics canvas = displayImage.getGraphics();
+
+						canvas.clipRect(x, y, x + width, y + height);
+						ma.getDisplayAccess().paint(canvas);
+						// TODO
+						// if (!deviceDisplay.isFullScreenMode()) {
+						// 	deviceDisplay.paintControls(canvas);
+						// }
+					}
+				}
+			}
+			View view = ((AndroidCanvasUI) current).getView(); 
+			view.postInvalidate();
+		} else {
+			// TODO extend DisplayableUI interface
+			//current.paint();
+		}
 		// TODO
 		// g.setFont(oldf);
 		// TODO

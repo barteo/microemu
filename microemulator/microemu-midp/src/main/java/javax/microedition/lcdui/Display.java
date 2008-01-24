@@ -299,6 +299,7 @@ public class Display {
         }
 
         public void paint(Graphics g) {
+        	// TODO consider removal of DisplayAccess::paint(..)
             if (current != null) {
                 try {
                     current.paint(g);

@@ -39,10 +39,15 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 		this.view.setText("AndroidTextBoxUI");
 	}
 
+	//
+	// DisplayableUI
+	//
+
 	public void hideNotify() {
 	}
 
 	public void showNotify() {
+		System.out.println("AndroidTextBoxUI::showNotify()");
 		activity.setContentView(view);
 	}
 

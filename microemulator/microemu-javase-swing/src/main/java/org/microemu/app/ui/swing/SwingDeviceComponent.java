@@ -126,7 +126,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 
 		public static void mouseReleased() {
 			if ((task != null) && (task.inputMethod != null)) {
-				task.inputMethod.buttonReleased(task.button);
+				task.inputMethod.buttonReleased(task.button, '\0');
 				stop();
 			}
 
@@ -192,7 +192,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 			J2SEInputMethod inputMethod = (J2SEInputMethod) device.getInputMethod();
 			J2SEButton prevOverButton = J2SEDeviceButtonsHelper.getSkinButton(e);
 			if (prevOverButton != null) {
-				inputMethod.buttonReleased(prevOverButton);
+				inputMethod.buttonReleased(prevOverButton, '\0');
 			}
 			pressedButton = null;
 			// optimize for some video cards.
@@ -330,15 +330,21 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 			return;
 		}
 
+		char keyChar = '\0';
+		if (((ev.getKeyCode() == KeyEvent.VK_SPACE) || (ev.getKeyCode() >= KeyEvent.VK_0)) && (ev.getKeyCode() != KeyEvent.VK_UNDEFINED)) {
+			keyChar = ev.getKeyChar();
+		}
 		J2SEButton button = inputMethod.getButton(ev);
 		if (button != null) {
 			pressedButton = button;
-			char keyChar = ev.getKeyChar();
 			// numeric keypad functions as hot keys for buttons only
 			if ((ev.getKeyCode() >= KeyEvent.VK_NUMPAD0) && (ev.getKeyCode() <= KeyEvent.VK_NUMPAD9)) {
 				keyChar = '\0';
 			}
-			inputMethod.buttonPressed(button, keyChar);
+			// soft buttons
+			if ((ev.getKeyCode() >= KeyEvent.VK_F1) && (ev.getKeyCode() <= KeyEvent.VK_F12)) {
+				keyChar = '\0';
+			}
 			org.microemu.device.impl.Shape shape = button.getShape();
 			if (shape != null) {
 				repaint(shape.getBounds());
@@ -346,6 +352,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 		} else {
 			// Logger.debug0x("no button for KeyCode", ev.getKeyCode());
 		}
+		inputMethod.buttonPressed(button, keyChar);
 	}
 
 	public void keyReleased(KeyEvent ev) {
@@ -363,10 +370,19 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 		Device device = DeviceFactory.getDevice();
 		J2SEInputMethod inputMethod = (J2SEInputMethod) device.getInputMethod();
 
-		J2SEButton button = inputMethod.getButton(ev);
-		if (button != null) {
-			inputMethod.buttonReleased(button);
+		char keyChar = '\0';
+		if (((ev.getKeyCode() == KeyEvent.VK_SPACE) || (ev.getKeyCode() >= KeyEvent.VK_0)) && (ev.getKeyCode() != KeyEvent.VK_UNDEFINED)) {
+			keyChar = ev.getKeyChar();
 		}
+		// numeric keypad functions as hot keys for buttons only
+		if ((ev.getKeyCode() >= KeyEvent.VK_NUMPAD0) && (ev.getKeyCode() <= KeyEvent.VK_NUMPAD9)) {
+			keyChar = '\0';
+		}
+		// soft buttons
+		if ((ev.getKeyCode() >= KeyEvent.VK_F1) && (ev.getKeyCode() <= KeyEvent.VK_F12)) {
+			keyChar = '\0';
+		}
+		inputMethod.buttonReleased(inputMethod.getButton(ev), keyChar);
 
 		prevOverButton = pressedButton;
 		pressedButton = null;

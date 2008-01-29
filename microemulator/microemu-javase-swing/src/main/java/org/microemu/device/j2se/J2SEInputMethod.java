@@ -142,10 +142,20 @@ public class J2SEInputMethod extends InputMethodImpl {
 			return false;
 		}
 
+		int keyCode = keyChar;
+		if (keyChar == '\0') {
+			keyCode = button.getKeyCode();
+		}
+
 		if (inputMethodListener == null) {
-			da.keyPressed(button.getKeyCode());
+			da.keyPressed(keyCode);
 			return true;
 		}
+		
+		if (button == null) {
+			return true;
+		}
+
 		ButtonName functionalName = button.getFunctionalName();
 
 		if (functionalName == ButtonName.UP || functionalName == ButtonName.DOWN) {
@@ -318,9 +328,13 @@ public class J2SEInputMethod extends InputMethodImpl {
 	}
 
 	public void buttonPressed(J2SEButton button, char keyChar) {
+		int keyCode = keyChar;
+		if (keyChar == '\0') {
+			keyCode = button.getKeyCode();
+		}
 		eventAlreadyConsumed = false;
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
-			if (repeatModeKeyCodes.contains(new Integer(button.getKeyCode()))) {
+			if (repeatModeKeyCodes.contains(new Integer(keyCode))) {
 				MIDletAccess ma = MIDletBridge.getMIDletAccess();
 				if (ma == null) {
 					return;
@@ -329,11 +343,11 @@ public class J2SEInputMethod extends InputMethodImpl {
 				if (da == null) {
 					return;
 				}
-				da.keyRepeated(button.getKeyCode());
+				da.keyRepeated(keyCode);
 				eventAlreadyConsumed = true;
 				return;
 			} else {
-				repeatModeKeyCodes.add(new Integer(button.getKeyCode()));
+				repeatModeKeyCodes.add(new Integer(keyCode));
 			}
 		}
 
@@ -354,10 +368,14 @@ public class J2SEInputMethod extends InputMethodImpl {
 		}
 	}
 
-	public void buttonReleased(J2SEButton button) {
+	public void buttonReleased(J2SEButton button, char keyChar) {
+		int keyCode = keyChar;
+		if (keyChar == '\0') {
+			keyCode = button.getKeyCode();
+		}
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
-			repeatModeKeyCodes.remove(new Integer(button.getKeyCode()));
-			keyReleasedDelayTimer.schedule(new KeyReleasedDelayTask(button.getKeyCode()), 50);
+			repeatModeKeyCodes.remove(new Integer(keyCode));
+			keyReleasedDelayTimer.schedule(new KeyReleasedDelayTask(keyCode), 50);
 		} else {
 			MIDletAccess ma = MIDletBridge.getMIDletAccess();
 			if (ma == null) {
@@ -369,7 +387,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 				return;
 			}
 
-			da.keyReleased(button.getKeyCode());
+			da.keyReleased(keyCode);
 			eventAlreadyConsumed = false;
 		}
 	}
@@ -379,7 +397,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 		if (button != null) {
 			return button;
 		}
-		if ((getInputMode() != INPUT_NONE) && (getInputMode() != INPUT_123)) {
+		if (getInputMode() != INPUT_123) {
 			for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
 				button = (J2SEButton) e.nextElement();
 				if (button.isChar(ev.getKeyChar(), getInputMode())) {

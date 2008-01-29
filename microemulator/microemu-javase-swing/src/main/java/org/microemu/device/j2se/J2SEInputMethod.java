@@ -129,7 +129,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 				return button.getName();
 			}
 		}
-		throw new IllegalArgumentException();
+		return Character.toString((char) keyCode);
 	}
 
 	protected boolean fireInputMethodListener(J2SEButton button, char keyChar) {

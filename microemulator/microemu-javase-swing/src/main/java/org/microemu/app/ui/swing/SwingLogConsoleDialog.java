@@ -84,7 +84,6 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 		super("Log console");
 
 		setIconImage(owner.getIconImage());
-		setFocusableWindowState(false);
 
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Log");

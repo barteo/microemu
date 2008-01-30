@@ -467,6 +467,8 @@ public class Main extends JFrame {
 					}
 				});
 				logConsoleDialog.pack();
+				// To avoid NPE on MacOS setFocusableWindowState(false) have to be called after pack()
+				logConsoleDialog.setFocusableWindowState(false);
 				Rectangle window = Config.getWindow("logConsole", new Rectangle(0, 0, 640, 320));
 				logConsoleDialog.setBounds(window.x, window.y, window.width, window.height);
 			}

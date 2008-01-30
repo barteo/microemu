@@ -869,11 +869,12 @@ public class Main extends JFrame {
 			}
 			debugArgs.append("[").append(args[i]).append("]");
 		}
+
+		final Main app = new Main();
 		if (args.length > 0) {
 			Logger.debug("arguments", debugArgs.toString());
 		}
-
-		final Main app = new Main();
+		
 		app.common.initParams(params, app.selectDevicePanel.getSelectedDeviceEntry(), J2SEDevice.class);
 		app.deviceEntry = app.selectDevicePanel.getSelectedDeviceEntry();
 		DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) DeviceFactory.getDevice().getDeviceDisplay();

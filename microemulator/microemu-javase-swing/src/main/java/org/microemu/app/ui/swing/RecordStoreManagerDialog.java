@@ -59,7 +59,7 @@ public class RecordStoreManagerDialog extends JFrame {
 
 	private Common common;
 
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss.S");
 
 	private JLabel recordStoreTypeLabel = new JLabel();
 

@@ -40,6 +40,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
+import org.microemu.app.Config;
 import org.microemu.app.ui.swing.logconsole.LogTextArea;
 import org.microemu.log.Logger;
 import org.microemu.log.LoggerAppender;
@@ -95,8 +96,20 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 			}
 		});
 		menu.add(menuClear);
+		
+		menu.addSeparator();
+		
+		final JCheckBoxMenuItem menuRecordLocation = new JCheckBoxMenuItem("Show record location");
+		menuRecordLocation.setState(Logger.isLocationEnabled());
+		menuRecordLocation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Logger.setLocationEnabled(menuRecordLocation.getState());
+				Config.setLogConsoleLocationEnabled(menuRecordLocation.getState());
+			}
+		});
+		menu.add(menuRecordLocation);		
 
-		final JCheckBoxMenuItem menuStdOut = new JCheckBoxMenuItem("Write to std Out");
+		final JCheckBoxMenuItem menuStdOut = new JCheckBoxMenuItem("Write to standard output");
 		menuStdOut.setState(StdOutAppender.enabled);
 		menuStdOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -173,7 +186,11 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 		if (event.hasData()) {
 			bug.append(" [").append(event.getFormatedData()).append("]");
 		}
-		bug.append("\n\t  ").append(formatLocation(event.getLocation()));
+    	String location = formatLocation(event.getLocation());
+    	if (location.length() > 0) {
+    		bug.append("\n\t  ");
+    	}
+		bug.append(location);
 		if (event.getThrowable() != null) {
 			OutputStream out = new ByteArrayOutputStream();
 			PrintStream stream = new PrintStream(out);

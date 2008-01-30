@@ -402,7 +402,27 @@ public class Config {
 
 		saveConfig();
 	}
+	
+	public static boolean isLogConsoleLocationEnabled() {
+		XMLElement logConsoleXml = configXml.getChild("logConsole");
+		if (logConsoleXml == null) {
+			return true;
+		}
 
+		return logConsoleXml.getBooleanAttribute("locationEnabled", true);
+	}
+
+	public static void setLogConsoleLocationEnabled(boolean state) {
+		XMLElement logConsoleXml = configXml.getChildOrNew("logConsole");
+		if (state) {
+			logConsoleXml.setAttribute("locationEnabled", "true");
+		} else {
+			logConsoleXml.setAttribute("locationEnabled", "false");
+		}
+
+		saveConfig();
+	}
+	
 	public static boolean isWindowOnStart(String name) {
 		XMLElement windowsXml = configXml.getChild("windows");
 		if (windowsXml == null) {

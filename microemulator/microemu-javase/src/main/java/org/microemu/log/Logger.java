@@ -44,6 +44,8 @@ public class Logger {
 	private static final Set logFunctionsSet = new HashSet();
 
 	private static boolean java13 = false;
+	
+	private static boolean locationEnabled = true;
 
 	private static List loggerAppenders = new Vector();
 
@@ -73,9 +75,17 @@ public class Logger {
 	public static boolean isErrorEnabled() {
 		return true;
 	}
+	
+	public static boolean isLocationEnabled() {
+		return locationEnabled;
+	}
+	
+	public static void setLocationEnabled(boolean state) {
+		locationEnabled = state;
+	}
 
 	private static StackTraceElement getLocation() {
-		if (java13) {
+		if (java13 || !locationEnabled) {
 			return null;
 		}
 		try {

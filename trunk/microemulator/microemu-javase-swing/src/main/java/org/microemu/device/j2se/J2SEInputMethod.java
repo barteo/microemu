@@ -143,7 +143,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 		}
 
 		int keyCode = keyChar;
-		if (keyChar == '\0') {
+		if (button != null && keyChar == '\0') {
 			keyCode = button.getKeyCode();
 		}
 
@@ -329,7 +329,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 
 	public void buttonPressed(J2SEButton button, char keyChar) {
 		int keyCode = keyChar;
-		if (keyChar == '\0') {
+		if (button != null && keyChar == '\0') {
 			keyCode = button.getKeyCode();
 		}
 		eventAlreadyConsumed = false;
@@ -370,7 +370,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 
 	public void buttonReleased(J2SEButton button, char keyChar) {
 		int keyCode = keyChar;
-		if (keyChar == '\0') {
+		if (button != null && keyChar == '\0') {
 			keyCode = button.getKeyCode();
 		}
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {

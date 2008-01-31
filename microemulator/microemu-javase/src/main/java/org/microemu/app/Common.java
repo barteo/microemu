@@ -121,8 +121,6 @@ public class Common implements MicroEmulator, CommonInterface {
 		instance = this;
 		this.emulatorContext = context;
 		
-		Logger.setLocationEnabled(Config.isLogConsoleLocationEnabled());
-
 		launcher = new Launcher(this);
 		launcher.setCurrentMIDlet(launcher);
 

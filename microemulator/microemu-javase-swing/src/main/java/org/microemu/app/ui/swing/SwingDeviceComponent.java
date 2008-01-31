@@ -324,6 +324,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 		}
 
 		switch (ev.getKeyCode()) {
+		case 0:
 		case KeyEvent.VK_ALT:
 		case KeyEvent.VK_CONTROL:
 		case KeyEvent.VK_SHIFT:
@@ -361,6 +362,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 		}
 
 		switch (ev.getKeyCode()) {
+		case 0:
 		case KeyEvent.VK_ALT:
 		case KeyEvent.VK_CONTROL:
 		case KeyEvent.VK_SHIFT:

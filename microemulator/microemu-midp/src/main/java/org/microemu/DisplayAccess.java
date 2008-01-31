@@ -30,7 +30,7 @@ import org.microemu.device.ui.DisplayableUI;
 public interface DisplayAccess
 {
 
-	void commandAction(Command cmd);
+	void commandAction(Command c, Displayable d);
 
 	Display getDisplay();
 

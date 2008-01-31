@@ -60,7 +60,7 @@ public class CommandManager
 			MIDletBridge.getMIDletAccess().getDisplayAccess().setCurrent(previous);
 
 			if ((c == CMD_SELECT) || c == List.SELECT_COMMAND) {
-				MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(selection);
+				MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(selection, previous);
 			}
 		}		
 	};
@@ -95,7 +95,7 @@ public class CommandManager
 			previous = MIDletBridge.getMIDletAccess().getDisplayAccess().getCurrent();
 			MIDletBridge.getMIDletAccess().getDisplayAccess().setCurrent(menuList);
 		} else {
-			MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(command);
+			MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(command, MIDletBridge.getMIDletAccess().getDisplayAccess().getCurrent());
 		}
 	}
 	

@@ -166,21 +166,120 @@ public class Display {
         public void run() {
             switch (type) {
             case KEY_PRESSED:
-                if (current != null)
+                if (current != null) {
                     current.keyPressed(keyCode);
+                }
                 break;
 
             case KEY_RELEASED:
-                if (current != null)
+                if (current != null) {
                     current.keyReleased(keyCode);
+                }
                 break;
 
             case KEY_REPEATED:
-                if (current != null)
+                if (current != null) {
                     current.keyRepeated(keyCode);
+                }
                 break;
             }
         }
+    }
+    
+    private final class PointerEvent implements Runnable {
+    	
+    	static final short POINTER_PRESSED = 0;
+    	
+    	static final short POINTER_RELEASED = 1;
+    	
+    	static final short POINTER_DRAGGED = 2;
+    	
+    	private short type;
+    	
+    	private int x;
+    	
+    	private int y;
+    	
+    	PointerEvent(short type, int x, int y) {
+    		this.type = type;
+    		this.x = x;
+    		this.y = y;
+    	}
+    	
+        public void run() {
+            switch (type) {
+            case POINTER_PRESSED:
+                if (current != null) {
+                    current.pointerPressed(x, y);
+                }
+            	break;
+            case POINTER_RELEASED:
+                if (current != null) {
+                    current.pointerReleased(x, y);
+                }
+            	break;
+            case POINTER_DRAGGED:
+                if (current != null) {
+                    current.pointerDragged(x, y);
+                }
+            	break;
+            }
+        }   	
+    }
+
+    private final class ShowHideNotifyEvent implements Runnable {
+    	
+    	static final short SHOW_NOTIFY = 0;
+    	
+    	static final short HIDE_NOTIFY = 1;
+    	
+    	private short type;
+    	
+    	private Displayable current;
+    	
+    	private Displayable nextDisplayable;
+    	
+    	ShowHideNotifyEvent(short type, Displayable current, Displayable nextDisplayable) {
+    		this.type = type;
+    		this.current = current;
+    		this.nextDisplayable = nextDisplayable;
+    	}
+    	
+        public void run() {
+            switch (type) {
+            case SHOW_NOTIFY:
+                if (current != null) {
+                	putInQueue(new ShowHideNotifyEvent(ShowHideNotifyEvent.HIDE_NOTIFY, current, nextDisplayable));
+                }
+
+                if (nextDisplayable instanceof Alert) {
+                    setCurrent((Alert) nextDisplayable, current);
+                    return;
+                }
+
+                // Andres Navarro
+                // TODO uncomment and test with JBenchmark2
+                /*
+                 * if (nextDisplayable instanceof GameCanvas) { // clear the keys of
+                 * the GameCanvas
+                 * MIDletBridge.getMIDletAccess().getGameCanvasKeyAccess().setActualKeyState(
+                 * (GameCanvas) nextDisplayable, 0); }
+                 */
+                // Andres Navarro
+                nextDisplayable.showNotify(Display.this);
+                Display.this.current = nextDisplayable;                
+                
+                setScrollUp(false);
+                setScrollDown(false);
+                updateCommands();
+                nextDisplayable.repaint();
+                
+                break;
+            case HIDE_NOTIFY:
+            	current.hideNotify(Display.this);
+            	break;
+            }
+        }   	
     }
 
     private class DisplayAccessor implements DisplayAccess {
@@ -192,33 +291,33 @@ public class Display {
             display = d;
         }
 
-        public void commandAction(Command cmd) {
-            if (cmd.equals(CommandManager.CMD_SCREEN_UP)) {
-                if (current != null && current instanceof Screen) {
-                    ((Screen) current).scroll(Canvas.UP);
+        public void commandAction(Command c, Displayable d) {
+            if (c.equals(CommandManager.CMD_SCREEN_UP)) {
+                if (d != null && d instanceof Screen) {
+                    ((Screen) d).scroll(Canvas.UP);
                 }
-            } else if (cmd.equals(CommandManager.CMD_SCREEN_DOWN)) {
-                if (current != null && current instanceof Screen) {
-                    ((Screen) current).scroll(Canvas.DOWN);
+            } else if (c.equals(CommandManager.CMD_SCREEN_DOWN)) {
+                if (d != null && d instanceof Screen) {
+                    ((Screen) d).scroll(Canvas.DOWN);
                 }
-            } else if (cmd.isRegularCommand()) {
-                if (current == null) {
+            } else if (c.isRegularCommand()) {
+                if (d == null) {
                     return;
                 }
-                CommandListener listener = current.getCommandListener();
+                CommandListener listener = d.getCommandListener();
                 if (listener == null) {
                     return;
                 }
-                listener.commandAction(cmd, current);
+                listener.commandAction(c, d);
             } else {
                 // item contained command
-                Item item = cmd.getFocusedItem();
+                Item item = c.getFocusedItem();
 
                 ItemCommandListener listener = item.getItemCommandListener();
                 if (listener == null) {
                     return;
                 }
-                listener.commandAction(cmd.getOriginalCommand(), item);
+                listener.commandAction(c.getOriginalCommand(), item);
             }
         }
 
@@ -281,20 +380,20 @@ public class Display {
 
         public void pointerPressed(int x, int y) {
             if (current != null) {
-                current.pointerPressed(x, y);
+            	putInQueue(new PointerEvent(PointerEvent.POINTER_PRESSED, x, y));
             }
         }
 
         public void pointerReleased(int x, int y) {
             if (current != null) {
-                current.pointerReleased(x, y);
+            	putInQueue(new PointerEvent(PointerEvent.POINTER_RELEASED, x, y));
             }
         }
 
         public void pointerDragged(int x, int y) {
 
             if (current != null) {
-                current.pointerDragged(x, y);
+            	putInQueue(new PointerEvent(PointerEvent.POINTER_DRAGGED, x, y));
             }
         }
 
@@ -583,37 +682,13 @@ public class Display {
 
     public void setCurrent(Displayable nextDisplayable) {
         if (nextDisplayable != null) {
-            if (current != null) {
-                current.hideNotify(this);
-            }
-
-            if (nextDisplayable instanceof Alert) {
-                setCurrent((Alert) nextDisplayable, current);
-                return;
-            }
-
-            current = nextDisplayable;
-            // Andres Navarro
-            // TODO uncomment and test with JBenchmark2
-            /*
-             * if (nextDisplayable instanceof GameCanvas) { // clear the keys of
-             * the GameCanvas
-             * MIDletBridge.getMIDletAccess().getGameCanvasKeyAccess().setActualKeyState(
-             * (GameCanvas) nextDisplayable, 0); }
-             */
-            // Andres Navarro
-            current.showNotify(this);
-            setScrollUp(false);
-            setScrollDown(false);
-            updateCommands();
-
-            current.repaint();
+        	putInQueue(new ShowHideNotifyEvent(ShowHideNotifyEvent.SHOW_NOTIFY, current, nextDisplayable));
         }
     }
 
     public void setCurrent(Alert alert, Displayable nextDisplayable) {
-        // XXX check if nextDisplayble is
-        // Alert
+        // TODO check if nextDisplayble is Alert
+    	// TODO change to putInQueue implementation
         Alert.nextDisplayable = nextDisplayable;
 
         current = alert;

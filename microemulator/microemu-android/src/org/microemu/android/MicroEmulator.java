@@ -49,12 +49,11 @@ import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.log.Logger;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.Window;
 
-public class MicroEmulator extends Activity {
+public class MicroEmulator extends MicroEmulatorActivity {
 	
 	public static final String LOG_TAG = "MicroEmulator";
 		

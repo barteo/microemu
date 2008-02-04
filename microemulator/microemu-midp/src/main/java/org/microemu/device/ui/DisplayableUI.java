@@ -26,6 +26,10 @@ import javax.microedition.lcdui.CommandListener;
 
 public interface DisplayableUI {
 	
+	String getTitle();
+	
+	void setTitle(String s);
+	
 	void addCommand(Command cmd);
 	
 	void removeCommand(Command cmd);

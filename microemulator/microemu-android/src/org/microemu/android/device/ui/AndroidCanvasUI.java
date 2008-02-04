@@ -24,6 +24,7 @@ package org.microemu.android.device.ui;
 import javax.microedition.android.lcdui.Image;
 
 import org.microemu.MIDletBridge;
+import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.android.device.AndroidInputMethod;
 import org.microemu.android.device.AndroidMutableImage;
 import org.microemu.device.Device;
@@ -31,7 +32,6 @@ import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.ui.CanvasUI;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -41,14 +41,18 @@ import android.view.View;
 
 public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 
-	private Activity activity;
+	private MicroEmulatorActivity activity;
 	
 	private CanvasView view;
 	
-	public AndroidCanvasUI(Activity activity) {
+	public AndroidCanvasUI(final MicroEmulatorActivity activity) {
 		this.activity = activity;
 		
-		this.view = new CanvasView(activity);
+		activity.getHandler().post(new Runnable() {
+			public void run() {
+				AndroidCanvasUI.this.view = new CanvasView(activity);
+			}
+		});
 	}
 	
 	public View getView() {
@@ -56,6 +60,14 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 	}
 	
 	public Image getImage() {
+		// TODO improve method that waits for for view being initialized
+		while (view == null) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException ex) {
+				ex.printStackTrace();
+			}
+		}
 		return view.getImage();
 	}
 
@@ -68,7 +80,11 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 
 	public void showNotify() {
 		System.out.println("AndroidCanvasUI::showNotify()");
-		activity.setContentView(view);
+		activity.getHandler().post(new Runnable() {
+			public void run() {
+				activity.setContentView(view);
+			}
+		});
 	}
 	
 	private class CanvasView extends View {

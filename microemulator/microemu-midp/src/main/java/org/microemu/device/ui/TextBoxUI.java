@@ -22,5 +22,11 @@
 package org.microemu.device.ui;
 
 public interface TextBoxUI extends DisplayableUI {
+	
+	int getCaretPosition();
 
+	String getString();
+	
+	void setString(String text);
+	
 }

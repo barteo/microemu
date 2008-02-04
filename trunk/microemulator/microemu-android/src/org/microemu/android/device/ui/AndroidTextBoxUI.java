@@ -21,34 +21,89 @@
 
 package org.microemu.android.device.ui;
 
+import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.TextBoxUI;
 
-import android.app.Activity;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI {
 	
-	private Activity activity;
+	private MicroEmulatorActivity activity;
 	
-	private TextView view;
+	private LinearLayout view;
 	
-	public AndroidTextBoxUI(Activity activity) {
-		this.activity = activity;
+	private TextView titleView;
+	
+	private EditText editView;
+	
+	public AndroidTextBoxUI(final MicroEmulatorActivity activity) {
+		this.activity = activity;		
 		
-		this.view = new TextView(activity);
-		this.view.setText("AndroidTextBoxUI");
+		activity.getHandler().post(new Runnable() {
+			public void run() {
+				AndroidTextBoxUI.this.view = new LinearLayout(activity);
+				AndroidTextBoxUI.this.view.setOrientation(LinearLayout.VERTICAL);
+				AndroidTextBoxUI.this.view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+				
+				titleView = new TextView(activity);
+				titleView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+				AndroidTextBoxUI.this.view.addView(titleView);
+				
+				editView = new EditText(activity);
+				editView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+				AndroidTextBoxUI.this.view.addView(editView);
+			}
+		});		
 	}
 
 	//
 	// DisplayableUI
 	//
+	
+	@Override
+	public void setTitle(final String title) {
+		super.setTitle(title);
+		
+		// TODO improve method that waits for for view being initialized
+		while (titleView == null) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException ex) {
+				ex.printStackTrace();
+			}
+		}
+		titleView.setText(title);		
+	}
 
 	public void hideNotify() {
 	}
 
 	public void showNotify() {
-		System.out.println("AndroidTextBoxUI::showNotify()");
-		activity.setContentView(view);
+		activity.getHandler().post(new Runnable() {
+			public void run() {
+				activity.setContentView(view);
+				editView.requestFocus();
+			}
+		});
+	}
+	
+	//
+	// TextBoxUI
+	//
+	
+	public int getCaretPosition() {
+		return editView.getSelectionStart();
+	}
+	
+	public String getString() {
+		return editView.getText().toString();
+	}
+
+	public void setString(String text) {
+		editView.setText(text);
+		editView.setSelection(text.length());
 	}
 
 }

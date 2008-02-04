@@ -28,6 +28,7 @@ import java.util.Vector;
 import javax.microedition.android.lcdui.Image;
 
 import org.microemu.EmulatorContext;
+import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.android.device.ui.AndroidCanvasUI;
 import org.microemu.android.device.ui.AndroidTextBoxUI;
 import org.microemu.device.Device;
@@ -39,13 +40,11 @@ import org.microemu.device.ui.DisplayableUI;
 import org.microemu.device.ui.TextBoxUI;
 import org.microemu.device.ui.UIFactory;
 
-import android.app.Activity;
-
 public class AndroidDevice implements Device {
 
 	private EmulatorContext emulatorContext;
 	
-	private Activity activity;
+	private MicroEmulatorActivity activity;
 	
 	private UIFactory ui = new UIFactory() {
 
@@ -79,7 +78,7 @@ public class AndroidDevice implements Device {
 	
 	private Vector softButtons = new Vector();
 	
-	public AndroidDevice(EmulatorContext emulatorContext, Activity activity) {
+	public AndroidDevice(EmulatorContext emulatorContext, MicroEmulatorActivity activity) {
 		this.emulatorContext = emulatorContext;
 		this.activity = activity;
 	}

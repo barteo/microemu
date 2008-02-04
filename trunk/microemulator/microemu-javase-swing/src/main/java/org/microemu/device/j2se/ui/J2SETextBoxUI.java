@@ -25,5 +25,22 @@ import org.microemu.device.impl.ui.DisplayableImplUI;
 import org.microemu.device.ui.TextBoxUI;
 
 public class J2SETextBoxUI extends DisplayableImplUI implements TextBoxUI {
+	
+	private String text;
+	
+	public int getCaretPosition() {
+		// TODO not yet used
+		return -1;
+	}
+
+	public String getString() {
+		// TODO not yet used
+		return text;
+	}
+
+	public void setString(String text) {
+		// TODO not yet used
+		this.text = text;	
+	}
 
 }

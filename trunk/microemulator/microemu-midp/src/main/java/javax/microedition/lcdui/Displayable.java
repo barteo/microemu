@@ -40,8 +40,6 @@ public abstract class Displayable
     Ticker ticker;
     
     // TODO make private
-    StringComponent title;
-    // TODO make private
     int viewPortY;
     // TODO make private
     int viewPortHeight;
@@ -58,12 +56,13 @@ public abstract class Displayable
     
     Displayable(String title, DisplayableUI ui) 
     {
-        this.title = new StringComponent(title);
         this.ui = ui;
         
         this.device = DeviceFactory.getDevice();
         this.sizeChangedDeferredRequest = false;        
         this.fullScreenMode = false;
+        
+        setTitle(title);
     }
     
 
@@ -155,14 +154,15 @@ public abstract class Displayable
     
     public String getTitle() 
     {
-        return title.getText();
+        return ui.getTitle();
     }
 
     
     public void setTitle(String s) 
     {
-        title.setText(s);
+        ui.setTitle(s);
         
+        // TODO move to the native UI component
         repaint();
     }        
     
@@ -266,7 +266,9 @@ public abstract class Displayable
 	{
 		currentDisplay = d;
         viewPortY = 0;
-        viewPortHeight = getHeight() - this.title.getHeight() - 1;
+        // TODO remove this StringComponent object when native UI is completed
+        StringComponent title = new StringComponent(getTitle());
+        viewPortHeight = getHeight() - title.getHeight() - 1;
         if (ticker != null) {
         		viewPortHeight -= this.ticker.getHeight();
         }

@@ -31,6 +31,8 @@ import org.microemu.device.ui.DisplayableUI;
 
 public abstract class AndroidDisplayableUI implements DisplayableUI {
 	
+	private String title;
+	
 	private List commands = new ArrayList();
 	
 	private CommandListener l = null;
@@ -46,6 +48,14 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 	//
 	// DisplayableUI
 	//
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
 	public void addCommand(Command cmd) {
 		commands.add(cmd);

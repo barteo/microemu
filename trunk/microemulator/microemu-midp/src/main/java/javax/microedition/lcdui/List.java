@@ -169,6 +169,8 @@ public class List extends Screen implements Choice {
         if (ticker != null) {
             y -= ticker.getHeight();
         }
+        // TODO remove this StringComponent object when native UI is completed
+        StringComponent title = new StringComponent(getTitle());
         y -= title.getHeight();
         y -= 1;
         if (y >= 0 && y < viewPortHeight) {
@@ -189,6 +191,8 @@ public class List extends Screen implements Choice {
         if (ticker != null) {
             y -= ticker.getHeight();
         }
+        // TODO remove this StringComponent object when native UI is completed
+        StringComponent title = new StringComponent(getTitle());
         y -= title.getHeight();
         y -= 1;
         if (y >= 0 && y < viewPortHeight && choiceGroup.choiceType == Choice.IMPLICIT) {

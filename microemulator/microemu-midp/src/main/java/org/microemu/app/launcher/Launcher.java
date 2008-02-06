@@ -34,16 +34,16 @@ import org.microemu.app.CommonInterface;
 public class Launcher extends MIDlet implements CommandListener {
 
 	private static final Command CMD_LAUNCH = new Command("Start", Command.ITEM, 0);;
-	
+
 	private static final String NOMIDLETS = "[no midlets]";
-	
+
 	private CommonInterface common;
 
 	private List menuList;
 
-	private String midletSuiteName = null;
+	private static String midletSuiteName = null;
 
-	private Vector midletEntries = new Vector();
+	private static Vector midletEntries = new Vector();
 
 	private MIDlet currentMIDlet = null;
 
@@ -55,20 +55,19 @@ public class Launcher extends MIDlet implements CommandListener {
 		return midletSuiteName;
 	}
 
-	public void setSuiteName(String midletSuiteName) {
-		this.midletSuiteName = midletSuiteName;
+	public static void setSuiteName(String midletSuiteName) {
+		Launcher.midletSuiteName = midletSuiteName;
 	}
 
-	public void addMIDletEntry(MIDletEntry entry) {
+	public static void addMIDletEntry(MIDletEntry entry) {
 		midletEntries.addElement(entry);
 	}
 
-	public void removeMIDletEntries() {
+	public static void removeMIDletEntries() {
 		midletEntries.removeAllElements();
 	}
-	
-	public MIDletEntry getSelectedMidletEntry()
-	{
+
+	public MIDletEntry getSelectedMidletEntry() {
 		if (menuList != null) {
 			int idx = menuList.getSelectedIndex();
 			if (!menuList.getString(idx).equals(NOMIDLETS)) {
@@ -102,8 +101,7 @@ public class Launcher extends MIDlet implements CommandListener {
 			menuList.append(NOMIDLETS, null);
 		} else {
 			for (int i = 0; i < midletEntries.size(); i++) {
-				menuList.append(((MIDletEntry) midletEntries.elementAt(i))
-						.getName(), null);
+				menuList.append(((MIDletEntry) midletEntries.elementAt(i)).getName(), null);
 			}
 		}
 

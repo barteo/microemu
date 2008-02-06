@@ -42,7 +42,6 @@ import javax.microedition.rms.RecordStoreNotOpenException;
 import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
 import org.microemu.app.Config;
-import org.microemu.app.launcher.Launcher;
 import org.microemu.log.Logger;
 import org.microemu.util.RecordStoreImpl;
 
@@ -50,7 +49,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 
 	private final static String RECORD_STORE_SUFFIX = ".rs";
 
-	private Launcher launcher;
+	private MicroEmulator emulator;
 
 	private Hashtable testOpenRecordStores = new Hashtable();
 
@@ -70,7 +69,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 	};
 
 	public void init(MicroEmulator emulator) {
-		this.launcher = emulator.getLauncher();
+		this.emulator = emulator;
 		this.acc = AccessController.getContext();
 	}
 
@@ -79,7 +78,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 	}
 
 	private File getSuiteFolder() {
-		return new File(Config.getConfigPath(), "suite-" + launcher.getSuiteName());
+		return new File(Config.getConfigPath(), "suite-" + emulator.getLauncher().getSuiteName());
 	}
 
 	public void deleteRecordStore(final String recordStoreName) throws RecordStoreNotFoundException,

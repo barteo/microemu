@@ -26,4 +26,19 @@ import org.microemu.device.ui.TextBoxUI;
 
 public class SwtTextBoxUI extends DisplayableImplUI implements TextBoxUI {
 
+	public int getCaretPosition() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public String getString() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void setString(String text) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

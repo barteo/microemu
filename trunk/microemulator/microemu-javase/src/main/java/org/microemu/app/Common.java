@@ -120,7 +120,7 @@ public class Common implements MicroEmulator, CommonInterface {
 	public Common(EmulatorContext context) {
 		instance = this;
 		this.emulatorContext = context;
-		
+
 		launcher = new Launcher(this);
 		launcher.setCurrentMIDlet(launcher);
 
@@ -413,6 +413,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		}
 
 		try {
+			launcher = new Launcher(this);
 			MIDletBridge.getMIDletAccess(launcher).startApp();
 			launcher.setCurrentMIDlet(launcher);
 		} catch (Throwable e) {
@@ -524,7 +525,7 @@ public class Common implements MicroEmulator, CommonInterface {
 
 			midletClassLoader.addURL(url);
 
-			launcher.removeMIDletEntries();
+			Launcher.removeMIDletEntries();
 
 			manifest.clear();
 			InputStream is = null;
@@ -543,12 +544,12 @@ public class Common implements MicroEmulator, CommonInterface {
 				IOUtils.closeQuietly(is);
 			}
 
-			launcher.setSuiteName(jad.getSuiteName());
+			Launcher.setSuiteName(jad.getSuiteName());
 
 			for (Enumeration e = jad.getMidletEntries().elements(); e.hasMoreElements();) {
 				JadMidletEntry jadEntry = (JadMidletEntry) e.nextElement();
 				Class midletClass = midletClassLoader.loadClass(jadEntry.getClassName());
-				launcher.addMIDletEntry(new MIDletEntry(jadEntry.getName(), midletClass));
+				Launcher.addMIDletEntry(new MIDletEntry(jadEntry.getName(), midletClass));
 			}
 			startLauncher(null);
 			setStatusBar("");

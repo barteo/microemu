@@ -29,7 +29,7 @@ public interface UIFactory {
 	
 	DisplayableUI createFormUI();
 
-	DisplayableUI createListUI();
+	ListUI createListUI();
 	
 	TextBoxUI createTextBoxUI();
 

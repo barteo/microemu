@@ -24,6 +24,7 @@
 package javax.microedition.lcdui;
 
 import org.microemu.device.DeviceFactory;
+import org.microemu.device.ui.ListUI;
 
 public class List extends Screen implements Choice {
 
@@ -73,7 +74,11 @@ public class List extends Screen implements Choice {
     }
 
     public int append(String stringPart, Image imagePart) {
-        return choiceGroup.append(stringPart, imagePart);
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidListUI")) {
+			return ((ListUI) ui).append(stringPart, imagePart);
+		} else {
+			return choiceGroup.append(stringPart, imagePart);
+		}
     }
 
     public void delete(int elementNum) {

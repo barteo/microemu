@@ -21,9 +21,11 @@ package org.microemu.device.swt;
 
 import org.microemu.device.impl.DeviceImpl;
 import org.microemu.device.swt.ui.SwtCanvasUI;
+import org.microemu.device.swt.ui.SwtListUI;
 import org.microemu.device.swt.ui.SwtTextBoxUI;
 import org.microemu.device.ui.CanvasUI;
 import org.microemu.device.ui.DisplayableUI;
+import org.microemu.device.ui.ListUI;
 import org.microemu.device.ui.TextBoxUI;
 import org.microemu.device.ui.UIFactory;
 
@@ -45,9 +47,9 @@ public class SwtDevice extends DeviceImpl {
 			return new SwtCanvasUI();
 		}
 
-		public DisplayableUI createListUI() {
+		public ListUI createListUI() {
 			// TODO Not yet implemented
-			return new SwtCanvasUI();
+			return new SwtListUI();
 		}
 
 		public TextBoxUI createTextBoxUI() {

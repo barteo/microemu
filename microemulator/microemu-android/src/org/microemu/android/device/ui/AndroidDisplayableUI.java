@@ -22,6 +22,8 @@
 package org.microemu.android.device.ui;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.microedition.android.lcdui.Command;
@@ -30,6 +32,20 @@ import javax.microedition.android.lcdui.CommandListener;
 import org.microemu.device.ui.DisplayableUI;
 
 public abstract class AndroidDisplayableUI implements DisplayableUI {
+	
+	private static Comparator commandsPriorityComparator = new Comparator() {
+
+		public int compare(Object object1, Object object2) {
+			if (((Command) object1).getPriority() == ((Command) object2).getPriority()) {
+				return 0;
+			} else if (((Command) object1).getPriority() < ((Command) object2).getPriority()) {
+				return -1;
+			} else {
+				return 1;
+			}
+		}
+		
+	};
 	
 	private String title;
 	
@@ -58,7 +74,10 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 	}
 
 	public void addCommand(Command cmd) {
+System.out.println("AndroidDisplayableUI::addCommand(..) " + cmd.getLabel());		
 		commands.add(cmd);
+		// TODO decide whether this is the best way for keeping sorted commands
+		Collections.sort(commands, commandsPriorityComparator);
 	}
 
 	public void removeCommand(Command cmd) {

@@ -48,7 +48,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 	public AndroidCanvasUI(final MicroEmulatorActivity activity) {
 		this.activity = activity;
 		
-		activity.getHandler().post(new Runnable() {
+		activity.post(new Runnable() {
 			public void run() {
 				AndroidCanvasUI.this.view = new CanvasView(activity);
 			}
@@ -79,8 +79,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 	}
 
 	public void showNotify() {
-		System.out.println("AndroidCanvasUI::showNotify()");
-		activity.getHandler().post(new Runnable() {
+		activity.post(new Runnable() {
 			public void run() {
 				activity.setContentView(view);
 			}

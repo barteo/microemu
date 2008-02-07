@@ -90,8 +90,12 @@ public class AndroidProducer {
 				}
 			}			
 		} finally {
-			jis.close();
-			jos.close();
+			if (jis != null) {
+				jis.close();
+			}
+			if (jos != null) {
+				jos.close();
+			}
 		}
 	}
 	

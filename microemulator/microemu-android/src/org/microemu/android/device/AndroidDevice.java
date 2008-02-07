@@ -30,6 +30,7 @@ import javax.microedition.android.lcdui.Image;
 import org.microemu.EmulatorContext;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.android.device.ui.AndroidCanvasUI;
+import org.microemu.android.device.ui.AndroidListUI;
 import org.microemu.android.device.ui.AndroidTextBoxUI;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
@@ -37,6 +38,7 @@ import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.device.ui.CanvasUI;
 import org.microemu.device.ui.DisplayableUI;
+import org.microemu.device.ui.ListUI;
 import org.microemu.device.ui.TextBoxUI;
 import org.microemu.device.ui.UIFactory;
 
@@ -54,7 +56,6 @@ public class AndroidDevice implements Device {
 		}
 
 		public CanvasUI createCanvasUI() {
-			// TODO Auto-generated method stub
 			return new AndroidCanvasUI(activity);
 		}
 
@@ -63,9 +64,9 @@ public class AndroidDevice implements Device {
 			return new AndroidCanvasUI(activity);
 		}
 
-		public DisplayableUI createListUI() {
-			// TODO Not yet implemented
-			return new AndroidCanvasUI(activity);
+		public ListUI createListUI() {
+System.out.println("UIFactory::createListUI()");		
+			return new AndroidListUI(activity);
 		}
 		
 		public TextBoxUI createTextBoxUI() {

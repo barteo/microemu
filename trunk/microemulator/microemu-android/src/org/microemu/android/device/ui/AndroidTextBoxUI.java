@@ -41,7 +41,7 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 	public AndroidTextBoxUI(final MicroEmulatorActivity activity) {
 		this.activity = activity;		
 		
-		activity.getHandler().post(new Runnable() {
+		activity.post(new Runnable() {
 			public void run() {
 				AndroidTextBoxUI.this.view = new LinearLayout(activity);
 				AndroidTextBoxUI.this.view.setOrientation(LinearLayout.VERTICAL);
@@ -81,7 +81,7 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 	}
 
 	public void showNotify() {
-		activity.getHandler().post(new Runnable() {
+		activity.post(new Runnable() {
 			public void run() {
 				activity.setContentView(view);
 				editView.requestFocus();

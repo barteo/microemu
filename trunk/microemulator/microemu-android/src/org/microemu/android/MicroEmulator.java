@@ -180,7 +180,8 @@ public class MicroEmulator extends MicroEmulatorActivity {
 		menu.clear();	
 		boolean result = false;
 		final CommandListener l = ui.getCommandListener();
-		for (Iterator it = ui.getCommands().iterator(); it.hasNext(); ) {
+		ArrayList commands = new ArrayList(ui.getCommands());
+		for (Iterator it = commands.iterator(); it.hasNext(); ) {
 			result = true;
 			final Command cmd = (Command) it.next();
 			menu.add(0, 0, cmd.getLabel(), new Runnable() {

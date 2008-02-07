@@ -21,9 +21,11 @@ package org.microemu.device.j2se;
 
 import org.microemu.device.impl.DeviceImpl;
 import org.microemu.device.j2se.ui.J2SECanvasUI;
+import org.microemu.device.j2se.ui.J2SEListUI;
 import org.microemu.device.j2se.ui.J2SETextBoxUI;
 import org.microemu.device.ui.CanvasUI;
 import org.microemu.device.ui.DisplayableUI;
+import org.microemu.device.ui.ListUI;
 import org.microemu.device.ui.TextBoxUI;
 import org.microemu.device.ui.UIFactory;
 
@@ -45,9 +47,9 @@ public class J2SEDevice extends DeviceImpl {
 			return new J2SECanvasUI();
 		}
 
-		public DisplayableUI createListUI() {
+		public ListUI createListUI() {
 			// TODO Not yet implemented
-			return new J2SECanvasUI();
+			return new J2SEListUI();
 		}
 
 		public TextBoxUI createTextBoxUI() {

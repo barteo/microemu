@@ -21,13 +21,18 @@
 
 package org.microemu.device.j2se.ui;
 
+import javax.microedition.lcdui.TextBox;
+
 import org.microemu.device.impl.ui.DisplayableImplUI;
 import org.microemu.device.ui.TextBoxUI;
 
 public class J2SETextBoxUI extends DisplayableImplUI implements TextBoxUI {
-	
+
 	private String text;
-	
+
+	public J2SETextBoxUI(TextBox textBox) {
+	}
+
 	public int getCaretPosition() {
 		// TODO not yet used
 		return -1;
@@ -40,7 +45,7 @@ public class J2SETextBoxUI extends DisplayableImplUI implements TextBoxUI {
 
 	public void setString(String text) {
 		// TODO not yet used
-		this.text = text;	
+		this.text = text;
 	}
 
 }

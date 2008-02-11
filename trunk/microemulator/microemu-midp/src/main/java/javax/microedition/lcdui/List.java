@@ -37,7 +37,8 @@ public class List extends Screen implements Choice {
     private int initialPressedItem;
 
     public List(String title, int listType) {
-        super(title, DeviceFactory.getDevice().getUIFactory().createListUI());
+        super(title);
+        super.setUI(DeviceFactory.getDevice().getUIFactory().createListUI(this));
 
         if (listType != Choice.IMPLICIT && listType != Choice.MULTIPLE && listType != Choice.EXCLUSIVE)
             throw new IllegalArgumentException("Illegal list type");
@@ -56,7 +57,8 @@ public class List extends Screen implements Choice {
     }
 
     public List(String title, int listType, String[] stringElements, Image[] imageElements) {
-        super(title, DeviceFactory.getDevice().getUIFactory().createListUI());
+        super(title);
+        super.setUI(DeviceFactory.getDevice().getUIFactory().createListUI(this));
 
         if (listType == Choice.IMPLICIT) {
             choiceGroup = new ChoiceGroup(null, Choice.IMPLICIT, stringElements, imageElements, false);
@@ -106,11 +108,19 @@ public class List extends Screen implements Choice {
     }
 
     public int getSelectedIndex() {
-        return choiceGroup.getSelectedIndex();
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidListUI")) {
+			return ((ListUI) ui).getSelectedIndex();
+		} else {
+			return choiceGroup.getSelectedIndex();
+		}
     }
 
     public String getString(int elementNum) {
-        return choiceGroup.getString(elementNum);
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidListUI")) {
+			return ((ListUI) ui).getString(elementNum);
+		} else {
+        	return choiceGroup.getString(elementNum);
+		}
     }
 
     public void insert(int elementNum, String stringPart, Image imagePart) {
@@ -140,6 +150,8 @@ public class List extends Screen implements Choice {
 
     public void setSelectCommand(Command command) {
         selCommand = command;
+        
+        ((ListUI) ui).setSelectCommand(command);
     }
 
     public void setSelectedFlags(boolean[] selectedArray) {

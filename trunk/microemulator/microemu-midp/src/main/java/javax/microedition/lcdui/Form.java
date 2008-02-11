@@ -38,7 +38,8 @@ public class Form extends Screen
 	
 	public Form(String title) 
 	{
-		super(title, DeviceFactory.getDevice().getUIFactory().createFormUI());
+		super(title);
+		super.setUI(DeviceFactory.getDevice().getUIFactory().createFormUI(this));
 		
 		focusItemIndex = -2;
 	}

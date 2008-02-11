@@ -65,7 +65,8 @@ public class Alert extends Screen
 
 	public Alert(String title, String alertText, Image alertImage, AlertType alertType)
 	{
-		super(title, DeviceFactory.getDevice().getUIFactory().createAlertUI());
+		super(title);
+		super.setUI(DeviceFactory.getDevice().getUIFactory().createAlertUI(this));
 		
 		setTimeout(getDefaultTimeout());
 		this.alertContent = new ImageStringItem(null, alertImage, alertText);

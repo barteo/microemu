@@ -27,8 +27,6 @@ import javax.microedition.lcdui.CommandListener;
 import org.microemu.device.ui.DisplayableUI;
 
 public class DisplayableImplUI implements DisplayableUI {
-	
-	private String title;
 
 	public void addCommand(Command cmd) {
 		// TODO Auto-generated method stub
@@ -45,14 +43,6 @@ public class DisplayableImplUI implements DisplayableUI {
 
 	}
 
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
 	public void hideNotify() {
 		// TODO Auto-generated method stub
 
@@ -61,6 +51,10 @@ public class DisplayableImplUI implements DisplayableUI {
 	public void showNotify() {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void invalidate() {
+		// TODO implement invalidate
 	}
 
 }

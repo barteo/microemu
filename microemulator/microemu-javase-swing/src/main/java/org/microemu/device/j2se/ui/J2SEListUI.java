@@ -21,16 +21,35 @@
 
 package org.microemu.device.j2se.ui;
 
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.List;
 
 import org.microemu.device.impl.ui.DisplayableImplUI;
 import org.microemu.device.ui.ListUI;
 
 public class J2SEListUI extends DisplayableImplUI implements ListUI {
 
+	public J2SEListUI(List list) {
+	}
+
 	public int append(String stringPart, Image imagePart) {
 		// TODO not yet used
 		return -1;
 	}
-	
+
+	public void setSelectCommand(Command command) {
+		// TODO not yet used
+	}
+
+	public int getSelectedIndex() {
+		// TODO not yet used
+		return 0;
+	}
+
+	public String getString(int elementNum) {
+		// TODO not yet used
+		return null;
+	}
+
 }

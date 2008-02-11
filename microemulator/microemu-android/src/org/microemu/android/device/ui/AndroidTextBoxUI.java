@@ -21,6 +21,8 @@
 
 package org.microemu.android.device.ui;
 
+import javax.microedition.android.lcdui.TextBox;
+
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.TextBoxUI;
 
@@ -32,14 +34,17 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 	
 	private MicroEmulatorActivity activity;
 	
+	private TextBox textBox;
+	
 	private LinearLayout view;
 	
 	private TextView titleView;
 	
 	private EditText editView;
 	
-	public AndroidTextBoxUI(final MicroEmulatorActivity activity) {
+	public AndroidTextBoxUI(final MicroEmulatorActivity activity, TextBox textBox) {
 		this.activity = activity;		
+		this.textBox = textBox;
 		
 		activity.post(new Runnable() {
 			public void run() {
@@ -54,6 +59,8 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 				editView = new EditText(activity);
 				editView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
 				AndroidTextBoxUI.this.view.addView(editView);
+				
+				AndroidTextBoxUI.this.invalidate();
 			}
 		});		
 	}
@@ -62,21 +69,6 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 	// DisplayableUI
 	//
 	
-	@Override
-	public void setTitle(final String title) {
-		super.setTitle(title);
-		
-		// TODO improve method that waits for for view being initialized
-		while (titleView == null) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException ex) {
-				ex.printStackTrace();
-			}
-		}
-		titleView.setText(title);		
-	}
-
 	public void hideNotify() {
 	}
 
@@ -89,6 +81,10 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 		});
 	}
 	
+	public void invalidate() {
+		titleView.setText(textBox.getTitle());		
+	}	
+
 	//
 	// TextBoxUI
 	//

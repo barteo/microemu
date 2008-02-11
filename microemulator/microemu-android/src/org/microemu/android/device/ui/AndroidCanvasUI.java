@@ -21,6 +21,7 @@
 
 package org.microemu.android.device.ui;
 
+import javax.microedition.android.lcdui.Canvas;
 import javax.microedition.android.lcdui.Image;
 
 import org.microemu.MIDletBridge;
@@ -33,7 +34,6 @@ import org.microemu.device.DeviceFactory;
 import org.microemu.device.ui.CanvasUI;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -45,7 +45,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 	
 	private CanvasView view;
 	
-	public AndroidCanvasUI(final MicroEmulatorActivity activity) {
+	public AndroidCanvasUI(final MicroEmulatorActivity activity, Canvas canvas) {
 		this.activity = activity;
 		
 		activity.post(new Runnable() {
@@ -86,6 +86,10 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 		});
 	}
 	
+	public void invalidate() {
+		// TODO implement title painting		
+	}
+
 	private class CanvasView extends View {
 		
 		public CanvasView(Context context) {
@@ -114,7 +118,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 		//
 		
 		@Override
-		protected void onDraw(Canvas canvas) {
+		protected void onDraw(android.graphics.Canvas canvas) {
 			if (displayImage != null) {
 				synchronized (displayImage) {
 					canvas.drawBitmap(displayImage.getBitmap(), 0, 0, paint);

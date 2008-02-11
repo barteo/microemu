@@ -25,7 +25,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.microedition.android.lcdui.Alert;
+import javax.microedition.android.lcdui.Canvas;
+import javax.microedition.android.lcdui.Form;
 import javax.microedition.android.lcdui.Image;
+import javax.microedition.android.lcdui.List;
+import javax.microedition.android.lcdui.TextBox;
 
 import org.microemu.EmulatorContext;
 import org.microemu.android.MicroEmulatorActivity;
@@ -50,27 +55,26 @@ public class AndroidDevice implements Device {
 	
 	private UIFactory ui = new UIFactory() {
 
-		public DisplayableUI createAlertUI() {
+		public DisplayableUI createAlertUI(Alert alert) {
 			// TODO Not yet implemented
-			return new AndroidCanvasUI(activity);
+			return new AndroidCanvasUI(activity, null);
 		}
 
-		public CanvasUI createCanvasUI() {
-			return new AndroidCanvasUI(activity);
+		public CanvasUI createCanvasUI(Canvas canvas) {
+			return new AndroidCanvasUI(activity, canvas);
 		}
 
-		public DisplayableUI createFormUI() {
+		public DisplayableUI createFormUI(Form form) {
 			// TODO Not yet implemented
-			return new AndroidCanvasUI(activity);
+			return new AndroidCanvasUI(activity, null);
 		}
 
-		public ListUI createListUI() {
-System.out.println("UIFactory::createListUI()");		
-			return new AndroidListUI(activity);
+		public ListUI createListUI(List list) {
+			return new AndroidListUI(activity, list);
 		}
 		
-		public TextBoxUI createTextBoxUI() {
-			return new AndroidTextBoxUI(activity);
+		public TextBoxUI createTextBoxUI(TextBox textBox) {
+			return new AndroidTextBoxUI(activity, textBox);
 		}
 
 	};

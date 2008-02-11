@@ -51,30 +51,21 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 	
 	private List commands = new ArrayList();
 	
-	private CommandListener l = null;
+	private CommandListener commandListener = null;
 	
 	public List getCommands() {
 		return commands;
 	}
 	
 	public CommandListener getCommandListener() {
-		return l;
+		return commandListener;
 	}
 	
 	//
 	// DisplayableUI
 	//
 
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
 	public void addCommand(Command cmd) {
-System.out.println("AndroidDisplayableUI::addCommand(..) " + cmd.getLabel());		
 		commands.add(cmd);
 		// TODO decide whether this is the best way for keeping sorted commands
 		Collections.sort(commands, commandsPriorityComparator);
@@ -85,7 +76,7 @@ System.out.println("AndroidDisplayableUI::addCommand(..) " + cmd.getLabel());
 	}
 
 	public void setCommandListener(CommandListener l) {
-		this.l = l;
+		this.commandListener = l;
 	}
 
 }

@@ -54,7 +54,7 @@ public class DisplayTest extends TestCase {
 		 */
 		public MockDisplayable() {
 
-			super("Mock", null);
+			super("Mock");
 		}
 
 		final void paint(Graphics g) {

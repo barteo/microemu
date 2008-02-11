@@ -21,16 +21,22 @@
 
 package org.microemu.device.ui;
 
+import javax.microedition.lcdui.Alert;
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Form;
+import javax.microedition.lcdui.List;
+import javax.microedition.lcdui.TextBox;
+
 public interface UIFactory {
 	
-	DisplayableUI createAlertUI();
+	DisplayableUI createAlertUI(Alert alert);
 
-	CanvasUI createCanvasUI();
+	CanvasUI createCanvasUI(Canvas canvas);
 	
-	DisplayableUI createFormUI();
+	DisplayableUI createFormUI(Form form);
 
-	ListUI createListUI();
+	ListUI createListUI(List list);
 	
-	TextBoxUI createTextBoxUI();
+	TextBoxUI createTextBoxUI(TextBox textBox);
 
 }

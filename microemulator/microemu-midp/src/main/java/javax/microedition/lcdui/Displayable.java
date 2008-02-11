@@ -46,6 +46,8 @@ public abstract class Displayable
     
     protected DisplayableUI ui;
     
+    private String title;
+    
     /**
      * @associates Command 
      */
@@ -54,17 +56,19 @@ public abstract class Displayable
 	private CommandListener listener = null;
 
     
-    Displayable(String title, DisplayableUI ui) 
+    Displayable(String title) 
     {
-        this.ui = ui;
-        
         this.device = DeviceFactory.getDevice();
         this.sizeChangedDeferredRequest = false;        
         this.fullScreenMode = false;
-        
-        setTitle(title);
+        this.title = title;
     }
     
+    
+    void setUI(DisplayableUI ui) {
+    	this.ui = ui;
+    }
+  
 
 	public void addCommand(Command cmd) {
 		// Check that its not the same command
@@ -154,16 +158,16 @@ public abstract class Displayable
     
     public String getTitle() 
     {
-        return ui.getTitle();
+        return title;
     }
 
     
     public void setTitle(String s) 
     {
-        ui.setTitle(s);
+        this.title = s;
         
         // TODO move to the native UI component
-        repaint();
+        ui.invalidate();
     }        
     
 

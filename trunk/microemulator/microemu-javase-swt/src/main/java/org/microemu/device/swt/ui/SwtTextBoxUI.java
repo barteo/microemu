@@ -21,10 +21,15 @@
 
 package org.microemu.device.swt.ui;
 
+import javax.microedition.lcdui.TextBox;
+
 import org.microemu.device.impl.ui.DisplayableImplUI;
 import org.microemu.device.ui.TextBoxUI;
 
 public class SwtTextBoxUI extends DisplayableImplUI implements TextBoxUI {
+
+	public SwtTextBoxUI(TextBox textBox) {
+	}
 
 	public int getCaretPosition() {
 		// TODO Auto-generated method stub

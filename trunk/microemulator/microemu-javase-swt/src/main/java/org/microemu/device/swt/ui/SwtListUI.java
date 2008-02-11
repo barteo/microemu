@@ -21,16 +21,35 @@
 
 package org.microemu.device.swt.ui;
 
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.List;
 
 import org.microemu.device.impl.ui.DisplayableImplUI;
 import org.microemu.device.ui.ListUI;
 
 public class SwtListUI extends DisplayableImplUI implements ListUI {
 
+	public SwtListUI(List list) {
+	}
+
 	public int append(String stringPart, Image imagePart) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	public void setSelectCommand(Command command) {
+		// TODO Auto-generated method stub
+	}
+
+	public int getSelectedIndex() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public String getString(int elementNum) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

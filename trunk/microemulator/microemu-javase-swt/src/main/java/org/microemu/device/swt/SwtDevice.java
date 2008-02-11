@@ -19,6 +19,12 @@
 
 package org.microemu.device.swt;
 
+import javax.microedition.lcdui.Alert;
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Form;
+import javax.microedition.lcdui.List;
+import javax.microedition.lcdui.TextBox;
+
 import org.microemu.device.impl.DeviceImpl;
 import org.microemu.device.swt.ui.SwtCanvasUI;
 import org.microemu.device.swt.ui.SwtListUI;
@@ -33,27 +39,26 @@ public class SwtDevice extends DeviceImpl {
 
 	private UIFactory ui = new UIFactory() {
 
-		public DisplayableUI createAlertUI() {
+		public DisplayableUI createAlertUI(Alert alert) {
 			// TODO Not yet implemented
-			return new SwtCanvasUI();
+			return new SwtCanvasUI(null);
 		}
 
-		public CanvasUI createCanvasUI() {
-			return new SwtCanvasUI();
+		public CanvasUI createCanvasUI(Canvas canvas) {
+			return new SwtCanvasUI(canvas);
 		}
 
-		public DisplayableUI createFormUI() {
+		public DisplayableUI createFormUI(Form form) {
 			// TODO Not yet implemented
-			return new SwtCanvasUI();
+			return new SwtCanvasUI(null);
 		}
 
-		public ListUI createListUI() {
-			// TODO Not yet implemented
-			return new SwtListUI();
+		public ListUI createListUI(List list) {
+			return new SwtListUI(list);
 		}
 
-		public TextBoxUI createTextBoxUI() {
-			return new SwtTextBoxUI();
+		public TextBoxUI createTextBoxUI(TextBox textBox) {
+			return new SwtTextBoxUI(textBox);
 		}
 
 	};

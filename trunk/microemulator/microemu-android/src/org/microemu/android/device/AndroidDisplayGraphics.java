@@ -39,13 +39,17 @@ public class AndroidDisplayGraphics extends javax.microedition.android.lcdui.Gra
 	
 	private Paint paint = new Paint();
 	
+	private Rect clip;
+	
 	public AndroidDisplayGraphics(Canvas canvas, MutableImage image) {
 		this.canvas = canvas;
 		this.canvas.save(Canvas.CLIP_SAVE_FLAG);
+		this.clip = canvas.getClipBounds();
 	}
 	
 	public void clipRect(int x, int y, int width, int height) {
 		canvas.clipRect(x, y, x + width, y + height);
+		clip = canvas.getClipBounds();
 	}
 
 	public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
@@ -132,19 +136,19 @@ public class AndroidDisplayGraphics extends javax.microedition.android.lcdui.Gra
     }
 
 	public int getClipHeight() {
-		return canvas.getClipBounds().bottom - canvas.getClipBounds().top;
+		return clip.bottom - clip.top;
 	}
 
 	public int getClipWidth() {
-		return canvas.getClipBounds().right - canvas.getClipBounds().left;
+		return clip.right - clip.left;
 	}
 
 	public int getClipX() {
-		return canvas.getClipBounds().left;
+		return clip.left;
 	}
 
 	public int getClipY() {
-		return canvas.getClipBounds().top;
+		return clip.top;
 	}
 
 	public int getColor() {
@@ -160,7 +164,11 @@ public class AndroidDisplayGraphics extends javax.microedition.android.lcdui.Gra
 	public void setClip(int x, int y, int width, int height) {
 		canvas.restore();
 		canvas.save(Canvas.CLIP_SAVE_FLAG);
-		canvas.clipRect(x, y, x + width, y + height);
+        clip.left = x;
+        clip.top = y;
+        clip.right = x + width;
+        clip.bottom = y + height;
+		canvas.clipRect(clip);
 	}
 
 	public void setColor(int RGB) {

@@ -50,8 +50,10 @@ import org.microemu.device.InputMethod;
 import org.microemu.log.Logger;
 
 import android.os.Bundle;
+import android.view.Display;
 import android.view.Menu;
 import android.view.Window;
+import android.view.WindowManager;
 
 public class MicroEmulator extends MicroEmulatorActivity {
 	
@@ -149,8 +151,9 @@ public class MicroEmulator extends MicroEmulatorActivity {
         params.add("--usesystemclassloader");
         params.add(midletClassName);
         
-        ((AndroidDeviceDisplay) emulatorContext.getDeviceDisplay()).displayRectangleWidth = 320;
-        ((AndroidDeviceDisplay) emulatorContext.getDeviceDisplay()).displayRectangleHeight = 220;
+        Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+        ((AndroidDeviceDisplay) emulatorContext.getDeviceDisplay()).displayRectangleWidth = display.getWidth();
+        ((AndroidDeviceDisplay) emulatorContext.getDeviceDisplay()).displayRectangleHeight = display.getHeight() - 25;
         
         common = new Common(emulatorContext);
         common.setRecordStoreManager(new AndroidRecordStoreManager(this));

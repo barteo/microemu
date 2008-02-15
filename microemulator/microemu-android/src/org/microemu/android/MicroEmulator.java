@@ -108,6 +108,7 @@ public class MicroEmulator extends MicroEmulatorActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
         Logger.removeAllAppenders();
+        Logger.setLocationEnabled(false);
         Logger.addAppender(new AndroidLoggerAppender());
         
         System.setOut(new PrintStream(new OutputStream() {

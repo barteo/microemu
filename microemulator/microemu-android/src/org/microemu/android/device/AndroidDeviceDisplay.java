@@ -196,7 +196,15 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 		if (width <= 0 || height <= 0)
 			throw new IllegalArgumentException();
 		
-		return new AndroidImmutableImage(Bitmap.createBitmap(rgb, width, height, processAlpha));
+		// TODO processAlpha is not handled natively, check whether we need to create copy of rgb
+		int[] newrgb = rgb;
+		if (!processAlpha) {
+			newrgb = new int[rgb.length];
+			for (int i = 0; i < rgb.length; i++) {
+				newrgb[i] = (0x00ffffff & rgb[i]) | 0xff000000;
+			}
+		}
+		return new AndroidImmutableImage(Bitmap.createBitmap(newrgb, width, height, Bitmap.Config.ARGB_8888));
 	}
 
 	public MutableImage getDisplayImage() {

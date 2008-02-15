@@ -91,7 +91,7 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 	}
 	
 	public int getSelectedIndex() {
-		return listView.getSelectedItemIndex();
+		return listView.getSelectedItemPosition();
 	}
 
 	public String getString(int elementNum) {
@@ -108,7 +108,7 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 		
 		public int append(String stringPart) {
 			objects.add(stringPart);
-			notifyChange();
+			// TODO API changed notifyChange();
 			
 			return objects.lastIndexOf(stringPart);
 		}
@@ -158,9 +158,9 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 		}
 	
 		@Override
-		public boolean onMotionEvent(MotionEvent ev) {
+		public boolean onTouchEvent(MotionEvent ev) {
 			// TODO implement pointer events
-			return super.onMotionEvent(ev);
+			return super.onTouchEvent(ev);
 		}
 		
 	}

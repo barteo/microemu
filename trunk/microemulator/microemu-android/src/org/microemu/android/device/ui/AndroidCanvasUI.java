@@ -161,7 +161,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 		}
 
 		@Override
-		public boolean onMotionEvent(MotionEvent event) {
+		public boolean onTouchEvent(MotionEvent event) {
 			Device device = DeviceFactory.getDevice();
 			AndroidInputMethod inputMethod = (AndroidInputMethod) device.getInputMethod();
 			switch (event.getAction()) {

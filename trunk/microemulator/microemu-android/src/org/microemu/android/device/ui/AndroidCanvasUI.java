@@ -26,6 +26,7 @@ import javax.microedition.android.lcdui.Image;
 
 import org.microemu.MIDletBridge;
 import org.microemu.android.MicroEmulatorActivity;
+import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.android.device.AndroidInputMethod;
 import org.microemu.android.device.AndroidMutableImage;
 import org.microemu.device.Device;
@@ -82,6 +83,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 		activity.post(new Runnable() {
 			public void run() {
 				activity.setContentView(view);
+				view.requestFocus();
 			}
 		});
 	}

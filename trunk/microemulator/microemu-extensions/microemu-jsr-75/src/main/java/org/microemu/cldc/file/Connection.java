@@ -28,11 +28,11 @@ import org.microemu.microedition.io.ConnectionImplementation;
 public class Connection implements ConnectionImplementation {
 
 	public final static String PROTOCOL = "file://";
-	
+
 	public static final int CONNECTIONTYPE_SYSTEM_FS = 0;
-	
+
 	private static int connectionType = CONNECTIONTYPE_SYSTEM_FS;
-	
+
 	public javax.microedition.io.Connection openConnection(String name, int mode, boolean timeouts) throws IOException {
 		// file://<host>/<path>
 		if (!name.startsWith(PROTOCOL)) {
@@ -40,7 +40,7 @@ public class Connection implements ConnectionImplementation {
 		}
 		switch (connectionType) {
 		case CONNECTIONTYPE_SYSTEM_FS:
-			return new FileSystemFileConnection(name.substring(PROTOCOL.length()));
+			return new FileSystemFileConnection(null, name.substring(PROTOCOL.length()));
 		default:
 			throw new IOException("Invalid connectionType configuration");
 		}
@@ -54,6 +54,4 @@ public class Connection implements ConnectionImplementation {
 		Connection.connectionType = connectionType;
 	}
 
-	
-	
 }

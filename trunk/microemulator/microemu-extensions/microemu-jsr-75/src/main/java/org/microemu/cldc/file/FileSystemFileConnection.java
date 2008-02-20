@@ -45,33 +45,35 @@ import javax.microedition.io.file.FileConnection;
 public class FileSystemFileConnection implements FileConnection {
 
 	private static File fsRoot;
-	
+
+	private String fsRootConfig;
+
 	private String host;
-	
+
 	private String fullPath;
-	
+
 	private File file;
-	
+
 	private boolean isRoot;
-	
+
 	private boolean isDirectory;
-	
+
 	private Throwable locationClosedFrom = null;
-	
+
 	private InputStream opendInputStream;
-	
+
 	private OutputStream opendOutputStream;
-	
-	private final static char  DIR_SEP = '/';
-	
-	private final static String  DIR_SEP_STR = "/";
-	
+
+	private final static char DIR_SEP = '/';
+
+	private final static String DIR_SEP_STR = "/";
+
 	/* The context to be used when acessing filesystem */
-    private AccessControlContext acc;
-	
-    private static boolean java15 = false;
-    
-	FileSystemFileConnection(String name) throws IOException {
+	private AccessControlContext acc;
+
+	private static boolean java15 = false;
+
+	FileSystemFileConnection(String fsRoot, String name) throws IOException {
 		// <host>/<path>
 		int hostEnd = name.indexOf(DIR_SEP);
 		if (hostEnd == -1) {
@@ -79,12 +81,13 @@ public class FileSystemFileConnection implements FileConnection {
 		}
 		host = name.substring(0, hostEnd);
 		fullPath = name.substring(hostEnd + 1);
-		int rootEnd = fullPath.indexOf(DIR_SEP); 
+		int rootEnd = fullPath.indexOf(DIR_SEP);
 		isRoot = ((rootEnd == -1) || (rootEnd == fullPath.length() - 1));
 		if (fullPath.charAt(fullPath.length() - 1) == DIR_SEP) {
-			fullPath = fullPath.substring(0, fullPath.length() -1);
+			fullPath = fullPath.substring(0, fullPath.length() - 1);
 		}
 		acc = AccessController.getContext();
+		fsRootConfig = fsRoot;
 		AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {
 				file = new File(getRoot(), fullPath);
@@ -93,22 +96,23 @@ public class FileSystemFileConnection implements FileConnection {
 			}
 		}, acc);
 	}
-	
-	private Object doPrivilegedIO(PrivilegedExceptionAction action)	throws IOException {
+
+	private Object doPrivilegedIO(PrivilegedExceptionAction action) throws IOException {
 		return FileSystemConnectorImpl.doPrivilegedIO(action, acc);
 	}
-	
+
 	private abstract class PrivilegedBooleanAction implements PrivilegedAction {
 		public Object run() {
 			return new Boolean(getBoolean());
 		}
+
 		abstract boolean getBoolean();
 	}
-	
+
 	private boolean doPrivilegedBoolean(PrivilegedBooleanAction action) {
-		return ((Boolean)AccessController.doPrivileged(action)).booleanValue();
+		return ((Boolean) AccessController.doPrivileged(action)).booleanValue();
 	}
-	
+
 	public static File getRoot() {
 		try {
 			if (fsRoot == null) {
@@ -125,40 +129,40 @@ public class FileSystemFileConnection implements FileConnection {
 			return null;
 		}
 	}
-	
+
 	static Enumeration listRoots() {
 		File[] files = getRoot().listFiles();
-        if (files == null) {  // null if security restricted
-            return (new Vector()).elements();
-        }
-        Vector list = new Vector();
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
-            if (file.isHidden()) {
-            	continue;
-            }
-            if (file.isDirectory()) {
-            	list.add(file.getName() + DIR_SEP);
-            }
-        }
-        return list.elements();
+		if (files == null) { // null if security restricted
+			return (new Vector()).elements();
+		}
+		Vector list = new Vector();
+		for (int i = 0; i < files.length; i++) {
+			File file = files[i];
+			if (file.isHidden()) {
+				continue;
+			}
+			if (file.isDirectory()) {
+				list.add(file.getName() + DIR_SEP);
+			}
+		}
+		return list.elements();
 	}
-	
+
 	public long availableSize() {
 		throwClosed();
 		if (getRoot() == null) {
 			return -1;
 		}
-		// TODO 
+		// TODO
 		return 10000000;
 	}
-	
+
 	public long totalSize() {
 		throwClosed();
 		if (getRoot() == null) {
 			return -1;
 		}
-		// TODO 
+		// TODO
 		return 10000000;
 	}
 
@@ -206,33 +210,33 @@ public class FileSystemFileConnection implements FileConnection {
 
 	public long directorySize(final boolean includeSubDirs) throws IOException {
 		throwClosed();
-		return ((Long)doPrivilegedIO(new PrivilegedExceptionAction() {
+		return ((Long) doPrivilegedIO(new PrivilegedExceptionAction() {
 			public Object run() throws IOException {
 				if (!file.isDirectory()) {
-					throw new IOException("Not a directory " +file.getAbsolutePath());
+					throw new IOException("Not a directory " + file.getAbsolutePath());
 				}
 				return new Long(directorySize(file, includeSubDirs));
 			}
 		})).longValue();
 	}
-	
+
 	private static long directorySize(File dir, boolean includeSubDirs) throws IOException {
 		long size = 0;
-		
-		File[] files = dir.listFiles();
-        if (files == null) {  // null if security restricted
-            return 0L;
-        }
-        for (int i = 0; i < files.length; i++) {
-            File child = files[i];
 
-            if (includeSubDirs && child.isDirectory()) {
-                size += directorySize(child, true);
-            } else {
-                size += child.length();
-            }
-        }
-        
+		File[] files = dir.listFiles();
+		if (files == null) { // null if security restricted
+			return 0L;
+		}
+		for (int i = 0; i < files.length; i++) {
+			File child = files[i];
+
+			if (includeSubDirs && child.isDirectory()) {
+				size += directorySize(child, true);
+			} else {
+				size += child.length();
+			}
+		}
+
 		return size;
 	}
 
@@ -247,7 +251,7 @@ public class FileSystemFileConnection implements FileConnection {
 
 	public long fileSize() throws IOException {
 		throwClosed();
-		return ((Long)doPrivilegedIO(new PrivilegedExceptionAction() {
+		return ((Long) doPrivilegedIO(new PrivilegedExceptionAction() {
 			public Object run() throws IOException {
 				return new Long(file.length());
 			}
@@ -261,7 +265,7 @@ public class FileSystemFileConnection implements FileConnection {
 		if (isRoot) {
 			return "";
 		}
-		
+
 		if (this.isDirectory) {
 			return this.file.getName() + DIR_SEP;
 		} else {
@@ -272,13 +276,13 @@ public class FileSystemFileConnection implements FileConnection {
 	public String getPath() {
 		// TODO test on real device. Not declared
 		throwClosed();
-		
-		//returns Parent directory
-        //  /<root>/<directory>/
+
+		// returns Parent directory
+		// /<root>/<directory>/
 		if (isRoot) {
 			return DIR_SEP + fullPath + DIR_SEP;
 		}
-		
+
 		int pathEnd = fullPath.lastIndexOf(DIR_SEP);
 		if (pathEnd == -1) {
 			return DIR_SEP_STR;
@@ -289,11 +293,11 @@ public class FileSystemFileConnection implements FileConnection {
 	public String getURL() {
 		// TODO test on real device. Not declared
 		throwClosed();
-		
+
 		// file://<host>/<root>/<directory>/<filename.extension>
-		//  or
+		// or
 		// file://<host>/<root>/<directory>/<directoryname>/
-		return Connection.PROTOCOL + this.host + DIR_SEP + fullPath + ((this.isDirectory)?DIR_SEP_STR:"");
+		return Connection.PROTOCOL + this.host + DIR_SEP + fullPath + ((this.isDirectory) ? DIR_SEP_STR : "");
 	}
 
 	public boolean isDirectory() {
@@ -312,7 +316,7 @@ public class FileSystemFileConnection implements FileConnection {
 
 	public long lastModified() {
 		throwClosed();
-		return ((Long)AccessController.doPrivileged(new PrivilegedAction() {
+		return ((Long) AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {
 				return new Long(file.lastModified());
 			}
@@ -330,50 +334,50 @@ public class FileSystemFileConnection implements FileConnection {
 			}
 		});
 	}
-	
+
 	public Enumeration list() throws IOException {
-        return this.list(null, false);
+		return this.list(null, false);
 	}
 
 	public Enumeration list(final String filter, final boolean includeHidden) throws IOException {
 		throwClosed();
-		return (Enumeration)doPrivilegedIO(new PrivilegedExceptionAction() {
+		return (Enumeration) doPrivilegedIO(new PrivilegedExceptionAction() {
 			public Object run() throws IOException {
 				return listPrivileged(filter, includeHidden);
 			}
 		});
 	}
-	
-	private Enumeration listPrivileged(String filter, boolean includeHidden) throws IOException {	
+
+	private Enumeration listPrivileged(String filter, boolean includeHidden) throws IOException {
 		if (!this.file.isDirectory()) {
 			throw new IOException("Not a directory " + this.file.getAbsolutePath());
 		}
 		// TODO
 		FilenameFilter filenameFilter = null;
-		
+
 		File[] files = this.file.listFiles(filenameFilter);
-        if (files == null) {  // null if security restricted
-            return (new Vector()).elements();
-        }
-        Vector list = new Vector();
-        for (int i = 0; i < files.length; i++) {
-            File child = files[i];
-            if ((!includeHidden) && (child.isHidden())) {
-            	continue;
-            }
-            if (child.isDirectory()) {
-            	list.add(child.getName() + DIR_SEP);
-            } else {
-            	list.add(child.getName());
-            }
-        }
-        return list.elements();
+		if (files == null) { // null if security restricted
+			return (new Vector()).elements();
+		}
+		Vector list = new Vector();
+		for (int i = 0; i < files.length; i++) {
+			File child = files[i];
+			if ((!includeHidden) && (child.isHidden())) {
+				continue;
+			}
+			if (child.isDirectory()) {
+				list.add(child.getName() + DIR_SEP);
+			} else {
+				list.add(child.getName());
+			}
+		}
+		return list.elements();
 	}
 
 	public boolean isOpen() {
 		return (this.file != null);
 	}
-	
+
 	private void throwOpenDirectory() throws IOException {
 		if (this.isDirectory) {
 			throw new IOException("Unable to open Stream on directory");
@@ -383,14 +387,15 @@ public class FileSystemFileConnection implements FileConnection {
 	public InputStream openInputStream() throws IOException {
 		throwClosed();
 		throwOpenDirectory();
-		
+
 		if (this.opendInputStream != null) {
 			throw new IOException("InputStream already opened");
 		}
 		/**
-		 * Trying to open more than one InputStream or more than one OutputStream from a StreamConnection causes an IOException. 
+		 * Trying to open more than one InputStream or more than one
+		 * OutputStream from a StreamConnection causes an IOException.
 		 */
-		this.opendInputStream = (InputStream)doPrivilegedIO(new PrivilegedExceptionAction() {
+		this.opendInputStream = (InputStream) doPrivilegedIO(new PrivilegedExceptionAction() {
 			public Object run() throws IOException {
 				return new FileInputStream(file) {
 					public void close() throws IOException {
@@ -402,7 +407,7 @@ public class FileSystemFileConnection implements FileConnection {
 		});
 		return this.opendInputStream;
 	}
-	
+
 	public DataInputStream openDataInputStream() throws IOException {
 		return new DataInputStream(openInputStream());
 	}
@@ -410,18 +415,19 @@ public class FileSystemFileConnection implements FileConnection {
 	public OutputStream openOutputStream() throws IOException {
 		return openOutputStream(false);
 	}
-	
+
 	private OutputStream openOutputStream(final boolean append) throws IOException {
 		throwClosed();
 		throwOpenDirectory();
-		
+
 		if (this.opendOutputStream != null) {
 			throw new IOException("OutputStream already opened");
 		}
 		/**
-		 * Trying to open more than one InputStream or more than one OutputStream from a StreamConnection causes an IOException. 
+		 * Trying to open more than one InputStream or more than one
+		 * OutputStream from a StreamConnection causes an IOException.
 		 */
-		this.opendOutputStream = (OutputStream)doPrivilegedIO(new PrivilegedExceptionAction() {
+		this.opendOutputStream = (OutputStream) doPrivilegedIO(new PrivilegedExceptionAction() {
 			public Object run() throws IOException {
 				return new FileOutputStream(file, append) {
 					public void close() throws IOException {
@@ -430,14 +436,14 @@ public class FileSystemFileConnection implements FileConnection {
 					}
 				};
 			}
-		}); 
+		});
 		return this.opendOutputStream;
 	}
 
 	public DataOutputStream openDataOutputStream() throws IOException {
 		return new DataOutputStream(openOutputStream());
 	}
-	
+
 	public OutputStream openOutputStream(long byteOffset) throws IOException {
 		throwClosed();
 		throwOpenDirectory();
@@ -457,11 +463,12 @@ public class FileSystemFileConnection implements FileConnection {
 			public Object run() throws IOException {
 				File newFile = new File(file.getParentFile(), newName);
 				if (!file.renameTo(newFile)) {
-					throw new IOException("Unable to rename " + file.getAbsolutePath() + " to " + newFile.getAbsolutePath());
+					throw new IOException("Unable to rename " + file.getAbsolutePath() + " to "
+							+ newFile.getAbsolutePath());
 				}
 				return null;
 			}
-		}); 
+		});
 		this.fullPath = this.getPath() + newName;
 	}
 
@@ -480,11 +487,11 @@ public class FileSystemFileConnection implements FileConnection {
 		}
 		// Use Java6 function in reflection.
 		try {
-			final Method setWritable = file.getClass().getMethod(mehtodName, new Class[] {boolean.class});
+			final Method setWritable = file.getClass().getMethod(mehtodName, new Class[] { boolean.class });
 			doPrivilegedIO(new PrivilegedExceptionAction() {
 				public Object run() throws IOException {
 					try {
-						setWritable.invoke(file, new Object[]{param});
+						setWritable.invoke(file, new Object[] { param });
 					} catch (Exception e) {
 						throw new IOException(e.getCause().getMessage());
 					}
@@ -496,7 +503,7 @@ public class FileSystemFileConnection implements FileConnection {
 			java15 = true;
 		}
 	}
-	
+
 	public void setReadable(boolean readable) throws IOException {
 		throwClosed();
 		fileSetJava16("setReadable", new Boolean(readable));
@@ -512,7 +519,7 @@ public class FileSystemFileConnection implements FileConnection {
 				}
 			});
 		} else {
-			fileSetJava16("setWritable", new Boolean(writable));	
+			fileSetJava16("setWritable", new Boolean(writable));
 		}
 	}
 

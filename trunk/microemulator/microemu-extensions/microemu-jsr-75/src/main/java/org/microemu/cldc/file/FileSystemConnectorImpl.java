@@ -34,19 +34,22 @@ import org.microemu.microedition.io.ConnectorAdapter;
 
 /**
  * @author vlads
- *
+ * 
  */
 public class FileSystemConnectorImpl extends ConnectorAdapter implements ImplementationUnloadable {
 
 	public final static String PROTOCOL = org.microemu.cldc.file.Connection.PROTOCOL;
-	
+
 	/* The context to be used when acessing filesystem */
-    private AccessControlContext acc;
-    
-	public FileSystemConnectorImpl() {
+	private AccessControlContext acc;
+
+	private String fsRoot;
+
+	FileSystemConnectorImpl(String fsRoot) {
 		acc = AccessController.getContext();
+		this.fsRoot = fsRoot;
 	}
-	
+
 	public Connection open(final String name, int mode, boolean timeouts) throws IOException {
 		// file://<host>/<path>
 		if (!name.startsWith(PROTOCOL)) {
@@ -55,13 +58,12 @@ public class FileSystemConnectorImpl extends ConnectorAdapter implements Impleme
 
 		return (Connection) doPrivilegedIO(new PrivilegedExceptionAction() {
 			public Object run() throws IOException {
-				return new FileSystemFileConnection(name.substring(PROTOCOL.length()));
+				return new FileSystemFileConnection(fsRoot, name.substring(PROTOCOL.length()));
 			}
 		}, acc);
 	}
 
-	static Object doPrivilegedIO(PrivilegedExceptionAction action, AccessControlContext context)
-			throws IOException {
+	static Object doPrivilegedIO(PrivilegedExceptionAction action, AccessControlContext context) throws IOException {
 		try {
 			return AccessController.doPrivileged(action, context);
 		} catch (PrivilegedActionException e) {
@@ -71,8 +73,10 @@ public class FileSystemConnectorImpl extends ConnectorAdapter implements Impleme
 			throw new IOException(e.toString());
 		}
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.microemu.microedition.ImplementationUnloadable#unregisterImplementation()
 	 */
 	public void unregisterImplementation() {

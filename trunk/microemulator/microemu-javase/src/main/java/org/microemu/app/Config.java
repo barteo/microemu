@@ -44,6 +44,7 @@ import org.microemu.app.util.MidletURLReference;
 import org.microemu.device.impl.DeviceImpl;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.log.Logger;
+import org.microemu.microedition.ImplementationInitialization;
 
 public class Config {
 
@@ -168,7 +169,37 @@ public class Config {
 
 	static Map getExtensions() {
 		Map extensions = new HashMap();
-		// TODO
+		XMLElement extensionsXml = configXml.getChild("extensions");
+		if (extensionsXml == null) {
+			return extensions;
+		}
+		for (Enumeration en = extensionsXml.enumerateChildren(); en.hasMoreElements();) {
+			XMLElement extension = (XMLElement) en.nextElement();
+			if (!extension.getName().equals("extension")) {
+				continue;
+			}
+			String className = (String) extension.getChildString("className", null);
+			if (className == null) {
+				continue;
+			}
+
+			Map parameters = new HashMap();
+			parameters.put(ImplementationInitialization.PARAM_EMULATOR_ID, Config.getEmulatorID());
+
+			for (Enumeration een = extension.enumerateChildren(); een.hasMoreElements();) {
+				XMLElement propXml = (XMLElement) een.nextElement();
+				if (propXml.getName().equals("properties")) {
+					for (Enumeration e_prop = propXml.enumerateChildren(); e_prop.hasMoreElements();) {
+						XMLElement tmp_prop = (XMLElement) e_prop.nextElement();
+						if (tmp_prop.getName().equals("property")) {
+							parameters.put(tmp_prop.getStringAttribute("name"), tmp_prop.getStringAttribute("value"));
+						}
+					}
+				}
+			}
+
+			extensions.put(className, parameters);
+		}
 		return extensions;
 	}
 
@@ -402,7 +433,7 @@ public class Config {
 
 		saveConfig();
 	}
-	
+
 	public static boolean isLogConsoleLocationEnabled() {
 		XMLElement logConsoleXml = configXml.getChild("logConsole");
 		if (logConsoleXml == null) {
@@ -422,7 +453,7 @@ public class Config {
 
 		saveConfig();
 	}
-	
+
 	public static boolean isWindowOnStart(String name) {
 		XMLElement windowsXml = configXml.getChild("windows");
 		if (windowsXml == null) {

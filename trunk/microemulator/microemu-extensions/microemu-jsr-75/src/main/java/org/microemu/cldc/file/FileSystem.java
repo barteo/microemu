@@ -30,10 +30,26 @@ import org.microemu.microedition.ImplementationInitialization;
 /**
  * @author vlads
  * 
+ * config2.xml example
+ * 
+ * <pre>
+ *  &lt;extensions&gt;
+ *  &lt;extension&gt;
+ *  &lt;className&gt;org.microemu.cldc.file.FileSystem&lt;/className&gt;
+ *  &lt;properties&gt;
+ *  &lt;property VALUE=&quot;fsRoot&quot; NAME=&quot;C:&quot;/&gt;
+ *  &lt;/properties&gt;
+ *  &lt;/extension&gt;
+ *  &lt;/extensions&gt;
+ * </pre>
+ * 
  */
+
 public class FileSystem implements ImplementationInitialization {
 
 	public static final String detectionProperty = "microedition.io.file.FileConnection.version";
+
+	public static final String fsRootConfigProperty = "fsRoot";
 
 	/*
 	 * (non-Javadoc)
@@ -41,7 +57,7 @@ public class FileSystem implements ImplementationInitialization {
 	 * @see org.microemu.microedition.ImplementationInitialization#registerImplementation()
 	 */
 	public void registerImplementation(Map parameters) {
-		ImplFactory.registerGCF("file", new FileSystemConnectorImpl());
+		ImplFactory.registerGCF("file", new FileSystemConnectorImpl((String) parameters.get(fsRootConfigProperty)));
 		ImplFactory.register(FileSystemRegistryDelegate.class, FileSystemRegistryImpl.class);
 		MIDletSystemProperties.setProperty(detectionProperty, "1.0");
 	}

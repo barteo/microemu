@@ -21,6 +21,9 @@
  */
 package org.microemu.app.util;
 
+import java.security.AccessControlContext;
+import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -35,8 +38,8 @@ import org.microemu.log.Logger;
 /**
  * @author vlads
  * 
- * This class is called by MIDlet to access System Property.
- * Call injection is made by MIDlet ClassLoaded
+ * This class is called by MIDlet to access System Property. Call injection is
+ * made by MIDlet ClassLoaded
  * 
  */
 public class MIDletSystemProperties {
@@ -47,7 +50,7 @@ public class MIDletSystemProperties {
 	public static boolean applyToJavaSystemProperties = true;
 
 	/**
-	 * Permits null values. 
+	 * Permits null values.
 	 */
 	private static final Map props = new HashMap();
 
@@ -56,26 +59,39 @@ public class MIDletSystemProperties {
 	private static List systemPropertiesDevice;
 
 	private static boolean wanrOnce = true;
-	
+
 	private static boolean initialized = false;
 
+	/* The context to be used when starting MicroEmulator */
+	private static AccessControlContext acc;
+
 	private static void initOnce() {
-		// Can't use static initializer because of applyToJavaSystemProperties in applet
+		// Can't use static initializer because of applyToJavaSystemProperties
+		// in applet
 		if (initialized) {
 			return;
 		}
 		initialized = true;
 		// This are set in Config
-		//setProperty("microedition.configuration", "CLDC-1.1");
-		//setProperty("microedition.profiles", "MIDP-2.0");
+		// setProperty("microedition.configuration", "CLDC-1.1");
+		// setProperty("microedition.profiles", "MIDP-2.0");
 		setProperty("microedition.platform", "MicroEmulator");
 		setProperty("microedition.encoding", getSystemProperty("file.encoding"));
 	}
 
 	/**
-	 * Gets the system property indicated by the specified key.
-	 * The only function called by MIDlet
-	 * @param key   the name of the system property
+	 * Allow Access to system properties from MIDlet
+	 */
+	public static void initContext() {
+		acc = AccessController.getContext();
+	}
+
+	/**
+	 * Gets the system property indicated by the specified key. The only
+	 * function called by MIDlet
+	 * 
+	 * @param key
+	 *            the name of the system property
 	 * @return
 	 */
 	public static String getProperty(String key) {
@@ -88,16 +104,32 @@ public class MIDletSystemProperties {
 			return v;
 		}
 		try {
-			return System.getProperty(key);
+			return getSystemProperty(key);
 		} catch (SecurityException e) {
 			return null;
 		}
 	}
-	
+
 	public static String getSystemProperty(String key) {
 		try {
-			return System.getProperty(key);
+			if (acc != null) {
+				return getSystemPropertySecure(key);
+			} else {
+				return System.getProperty(key);
+			}
 		} catch (SecurityException e) {
+			return null;
+		}
+	}
+
+	private static String getSystemPropertySecure(final String key) {
+		try {
+			return (String) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+				public Object run() {
+					return System.getProperty(key);
+				}
+			}, acc);
+		} catch (Throwable e) {
 			return null;
 		}
 	}

@@ -129,6 +129,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		 * better place for this call
 		 */
 		ImplFactory.instance();
+		MIDletSystemProperties.initContext();
 		// TODO integrate with ImplementationInitialization
 		ImplFactory.registerGCF(ImplFactory.DEFAULT, new ConnectorImpl());
 

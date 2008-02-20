@@ -30,6 +30,17 @@
   - udp
   - file  in memory
 
+* Document this config2.xml
+
+	<extensions>
+	    <extension>
+            <className>org.microemu.cldc.file.FileSystem</className>
+            <properties>
+		        <property VALUE="fsRoot" NAME="C:"/>
+	        </properties>
+	    </extension>
+	</extensions>
+
 * (?) applet loader - during loading applet code progress bar should be visible
 
 * rewrite InputMethod code:
@@ -69,3 +80,5 @@
                         </rectangle>
                         <action>showCreditsImage<action>
                 </specialButton>
+
+

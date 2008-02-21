@@ -38,6 +38,9 @@ import java.util.Map;
  */
 public interface ImplementationInitialization {
 
+	/**
+	 * See "--id EmulatorID" command line option
+	 */
 	public static final String PARAM_EMULATOR_ID = "emulatorID";
 
 	/**
@@ -45,7 +48,7 @@ public interface ImplementationInitialization {
 	 * Call implementation initialization inside secure context.
 	 * 
 	 * @param parameters
-	 *            Map of configuration options
+	 *            Map of configuration options and emulatorID property.
 	 */
 	public void registerImplementation(Map parameters);
 

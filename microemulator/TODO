@@ -30,26 +30,9 @@
   - udp
   - file  in memory
 
-* Document this config2.xml
-
-	<extensions>
-	    <extension>
-            <className>org.microemu.cldc.file.FileSystem</className>
-            <properties>
-		        <property VALUE="fsRoot" NAME="C:"/>
-	        </properties>
-	    </extension>
-	</extensions>
-
 * (?) applet loader - during loading applet code progress bar should be visible
 
-* rewrite InputMethod code:
-  - for buttons  2, 4, 6, 8  function  Canvas.getGameAction(keyCode)  should return  Up, Left, Right, Down
-  - KeyCodes for Numeric keyboard
-
 * Replace all System.err.println with proper log infrastructure
-
-* midlet bytcode instrumentation to replace calls to System.getProperty (not avalable in Webstart and Applet env)
 
 * Create eclipseme.core.model.impl for Microemulator as described
   http://eclipseme.org/docs/developer/extending.html

@@ -44,9 +44,9 @@ import javax.microedition.io.file.FileConnection;
 
 public class FileSystemFileConnection implements FileConnection {
 
-	private static File fsRoot;
-
 	private String fsRootConfig;
+
+	private File fsRoot;
 
 	private String host;
 
@@ -59,6 +59,8 @@ public class FileSystemFileConnection implements FileConnection {
 	private boolean isDirectory;
 
 	private Throwable locationClosedFrom = null;
+
+	private FileSystemConnectorImpl notifyClosed;
 
 	private InputStream opendInputStream;
 
@@ -73,12 +75,15 @@ public class FileSystemFileConnection implements FileConnection {
 
 	private static boolean java15 = false;
 
-	FileSystemFileConnection(String fsRoot, String name) throws IOException {
+	FileSystemFileConnection(String fsRootConfig, String name, FileSystemConnectorImpl notifyClosed) throws IOException {
 		// <host>/<path>
 		int hostEnd = name.indexOf(DIR_SEP);
 		if (hostEnd == -1) {
 			throw new IOException("Invalid path " + name);
 		}
+		this.fsRootConfig = fsRootConfig;
+		this.notifyClosed = notifyClosed;
+
 		host = name.substring(0, hostEnd);
 		fullPath = name.substring(hostEnd + 1);
 		int rootEnd = fullPath.indexOf(DIR_SEP);
@@ -87,10 +92,10 @@ public class FileSystemFileConnection implements FileConnection {
 			fullPath = fullPath.substring(0, fullPath.length() - 1);
 		}
 		acc = AccessController.getContext();
-		fsRootConfig = fsRoot;
 		AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {
-				file = new File(getRoot(), fullPath);
+				fsRoot = getRoot(FileSystemFileConnection.this.fsRootConfig);
+				file = new File(fsRoot, fullPath);
 				isDirectory = file.isDirectory();
 				return null;
 			}
@@ -113,25 +118,31 @@ public class FileSystemFileConnection implements FileConnection {
 		return ((Boolean) AccessController.doPrivileged(action)).booleanValue();
 	}
 
-	public static File getRoot() {
+	public static File getRoot(String fsRootConfig) {
 		try {
-			if (fsRoot == null) {
-				fsRoot = new File(System.getProperty("user.home") + "/.microemulator/filesystem");
+			if (fsRootConfig == null) {
+				File fsRoot = new File(System.getProperty("user.home") + "/.microemulator/filesystem");
 				if (!fsRoot.exists()) {
 					if (!fsRoot.mkdirs()) {
 						throw new RuntimeException("Can't create filesystem root " + fsRoot.getAbsolutePath());
 					}
 				}
+				return fsRoot;
+			} else {
+				File fsRoot = new File(fsRootConfig);
+				if (!fsRoot.isDirectory()) {
+					throw new RuntimeException("Can't find filesystem root " + fsRoot.getAbsolutePath());
+				}
+				return fsRoot;
 			}
-			return fsRoot;
 		} catch (SecurityException e) {
 			System.out.println("Cannot access user.home " + e);
 			return null;
 		}
 	}
 
-	static Enumeration listRoots() {
-		File[] files = getRoot().listFiles();
+	static Enumeration listRoots(String fsRootConfig) {
+		File[] files = getRoot(fsRootConfig).listFiles();
 		if (files == null) { // null if security restricted
 			return (new Vector()).elements();
 		}
@@ -150,7 +161,7 @@ public class FileSystemFileConnection implements FileConnection {
 
 	public long availableSize() {
 		throwClosed();
-		if (getRoot() == null) {
+		if (fsRoot == null) {
 			return -1;
 		}
 		// TODO
@@ -159,7 +170,7 @@ public class FileSystemFileConnection implements FileConnection {
 
 	public long totalSize() {
 		throwClosed();
-		if (getRoot() == null) {
+		if (fsRoot == null) {
 			return -1;
 		}
 		// TODO
@@ -548,6 +559,9 @@ public class FileSystemFileConnection implements FileConnection {
 
 	public void close() throws IOException {
 		if (this.file != null) {
+			if (this.notifyClosed != null) {
+				this.notifyClosed.notifyClosed(this);
+			}
 			locationClosedFrom = new Throwable();
 			locationClosedFrom.fillInStackTrace();
 			this.file = null;

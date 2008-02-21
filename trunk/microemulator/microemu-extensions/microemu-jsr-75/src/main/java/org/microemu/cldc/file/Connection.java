@@ -25,6 +25,12 @@ import java.io.IOException;
 
 import org.microemu.microedition.io.ConnectionImplementation;
 
+/**
+ * This is default Connection when no initialization has been made.
+ * 
+ * @author vlads
+ * 
+ */
 public class Connection implements ConnectionImplementation {
 
 	public final static String PROTOCOL = "file://";
@@ -40,7 +46,7 @@ public class Connection implements ConnectionImplementation {
 		}
 		switch (connectionType) {
 		case CONNECTIONTYPE_SYSTEM_FS:
-			return new FileSystemFileConnection(null, name.substring(PROTOCOL.length()));
+			return new FileSystemFileConnection(null, name.substring(PROTOCOL.length()), null);
 		default:
 			throw new IOException("Invalid connectionType configuration");
 		}

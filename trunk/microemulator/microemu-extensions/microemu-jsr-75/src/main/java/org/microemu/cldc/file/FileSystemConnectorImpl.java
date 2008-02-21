@@ -26,9 +26,12 @@ import java.security.AccessControlContext;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
+import java.util.List;
+import java.util.Vector;
 
 import javax.microedition.io.Connection;
 
+import org.microemu.log.Logger;
 import org.microemu.microedition.ImplementationUnloadable;
 import org.microemu.microedition.io.ConnectorAdapter;
 
@@ -45,6 +48,8 @@ public class FileSystemConnectorImpl extends ConnectorAdapter implements Impleme
 
 	private String fsRoot;
 
+	private List openConnection = new Vector();
+
 	FileSystemConnectorImpl(String fsRoot) {
 		acc = AccessController.getContext();
 		this.fsRoot = fsRoot;
@@ -56,11 +61,14 @@ public class FileSystemConnectorImpl extends ConnectorAdapter implements Impleme
 			throw new IOException("Invalid Protocol " + name);
 		}
 
-		return (Connection) doPrivilegedIO(new PrivilegedExceptionAction() {
+		Connection con = (Connection) doPrivilegedIO(new PrivilegedExceptionAction() {
 			public Object run() throws IOException {
-				return new FileSystemFileConnection(fsRoot, name.substring(PROTOCOL.length()));
+				return new FileSystemFileConnection(fsRoot, name.substring(PROTOCOL.length()),
+						FileSystemConnectorImpl.this);
 			}
 		}, acc);
+		openConnection.add(con);
+		return con;
 	}
 
 	static Object doPrivilegedIO(PrivilegedExceptionAction action, AccessControlContext context) throws IOException {
@@ -74,6 +82,12 @@ public class FileSystemConnectorImpl extends ConnectorAdapter implements Impleme
 		}
 	}
 
+	void notifyMIDletDestroyed() {
+		if (openConnection.size() > 0) {
+			Logger.warn("Still has " + openConnection.size() + " open file connections");
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -81,6 +95,10 @@ public class FileSystemConnectorImpl extends ConnectorAdapter implements Impleme
 	 */
 	public void unregisterImplementation() {
 		FileSystem.unregisterImplementation(this);
+	}
+
+	void notifyClosed(FileSystemFileConnection con) {
+		openConnection.remove(con);
 	}
 
 }

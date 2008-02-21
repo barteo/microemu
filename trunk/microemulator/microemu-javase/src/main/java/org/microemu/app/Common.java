@@ -584,7 +584,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		}
 	}
 
-	private void registerImplementation(String implClassName, Map properties) {
+	private void registerImplementation(String implClassName, Map properties, boolean notFoundError) {
 		final String errorText = "Implementation initialization";
 		try {
 			Class implClass = getExtensionsClassLoader().loadClass(implClassName);
@@ -594,6 +594,9 @@ public class Common implements MicroEmulator, CommonInterface {
 				parameters.put(ImplementationInitialization.PARAM_EMULATOR_ID, Config.getEmulatorID());
 				if (properties != null) {
 					parameters.putAll(properties);
+				} else {
+					Map extensions = Config.getExtensions();
+					parameters.putAll((Map) extensions.get(implClassName));
 				}
 				((ImplementationInitialization) inst).registerImplementation(parameters);
 				Logger.debug("implementation registered", implClassName);
@@ -627,7 +630,11 @@ public class Common implements MicroEmulator, CommonInterface {
 				}
 			}
 		} catch (ClassNotFoundException e) {
-			Logger.error(errorText, e);
+			if (notFoundError) {
+				Logger.error(errorText, e);
+			} else {
+				Logger.warn(errorText + " " + e);
+			}
 		} catch (InstantiationException e) {
 			Logger.error(errorText, e);
 		} catch (IllegalAccessException e) {
@@ -639,7 +646,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		Map extensions = Config.getExtensions();
 		for (Iterator iterator = extensions.entrySet().iterator(); iterator.hasNext();) {
 			Map.Entry entry = (Map.Entry) iterator.next();
-			registerImplementation((String) entry.getKey(), (Map) entry.getValue());
+			registerImplementation((String) entry.getKey(), (Map) entry.getValue(), false);
 		}
 	}
 
@@ -735,7 +742,7 @@ public class Common implements MicroEmulator, CommonInterface {
 					getExtensionsClassLoader().addClasspath((String) argsIterator.next());
 					argsIterator.remove();
 				} else if (arg.equals("--impl")) {
-					registerImplementation((String) argsIterator.next(), null);
+					registerImplementation((String) argsIterator.next(), null, true);
 					argsIterator.remove();
 				} else {
 					midletClassOrJad = arg;

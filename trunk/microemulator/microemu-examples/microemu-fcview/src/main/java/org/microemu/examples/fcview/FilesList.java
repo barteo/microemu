@@ -37,7 +37,7 @@ import javax.microedition.lcdui.List;
 
 /**
  * @author vlads
- *
+ * 
  */
 public class FilesList extends List implements CommandListener {
 
@@ -47,8 +47,8 @@ public class FilesList extends List implements CommandListener {
 
 	private Image dirIcon = null, fileIcon = null;
 
-	private final static char  DIR_SEP = '/';
-	
+	private final static char DIR_SEP = '/';
+
 	public FilesList() {
 		super("", List.IMPLICIT);
 		this.addCommand(exitCommand);
@@ -80,7 +80,7 @@ public class FilesList extends List implements CommandListener {
 				System.out.println("cd " + location);
 				String sep = "";
 				if (location.charAt(0) != DIR_SEP) {
-					sep  = String.valueOf(DIR_SEP);
+					sep = String.valueOf(DIR_SEP);
 				}
 				dir = (FileConnection) Connector.open("file://localhost" + sep + location);
 				if (!dir.isDirectory()) {
@@ -123,15 +123,22 @@ public class FilesList extends List implements CommandListener {
 		if (d == this) {
 			if (c == List.SELECT_COMMAND) {
 				final String newDir = this.getString(this.getSelectedIndex());
-				 new Thread(new Runnable() {
-		                public void run() {
-		                	changeDir(newDir );
-		                }
-				 }).start();
+				new Thread(new Runnable() {
+					public void run() {
+						changeDir(newDir);
+					}
+				}).start();
 			} else if (c == exitCommand) {
+				if (currentDir != null) {
+					try {
+						currentDir.close();
+					} catch (IOException ignore) {
+					}
+					currentDir = null;
+				}
 				FCViewMIDlet.exit();
 			}
 		}
-		
+
 	}
 }

@@ -33,23 +33,21 @@ import org.microemu.microedition.Implementation;
 public class FileSystemRegistryImpl implements FileSystemRegistryDelegate, Implementation {
 
 	/* The context to be used when acessing filesystem */
-    private AccessControlContext acc;
-    
-	public FileSystemRegistryImpl() {
-		acc = AccessController.getContext();
-	}
-	
-	public boolean addFileSystemListener(FileSystemListener listener) {
-		// TODO Auto-generated method stub
-		return false;
+	private AccessControlContext acc;
+
+	private String fsRoot;
+
+	public FileSystemRegistryImpl(String fsRoot) {
+		this.acc = AccessController.getContext();
+		this.fsRoot = fsRoot;
 	}
 
 	public Enumeration listRoots() {
 		switch (Connection.getConnectionType()) {
 		case Connection.CONNECTIONTYPE_SYSTEM_FS:
-			return (Enumeration)AccessController.doPrivileged(new PrivilegedAction() {
+			return (Enumeration) AccessController.doPrivileged(new PrivilegedAction() {
 				public Object run() {
-					return FileSystemFileConnection.listRoots();
+					return FileSystemFileConnection.listRoots(fsRoot);
 				}
 			}, acc);
 		default:
@@ -57,13 +55,14 @@ public class FileSystemRegistryImpl implements FileSystemRegistryDelegate, Imple
 		}
 	}
 
-	public boolean removeFileSystemListener(FileSystemListener listener) {
+	public boolean addFileSystemListener(FileSystemListener listener) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public void setImplemented(Object obj) {
+	public boolean removeFileSystemListener(FileSystemListener listener) {
 		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

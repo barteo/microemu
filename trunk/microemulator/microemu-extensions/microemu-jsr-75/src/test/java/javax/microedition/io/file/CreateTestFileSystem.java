@@ -27,13 +27,13 @@ import java.io.IOException;
 import org.microemu.cldc.file.FileSystemFileConnection;
 
 public class CreateTestFileSystem {
-	
+
 	public static void main(String[] args) {
 		init();
 	}
 
 	public static void init() {
-		File fsRoot = FileSystemFileConnection.getRoot();
+		File fsRoot = FileSystemFileConnection.getRoot(null);
 		File d1 = mkdir(fsRoot, "test/dir1");
 		mkfile(d1, "f1.txt", "text");
 		mkfile(d1, "f2.txt", "text2");

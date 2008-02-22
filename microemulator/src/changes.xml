@@ -26,6 +26,8 @@
     <release version="2.0.2-SNAPSHOT" date="Release date not defined" description="">
         <action dev="vlads" type="add">Import stubs and API docs from PhoneME project.</action>
         <action dev="vlads" type="add">device.xml skin version 2.0.2. Buttons name attr defines its function.</action>
+        <action dev="barteo" type="add">New skin with dynamic resizable screen size.</action>
+        <action dev="barteo" type="update">Fixed PNG image decoding.</action>
     </release>
 
     <release version="2.0.1" date="2007-05-05" description="">

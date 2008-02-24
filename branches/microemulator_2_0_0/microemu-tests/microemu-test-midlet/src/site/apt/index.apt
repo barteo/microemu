@@ -1,0 +1,23 @@
+~~ @version $Revision$ ($Author$) $Date$
+~~ See this file format http://maven.apache.org/guides/mini/guide-apt-format.html
+
+                                    ------------------
+                                    About microemu-test-midlet
+                                    ------------------
+
+
+About microemu-test-midlet
+
+  This project tests some MicroEmulator using <<{{{http://snapshot.pyx4me.com/pyx4me-cldcunit/}CLDCUnit}}>> J2ME JUnit base test framework.
+
+  J2ME application distributon {{microemu-test-midlet-#version#-test.jad}} and {{microemu-test-midlet-#version#-test.jar}} has two MIDLets.
+
+    *  MainTest is used to execute tests manualy during .
+
+    *  UnitTests is used to execute JUnit tests.
+
+  See the {{{source-repository.html}sources}} for this project.
+
+* Try this MIDlet
+
+   Start MicroEmulator Web Start {{{/microemu-webstart/open-local/~/microemu-tests/microemu-test-midlet/microemu-test-midlet-#version#-test.jnlp}microemu-test-midlet-#version#-test}}

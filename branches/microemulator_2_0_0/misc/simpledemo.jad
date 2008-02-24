@@ -1,0 +1,8 @@
+Created-By: Bartek Teodorczyk
+MIDlet-1: SimpleDemo, , org.microemu.midp.examples.simpledemo.SimpleDemo
+MIDlet-Jar-Size: 15283
+MIDlet-Jar-URL: simpledemo.jar
+MIDlet-Name: SimpleDemo
+MIDlet-Vendor: Bartek Teodorczyk
+MIDlet-Version: 1.0
+Manifest-Version: 1.0

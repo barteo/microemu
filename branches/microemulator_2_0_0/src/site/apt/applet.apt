@@ -1,0 +1,133 @@
+~~ @version $Revision$ ($Author$) $Date$
+~~ See this file format http://maven.apache.org/guides/mini/guide-apt-format.html
+
+                                    ------------------
+                                    Application demonstration in web browser applet
+
+Application demonstration in web browser applet
+
+  In general your application should run without any changes inside applet.
+
+  * Keep it in mind that if your j2me application requires HTTP access to any site the applet and application jars must be signed.
+  By default the applet will only communicate with the host the applet came from (your website). See {{{#MIDlet.getAppProperty}MIDlet.getAppProperty}}.
+
+  * Applet do not allow calls to System.getProperty() use "Save for Web...".
+
+  []
+
+"Save for Web..."
+
+   "Save for Web..." function (in menu of main MicroEmulator application) does bytecode preprocessing of your application.
+
+   We are adding new class {{{http://microemulator.svn.sourceforge.net/viewvc/microemulator/trunk/microemulator/microemu-injected/src/main/java/org/microemu/Injected.java?view=markup}org.microemu.Injected}} to new JAR.
+   Calls to System.getProperty(), System.out, System.err and getResourceAsStream are redirected to MicroEmulator Injected class.
+
+   The resulting JAR is safe to run on any other Emulator or device. Different {{{http://microemulator.svn.sourceforge.net/viewvc/microemulator/trunk/microemulator/microemu-javase/src/main/java/org/microemu/Injected.java?view=markup}Injected}} class
+   with the same name is used when application is running under MicroEmulator.
+
+    []
+
+Embedding applet into html page
+
+  MicroEmulator comes with three differend Skins:
+
+    * {{{skin-images.html#Default}Default}} 176x220 Full Screen and 176x176 Normal Canvas,  Skin 226x471.
+
+    * {{{skin-images.html#Minimum}Minimum}} 128x128 Full Screen and 128x96 Normal Canvas,  Skin 157x285. microemu-device-minimum.jar
+
+    * {{{skin-images.html#Large}Large}} 240x320 Full Screen and 240x266 Normal Canvas,  Skin 292x618. microemu-device-large.jar
+
+    []
+
+    Html fragment example for Default device:
+
+---
+<applet code="org.microemu.applet.Main"
+		width=226 height=471 archive="microemu-javase-applet.jar,(MIDlet application jar)">
+	<param name="midlet" value="(MIDlet application main class)">
+</applet>
+---
+
+  * To support Nokia UI microemu-nokiaui.jar should be included in the archive attribute.
+
+  * To support Siemens API microemu-siemensapi.jar should be included in the archive attribute.
+
+  []
+
+    There is additional parameter in the applet definition tag if you want to start the applet
+    with device other than the default one:
+
+---
+  <param name="device" value="(device main class or device.xml)">
+---
+
+    * Minimum phone included in distribution is org/microemu/device/minimum/device.xml
+
+    * Minimum phone with mouse and color is org/microemu/device/minimum/device-color.xml
+
+    * Large phone is org/microemu/device/large/device.xml
+
+   []
+
+    Remember to include the new device jar into the applet archive tag
+
+    * minimum phone included in distribution is packaged inside microemu-device-minimum.jar
+
+    * large phone included in distribution is packaged inside microemu-device-large.jar
+
+    []
+
+
+    Example for SimpleDemo MIDlet, Nokia UI support and Minimum device:
+
+---
+<applet code="org.microemu.applet.Main"
+		width=157 height=285 archive="microemu-javase-applet.jar,microemu-nokiaui.jar,microemu-device-minimum.jar,microemu-demo.jar">
+	<param name="midlet" value="org.microemu.midp.examples.simpledemo.SimpleDemo">
+	<param name="device" value="org/microemu/device/minimum/device.xml">
+</applet>
+---
+
+    Example for SimpleDemo MIDlet and Minimum device with mouse and color:
+
+---
+<applet code="org.microemu.applet.Main"
+		width=157 height=285 archive="microemu-javase-applet.jar,microemu-device-minimum.jar,microemu-demo.jar">
+	<param name="midlet" value="org.microemu.midp.examples.simpledemo.SimpleDemo">
+	<param name="device" value="org/microemu/device/minimum/device-color.xml">
+</applet>
+---
+
+    Example for SimpleDemo MIDlet and Large Skin:
+
+---
+<applet code="org.microemu.applet.Main"
+		width=292 height=618 archive="microemu-javase-applet.jar,microemu-device-large.jar,microemu-demo.jar">
+	<param name="midlet" value="org.microemu.midp.examples.simpledemo.SimpleDemo">
+	<param name="device" value="org/microemu/device/large/device.xml">
+</applet>
+---
+
+
+{MIDlet.getAppProperty}
+
+    Function MIDlet.getAppProperty(String) is extended with additional properties so your MIDP application can be made aware of applet runtime environment.
+
+    * "microemu.applet" the value would be "true" when application is running in applet
+
+    * "microemu.accessible.host" the host name the applet is loaded from. This is the only host your application can communicate with while runing in applet.
+
+    * Other named parameter from the applet HTML tag.
+
+        Example:
+
+            getAppProperty("demoServiceURL");
+
+---
+<applet code="org.microemu.applet.Main"
+		width=226 height=471 archive="microemu-javase-applet.jar,(MIDlet application jar)">
+	<param name="midlet" value="(MIDlet application main class)">
+	<param name="demoServiceURL" value="http://mycompany.com/appdemo/service.php">
+</applet>
+---
+

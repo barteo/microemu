@@ -1,0 +1,55 @@
+/**
+ *  MicroEmulator
+ *  Copyright (C) 2008 Bartek Teodorczyk <barteo@barteo.net>
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  @version $Id$
+ */
+
+package org.microemu.device.j2se.ui;
+
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.List;
+
+import org.microemu.device.impl.ui.DisplayableImplUI;
+import org.microemu.device.ui.ListUI;
+
+public class J2SEListUI extends DisplayableImplUI implements ListUI {
+
+	public J2SEListUI(List list) {
+	}
+
+	public int append(String stringPart, Image imagePart) {
+		// TODO not yet used
+		return -1;
+	}
+
+	public void setSelectCommand(Command command) {
+		// TODO not yet used
+	}
+
+	public int getSelectedIndex() {
+		// TODO not yet used
+		return 0;
+	}
+
+	public String getString(int elementNum) {
+		// TODO not yet used
+		return null;
+	}
+
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project>
+
+<!-- @version $Revision$ ($Author$) $Date$ -->
+
+    <bannerLeft>
+            <name>J2ME Device Emulator</name>
+            <src>../images/logo.png</src>
+            <href>http://www.microemu.org/</href>
+    </bannerLeft>
+
+    <body>
+        <menu ref="parent" />
+
+        <menu name="Overview">
+            <item name="Introduction" href="index.html" />
+            <item name="Web Start Faq" href="faq.html" />
+        </menu>
+
+        <menu name="Live example">
+            <item name="Web Start" href="demo.jnlp" />
+        </menu>
+
+        <menu ref="modules" />
+
+        <menu ref="reports" />
+    </body>
+
+</project>

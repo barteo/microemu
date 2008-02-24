@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0">
+    <!-- @version $Revision$ ($Author$) $Date$ -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.microemu</groupId>
+        <artifactId>microemu-tests</artifactId>
+        <version>2.0.2-SNAPSHOT</version><!--me-version-->
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>microemu-test-midlet</artifactId>
+    <name>microemu-test-midlet</name>
+
+    <description>microemu-test-midlet</description>
+
+    <repositories>
+
+        <repository>
+            <id>pyx4me-web</id>
+            <url>http://www.pyx4me.com/maven2</url>
+        </repository>
+
+    </repositories>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-javase-swing</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.pyx4me</groupId>
+            <artifactId>cldcunit</artifactId>
+            <version>${pyx4meVersion}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.pyx4me</groupId>
+            <artifactId>cldcunit-se</artifactId>
+            <version>${pyx4meVersion}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.3</source>
+                    <target>1.1</target>
+                    <compilerArguments>
+                        <bootclasspath>${basedir}/../../api/cldcapi11/target/cldcapi11-${project.version}.jar${path.separator}${basedir}/../../api/midpapi20/target/midpapi20-${project.version}.jar</bootclasspath>
+                   </compilerArguments>
+                </configuration>
+            </plugin>
+
+            <!-- Add EclipseME nature to the generated project-->
+            <!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <configuration>
+                    <buildcommands>
+                        <buildcommand>org.eclipse.jdt.core.javabuilder</buildcommand>
+                        <buildcommand>eclipseme.core.preverifier</buildcommand>
+                    </buildcommands>
+                    <projectnatures>
+                        <projectnature>org.eclipse.jdt.core.javanature</projectnature>
+                        <projectnature>eclipseme.core.nature</projectnature>
+                    </projectnatures>
+                    <classpathContainers>
+                        <classpathContainer>J2MELIB</classpathContainer>
+                        <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
+                    </classpathContainers>
+                </configuration>
+            </plugin>
+            -->
+
+            <plugin>
+                <groupId>net.sf.jour</groupId>
+                <artifactId>jour-maven-plugin</artifactId>
+                <version>${jourVersion}</version>
+                <executions>
+                    <execution>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>instrument</goal>
+                        </goals>
+                        <configuration>
+                            <jourConfig>${basedir}/process-test-classes.jour.xml</jourConfig>
+                            <classesDirectory>${project.build.testOutputDirectory}</classesDirectory>
+                            <output>test-classes</output>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                   <dependency>
+                        <groupId>com.pyx4me</groupId>
+                        <artifactId>cldcunit-instrument</artifactId>
+                       <version>${pyx4meVersion}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <!-- Create application loadable on the phone -->
+            <plugin>
+                <groupId>com.pyx4me</groupId>
+                <artifactId>j2me-maven-plugin</artifactId>
+                <version>${pyx4meVersion}</version>
+                <executions>
+                   <execution>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--wtkHome>${env.WTK_HOME}</wtkHome-->
+                    <useWtkLibs>false</useWtkLibs>
+                    <proguard>true</proguard>
+                    <obfuscate>false</obfuscate>
+                    <proguardPreverify>true</proguardPreverify>
+                    <proguardOptions>
+                        <options>
+                            <option>-overloadaggressively</option>
+                            <option>-dontoptimize</option>
+                            <option>-allowaccessmodification</option>
+                            <option>-dontusemixedcaseclassnames</option>
+                            <option>-keep public interface javax.microedition.*</option>
+                        </options>
+                    </proguardOptions>
+                    <test>true</test>
+                    <midlets>
+                        <MIDlet>
+                            <name>MainTest</name>
+                            <class>org.microemu.tests.MainTestMIDlet</class>
+                        </MIDlet>
+                        <MIDlet>
+                            <name>UnitTests</name>
+                            <class>org.microemu.tests.UnitTestsMIDLet</class>
+                            <test>true</test>
+                        </MIDlet>
+                    </midlets>
+                    <libs>
+                        <lib>${basedir}/../../api/cldcapi11/target/cldcapi11-${project.version}.jar</lib>
+                        <lib>${basedir}/../../api/midpapi20/target/midpapi20-${project.version}.jar</lib>
+                    </libs>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.microemu</groupId>
+                            <artifactId>microemu-javase-swing</artifactId>
+                            <exclude>true</exclude>
+                            <withTrail>true</withTrail>
+                        </dependency>
+                    </dependencies>
+                </configuration>
+                <!--
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sf.proguard</groupId>
+                        <artifactId>proguard</artifactId>
+                        <version>3.10.1</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
+                -->
+            </plugin>
+
+            <!-- install jar in project site -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>site-copy-artifacts</id>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy overwrite="true"
+                                      file="${project.build.directory}/${artifactId}-${version}-test.jar"
+                                      tofile="${project.build.directory}/site/${artifactId}-${version}-test.jar"/>
+                                <copy overwrite="true"
+                                      file="${project.build.directory}/${artifactId}-${version}-test.jad"
+                                      tofile="${project.build.directory}/site/${artifactId}-${version}-test.jad"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+
+</project>

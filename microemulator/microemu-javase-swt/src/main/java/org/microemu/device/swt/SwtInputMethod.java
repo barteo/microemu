@@ -29,7 +29,6 @@ import javax.microedition.lcdui.Command;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
-import org.microemu.CommandManager;
 import org.microemu.DisplayAccess;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
@@ -38,44 +37,38 @@ import org.microemu.device.InputMethodEvent;
 import org.microemu.device.impl.InputMethodImpl;
 import org.microemu.device.impl.SoftButton;
 
+public class SwtInputMethod extends InputMethodImpl {
 
-public class SwtInputMethod extends InputMethodImpl 
-{
-	
 	private Timer keyRepeatTimer;
-	
+
 	private int repeatModeKeyCode;
-	
+
 	private boolean clearRepeatFlag;
-	
-	
-	private class KeyRepeatTask extends TimerTask
-	{
+
+	private class KeyRepeatTask extends TimerTask {
 		public void run() {
 			if (repeatModeKeyCode != Integer.MIN_VALUE) {
 				MIDletAccess ma = MIDletBridge.getMIDletAccess();
 				if (ma == null) {
 					return;
 				}
-				
+
 				DisplayAccess da = ma.getDisplayAccess();
 				if (da == null) {
 					return;
 				}
 
 				if (clearRepeatFlag) {
-					da.keyReleased(repeatModeKeyCode);							
+					da.keyReleased(repeatModeKeyCode);
 					repeatModeKeyCode = Integer.MIN_VALUE;
-				}				
+				}
 			}
 		}
 	};
-	
-	
-	public SwtInputMethod()
-	{
+
+	public SwtInputMethod() {
 		super();
-		
+
 		// TODO When InputMethod will be removed from EmulatorContext add:
 		// if (DeviceFactory.getDevice().hasRepeatEvents()) {
 		keyRepeatTimer = new Timer();
@@ -83,86 +76,81 @@ public class SwtInputMethod extends InputMethodImpl
 		clearRepeatFlag = false;
 	}
 
-	public int getGameAction(int keyCode)
-    {
-        // TODO fix KeyEvent
-        switch (keyCode) {
-            case SWT.ARROW_UP:
-                return Canvas.UP;
+	public int getGameAction(int keyCode) {
+		// TODO fix KeyEvent
+		switch (keyCode) {
+		case SWT.ARROW_UP:
+			return Canvas.UP;
 
-            case SWT.ARROW_DOWN:
-                return Canvas.DOWN;
+		case SWT.ARROW_DOWN:
+			return Canvas.DOWN;
 
-            case SWT.ARROW_LEFT:
-                return Canvas.LEFT;
+		case SWT.ARROW_LEFT:
+			return Canvas.LEFT;
 
-            case SWT.ARROW_RIGHT:
-                return Canvas.RIGHT;
+		case SWT.ARROW_RIGHT:
+			return Canvas.RIGHT;
 
-            case SWT.CR:
-                return Canvas.FIRE;
+		case SWT.CR:
+			return Canvas.FIRE;
 
-            /*
-             * case KeyEvent.VK_1: case KeyEvent.VK_A: return Canvas.GAME_A;
-             * 
-             * case KeyEvent.VK_3: case KeyEvent.VK_B: return Canvas.GAME_B;
-             * 
-             * case KeyEvent.VK_7: case KeyEvent.VK_C: return Canvas.GAME_C;
-             * 
-             * case KeyEvent.VK_9: case KeyEvent.VK_D: return Canvas.GAME_D;
-             */
+			/*
+			 * case KeyEvent.VK_1: case KeyEvent.VK_A: return Canvas.GAME_A;
+			 * 
+			 * case KeyEvent.VK_3: case KeyEvent.VK_B: return Canvas.GAME_B;
+			 * 
+			 * case KeyEvent.VK_7: case KeyEvent.VK_C: return Canvas.GAME_C;
+			 * 
+			 * case KeyEvent.VK_9: case KeyEvent.VK_D: return Canvas.GAME_D;
+			 */
 
-            default:
-                return 0;
-        }
-    }
+		default:
+			return 0;
+		}
+	}
 
-	
-    public int getKeyCode(int gameAction)
-    {
-        // TODO fix KeyEvent
-        switch (gameAction) {
-            case Canvas.UP:
-                return SWT.ARROW_UP;
+	public int getKeyCode(int gameAction) {
+		// TODO fix KeyEvent
+		switch (gameAction) {
+		case Canvas.UP:
+			return SWT.ARROW_UP;
 
-            case Canvas.DOWN:
-                return SWT.ARROW_DOWN;
+		case Canvas.DOWN:
+			return SWT.ARROW_DOWN;
 
-            case Canvas.LEFT:
-                return SWT.ARROW_LEFT;
+		case Canvas.LEFT:
+			return SWT.ARROW_LEFT;
 
-            case Canvas.RIGHT:
-                return SWT.ARROW_RIGHT;
+		case Canvas.RIGHT:
+			return SWT.ARROW_RIGHT;
 
-            case Canvas.FIRE:
-                return SWT.CR;
+		case Canvas.FIRE:
+			return SWT.CR;
 
-            /*
-             * case Canvas.GAME_A: return KeyEvent.VK_1;
-             * 
-             * case Canvas.GAME_B: return KeyEvent.VK_3;
-             * 
-             * case Canvas.GAME_C: return KeyEvent.VK_7;
-             * 
-             * case Canvas.GAME_D: return KeyEvent.VK_9;
-             */
+			/*
+			 * case Canvas.GAME_A: return KeyEvent.VK_1;
+			 * 
+			 * case Canvas.GAME_B: return KeyEvent.VK_3;
+			 * 
+			 * case Canvas.GAME_C: return KeyEvent.VK_7;
+			 * 
+			 * case Canvas.GAME_D: return KeyEvent.VK_9;
+			 */
 
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
+		default:
+			throw new IllegalArgumentException();
+		}
+	}
 
-
-	public String getKeyName(int keyCode) throws IllegalArgumentException
-    {
-		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext(); ) {
+	public String getKeyName(int keyCode) throws IllegalArgumentException {
+		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext();) {
 			SwtButton button = (SwtButton) it.next();
 			if (button.getKeyCode() == keyCode) {
 				return button.getName();
 			}
 		}
 
-		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext(); ) {
+		for (Iterator it = DeviceFactory.getDevice().getButtons().iterator(); it.hasNext();) {
 			SwtButton button = (SwtButton) it.next();
 			if (button.getKeyboardKey() == keyCode) {
 				return button.getName();
@@ -170,29 +158,27 @@ public class SwtInputMethod extends InputMethodImpl
 		}
 
 		throw new IllegalArgumentException();
-    }
+	}
 
-	
-	private boolean commonKeyPressed(KeyEvent ev) 
-	{
+	private boolean commonKeyPressed(KeyEvent ev) {
 		int keyCode = ev.keyCode;
 		if (inputMethodListener == null) {
 			int midpKeyCode;
 			switch (ev.keyCode) {
-				case SWT.BS :
-					return true;
-				default :
-					midpKeyCode = keyCode;
+			case SWT.BS:
+				return true;
+			default:
+				midpKeyCode = keyCode;
 			}
 			switch (ev.character) {
-				case '*' :
-					midpKeyCode = Canvas.KEY_STAR;
-					break;
-				case '#' :
-					midpKeyCode = Canvas.KEY_POUND;
-					break;
-				default :
-					midpKeyCode = keyCode;
+			case '*':
+				midpKeyCode = Canvas.KEY_STAR;
+				break;
+			case '#':
+				midpKeyCode = Canvas.KEY_POUND;
+				break;
+			default:
+				midpKeyCode = keyCode;
 			}
 			MIDletBridge.getMIDletAccess().getDisplayAccess().keyPressed(midpKeyCode);
 			return true;
@@ -217,7 +203,7 @@ public class SwtInputMethod extends InputMethodImpl
 		 */
 
 		int caret = inputMethodListener.getCaretPosition();
-		
+
 		if (getGameAction(keyCode) == Canvas.LEFT || getGameAction(keyCode) == Canvas.RIGHT) {
 			synchronized (this) {
 				if (getGameAction(keyCode) == Canvas.LEFT && caret > 0) {
@@ -229,7 +215,8 @@ public class SwtInputMethod extends InputMethodImpl
 				lastButton = null;
 				lastButtonCharIndex = -1;
 			}
-			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, inputMethodListener.getText());
+			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret,
+					inputMethodListener.getText());
 			inputMethodListener.caretPositionChanged(event);
 			return true;
 		}
@@ -253,16 +240,16 @@ public class SwtInputMethod extends InputMethodImpl
 					}
 				}
 			}
-            if (!validate(tmp, inputMethodListener.getConstraints())) {
-                return true;
-            }
+			if (!validate(tmp, inputMethodListener.getConstraints())) {
+				return true;
+			}
 			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, tmp);
 			inputMethodListener.inputMethodTextChanged(event);
 			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, tmp);
 			inputMethodListener.caretPositionChanged(event);
 			return true;
 		}
-		
+
 		if (keyCode == SWT.DEL) {
 			String tmp = inputMethodListener.getText();
 			synchronized (this) {
@@ -271,19 +258,20 @@ public class SwtInputMethod extends InputMethodImpl
 					lastButtonCharIndex = -1;
 				}
 				if (caret != inputMethodListener.getText().length()) {
-					tmp = inputMethodListener.getText().substring(0, caret) + inputMethodListener.getText().substring(caret + 1);
+					tmp = inputMethodListener.getText().substring(0, caret)
+							+ inputMethodListener.getText().substring(caret + 1);
 				}
 			}
-            if (!validate(tmp, inputMethodListener.getConstraints())) {
-                return true;
-            }
+			if (!validate(tmp, inputMethodListener.getConstraints())) {
+				return true;
+			}
 			InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, tmp);
 			inputMethodListener.inputMethodTextChanged(event);
 			event = new InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret, tmp);
 			inputMethodListener.caretPositionChanged(event);
 			return true;
 		}
-		
+
 		if (keyCode == SWT.SHIFT || keyCode == SWT.CTRL || keyCode == SWT.ALT) {
 			return true;
 		}
@@ -291,9 +279,7 @@ public class SwtInputMethod extends InputMethodImpl
 		return false;
 	}
 
-	
-	public void keyPressed(KeyEvent ev) 
-	{
+	public void keyPressed(KeyEvent ev) {
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
 			clearRepeatFlag = false;
 			if (repeatModeKeyCode == ev.keyCode) {
@@ -301,30 +287,38 @@ public class SwtInputMethod extends InputMethodImpl
 				if (ma == null) {
 					return;
 				}
-				
+
 				DisplayAccess da = ma.getDisplayAccess();
 				if (da == null) {
 					return;
 				}
 
-				da.keyRepeated(ev.keyCode);		
-				
+				da.keyRepeated(ev.keyCode);
+
 				return;
 			}
-			
-			repeatModeKeyCode = ev.keyCode;			
+
+			repeatModeKeyCode = ev.keyCode;
 		}
 
 		// invoke any associated commands, but send the raw key codes instead
 		boolean rawSoftKeys = DeviceFactory.getDevice().getDeviceDisplay().isFullScreenMode();
 		SwtButton pressedButton = getButton(ev);
 		if (pressedButton != null) {
-		    if (pressedButton instanceof SoftButton && !rawSoftKeys) {
-			    Command cmd = ((SoftButton) pressedButton).getCommand();
-			    if (cmd != null) {
-					CommandManager.getInstance().commandAction(cmd);
+			if (pressedButton instanceof SoftButton && !rawSoftKeys) {
+				Command cmd = ((SoftButton) pressedButton).getCommand();
+				if (cmd != null) {
+					MIDletAccess ma = MIDletBridge.getMIDletAccess();
+					if (ma == null) {
+						return;
+					}
+					DisplayAccess da = ma.getDisplayAccess();
+					if (da == null) {
+						return;
+					}
+					da.commandAction(cmd, da.getCurrent());
 					return;
-			    }
+				}
 			}
 		}
 
@@ -337,30 +331,26 @@ public class SwtInputMethod extends InputMethodImpl
 		}
 	}
 
-	
-	public void keyReleased(KeyEvent ev) 
-	{
+	public void keyReleased(KeyEvent ev) {
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
 			clearRepeatFlag = true;
 			keyRepeatTimer.schedule(new KeyRepeatTask(), 50);
-		} else {		
+		} else {
 			MIDletAccess ma = MIDletBridge.getMIDletAccess();
 			if (ma == null) {
 				return;
 			}
-			
+
 			DisplayAccess da = ma.getDisplayAccess();
 			if (da == null) {
 				return;
 			}
-	
+
 			da.keyReleased(ev.keyCode);
 		}
 	}
 
-	
-	public void mousePressed(KeyEvent ev) 
-	{
+	public void mousePressed(KeyEvent ev) {
 		if (commonKeyPressed(ev)) {
 			return;
 		}
@@ -417,10 +407,11 @@ public class SwtInputMethod extends InputMethodImpl
 						resetKey = false;
 						notify();
 					}
-                    if (!validate(tmp, inputMethodListener.getConstraints())) {
-                        return;
-                    }
-					InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret, tmp);
+					if (!validate(tmp, inputMethodListener.getConstraints())) {
+						return;
+					}
+					InputMethodEvent event = new InputMethodEvent(InputMethodEvent.INPUT_METHOD_TEXT_CHANGED, caret,
+							tmp);
 					inputMethodListener.inputMethodTextChanged(event);
 					break;
 				}
@@ -428,14 +419,12 @@ public class SwtInputMethod extends InputMethodImpl
 		}
 	}
 
-	
-	public void mouseReleased(int keyCode) 
-	{
+	public void mouseReleased(int keyCode) {
 		MIDletAccess ma = MIDletBridge.getMIDletAccess();
 		if (ma == null) {
 			return;
 		}
-		
+
 		DisplayAccess da = ma.getDisplayAccess();
 		if (da == null) {
 			return;
@@ -444,10 +433,8 @@ public class SwtInputMethod extends InputMethodImpl
 		da.keyReleased(keyCode);
 	}
 
-	
-	public SwtButton getButton(KeyEvent ev)
-	{
-		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements(); ) {
+	public SwtButton getButton(KeyEvent ev) {
+		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
 			SwtButton button = (SwtButton) e.nextElement();
 			if (ev.keyCode == button.getKeyCode()) {
 				return button;
@@ -456,7 +443,7 @@ public class SwtInputMethod extends InputMethodImpl
 				return button;
 			}
 		}
-		        
+
 		return null;
 	}
 

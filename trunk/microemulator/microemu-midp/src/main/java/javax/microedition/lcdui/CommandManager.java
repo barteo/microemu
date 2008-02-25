@@ -17,33 +17,28 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.microemu;
+package javax.microedition.lcdui;
 
 import java.util.Enumeration;
 import java.util.Vector;
 
-import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.CommandListener;
-import javax.microedition.lcdui.Displayable;
-import javax.microedition.lcdui.List;
 
+import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.impl.SoftButton;
 
 
 
-public class CommandManager 
+class CommandManager 
 {
-	public static final Command CMD_SCREEN_UP = new Command("", Command.SCREEN, 0);
-	public static final Command CMD_SCREEN_DOWN = new Command("", Command.SCREEN, 0);
-	
-	private static final Command CMD_MENU = new Command("Menu", Command.EXIT, 0);
+	public static final Command CMD_MENU = new Command("Menu", Command.EXIT, 0);
+
 	private static final Command CMD_BACK = new Command("Back", Command.BACK, 0);
 	private static final Command CMD_SELECT = new Command("Select", Command.OK, 0);
 	
 	private static CommandManager instance = new CommandManager();
 	
-	private List menuList = null;
+	private MenuList menuList = null;
 	private Vector menuCommands;
 	private Displayable previous;
 	
@@ -55,13 +50,9 @@ public class CommandManager
 				lateInit();
 			}
 
-		    Command selection = (Command) menuCommands.elementAt(menuList.getSelectedIndex());
+		    menuList.setCommandOnExit((Command) menuCommands.elementAt(menuList.getSelectedIndex()), c);
 
 			MIDletBridge.getMIDletAccess().getDisplayAccess().setCurrent(previous);
-
-			if ((c == CMD_SELECT) || c == List.SELECT_COMMAND) {
-				MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(selection, previous);
-			}
 		}		
 	};
 		
@@ -72,7 +63,7 @@ public class CommandManager
 	
 	
 	private void lateInit() {
-		menuList = new List("Menu", List.IMPLICIT);
+		menuList = new MenuList("Menu", List.IMPLICIT);
 		menuList.addCommand(CMD_BACK);
 		menuList.addCommand(CMD_SELECT);
 		menuList.setCommandListener(menuCommandListener);
@@ -91,12 +82,8 @@ public class CommandManager
 			lateInit();
 		}
 
-		if (command == CMD_MENU) {			
-			previous = MIDletBridge.getMIDletAccess().getDisplayAccess().getCurrent();
-			MIDletBridge.getMIDletAccess().getDisplayAccess().setCurrent(menuList);
-		} else {
-			MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(command, MIDletBridge.getMIDletAccess().getDisplayAccess().getCurrent());
-		}
+		previous = MIDletBridge.getMIDletAccess().getDisplayAccess().getCurrent();
+		MIDletBridge.getMIDletAccess().getDisplayAccess().setCurrent(menuList);
 	}
 	
 	
@@ -214,6 +201,28 @@ public class CommandManager
 				}
 			}
 		}
+	}
+	
+	private class MenuList extends List
+	{
+		private Command selection;
+		private Command c;
+		
+		public MenuList(String string, int implicit) {
+			super(string, implicit);
+		}
+
+		public void setCommandOnExit(Command selection, Command c) {
+			this.selection = selection;
+			this.c = c;
+		}
+		
+		void hideNotify() {
+			if ((c == CMD_SELECT) || c == List.SELECT_COMMAND) {
+				MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(selection, previous);
+			}
+		}
+
 	}
 	
 }

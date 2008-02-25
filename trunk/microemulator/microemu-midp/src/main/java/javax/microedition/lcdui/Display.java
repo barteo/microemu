@@ -31,7 +31,6 @@ import java.util.TimerTask;
 import javax.microedition.lcdui.game.GameCanvas;
 import javax.microedition.midlet.MIDlet;
 
-import org.microemu.CommandManager;
 import org.microemu.DisplayAccess;
 import org.microemu.GameCanvasKeyAccess;
 import org.microemu.MIDletBridge;
@@ -292,11 +291,13 @@ public class Display {
         }
 
         public void commandAction(Command c, Displayable d) {
-            if (c.equals(CommandManager.CMD_SCREEN_UP)) {
+        	if (c.equals(CommandManager.CMD_MENU)) {
+        		CommandManager.getInstance().commandAction(c);
+        	} else if (c.equals(CMD_SCREEN_UP)) {
                 if (d != null && d instanceof Screen) {
                     ((Screen) d).scroll(Canvas.UP);
                 }
-            } else if (c.equals(CommandManager.CMD_SCREEN_DOWN)) {
+            } else if (c.equals(CMD_SCREEN_DOWN)) {
                 if (d != null && d instanceof Screen) {
                     ((Screen) d).scroll(Canvas.DOWN);
                 }

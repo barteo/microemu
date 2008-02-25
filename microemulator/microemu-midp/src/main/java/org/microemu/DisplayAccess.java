@@ -29,6 +29,9 @@ import org.microemu.device.ui.DisplayableUI;
 
 public interface DisplayAccess
 {
+	Command CMD_SCREEN_UP = new Command("", Command.SCREEN, 0);
+
+	Command CMD_SCREEN_DOWN = new Command("", Command.SCREEN, 0);	
 
 	void commandAction(Command c, Displayable d);
 

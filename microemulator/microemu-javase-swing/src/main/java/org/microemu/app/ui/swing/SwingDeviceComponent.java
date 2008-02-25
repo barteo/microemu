@@ -46,8 +46,9 @@ import javax.microedition.lcdui.Command;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
-import org.microemu.CommandManager;
+import org.microemu.DisplayAccess;
 import org.microemu.DisplayComponent;
+import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.app.Common;
 import org.microemu.device.Device;
@@ -165,7 +166,15 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 				if (pressedButton instanceof SoftButton && !fullScreenMode) {
 					Command cmd = ((SoftButton) pressedButton).getCommand();
 					if (cmd != null) {
-						CommandManager.getInstance().commandAction(cmd);
+						MIDletAccess ma = MIDletBridge.getMIDletAccess();
+						if (ma == null) {
+							return;
+						}
+						DisplayAccess da = ma.getDisplayAccess();
+						if (da == null) {
+							return;
+						}
+						da.commandAction(cmd, da.getCurrent());
 					}
 				} else {
 					inputMethod.buttonPressed(pressedButton, '\0');
@@ -332,7 +341,8 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 		}
 
 		char keyChar = '\0';
-		if (((ev.getKeyCode() == KeyEvent.VK_SPACE) || (ev.getKeyCode() >= KeyEvent.VK_0)) && (ev.getKeyCode() != KeyEvent.VK_UNDEFINED)) {
+		if (((ev.getKeyCode() == KeyEvent.VK_SPACE) || (ev.getKeyCode() >= KeyEvent.VK_0))
+				&& (ev.getKeyCode() != KeyEvent.VK_UNDEFINED)) {
 			keyChar = ev.getKeyChar();
 		}
 		J2SEButton button = inputMethod.getButton(ev);
@@ -373,7 +383,8 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 		J2SEInputMethod inputMethod = (J2SEInputMethod) device.getInputMethod();
 
 		char keyChar = '\0';
-		if (((ev.getKeyCode() == KeyEvent.VK_SPACE) || (ev.getKeyCode() >= KeyEvent.VK_0)) && (ev.getKeyCode() != KeyEvent.VK_UNDEFINED)) {
+		if (((ev.getKeyCode() == KeyEvent.VK_SPACE) || (ev.getKeyCode() >= KeyEvent.VK_0))
+				&& (ev.getKeyCode() != KeyEvent.VK_UNDEFINED)) {
 			keyChar = ev.getKeyChar();
 		}
 		// numeric keypad functions as hot keys for buttons only
@@ -418,11 +429,11 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 			g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
 			return;
 		}
-	    if (((DeviceDisplayImpl) device.getDeviceDisplay()).isResizable()) {
-	        return;
-	    }
+		if (((DeviceDisplayImpl) device.getDeviceDisplay()).isResizable()) {
+			return;
+		}
 
-	    offg.drawImage(((J2SEImmutableImage) device.getNormalImage()).getImage(), 0, 0, this);
+		offg.drawImage(((J2SEImmutableImage) device.getNormalImage()).getImage(), 0, 0, this);
 
 		if (prevOverButton != null) {
 			org.microemu.device.impl.Shape shape = prevOverButton.getShape();
@@ -461,18 +472,18 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 	}
 
 	public Dimension getPreferredSize() {
-  		Device device = DeviceFactory.getDevice();
-  		if (device == null) {
-  			return new Dimension(0, 0);
-  		}
-  		
-  		DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) DeviceFactory.getDevice().getDeviceDisplay();
-  		if (deviceDisplay.isResizable()) {
-  		    return new Dimension(deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
-  		} else {  		
-  		    javax.microedition.lcdui.Image img = device.getNormalImage();  		
-  		    return new Dimension(img.getWidth(), img.getHeight());
-  		}
+		Device device = DeviceFactory.getDevice();
+		if (device == null) {
+			return new Dimension(0, 0);
+		}
+
+		DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) DeviceFactory.getDevice().getDeviceDisplay();
+		if (deviceDisplay.isResizable()) {
+			return new Dimension(deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
+		} else {
+			javax.microedition.lcdui.Image img = device.getNormalImage();
+			return new Dimension(img.getWidth(), img.getHeight());
+		}
 	}
 
 }

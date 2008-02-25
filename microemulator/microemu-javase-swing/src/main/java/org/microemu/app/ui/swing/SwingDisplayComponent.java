@@ -37,7 +37,6 @@ import javax.microedition.lcdui.Displayable;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
-import org.microemu.CommandManager;
 import org.microemu.DisplayAccess;
 import org.microemu.DisplayComponent;
 import org.microemu.MIDletAccess;
@@ -134,7 +133,15 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 							if (pb.contains(e.getX(), e.getY())) {
 								Command cmd = initialPressedSoftButton.getCommand();
 								if (cmd != null) {
-									CommandManager.getInstance().commandAction(cmd);
+									MIDletAccess ma = MIDletBridge.getMIDletAccess();
+									if (ma == null) {
+										return;
+									}
+									DisplayAccess da = ma.getDisplayAccess();
+									if (da == null) {
+										return;
+									}
+									da.commandAction(cmd, da.getCurrent());
 								}
 							}
 						}

@@ -32,7 +32,6 @@ import java.util.Vector;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.TextField;
 
-import org.microemu.CommandManager;
 import org.microemu.DisplayAccess;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
@@ -151,7 +150,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 			da.keyPressed(keyCode);
 			return true;
 		}
-		
+
 		if (button == null) {
 			return true;
 		}
@@ -356,7 +355,15 @@ public class J2SEInputMethod extends InputMethodImpl {
 		if (button instanceof SoftButton && !rawSoftKeys) {
 			Command cmd = ((SoftButton) button).getCommand();
 			if (cmd != null) {
-				CommandManager.getInstance().commandAction(cmd);
+				MIDletAccess ma = MIDletBridge.getMIDletAccess();
+				if (ma == null) {
+					return;
+				}
+				DisplayAccess da = ma.getDisplayAccess();
+				if (da == null) {
+					return;
+				}
+				da.commandAction(cmd, da.getCurrent());
 				eventAlreadyConsumed = true;
 				return;
 			}

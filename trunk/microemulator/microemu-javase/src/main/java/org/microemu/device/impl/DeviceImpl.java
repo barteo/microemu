@@ -39,7 +39,7 @@ import javax.microedition.lcdui.Image;
 import nanoxml.XMLElement;
 import nanoxml.XMLParseException;
 
-import org.microemu.CommandManager;
+import org.microemu.DisplayAccess;
 import org.microemu.EmulatorContext;
 import org.microemu.app.util.IOUtils;
 import org.microemu.device.Device;
@@ -400,9 +400,9 @@ public abstract class DeviceImpl implements Device {
 				SoftButton icon = deviceDisplay.createSoftButton(skinVersion, tmp_display.getStringAttribute("name"),
 						getRectangle(tmp_display.getChild("paintable")), iconNormalImage, iconPressedImage);
 				if (icon.getName().equals("up")) {
-					icon.setCommand(CommandManager.CMD_SCREEN_UP);
+					icon.setCommand(DisplayAccess.CMD_SCREEN_UP);
 				} else if (icon.getName().equals("down")) {
-					icon.setCommand(CommandManager.CMD_SCREEN_DOWN);
+					icon.setCommand(DisplayAccess.CMD_SCREEN_DOWN);
 				}
 				getSoftButtons().addElement(icon);
 			} else if (tmp_display.getName().equals("status")) {

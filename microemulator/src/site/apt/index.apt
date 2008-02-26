@@ -8,7 +8,7 @@
 
 MicroEmulator
 
-    MicroEmulator is a pure Java implementation of J2ME in J2SE.
+    MicroEmulator is a pure Java implementation of Java ME in Java SE.
     MicroEmulator is licensed under LGPL so it is possible to link and distribute commercial software with its libraries.
 
 * Key usage examples
@@ -75,6 +75,8 @@ MicroEmulator
 * Acknowledgements
 
 	* YourKit {{{http://www.yourkit.com}Java Profiler}}
+
+	* {{{http://asm.objectweb.org/}ASM Java bytecode manipulation and analysis framework}}
 
 * Links
 

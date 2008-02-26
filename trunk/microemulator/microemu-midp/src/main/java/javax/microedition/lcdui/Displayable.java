@@ -49,7 +49,7 @@ public abstract class Displayable
     // TODO make private
     int viewPortHeight;
     
-    protected DisplayableUI ui;
+    DisplayableUI ui;
     
     private String title;
     

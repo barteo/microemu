@@ -346,8 +346,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 		}
 
 		char keyChar = '\0';
-		if (((ev.getKeyCode() == KeyEvent.VK_SPACE) || (ev.getKeyCode() >= KeyEvent.VK_0))
-				&& (ev.getKeyCode() != KeyEvent.VK_UNDEFINED)) {
+		if (ev.getKeyChar() >= 32 && ev.getKeyChar() != 65535) {
 			keyChar = ev.getKeyChar();
 		}
 		J2SEButton button = inputMethod.getButton(ev);
@@ -388,8 +387,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 		J2SEInputMethod inputMethod = (J2SEInputMethod) device.getInputMethod();
 
 		char keyChar = '\0';
-		if (((ev.getKeyCode() == KeyEvent.VK_SPACE) || (ev.getKeyCode() >= KeyEvent.VK_0))
-				&& (ev.getKeyCode() != KeyEvent.VK_UNDEFINED)) {
+		if (ev.getKeyChar() >= 32 && ev.getKeyChar() != 65535) {
 			keyChar = ev.getKeyChar();
 		}
 		// numeric keypad functions as hot keys for buttons only

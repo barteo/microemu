@@ -337,7 +337,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 			keyCode = button.getKeyCode();
 		}
 		eventAlreadyConsumed = false;
-		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
+		if (DeviceFactory.getDevice().hasRepeatEvents()) {
 			if (repeatModeKeyCodes.contains(new Integer(keyCode))) {
 				MIDletAccess ma = MIDletBridge.getMIDletAccess();
 				if (ma == null) {
@@ -385,7 +385,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 		if (button != null && keyChar == '\0') {
 			keyCode = button.getKeyCode();
 		}
-		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
+		if (DeviceFactory.getDevice().hasRepeatEvents()) {
 			repeatModeKeyCodes.remove(new Integer(keyCode));
 			keyReleasedDelayTimer.schedule(new KeyReleasedDelayTask(keyCode), 50);
 		} else {

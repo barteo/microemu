@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *  
+ *
  *  @version $Id$
  */
 package org.microemu.app;
@@ -121,8 +121,12 @@ public class Common implements MicroEmulator, CommonInterface {
 		instance = this;
 		this.emulatorContext = context;
 
-		launcher = new Launcher(this);
-		launcher.setCurrentMIDlet(launcher);
+        try {
+		    launcher = new Launcher(this);
+		    launcher.setCurrentMIDlet(launcher);
+		} finally {
+		    MIDletBridge.setThreadMIDletContext(null);
+		}
 
 		/*
 		 * Initialize secutity context for implemenations, May be there are
@@ -420,6 +424,8 @@ public class Common implements MicroEmulator, CommonInterface {
 		} catch (Throwable e) {
 			Message.error("Unable to start launcher MIDlet, " + Message.getCauseMessage(e), e);
 			handleStartMidletException(e);
+		} finally {
+		    MIDletBridge.setThreadMIDletContext(null);
 		}
 	}
 

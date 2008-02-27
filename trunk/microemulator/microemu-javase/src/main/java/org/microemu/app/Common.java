@@ -20,7 +20,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the LGPL or the AL for the specific language governing permissions and
  *  limitations.
- *  
+ *
  *  @version $Id$
  */
 package org.microemu.app;
@@ -126,8 +126,12 @@ public class Common implements MicroEmulator, CommonInterface {
 		instance = this;
 		this.emulatorContext = context;
 
-		launcher = new Launcher(this);
-		launcher.setCurrentMIDlet(launcher);
+        try {
+		    launcher = new Launcher(this);
+		    launcher.setCurrentMIDlet(launcher);
+		} finally {
+		    MIDletBridge.setThreadMIDletContext(null);
+		}
 
 		/*
 		 * Initialize secutity context for implemenations, May be there are
@@ -425,6 +429,8 @@ public class Common implements MicroEmulator, CommonInterface {
 		} catch (Throwable e) {
 			Message.error("Unable to start launcher MIDlet, " + Message.getCauseMessage(e), e);
 			handleStartMidletException(e);
+		} finally {
+		    MIDletBridge.setThreadMIDletContext(null);
 		}
 	}
 

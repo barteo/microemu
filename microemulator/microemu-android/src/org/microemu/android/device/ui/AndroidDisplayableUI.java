@@ -38,12 +38,12 @@ import org.microemu.device.ui.DisplayableUI;
 
 public abstract class AndroidDisplayableUI implements DisplayableUI {
 	
-	private static Comparator commandsPriorityComparator = new Comparator() {
+	private static Comparator<Command> commandsPriorityComparator = new Comparator<Command>() {
 
-		public int compare(Object object1, Object object2) {
-			if (((Command) object1).getPriority() == ((Command) object2).getPriority()) {
+		public int compare(Command first, Command second) {
+			if (first.getPriority() == second.getPriority()) {
 				return 0;
-			} else if (((Command) object1).getPriority() < ((Command) object2).getPriority()) {
+			} else if (first.getPriority() < second.getPriority()) {
 				return -1;
 			} else {
 				return 1;
@@ -52,13 +52,11 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 		
 	};
 	
-	private String title;
-	
-	private List commands = new ArrayList();
+	private List<Command> commands = new ArrayList<Command>();
 	
 	private CommandListener commandListener = null;
 	
-	public List getCommands() {
+	public List<Command> getCommands() {
 		return commands;
 	}
 	

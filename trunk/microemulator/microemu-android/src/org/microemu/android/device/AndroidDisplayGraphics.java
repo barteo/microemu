@@ -167,8 +167,13 @@ public class AndroidDisplayGraphics extends javax.microedition.android.lcdui.Gra
 	}
 
 	public void setClip(int x, int y, int width, int height) {
-		canvas.restore();
-		canvas.save(Canvas.CLIP_SAVE_FLAG);
+		if (x == clip.left && x+ width == clip.right && y == clip.top && y + height == clip.bottom) {
+			return;
+		}
+		if (x < clip.left || x + width > clip.right || y < clip.top || y + height > clip.bottom) {
+			canvas.restore();
+			canvas.save(Canvas.CLIP_SAVE_FLAG);
+		}
         clip.left = x;
         clip.top = y;
         clip.right = x + width;

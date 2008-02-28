@@ -108,7 +108,7 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 		
 		public int append(String stringPart) {
 			objects.add(stringPart);
-			// TODO API changed notifyChange();
+			notifyDataSetChanged();
 			
 			return objects.lastIndexOf(stringPart);
 		}

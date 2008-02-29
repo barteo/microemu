@@ -42,8 +42,6 @@ import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.ui.DisplayableUI;
 
-import edu.emory.mathcs.backport.java.util.concurrent.BlockingQueue;
-import edu.emory.mathcs.backport.java.util.concurrent.LinkedBlockingQueue;
 import edu.emory.mathcs.backport.java.util.concurrent.Semaphore;
 
 public class Display {
@@ -127,21 +125,6 @@ public class Display {
     }
 
     /**
-     * Simple method that eats interrupted exception since in most cases we
-     * can't do anything about these anyway
-     * 
-     * @param event
-     */
-    private void putInQueue(Runnable runnable) {
-        try {
-            eventQueue.put(runnable);
-        } catch (InterruptedException exception) {
-            // nothing to do
-            exception.printStackTrace();
-        }
-    }
-
-    /**
      * Wrap a key event as a runnable so it can be thrown into the event
      * processing queue. Note that this may be a bit buggy, since events are
      * supposed to propogate to the head of the queue and not get tied behind
@@ -150,7 +133,7 @@ public class Display {
      * @author radoshi
      * 
      */
-    private final class KeyEvent implements Runnable {
+    private final class KeyEvent extends EventDispatcher.Event {
 
         static final short KEY_PRESSED = 0;
 
@@ -163,6 +146,7 @@ public class Display {
         private int keyCode;
 
         KeyEvent(short type, int keyCode) {
+        	eventDispatcher.super();
             this.type = type;
             this.keyCode = keyCode;
         }
@@ -190,48 +174,7 @@ public class Display {
         }
     }
     
-    private final class PointerEvent implements Runnable {
-    	
-    	static final short POINTER_PRESSED = 0;
-    	
-    	static final short POINTER_RELEASED = 1;
-    	
-    	static final short POINTER_DRAGGED = 2;
-    	
-    	private short type;
-    	
-    	private int x;
-    	
-    	private int y;
-    	
-    	PointerEvent(short type, int x, int y) {
-    		this.type = type;
-    		this.x = x;
-    		this.y = y;
-    	}
-    	
-        public void run() {
-            switch (type) {
-            case POINTER_PRESSED:
-                if (current != null) {
-                    current.pointerPressed(x, y);
-                }
-            	break;
-            case POINTER_RELEASED:
-                if (current != null) {
-                    current.pointerReleased(x, y);
-                }
-            	break;
-            case POINTER_DRAGGED:
-                if (current != null) {
-                    current.pointerDragged(x, y);
-                }
-            	break;
-            }
-        }   	
-    }
-
-    private final class ShowHideNotifyEvent implements Runnable {
+    private final class ShowHideNotifyEvent extends EventDispatcher.Event {
     	
     	static final short SHOW_NOTIFY = 0;
     	
@@ -244,6 +187,7 @@ public class Display {
     	private Displayable nextDisplayable;
     	
     	ShowHideNotifyEvent(short type, Displayable current, Displayable nextDisplayable) {
+    		eventDispatcher.super();
     		this.type = type;
     		this.current = current;
     		this.nextDisplayable = nextDisplayable;
@@ -253,7 +197,7 @@ public class Display {
             switch (type) {
             case SHOW_NOTIFY:
                 if (current != null) {
-                	putInQueue(new ShowHideNotifyEvent(ShowHideNotifyEvent.HIDE_NOTIFY, current, nextDisplayable));
+                	eventDispatcher.put(new ShowHideNotifyEvent(ShowHideNotifyEvent.HIDE_NOTIFY, current, nextDisplayable));
                 }
 
                 if (nextDisplayable instanceof Alert) {
@@ -351,9 +295,9 @@ public class Display {
             }
             if (!suppress) {
                 if (press) {
-                    putInQueue(new KeyEvent(KeyEvent.KEY_PRESSED, k));
+                	eventDispatcher.put(new KeyEvent(KeyEvent.KEY_PRESSED, k));
                 } else {
-                    putInQueue(new KeyEvent(KeyEvent.KEY_RELEASED, k));
+                	eventDispatcher.put(new KeyEvent(KeyEvent.KEY_RELEASED, k));
                 }
             }
         }
@@ -367,12 +311,12 @@ public class Display {
             if (current != null && current instanceof GameCanvas) {
                 processGameCanvasKeyEvent((GameCanvas) current, keyCode, true);
             } else {
-                putInQueue(new KeyEvent(KeyEvent.KEY_PRESSED, keyCode));
+            	eventDispatcher.put(new KeyEvent(KeyEvent.KEY_PRESSED, keyCode));
             }
         }
 
         public void keyRepeated(int keyCode) {
-            putInQueue(new KeyEvent(KeyEvent.KEY_REPEATED, keyCode));
+        	eventDispatcher.put(new KeyEvent(KeyEvent.KEY_REPEATED, keyCode));
         }
 
         public void keyReleased(int keyCode) {
@@ -380,26 +324,25 @@ public class Display {
             if (current != null && current instanceof GameCanvas) {
                 processGameCanvasKeyEvent((GameCanvas) current, keyCode, false);
             } else {
-                putInQueue(new KeyEvent(KeyEvent.KEY_RELEASED, keyCode));
+            	eventDispatcher.put(new KeyEvent(KeyEvent.KEY_RELEASED, keyCode));
             }
         }
 
         public void pointerPressed(int x, int y) {
             if (current != null) {
-            	putInQueue(new PointerEvent(PointerEvent.POINTER_PRESSED, x, y));
+            	eventDispatcher.put(eventDispatcher.new PointerEvent(current, EventDispatcher.PointerEvent.POINTER_PRESSED, x, y));
             }
         }
 
         public void pointerReleased(int x, int y) {
             if (current != null) {
-            	putInQueue(new PointerEvent(PointerEvent.POINTER_RELEASED, x, y));
+            	eventDispatcher.put(eventDispatcher.new PointerEvent(current, EventDispatcher.PointerEvent.POINTER_RELEASED, x, y));
             }
         }
 
         public void pointerDragged(int x, int y) {
-
             if (current != null) {
-            	putInQueue(new PointerEvent(PointerEvent.POINTER_DRAGGED, x, y));
+            	eventDispatcher.put(eventDispatcher.new PointerEvent(current, EventDispatcher.PointerEvent.POINTER_DRAGGED, x, y));
             }
         }
 
@@ -491,95 +434,7 @@ public class Display {
     }
 
     private final Semaphore serviceRepaintSemaphore = new Semaphore(0);
-
-    private final class PaintTask implements Runnable {
-
-        private int x = -1, y = -1, width = -1, height = -1;
-
-        PaintTask(int x, int y, int width, int height) {
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
-        }
-
-        public void run() {
-            DeviceFactory.getDevice().getDeviceDisplay().repaint(x, y, width, height);
-        }
-
-        /**
-         * Do a 2-D merge of the paint areas
-         * 
-         * @param task
-         */
-        public final void merge(PaintTask task) {
-            int xMax = x + width;
-            int yMax = y + height;
-
-            this.x = Math.min(this.x, task.x);
-            xMax = Math.max(xMax, task.x + task.width);
-
-            this.y = Math.min(this.y, task.y);
-            yMax = Math.max(yMax, task.y + task.height);
-
-            this.width = xMax - x;
-            this.height = yMax - y;
-        }
-
-    }
-
-    /**
-     * TODO: User a priority queue instead The problem is that key events should
-     * propogate to the head of the queue, even if inserted at the tail. A
-     * priority queue is probably a more appropriate structure to use
-     * 
-     * @author radoshi
-     */
-    private final BlockingQueue eventQueue = new LinkedBlockingQueue();
-
-    /**
-     * Management of all events including paints, keyboard events and serial
-     * runners
-     * 
-     * @author radoshi
-     * 
-     */
-    private final class EventDispatcher implements Runnable {
-
-        private volatile boolean cancelled = false;
-
-        public void run() {
-
-            while (!cancelled) {
-                try {
-                    Runnable runnable = (Runnable) eventQueue.take();
-
-                    if (runnable instanceof PaintTask) {
-
-                        PaintTask paint = (PaintTask) runnable;
-
-                        while (eventQueue.peek() != null && eventQueue.peek() instanceof PaintTask) {
-                            paint.merge((PaintTask) eventQueue.take());
-                        }
-
-                    }
-                    runnable.run();
-
-                } catch (InterruptedException exception) {
-                    // nothing to do really, just keep retrying
-                }
-            }
-        }
-
-        /**
-         * Do not service any more events
-         */
-        public final void cancel() {
-            this.cancelled = true;
-        }
-
-    }
-
+    
     private final Timer timer = new Timer();
 
     /**
@@ -598,7 +453,7 @@ public class Display {
         }
 
         public void run() {
-            putInQueue(runnable);
+            eventDispatcher.put(runnable);
         }
 
     }
@@ -621,7 +476,7 @@ public class Display {
     }
 
     public void callSerially(Runnable runnable) {
-        putInQueue(runnable);
+    	eventDispatcher.put(runnable);
     }
 
     public int numAlphaLevels() {
@@ -688,7 +543,7 @@ public class Display {
 
     public void setCurrent(Displayable nextDisplayable) {
         if (nextDisplayable != null) {
-        	putInQueue(new ShowHideNotifyEvent(ShowHideNotifyEvent.SHOW_NOTIFY, current, nextDisplayable));
+        	eventDispatcher.put(new ShowHideNotifyEvent(ShowHideNotifyEvent.SHOW_NOTIFY, current, nextDisplayable));
         }
     }
 
@@ -745,7 +600,7 @@ public class Display {
 
     void repaint(Displayable d, int x, int y, int width, int height) {
         if (current == d) {
-            putInQueue(new PaintTask(x, y, width, height));
+        	eventDispatcher.put(eventDispatcher.new PaintEvent(x, y, width, height));
         }
     }
 
@@ -762,7 +617,7 @@ public class Display {
         }
 
         // put in a repaint task and block until that task is completed
-        putInQueue(new Runnable() {
+        eventDispatcher.put(new Runnable() {
 
             public void run() {
                 serviceRepaintSemaphore.release();

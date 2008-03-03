@@ -27,11 +27,6 @@
         </dependency>
 
         <dependency>
-            <groupId>backport-util-concurrent</groupId>
-            <artifactId>backport-util-concurrent</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
@@ -62,13 +57,6 @@
                     <proguardInclude>${basedir}/proguard.conf</proguardInclude>
                     <attach>true</attach>
                     <attachArtifactClassifier>4applet</attachArtifactClassifier>
-                    <assembly>
-                        <inclusions>
-                            <inclusion>
-                                <groupId>backport-util-concurrent</groupId><artifactId>backport-util-concurrent</artifactId>
-                            </inclusion>
-                        </inclusions>
-                    </assembly>
                     <libs>
                         <lib>${javaRunTimeJar}</lib>
                     </libs>

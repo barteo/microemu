@@ -42,8 +42,6 @@ import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.ui.DisplayableUI;
 
-import edu.emory.mathcs.backport.java.util.concurrent.Semaphore;
-
 public class Display {
 
     public static final int LIST_ELEMENT = 1;
@@ -63,9 +61,6 @@ public class Display {
     public static final int COLOR_BORDER = 4;
 
     public static final int COLOR_HIGHLIGHTED_BORDER = 5;
-
-    // private PaintThread paintThread = null;
-    // private EventDispatcher eventDispatcher = null;
 
     private Displayable current = null;
 
@@ -433,8 +428,6 @@ public class Display {
         }
     }
 
-    private final Semaphore serviceRepaintSemaphore = new Semaphore(0);
-    
     private final Timer timer = new Timer();
 
     /**
@@ -616,21 +609,7 @@ public class Display {
             return;
         }
 
-        // put in a repaint task and block until that task is completed
-        eventDispatcher.put(new Runnable() {
-
-            public void run() {
-                serviceRepaintSemaphore.release();
-            }
-
-        });
-
-        try {
-            serviceRepaintSemaphore.acquire();
-        } catch (InterruptedException exception) {
-            // nothing to do - fall out of service repaints
-            exception.printStackTrace();
-        }
+        eventDispatcher.serviceRepaints();
     }
 
     void setScrollDown(boolean state) {

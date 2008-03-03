@@ -38,6 +38,8 @@ class EventDispatcher implements Runnable {
     
     private PointerEvent scheduledPointerDraggedEvent = null; 
     
+    private Object serviceRepaintsLock = new Object();
+    
     public void run() {
 
         while (!cancelled) {
@@ -62,8 +64,15 @@ class EventDispatcher implements Runnable {
 					}
         		}
         	}
+        	
         	if (event != null) {
         		event.run();
+        	}
+        	
+        	synchronized (serviceRepaintsLock) {
+	        	if (event instanceof PaintEvent) {
+	        		serviceRepaintsLock.notify();
+	        	}
         	}
         }
     }
@@ -106,6 +115,23 @@ class EventDispatcher implements Runnable {
 		put(new RunnableEvent(runnable));
 	}
 	
+	public void serviceRepaints() {
+		synchronized (serviceRepaintsLock) {
+			synchronized (this) {
+				if (scheduledPaintEvent == null) {
+					return;
+				}			
+				
+				// TODO move scheduledPaintEvent to head
+			}
+			
+			try {
+				serviceRepaintsLock.wait();
+			} catch (InterruptedException e) {
+			}
+		}
+	}
+
 	abstract class Event {
 		
 		Event next = null;

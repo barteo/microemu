@@ -50,6 +50,7 @@
 
     </dependencies>
 
+    <!--
     <build>
 
         <plugins>
@@ -111,5 +112,6 @@
             </plugin>
         </plugins>
     </reporting>
+    -->
 
 </project>

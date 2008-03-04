@@ -116,7 +116,6 @@
     </distributionManagement>
 
 <!-- 4snapshot -->
-<!--
     <repositories>
         <repository>
             <id>pyx4me-web</id>
@@ -129,12 +128,10 @@
             </releases>
         </repository>
     </repositories>
--->
 
     <pluginRepositories>
 
 <!-- 4snapshot -->
-<!--
         <pluginRepository>
             <id>pyx4me-web</id>
             <url>http://www.pyx4me.com/maven2-snapshot</url>
@@ -145,7 +142,6 @@
                 <enabled>false</enabled>
             </releases>
         </pluginRepository>
--->
         <pluginRepository>
             <id>codehaus.org</id>
             <name>Codehaus Central Repository</name>
@@ -157,7 +153,7 @@
     <properties>
         <buildLabel>${version}</buildLabel>
         <pyx4meVersion>2.0.2</pyx4meVersion>
-        <jourVersion>2.0.1</jourVersion>
+        <jourVersion>2.0.2-SNAPSHOT</jourVersion>
         <!-- See OS X profile -->
         <javaRunTimeJar>${java.home}/lib/rt.jar</javaRunTimeJar>
         <javaRunTimeSecurityJar>${java.home}/lib/jsse.jar</javaRunTimeSecurityJar>
@@ -324,6 +320,24 @@
 
     <build>
         <defaultGoal>install</defaultGoal>
+
+        <pluginManagement>
+            <plugins>
+                <!-- m2bug; the same dependencies declared in microemu-test-midlet and api stub projects will not work if building from root -->
+                <plugin>
+                    <groupId>net.sf.jour</groupId>
+                    <artifactId>jour-maven-plugin</artifactId>
+                    <version>${jourVersion}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.pyx4me</groupId>
+                            <artifactId>cldcunit-instrument</artifactId>
+                            <version>${pyx4meVersion}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
 
         <plugins>
             <plugin>

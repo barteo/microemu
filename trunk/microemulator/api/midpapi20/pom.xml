@@ -28,4 +28,28 @@
 
     </dependencies>
 
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>net.sf.jour</groupId>
+                <artifactId>jour-maven-plugin</artifactId>
+                <version>${jourVersion}</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <output>${basedir}/target/classes</output>
+                            <signature>${basedir}/src/test/resources/midpapi20-signature.xml</signature>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
 </project>

@@ -86,6 +86,10 @@
         </file>
 
         <file>
+            <source>${basedir}/target/microemu-demo.jad</source>
+            <destName>${artifactId}-${version}/apps/microemu-demo.jad</destName>
+        </file>
+        <file>
             <source>${basedir}/../microemu-examples/microemu-demo/target/microemu-demo-${project.version}-me.jar</source>
             <destName>${artifactId}-${version}/apps/microemu-demo.jar</destName>
         </file>

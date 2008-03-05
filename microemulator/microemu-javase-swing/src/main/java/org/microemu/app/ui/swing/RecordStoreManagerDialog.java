@@ -37,7 +37,6 @@ import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.microedition.rms.RecordListener;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreNotOpenException;
 import javax.swing.JButton;
@@ -56,6 +55,7 @@ import org.microemu.app.Common;
 import org.microemu.app.Config;
 import org.microemu.app.util.FileRecordStoreManager;
 import org.microemu.log.Logger;
+import org.microemu.util.ExtendedRecordListener;
 import org.microemu.util.MemoryRecordStoreManager;
 
 public class RecordStoreManagerDialog extends JFrame {
@@ -219,22 +219,22 @@ public class RecordStoreManagerDialog extends JFrame {
 
 		suiteNameLabel.setText(common.getLauncher().getSuiteName());
 
-		common.getRecordStoreManager().setRecordListener(new RecordListener() {
+		common.getRecordStoreManager().setRecordListener(new ExtendedRecordListener() {
 
 			public void recordEvent(int type, long timestamp, RecordStore recordStore, int recordId) {
 				String eventMessageType = null;
 
 				switch (type) {
-				case RecordListener.RECORD_ADD:
+				case ExtendedRecordListener.RECORD_ADD:
 					eventMessageType = "added";
 					break;
-				case RecordListener.RECORD_READ:
+				case ExtendedRecordListener.RECORD_READ:
 					eventMessageType = "read";
 					break;
-				case RecordListener.RECORD_CHANGE:
+				case ExtendedRecordListener.RECORD_CHANGE:
 					eventMessageType = "changed";
 					break;
-				case RecordListener.RECORD_DELETE:
+				case ExtendedRecordListener.RECORD_DELETE:
 					eventMessageType = "deleted";
 					break;
 				}
@@ -253,13 +253,13 @@ public class RecordStoreManagerDialog extends JFrame {
 				String eventMessageType = null;
 
 				switch (type) {
-				case RecordListener.RECORDSTORE_OPEN:
+				case ExtendedRecordListener.RECORDSTORE_OPEN:
 					eventMessageType = "opened";
 					break;
-				case RecordListener.RECORDSTORE_CLOSE:
+				case ExtendedRecordListener.RECORDSTORE_CLOSE:
 					eventMessageType = "closed";
 					break;
-				case RecordListener.RECORDSTORE_DELETE:
+				case ExtendedRecordListener.RECORDSTORE_DELETE:
 					eventMessageType = "deleted";
 					break;
 				}
@@ -267,6 +267,18 @@ public class RecordStoreManagerDialog extends JFrame {
 				modelTable.addRow(new Object[] { dateFormat.format(new Date(timestamp)), "store " + eventMessageType,
 						recordStoreName, null });
 				logTable.scrollRectToVisible(logTable.getCellRect(modelTable.getRowCount() - 1, 0, true));
+			}
+
+			public void recordAdded(RecordStore recordStore, int recordId) {
+				// already handled by recordEvent
+			}
+
+			public void recordChanged(RecordStore recordStore, int recordId) {
+				// already handled by recordEvent
+			}
+
+			public void recordDeleted(RecordStore recordStore, int recordId) {
+				// already handled by recordEvent
 			}
 
 		});

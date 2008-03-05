@@ -37,7 +37,6 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import javax.microedition.rms.RecordEnumeration;
-import javax.microedition.rms.RecordListener;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreNotFoundException;
@@ -49,6 +48,7 @@ import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
 import org.microemu.log.Logger;
 import org.microemu.util.Base64Coder;
+import org.microemu.util.ExtendedRecordListener;
 import org.microemu.util.RecordStoreImpl;
 
 public class CookieRecordStoreManager implements RecordStoreManager {
@@ -57,7 +57,7 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 
 	private static final int MAX_COOKIE_SIZE = 4096 * 3 / 4; // Base64
 
-	private RecordListener recordListener = null;
+	private ExtendedRecordListener recordListener = null;
 
 	private Applet applet;
 
@@ -93,7 +93,7 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 		removeCookie(recordStoreName, cookieContent);
 		cookies.remove(recordStoreName);
 
-		fireRecordStoreListener(RecordListener.RECORDSTORE_DELETE, recordStoreName);
+		fireRecordStoreListener(ExtendedRecordListener.RECORDSTORE_DELETE, recordStoreName);
 
 		System.out.println("deleteRecordStore: " + recordStoreName);
 	}
@@ -183,7 +183,7 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 			result.addRecordListener(recordListener);
 		}
 
-		fireRecordStoreListener(RecordListener.RECORDSTORE_OPEN, recordStoreName);
+		fireRecordStoreListener(ExtendedRecordListener.RECORDSTORE_OPEN, recordStoreName);
 
 		return result;
 	}
@@ -308,7 +308,7 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 		}
 	}
 
-	public void setRecordListener(RecordListener recordListener) {
+	public void setRecordListener(ExtendedRecordListener recordListener) {
 		this.recordListener = recordListener;
 	}
 

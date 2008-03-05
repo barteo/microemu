@@ -16,6 +16,31 @@
     <artifactId>cldcapi10</artifactId>
     <name>cldcapi10</name>
 
-    <description>MicroEmulator SDK CLDC 1.0 API modules based on sources from phoneME</description>
+    <description>MicroEmulator SDK CLDC 1.0 API stub module</description>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>net.sf.jour</groupId>
+                <artifactId>jour-maven-plugin</artifactId>
+                <version>${jourVersion}</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <output>${basedir}/target/classes</output>
+                            <signature>${basedir}/src/test/resources/cldcapi10-signature.xml</signature>
+                            <classVersion>1.1</classVersion>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
 
 </project>

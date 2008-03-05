@@ -40,10 +40,10 @@ public class CLDC10APIDeclarationsTest extends SignatureTestCase {
 
     public APICompareConfig getAPICompareConfig() {
         APICompareConfig c = new APICompareConfig();
-        c.allowPackageAPIextension = false;
+        c.setCompareLevelPackage();
         return c;
     }
-    
+
     public String getSignatureXMLPath() {
         return "cldcapi10-signature.xml";
     }

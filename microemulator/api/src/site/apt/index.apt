@@ -8,23 +8,20 @@
 
 SDK API
 
-    MicroEmulator SDK API modules based on sources from {{{https://phoneme.dev.java.net/}phoneME project}} and are licenesd under {{{http://www.gnu.org/licenses/old-licenses/gpl-2.0.html}GNU General Public License version 2 (GPL)}}.
+    MicroEmulator SDK API modules.
 
     There are no CLDC or MIDP implemenations in this modules so you should not include the jars into runtime enviroment.
     They are indended strictly as refference and should be used only during MIDlet projects compilation and preverification the same way you are using WTK\lib\cldcapi11.jar and WTK\lib\midpapi20.jar from SUN WTK.
 
 * API documentation JavaDoc
 
-     * Connected Limited Device Configuration {{{cldcapi10/apidocs/index.html}CLDC 1.0}}
+     * Connected Limited Device Configuration {{{http://java.sun.com/javame/reference/apis/jsr030/}CLDC 1.0}}
 
-     * Connected Limited Device Configuration {{{cldcapi11/apidocs/index.html}CLDC 1.1}}
+     * Connected Limited Device Configuration {{{http://java.sun.com/javame/reference/apis/jsr139/}CLDC 1.1}}
 
-     * Mobile Information Device Profile {{{midpapi20/apidocs/index.html}MID Profile 2.0}}
+     * Mobile Information Device Profile {{{http://java.sun.com/javame/reference/apis/jsr118/}MID Profile 2.0}}
 
      []
-
-    JavaDoc genearated for this modules are licenesed under GNU General Public License version 2, Copyright 1990-2007 Sun Microsystems, Inc. All Rights Reserved.
-
 
 * Compiling MIDlet
 

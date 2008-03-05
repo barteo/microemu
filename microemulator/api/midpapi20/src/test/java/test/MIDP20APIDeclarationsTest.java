@@ -31,30 +31,30 @@ import net.sf.jour.signature.SignatureTestCase;
 
 /**
  * @author vlads
- *
+ * 
  */
 public class MIDP20APIDeclarationsTest extends SignatureTestCase {
 
-    public String getAPIPath() {
-        return "./target/classes";
-    }
+	public String getAPIPath() {
+		return "./target/classes";
+	}
 
-    public String getSupportingJarsPath() {
-        return "../cldcapi11/target/classes";
-    }
-    
-    public boolean isUeSystemClassPath() {
-        return false;
-    }
-    
-    public APICompareConfig getAPICompareConfig() {
-        APICompareConfig c = new APICompareConfig();
-        c.allowPackageAPIextension = false;
-        return c;
-    }
+	public String getSupportingJarsPath() {
+		return "../cldcapi11/target/classes";
+	}
 
-    public String getSignatureXMLPath() {
-        return "midpapi20-signature.xml";
-    }
+	public boolean isUeSystemClassPath() {
+		return false;
+	}
+
+	public APICompareConfig getAPICompareConfig() {
+		APICompareConfig c = new APICompareConfig();
+		c.setCompareLevelPackage();
+		return c;
+	}
+
+	public String getSignatureXMLPath() {
+		return "midpapi20-signature.xml";
+	}
 
 }

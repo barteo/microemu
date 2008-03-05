@@ -63,7 +63,7 @@
                 </configuration>
             </plugin>
 
-            <!--
+            <!-- TODO enable when javax.microedition.rms.RecordListener fixed.
             <plugin>
                 <groupId>net.sf.jour</groupId>
                 <artifactId>jour-maven-plugin</artifactId>
@@ -75,7 +75,7 @@
                         </goals>
                         <configuration>
                             <allowAPIextension>false</allowAPIextension>
-                            <allowPackageAPIextension>true</allowPackageAPIextension>
+                            <level>protected</level>
                             <signature>${basedir}/src/test/resources/midpapi20-signature.xml</signature>
                         </configuration>
                     </execution>

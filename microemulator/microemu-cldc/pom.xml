@@ -57,6 +57,25 @@
                     </libs>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>net.sf.jour</groupId>
+                <artifactId>jour-maven-plugin</artifactId>
+                <version>${jourVersion}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>signatureVerify</goal>
+                        </goals>
+                        <configuration>
+                            <allowAPIextension>false</allowAPIextension>
+                            <level>protected</level>
+                            <signature>${basedir}/src/test/resources/cldcapi_10_11-javax.microedition.io-signature.xml</signature>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 

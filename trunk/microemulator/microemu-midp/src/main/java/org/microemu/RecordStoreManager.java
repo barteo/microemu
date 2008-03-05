@@ -23,12 +23,12 @@
  */
 package org.microemu;
 
-import javax.microedition.rms.RecordListener;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreNotFoundException;
 import javax.microedition.rms.RecordStoreNotOpenException;
 
+import org.microemu.util.ExtendedRecordListener;
 import org.microemu.util.RecordStoreImpl;
 
 public interface RecordStoreManager {
@@ -55,7 +55,7 @@ public interface RecordStoreManager {
 	 */
 	void deleteStores();
 
-	void setRecordListener(RecordListener recordListener);
+	void setRecordListener(ExtendedRecordListener recordListener);
 	
 	void fireRecordStoreListener(int type, String recordStoreName);
 

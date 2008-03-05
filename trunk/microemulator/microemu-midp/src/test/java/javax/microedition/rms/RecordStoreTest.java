@@ -15,6 +15,7 @@ import junit.framework.TestCase;
 
 import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
+import org.microemu.util.ExtendedRecordListener;
 import org.microemu.util.RecordStoreImpl;
 
 /**
@@ -28,7 +29,7 @@ public final class RecordStoreTest extends TestCase {
 
 		private final Hashtable stores = new Hashtable();
 
-		private RecordListener recordListener = null;
+		private ExtendedRecordListener recordListener = null;
 		
 		public void init(MicroEmulator emulator) {			
 		}
@@ -42,7 +43,7 @@ public final class RecordStoreTest extends TestCase {
 
 			stores.remove(name);
 			
-			fireRecordStoreListener(RecordListener.RECORDSTORE_DELETE, name);
+			fireRecordStoreListener(ExtendedRecordListener.RECORDSTORE_DELETE, name);
 		}
 
 		public void deleteStores() {
@@ -75,7 +76,7 @@ public final class RecordStoreTest extends TestCase {
 
 			if (stores.contains(recordStoreName)) {
 				RecordStoreImpl store = (RecordStoreImpl) stores.get(recordStoreName);
-				fireRecordStoreListener(RecordListener.RECORDSTORE_OPEN, recordStoreName);
+				fireRecordStoreListener(ExtendedRecordListener.RECORDSTORE_OPEN, recordStoreName);
 				return store;
 			}
 
@@ -86,7 +87,7 @@ public final class RecordStoreTest extends TestCase {
 					store.addRecordListener(recordListener);
 				}
 				stores.put(recordStoreName, store);
-				fireRecordStoreListener(RecordListener.RECORDSTORE_OPEN, recordStoreName);
+				fireRecordStoreListener(ExtendedRecordListener.RECORDSTORE_OPEN, recordStoreName);
 				return store;
 			}
 
@@ -99,7 +100,7 @@ public final class RecordStoreTest extends TestCase {
 
 		}
 
-		public void setRecordListener(RecordListener recordListener) {
+		public void setRecordListener(ExtendedRecordListener recordListener) {
 			this.recordListener = recordListener;
 		}
 

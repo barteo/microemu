@@ -602,7 +602,9 @@ public class Common implements MicroEmulator, CommonInterface {
 					parameters.putAll(properties);
 				} else {
 					Map extensions = Config.getExtensions();
-					parameters.putAll((Map) extensions.get(implClassName));
+					if (extensions != null) {
+					    parameters.putAll((Map) extensions.get(implClassName));
+				    }
 				}
 				((ImplementationInitialization) inst).registerImplementation(parameters);
 				Logger.debug("implementation registered", implClassName);

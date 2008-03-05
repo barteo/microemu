@@ -31,26 +31,26 @@ import net.sf.jour.signature.SignatureTestCase;
 
 /**
  * @author vlads
- *
+ * 
  */
 public class CLDC10APIDeclarationsTest extends SignatureTestCase {
 
-    public String getAPIPath() {
-        return "./target/classes";
-    }
+	public String getAPIPath() {
+		return "./target/classes";
+	}
 
-    public boolean isUeSystemClassPath() {
-        return false;
-    }
+	public boolean isUeSystemClassPath() {
+		return false;
+	}
 
-    public APICompareConfig getAPICompareConfig() {
-        APICompareConfig c = new APICompareConfig();
-        c.allowPackageAPIextension = false;
-        return c;
-    }
-    
-    public String getSignatureXMLPath() {
-        return "cldcapi10-signature.xml";
-    }
+	public APICompareConfig getAPICompareConfig() {
+		APICompareConfig c = new APICompareConfig();
+		c.setCompareLevelPackage();
+		return c;
+	}
+
+	public String getSignatureXMLPath() {
+		return "cldcapi10-signature.xml";
+	}
 
 }

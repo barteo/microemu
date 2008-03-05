@@ -49,7 +49,7 @@ public class MIDP20APIDeclarationsTest extends SignatureTestCase {
 
 	public APICompareConfig getAPICompareConfig() {
 		APICompareConfig c = new APICompareConfig();
-		c.setCompareLevelPackage();
+		// c.setCompareLevelPackage();
 		return c;
 	}
 

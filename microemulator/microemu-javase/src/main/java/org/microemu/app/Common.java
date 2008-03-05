@@ -607,9 +607,10 @@ public class Common implements MicroEmulator, CommonInterface {
 					parameters.putAll(properties);
 				} else {
 					Map extensions = Config.getExtensions();
-					if (extensions.get(implClassName) != null) {
-						parameters.putAll((Map) extensions.get(implClassName));
-					}
+					Map prop = (Map)extensions.get(implClassName);
+					if (prop != null) {
+					    parameters.putAll(prop);
+				    }
 				}
 				((ImplementationInitialization) inst).registerImplementation(parameters);
 				Logger.debug("implementation registered", implClassName);

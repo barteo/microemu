@@ -111,6 +111,15 @@
                                     <descriptors>
                                         <descriptor>assembly-sources.xml</descriptor>
                                     </descriptors>
+                                    <archive>
+                                        <manifestEntries>
+                                            <Version>${label}</Version>
+                                            <Build-Time>${cctimestamp}</Build-Time>
+                                            <Implementation-Version>${pom.version}</Implementation-Version>
+                                            <SVN-Revision>${scm.revision}</SVN-Revision>
+                                            <License>GNU Lesser General Public License (LGPL)</License>
+                                        </manifestEntries>
+                                    </archive>
                                 </configuration>
                             </execution>
                             <execution>
@@ -122,6 +131,15 @@
                                     <descriptors>
                                         <descriptor>assembly-all-sources.xml</descriptor>
                                     </descriptors>
+                                    <archive>
+                                        <manifestEntries>
+                                            <Version>${label}</Version>
+                                            <Build-Time>${cctimestamp}</Build-Time>
+                                            <Implementation-Version>${pom.version}</Implementation-Version>
+                                            <SVN-Revision>${scm.revision}</SVN-Revision>
+                                            <License>GNU Lesser General Public License (LGPL)</License>
+                                        </manifestEntries>
+                                    </archive>
                                 </configuration>
                             </execution>
                             <execution>
@@ -134,6 +152,15 @@
                                     <descriptors>
                                         <descriptor>assembly-release.xml</descriptor>
                                     </descriptors>
+                                    <archive>
+                                        <manifestEntries>
+                                            <Version>${label}</Version>
+                                            <Build-Time>${cctimestamp}</Build-Time>
+                                            <Implementation-Version>${pom.version}</Implementation-Version>
+                                            <SVN-Revision>${scm.revision}</SVN-Revision>
+                                            <License>GNU Lesser General Public License (LGPL)</License>
+                                        </manifestEntries>
+                                    </archive>
                                 </configuration>
                             </execution>
                         </executions>

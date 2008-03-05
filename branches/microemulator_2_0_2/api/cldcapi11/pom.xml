@@ -35,6 +35,8 @@
                             <output>${basedir}/target/classes</output>
                             <signature>${basedir}/src/test/resources/cldcapi11-signature.xml</signature>
                             <classVersion>1.1</classVersion>
+                            <stubException>java.lang.Error</stubException>
+                            <stubExceptionMessage>API Stub has been used</stubExceptionMessage>
                         </configuration>
                     </execution>
                 </executions>

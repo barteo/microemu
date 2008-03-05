@@ -10,6 +10,8 @@
         <dependencySet>
             <excludes>
                 <exclude>backport-util-concurrent:backport-util-concurrent</exclude>
+                <!-- exclude self -->
+                <exclude>org.microemu:microemulator</exclude>
             </excludes>
             <unpack>true</unpack>
             <outputDirectory></outputDirectory>

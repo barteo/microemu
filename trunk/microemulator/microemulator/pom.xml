@@ -100,6 +100,48 @@
 
             <build>
                 <plugins>
+
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>jar-files-corrections</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <copy overwrite="true"
+                                            file="${basedir}/../microemu-examples/microemu-demo/target/microemu-demo-${project.version}-me.jad"
+                                            tofile="${project.build.directory}/microemu-demo.jad"/>
+                                        <replace value="microemu-demo.jar" token="microemu-demo-${project.version}-me.jar" dir="${project.build.directory}">
+                                            <include name="microemu-demo.jad"></include>
+                                        </replace>
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>copy-all-sources-4download</id>
+                                <phase>site</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <mkdir dir="${project.build.directory}/site/download"/>
+                                        <copy overwrite="true"
+                                            file="${project.build.directory}/${project.build.finalName}-sources.tar.gz"
+                                            todir="${project.build.directory}/site/download"/>
+                                        <copy overwrite="true"
+                                            file="${project.build.directory}/${project.build.finalName}.tar.gz"
+                                            todir="${project.build.directory}/site/download"/>
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
                     <plugin>
                         <artifactId>maven-assembly-plugin</artifactId>
                         <executions>
@@ -144,30 +186,6 @@
                                     <descriptors>
                                         <descriptor>assembly-release.xml</descriptor>
                                     </descriptors>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <plugin>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>copy-all-sources-4download</id>
-                                <phase>site</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <tasks>
-                                        <mkdir dir="${project.build.directory}/site/download"/>
-                                        <copy overwrite="true"
-                                            file="${project.build.directory}/${project.build.finalName}-sources.tar.gz"
-                                            todir="${project.build.directory}/site/download"/>
-                                        <copy overwrite="true"
-                                            file="${project.build.directory}/${project.build.finalName}.tar.gz"
-                                            todir="${project.build.directory}/site/download"/>
-                                    </tasks>
                                 </configuration>
                             </execution>
                         </executions>

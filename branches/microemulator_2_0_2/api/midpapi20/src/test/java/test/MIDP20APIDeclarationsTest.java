@@ -37,14 +37,14 @@ public class MIDP20APIDeclarationsTest extends SignatureTestCase {
     public String getSupportingJarsPath() {
         return "../cldcapi11/target/classes";
     }
-    
+
     public boolean isUeSystemClassPath() {
         return false;
     }
-    
+
     public APICompareConfig getAPICompareConfig() {
         APICompareConfig c = new APICompareConfig();
-		c.setCompareLevelPackage();
+		// c.setCompareLevelPackage();
         return c;
     }
 

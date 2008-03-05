@@ -23,7 +23,7 @@ MicroEmulator
 
     * Creation of unit tests for J2ME application that runs during build process
 
-    * Development support for platforms where no emulator is available.
+    * Development support for platforms where no emulator is available. See {{{./api/}api modules}}
 
 * Features
 

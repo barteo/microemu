@@ -74,7 +74,7 @@
                                     <Version>${label}</Version>
                                     <Build-Time>${cctimestamp}</Build-Time>
                                     <Build-Time>${cctimestamp}</Build-Time>
-                                    <Implementation-Version2>${pom.version}</Implementation-Version2>
+                                    <Implementation-Version>${pom.version}</Implementation-Version>
                                     <SVN-Revision>${scm.revision}</SVN-Revision>
                                     <License>GNU Lesser General Public License (LGPL)</License>
                                 </manifestEntries>
@@ -92,7 +92,7 @@
             <id>build</id>
 
             <activation>
-                <property>
+               <property>
                     <name>performRelease</name>
                     <value>true</value>
                 </property>

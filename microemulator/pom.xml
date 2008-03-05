@@ -462,6 +462,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-changes-plugin</artifactId>
+                <inherited>false</inherited>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -477,6 +478,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>changelog-maven-plugin</artifactId>
                 <!--artifactId>maven-changelog-plugin</artifactId-->
+                <inherited>false</inherited>
                 <configuration>
                     <basedir>${basedir}</basedir>
                 </configuration>

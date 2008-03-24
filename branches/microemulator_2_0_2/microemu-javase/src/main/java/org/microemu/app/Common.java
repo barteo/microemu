@@ -180,7 +180,10 @@ public class Common implements MicroEmulator, CommonInterface {
 	}
 
 	public void destroyMIDletContext(MIDletContext midletContext) {
-		Logger.debug("destroyMIDletContext");
+		if ((midletContext != null) && (MIDletBridge.getMIDletContext() == midletContext)
+				&& !midletContext.isLauncher()) {
+		      Logger.debug("destroyMIDletContext");
+		}
 		MIDletThread.contextDestroyed(midletContext);
 		synchronized (destroyNotify) {
 			destroyNotify.notifyAll();
@@ -193,7 +196,10 @@ public class Common implements MicroEmulator, CommonInterface {
 
 	public static void dispose() {
 		try {
-			MIDletBridge.getMIDletAccess().destroyApp(true);
+			MIDletAccess midletAccess = MIDletBridge.getMIDletAccess();
+			if (midletAccess != null) {
+				midletAccess.destroyApp(true);
+			}
 		} catch (MIDletStateChangeException ex) {
 			Logger.error(ex);
 		}
@@ -279,7 +285,7 @@ public class Common implements MicroEmulator, CommonInterface {
 							break;
 						}
 						Logger.debug("AutoTests start class", midletClassName);
-						MIDletContext context = startMidlet(midletClass, null);
+						MIDletContext context = startMidlet(midletClass, MIDletBridge.getMIDletAccess());
 						// TODO Proper test If this is still active conetex.
 						if (MIDletBridge.getMIDletContext() == context) {
 							synchronized (destroyNotify) {
@@ -406,7 +412,10 @@ public class Common implements MicroEmulator, CommonInterface {
 	}
 
 	protected void startLauncher(MIDletContext midletContext) {
-		if (midletContext != null && !midletContext.isLauncher()) {
+		if ((midletContext != null) && (midletContext.isLauncher())) {
+			return;
+		}
+		if (midletContext != null) {
 			try {
 				MIDletAccess previousMidletAccess = midletContext.getMIDletAccess();
 				if (previousMidletAccess != null) {
@@ -507,10 +516,8 @@ public class Common implements MicroEmulator, CommonInterface {
 		Logger.debug("openJar", jarUrl);
 
 		// Close Current MIDlet before oppening new one.
-		MIDletContext previousMidletContext = MIDletBridge.getMIDletContext();
-		if (previousMidletContext != null && !previousMidletContext.isLauncher()) {
-			MIDletBridge.destroyMIDletContext(previousMidletContext);
-		}
+		dispose();
+		// MIDletBridge.destroyMIDletContext(MIDletBridge.getMIDletContext());
 		MIDletBridge.clear();
 
 		setResponseInterface(false);
@@ -558,7 +565,7 @@ public class Common implements MicroEmulator, CommonInterface {
 				Class midletClass = midletClassLoader.loadClass(jadEntry.getClassName());
 				Launcher.addMIDletEntry(new MIDletEntry(jadEntry.getName(), midletClass));
 			}
-			startLauncher(null);
+			startLauncher(MIDletBridge.getMIDletContext());
 			setStatusBar("");
 		} finally {
 			setResponseInterface(true);
@@ -919,19 +926,18 @@ public class Common implements MicroEmulator, CommonInterface {
 				}
 			}
 
+			boolean started = false;
+
 			if (midletClass == null) {
 				MIDletEntry entry = launcher.getSelectedMidletEntry();
 				if (startMidlet && entry != null) {
-					if (MIDletBridge.getMIDletAccess().midlet instanceof Launcher) {
-						startMidlet(entry.getMIDletClass(), null);
-					} else {
-						startMidlet(entry.getMIDletClass(), MIDletBridge.getMIDletAccess());
-					}
-				} else {
-					startLauncher(null);
+					started = (null != startMidlet(entry.getMIDletClass(), MIDletBridge.getMIDletAccess()));
 				}
 			} else {
-				startMidlet(midletClass, MIDletBridge.getMIDletAccess());
+				started = (null != startMidlet(midletClass, MIDletBridge.getMIDletAccess()));
+			}
+			if (!started) {
+				startLauncher(MIDletBridge.getMIDletContext());
 			}
 		}
 

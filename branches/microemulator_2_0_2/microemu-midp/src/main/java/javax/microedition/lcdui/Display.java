@@ -456,6 +456,7 @@ public class Display {
                 current.hideNotify();
             }
             eventDispatcher.cancel();
+			timer.cancel();
         }
     }
 
@@ -540,6 +541,8 @@ public class Display {
      */
     private final class EventDispatcher implements Runnable {
 
+    	private Thread thread;
+    	
         private volatile boolean cancelled = false;
 
         public void run() {
@@ -570,6 +573,7 @@ public class Display {
          */
         public final void cancel() {
             this.cancelled = true;
+            thread.interrupt();
         }
 
     }
@@ -609,9 +613,9 @@ public class Display {
     }
 
     private final void startEventDispatcher() {
-        Thread thread = new Thread(eventDispatcher, EVENT_DISPATCHER_NAME);
-        thread.setDaemon(true);
-        thread.start();
+    	eventDispatcher.thread = new Thread(eventDispatcher, EVENT_DISPATCHER_NAME);
+    	eventDispatcher.thread.setDaemon(true);
+    	eventDispatcher.thread.start();
     }
 
     public void callSerially(Runnable runnable) {

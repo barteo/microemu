@@ -29,67 +29,73 @@ import org.microemu.device.DeviceFactory;
 class EventDispatcher implements Runnable {
 
 	private volatile boolean cancelled = false;
-    
-    private Event head = null;
-    
-    private Event tail = null;
-    
-    private PaintEvent scheduledPaintEvent = null;
-    
-    private PointerEvent scheduledPointerDraggedEvent = null; 
-    
-    private Object serviceRepaintsLock = new Object();
-    
-    public void run() {
 
-        while (!cancelled) {
-        	Event event = null;
-        	synchronized (this) {
-        		if (head != null) {
-        			event = head;
-        			head = event.next;
-        			if (head == null) {
-        				tail = null;
-        			}
-    				if (event instanceof PaintEvent) {
-    					scheduledPaintEvent = null;
-    				}
-    				if (event instanceof PointerEvent && ((PointerEvent) event).type == PointerEvent.POINTER_DRAGGED) {
-    					scheduledPointerDraggedEvent = null;
-    				}
-        		} else {
-	        		try {
+	private Event head = null;
+
+	private Event tail = null;
+
+	private PaintEvent scheduledPaintEvent = null;
+
+	private PointerEvent scheduledPointerDraggedEvent = null;
+
+	private Object serviceRepaintsLock = new Object();
+
+	EventDispatcher() {
+	}
+
+	public void run() {
+
+		while (!cancelled) {
+			Event event = null;
+			synchronized (this) {
+				if (head != null) {
+					event = head;
+					head = event.next;
+					if (head == null) {
+						tail = null;
+					}
+					if (event instanceof PaintEvent) {
+						scheduledPaintEvent = null;
+					}
+					if (event instanceof PointerEvent && ((PointerEvent) event).type == PointerEvent.POINTER_DRAGGED) {
+						scheduledPointerDraggedEvent = null;
+					}
+				} else {
+					try {
 						wait();
 					} catch (InterruptedException e) {
 					}
-        		}
-        	}
-        	
-        	if (event != null) {
-        		event.run();
-        	}
-        	
-        	synchronized (serviceRepaintsLock) {
-	        	if (event instanceof PaintEvent) {
-	        		serviceRepaintsLock.notify();
-	        	}
-        	}
-        }
-    }
+				}
+			}
 
-    /**
-     * Do not service any more events
-     */
-    public final void cancel() {
-        cancelled = true;
-        notify();
-    }
+			if (event != null) {
+				event.run();
+			}
+
+			synchronized (serviceRepaintsLock) {
+				if (event instanceof PaintEvent) {
+					serviceRepaintsLock.notify();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Do not service any more events
+	 */
+	public final void cancel() {
+		cancelled = true;
+		synchronized (this) {
+			notifyAll();
+		}
+	}
 
 	public void put(Event event) {
 		synchronized (this) {
 			if (event instanceof PaintEvent && scheduledPaintEvent != null) {
 				scheduledPaintEvent.merge((PaintEvent) event);
-			} else if (event instanceof PointerEvent && scheduledPointerDraggedEvent != null && ((PointerEvent) event).type == PointerEvent.POINTER_DRAGGED) {
+			} else if (event instanceof PointerEvent && scheduledPointerDraggedEvent != null
+					&& ((PointerEvent) event).type == PointerEvent.POINTER_DRAGGED) {
 				scheduledPointerDraggedEvent.x = ((PointerEvent) event).x;
 				scheduledPointerDraggedEvent.y = ((PointerEvent) event).y;
 			} else {
@@ -100,31 +106,31 @@ class EventDispatcher implements Runnable {
 					scheduledPointerDraggedEvent = (PointerEvent) event;
 				}
 				if (tail != null) {
-					tail.next = event;				
+					tail.next = event;
 				}
 				tail = event;
 				if (head == null) {
 					head = event;
 				}
-				notify();
+				notifyAll();
 			}
 		}
 	}
-	
+
 	public void put(Runnable runnable) {
 		put(new RunnableEvent(runnable));
 	}
-	
+
 	public void serviceRepaints() {
 		synchronized (serviceRepaintsLock) {
 			synchronized (this) {
 				if (scheduledPaintEvent == null) {
 					return;
-				}			
-				
+				}
+
 				// TODO move scheduledPaintEvent to head
 			}
-			
+
 			try {
 				serviceRepaintsLock.wait();
 			} catch (InterruptedException e) {
@@ -133,90 +139,90 @@ class EventDispatcher implements Runnable {
 	}
 
 	abstract class Event {
-		
+
 		Event next = null;
-		
+
 		public abstract void run();
-		
+
 	}
-	
-    final class PaintEvent extends Event {
 
-        private int x = -1, y = -1, width = -1, height = -1;
+	final class PaintEvent extends Event {
 
-        public PaintEvent(int x, int y, int width, int height) {
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
-        }
+		private int x = -1, y = -1, width = -1, height = -1;
 
-        public void run() {
-            DeviceFactory.getDevice().getDeviceDisplay().repaint(x, y, width, height);
-        }
+		public PaintEvent(int x, int y, int width, int height) {
+			this.x = x;
+			this.y = y;
+			this.width = width;
+			this.height = height;
+		}
 
-        /**
-         * Do a 2-D merge of the paint areas
-         * 
-         * @param event
-         */
-        public final void merge(PaintEvent event) {
-            int xMax = x + width;
-            int yMax = y + height;
+		public void run() {
+			DeviceFactory.getDevice().getDeviceDisplay().repaint(x, y, width, height);
+		}
 
-            this.x = Math.min(this.x, event.x);
-            xMax = Math.max(xMax, event.x + event.width);
+		/**
+		 * Do a 2-D merge of the paint areas
+		 * 
+		 * @param event
+		 */
+		public final void merge(PaintEvent event) {
+			int xMax = x + width;
+			int yMax = y + height;
 
-            this.y = Math.min(this.y, event.y);
-            yMax = Math.max(yMax, event.y + event.height);
+			this.x = Math.min(this.x, event.x);
+			xMax = Math.max(xMax, event.x + event.width);
 
-            this.width = xMax - x;
-            this.height = yMax - y;
-        }
+			this.y = Math.min(this.y, event.y);
+			yMax = Math.max(yMax, event.y + event.height);
 
-    }
+			this.width = xMax - x;
+			this.height = yMax - y;
+		}
 
-    final class PointerEvent extends EventDispatcher.Event {
-    	
-    	static final short POINTER_PRESSED = 0;
-    	
-    	static final short POINTER_RELEASED = 1;
-    	
-    	static final short POINTER_DRAGGED = 2;
-    	
-    	private Displayable displayable;
-    	
-    	private short type;
-    	
-    	private int x;
-    	
-    	private int y;
-    	
-    	public PointerEvent(Displayable displayable, short type, int x, int y) {
-    		this.displayable = displayable;
-    		this.type = type;
-    		this.x = x;
-    		this.y = y;
-    	}
-    	
-        public void run() {
-            switch (type) {
-            case POINTER_PRESSED:
-               	displayable.pointerPressed(x, y);
-            	break;
-            case POINTER_RELEASED:
-               	displayable.pointerReleased(x, y);
-            	break;
-            case POINTER_DRAGGED:
-               	displayable.pointerDragged(x, y);
-            	break;
-            }
-        }   	
-    }
+	}
+
+	final class PointerEvent extends EventDispatcher.Event {
+
+		static final short POINTER_PRESSED = 0;
+
+		static final short POINTER_RELEASED = 1;
+
+		static final short POINTER_DRAGGED = 2;
+
+		private Displayable displayable;
+
+		private short type;
+
+		private int x;
+
+		private int y;
+
+		public PointerEvent(Displayable displayable, short type, int x, int y) {
+			this.displayable = displayable;
+			this.type = type;
+			this.x = x;
+			this.y = y;
+		}
+
+		public void run() {
+			switch (type) {
+			case POINTER_PRESSED:
+				displayable.pointerPressed(x, y);
+				break;
+			case POINTER_RELEASED:
+				displayable.pointerReleased(x, y);
+				break;
+			case POINTER_DRAGGED:
+				displayable.pointerDragged(x, y);
+				break;
+			}
+		}
+	}
 
 	private class RunnableEvent extends Event {
-		
-		private Runnable runnable; 
+
+		private Runnable runnable;
 
 		public RunnableEvent(Runnable runnable) {
 			this.runnable = runnable;
@@ -225,7 +231,7 @@ class EventDispatcher implements Runnable {
 		public void run() {
 			runnable.run();
 		}
-		
+
 	}
 
 }

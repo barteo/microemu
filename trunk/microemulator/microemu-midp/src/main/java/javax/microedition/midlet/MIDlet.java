@@ -34,11 +34,11 @@ import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 
 public abstract class MIDlet {
-	
+
 	private boolean destroyed;
-	
+
 	class MIDletAccessor extends MIDletAccess {
-		
+
 		public MIDletAccessor() {
 			super(MIDlet.this);
 			destroyed = false;
@@ -60,7 +60,7 @@ public abstract class MIDlet {
 			}
 			DisplayAccess da = getDisplayAccess();
 			if (da != null) {
-				getDisplayAccess().clean();
+				da.clean();
 				setDisplayAccess(null);
 			}
 			MIDletBridge.destroyMIDletContext(MIDletBridge.getMIDletContext(midlet));

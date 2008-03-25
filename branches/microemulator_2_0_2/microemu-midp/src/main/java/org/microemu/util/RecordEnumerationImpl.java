@@ -46,14 +46,19 @@ public class RecordEnumerationImpl implements RecordEnumeration
     
 	private RecordListener recordListener = new RecordListener() 
     {
-		public void recordEvent(int type, long timestamp, RecordStore recordStore, int recordId) {
-			if (type == RecordListener.RECORD_ADD || type == RecordListener.RECORD_CHANGE || type == RecordListener.RECORD_DELETE) {
-				rebuild();
-			}
+
+		public void recordAdded(RecordStore recordStore, int recordId) {
+			rebuild();
 		}
 
-		public void recordStoreEvent(int type, long timestamp, String recordStoreName) {
+		public void recordChanged(RecordStore recordStore, int recordId) {
+			rebuild();
 		}
+
+		public void recordDeleted(RecordStore recordStore, int recordId) {
+			rebuild();
+		}
+		
     };
 
 

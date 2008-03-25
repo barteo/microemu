@@ -132,7 +132,7 @@ public class RecordStoreImpl extends RecordStore
 		if (recordListeners != null) {
 			recordListeners.removeAllElements();
 		}	
-		recordStoreManager.fireRecordStoreListener(RecordListener.RECORDSTORE_CLOSE, this.getName());
+		recordStoreManager.fireRecordStoreListener(ExtendedRecordListener.RECORDSTORE_CLOSE, this.getName());
 
 		open = false;		
 	}
@@ -271,7 +271,7 @@ public class RecordStoreImpl extends RecordStore
 		
         recordStoreManager.saveChanges(this);
 		
-		fireRecordListener(RecordListener.RECORD_ADD, curRecordID);
+		fireRecordListener(ExtendedRecordListener.RECORD_ADD, curRecordID);
 		
 		return curRecordID;
 	}
@@ -294,7 +294,7 @@ public class RecordStoreImpl extends RecordStore
 		
         recordStoreManager.saveChanges(this);
 		
-		fireRecordListener(RecordListener.RECORD_DELETE, recordId);
+		fireRecordListener(ExtendedRecordListener.RECORD_DELETE, recordId);
 	}
 
 
@@ -326,7 +326,7 @@ public class RecordStoreImpl extends RecordStore
 		            offset, recordSize);
 		}
 		
-		fireRecordListener(RecordListener.RECORD_READ, recordId);
+		fireRecordListener(ExtendedRecordListener.RECORD_READ, recordId);
 		
 		return recordSize;
 	}
@@ -373,7 +373,7 @@ public class RecordStoreImpl extends RecordStore
 		
         recordStoreManager.saveChanges(this);
 		
-		fireRecordListener(RecordListener.RECORD_CHANGE, recordId);
+		fireRecordListener(ExtendedRecordListener.RECORD_CHANGE, recordId);
 	}
 
 
@@ -407,7 +407,21 @@ public class RecordStoreImpl extends RecordStore
     	
     	if (recordListeners != null) { 
 	        for (Enumeration e = recordListeners.elements(); e.hasMoreElements();) {
-	            ((RecordListener) e.nextElement()).recordEvent(type, timestamp, this, recordId);
+	        	RecordListener l = (RecordListener) e.nextElement();
+	        	if (l instanceof ExtendedRecordListener) {
+	        		((ExtendedRecordListener) l).recordEvent(type, timestamp, this, recordId);
+	        	} else {
+	        		switch (type) {
+	        		case ExtendedRecordListener.RECORD_ADD:
+	        			l.recordAdded(this, recordId);
+	        			break;
+	        		case ExtendedRecordListener.RECORD_CHANGE:
+	        			l.recordChanged(this, recordId);
+	        			break;
+	        		case ExtendedRecordListener.RECORD_DELETE:
+	        			l.recordDeleted(this, recordId);
+	        		}
+	        	}            
 	        }
     	}
     }

@@ -22,7 +22,6 @@ package org.microemu.util;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import javax.microedition.rms.RecordListener;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreNotFoundException;
@@ -33,7 +32,7 @@ import org.microemu.RecordStoreManager;
 public class MemoryRecordStoreManager implements RecordStoreManager {
 	private Hashtable recordStores = new Hashtable();
 
-	private RecordListener recordListener = null;
+	private ExtendedRecordListener recordListener = null;
 
 	public void init(MicroEmulator emulator) {
 	}
@@ -52,7 +51,7 @@ public class MemoryRecordStoreManager implements RecordStoreManager {
 		}
 		recordStores.remove(recordStoreName);
 
-		fireRecordStoreListener(RecordListener.RECORDSTORE_DELETE, recordStoreName);
+		fireRecordStoreListener(ExtendedRecordListener.RECORDSTORE_DELETE, recordStoreName);
 	}
 
 	public RecordStore openRecordStore(String recordStoreName, boolean createIfNecessary)
@@ -70,7 +69,7 @@ public class MemoryRecordStoreManager implements RecordStoreManager {
 			recordStoreImpl.addRecordListener(recordListener);
 		}
 
-		fireRecordStoreListener(RecordListener.RECORDSTORE_OPEN, recordStoreName);
+		fireRecordStoreListener(ExtendedRecordListener.RECORDSTORE_OPEN, recordStoreName);
 
 		return recordStoreImpl;
 	}
@@ -107,7 +106,7 @@ public class MemoryRecordStoreManager implements RecordStoreManager {
 		return (int) Runtime.getRuntime().freeMemory();
 	}
 
-	public void setRecordListener(RecordListener recordListener) {
+	public void setRecordListener(ExtendedRecordListener recordListener) {
 		this.recordListener = recordListener;
 	}
 

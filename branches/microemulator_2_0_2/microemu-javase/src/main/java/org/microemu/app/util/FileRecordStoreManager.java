@@ -33,7 +33,6 @@ import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Hashtable;
 
-import javax.microedition.rms.RecordListener;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreNotFoundException;
@@ -43,6 +42,7 @@ import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
 import org.microemu.app.Config;
 import org.microemu.log.Logger;
+import org.microemu.util.ExtendedRecordListener;
 import org.microemu.util.RecordStoreImpl;
 
 public class FileRecordStoreManager implements RecordStoreManager {
@@ -53,7 +53,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 
 	private Hashtable testOpenRecordStores = new Hashtable();
 
-	private RecordListener recordListener = null;
+	private ExtendedRecordListener recordListener = null;
 
 	/* The context to be used when accessing files in Webstart */
 	private AccessControlContext acc;
@@ -100,7 +100,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 			AccessController.doPrivileged(new PrivilegedExceptionAction() {
 				public Object run() throws FileNotFoundException {
 					storeFile.delete();
-					fireRecordStoreListener(RecordListener.RECORDSTORE_DELETE, recordStoreName);
+					fireRecordStoreListener(ExtendedRecordListener.RECORDSTORE_DELETE, recordStoreName);
 					return null;
 				}
 			}, acc);
@@ -130,7 +130,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 
 		testOpenRecordStores.put(storeFile.getName(), recordStoreImpl);
 
-		fireRecordStoreListener(RecordListener.RECORDSTORE_OPEN, recordStoreName);
+		fireRecordStoreListener(ExtendedRecordListener.RECORDSTORE_OPEN, recordStoreName);
 
 		return recordStoreImpl;
 	}
@@ -250,7 +250,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 		return 1024 * 1024;
 	}
 
-	public void setRecordListener(RecordListener recordListener) {
+	public void setRecordListener(ExtendedRecordListener recordListener) {
 		this.recordListener = recordListener;
 	}
 

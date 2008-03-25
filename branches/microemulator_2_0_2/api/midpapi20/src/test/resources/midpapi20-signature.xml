@@ -512,12 +512,6 @@
 			<parameter type="int" />
 			<parameter type="int" />
 		</method>
-		<!--
-			<method modifiers="public" name="setCommandListener"
-			return="void">
-			<parameter type="javax.microedition.lcdui.CommandListener" />
-			</method>
-		-->
 		<field constant-value="1" modifiers="public static final"
 			name="UP" type="int" />
 		<field constant-value="6" modifiers="public static final"
@@ -1561,8 +1555,6 @@
 		<method modifiers="public" name="setTicker" return="void">
 			<parameter type="javax.microedition.lcdui.Ticker" />
 		</method>
-		<method modifiers="public" name="getTicker"
-			return="javax.microedition.lcdui.Ticker" />
 		<method modifiers="public" name="setTitle" return="void">
 			<parameter type="java.lang.String" />
 		</method>
@@ -1797,11 +1789,6 @@
 			return="void">
 			<parameter type="java.lang.String" />
 		</method>
-		<!--
-			<method modifiers="public" name="setLabel" return="void">
-			<parameter type="java.lang.String" />
-			</method>
-		-->
 		<field constant-value="0" modifiers="public static final"
 			name="ANY" type="int" />
 		<field constant-value="1" modifiers="public static final"
@@ -2121,25 +2108,9 @@
 			<parameter type="int" />
 			<parameter type="int" />
 		</method>
-		<!--
-			<method modifiers="public static" name="createPlayer"
-			return="javax.microedition.media.Player">
-			<exception name="java.io.IOException" />
-			<exception name="javax.microedition.media.MediaException" />
-			<parameter
-			type="javax.microedition.media.protocol.DataSource" />
-			</method>
-			<method modifiers="public static" name="getSystemTimeBase"
-			return="javax.microedition.media.TimeBase" />
-		-->
 		<field constant-value="device://tone"
 			modifiers="public static final" name="TONE_DEVICE_LOCATOR"
 			type="java.lang.String" />
-		<!--
-			<field constant-value="device://midi"
-			modifiers="public static final" name="MIDI_DEVICE_LOCATOR"
-			type="java.lang.String" />
-		-->
 	</class>
 	<class extends="java.lang.Exception" modifiers="public"
 		name="javax.microedition.media.MediaException">
@@ -2171,15 +2142,6 @@
 		<method modifiers="public abstract" name="deallocate"
 			return="void" />
 		<method modifiers="public abstract" name="close" return="void" />
-		<!--
-			<method modifiers="public abstract" name="setTimeBase"
-			return="void">
-			<exception name="javax.microedition.media.MediaException" />
-			<parameter type="javax.microedition.media.TimeBase" />
-			</method>
-			<method modifiers="public abstract" name="getTimeBase"
-			return="javax.microedition.media.TimeBase" />
-		-->
 		<method modifiers="public abstract" name="setMediaTime"
 			return="long">
 			<exception name="javax.microedition.media.MediaException" />
@@ -2230,11 +2192,6 @@
 			name="STARTED" type="java.lang.String" />
 		<field constant-value="stopped" modifiers="public static final"
 			name="STOPPED" type="java.lang.String" />
-		<!--
-			<field constant-value="stoppedAtTime"
-			modifiers="public static final" name="STOPPED_AT_TIME"
-			type="java.lang.String" />
-		-->
 		<field constant-value="endOfMedia"
 			modifiers="public static final" name="END_OF_MEDIA"
 			type="java.lang.String" />
@@ -2250,32 +2207,10 @@
 		<field constant-value="volumeChanged"
 			modifiers="public static final" name="VOLUME_CHANGED"
 			type="java.lang.String" />
-		<!--
-			<field constant-value="sizeChanged"
-			modifiers="public static final" name="SIZE_CHANGED"
-			type="java.lang.String" />
-		-->
 		<field constant-value="error" modifiers="public static final"
 			name="ERROR" type="java.lang.String" />
 		<field constant-value="closed" modifiers="public static final"
 			name="CLOSED" type="java.lang.String" />
-		<!--
-			<field constant-value="recordStarted"
-			modifiers="public static final" name="RECORD_STARTED"
-			type="java.lang.String" />
-			<field constant-value="recordStopped"
-			modifiers="public static final" name="RECORD_STOPPED"
-			type="java.lang.String" />
-			<field constant-value="recordError"
-			modifiers="public static final" name="RECORD_ERROR"
-			type="java.lang.String" />
-			<field constant-value="bufferingStarted"
-			modifiers="public static final" name="BUFFERING_STARTED"
-			type="java.lang.String" />
-			<field constant-value="bufferingStopped"
-			modifiers="public static final" name="BUFFERING_STOPPED"
-			type="java.lang.String" />
-		-->
 	</interface>
 	<interface modifiers="public"
 		name="javax.microedition.media.control.ToneControl">
@@ -2325,42 +2260,6 @@
 		<method modifiers="public abstract" name="getLevel"
 			return="int" />
 	</interface>
-	<!--
-		<class modifiers="public abstract"
-		name="javax.microedition.media.protocol.DataSource">
-		<implements>
-		<interface name="javax.microedition.media.Controllable" />
-		</implements>
-		<constructor modifiers="public">
-		<parameter type="java.lang.String" />
-		</constructor>
-		<method modifiers="public" name="getLocator"
-		return="java.lang.String" />
-		<method modifiers="public abstract" name="getContentType"
-		return="java.lang.String" />
-		<method modifiers="public abstract" name="connect"
-		return="void">
-		<exception name="java.io.IOException" />
-		</method>
-		<method modifiers="public abstract" name="disconnect"
-		return="void" />
-		<method modifiers="public abstract" name="start"
-		return="void">
-		<exception name="java.io.IOException" />
-		</method>
-		<method modifiers="public abstract" name="stop" return="void">
-		<exception name="java.io.IOException" />
-		</method>
-		<method modifiers="public abstract" name="getStreams"
-		return="javax.microedition.media.protocol.SourceStream[]" />
-		<method modifiers="public abstract" name="getControls"
-		return="javax.microedition.media.Control[]" />
-		<method modifiers="public abstract" name="getControl"
-		return="javax.microedition.media.Control">
-		<parameter type="java.lang.String" />
-		</method>
-		</class>
-	-->
 	<class modifiers="public abstract"
 		name="javax.microedition.midlet.MIDlet">
 		<constructor modifiers="protected" />
@@ -2771,69 +2670,4 @@
 		</constructor>
 		<constructor modifiers="public" />
 	</class>
-	<!--
-		<class modifiers="public final"
-		name="javax.microedition.securityservice.CMSMessageSignatureService">
-		<method modifiers="public static final" name="sign"
-		return="byte[]">
-		<exception
-		name="javax.microedition.securityservice.CMSMessageSignatureServiceException" />
-		<exception
-		name="javax.microedition.pki.UserCredentialManagerException" />
-		<parameter type="java.lang.String" />
-		<parameter type="int" />
-		<parameter type="java.lang.String[]" />
-		<parameter type="java.lang.String" />
-		</method>
-		<method modifiers="public static final" name="authenticate"
-		return="byte[]">
-		<exception
-		name="javax.microedition.securityservice.CMSMessageSignatureServiceException" />
-		<exception
-		name="javax.microedition.pki.UserCredentialManagerException" />
-		<parameter type="byte[]" />
-		<parameter type="int" />
-		<parameter type="java.lang.String[]" />
-		<parameter type="java.lang.String" />
-		</method>
-		<method modifiers="public static final" name="authenticate"
-		return="byte[]">
-		<exception
-		name="javax.microedition.securityservice.CMSMessageSignatureServiceException" />
-		<exception
-		name="javax.microedition.pki.UserCredentialManagerException" />
-		<parameter type="java.lang.String" />
-		<parameter type="int" />
-		<parameter type="java.lang.String[]" />
-		<parameter type="java.lang.String" />
-		</method>
-		<field constant-value="1" modifiers="public static final"
-		name="SIG_INCLUDE_CONTENT" type="int" />
-		<field constant-value="2" modifiers="public static final"
-		name="SIG_INCLUDE_CERTIFICATE" type="int" />
-		</class>
-		<class extends="java.lang.Exception" modifiers="public final"
-		name="javax.microedition.securityservice.CMSMessageSignatureServiceException">
-		<constructor modifiers="public">
-		<parameter type="byte" />
-		</constructor>
-		<method modifiers="public" name="getReason" return="byte" />
-		<field constant-value="1" modifiers="public static final"
-		name="CRYPTO_FAILURE" type="byte" />
-		<field constant-value="2" modifiers="public static final"
-		name="CRYPTO_FORMAT_ERROR" type="byte" />
-		<field constant-value="3" modifiers="public static final"
-		name="CRYPTO_NO_DETACHED_SIG" type="byte" />
-		<field constant-value="4" modifiers="public static final"
-		name="CRYPTO_NO_OPAQUE_SIG" type="byte" />
-		<field constant-value="5" modifiers="public static final"
-		name="SE_BUSY" type="byte" />
-		<field constant-value="6" modifiers="public static final"
-		name="SE_FAILURE" type="byte" />
-		<field constant-value="7" modifiers="public static final"
-		name="SE_CRYPTO_FAILURE" type="byte" />
-		<field constant-value="8" modifiers="public static final"
-		name="CRYPTO_NO_CERTIFICATE" type="byte" />
-		</class>
-	-->
 </signature>

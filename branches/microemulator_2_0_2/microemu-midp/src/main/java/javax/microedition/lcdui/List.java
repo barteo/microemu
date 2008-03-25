@@ -256,10 +256,4 @@ public class List extends Screen implements Choice {
         }
     }
 
-    /**
-     * @since MIDP 2.0
-     */
-    public Ticker getTicker() {
-        return super.getTicker();
-    }
 }

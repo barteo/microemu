@@ -20,11 +20,11 @@
         <action dev="barteo" type="add">Start ME2 as child windows from another java program.</action>
     </release>
 
-    <release version="2.0.2 TODO" date="date not defined" description="Plans for next Release">
+    <release version="2.0.3 TODO" date="date not defined" description="Plans for next Release">
     </release>
 
-    <release version="2.0.2-SNAPSHOT" date="Release date not defined" description="">
-        <action dev="vlads" type="add">Import stubs and API docs from PhoneME project.</action>
+    <release version="2.0.2" date="2008-03-25" description="">
+        <action dev="vlads" type="add">Created API stubs</action>
         <action dev="vlads" type="add">device.xml skin version 2.0.2. Buttons name attr defines its function.</action>
         <action dev="barteo" type="add">New skin with dynamic resizable screen size.</action>
         <action dev="barteo" type="update">Fixed PNG image decoding.</action>

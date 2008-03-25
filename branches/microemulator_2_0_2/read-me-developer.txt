@@ -47,8 +47,6 @@
 
     * Comment out sections marked <!--4release--> and <!--4snapshot--> in src/site/site.xml
 
-    * Update variable demoLocation in microemu-examples/microemu-demo HTTPPanel.java
-
     * SVN commit
 
     * On build server (CruiseControl)  https://pyx4j.com/cruisecontrol/ start  "me2-release"

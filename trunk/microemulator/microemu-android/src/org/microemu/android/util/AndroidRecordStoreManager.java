@@ -32,7 +32,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Hashtable;
 
-import javax.microedition.rms.RecordListener;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreNotFoundException;
@@ -42,6 +41,7 @@ import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
 import org.microemu.app.launcher.Launcher;
 import org.microemu.log.Logger;
+import org.microemu.util.ExtendedRecordListener;
 import org.microemu.util.RecordStoreImpl;
 
 import android.content.Context;
@@ -54,9 +54,9 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 
 	private Launcher launcher;
 
-	private Hashtable testOpenRecordStores = new Hashtable();
+	private Hashtable<String, RecordStoreImpl> testOpenRecordStores = new Hashtable<String, RecordStoreImpl>();
 
-	private RecordListener recordListener = null;
+	private ExtendedRecordListener recordListener = null;
 
 // TODO move to listRecordStores
 /*	private FilenameFilter filter = new FilenameFilter() {
@@ -101,7 +101,7 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 		}
 
 		context.deleteFile(storeFileName);
-		fireRecordStoreListener(RecordListener.RECORDSTORE_DELETE, recordStoreName);
+		fireRecordStoreListener(ExtendedRecordListener.RECORDSTORE_DELETE, recordStoreName);
 	}
 
 	public RecordStore openRecordStore(String recordStoreName, boolean createIfNecessary) throws RecordStoreException {
@@ -124,7 +124,7 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 
 		testOpenRecordStores.put(storeFileName, recordStoreImpl);
 
-		fireRecordStoreListener(RecordListener.RECORDSTORE_OPEN, recordStoreName);
+		fireRecordStoreListener(ExtendedRecordListener.RECORDSTORE_OPEN, recordStoreName);
 
 		return recordStoreImpl;
 	}
@@ -194,7 +194,7 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 		return 1024 * 1024;
 	}
 
-	public void setRecordListener(RecordListener recordListener) {
+	public void setRecordListener(ExtendedRecordListener recordListener) {
 		this.recordListener = recordListener;
 	}
 

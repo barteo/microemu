@@ -5,14 +5,14 @@
     
     <!-- IMPORTANT TO SET WITH VALID VALUES --> 
     <property name="midlet.name" value="Simple Demo" />
+    <property name="midlet.package" value="SimpleDemo.apk" />
     <property name="midlet.class" value="org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet" />
-    <property name="midlet.jar" value="../microemu-examples/microemu-demo/target/microemu-demo-2.0.2-SNAPSHOT.jar" />
-    <property name="sdk-folder" value="/home/barteo/Desktop/android_sdk_linux_m3-rc20a" />
+    <property name="midlet.jar" value="../microemu-examples/microemu-demo/target/microemu-demo-2.0.3-SNAPSHOT.jar" />
+    <property name="sdk-folder" value="/home/barteo/Desktop/android-sdk_m5-rc15_linux-x86" />
     <property name="asm.jar" value="/home/barteo/Desktop/tmp/asm-3.0.jar" />
-    <property name="backport-util-concurrent.jar" value="/home/barteo/Desktop/tmp/backport-util-concurrent-3.0.jar" />
-    <property name="microemu-cldc.jar" value="../microemu-cldc/target/microemu-cldc-2.0.2-SNAPSHOT.jar" />
-    <property name="microemu-midp.jar" value="../microemu-midp/target/microemu-midp-2.0.2-SNAPSHOT.jar" />
-    <property name="microemu-javase.jar" value="../microemu-javase/target/microemu-javase-2.0.2-SNAPSHOT.jar" />
+    <property name="microemu-cldc.jar" value="../microemu-cldc/target/microemu-cldc-2.0.3-SNAPSHOT.jar" />
+    <property name="microemu-midp.jar" value="../microemu-midp/target/microemu-midp-2.0.3-SNAPSHOT.jar" />
+    <property name="microemu-javase.jar" value="../microemu-javase/target/microemu-javase-2.0.3-SNAPSHOT.jar" />
     
     <!-- The intermediates directory -->
     <!-- Eclipse uses "bin" for its own output, so we do the same. -->
@@ -30,7 +30,7 @@
     <property name="intermediate-dex" value="${outdir}/${dex-file}" />
 
     <!-- The final package file to generate -->
-    <property name="out-package" value="${outdir}/${midlet.name}.apk" />
+    <property name="out-package" value="${outdir}/${midlet.package}" />
 
     <!-- Tools -->
     <property name="aapt" value="${sdk-folder}/tools/aapt" />
@@ -111,7 +111,6 @@
             <arg value="--locals=full" />
             <arg value="--positions=lines" />
             <arg value="${microemu-cldc.jar}"/>
-            <arg value="${backport-util-concurrent.jar}"/>
             <arg value="${outdir-libs}/microemu-midp.jar" />
             <arg value="${outdir-libs}/microemu-javase.jar"/>
             <arg path="${outdir-classes}" />

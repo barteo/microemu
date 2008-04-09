@@ -37,13 +37,17 @@ import org.microemu.microedition.Implementation;
 
 public class FileSystemRegistryImpl implements FileSystemRegistryDelegate, Implementation {
 
-	/* The context to be used when acessing filesystem */
+	/* The context to be used when accessing filesystem */
 	private AccessControlContext acc;
 
 	private String fsRoot;
 
-	public FileSystemRegistryImpl(String fsRoot) {
+	public FileSystemRegistryImpl() {
 		this.acc = AccessController.getContext();
+	}
+
+	public FileSystemRegistryImpl(String fsRoot) {
+		this();
 		this.fsRoot = fsRoot;
 	}
 

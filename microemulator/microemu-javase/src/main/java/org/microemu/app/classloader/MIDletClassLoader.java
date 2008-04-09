@@ -235,7 +235,7 @@ public class MIDletClassLoader extends URLClassLoader {
 	 * identifies the resource.
 	 * 
 	 * <p>
-	 * Search order is reverse to standard implemenation
+	 * Search order is reverse to standard implementation
 	 * </p>
 	 * 
 	 * <p>
@@ -258,7 +258,7 @@ public class MIDletClassLoader extends URLClassLoader {
 			return (URL) AccessController.doPrivileged(new PrivilegedExceptionAction() {
 				public Object run() {
 					URL url = findResource(name);
-					if (delegatingToParent && (getParent() != null)) {
+					if ((url == null) && delegatingToParent && (getParent() != null)) {
 						url = getParent().getResource(name);
 					}
 					return url;

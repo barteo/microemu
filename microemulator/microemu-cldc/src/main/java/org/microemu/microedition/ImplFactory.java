@@ -128,6 +128,11 @@ public class ImplFactory {
 			return AccessController.doPrivileged(new PrivilegedExceptionAction() {
 				public Object run() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 					Class implClass = ImplFactory.class.getClassLoader().loadClass(implClassName);
+					try {
+						implClass.getConstructor(null);
+					} catch (NoSuchMethodException e) {
+						throw new InstantiationException("No default constructor in class " + implClassName);
+					}
 					return implClass.newInstance();
 				}
 			}, acc);

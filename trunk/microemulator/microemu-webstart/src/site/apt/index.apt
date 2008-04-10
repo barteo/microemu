@@ -25,13 +25,13 @@ MicroEmulator Web Start
 *-----------------------+-----------+
 | {{{../microemu-tests/microemu-test-midlet/microemu-test-midlet-#version#-test.jad}MicroEmulator CLDCUnit tests}} |  <<<{{{open-local/~/microemu-tests/microemu-test-midlet/microemu-test-midlet-#version#-test.jnlp}\u00bbOpen}}>>>
 *-----------------------+-----------+
-| {{{http://www.google.com/gmm/apps/v1.4.4/L1/gmaps-Sony_Ericsson-W810_L1.jad}Google Maps for Sony Ericsson}} |  <<<{{{open/www.google.com/gmm/apps/v1.4.4/L1/gmaps-Sony_Ericsson-W810_L1.jnlp}\u00bbOpen}}>>>
+| {{{http://www.google.com/gmm/gmm.jad?make=Sony_Ericsson&model=K790&ver=v2.0.3}Google Maps for Sony Ericsson}} |  <<<{{{open/www.google.com/gmm/gmm.jnlp?make=Sony_Ericsson&model=K790&ver=v2.0.3}\u00bbOpen}}>>>
 *-----------------------+-----------+
-| {{{http://www.google.com/gmm/apps/v1.4.4/L1/gmaps-Generic-Advanced_MIDP2_L1.jad}Google Maps Generic}}  |      <<<{{{open/www.google.com/gmm/apps/v1.4.4/L1/gmaps-Generic-Advanced_MIDP2_L1.jnlp}\u00bbOpen}}>>>
+| {{{http://www.google.com/gmm/gmm.jad?make=Generic&model=Advanced%20MIDP2&ver=v2.0.3}Google Maps Generic}}  |      <<<{{{open/www.google.com/gmm/gmm.jnlp?make=Generic&model=Advanced%20MIDP2&ver=v2.0.3}\u00bbOpen}}>>>
 *-----------------------+-----------+
-| {{{http://www.gmail.com/app/v1.1.0/L1/gm-Sony_Ericsson-W810.jad}Google Gmail for Sony Ericsson}} |  <<<{{{open/www.gmail.com/app/v1.1.0/L1/gm-Sony_Ericsson-W810.jnlp}\u00bbOpen}}>>>
+| {{{http://mail.google.com/app/gmail.jad?make=Sony_Ericsson&model=K790&ver=v1.5.0.1191}Google Gmail for Sony Ericsson}} |  <<<{{{open/mail.google.com/app/gmail.jnlp?make=Sony_Ericsson&model=K790&ver=v1.5.0.1191}\u00bbOpen}}>>>
 *-----------------------+-----------+
-| {{{http://www.gmail.com/app/v1.1.0/L1/gm-Generic-Advanced_MIDP2.jad}Google Gmail Generic}} | <<<{{{open/www.gmail.com/app/v1.1.0/L1/gm-Generic-Advanced_MIDP2.jnlp}\u00bbOpen}}>>>
+| {{{http://mail.google.com/app/gmail.jad?make=Generic&model=Advanced%20MIDP2&ver=v1.5.0.1191}Google Gmail Generic}} | <<<{{{open/mail.google.com/app/gmail.jnlp?make=Generic&model=Advanced%20MIDP2&ver=v1.5.0.1191}\u00bbOpen}}>>>
 *-----------------------+-----------+
 
 * Other MicroEmulator Web Start demonstrations

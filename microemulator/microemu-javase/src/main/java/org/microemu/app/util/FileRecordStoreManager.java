@@ -40,8 +40,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
@@ -105,15 +103,18 @@ public class FileRecordStoreManager implements RecordStoreManager {
 	}
 
 	private static String escapeCharacter(String charcter) {
-		return "%%" + Integer.valueOf(charcter.charAt(0)) + "%%";
+		return "_%%" + (int) (charcter.charAt(0)) + "%%_";
 	}
 
 	private static String recordStoreName2FileName(String recordStoreName) {
 		for (Iterator iterator = replaceChars.iterator(); iterator.hasNext();) {
 			String c = (String) iterator.next();
 			String newValue = escapeCharacter(c);
-			recordStoreName = Pattern.compile(c, Pattern.LITERAL).matcher(recordStoreName).replaceAll(
-					Matcher.quoteReplacement(newValue));
+			if (c.equals("\\")) {
+				c = "\\\\";
+			}
+			c = "[" + c + "]";
+			recordStoreName = recordStoreName.replaceAll(c, newValue);
 		}
 		return recordStoreName + RECORD_STORE_SUFFIX;
 	}
@@ -122,8 +123,10 @@ public class FileRecordStoreManager implements RecordStoreManager {
 		for (Iterator iterator = replaceChars.iterator(); iterator.hasNext();) {
 			String c = (String) iterator.next();
 			String newValue = escapeCharacter(c);
-			fileName = Pattern.compile(newValue, Pattern.LITERAL).matcher(fileName).replaceAll(
-					Matcher.quoteReplacement(c));
+			if (c.equals("\\")) {
+				c = "\\\\";
+			}
+			fileName = fileName.replaceAll(newValue, c);
 		}
 		return fileName.substring(0, fileName.length() - RECORD_STORE_SUFFIX.length());
 	}

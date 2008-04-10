@@ -216,6 +216,13 @@ public class Common implements MicroEmulator, CommonInterface {
 		if (nameString == null) {
 			return false;
 		}
+		// Remove query
+		if (nameString.startsWith("http://") || nameString.startsWith("https://")) {
+			int s = nameString.lastIndexOf('?');
+			if (s != -1) {
+				nameString = nameString.substring(0, s);
+			}
+		}
 		int end = nameString.lastIndexOf('.');
 		if (end == -1) {
 			return false;
@@ -885,7 +892,7 @@ public class Common implements MicroEmulator, CommonInterface {
 	public void initMIDlet(boolean startMidlet) {
 		Class midletClass = null;
 
-		if (midletClassOrJad != null && midletClassOrJad.endsWith(".jad")) {
+		if (midletClassOrJad != null && Common.isJadExtension(midletClassOrJad)) {
 			try {
 				File file = new File(midletClassOrJad);
 				String url = file.exists() ? IOUtils.getCanonicalFileURL(file) : midletClassOrJad;

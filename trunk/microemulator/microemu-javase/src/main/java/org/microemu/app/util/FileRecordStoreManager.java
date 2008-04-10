@@ -37,6 +37,11 @@ import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
@@ -54,6 +59,8 @@ public class FileRecordStoreManager implements RecordStoreManager {
 
 	private final static String RECORD_STORE_SUFFIX = ".rs";
 
+	private final static List replaceChars = new Vector();
+
 	private MicroEmulator emulator;
 
 	private Hashtable testOpenRecordStores = new Hashtable();
@@ -62,6 +69,17 @@ public class FileRecordStoreManager implements RecordStoreManager {
 
 	/* The context to be used when accessing files in Webstart */
 	private AccessControlContext acc;
+
+	static {
+		replaceChars.add(":");
+		replaceChars.add("*");
+		replaceChars.add("?");
+		replaceChars.add("=");
+		replaceChars.add("|");
+		replaceChars.add("/");
+		replaceChars.add("\\");
+		replaceChars.add("\"");
+	}
 
 	private FilenameFilter filter = new FilenameFilter() {
 		public boolean accept(File dir, String name) {
@@ -86,9 +104,33 @@ public class FileRecordStoreManager implements RecordStoreManager {
 		return new File(Config.getConfigPath(), "suite-" + emulator.getLauncher().getSuiteName());
 	}
 
+	private static String escapeCharacter(String charcter) {
+		return "%%" + Integer.valueOf(charcter.charAt(0)) + "%%";
+	}
+
+	private static String recordStoreName2FileName(String recordStoreName) {
+		for (Iterator iterator = replaceChars.iterator(); iterator.hasNext();) {
+			String c = (String) iterator.next();
+			String newValue = escapeCharacter(c);
+			recordStoreName = Pattern.compile(c, Pattern.LITERAL).matcher(recordStoreName).replaceAll(
+					Matcher.quoteReplacement(newValue));
+		}
+		return recordStoreName + RECORD_STORE_SUFFIX;
+	}
+
+	private static String fileName2RecordStoreName(String fileName) {
+		for (Iterator iterator = replaceChars.iterator(); iterator.hasNext();) {
+			String c = (String) iterator.next();
+			String newValue = escapeCharacter(c);
+			fileName = Pattern.compile(newValue, Pattern.LITERAL).matcher(fileName).replaceAll(
+					Matcher.quoteReplacement(c));
+		}
+		return fileName.substring(0, fileName.length() - RECORD_STORE_SUFFIX.length());
+	}
+
 	public void deleteRecordStore(final String recordStoreName) throws RecordStoreNotFoundException,
 			RecordStoreException {
-		final File storeFile = new File(getSuiteFolder(), recordStoreName + RECORD_STORE_SUFFIX);
+		final File storeFile = new File(getSuiteFolder(), recordStoreName2FileName(recordStoreName));
 
 		RecordStoreImpl recordStoreImpl = (RecordStoreImpl) testOpenRecordStores.get(storeFile.getName());
 		if (recordStoreImpl != null && recordStoreImpl.isOpen()) {
@@ -116,7 +158,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 	}
 
 	public RecordStore openRecordStore(String recordStoreName, boolean createIfNecessary) throws RecordStoreException {
-		File storeFile = new File(getSuiteFolder(), recordStoreName + RECORD_STORE_SUFFIX);
+		File storeFile = new File(getSuiteFolder(), recordStoreName2FileName(recordStoreName));
 
 		RecordStoreImpl recordStoreImpl;
 		try {
@@ -149,7 +191,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 				}
 			}, acc);
 		} catch (PrivilegedActionException e) {
-			Logger.error("Unable to acess storeFiles", e);
+			Logger.error("Unable to access storeFiles", e);
 			return null;
 		}
 		if (result != null) {
@@ -157,7 +199,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 				result = null;
 			} else {
 				for (int i = 0; i < result.length; i++) {
-					result[i] = result[i].substring(0, result[i].length() - RECORD_STORE_SUFFIX.length());
+					result[i] = fileName2RecordStoreName(result[i]);
 				}
 			}
 		}
@@ -166,7 +208,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 
 	public void saveChanges(RecordStoreImpl recordStoreImpl) throws RecordStoreNotOpenException, RecordStoreException {
 
-		File storeFile = new File(getSuiteFolder(), recordStoreImpl.getName() + RECORD_STORE_SUFFIX);
+		File storeFile = new File(getSuiteFolder(), recordStoreName2FileName(recordStoreImpl.getName()));
 
 		saveToDisk(storeFile, recordStoreImpl);
 	}

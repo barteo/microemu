@@ -106,7 +106,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 		return "_%%" + (int) (charcter.charAt(0)) + "%%_";
 	}
 
-	private static String recordStoreName2FileName(String recordStoreName) {
+	static String recordStoreName2FileName(String recordStoreName) {
 		for (Iterator iterator = replaceChars.iterator(); iterator.hasNext();) {
 			String c = (String) iterator.next();
 			String newValue = escapeCharacter(c);
@@ -119,7 +119,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 		return recordStoreName + RECORD_STORE_SUFFIX;
 	}
 
-	private static String fileName2RecordStoreName(String fileName) {
+	static String fileName2RecordStoreName(String fileName) {
 		for (Iterator iterator = replaceChars.iterator(); iterator.hasNext();) {
 			String c = (String) iterator.next();
 			String newValue = escapeCharacter(c);

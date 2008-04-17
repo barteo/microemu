@@ -246,6 +246,8 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
     public void translate(int x, int y) {
         super.translate(x, y);
         g.translate(x, y);
+        clip.x -= x;
+        clip.y = -y;
     }
 
     // Andres Navarro

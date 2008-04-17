@@ -196,6 +196,10 @@ public class AndroidDisplayGraphics extends javax.microedition.android.lcdui.Gra
     public void translate(int x, int y) {
         super.translate(x, y);
         canvas.translate(x, y);
+        clip.left -= x;
+        clip.right -= x;
+        clip.top = -y;
+        clip.bottom -= y;
     }
 
 	public void drawRegion(Image src, int x_src, int y_src, int width,

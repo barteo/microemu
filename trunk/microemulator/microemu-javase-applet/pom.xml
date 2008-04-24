@@ -92,8 +92,24 @@
                 </configuration>
             </plugin>
 
-            <!-- applet jar-with-dependencies -->
+            <!-- applet-debug jar-with-dependencies -->
+            <plugin>
+               <artifactId>maven-assembly-plugin</artifactId>
+               <executions>
+                   <execution>
+                       <phase>package</phase>
+                       <goals><goal>single</goal></goals>
+                   </execution>
+               </executions>
+               <configuration>
+                   <attach>true</attach>
+                   <descriptors>
+                       <descriptor>applet-debug-assembly.xml</descriptor>
+                   </descriptors>
+               </configuration>
+            </plugin>
 
+            <!-- applet jar-with-dependencies -->
             <plugin>
                 <groupId>com.pyx4me</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
@@ -147,23 +163,6 @@
                         </manifestEntries>
                     </archive>
                 </configuration>
-            </plugin>
-
-            <!-- applet-debug jar-with-dependencies -->
-            <plugin>
-               <artifactId>maven-assembly-plugin</artifactId>
-               <executions>
-                   <execution>
-                       <phase>package</phase>
-                       <goals><goal>single</goal></goals>
-                   </execution>
-               </executions>
-               <configuration>
-                   <attach>true</attach>
-                   <descriptors>
-                       <descriptor>applet-debug-assembly.xml</descriptor>
-                   </descriptors>
-               </configuration>
             </plugin>
 
             <plugin>

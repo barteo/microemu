@@ -12,6 +12,9 @@
             <scope>runtime</scope>
             <outputDirectory></outputDirectory>
             <outputFileNameMapping></outputFileNameMapping>
+            <excludes>
+                <exclude>org.microemu:microemu-javase-applet</exclude>
+            </excludes>
         </dependencySet>
     </dependencySets>
 </assembly>

@@ -89,6 +89,8 @@ public abstract class ButtonDetaultDeviceKeyCodes {
 		code(ButtonName.LEFT, -3, Canvas.LEFT);
 		code(ButtonName.RIGHT, -4, Canvas.RIGHT);
 
+		code(ButtonName.BACK_SPACE, -8);
+
 		code(ButtonName.KEY_NUM0, Canvas.KEY_NUM0);
 		code(ButtonName.KEY_NUM1, Canvas.KEY_NUM1, Canvas.GAME_A);
 		code(ButtonName.KEY_NUM2, Canvas.KEY_NUM2);

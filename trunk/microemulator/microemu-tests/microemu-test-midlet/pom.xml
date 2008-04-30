@@ -150,7 +150,7 @@
                     <test>true</test>
                     <midlets>
                         <MIDlet>
-                            <name>MainTest</name>
+                            <name>ManualTest</name>
                             <class>org.microemu.tests.MainTestMIDlet</class>
                         </MIDlet>
                         <MIDlet>

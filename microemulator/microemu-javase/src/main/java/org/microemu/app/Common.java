@@ -384,6 +384,7 @@ public class Common implements MicroEmulator, CommonInterface {
 
 		MIDletContext context = new MIDletContext();
 		MIDletBridge.setThreadMIDletContext(context);
+		MIDletBridge.getRecordStoreManager().init(MIDletBridge.getMicroEmulator());
 		try {
 			MIDlet m;
 

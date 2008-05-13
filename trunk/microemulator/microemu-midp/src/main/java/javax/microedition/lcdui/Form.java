@@ -140,7 +140,9 @@ public class Form extends Screen
 	
 	public void insert(int itemNum, Item item) 
 	{
-		verifyItemNum(itemNum);
+		if (itemNum != numOfItems) {
+			verifyItemNum(itemNum);
+		}
 		verifyItem(item);
 
 		if (numOfItems + 1 == items.length) {

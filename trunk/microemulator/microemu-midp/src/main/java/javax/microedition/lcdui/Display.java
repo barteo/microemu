@@ -390,6 +390,10 @@ public class Display {
 
 		public void sizeChanged(int width, int height) {
 			if (current != null) {
+	    		if (current instanceof GameCanvas) {
+	    		    GameCanvasKeyAccess access = MIDletBridge.getMIDletAccess().getGameCanvasKeyAccess();
+	    		    access.initBuffer();
+	    		}
 				current.sizeChanged(width, height);
 				updateCommands();
 			}

@@ -108,7 +108,7 @@ public class J2SEButton implements Button {
 					this.keyboardKeys = new int[1];
 				} else {
 					int[] newKeyboardKeys = new int[this.keyboardKeys.length + 1];
-					System.arraycopy(keyboardKeys, 0, newKeyboardKeys, 0, this.keyboardKeys.length);
+					System.arraycopy(this.keyboardKeys, 0, newKeyboardKeys, 0, this.keyboardKeys.length);
 					this.keyboardKeys = newKeyboardKeys;
 				}
 				this.keyboardKeys[this.keyboardKeys.length - 1] = key;

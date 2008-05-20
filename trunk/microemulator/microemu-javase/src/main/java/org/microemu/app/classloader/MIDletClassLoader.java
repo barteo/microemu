@@ -63,7 +63,7 @@ public class MIDletClassLoader extends URLClassLoader {
 
 	public static boolean traceSystemClassLoading = false;
 
-	public static boolean enhanceCatchBlock = true;
+	public static boolean enhanceCatchBlock = false;
 
 	private final static boolean debug = false;
 

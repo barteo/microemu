@@ -338,11 +338,16 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 		}
 
 		switch (ev.getKeyCode()) {
-		case 0:
 		case KeyEvent.VK_ALT:
 		case KeyEvent.VK_CONTROL:
 		case KeyEvent.VK_SHIFT:
 			return;
+		case 0:
+			// Don't know what is the case was intended for but this may be
+			// national keyboard letter, so let it work
+			if (ev.getKeyChar() == '\0') {
+				return;
+			}
 		}
 
 		char keyChar = '\0';
@@ -376,11 +381,16 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 		}
 
 		switch (ev.getKeyCode()) {
-		case 0:
 		case KeyEvent.VK_ALT:
 		case KeyEvent.VK_CONTROL:
 		case KeyEvent.VK_SHIFT:
 			return;
+		case 0:
+			// Don't know what is the case was intended for but this may be
+			// national keyboard letter, so let it work
+			if (ev.getKeyChar() == '\0') {
+				return;
+			}
 		}
 
 		Device device = DeviceFactory.getDevice();
@@ -398,6 +408,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 		if ((ev.getKeyCode() >= KeyEvent.VK_F1) && (ev.getKeyCode() <= KeyEvent.VK_F12)) {
 			keyChar = '\0';
 		}
+		// Logger.debug0x("keyReleased [" + keyChar + "]", keyChar);
 		inputMethod.buttonReleased(inputMethod.getButton(ev), keyChar);
 
 		prevOverButton = pressedButton;

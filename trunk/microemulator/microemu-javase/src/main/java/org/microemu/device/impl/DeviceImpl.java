@@ -770,6 +770,18 @@ public abstract class DeviceImpl implements Device {
 			} else {
 				p = parent.getChild(c.getName());
 			}
+			boolean inheritOverride = c.getBooleanAttribute("override", false);
+			if (inheritOverride) {
+				// System.out.println("inheritXML override parent:" +
+				// parent.toString());
+				// System.out.println("inheritXML override c :" + c.toString());
+				// System.out.println("inheritXML override p :" + p.toString());
+				c.removeAttribute("override");
+				if (p != null) {
+					parent.removeChild(p);
+					p = null;
+				}
+			}
 			// System.out.println("inheritXML " + c.getName());
 			if (p == null) {
 				parent.addChild(c);

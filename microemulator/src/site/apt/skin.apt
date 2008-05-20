@@ -79,7 +79,7 @@ Custom Skin Creation for MicroEmulator
 
     * device Attribute extends
 
-        Allow inheritance for devices. Xml element name plus optional attribute 'name' are unique identifiers for xml descriptor inheritance
+        Allow inheritance for devices. Xml element name plus optional attribute 'name' are unique identifiers for xml descriptor inheritance, attribute 'override' will replace all sub-elements from parent.
 
         Example:
 
@@ -93,6 +93,20 @@ Custom Skin Creation for MicroEmulator
         <haspointerevents>true</haspointerevents>
         <softbutton name="SOFT1" keyCode="-21"/>
         <softbutton name="SOFT2" keyCode="-22"/>
+    </input>
+    <input>
+        <button name="2">
+            <chars override="true">
+                <char>a</char>
+                <char>b</char>
+                <char>c</char>
+				<char>&#1072;</char>
+				<char>&#1073;</char>
+				<char>&#1074;</char>
+				<char>&#1075;</char>
+                <char>2</char>
+            </chars>
+        </button>
     </input>
 </device>
 ---

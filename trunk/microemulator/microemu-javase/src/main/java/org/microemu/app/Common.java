@@ -335,7 +335,15 @@ public class Common implements MicroEmulator, CommonInterface {
 			URL url = new URL(jad.getJarURL());
 			URLConnection conn = url.openConnection();
 			is = conn.getInputStream();
-			File tmp = File.createTempFile("me2-", ".jar");
+			File tmpDir = null;
+			String systemTmpDir = MIDletSystemProperties.getSystemProperty("java.io.tmpdir");
+			if (systemTmpDir != null) {
+				tmpDir = new File(systemTmpDir, "microemulator-apps");
+				if ((!tmpDir.exists()) && (!tmpDir.mkdirs())) {
+					tmpDir = null;
+				}
+			}
+			File tmp = File.createTempFile("me2-app-", ".jar", tmpDir);
 			tmp.deleteOnExit();
 			IOUtils.copyToFile(is, tmp);
 			return IOUtils.getCanonicalFileClassLoaderURL(tmp);

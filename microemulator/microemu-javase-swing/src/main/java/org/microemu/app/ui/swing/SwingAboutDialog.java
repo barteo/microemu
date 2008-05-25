@@ -1,7 +1,7 @@
 /**
  *  MicroEmulator
- *  Copyright (C) 2006-2007 Bartek Teodorczyk <barteo@barteo.net>
- *  Copyright (C) 2006-2007 Vlad Skarzhevskyy
+ *  Copyright (C) 2006-2008 Bartek Teodorczyk <barteo@barteo.net>
+ *  Copyright (C) 2006-2008 Vlad Skarzhevskyy
  *
  *  It is licensed under the following two licenses as alternatives:
  *    1. GNU Lesser General Public License (the "LGPL") version 2.1 or any newer version
@@ -39,31 +39,32 @@ import org.microemu.app.util.BuildVersion;
 
 /**
  * @author vlads
- *
+ * 
  */
 public class SwingAboutDialog extends SwingDialogPanel {
 
 	private static final long serialVersionUID = 1L;
 
 	private JLabel iconLabel;
-	
+
 	private JLabel textLabel;
-	
+
 	public SwingAboutDialog() {
-		
+
 		setLayout(new GridBagLayout());
-		
+
 		GridBagConstraints c = new GridBagConstraints();
-		
+
 		c.ipadx = 10;
 		c.ipady = 10;
 		c.gridx = 0;
 		c.gridy = 0;
 		iconLabel = new JLabel();
 		add(iconLabel, c);
-		
-		iconLabel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/org/microemu/icon.png"))));
-		
+
+		iconLabel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+				Main.class.getResource("/org/microemu/icon.png"))));
+
 		c.gridx = 1;
 		c.gridy = 0;
 		c.weightx = 1;
@@ -71,17 +72,17 @@ public class SwingAboutDialog extends SwingDialogPanel {
 		textLabel = new JLabel("MicroEmulator");
 		textLabel.setFont(new Font("Default", Font.BOLD, 18));
 		add(textLabel, c);
-		
+
 		c.gridy = 1;
 		c.weightx = 0.0;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.anchor = GridBagConstraints.WEST;
 		add(new JLabel("version: " + BuildVersion.getVersion()), c);
-		
+
 		c.gridy = 2;
 		c.weightx = 0.0;
 		c.gridwidth = GridBagConstraints.REMAINDER;
-		add(new JLabel("Copyright (C) 2001-2007 Bartek Teodorczyk & co"), c);
+		add(new JLabel("Copyright (C) 2001-2008 Bartek Teodorczyk & co"), c);
 
 	}
 }

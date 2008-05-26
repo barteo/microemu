@@ -59,6 +59,8 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 
 	private static final boolean tests = false;
 
+	private boolean isShown;
+
 	private LogTextArea logArea;
 
 	private Vector logLinesQueue = new Vector();
@@ -101,9 +103,9 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 			}
 		});
 		menu.add(menuClear);
-		
+
 		menu.addSeparator();
-		
+
 		final JCheckBoxMenuItem menuRecordLocation = new JCheckBoxMenuItem("Show record location");
 		menuRecordLocation.setState(Logger.isLocationEnabled());
 		menuRecordLocation.addActionListener(new ActionListener() {
@@ -112,7 +114,7 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 				Config.setLogConsoleLocationEnabled(menuRecordLocation.getState());
 			}
 		});
-		menu.add(menuRecordLocation);		
+		menu.add(menuRecordLocation);
 
 		final JCheckBoxMenuItem menuStdOut = new JCheckBoxMenuItem("Write to standard output");
 		menuStdOut.setState(StdOutAppender.enabled);
@@ -147,16 +149,25 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 
 		getContentPane().add(scrollPane);
 
+		Logger.addAppender(this);
+		Logger.removeAppender(logQueueAppender);
+
 		LoggingEvent event = null;
 		while ((event = logQueueAppender.poll()) != null) {
 			append(event);
 		}
 
-		Logger.removeAppender(logQueueAppender);
-		Logger.addAppender(this);
 	}
 
-	public void log(String message) {
+	public void setVisible(boolean b) {
+		super.setVisible(b);
+		isShown = true;
+		if (isShown) {
+			SwingUtilities.invokeLater(new SwingLogUpdater());
+		}
+	}
+
+	private void log(String message) {
 		boolean createUpdater = false;
 		synchronized (logLinesQueue) {
 			if (logLinesQueue.isEmpty()) {
@@ -164,7 +175,7 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 			}
 			logLinesQueue.addElement(message);
 		}
-		if (createUpdater) {
+		if (createUpdater && isShown) {
 			SwingUtilities.invokeLater(new SwingLogUpdater());
 		}
 	}
@@ -191,10 +202,10 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 		if (event.hasData()) {
 			bug.append(" [").append(event.getFormatedData()).append("]");
 		}
-    	String location = formatLocation(event.getLocation());
-    	if (location.length() > 0) {
-    		bug.append("\n\t  ");
-    	}
+		String location = formatLocation(event.getLocation());
+		if (location.length() > 0) {
+			bug.append("\n\t  ");
+		}
 		bug.append(location);
 		if (event.getThrowable() != null) {
 			OutputStream out = new ByteArrayOutputStream();

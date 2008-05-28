@@ -68,6 +68,7 @@
             <!-- jar-with jar -->
             <plugin>
                <artifactId>maven-assembly-plugin</artifactId>
+               <version>${assemblyPluginVersion}</version>
                <executions>
                    <execution>
                        <phase>package</phase>

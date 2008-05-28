@@ -159,6 +159,7 @@
         <!-- See OS X profile -->
         <javaRunTimeJar>${java.home}/lib/rt.jar</javaRunTimeJar>
         <javaRunTimeSecurityJar>${java.home}/lib/jsse.jar</javaRunTimeSecurityJar>
+        <assemblyPluginVersion>2.1</assemblyPluginVersion>
     </properties>
 
     <dependencyManagement>

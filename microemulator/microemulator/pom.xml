@@ -173,6 +173,7 @@
                                 <goals><goal>single</goal></goals>
                                 <configuration>
                                     <attach>false</attach>
+                                    <tarLongFileMode>gnu</tarLongFileMode>
                                     <descriptors>
                                         <descriptor>assembly-all-sources.xml</descriptor>
                                     </descriptors>
@@ -185,6 +186,7 @@
                                 <configuration>
                                     <attach>false</attach>
                                     <appendAssemblyId>false</appendAssemblyId>
+                                    <tarLongFileMode>gnu</tarLongFileMode>
                                     <descriptors>
                                         <descriptor>assembly-release.xml</descriptor>
                                     </descriptors>

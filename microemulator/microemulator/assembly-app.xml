@@ -12,6 +12,13 @@
             <outputDirectory></outputDirectory>
             <outputFileNameMapping></outputFileNameMapping>
             <scope>runtime</scope>
+            <excludes>
+                <!--
+                    exclude self (this module do not have sources)
+                    [WARNING] Cannot include project artifact: org.microemu:microemulator:pom:2.0.3-SNAPSHOT; it doesn't have an associated file or directory
+                -->
+                <exclude>org.microemu:microemulator</exclude>
+            </excludes>
         </dependencySet>
     </dependencySets>
 </assembly>

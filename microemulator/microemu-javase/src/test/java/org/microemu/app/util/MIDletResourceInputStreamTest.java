@@ -1,6 +1,7 @@
 /**
  *  MicroEmulator
- *  Copyright (C) 2001-2008 Bartek Teodorczyk <barteo@barteo.net>
+ *  Copyright (C) 2006-2008 Bartek Teodorczyk <barteo@barteo.net>
+ *  Copyright (C) 2006-2008 Vlad Skarzhevskyy
  *
  *  It is licensed under the following two licenses as alternatives:
  *    1. GNU Lesser General Public License (the "LGPL") version 2.1 or any newer version
@@ -25,46 +26,32 @@
  */
 package org.microemu.app.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+
+import junit.framework.TestCase;
 
 /**
- * Special InputStream wrapper for loading resources is needed to change
- * behavior of read(byte[] b) under Java SE. All existing Java ME
- * implementations always read all bytes available in one read call.
+ * @author vlads
+ * 
  */
-public class MIDletResourceInputStream extends InputStream {
+public class MIDletResourceInputStreamTest extends TestCase {
 
-	private InputStream is;
-
-	public MIDletResourceInputStream(InputStream is) {
-		this.is = is;
+	private void setData(byte data[]) {
+		for (int i = 0; i < data.length; i++) {
+			data[i] = (byte) i;
+		}
 	}
 
-	public int available() throws IOException {
-		return is.available();
-	}
-
-	public int read() throws IOException {
-		return is.read();
-	}
-
-	public int read(byte[] b) throws IOException {
-		int result = 0;
-		int count = 0;
-		do {
-			count = is.read(b, result, b.length - result);
-			if (count != -1) {
-				result += count;
-				if (result == b.length) {
-					return result;
-				}
-			} else if (result != 0) {
-				return result;
-			}
-		} while (count != -1);
-
-		return -1;
+	public void testReadPart() throws IOException {
+		int max = 10;
+		byte data[] = new byte[max];
+		setData(data);
+		ByteArrayInputStream is = new ByteArrayInputStream(data);
+		MIDletResourceInputStream mis = new MIDletResourceInputStream(is);
+		byte data2[] = new byte[max + 5];
+		int rc = mis.read(data2);
+		assertEquals("read part", max, rc);
 	}
 
 }

@@ -23,7 +23,7 @@
    To build distribution assembly e.g. microemulator-2.X.X.tar.gz:
      mvn -DperformRelease=true
 
-     distribution pakage would be created in microemulator\target\microemulator-2.X.X.tar.gz
+     distribution package would be created in microemulator\target\microemulator-2.X.X.tar.gz
 
    Module microemu-javase-swt is not built by default. To activate its build add property buildByMicroEmulatorTeam to settings.xml
 

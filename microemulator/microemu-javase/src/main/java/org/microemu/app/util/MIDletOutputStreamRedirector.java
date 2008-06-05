@@ -26,41 +26,50 @@
  */
 package org.microemu.app.util;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
 import org.microemu.log.Logger;
 
-
 /**
  * @author vlads
  * 
- * This class allow redirection of stdout and stderr from MIDlet to MicroEmulator logger console
+ * This class allow redirection of stdout and stderr from MIDlet to
+ * MicroEmulator logger console
  * 
  */
 public class MIDletOutputStreamRedirector extends PrintStream {
+
+	private final static boolean keepMultiLinePrint = true;
 
 	public final static PrintStream out = outPrintStream();
 
 	public final static PrintStream err = errPrintStream();
 
+	private boolean isErrorStream;
+
 	static {
 		Logger.addLogOrigin(MIDletOutputStreamRedirector.class);
 		Logger.addLogOrigin(OutputStream2Log.class);
 	}
-	
+
 	private static class OutputStream2Log extends OutputStream {
 
 		boolean isErrorStream;
-		
+
 		StringBuffer buffer = new StringBuffer();
 
 		OutputStream2Log(boolean error) {
 			this.isErrorStream = error;
 		}
 
-		public void write(int b) throws IOException {
+		public void flush() {
+			if (buffer.length() > 0) {
+				write('\n');
+			}
+		}
+
+		public void write(int b) {
 			if ((b == '\n') || (b == '\r')) {
 				if (buffer.length() > 0) {
 					if (isErrorStream) {
@@ -89,7 +98,7 @@ public class MIDletOutputStreamRedirector extends PrintStream {
 		return new MIDletOutputStreamRedirector(true);
 	}
 
-	//Override methods to be able to get proper stack trace
+	// Override methods to be able to get proper stack trace
 
 	public void print(boolean b) {
 		super.print(b);
@@ -160,11 +169,29 @@ public class MIDletOutputStreamRedirector extends PrintStream {
 	}
 
 	public void println(Object x) {
-		super.println(x);
+		if (keepMultiLinePrint) {
+			super.flush();
+			if (isErrorStream) {
+				Logger.error(x);
+			} else {
+				Logger.info(x);
+			}
+		} else {
+			super.println(x);
+		}
 	}
 
 	public void println(String x) {
-		super.println(x);
+		if (keepMultiLinePrint) {
+			super.flush();
+			if (isErrorStream) {
+				Logger.error(x);
+			} else {
+				Logger.info(x);
+			}
+		} else {
+			super.println(x);
+		}
 	}
 
 	public void write(byte[] buf, int off, int len) {
@@ -174,5 +201,5 @@ public class MIDletOutputStreamRedirector extends PrintStream {
 	public void write(int b) {
 		super.write(b);
 	}
-	
+
 }

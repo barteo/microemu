@@ -49,7 +49,7 @@ public class Logger {
 	private static final Set logFunctionsSet = new HashSet();
 
 	private static boolean java13 = false;
-	
+
 	private static boolean locationEnabled = true;
 
 	private static List loggerAppenders = new Vector();
@@ -80,11 +80,11 @@ public class Logger {
 	public static boolean isErrorEnabled() {
 		return true;
 	}
-	
+
 	public static boolean isLocationEnabled() {
 		return locationEnabled;
 	}
-	
+
 	public static void setLocationEnabled(boolean state) {
 		locationEnabled = state;
 	}
@@ -129,6 +129,9 @@ public class Logger {
 	}
 
 	private static void write(int level, String message, Throwable throwable) {
+		while ((message != null) && message.endsWith("\n")) {
+			message = message.substring(0, message.length() - 1);
+		}
 		callAppenders(new LoggingEvent(level, message, getLocation(), throwable));
 	}
 
@@ -228,6 +231,12 @@ public class Logger {
 		}
 	}
 
+	public static void info(Object message) {
+		if (isErrorEnabled()) {
+			write(LoggingEvent.INFO, "" + message, null);
+		}
+	}
+
 	public static void info(String message, String data) {
 		if (isErrorEnabled()) {
 			write(LoggingEvent.INFO, message, null, data);
@@ -241,6 +250,12 @@ public class Logger {
 	}
 
 	public static void error(String message) {
+		if (isErrorEnabled()) {
+			write(LoggingEvent.ERROR, "error " + message, null);
+		}
+	}
+
+	public static void error(Object message) {
 		if (isErrorEnabled()) {
 			write(LoggingEvent.ERROR, "error " + message, null);
 		}

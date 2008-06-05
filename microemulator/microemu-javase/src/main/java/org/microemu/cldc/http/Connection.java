@@ -26,8 +26,8 @@ package org.microemu.cldc.http;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -39,11 +39,11 @@ import javax.microedition.io.HttpConnection;
 import org.microemu.microedition.io.ConnectionImplementation;
 
 public class Connection implements HttpConnection, ConnectionImplementation {
-	
+
 	protected URLConnection cn;
 
 	protected boolean connected = false;
-	
+
 	protected static boolean allowNetworkConnection = true;
 
 	public javax.microedition.io.Connection openConnection(String name, int mode, boolean timeouts) throws IOException {
@@ -58,7 +58,11 @@ public class Connection implements HttpConnection, ConnectionImplementation {
 		}
 		cn = url.openConnection();
 		cn.setDoOutput(true);
-
+		// J2ME do not follow redirects. Test this url
+		// http://www.microemu.org/test/r/
+		if (cn instanceof HttpURLConnection) {
+			((HttpURLConnection) cn).setInstanceFollowRedirects(false);
+		}
 		return this;
 	}
 
@@ -115,7 +119,7 @@ public class Connection implements HttpConnection, ConnectionImplementation {
 			return null;
 		}
 
-		//    return cn.getURL().getQuery();
+		// return cn.getURL().getQuery();
 		return null;
 	}
 

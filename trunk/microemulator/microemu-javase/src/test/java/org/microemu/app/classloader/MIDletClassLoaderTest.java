@@ -42,42 +42,42 @@ import org.microemu.log.LoggingEvent;
 
 /**
  * @author vlads
- *
+ * 
  */
 public class MIDletClassLoaderTest extends TestCase {
 
-	public static final String TEST_APP_JAR = "bytecode-test-app.jar"; 
-	
+	public static final String TEST_APP_JAR = "bytecode-test-app.jar";
+
 	public static final String TEST_CLASS = "org.TestMain";
-	
+
 	EventCatureLoggerAppender capture;
 
 	private boolean enhanceCatchBlockSave;
-	
+
 	protected void setUp() throws Exception {
 		super.setUp();
 		capture = new EventCatureLoggerAppender();
 		Logger.addAppender(capture);
 		enhanceCatchBlockSave = MIDletClassLoader.enhanceCatchBlock;
 	}
-	
+
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		Logger.removeAppender(capture);
-		MIDletClassLoader.enhanceCatchBlock = enhanceCatchBlockSave; 
+		MIDletClassLoader.enhanceCatchBlock = enhanceCatchBlockSave;
 	}
-	
+
 	public void testGetResourceAsStream() throws Exception {
-		
+
 		ClassLoader parent = MIDletClassLoaderTest.class.getClassLoader();
-		
+
 		URL jarURL = parent.getResource(TEST_APP_JAR);
 		assertNotNull("Can't find app jar", jarURL);
-		
-		URLClassLoader ucl = new URLClassLoader(new URL[]{jarURL});
-		
+
+		URLClassLoader ucl = new URLClassLoader(new URL[] { jarURL });
+
 		final String testFile = "META-INF/MANIFEST.MF";
-		
+
 		InputStream is = null;
 		try {
 			is = ucl.getResourceAsStream(testFile);
@@ -85,7 +85,7 @@ public class MIDletClassLoaderTest extends TestCase {
 		} finally {
 			IOUtils.closeQuietly(is);
 		}
-		
+
 		MIDletClassLoader mcl = new MIDletClassLoader(parent);
 		mcl.addURL(jarURL);
 		try {
@@ -94,29 +94,34 @@ public class MIDletClassLoaderTest extends TestCase {
 		} finally {
 			IOUtils.closeQuietly(is);
 		}
-		
+
 	}
-	
+
 	public void testApplication() throws Exception {
 		ClassLoader parent = MIDletClassLoaderTest.class.getClassLoader();
 		URL jarURL = parent.getResource(TEST_APP_JAR);
 		assertNotNull("Can't find app jar", jarURL);
-		
+
 		System.setProperty("test.verbose", "1");
-		
+
 		MIDletSystemProperties.setProperty("test.property1", "1");
 		MIDletSystemProperties.setProperty("microedition.platform", null);
-		
+
+		MIDletResourceLoader.traceResourceLoading = true;
 		MIDletClassLoader.enhanceCatchBlock = false;
 		MIDletClassLoader mcl = new MIDletClassLoader(parent);
+		// delegatingToParent = false;
+		MIDletClassLoaderConfig clConfig = new MIDletClassLoaderConfig();
+		clConfig.delegationType = MIDletClassLoaderConfig.DELEGATION_STRICT;
+		mcl.configure(clConfig);
 		mcl.disableClassPreporcessing(Injected.class);
 		MIDletResourceLoader.classLoader = mcl;
 		mcl.addURL(jarURL);
-		
+
 		Class instrumentedClass = mcl.loadClass(TEST_CLASS);
 		Runnable instrumentedInstance = (Runnable) instrumentedClass.newInstance();
 		instrumentedInstance.run();
-		
+
 		LoggingEvent lastEvent = capture.getLastEvent();
 		assertNotNull("got event", lastEvent);
 		assertEquals("All tests OK", lastEvent.getMessage());
@@ -125,30 +130,47 @@ public class MIDletClassLoaderTest extends TestCase {
 		assertEquals("ClassName", TEST_CLASS, ste.getClassName());
 
 	}
-	
+
 	private void runEnhanceCatchBlock(MIDletClassLoader mcl, String name) throws Exception {
 		Class instrumentedClass = mcl.loadClass(name);
 		Runnable instrumentedInstance = (Runnable) instrumentedClass.newInstance();
 		instrumentedInstance.run();
-		
+
 		LoggingEvent lastEvent = capture.getLastEvent();
 		assertNotNull("got event", lastEvent);
 		assertNotNull("got message", lastEvent.getMessage());
-		System.out.println("[" +lastEvent.getMessage() + "]");
+		System.out.println("[" + lastEvent.getMessage() + "]");
 		assertTrue("error message", lastEvent.getMessage().indexOf("MIDlet caught") != -1);
 	}
-	
+
 	public void x_testEnhanceCatchBlock() throws Exception {
 		ClassLoader parent = MIDletClassLoaderTest.class.getClassLoader();
 		URL jarURL = parent.getResource(TEST_APP_JAR);
 		assertNotNull("Can't find app jar", jarURL);
-		
+
 		System.setProperty("test.verbose", "1");
-		
+
 		MIDletClassLoader.enhanceCatchBlock = true;
 		MIDletClassLoader mcl = new MIDletClassLoader(parent);
 		mcl.disableClassPreporcessing(Injected.class);
 		mcl.addURL(jarURL);
 		runEnhanceCatchBlock(mcl, "org.catchBlock.CatchThrowable");
+	}
+
+	public void testTimer() throws Exception {
+		ClassLoader parent = MIDletClassLoaderTest.class.getClassLoader();
+		URL jarURL = parent.getResource(TEST_APP_JAR);
+		assertNotNull("Can't find app jar", jarURL);
+
+		System.setProperty("test.verbose", "1");
+
+		MIDletClassLoader.enhanceCatchBlock = true;
+		MIDletClassLoader mcl = new MIDletClassLoader(parent);
+		mcl.disableClassPreporcessing(Injected.class);
+		mcl.addURL(jarURL);
+
+		Class instrumentedClass = mcl.loadClass("org.TimerCreationRunner");
+		Runnable instrumentedInstance = (Runnable) instrumentedClass.newInstance();
+		instrumentedInstance.run();
 	}
 }

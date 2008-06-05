@@ -24,12 +24,10 @@
 
 package org.microemu.device.impl;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -793,14 +791,11 @@ public abstract class DeviceImpl implements Device {
 	}
 
 	private static XMLElement loadXmlDocument(InputStream descriptor) throws IOException {
-		BufferedReader dis = new BufferedReader(new InputStreamReader(descriptor));
 		XMLElement doc = new XMLElement();
 		try {
-			doc.parseFromReader(dis, 1);
+			doc.parse(descriptor, 1);
 		} catch (XMLParseException ex) {
 			throw new IOException(ex.toString());
-		} finally {
-			dis.close();
 		}
 		return doc;
 	}

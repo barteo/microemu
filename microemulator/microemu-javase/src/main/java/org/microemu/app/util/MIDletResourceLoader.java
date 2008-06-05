@@ -71,11 +71,13 @@ public class MIDletResourceLoader {
 		}
 		resourceName = resolveName(origClass, resourceName);
 
-		InputStream is = new MIDletResourceInputStream(classLoader.getResourceAsStream(resourceName));
+		InputStream is = classLoader.getResourceAsStream(resourceName);
 		if (is == null) {
 			Logger.debug("Resource not found ", resourceName);
+			return null;
+		} else {
+			return new MIDletResourceInputStream(is);
 		}
-		return is;
 	}
 
 	private static String resolveName(Class origClass, String name) {

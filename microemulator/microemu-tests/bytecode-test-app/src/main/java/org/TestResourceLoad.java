@@ -32,7 +32,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
- * This class illustrate Resource usage paterns commonly used in MIDlet and not aceptable in Java SE application 
+ * This class illustrate Resource usage paterns commonly used in MIDlet and not
+ * aceptable in Java SE application
+ * 
  * @author vlads
  */
 
@@ -41,46 +43,52 @@ public class TestResourceLoad implements Runnable {
 	public void loadStringsUsingSystemClassLoaded() {
 		String resourceName;
 		String expected;
-		
+
 		resourceName = "/app-data.txt";
 		expected = "private app-data";
-		verifyLoadStrings("".getClass().getResourceAsStream(resourceName), "\"\".getClass() " +  resourceName, expected);
-		verifyLoadStrings(String.class.getResourceAsStream(resourceName), "String.class. " +  resourceName, expected);
-		
+		verifyLoadStrings("".getClass().getResourceAsStream(resourceName), "\"\".getClass() " + resourceName, expected);
+		verifyLoadStrings(String.class.getResourceAsStream(resourceName), "String.class. " + resourceName, expected);
+
 	}
-	
+
 	public void accessTest() {
 		String resourceName;
 		String expected;
-		
+
 		resourceName = "/container-internal.txt";
-		verifyLoadStrings(this.getClass().getResourceAsStream(resourceName), "this.getClass() " + resourceName, null);
-		verifyLoadStrings("".getClass().getResourceAsStream(resourceName), "\"\".getClass() " +  resourceName, null);
-		
+		verifyNotLoaddable(this.getClass().getResourceAsStream(resourceName), "this.getClass() " + resourceName);
+		verifyNotLoaddable("".getClass().getResourceAsStream(resourceName), "\"\".getClass() " + resourceName);
+
 		resourceName = "/app-data.txt";
 		expected = "private app-data";
-		verifyLoadStrings(this.getClass().getResourceAsStream(resourceName), "this.getClass() " + resourceName, expected);
-		verifyLoadStrings("".getClass().getResourceAsStream(resourceName), "\"\".getClass() " +  resourceName, expected);
+		verifyLoadStrings(this.getClass().getResourceAsStream(resourceName), "this.getClass() " + resourceName,
+				expected);
+		verifyLoadStrings("".getClass().getResourceAsStream(resourceName), "\"\".getClass() " + resourceName, expected);
 	}
 
 	public void multipleResources() {
-		
+
 		String resourceName = "/strings.txt";
 		String expected = "proper MIDlet resources strings";
-		verifyLoadStrings(this.getClass().getResourceAsStream(resourceName), "this.getClass() " + resourceName, expected);
-		verifyLoadStrings("".getClass().getResourceAsStream(resourceName), "\"\".getClass() " +  resourceName, expected);
-		
+		verifyLoadStrings(this.getClass().getResourceAsStream(resourceName), "this.getClass() " + resourceName,
+				expected);
+		verifyLoadStrings("".getClass().getResourceAsStream(resourceName), "\"\".getClass() " + resourceName, expected);
+
 	}
 
 	public void packageResources() {
 
-        String resourceName = "resource-package.txt";
-        String expected = "package relative";
-        verifyLoadStrings(TestResourceLoad.class.getResourceAsStream(resourceName), "this.class " + resourceName,
-                expected);
-    }
-	
-	private void verifyLoadStrings(InputStream inputstream, String resourceName, String expected) {	
+		String resourceName = "resource-package.txt";
+		String expected = "package relative";
+		verifyLoadStrings(TestResourceLoad.class.getResourceAsStream(resourceName), "this.class " + resourceName,
+				expected);
+	}
+
+	private void verifyNotLoaddable(InputStream inputstream, String resourceName) {
+		verifyLoadStrings(inputstream, resourceName, null);
+	}
+
+	private void verifyLoadStrings(InputStream inputstream, String resourceName, String expected) {
 		if (inputstream == null) {
 			if (expected == null) {
 				if (TestMain.verbose) {
@@ -98,7 +106,8 @@ public class TestResourceLoad implements Runnable {
 			BufferedReader r = new BufferedReader(new InputStreamReader(inputstream));
 			String value = r.readLine();
 			if (!expected.equals(value)) {
-				throw new RuntimeException("Unexpected resource " + resourceName + " value [" + value + "]\nexpected [" + expected + "]");
+				throw new RuntimeException("Unexpected resource " + resourceName + " value [" + value + "]\nexpected ["
+						+ expected + "]");
 			}
 		} catch (IOException e) {
 			throw new RuntimeException("Resource read error " + resourceName, e);
@@ -111,16 +120,16 @@ public class TestResourceLoad implements Runnable {
 	}
 
 	public void run() {
-		
+
 		if (TestMain.verbose) {
-			System.out.println("ClassLoader " + this.getClass().getClassLoader().hashCode() +  " TestResourceLoad");
+			System.out.println("ClassLoader " + this.getClass().getClassLoader().hashCode() + " TestResourceLoad");
 		}
-		
+
 		loadStringsUsingSystemClassLoaded();
 		multipleResources();
 		accessTest();
 		packageResources();
-		
+
 	}
-	
+
 }

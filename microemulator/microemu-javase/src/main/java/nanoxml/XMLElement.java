@@ -24,9 +24,13 @@
 
 package nanoxml;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.CharArrayReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
@@ -37,6 +41,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * XMLElement is a representation of an XML object. The object is able to parse
@@ -1984,6 +1990,45 @@ public class XMLElement {
 				this.scanElement(this);
 				return;
 			}
+		}
+	}
+
+	public void parse(InputStream is, int startingLineNr) throws IOException, XMLParseException {
+		// <?xml version="1.0" encoding="ISO-8859-1"?>
+		// or <?xml version="1.0" encoding="UTF-8"?>
+
+		// Very simple read the header and reset to beginning
+		BufferedInputStream in = new BufferedInputStream(is);
+		int maxHeader = 100;
+		in.mark(maxHeader);
+		StringBuffer fistLine = new StringBuffer();
+		int c;
+		while (((c = in.read()) != -1) && (fistLine.length() < maxHeader)) {
+			fistLine.append((char) c);
+			if (c == '>') {
+				break;
+			}
+		}
+		in.reset();
+		String encoding = null;
+		// Java 1.4
+		Pattern pattern = Pattern.compile("(encoding=\")([\\p{Alnum}-]+)\"");
+		Matcher matcher = pattern.matcher(fistLine.toString());
+		if (matcher.find()) {
+			encoding = matcher.group(2);
+		}
+
+		BufferedReader dis;
+		if (encoding == null) {
+			dis = new BufferedReader(new InputStreamReader(in));
+		} else {
+			dis = new BufferedReader(new InputStreamReader(in, encoding));
+		}
+		try {
+			parseFromReader(dis, 1);
+		} finally {
+			dis.close();
+			in.close();
 		}
 	}
 

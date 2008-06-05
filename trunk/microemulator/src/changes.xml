@@ -20,10 +20,35 @@
         <action dev="barteo" type="add">Start ME2 as child windows from another java program.</action>
     </release>
 
-    <release version="2.0.2 TODO" date="date not defined" description="Plans for next Release">
+    <release version="2.0.3 TODO" date="date not defined" description="Plans for next Release">
     </release>
 
-    <release version="2.0.2-SNAPSHOT" date="Release date not defined" description="">
+    <release version="2.0.3-SNAPSHOT" date="Release date not defined" description="">
+        <!--
+        <action dev="barteo" type="update">Fixed clipping problem ?</action>
+        Backspace keyboard key has keyCode=-8 which is passed to the Canvas
+        Fixed NPE when MIDlet tries to access the record store in own constructor
+        Fixed ArrayIndexOutOfBoundsException in Form.insert(..)
+        Fixed bug in sizeChanged used by GameCanvas
+        Fix for: Parsing keyboard keys is broken if there is more than one key defined
+        -->
+        <action dev="vlads" type="update">Log will keep MultiLine System.out.print() class from MIDlet</action>
+        <action dev="vlads" type="add">Show WARNING when loadin Java 5 MIDlet classes</action>
+        <action dev="vlads" type="update">Disable automatic redirects in http(s) connections</action>
+        <action dev="vlads" type="update">Fixed recent MIDlet menu has only one Element</action>
+        <action dev="vlads" type="update">Special chars in recordStoreName</action>
+        <action dev="vlads" type="update">Fixed getResource for pakage realtive resourses</action>
+        <action dev="barteo" type="update">Special InputStream wrapper for loading resources that is needed to change behavior of read(byte[] b) under Java SE</action>
+        <action dev="vlads" type="update">Fixed Logger hanging on DualCore CPU</action>
+        <action dev="vlads" type="update">Fixed extending Timer instrumentation error</action>
+        <action dev="vlads" type="update">Fixed FileSystemRegistryImpl initialization</action>
+        <action dev="vlads" type="add">Support ? in jad URL (http get query)</action>
+        <action dev="vlads" type="add">device.xml inheritance attribute override="true"</action>
+        <action dev="vlads" type="update">support device.xml XML encoding</action>
+        <action dev="vlads" type="update">device.xml support national keyboard letters</action>
+    </release>
+
+    <release version="2.0.2" date="2008-03-25" description="">
         <action dev="vlads" type="add">CLDC and MIDP API stubs.</action>
         <action dev="vlads" type="add">device.xml skin version 2.0.2. Buttons name attr defines its function.</action>
         <action dev="barteo" type="add">New skin with dynamic resizable screen size.</action>

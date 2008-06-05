@@ -39,6 +39,8 @@ public class TimerCreationRunner implements Runnable {
 	 */
 	public void run() {
 
+		new TimerExtendsClass().doNothing();
+
 		Runnable r = new TimerAnonymousClass();
 		r.run();
 

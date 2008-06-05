@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.microemu.app.util.MIDletThread;
+import org.microemu.app.util.MIDletTimer;
 import org.microemu.log.Logger;
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
@@ -65,8 +66,12 @@ public class ChangeCallsClassVisitor extends ClassAdapter {
 			String v = (String) javaVersion.get(new Integer(version));
 			Logger.warn("Loading MIDlet class " + name + " of version " + version + ((v == null) ? "" : (" " + v)));
 		}
-		if ((config.isEnhanceThreadCreation()) && (superName.equals("java/lang/Thread"))) {
-			superName = ChangeCallsMethodVisitor.codeName(MIDletThread.class);
+		if (config.isEnhanceThreadCreation()) {
+			if (superName.equals("java/lang/Thread")) {
+				superName = ChangeCallsMethodVisitor.codeName(MIDletThread.class);
+			} else if (superName.equals("java/util/Timer")) {
+				superName = ChangeCallsMethodVisitor.codeName(MIDletTimer.class);
+			}
 		}
 		super.visit(version, access, name, signature, superName, interfaces);
 	}

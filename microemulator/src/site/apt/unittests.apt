@@ -1,5 +1,5 @@
 ~~ @version $Revision$ ($Author$) $Date$
-~~ See this file format http://maven.apache.org/guides/mini/guide-apt-format.html
+~~ See this file format http://maven.apache.org/doxia/references/apt-format.html
 
                                     ------------------
                                     Testing J2ME  Application using MicroEmulator
@@ -23,6 +23,17 @@ Testing j2me application with MicroEmulator
 
         See how it is used to test MicroEmulator in {{{microemu-tests/microemu-test-midlet}microemu-test-midlet}}
 
+    * <<{{{https://opensource.motorola.com/sf/projects/gatling}Gatling}}>> Motorola opensource project: an open, extensible test framework aimed at supporting conformance, interoperability, performance, unit, and signature tests for Java ME implementations. Gatling can be used by application developers or implementers of standard or proprietary APIs and is designed to be easily customized and extended.
+
+        The goals of the project include:
+
+            * Produce a unified test framework that can be freely used, extended, and improved by the entire Java ME community
+
+            * Enable the development of a rich set of tests that serve to reduce fragmentation and subtle differences in implementation of standard APIs
+
+            * Enable many different types of legacy tests to be run within a single test environment
+
+        We run JSR-82 tests for BlueCove using Gatling and MicroEmulator. See {{{http://www.bluecove.org/tck/}BlueCove JSR 82 TCK tests}}
 
     * <<J2MEUnit>> or SE Mobile JUnit approach.
 
@@ -44,15 +55,44 @@ Testing j2me application with MicroEmulator
        In any case probably your complex application already contains multiple modules (jars) that are finally linked to
        with MIDlet in application. Test them separately before you build MIDlet.
 
-       Build and run UnitTests that are executing you application logic with microemulator-2.0.jar in you classpath. All classes that are using Generic Connection Framework will run perfectly under J2SE without initialization.
+       Build and run UnitTests that are executing you application logic with microemulato.jar in you classpath. All classes that are using Generic Connection Framework will run perfectly under J2SE without initialization.
        This way it is much simple to integrate tests into automatic build process and is easier to test complex scenarios.
 
        Don't forget that you will have added benefits of reporting and coverage that comes with standard tools like Eclipse, Emma, Clove.
 
-
-~~~* Running headless emulator
-
+       In addition to GCF code you can test jsr-82 bluetooth application code using BlueCove JSR-82 Emulator module in J2SE.
 
 
+* Running headless emulator
 
+    We are working on this text now
+
+
+* -Xautotest MicroEmulator command line option to run MIDlet in autotest mode
+
+    The -Xautotest should run the same way as in WTK. Since in WTK it not well documented Vlad did what he understood. This feature has only been tested with {{{https://opensource.motorola.com/sf/projects/gatling}Gatling}}
+
+    To run MIDlet tests in MicroEmulator execute this command after starting and configuring Gatling:
+
+---
+java -cp microemulator.jar org.microemu.app.Main -Xautotest:http://localhost:8080/getNextApp.jad
+---
+
+    This is what "autotest mode" does in microemulator:
+
+        1) Load <jad> from http url
+
+        2) If <jad> not found (http 404) end all the tests
+
+        3) Create new MIDlet ClassLoader
+
+        4) Load <jar> from url specified in <jad>
+
+        5) If <jar> not found (http 404) end the tests for this <jar>, start from 1) for next <jad>
+
+        6) Start MIDlet
+
+        7) Wait while MIDlet has Running Threads. So the test MIDlet and its Threads should exit by itself..
+
+        8) Continue tests with the same <jar> but load it again; go to 3)
 

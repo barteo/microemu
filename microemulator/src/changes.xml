@@ -32,6 +32,7 @@
         Fixed bug in sizeChanged used by GameCanvas
         Fix for: Parsing keyboard keys is broken if there is more than one key defined
         -->
+        <action dev="vlads" type="update">MIDlet-Jar-URL uses Basic authentication, Example: http://user:pass@foo.bar.com/midlet.jar</action>
         <action dev="vlads" type="update">Log will keep MultiLine System.out.print() calls from MIDlet</action>
         <action dev="vlads" type="add">Show WARNING when loading Java 5 MIDlet classes</action>
         <action dev="vlads" type="update">Disable automatic redirects in http(s) connections</action>

@@ -32,12 +32,12 @@
         Fixed bug in sizeChanged used by GameCanvas
         Fix for: Parsing keyboard keys is broken if there is more than one key defined
         -->
-        <action dev="vlads" type="update">Log will keep MultiLine System.out.print() class from MIDlet</action>
-        <action dev="vlads" type="add">Show WARNING when loadin Java 5 MIDlet classes</action>
+        <action dev="vlads" type="update">Log will keep MultiLine System.out.print() calls from MIDlet</action>
+        <action dev="vlads" type="add">Show WARNING when loading Java 5 MIDlet classes</action>
         <action dev="vlads" type="update">Disable automatic redirects in http(s) connections</action>
         <action dev="vlads" type="update">Fixed recent MIDlet menu has only one Element</action>
         <action dev="vlads" type="update">Special chars in recordStoreName</action>
-        <action dev="vlads" type="update">Fixed getResource for pakage realtive resourses</action>
+        <action dev="vlads" type="update">Fixed getResource for package relative resources</action>
         <action dev="barteo" type="update">Special InputStream wrapper for loading resources that is needed to change behavior of read(byte[] b) under Java SE</action>
         <action dev="vlads" type="update">Fixed Logger hanging on DualCore CPU</action>
         <action dev="vlads" type="update">Fixed extending Timer instrumentation error</action>

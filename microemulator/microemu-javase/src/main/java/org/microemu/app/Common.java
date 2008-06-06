@@ -334,6 +334,10 @@ public class Common implements MicroEmulator, CommonInterface {
 		try {
 			URL url = new URL(jad.getJarURL());
 			URLConnection conn = url.openConnection();
+			if (url.getUserInfo() != null) {
+				String userInfo = new String(Base64Coder.encode(url.getUserInfo().getBytes("UTF-8")));
+				conn.setRequestProperty("Authorization", "Basic " + userInfo);
+			}
 			is = conn.getInputStream();
 			File tmpDir = null;
 			String systemTmpDir = MIDletSystemProperties.getSystemProperty("java.io.tmpdir");
@@ -555,9 +559,21 @@ public class Common implements MicroEmulator, CommonInterface {
 				} catch (MalformedURLException ex1) {
 					Logger.error("Unable to find jar url", ex1);
 					setResponseInterface(true);
+					return;
 				}
 			}
-
+			// Support Basic Authentication; Copy jar file to tmp directory
+			if (url.getUserInfo() != null) {
+				String tmpURL = saveJar2TmpFile(jarUrl, true);
+				if (tmpURL == null) {
+					return;
+				}
+				try {
+					url = new URL(tmpURL);
+				} catch (MalformedURLException e) {
+					Logger.error("Unable to open tmporary jar url", e);
+				}
+			}
 			midletClassLoader.addURL(url);
 
 			Launcher.removeMIDletEntries();

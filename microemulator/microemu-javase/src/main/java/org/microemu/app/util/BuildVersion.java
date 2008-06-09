@@ -32,21 +32,44 @@ import java.util.Properties;
 
 /**
  * @author vlads
- *
+ * 
  */
 public class BuildVersion {
 
 	public static String getVersion() {
-		InputStream is = BuildVersion.class.getResourceAsStream("/META-INF/maven/org.microemu/microemu-javase/pom.properties");
-		if (is != null) {
+		InputStream buildVersionInputStream = BuildVersion.class
+				.getResourceAsStream("/META-INF/microemulator-build.version");
+		if (buildVersionInputStream != null) {
 			Properties projectProperties = new Properties();
 			try {
-				projectProperties.load(is);
+				projectProperties.load(buildVersionInputStream);
+				String version = projectProperties.getProperty("build.version");
+				if (version != null) {
+					String buildNumber = projectProperties.getProperty("build.buildNum");
+					if (buildNumber != null) {
+						version += "." + buildNumber;
+					}
+					return version;
+				}
+			} catch (IOException ignore) {
+			} finally {
+				IOUtils.closeQuietly(buildVersionInputStream);
+			}
+		}
+
+		InputStream mavenDataInputStream = BuildVersion.class
+				.getResourceAsStream("/META-INF/maven/org.microemu/microemu-javase/pom.properties");
+		if (mavenDataInputStream != null) {
+			Properties projectProperties = new Properties();
+			try {
+				projectProperties.load(mavenDataInputStream);
 				String version = projectProperties.getProperty("version");
 				if (version != null) {
 					return version;
 				}
 			} catch (IOException ignore) {
+			} finally {
+				IOUtils.closeQuietly(mavenDataInputStream);
 			}
 		}
 		return "n/a";

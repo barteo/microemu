@@ -21,4 +21,10 @@
             </excludes>
         </dependencySet>
     </dependencySets>
+    <files>
+        <file>
+            <source>${basedir}/../build.version</source>
+            <destName>META-INF/microemulator-build.version</destName>
+        </file>
+   </files>
 </assembly>

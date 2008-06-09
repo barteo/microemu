@@ -51,6 +51,35 @@
     <build>
         <plugins>
 
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>jar-with-dependencies-fix-manifest</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy file="${basedir}/assembly.manifest" todir="${project.build.directory}" overwrite="true"/>
+                                <tstamp><format property="TODAY" pattern="yyyy-MM-dd hh:mm:ss" /></tstamp>
+                                <echo>pom.xml: timestamp ${TODAY}</echo>
+                                <!-- Set build number -->
+                                <replace dir="${project.build.directory}">
+                                    <include name="assembly.manifest"/>
+                                    <replacefilter token="#build#" value="${buildLabel}"/>
+                                    <replacefilter token="#version#" value="${version}"/>
+                                    <replacefilter token="#user.name#" value="${user.name}"/>
+                                    <replacefilter token="#today#" value="${TODAY}"/>
+                                    <replacefilter token="#scm.revision#" value="${scm.revision}"/>
+                                </replace>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- app jar-with-dependencies -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -67,15 +96,16 @@
                                <descriptor>assembly-app.xml</descriptor>
                            </descriptors>
                            <archive>
+                                <manifestFile>${project.build.directory}/assembly.manifest</manifestFile>
+                                <!-- this does not work, if manifestFile is used -->
                                 <manifest>
                                     <mainClass>org.microemu.app.Main</mainClass>
                                 </manifest>
                                 <!-- this does not work, bug http://jira.codehaus.org/browse/MASSEMBLY-188 -->
                                 <manifestEntries>
-                                    <Version>${label}</Version>
-                                    <Build-Time>${cctimestamp}</Build-Time>
-                                    <Build-Time>${cctimestamp}</Build-Time>
-                                    <Implementation-Version2>${pom.version}</Implementation-Version2>
+                                    <Implementation-Version>${pom.version}</Implementation-Version>
+                                    <Implementation-Build>${label}</Implementation-Build>
+                                    <Build-Date>${cctimestamp}</Build-Date>
                                     <SVN-Revision>${scm.revision}</SVN-Revision>
                                     <License>GNU Lesser General Public License (LGPL)</License>
                                 </manifestEntries>

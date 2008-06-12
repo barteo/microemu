@@ -132,6 +132,15 @@ public class FileSystemFileConnection implements FileConnection {
 						throw new RuntimeException("Can't create filesystem root " + fsRoot.getAbsolutePath());
 					}
 				}
+				// Create real roots C and E
+				File rootC = new File(fsRoot, "c");
+				if (!rootC.exists()) {
+					rootC.mkdirs();
+				}
+				File rootE = new File(fsRoot, "e");
+				if (!rootE.exists()) {
+					rootE.mkdirs();
+				}
 				return fsRoot;
 			} else {
 				File fsRoot = new File(fsRootConfig);

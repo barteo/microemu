@@ -29,7 +29,7 @@
             </question>
             <answer>
                 <p>
-                    This is beacuse you are compiling your code with J2SE java.io.
+                    This is because you are compiling your code with J2SE java.io.
                     And DataInputStream and DataOutputStream are inherited from FilterInputStream in J2SE
                     The problem in close() function.
                     Solution is to use InputStream.close(). Consider this example:

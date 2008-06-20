@@ -198,7 +198,7 @@ public class AndroidDisplayGraphics extends javax.microedition.android.lcdui.Gra
         canvas.translate(x, y);
         clip.left -= x;
         clip.right -= x;
-        clip.top = -y;
+        clip.top -= y;
         clip.bottom -= y;
     }
 

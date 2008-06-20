@@ -247,7 +247,7 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
         super.translate(x, y);
         g.translate(x, y);
         clip.x -= x;
-        clip.y = -y;
+        clip.y -= y;
     }
 
     // Andres Navarro

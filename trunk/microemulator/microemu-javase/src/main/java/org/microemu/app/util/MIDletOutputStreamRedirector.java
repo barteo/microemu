@@ -88,6 +88,8 @@ public class MIDletOutputStreamRedirector extends PrintStream {
 
 	private MIDletOutputStreamRedirector(boolean error) {
 		super(new OutputStream2Log(error));
+
+		this.isErrorStream = error;
 	}
 
 	private static PrintStream outPrintStream() {

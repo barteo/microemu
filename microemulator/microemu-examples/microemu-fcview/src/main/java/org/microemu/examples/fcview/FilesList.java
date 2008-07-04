@@ -48,6 +48,8 @@ public class FilesList extends List implements CommandListener {
 
 	static final Command exitCommand = new Command("Exit", Command.EXIT, 5);
 
+	static final Command infoCommand = new Command("Info", Command.ITEM, 6);
+
 	private FileConnection currentDir;
 
 	private Image dirIcon = null, fileIcon = null;
@@ -57,6 +59,7 @@ public class FilesList extends List implements CommandListener {
 	public FilesList() {
 		super("", List.IMPLICIT);
 		this.addCommand(exitCommand);
+		this.addCommand(infoCommand);
 		this.setCommandListener(this);
 	}
 
@@ -118,6 +121,31 @@ public class FilesList extends List implements CommandListener {
 		}
 	}
 
+	private void showInfo(String name) {
+		String p;
+		if (currentDir == null) {
+			p = DIR_SEP + name;
+		} else if (name.equals("..")) {
+			return;
+		} else {
+			p = currentDir.getPath() + currentDir.getName() + name;
+		}
+		try {
+			FileConnection f = (FileConnection) Connector.open("file://localhost" + p);
+
+			StringBuffer message = new StringBuffer();
+
+			message.append("totalSize:").append(f.totalSize()).append('\n');
+			message.append("availableSize:").append(f.availableSize()).append('\n');
+
+			Alert alert = new Alert("Info", message.toString(), null, AlertType.INFO);
+			alert.setTimeout(Alert.FOREVER);
+			FCViewMIDlet.setCurrentDisplayable(alert);
+		} catch (IOException e) {
+			showError(e.getMessage());
+		}
+	}
+
 	private void showError(String message) {
 		Alert alert = new Alert("Error", message, null, AlertType.ERROR);
 		alert.setTimeout(Alert.FOREVER);
@@ -131,6 +159,13 @@ public class FilesList extends List implements CommandListener {
 				new Thread(new Runnable() {
 					public void run() {
 						changeDir(newDir);
+					}
+				}).start();
+			} else if (c == infoCommand) {
+				final String newDir = this.getString(this.getSelectedIndex());
+				new Thread(new Runnable() {
+					public void run() {
+						showInfo(newDir);
 					}
 				}).start();
 			} else if (c == exitCommand) {

@@ -91,6 +91,9 @@ public class FileSystemFileConnection implements FileConnection {
 
 		host = name.substring(0, hostEnd);
 		fullPath = name.substring(hostEnd + 1);
+		if (fullPath.length() == 0) {
+			throw new IOException("Invalid path " + name);
+		}
 		int rootEnd = fullPath.indexOf(DIR_SEP);
 		isRoot = ((rootEnd == -1) || (rootEnd == fullPath.length() - 1));
 		if (fullPath.charAt(fullPath.length() - 1) == DIR_SEP) {
@@ -178,8 +181,7 @@ public class FileSystemFileConnection implements FileConnection {
 		if (fsRoot == null) {
 			return -1;
 		}
-		// TODO
-		return 10000000;
+		return getFileValueJava6("getFreeSpace");
 	}
 
 	public long totalSize() {
@@ -187,8 +189,7 @@ public class FileSystemFileConnection implements FileConnection {
 		if (fsRoot == null) {
 			return -1;
 		}
-		// TODO
-		return 10000000;
+		return getFileValueJava6("getTotalSpace");
 	}
 
 	public boolean canRead() {
@@ -526,6 +527,32 @@ public class FileSystemFileConnection implements FileConnection {
 			});
 		} catch (NoSuchMethodException e) {
 			java15 = true;
+			throw new IOException("Not supported on Java version < 6");
+		}
+	}
+
+	private long getFileValueJava6(String mehtodName) throws SecurityException {
+		if (java15) {
+			throw new SecurityException("Not supported on Java version < 6");
+		}
+		// Use Java6 function in reflection.
+		try {
+			final Method getter = file.getClass().getMethod(mehtodName, new Class[] {});
+			Long rc = (Long) doPrivilegedIO(new PrivilegedExceptionAction() {
+				public Object run() throws IOException {
+					try {
+						return getter.invoke(file, new Object[] {});
+					} catch (Exception e) {
+						throw new IOException(e.getCause().getMessage());
+					}
+				}
+			});
+			return rc.longValue();
+		} catch (IOException e) {
+			throw new SecurityException(e.getMessage());
+		} catch (NoSuchMethodException e) {
+			java15 = true;
+			throw new SecurityException("Not supported on Java version < 6");
 		}
 	}
 

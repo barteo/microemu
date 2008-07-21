@@ -52,6 +52,28 @@
                 </executions>
             </plugin>
 
+            <plugin>
+                <groupId>com.pyx4me</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <version>${pyx4meVersion}</version>
+                <executions>
+                   <execution>
+                       <phase>package</phase>
+                       <goals><goal>proguard</goal></goals>
+                   </execution>
+                </executions>
+                <configuration>
+                    <addMavenDescriptor>true</addMavenDescriptor>
+                    <options>
+                        <option>-dontshrink</option>
+                        <option>-dontoptimize</option>
+                        <option>-dontobfuscate</option>
+                        <option>-microedition</option>
+                        <option>-keep class *</option>
+                    </options>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 

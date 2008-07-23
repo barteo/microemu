@@ -115,8 +115,7 @@
 
     </distributionManagement>
 
-<!-- 4snapshot -->
-<!--
+<!-- 4snapshot begin { -->
     <repositories>
         <repository>
             <id>pyx4me-web</id>
@@ -129,11 +128,11 @@
             </releases>
         </repository>
     </repositories>
--->
+<!-- 4snapshot end } -->
+
     <pluginRepositories>
 
-<!-- 4snapshot -->
-<!--
+<!-- 4snapshot begin { -->
         <pluginRepository>
             <id>pyx4me-web</id>
             <url>http://www.pyx4me.com/maven2-snapshot</url>
@@ -144,7 +143,8 @@
                 <enabled>false</enabled>
             </releases>
         </pluginRepository>
--->
+<!-- 4snapshot end } -->
+
         <pluginRepository>
             <id>codehaus.org</id>
             <name>Codehaus Central Repository</name>
@@ -154,8 +154,8 @@
 
     <properties>
         <buildLabel>${version}</buildLabel>
-        <pyx4meVersion>2.0.2</pyx4meVersion>
-        <jourVersion>2.0.2</jourVersion>
+        <pyx4meVersion>2.0.3-SNAPSHOT</pyx4meVersion>
+        <jourVersion>2.0.3-SNAPSHOT</jourVersion>
         <!-- See OS X profile -->
         <javaRunTimeJar>${java.home}/lib/rt.jar</javaRunTimeJar>
         <javaRunTimeSecurityJar>${java.home}/lib/jsse.jar</javaRunTimeSecurityJar>

@@ -176,4 +176,22 @@ public class MIDletClassLoaderTest extends TestCase {
 		Runnable instrumentedInstance = (Runnable) instrumentedClass.newInstance();
 		instrumentedInstance.run();
 	}
+
+	public void testTimerCancell() throws Exception {
+		ClassLoader parent = MIDletClassLoaderTest.class.getClassLoader();
+		URL jarURL = parent.getResource(TEST_APP_JAR);
+		assertNotNull("Can't find app jar", jarURL);
+
+		System.setProperty("test.verbose", "1");
+
+		MIDletClassLoader mcl = new MIDletClassLoader(parent);
+		mcl.disableClassPreporcessing(Injected.class);
+		mcl.disableClassPreporcessing(MIDletThread.class);
+		mcl.disableClassPreporcessing(MIDletTimer.class);
+		mcl.addURL(jarURL);
+
+		Class instrumentedClass = mcl.loadClass("org.TimerTaskCancelRunner");
+		Runnable instrumentedInstance = (Runnable) instrumentedClass.newInstance();
+		instrumentedInstance.run();
+	}
 }

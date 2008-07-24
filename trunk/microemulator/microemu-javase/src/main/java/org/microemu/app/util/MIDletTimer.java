@@ -48,21 +48,6 @@ public class MIDletTimer extends Timer {
 
 	private static Map midlets = new WeakHashMap();
 
-	private class OneTimeTimerTaskWrapper extends TimerTask {
-
-		TimerTask task;
-
-		OneTimeTimerTaskWrapper(TimerTask task) {
-			this.task = task;
-		}
-
-		public void run() {
-			unregister(MIDletTimer.this);
-			task.run();
-		}
-
-	}
-
 	private String name;
 
 	private MIDletContext midletContext;
@@ -75,7 +60,7 @@ public class MIDletTimer extends Timer {
 
 	public void schedule(TimerTask task, Date time) {
 		register(this);
-		super.schedule(new OneTimeTimerTaskWrapper(task), time);
+		super.schedule(task, time);
 	}
 
 	public void schedule(TimerTask task, Date firstTime, long period) {
@@ -85,7 +70,7 @@ public class MIDletTimer extends Timer {
 
 	public void schedule(TimerTask task, long delay) {
 		register(this);
-		super.schedule(new OneTimeTimerTaskWrapper(task), delay);
+		super.schedule(task, delay);
 	}
 
 	public void schedule(TimerTask task, long delay, long period) {

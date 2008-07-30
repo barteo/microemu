@@ -467,7 +467,13 @@ public class Common implements MicroEmulator, CommonInterface {
 		statusBarListener = listener;
 	}
 
-	public boolean platformRequest(String URL) {
+	public boolean platformRequest(final String URL) {
+		new Thread(new Runnable() {
+			public void run() {
+				Message.info("MIDlet requests that the device handle the following URL: " + URL);
+			}			
+		}).start();
+		
 		return false;
 	}
 

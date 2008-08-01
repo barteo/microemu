@@ -315,7 +315,7 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 			}
 		}
 
-		repaint();
+		paintImmediately(x, y, width, height);
 	}
 
 	private void fireDisplayRepaint(MutableImage image) {

@@ -370,20 +370,22 @@ public class Config {
 	public static Rectangle getDeviceEntryDisplaySize(DeviceEntry entry) {
 		XMLElement devicesXml = configXml.getChild("devices");
 
-		for (Enumeration e_device = devicesXml.enumerateChildren(); e_device.hasMoreElements();) {
-			XMLElement tmp_device = (XMLElement) e_device.nextElement();
-			if (tmp_device.getName().equals("device")) {
-				String testDescriptor = tmp_device.getChildString("descriptor", null);
-				if (testDescriptor.equals(entry.getDescriptorLocation())) {
-					XMLElement rectangleXml = tmp_device.getChild("rectangle");
-					if (rectangleXml != null) {
-						Rectangle result = new Rectangle();
-						result.x = rectangleXml.getChildInteger("x", -1);
-						result.y = rectangleXml.getChildInteger("y", -1);
-						result.width = rectangleXml.getChildInteger("width", -1);
-						result.height = rectangleXml.getChildInteger("height", -1);
-
-						return result;
+		if (devicesXml != null) {
+			for (Enumeration e_device = devicesXml.enumerateChildren(); e_device.hasMoreElements();) {
+				XMLElement tmp_device = (XMLElement) e_device.nextElement();
+				if (tmp_device.getName().equals("device")) {
+					String testDescriptor = tmp_device.getChildString("descriptor", null);
+					if (testDescriptor.equals(entry.getDescriptorLocation())) {
+						XMLElement rectangleXml = tmp_device.getChild("rectangle");
+						if (rectangleXml != null) {
+							Rectangle result = new Rectangle();
+							result.x = rectangleXml.getChildInteger("x", -1);
+							result.y = rectangleXml.getChildInteger("y", -1);
+							result.width = rectangleXml.getChildInteger("width", -1);
+							result.height = rectangleXml.getChildInteger("height", -1);
+	
+							return result;
+						}
 					}
 				}
 			}

@@ -31,7 +31,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
-import javax.microedition.android.lcdui.Canvas;
+import javax.microedition.lcdui.Canvas;
 
 import org.microemu.DisplayAccess;
 import org.microemu.MIDletAccess;
@@ -338,6 +338,7 @@ public class AndroidInputMethod extends InputMethod {
 		int resultKeyCode;
 		switch (deviceKeyCode) {
 		case KeyEvent.KEYCODE_DPAD_CENTER :
+		case KeyEvent.KEYCODE_ENTER : // Easier to deliver Canvas.FIRE using keyboard (fix for emulator only)
 			resultKeyCode = Canvas.FIRE;
 			break;
 		case KeyEvent.KEYCODE_DPAD_UP :

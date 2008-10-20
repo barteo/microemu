@@ -43,23 +43,15 @@ public class AndroidClassVisitor extends ClassAdapter {
 			super(mv);
 		}
 		
-	    public void visitFieldInsn(final int opcode, String owner, final String name, String desc) {
-			mv.visitFieldInsn(opcode, fixPackage(owner), name, fixPackage(desc));
-		}	
-
 		public void visitMethodInsn(int opcode, String owner, String name, String desc) {
 			if (isMidlet && opcode == Opcodes.INVOKEVIRTUAL) {
 				if ((name.equals("getResourceAsStream")) && (owner.equals("java/lang/Class"))) {							
-					mv.visitMethodInsn(Opcodes.INVOKESTATIC, fixPackage("org/microemu/MIDletBridge"), name, fixPackage("(Ljava/lang/Class;Ljava/lang/String;)Ljava/io/InputStream;"));
+					mv.visitMethodInsn(Opcodes.INVOKESTATIC, "org/microemu/MIDletBridge", name, "(Ljava/lang/Class;Ljava/lang/String;)Ljava/io/InputStream;");
 					return;
 				}
 			}
 			
-			mv.visitMethodInsn(opcode, fixPackage(owner), name, fixPackage(desc));
-		}
-
-		public void visitTypeInsn(final int opcode, String desc) {
-			super.visitTypeInsn(opcode, fixPackage(desc));
+			mv.visitMethodInsn(opcode, owner, name, desc);
 		}
 		
 	}
@@ -70,28 +62,8 @@ public class AndroidClassVisitor extends ClassAdapter {
 		this.isMidlet = isMidlet;
 	}
 
-    public void visit(final int version, final int access, String name, final String signature, String superName, final String[] interfaces) {
-    	for (int i = 0; i < interfaces.length; i++) {
-    		interfaces[i] = fixPackage(interfaces[i]);
-    	}
-    	super.visit(version, access, fixPackage(name), signature, fixPackage(superName), interfaces);
-	}
-
-	public FieldVisitor visitField(final int access, final String name, String desc, final String signature, final Object value) {
-		return super.visitField(access, name, fixPackage(desc), signature, value);
-	}
-
 	public MethodVisitor visitMethod(final int access, final String name, String desc, final String signature, final String[] exceptions) {
-		return new AndroidMethodVisitor(super.visitMethod(access, name, fixPackage(desc), signature, exceptions));
+		return new AndroidMethodVisitor(super.visitMethod(access, name, desc, signature, exceptions));
 	}
-	
-	public static String fixPackage(String name) {
-		int index = name.indexOf("javax/microedition/lcdui/");
-		if (index != -1) {
-			name = name.replaceAll("javax/microedition/lcdui/", "javax/microedition/android/lcdui/");
-		}
-		
-		return name;
-	}		
 	
 }

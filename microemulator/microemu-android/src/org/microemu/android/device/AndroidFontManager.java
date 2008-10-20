@@ -28,7 +28,7 @@ package org.microemu.android.device;
 
 import java.util.Hashtable;
 
-import javax.microedition.android.lcdui.Font;
+import javax.microedition.lcdui.Font;
 
 import org.microemu.device.FontManager;
 

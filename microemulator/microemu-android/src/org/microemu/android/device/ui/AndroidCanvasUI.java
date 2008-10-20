@@ -26,12 +26,11 @@
 
 package org.microemu.android.device.ui;
 
-import javax.microedition.android.lcdui.Canvas;
-import javax.microedition.android.lcdui.Image;
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Image;
 
 import org.microemu.MIDletBridge;
 import org.microemu.android.MicroEmulatorActivity;
-import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.android.device.AndroidInputMethod;
 import org.microemu.android.device.AndroidMutableImage;
 import org.microemu.device.Device;

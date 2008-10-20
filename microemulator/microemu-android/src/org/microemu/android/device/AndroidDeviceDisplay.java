@@ -29,9 +29,9 @@ package org.microemu.android.device;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.microedition.android.lcdui.Graphics;
-import javax.microedition.android.lcdui.Image;
-import javax.microedition.android.lcdui.game.Sprite;
+import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.game.Sprite;
 
 import org.microemu.DisplayAccess;
 import org.microemu.EmulatorContext;

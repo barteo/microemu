@@ -2,9 +2,9 @@ package org.microemu.android.device.ui;
 
 import java.util.ArrayList;
 
-import javax.microedition.android.lcdui.Image;
-import javax.microedition.android.lcdui.List;
-import javax.microedition.android.lcdui.Command;
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.List;
+import javax.microedition.lcdui.Command;
 
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.ListUI;
@@ -87,6 +87,14 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 	//
 	
 	public int append(String stringPart, Image imagePart) {
+		// TODO improve method that waits for for listAdapter being initialized
+		while (listAdapter == null) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException ex) {
+				ex.printStackTrace();
+			}
+		}
 		return listAdapter.append(stringPart);
 	}
 	

@@ -8,8 +8,8 @@
     <property name="midlet.package" value="SimpleDemo.apk" />
     <property name="midlet.class" value="org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet" />
     <property name="midlet.jar" value="../microemu-examples/microemu-demo/target/microemu-demo-2.0.3-SNAPSHOT.jar" />
-    <property name="sdk-folder" value="/home/barteo/Desktop/android-sdk_m5-rc15_linux-x86" />
-    <property name="asm.jar" value="/home/barteo/Desktop/tmp/asm-3.0.jar" />
+    <property name="sdk-folder" value="/home/barteo/Desktop/android-sdk-linux_x86-1.0_r1" />
+    <property name="asm.jar" value="/home/barteo/.m2/repository/asm/asm/3.1/asm-3.1.jar" />
     <property name="microemu-cldc.jar" value="../microemu-cldc/target/microemu-cldc-2.0.3-SNAPSHOT.jar" />
     <property name="microemu-midp.jar" value="../microemu-midp/target/microemu-midp-2.0.3-SNAPSHOT.jar" />
     <property name="microemu-javase.jar" value="../microemu-javase/target/microemu-javase-2.0.3-SNAPSHOT.jar" />
@@ -35,11 +35,24 @@
     <!-- Tools -->
     <property name="aapt" value="${sdk-folder}/tools/aapt" />
     <property name="dx" value="${sdk-folder}/tools/dx" />
-    <property name="zip" value="zip" />
+    <condition property="apk-builder" value="${sdk-folder}/tools/apkbuilder.bat" else="${sdk-folder}/tools/apkbuilder" >
+        <os family="windows"/>
+    </condition>
     <property name="android-jar" value="${sdk-folder}/android.jar" />
     
     <target name="clean">
         <delete dir="${outdir}" />
+    </target>
+
+    <target name="check">
+        <available file="${microemu-cldc.jar}" property="microemu-cldc.jar.present"/>
+        <fail unless="microemu-cldc.jar.present" message="microemu-cldc.jar doesn't exist at ${microemu-cldc.jar}"/>
+        
+        <available file="${microemu-midp.jar}" property="microemu-midp.jar.present"/>
+        <fail unless="microemu-midp.jar.present" message="microemu-midp.jar doesn't exist at ${microemu-midp.jar}"/>
+        
+        <available file="${microemu-javase.jar}" property="microemu-javase.jar.present"/>
+        <fail unless="microemu-javase.jar.present" message="microemu-javase.jar doesn't exist at ${microemu-javase.jar}"/>
     </target>
 
     <target name="dirs">
@@ -51,7 +64,7 @@
         <mkdir dir="${outdir-libs}" />
     </target>
     
-    <target name="compile-producer" depends="dirs">
+    <target name="compile-producer" depends="check,dirs">
         <javac target="1.5" debug="true" extdirs=""
                 srcdir="src"
                 destdir="${outdir-producer}"
@@ -63,22 +76,6 @@
    </target>
 
     <target name="prepare-jars" depends="compile-producer">
-        <java classname="org.microemu.android.asm.AndroidProducer">            
-            <arg value="${microemu-midp.jar}"/>
-            <arg value="${outdir-libs}/microemu-midp.jar"/>
-            <classpath>
-                <pathelement path="${outdir-producer}"/>
-                <pathelement location="${asm.jar}"/>
-            </classpath>
-        </java>
-        <java classname="org.microemu.android.asm.AndroidProducer">            
-            <arg value="${microemu-javase.jar}"/>
-            <arg value="${outdir-libs}/microemu-javase.jar"/>
-            <classpath>
-                <pathelement path="${outdir-producer}"/>
-                <pathelement location="${asm.jar}"/>
-            </classpath>
-        </java>
         <java classname="org.microemu.android.asm.AndroidProducer">            
             <arg value="${midlet.jar}"/>
             <arg value="${outdir-libs}/midlet.jar"/>
@@ -97,8 +94,8 @@
                 bootclasspath="${android-jar}"
                 excludes="org/microemu/android/asm/**">
             <classpath>
-                <pathelement location="${outdir-libs}/microemu-midp.jar" />
-                <pathelement location="${outdir-libs}/microemu-javase.jar"/>
+                <pathelement location="${microemu-midp.jar}" />
+                <pathelement location="${microemu-javase.jar}"/>
             </classpath>
         </javac>
     </target>
@@ -108,11 +105,10 @@
             <arg value="-JXmx384M" />
             <arg value="--dex" />
             <arg value="--output=${intermediate-dex}" />
-            <arg value="--locals=full" />
             <arg value="--positions=lines" />
             <arg value="${microemu-cldc.jar}"/>
-            <arg value="${outdir-libs}/microemu-midp.jar" />
-            <arg value="${outdir-libs}/microemu-javase.jar"/>
+            <arg value="${microemu-midp.jar}" />
+            <arg value="${microemu-javase.jar}"/>
             <arg path="${outdir-classes}" />
             <arg value="${outdir-libs}/midlet.jar"/>
         </exec>
@@ -143,7 +139,6 @@
         <exec executable="${aapt}" failonerror="true">
             <arg value="package" />
             <arg value="-f" />
-            <arg value="-c" />
             <arg value="-M" />
             <arg value="AndroidManifest.xml" />
             <arg value="-S" />
@@ -152,14 +147,17 @@
             <arg value="${outdir-assets}" />
             <arg value="-I" />
             <arg value="${android-jar}" />
-            <arg value="${out-package}" />
+            <arg value="-F" />
+            <arg value="${out-package}.res" /> <!-- temp name -->
         </exec>
     </target>
 
     <target name="package-apk" depends="clean, dex, package-res">
-        <exec executable="${zip}" failonerror="true">
-            <arg value="-qj" />
+        <exec executable="${apk-builder}" failonerror="true">
             <arg value="${out-package}" />
+            <arg value="-z" />
+            <arg value="${out-package}.res" /> <!-- temp name -->
+            <arg value="-f" />
             <arg value="${intermediate-dex}" />
         </exec>
     </target>

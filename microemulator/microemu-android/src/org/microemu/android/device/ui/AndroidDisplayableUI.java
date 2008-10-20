@@ -31,8 +31,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.microedition.android.lcdui.Command;
-import javax.microedition.android.lcdui.CommandListener;
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.CommandListener;
 
 import org.microemu.device.ui.DisplayableUI;
 

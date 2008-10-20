@@ -26,7 +26,7 @@
 
 package org.microemu.android.device.ui;
 
-import javax.microedition.android.lcdui.TextBox;
+import javax.microedition.lcdui.TextBox;
 
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.TextBoxUI;

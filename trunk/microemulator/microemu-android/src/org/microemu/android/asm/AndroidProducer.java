@@ -88,7 +88,6 @@ public class AndroidProducer {
 					if (name.endsWith(".class")) {					
 				        outputBuffer = instrument(new ByteArrayInputStream(inputBuffer, 0, size), isMidlet);
 				        outputSize = outputBuffer.length;
-				        name = AndroidClassVisitor.fixPackage(name);
 					}
 					jos.putNextEntry(new JarEntry(name));
 					jos.write(outputBuffer, 0, outputSize);

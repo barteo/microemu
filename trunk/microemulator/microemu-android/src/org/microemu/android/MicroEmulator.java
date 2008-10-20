@@ -31,10 +31,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
-import javax.microedition.android.lcdui.Command;
-import javax.microedition.android.lcdui.CommandListener;
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.CommandListener;
 
 import org.microemu.DisplayAccess;
 import org.microemu.DisplayComponent;
@@ -57,6 +59,7 @@ import org.microemu.log.Logger;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -189,20 +192,42 @@ public class MicroEmulator extends MicroEmulatorActivity {
 		menu.clear();	
 		boolean result = false;
 		final CommandListener l = ui.getCommandListener();
-		ArrayList commands = new ArrayList(ui.getCommands());
-		for (Iterator it = commands.iterator(); it.hasNext(); ) {
+		List<Command> commands = ui.getCommands();
+		for (int i = 0; i < commands.size(); i++) {
 			result = true;
-			final Command cmd = (Command) it.next();
-			menu.add(0, 0, cmd.getLabel(), new Runnable() {
-				public void run() {
-					if (l != null) {
-						l.commandAction(cmd, da.getCurrent());
-					}
-				}				
-			});
+			final Command cmd = commands.get(i);
+			menu.add(Menu.NONE, i + Menu.FIRST, Menu.NONE, cmd.getLabel());
 		}
 
 		return result;
 	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma == null) {
+			return false;
+		}
+		final DisplayAccess da = ma.getDisplayAccess();
+		if (da == null) {
+			return false;
+		}
+		AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getCurrentUI();
+		if (ui == null) {
+			return false;
+		}
+
+		final CommandListener l = ui.getCommandListener();
+		int commandIndex = item.getItemId() - Menu.FIRST;
+		List<Command> commands = ui.getCommands();
+		Command c = commands.get(commandIndex);
+
+		if (c != null) {
+			l.commandAction(c, da.getCurrent());
+			return true;
+		}
+
+		return false;
+	}	
 
 }

@@ -26,7 +26,7 @@
 
 package org.microemu.android.device;
 
-import javax.microedition.android.lcdui.Graphics;
+import javax.microedition.lcdui.Graphics;
 
 import org.microemu.device.MutableImage;
 
@@ -38,7 +38,7 @@ public class AndroidMutableImage extends MutableImage {
 	private Bitmap bitmap;
 	
 	public AndroidMutableImage(int width, int height) {
-		bitmap = Bitmap.createBitmap(width, height, false);
+		bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 	}
 
 	@Override
@@ -69,12 +69,12 @@ public class AndroidMutableImage extends MutableImage {
 
 	@Override
 	public int getWidth() {
-		return bitmap.width();
+		return bitmap.getWidth();
 	}
 	
 	@Override
 	public int getHeight() {
-		return bitmap.height();
+		return bitmap.getHeight();
 	}
 
 	@Override

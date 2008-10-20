@@ -30,12 +30,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.microedition.android.lcdui.Alert;
-import javax.microedition.android.lcdui.Canvas;
-import javax.microedition.android.lcdui.Form;
-import javax.microedition.android.lcdui.Image;
-import javax.microedition.android.lcdui.List;
-import javax.microedition.android.lcdui.TextBox;
+import javax.microedition.lcdui.Alert;
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Form;
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.List;
+import javax.microedition.lcdui.TextBox;
 
 import org.microemu.EmulatorContext;
 import org.microemu.android.MicroEmulatorActivity;

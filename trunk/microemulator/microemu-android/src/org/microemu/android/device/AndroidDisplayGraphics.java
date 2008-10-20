@@ -26,9 +26,9 @@
 
 package org.microemu.android.device;
 
-import javax.microedition.android.lcdui.Font;
-import javax.microedition.android.lcdui.Image;
-import javax.microedition.android.lcdui.game.Sprite;
+import javax.microedition.lcdui.Font;
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.game.Sprite;
 
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.MutableImage;
@@ -39,7 +39,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-public class AndroidDisplayGraphics extends javax.microedition.android.lcdui.Graphics {
+public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
 	private Canvas canvas;
 	
@@ -106,17 +106,17 @@ public class AndroidDisplayGraphics extends javax.microedition.android.lcdui.Gra
         int newy = y;
 
         if (anchor == 0) {
-            anchor = javax.microedition.android.lcdui.Graphics.TOP | javax.microedition.android.lcdui.Graphics.LEFT;
+            anchor = javax.microedition.lcdui.Graphics.TOP | javax.microedition.lcdui.Graphics.LEFT;
         }
 
-        if ((anchor & javax.microedition.android.lcdui.Graphics.TOP) != 0) {
+        if ((anchor & javax.microedition.lcdui.Graphics.TOP) != 0) {
             newy -= paint.getFontMetricsInt().ascent;
-        } else if ((anchor & javax.microedition.android.lcdui.Graphics.BOTTOM) != 0) {
+        } else if ((anchor & javax.microedition.lcdui.Graphics.BOTTOM) != 0) {
             newy -= paint.getFontMetricsInt().descent;
         }
-        if ((anchor & javax.microedition.android.lcdui.Graphics.HCENTER) != 0) {
+        if ((anchor & javax.microedition.lcdui.Graphics.HCENTER) != 0) {
             newx -= paint.measureText(str) / 2;
-        } else if ((anchor & javax.microedition.android.lcdui.Graphics.RIGHT) != 0) {
+        } else if ((anchor & javax.microedition.lcdui.Graphics.RIGHT) != 0) {
             newx -= paint.measureText(str);
         }
 

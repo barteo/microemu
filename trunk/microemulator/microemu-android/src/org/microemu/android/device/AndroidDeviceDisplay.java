@@ -63,22 +63,20 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 		this.context = context;
 	}
 
-	public Image createImage(String arg0) throws IOException {
-		System.out.println("createImage: " + arg0);
-		// TODO Auto-generated method stub
-		return null;
+	public Image createImage(String name) throws IOException {
+		return createImage(context.getResourceAsStream(name));
 	}
 
-	public Image createImage(Image arg0) {
-		System.out.println("createImage: " + arg0);
-		// TODO Auto-generated method stub
-		return null;
+	public Image createImage(Image source) {
+		if (source.isMutable()) {
+			return new AndroidImmutableImage((AndroidMutableImage) source);
+		} else {
+			return source;
+		}
 	}
 
-	public Image createImage(InputStream arg0) throws IOException {
-		System.out.println("createImage: " + arg0);
-		// TODO Auto-generated method stub
-		return null;
+	public Image createImage(InputStream is) throws IOException {
+		return new AndroidImmutableImage(BitmapFactory.decodeStream(is));
 	}
 
 	public Image createImage(int width, int height) {

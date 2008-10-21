@@ -36,7 +36,11 @@ public class AndroidImmutableImage extends javax.microedition.lcdui.Image {
 		this.bitmap = bitmap;
 	}
 
-	public Bitmap getBitmap() {
+    public AndroidImmutableImage(AndroidMutableImage image) {
+    	this.bitmap = Bitmap.createBitmap(image.getBitmap());
+    }
+
+    public Bitmap getBitmap() {
 		return bitmap;
 	}
 

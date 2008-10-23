@@ -46,56 +46,36 @@ import android.view.View;
 
 public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 
-	private MicroEmulatorActivity activity;
-	
-	private CanvasView view;
-	
 	public AndroidCanvasUI(final MicroEmulatorActivity activity, Canvas canvas) {
-		this.activity = activity;
+		super(activity, canvas);
 		
 		activity.post(new Runnable() {
 			public void run() {
-				AndroidCanvasUI.this.view = new CanvasView(activity);
+				view = new CanvasView(activity);
 			}
 		});
 	}
 	
-	public View getView() {
-		return view;
+	public CanvasView getView() {
+		return (CanvasView) view;
 	}
 	
 	public Image getImage() {
 		// TODO improve method that waits for for view being initialized
-		while (view == null) {
+		while (getView() == null) {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException ex) {
 				ex.printStackTrace();
 			}
 		}
-		return view.getImage();
+		return getView().getImage();
 	}
 
 	//
-	// DisplayableUI
+	// CanvasUI
 	//
-
-	public void hideNotify() {
-	}
-
-	public void showNotify() {
-		activity.post(new Runnable() {
-			public void run() {
-				activity.setContentView(view);
-				view.requestFocus();
-			}
-		});
-	}
 	
-	public void invalidate() {
-		// TODO implement title painting		
-	}
-
 	private class CanvasView extends View {
 		
 		public CanvasView(Context context) {

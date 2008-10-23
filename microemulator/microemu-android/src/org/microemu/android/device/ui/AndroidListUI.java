@@ -10,6 +10,7 @@ import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.ListUI;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,67 +22,40 @@ import android.widget.TextView;
 
 public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 
-	private MicroEmulatorActivity activity;
-	
-	private List list;
-	
 	private Command selectCommand;
-	
-	private LinearLayout view;
-	
-	private TextView titleView;
 	
 	private AndroidListAdapter listAdapter;
 	
 	private AndroidListView listView;
 	
 	public AndroidListUI(final MicroEmulatorActivity activity, List list) {
-		this.activity = activity;
-		this.list = list;
+		super(activity, list);
 		
 		this.selectCommand = List.SELECT_COMMAND;
 			
 		activity.post(new Runnable() {
 			public void run() {
-				AndroidListUI.this.view = new LinearLayout(activity);
-				AndroidListUI.this.view.setOrientation(LinearLayout.VERTICAL);
-				AndroidListUI.this.view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+				view = new LinearLayout(activity);
+				((LinearLayout) view).setOrientation(LinearLayout.VERTICAL);
+				view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
 				
-				AndroidListUI.this.titleView = new TextView(activity);
-				AndroidListUI.this.titleView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-				AndroidListUI.this.view.addView(titleView);				
+				titleView = new TextView(activity);
+				titleView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+				TypedArray a = titleView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
+				titleView.setTextAppearance(titleView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
+				((LinearLayout) view).addView(titleView);				
 		
-				AndroidListUI.this.listAdapter = new AndroidListAdapter();
-				AndroidListUI.this.listView = new AndroidListView(activity);
-				AndroidListUI.this.listView.setAdapter(AndroidListUI.this.listAdapter);
-				AndroidListUI.this.listView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));				
-				AndroidListUI.this.view.addView(AndroidListUI.this.listView);		
+				listAdapter = new AndroidListAdapter();
+				listView = new AndroidListView(activity);
+				listView.setAdapter(listAdapter);
+				listView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+				((LinearLayout) AndroidListUI.this.view).addView(listView);		
 
-				AndroidListUI.this.invalidate();
+				invalidate();
 			}
 		});		
 	}
 	
-	//
-	// DisplayableUI
-	//
-	
-	public void hideNotify() {
-	}
-
-	public void showNotify() {
-		activity.post(new Runnable() {
-			public void run() {
-				activity.setContentView(view);
-				listView.requestFocus();
-			}
-		});
-	}
-	
-	public void invalidate() {
-		titleView.setText(list.getTitle());		
-	}	
-
 	//
 	// ListUI
 	//
@@ -136,6 +110,8 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
 				convertView = new TextView(activity);
+				TypedArray a = convertView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
+				((TextView) convertView).setTextAppearance(convertView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
 			}
 			
 			((TextView) convertView).setText((String) getItem(position));
@@ -155,7 +131,7 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 		public boolean onKeyDown(int keyCode, KeyEvent event) {
 			if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
 				if (getCommandListener() != null) {
-					getCommandListener().commandAction(selectCommand, list);
+					getCommandListener().commandAction(selectCommand, displayable);
 					return true;
 				} else {				
 					return false;

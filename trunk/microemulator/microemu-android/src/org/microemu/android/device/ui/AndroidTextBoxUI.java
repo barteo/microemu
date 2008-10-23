@@ -31,64 +31,38 @@ import javax.microedition.lcdui.TextBox;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.TextBoxUI;
 
+import android.content.res.TypedArray;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI {
 	
-	private MicroEmulatorActivity activity;
-	
-	private TextBox textBox;
-	
-	private LinearLayout view;
-	
-	private TextView titleView;
-	
 	private EditText editView;
 	
-	public AndroidTextBoxUI(final MicroEmulatorActivity activity, TextBox textBox) {
-		this.activity = activity;		
-		this.textBox = textBox;
+	public AndroidTextBoxUI(final MicroEmulatorActivity activity, TextBox textBox) {		
+		super(activity, textBox);		
 		
 		activity.post(new Runnable() {
 			public void run() {
-				AndroidTextBoxUI.this.view = new LinearLayout(activity);
-				AndroidTextBoxUI.this.view.setOrientation(LinearLayout.VERTICAL);
-				AndroidTextBoxUI.this.view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+				view = new LinearLayout(activity);
+				((LinearLayout) view).setOrientation(LinearLayout.VERTICAL);
+				view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
 				
 				titleView = new TextView(activity);
 				titleView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-				AndroidTextBoxUI.this.view.addView(titleView);
+				TypedArray a = titleView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
+				titleView.setTextAppearance(titleView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
+				((LinearLayout) view).addView(titleView);
 				
 				editView = new EditText(activity);
 				editView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
-				AndroidTextBoxUI.this.view.addView(editView);
+				((LinearLayout) view).addView(editView);
 				
-				AndroidTextBoxUI.this.invalidate();
+				invalidate();
 			}
 		});		
 	}
-
-	//
-	// DisplayableUI
-	//
-	
-	public void hideNotify() {
-	}
-
-	public void showNotify() {
-		activity.post(new Runnable() {
-			public void run() {
-				activity.setContentView(view);
-				editView.requestFocus();
-			}
-		});
-	}
-	
-	public void invalidate() {
-		titleView.setText(textBox.getTitle());		
-	}	
 
 	//
 	// TextBoxUI

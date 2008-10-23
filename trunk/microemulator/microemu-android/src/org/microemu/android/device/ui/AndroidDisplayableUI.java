@@ -33,10 +33,23 @@ import java.util.List;
 
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
+import javax.microedition.lcdui.Displayable;
 
+import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.DisplayableUI;
 
+import android.view.View;
+import android.widget.TextView;
+
 public abstract class AndroidDisplayableUI implements DisplayableUI {
+	
+	protected MicroEmulatorActivity activity;
+	
+	protected Displayable displayable;
+	
+	protected View view;
+	
+	protected TextView titleView;
 	
 	private static Comparator<Command> commandsPriorityComparator = new Comparator<Command>() {
 
@@ -55,6 +68,11 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 	private List<Command> commands = new ArrayList<Command>();
 	
 	private CommandListener commandListener = null;
+	
+	protected AndroidDisplayableUI(MicroEmulatorActivity activity, Displayable displayable) {
+		this.activity = activity;
+		this.displayable = displayable;
+	}
 	
 	public List<Command> getCommands() {
 		return commands;
@@ -80,6 +98,22 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 
 	public void setCommandListener(CommandListener l) {
 		this.commandListener = l;
+	}
+
+	public void invalidate() {
+		titleView.setText(displayable.getTitle());
+	}	
+	
+	public final void showNotify() {
+		activity.post(new Runnable() {
+			public void run() {
+				activity.setContentView(view);
+				view.requestFocus();
+			}
+		});
+	}
+
+	public final void hideNotify() {
 	}
 
 }

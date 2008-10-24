@@ -24,24 +24,20 @@
  *  @version $Id$
  */
 
-package org.microemu.device.ui;
+package org.microemu.device.j2se.ui;
 
 import javax.microedition.lcdui.Alert;
-import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Form;
-import javax.microedition.lcdui.List;
-import javax.microedition.lcdui.TextBox;
 
-public interface UIFactory {
-	
-	AlertUI createAlertUI(Alert alert);
+import org.microemu.device.impl.ui.DisplayableImplUI;
+import org.microemu.device.ui.AlertUI;
 
-	CanvasUI createCanvasUI(Canvas canvas);
-	
-	FormUI createFormUI(Form form);
+public class J2SEAlertUI extends DisplayableImplUI implements AlertUI {
 
-	ListUI createListUI(List list);
-	
-	TextBoxUI createTextBoxUI(TextBox textBox);
+	public J2SEAlertUI(Alert form) {
+	}
+
+	public void setString(String str) {
+		// TODO not yet used
+	}
 
 }

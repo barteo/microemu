@@ -24,24 +24,49 @@
  *  @version $Id$
  */
 
-package org.microemu.device.ui;
+package org.microemu.device.swt.ui;
 
-import javax.microedition.lcdui.Alert;
-import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Form;
-import javax.microedition.lcdui.List;
-import javax.microedition.lcdui.TextBox;
+import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.Item;
 
-public interface UIFactory {
-	
-	AlertUI createAlertUI(Alert alert);
+import org.microemu.device.impl.ui.DisplayableImplUI;
+import org.microemu.device.ui.FormUI;
 
-	CanvasUI createCanvasUI(Canvas canvas);
-	
-	FormUI createFormUI(Form form);
+public class SwtFormUI extends DisplayableImplUI implements FormUI {
 
-	ListUI createListUI(List list);
-	
-	TextBoxUI createTextBoxUI(TextBox textBox);
+	public SwtFormUI(Form form) {
+	}
+
+	public int append(Image img) {
+		// TODO not yet used
+		return 0;
+	}
+
+	public int append(Item item) {
+		// TODO not yet used
+		return 0;
+	}
+
+	public int append(String str) {
+		// TODO not yet used
+		return 0;
+	}
+
+	public void delete(int itemNum) {
+		// TODO not yet used
+	}
+
+	public void deleteAll() {
+		// TODO not yet used
+	}
+
+	public void insert(int itemNum, Item item) {
+		// TODO not yet used
+	}
+
+	public void set(int itemNum, Item item) {
+		// TODO Auto-generated method stub
+	}
 
 }

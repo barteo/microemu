@@ -234,17 +234,20 @@ public class List extends Screen implements Choice {
     void showNotify() {
         super.showNotify();
 
-        int selectedItemIndex = getSelectedIndex();
-        int heightToItem = choiceGroup.getHeightToItem(selectedItemIndex);
-        int heightAfterItem = heightToItem;
-        if (selectedItemIndex >= 0) {
-            heightAfterItem += choiceGroup.getItemHeight(selectedItemIndex);
-        }
-        if (viewPortY > heightToItem) {
-            viewPortY = heightToItem;
-        } else if ((viewPortY + viewPortHeight) < heightAfterItem) {
-            viewPortY = heightAfterItem - viewPortHeight;
-        }
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidListUI")) {
+		} else {
+	        int selectedItemIndex = getSelectedIndex();
+	        int heightToItem = choiceGroup.getHeightToItem(selectedItemIndex);
+	        int heightAfterItem = heightToItem;
+	        if (selectedItemIndex >= 0) {
+	            heightAfterItem += choiceGroup.getItemHeight(selectedItemIndex);
+	        }
+	        if (viewPortY > heightToItem) {
+	            viewPortY = heightToItem;
+	        } else if ((viewPortY + viewPortHeight) < heightAfterItem) {
+	            viewPortY = heightAfterItem - viewPortHeight;
+	        }
+		}
     }
 
     int traverse(int gameKeyCode, int top, int bottom) {

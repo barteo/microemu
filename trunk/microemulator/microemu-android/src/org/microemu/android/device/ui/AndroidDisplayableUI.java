@@ -101,7 +101,9 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 	}
 
 	public void invalidate() {
-		titleView.setText(displayable.getTitle());
+		if (titleView != null) {
+			titleView.setText(displayable.getTitle());
+		}
 	}	
 	
 	public final void showNotify() {

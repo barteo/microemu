@@ -118,8 +118,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 				return false;
 			}
 			
-			// KEYCODE_SOFT_LEFT == menu key 
-			if (keyCode == KeyEvent.KEYCODE_SOFT_LEFT) {
+			if (keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_BACK) {
 				return false;
 			}
 			
@@ -135,8 +134,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 				return false;
 			}
 
-			// KEYCODE_SOFT_LEFT == menu key 
-			if (keyCode == KeyEvent.KEYCODE_SOFT_LEFT) {
+			if (keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_BACK) {
 				return false;
 			}
 

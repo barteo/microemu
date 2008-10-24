@@ -58,6 +58,7 @@ import org.microemu.log.Logger;
 
 import android.os.Bundle;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -173,6 +174,36 @@ public class MicroEmulator extends MicroEmulatorActivity {
         common.getLauncher().setSuiteName(midletClassName);
         common.initMIDlet(true);
     }
+    
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			MIDletAccess ma = MIDletBridge.getMIDletAccess();
+			if (ma == null) {
+				return false;
+			}
+			final DisplayAccess da = ma.getDisplayAccess();
+			if (da == null) {
+				return false;
+			}
+			AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getCurrentUI();
+			if (ui == null) {
+				return false;
+			}		
+
+			List<Command> commands = ui.getCommands();
+			for (int i = 0; i < commands.size(); i++) {
+				Command cmd = commands.get(i);
+				if (cmd.getCommandType() == Command.BACK) {
+					CommandListener l = ui.getCommandListener();
+					l.commandAction(cmd, da.getCurrent());
+					return true;
+				}
+			}
+		}
+		
+		return super.onKeyDown(keyCode, event);
+	}	    
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
@@ -195,8 +226,10 @@ public class MicroEmulator extends MicroEmulatorActivity {
 		List<Command> commands = ui.getCommands();
 		for (int i = 0; i < commands.size(); i++) {
 			result = true;
-			final Command cmd = commands.get(i);
-			menu.add(Menu.NONE, i + Menu.FIRST, Menu.NONE, cmd.getLabel());
+			Command cmd = commands.get(i);
+			if (cmd.getCommandType() != Command.BACK) {
+				menu.add(Menu.NONE, i + Menu.FIRST, Menu.NONE, cmd.getLabel());
+			}
 		}
 
 		return result;
@@ -217,7 +250,7 @@ public class MicroEmulator extends MicroEmulatorActivity {
 			return false;
 		}
 
-		final CommandListener l = ui.getCommandListener();
+		CommandListener l = ui.getCommandListener();
 		int commandIndex = item.getItemId() - Menu.FIRST;
 		List<Command> commands = ui.getCommands();
 		Command c = commands.get(commandIndex);
@@ -228,6 +261,6 @@ public class MicroEmulator extends MicroEmulatorActivity {
 		}
 
 		return false;
-	}	
+	}
 
 }

@@ -24,6 +24,7 @@
 package javax.microedition.lcdui;
 
 import org.microemu.device.DeviceFactory;
+import org.microemu.device.ui.AlertUI;
 
 
 public class Alert extends Screen
@@ -69,7 +70,8 @@ public class Alert extends Screen
 		super.setUI(DeviceFactory.getDevice().getUIFactory().createAlertUI(this));
 		
 		setTimeout(getDefaultTimeout());
-		this.alertContent = new ImageStringItem(null, alertImage, alertText);
+		setString(alertText);
+		setImage(alertImage);
 		setType(alertType);
 		super.addCommand(Alert.DISMISS_COMMAND);
 		super.setCommandListener(defaultListener);
@@ -144,7 +146,11 @@ public class Alert extends Screen
 
 	public void setImage(Image img)
 	{
-	    if (img.isMutable()) {
+		if (alertContent == null) {
+			alertContent = new ImageStringItem(null, img, null);
+		}
+
+		if (img != null && img.isMutable()) {
 	      img = Image.createImage(img);
 	    }
 	    alertContent.setImage(img);
@@ -186,6 +192,14 @@ public class Alert extends Screen
 
 	public void setString(String str)
 	{
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidAlertUI")) {
+			((AlertUI) ui).setString(str);
+		}
+		
+		if (alertContent == null) {
+			alertContent = new ImageStringItem(null, null, str);
+		}
+
 		alertContent.setText(str);
 		repaint();
 	}

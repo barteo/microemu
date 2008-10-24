@@ -31,11 +31,14 @@ import javax.microedition.lcdui.List;
 import javax.microedition.lcdui.TextBox;
 
 import org.microemu.device.impl.DeviceImpl;
+import org.microemu.device.j2se.ui.J2SEAlertUI;
 import org.microemu.device.j2se.ui.J2SECanvasUI;
+import org.microemu.device.j2se.ui.J2SEFormUI;
 import org.microemu.device.j2se.ui.J2SEListUI;
 import org.microemu.device.j2se.ui.J2SETextBoxUI;
+import org.microemu.device.ui.AlertUI;
 import org.microemu.device.ui.CanvasUI;
-import org.microemu.device.ui.DisplayableUI;
+import org.microemu.device.ui.FormUI;
 import org.microemu.device.ui.ListUI;
 import org.microemu.device.ui.TextBoxUI;
 import org.microemu.device.ui.UIFactory;
@@ -44,18 +47,16 @@ public class J2SEDevice extends DeviceImpl {
 
 	private UIFactory ui = new UIFactory() {
 
-		public DisplayableUI createAlertUI(Alert alert) {
-			// TODO Not yet implemented
-			return new J2SECanvasUI(null);
+		public AlertUI createAlertUI(Alert alert) {
+			return new J2SEAlertUI(alert);
 		}
 
 		public CanvasUI createCanvasUI(Canvas canvas) {
 			return new J2SECanvasUI(canvas);
 		}
 
-		public DisplayableUI createFormUI(Form form) {
-			// TODO Not yet implemented
-			return new J2SECanvasUI(null);
+		public FormUI createFormUI(Form form) {
+			return new J2SEFormUI(form);
 		}
 
 		public ListUI createListUI(List list) {

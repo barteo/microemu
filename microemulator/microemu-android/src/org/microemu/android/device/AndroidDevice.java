@@ -39,15 +39,18 @@ import javax.microedition.lcdui.TextBox;
 
 import org.microemu.EmulatorContext;
 import org.microemu.android.MicroEmulatorActivity;
+import org.microemu.android.device.ui.AndroidAlertUI;
 import org.microemu.android.device.ui.AndroidCanvasUI;
+import org.microemu.android.device.ui.AndroidFormUI;
 import org.microemu.android.device.ui.AndroidListUI;
 import org.microemu.android.device.ui.AndroidTextBoxUI;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
+import org.microemu.device.ui.AlertUI;
 import org.microemu.device.ui.CanvasUI;
-import org.microemu.device.ui.DisplayableUI;
+import org.microemu.device.ui.FormUI;
 import org.microemu.device.ui.ListUI;
 import org.microemu.device.ui.TextBoxUI;
 import org.microemu.device.ui.UIFactory;
@@ -60,18 +63,16 @@ public class AndroidDevice implements Device {
 	
 	private UIFactory ui = new UIFactory() {
 
-		public DisplayableUI createAlertUI(Alert alert) {
-			// TODO Not yet implemented
-			return new AndroidCanvasUI(activity, null);
+		public AlertUI createAlertUI(Alert alert) {
+			return new AndroidAlertUI(activity, alert);
 		}
 
 		public CanvasUI createCanvasUI(Canvas canvas) {
 			return new AndroidCanvasUI(activity, canvas);
 		}
 
-		public DisplayableUI createFormUI(Form form) {
-			// TODO Not yet implemented
-			return new AndroidCanvasUI(activity, null);
+		public FormUI createFormUI(Form form) {
+			return new AndroidFormUI(activity, form);
 		}
 
 		public ListUI createListUI(List list) {

@@ -32,6 +32,7 @@ import java.util.Vector;
 
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.List;
@@ -44,16 +45,21 @@ import org.microemu.android.device.ui.AndroidCanvasUI;
 import org.microemu.android.device.ui.AndroidFormUI;
 import org.microemu.android.device.ui.AndroidListUI;
 import org.microemu.android.device.ui.AndroidTextBoxUI;
+import org.microemu.android.device.ui.AndroidCanvasUI.CanvasView;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.device.ui.AlertUI;
 import org.microemu.device.ui.CanvasUI;
+import org.microemu.device.ui.EventDispatcher;
 import org.microemu.device.ui.FormUI;
 import org.microemu.device.ui.ListUI;
 import org.microemu.device.ui.TextBoxUI;
 import org.microemu.device.ui.UIFactory;
+
+import android.os.Handler;
+import android.view.View;
 
 public class AndroidDevice implements Device {
 
@@ -62,6 +68,37 @@ public class AndroidDevice implements Device {
 	private MicroEmulatorActivity activity;
 	
 	private UIFactory ui = new UIFactory() {
+
+		public EventDispatcher createEventDispatcher(Display display) {
+			EventDispatcher eventDispatcher = new EventDispatcher() {
+
+				@Override
+				protected void post(Event event) {
+					View view = activity.getContentView();
+					if (event instanceof ShowHideNotifyEvent) {
+						event.run();
+					} else {
+						if (view instanceof CanvasView) {
+							Handler handler = ((CanvasView) view).getHandler();
+							if (handler != null) {
+								handler.post(event);
+							} else {
+								System.out.println("Undelivered " + event + " (handler is null)");
+							}
+						} else {
+							System.out.println("Undelivered " + event);						
+						}
+					}
+				}
+				
+			};
+			
+			Thread thread = new Thread(eventDispatcher, EventDispatcher.EVENT_DISPATCHER_NAME);
+			thread.setDaemon(true);
+			thread.start();
+
+			return eventDispatcher;
+		}
 
 		public AlertUI createAlertUI(Alert alert) {
 			return new AndroidAlertUI(activity, alert);

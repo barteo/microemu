@@ -28,11 +28,14 @@ package org.microemu.device.ui;
 
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.List;
 import javax.microedition.lcdui.TextBox;
 
 public interface UIFactory {
+	
+	EventDispatcher createEventDispatcher(Display display);
 	
 	AlertUI createAlertUI(Alert alert);
 

@@ -22,11 +22,13 @@
  *  limitations.
  */
 
-package javax.microedition.lcdui;
+package org.microemu.device.ui;
 
 import org.microemu.device.DeviceFactory;
 
-class EventDispatcher implements Runnable {
+public class EventDispatcher implements Runnable {
+	
+	public static final String EVENT_DISPATCHER_NAME = "event-thread";
 
 	private volatile boolean cancelled = false;
 
@@ -40,9 +42,9 @@ class EventDispatcher implements Runnable {
 
 	private Object serviceRepaintsLock = new Object();
 
-	EventDispatcher() {
+	public EventDispatcher() {
 	}
-
+	
 	public void run() {
 
 		while (!cancelled) {
@@ -69,7 +71,7 @@ class EventDispatcher implements Runnable {
 			}
 
 			if (event != null) {
-				event.run();
+				post(event);
 			}
 
 			synchronized (serviceRepaintsLock) {
@@ -138,15 +140,17 @@ class EventDispatcher implements Runnable {
 		}
 	}
 
-	abstract class Event {
+	protected void post(Event event) {
+		event.run();
+	}
+
+	public abstract class Event implements Runnable {
 
 		Event next = null;
 
-		public abstract void run();
-
 	}
 
-	final class PaintEvent extends Event {
+	public final class PaintEvent extends Event {
 
 		private int x = -1, y = -1, width = -1, height = -1;
 
@@ -182,15 +186,15 @@ class EventDispatcher implements Runnable {
 
 	}
 
-	final class PointerEvent extends EventDispatcher.Event {
+	public final class PointerEvent extends EventDispatcher.Event {
 
-		static final short POINTER_PRESSED = 0;
+		public static final short POINTER_PRESSED = 0;
 
-		static final short POINTER_RELEASED = 1;
+		public static final short POINTER_RELEASED = 1;
 
-		static final short POINTER_DRAGGED = 2;
+		public static final short POINTER_DRAGGED = 2;
 
-		private Displayable displayable;
+		private Runnable runnable;
 
 		private short type;
 
@@ -198,25 +202,35 @@ class EventDispatcher implements Runnable {
 
 		private int y;
 
-		public PointerEvent(Displayable displayable, short type, int x, int y) {
-			this.displayable = displayable;
+		public PointerEvent(Runnable runnable, short type, int x, int y) {
+			this.runnable = runnable;
 			this.type = type;
 			this.x = x;
 			this.y = y;
 		}
 
 		public void run() {
-			switch (type) {
-			case POINTER_PRESSED:
-				displayable.pointerPressed(x, y);
-				break;
-			case POINTER_RELEASED:
-				displayable.pointerReleased(x, y);
-				break;
-			case POINTER_DRAGGED:
-				displayable.pointerDragged(x, y);
-				break;
-			}
+			runnable.run();
+		}
+	}
+	
+	public final class ShowHideNotifyEvent extends EventDispatcher.Event {
+
+		public static final short SHOW_NOTIFY = 0;
+
+		public static final short HIDE_NOTIFY = 1;
+
+		private short type;
+
+		private Runnable runnable;
+
+		public ShowHideNotifyEvent(short type, Runnable runnable) {
+			this.type = type;
+			this.runnable = runnable;
+		}
+
+		public void run() {
+			runnable.run();
 		}
 	}
 

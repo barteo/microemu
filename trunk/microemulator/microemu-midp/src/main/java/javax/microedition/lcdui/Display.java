@@ -41,6 +41,8 @@ import org.microemu.GameCanvasKeyAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.ui.DisplayableUI;
+import org.microemu.device.ui.EventDispatcher;
+import org.microemu.device.ui.EventDispatcher.ShowHideNotifyEvent;
 
 public class Display {
 
@@ -66,9 +68,7 @@ public class Display {
 
 	private DisplayAccessor accessor = null;
 
-	private static final String EVENT_DISPATCHER_NAME = "event-thread";
-
-	private final EventDispatcher eventDispatcher = new EventDispatcher();
+	private EventDispatcher eventDispatcher;
 
 	private final class GaugePaintTask implements Runnable {
 
@@ -164,63 +164,6 @@ public class Display {
 				if (current != null) {
 					current.keyRepeated(keyCode);
 				}
-				break;
-			}
-		}
-	}
-
-	private final class ShowHideNotifyEvent extends EventDispatcher.Event {
-
-		static final short SHOW_NOTIFY = 0;
-
-		static final short HIDE_NOTIFY = 1;
-
-		private short type;
-
-		private Displayable current;
-
-		private Displayable nextDisplayable;
-
-		ShowHideNotifyEvent(short type, Displayable current, Displayable nextDisplayable) {
-			eventDispatcher.super();
-			this.type = type;
-			this.current = current;
-			this.nextDisplayable = nextDisplayable;
-		}
-
-		public void run() {
-			switch (type) {
-			case SHOW_NOTIFY:
-				if (current != null) {
-					eventDispatcher.put(new ShowHideNotifyEvent(ShowHideNotifyEvent.HIDE_NOTIFY, current,
-							nextDisplayable));
-				}
-
-				if (nextDisplayable instanceof Alert) {
-					setCurrent((Alert) nextDisplayable, current);
-					return;
-				}
-
-				// Andres Navarro
-				// TODO uncomment and test with JBenchmark2
-				/*
-				 * if (nextDisplayable instanceof GameCanvas) { // clear the
-				 * keys of the GameCanvas
-				 * MIDletBridge.getMIDletAccess().getGameCanvasKeyAccess().setActualKeyState(
-				 * (GameCanvas) nextDisplayable, 0); }
-				 */
-				// Andres Navarro
-				nextDisplayable.showNotify(Display.this);
-				Display.this.current = nextDisplayable;
-
-				setScrollUp(false);
-				setScrollDown(false);
-				updateCommands();
-				nextDisplayable.repaint();
-
-				break;
-			case HIDE_NOTIFY:
-				current.hideNotify(Display.this);
 				break;
 			}
 		}
@@ -324,24 +267,42 @@ public class Display {
 			}
 		}
 
-		public void pointerPressed(int x, int y) {
+		public void pointerPressed(final int x, final int y) {
 			if (current != null) {
-				eventDispatcher.put(eventDispatcher.new PointerEvent(current,
-						EventDispatcher.PointerEvent.POINTER_PRESSED, x, y));
+				eventDispatcher.put(eventDispatcher.new PointerEvent(new Runnable() {
+					
+					public void run() {
+						current.pointerPressed(x, y);
+						
+					}
+					
+				}, EventDispatcher.PointerEvent.POINTER_PRESSED, x, y));
 			}
 		}
 
-		public void pointerReleased(int x, int y) {
+		public void pointerReleased(final int x, final int y) {
 			if (current != null) {
-				eventDispatcher.put(eventDispatcher.new PointerEvent(current,
-						EventDispatcher.PointerEvent.POINTER_RELEASED, x, y));
+				eventDispatcher.put(eventDispatcher.new PointerEvent(new Runnable() {
+					
+					public void run() {
+						current.pointerReleased(x, y);
+						
+					}
+					
+				}, EventDispatcher.PointerEvent.POINTER_RELEASED, x, y));
 			}
 		}
 
-		public void pointerDragged(int x, int y) {
+		public void pointerDragged(final int x, final int y) {
 			if (current != null) {
-				eventDispatcher.put(eventDispatcher.new PointerEvent(current,
-						EventDispatcher.PointerEvent.POINTER_DRAGGED, x, y));
+				eventDispatcher.put(eventDispatcher.new PointerEvent(new Runnable() {
+					
+					public void run() {
+						current.pointerDragged(x, y);
+						
+					}
+					
+				}, EventDispatcher.PointerEvent.POINTER_DRAGGED, x, y));
 			}
 		}
 
@@ -461,20 +422,12 @@ public class Display {
 	}
 
 	Display() {
-
 		accessor = new DisplayAccessor(this);
 
-		startEventDispatcher();
+		eventDispatcher = DeviceFactory.getDevice().getUIFactory().createEventDispatcher(this);
 
 		timer.scheduleAtFixedRate(new RunnableWrapper(new TickerPaintTask()), 0, Ticker.PAINT_TIMEOUT);
-
 		timer.scheduleAtFixedRate(new RunnableWrapper(new GaugePaintTask()), 0, Ticker.PAINT_TIMEOUT);
-	}
-
-	private final void startEventDispatcher() {
-		Thread thread = new Thread(eventDispatcher, EVENT_DISPATCHER_NAME);
-		thread.setDaemon(true);
-		thread.start();
 	}
 
 	public void callSerially(Runnable runnable) {
@@ -543,9 +496,45 @@ public class Display {
 		return DeviceFactory.getDevice().getDeviceDisplay().isColor();
 	}
 
-	public void setCurrent(Displayable nextDisplayable) {
+	public void setCurrent(final Displayable nextDisplayable) {
 		if (nextDisplayable != null) {
-			eventDispatcher.put(new ShowHideNotifyEvent(ShowHideNotifyEvent.SHOW_NOTIFY, current, nextDisplayable));
+			eventDispatcher.put(eventDispatcher.new ShowHideNotifyEvent(ShowHideNotifyEvent.SHOW_NOTIFY, new Runnable() {
+
+				public void run() {
+					if (current != null) {
+						eventDispatcher.put(eventDispatcher.new ShowHideNotifyEvent(ShowHideNotifyEvent.HIDE_NOTIFY, new Runnable() {
+
+									public void run() {
+										current.hideNotify(Display.this);
+									}
+							
+						}));
+					}
+
+					if (nextDisplayable instanceof Alert) {
+						setCurrent((Alert) nextDisplayable, current);
+						return;
+					}
+
+					// Andres Navarro
+					// TODO uncomment and test with JBenchmark2
+					/*
+					 * if (nextDisplayable instanceof GameCanvas) { // clear the
+					 * keys of the GameCanvas
+					 * MIDletBridge.getMIDletAccess().getGameCanvasKeyAccess().setActualKeyState(
+					 * (GameCanvas) nextDisplayable, 0); }
+					 */
+					// Andres Navarro
+					nextDisplayable.showNotify(Display.this);
+					Display.this.current = nextDisplayable;
+
+					setScrollUp(false);
+					setScrollDown(false);
+					updateCommands();
+					nextDisplayable.repaint();
+				}
+												
+			}));
 		}
 	}
 
@@ -613,7 +602,7 @@ public class Display {
 		// called from another thread, then we setup a repaint barrier and wait
 		// for that barrier to execute
 		//
-		if (EVENT_DISPATCHER_NAME.equals(Thread.currentThread().getName())) {
+		if (EventDispatcher.EVENT_DISPATCHER_NAME.equals(Thread.currentThread().getName())) {
 			DeviceFactory.getDevice().getDeviceDisplay().repaint(0, 0, current.getWidth(), current.getHeight());
 			return;
 		}

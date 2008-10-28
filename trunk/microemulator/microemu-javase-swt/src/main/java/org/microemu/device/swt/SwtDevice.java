@@ -26,6 +26,7 @@ package org.microemu.device.swt;
 
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.List;
 import javax.microedition.lcdui.TextBox;
@@ -38,6 +39,7 @@ import org.microemu.device.swt.ui.SwtListUI;
 import org.microemu.device.swt.ui.SwtTextBoxUI;
 import org.microemu.device.ui.AlertUI;
 import org.microemu.device.ui.CanvasUI;
+import org.microemu.device.ui.EventDispatcher;
 import org.microemu.device.ui.FormUI;
 import org.microemu.device.ui.ListUI;
 import org.microemu.device.ui.TextBoxUI;
@@ -46,6 +48,15 @@ import org.microemu.device.ui.UIFactory;
 public class SwtDevice extends DeviceImpl {
 
 	private UIFactory ui = new UIFactory() {
+
+		public EventDispatcher createEventDispatcher(Display display) {
+			EventDispatcher eventDispatcher = new EventDispatcher();
+			Thread thread = new Thread(eventDispatcher, EventDispatcher.EVENT_DISPATCHER_NAME);
+			thread.setDaemon(true);
+			thread.start();
+
+			return eventDispatcher;
+		}
 
 		public AlertUI createAlertUI(Alert alert) {
 			return new SwtAlertUI(alert);

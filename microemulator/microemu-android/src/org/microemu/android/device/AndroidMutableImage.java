@@ -51,7 +51,7 @@ public class AndroidMutableImage extends MutableImage {
 	public Graphics getGraphics() {
         Canvas canvas = new Canvas(bitmap);
         canvas.clipRect(0, 0, getWidth(), getHeight());
-        AndroidDisplayGraphics displayGraphics = new AndroidDisplayGraphics(canvas, this);
+        AndroidDisplayGraphics displayGraphics = new AndroidDisplayGraphics(canvas);
 		displayGraphics.setColor(0x00000000);
 		displayGraphics.translate(-displayGraphics.getTranslateX(), -displayGraphics.getTranslateY());
 		

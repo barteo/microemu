@@ -29,7 +29,6 @@ package org.microemu.android.device;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
 
@@ -38,9 +37,7 @@ import org.microemu.EmulatorContext;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.android.device.ui.AndroidCanvasUI;
-import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
-import org.microemu.device.DeviceFactory;
 import org.microemu.device.MutableImage;
 import org.microemu.device.ui.CanvasUI;
 import org.microemu.device.ui.DisplayableUI;
@@ -288,26 +285,8 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 		// TODO
 		// Font oldf = g.getFont();
 		if (current instanceof CanvasUI) {
-			Device device = DeviceFactory.getDevice();
-			
-			// TODO take region size into account
-			if (device != null) {
-				synchronized (current) {
-					Image displayImage = ((AndroidCanvasUI) current).getImage();
-					synchronized (displayImage) {
-						Graphics canvas = displayImage.getGraphics();
-
-						canvas.clipRect(x, y, x + width, y + height);
-						ma.getDisplayAccess().paint(canvas);
-						// TODO
-						// if (!deviceDisplay.isFullScreenMode()) {
-						// 	deviceDisplay.paintControls(canvas);
-						// }
-					}
-				}
-			}
 			View view = ((AndroidCanvasUI) current).getView(); 
-			view.postInvalidate();
+			view.invalidate(x, y, x + width, y + height);
 		} else {
 			// TODO extend DisplayableUI interface
 			//current.paint();

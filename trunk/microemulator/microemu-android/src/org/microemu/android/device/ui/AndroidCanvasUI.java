@@ -27,19 +27,20 @@
 package org.microemu.android.device.ui;
 
 import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.Graphics;
 
+import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.android.MicroEmulatorActivity;
+import org.microemu.android.device.AndroidDisplayGraphics;
 import org.microemu.android.device.AndroidInputMethod;
-import org.microemu.android.device.AndroidMutableImage;
 import org.microemu.device.Device;
-import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.ui.CanvasUI;
 
 import android.content.Context;
-import android.graphics.Paint;
+import android.graphics.Rect;
+import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -60,23 +61,11 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 		return (CanvasView) view;
 	}
 	
-	public Image getImage() {
-		// TODO improve method that waits for for view being initialized
-		while (getView() == null) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException ex) {
-				ex.printStackTrace();
-			}
-		}
-		return getView().getImage();
-	}
-
 	//
 	// CanvasUI
 	//
 	
-	private class CanvasView extends View {
+	public class CanvasView extends View {
 		
 		public CanvasView(Context context) {
 			super(context);
@@ -84,32 +73,20 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 			setFocusable(true);
 		}
 
-		private AndroidMutableImage displayImage = null;
-		
-		private Paint paint = new Paint();
-		
-		public Image getImage() {
-			synchronized(this) {
-				if (displayImage == null) {
-					DeviceDisplay deviceDisplay = DeviceFactory.getDevice().getDeviceDisplay();
-					displayImage = new AndroidMutableImage(deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
-				}
-			}
-
-			return displayImage;
-		}
-
 		//
 		// View
 		//
 		
 		@Override
-		protected void onDraw(android.graphics.Canvas canvas) {
-			if (displayImage != null) {
-				synchronized (displayImage) {
-					canvas.drawBitmap(displayImage.getBitmap(), 0, 0, paint);
-				}
+		protected void onDraw(android.graphics.Canvas androidCanvas) {
+			MIDletAccess ma = MIDletBridge.getMIDletAccess();
+			if (ma == null) {
+				return;
 			}
+			Graphics g = new AndroidDisplayGraphics(androidCanvas);
+			Rect r = androidCanvas.getClipBounds();
+			g.clipRect(r.left, r.top, r.width(), r.height());
+			ma.getDisplayAccess().paint(g);
 		}	
 		
 		@Override
@@ -164,6 +141,11 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 			
 			return true;
 		}
+
+		@Override
+		public Handler getHandler() {
+			return super.getHandler();
+		}		
 
 	}
 

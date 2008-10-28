@@ -31,7 +31,6 @@ import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
 
 import org.microemu.device.DeviceFactory;
-import org.microemu.device.MutableImage;
 import org.microemu.log.Logger;
 
 import android.graphics.Bitmap;
@@ -47,7 +46,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
 	private Rect clip;
 	
-	public AndroidDisplayGraphics(Canvas canvas, MutableImage image) {
+	public AndroidDisplayGraphics(Canvas canvas) {
 		this.canvas = canvas;
 		this.canvas.save(Canvas.CLIP_SAVE_FLAG);
 		this.clip = canvas.getClipBounds();

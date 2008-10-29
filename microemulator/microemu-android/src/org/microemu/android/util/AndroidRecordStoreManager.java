@@ -39,7 +39,7 @@ import javax.microedition.rms.RecordStoreNotOpenException;
 
 import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
-import org.microemu.app.launcher.Launcher;
+import org.microemu.android.R;
 import org.microemu.log.Logger;
 import org.microemu.util.ExtendedRecordListener;
 import org.microemu.util.RecordStoreImpl;
@@ -51,8 +51,6 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 	private final static String RECORD_STORE_SUFFIX = ".rs";
 	
 	private Context context;
-
-	private Launcher launcher;
 
 	private Hashtable<String, RecordStoreImpl> testOpenRecordStores = new Hashtable<String, RecordStoreImpl>();
 
@@ -74,7 +72,6 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 	}
 
 	public void init(MicroEmulator emulator) {
-		this.launcher = emulator.getLauncher();
 	}
 
 	public String getName() {
@@ -82,7 +79,7 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 	}
 
 	private String getSuiteName() {
-		return launcher.getSuiteName();
+		return context.getString(R.string.app_name);
 	}
 
 	public void deleteRecordStore(final String recordStoreName) throws RecordStoreNotFoundException,

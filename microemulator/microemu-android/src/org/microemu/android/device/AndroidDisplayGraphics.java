@@ -46,10 +46,13 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
 	private Rect clip;
 	
+	private AndroidFont font;
+	
 	public AndroidDisplayGraphics(Canvas canvas) {
 		this.canvas = canvas;
 		this.canvas.save(Canvas.CLIP_SAVE_FLAG);
 		this.clip = canvas.getClipBounds();
+		setFont(Font.getDefaultFont());
 	}
 	
 	public void clipRect(int x, int y, int width, int height) {
@@ -125,12 +128,8 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
             newx -= paint.measureText(str);
         }
 
-        canvas.drawText(str, newx, newy, AndroidFont.paint);
-
-        // TODO
-        // if ((currentFont.getStyle() & javax.microedition.android.lcdui.Font.STYLE_UNDERLINED) != 0) {
-        //     g.drawLine(newx, newy + 1, newx + g.getFontMetrics().stringWidth(str), newy + 1);
-        // }
+        font.paint.setColor(paint.getColor());
+        canvas.drawText(str, newx, newy, font.paint);
 	}
 
     public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
@@ -189,13 +188,10 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 
 	public void setColor(int RGB) {
 		paint.setColor(0xff000000 | RGB);
-		// TODO AndroidFont.paint cannot be static 
-		AndroidFont.paint.setColor(0xff000000 | RGB);
 	}
 
 	public void setFont(Font font) {
-		// TODO
-		// Logger.debug("(todo) setFont");
+		this.font = AndroidFontManager.getFont(font);
 	}
 
     public void translate(int x, int y) {

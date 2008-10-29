@@ -74,21 +74,7 @@ public class AndroidDevice implements Device {
 
 				@Override
 				protected void post(Event event) {
-					View view = activity.getContentView();
-					if (event instanceof ShowHideNotifyEvent) {
-						event.run();
-					} else {
-						if (view instanceof CanvasView) {
-							Handler handler = ((CanvasView) view).getHandler();
-							if (handler != null) {
-								handler.post(event);
-							} else {
-								System.out.println("Undelivered " + event + " (handler is null)");
-							}
-						} else {
-							System.out.println("Undelivered " + event);						
-						}
-					}
+					activity.post(event);
 				}
 				
 			};

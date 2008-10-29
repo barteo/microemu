@@ -29,13 +29,16 @@ package org.microemu.android.device;
 import org.microemu.device.impl.Font;
 
 import android.graphics.Paint;
+import android.graphics.Typeface;
 
 public class AndroidFont implements Font {
 
-	static Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+	Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	
-	public AndroidFont(String name, String style, int size) {
-		// TODO Auto-generated constructor stub
+	public AndroidFont(Typeface typeface, int size, boolean underlined) {
+		paint.setTypeface(typeface);
+		paint.setTextSize(size);
+		paint.setUnderlineText(underlined);
 	}
 
 	public int charWidth(char ch) {

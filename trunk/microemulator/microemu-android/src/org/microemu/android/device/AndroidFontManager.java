@@ -32,51 +32,48 @@ import javax.microedition.lcdui.Font;
 
 import org.microemu.device.FontManager;
 
+import android.graphics.Typeface;
+
 public class AndroidFontManager implements FontManager
 {
-	private static String FACE_SYSTEM_NAME = "SansSerif";
-	private static String FACE_MONOSPACE_NAME = "Monospaced";
-	private static String FACE_PROPORTIONAL_NAME = "SansSerif";
+	private static int SIZE_SMALL = 12;
+	private static int SIZE_MEDIUM = 16;
+	private static int SIZE_LARGE = 20;
 
-	private static int SIZE_SMALL = 9;
-	private static int SIZE_MEDIUM = 11;
-	private static int SIZE_LARGE = 13;
+	private static Hashtable fonts = new Hashtable();
 
-	private Hashtable fonts = new Hashtable();
-
-
-	org.microemu.device.impl.Font getFont(Font meFont)
+	static AndroidFont getFont(Font meFont)
 	{
     	int key = 0;
     	key |= meFont.getFace();
     	key |= meFont.getStyle();
     	key |= meFont.getSize();
     	
-    	org.microemu.device.impl.Font result = (org.microemu.device.impl.Font) fonts.get(new Integer(key));
+    	AndroidFont result = (AndroidFont) fonts.get(new Integer(key));
 	    
 	    if (result == null) {
-	    	String name = null;
+	    	Typeface family = Typeface.SANS_SERIF;
 	    	if (meFont.getFace() == Font.FACE_SYSTEM) {
-	    		name = FACE_SYSTEM_NAME;
+	    		family = Typeface.SANS_SERIF;
 	    	} else if (meFont.getFace() == Font.FACE_MONOSPACE) {
-	    		name = FACE_MONOSPACE_NAME;
+	    		family = Typeface.MONOSPACE;
 	    	} else if (meFont.getFace() == Font.FACE_PROPORTIONAL) {
-	    		name = FACE_PROPORTIONAL_NAME;
+	    		family = Typeface.SANS_SERIF;
 	    	}
-	    	String style = ",";
+	    	int style = 0;
 	    	if ((meFont.getStyle() & Font.STYLE_PLAIN) != 0) {
-	    		style += "plain,";
+	    		style |= Typeface.NORMAL;
 	    	}
 	    	if ((meFont.getStyle() & Font.STYLE_BOLD) != 0) {
-	    		style += "bold,";
+	    		style |= Typeface.BOLD;
 	    	}
 	    	if ((meFont.getStyle() & Font.STYLE_ITALIC) != 0) {
-	    		style += "italic,";
+	    		style |= Typeface.ITALIC;
 	    	}
-	    	if ((meFont.getStyle() & Font.STYLE_ITALIC) != 0) {
-	    		style += "underlined,";
+	    	boolean underlined = false;
+	    	if ((meFont.getStyle() & Font.STYLE_UNDERLINED) != 0) {
+	    		underlined = true;
 	    	}
-	    	style = style.substring(0, style.length() - 1);
 	    	int size = 0;
 	    	if (meFont.getSize() == Font.SIZE_SMALL) {
 	    		size = SIZE_SMALL;
@@ -85,7 +82,7 @@ public class AndroidFontManager implements FontManager
 	    	} else if (meFont.getSize() == Font.SIZE_LARGE) {
 	    		size = SIZE_LARGE;
 	    	}
-	    	result = new AndroidFont(name, style, size);
+	    	result = new AndroidFont(Typeface.create(family, style), size, underlined);
 	    	fonts.put(new Integer(key), result);
 	    }
 	    

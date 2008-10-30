@@ -67,6 +67,13 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 	
 	public class CanvasView extends View {
 		
+		private int FIRST_DRAG_SENSITIVITY_X = 5;
+		private int FIRST_DRAG_SENSITIVITY_Y = 5;
+		
+		int pressedX = -FIRST_DRAG_SENSITIVITY_X;
+		
+		int pressedY = -FIRST_DRAG_SENSITIVITY_Y;
+		
 		public CanvasView(Context context) {
 			super(context);
 			
@@ -125,15 +132,25 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 		public boolean onTouchEvent(MotionEvent event) {
 			Device device = DeviceFactory.getDevice();
 			AndroidInputMethod inputMethod = (AndroidInputMethod) device.getInputMethod();
+			int x = (int) event.getX();
+			int y = (int) event.getY();
 			switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN :
-				inputMethod.pointerPressed((int) event.getX(), (int) event.getY());
+				inputMethod.pointerPressed(x, y);
+				pressedX = x;
+				pressedY = y;
 				break;
 			case MotionEvent.ACTION_UP :
-				inputMethod.pointerReleased((int) event.getX(), (int) event.getY());
+				inputMethod.pointerReleased(x, y);
 				break;
 			case MotionEvent.ACTION_MOVE :
-				inputMethod.pointerDragged((int) event.getX(), (int) event.getY());
+				if (x > (pressedX - FIRST_DRAG_SENSITIVITY_X) &&  x < (pressedX + FIRST_DRAG_SENSITIVITY_X)
+						&& y > (pressedY - FIRST_DRAG_SENSITIVITY_Y) &&  y < (pressedY + FIRST_DRAG_SENSITIVITY_Y)) {
+				} else {
+					pressedX = -FIRST_DRAG_SENSITIVITY_X;
+					pressedY = -FIRST_DRAG_SENSITIVITY_Y;
+					inputMethod.pointerDragged(x, y);
+				}
 				break;
 			default:
 				return false;

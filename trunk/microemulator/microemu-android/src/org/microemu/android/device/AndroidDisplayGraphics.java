@@ -91,13 +91,18 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void drawLine(int x1, int y1, int x2, int y2) {
-		if (x1 == x2) {
-			canvas.drawLine(x1, y1, x2, y2 + 1, paint);
-		} else if (y1 == y2) {
-			canvas.drawLine(x1, y1, x2 + 1, y2, paint);
-		} else { 
-			canvas.drawLine(x1, y1, x2 + 1, y2 + 1, paint);
+		if (x1 > x2) {
+			x1++;
+		} else {
+			x2++;
 		}
+		if (y1 > y2) {
+			y1++;
+		} else {
+			y2++;
+		}
+
+		canvas.drawLine(x1, y1, x2, y2, paint);
 	}
 
 	public void drawRect(int x, int y, int width, int height) {

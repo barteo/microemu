@@ -78,6 +78,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 			super(context);
 			
 			setFocusable(true);
+			setFocusableInTouchMode(true);
 		}
 
 		//

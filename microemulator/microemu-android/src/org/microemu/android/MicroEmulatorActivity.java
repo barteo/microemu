@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Display;
 import android.view.View;
-import android.view.WindowManager;
 
 public abstract class MicroEmulatorActivity extends Activity {
 
@@ -53,7 +52,7 @@ public abstract class MicroEmulatorActivity extends Activity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		
-        Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+        Display display = getWindowManager().getDefaultDisplay();
 		AndroidDeviceDisplay deviceDisplay = (AndroidDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
 		deviceDisplay.displayRectangleWidth = display.getWidth();
 		deviceDisplay.displayRectangleHeight = display.getHeight() - 25;

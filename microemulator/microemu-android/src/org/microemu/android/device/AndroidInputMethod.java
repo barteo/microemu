@@ -354,8 +354,10 @@ public class AndroidInputMethod extends InputMethod {
 			resultKeyCode = Canvas.RIGHT;
 			break;
 		default: 
-			System.out.println("(todo) getKeyCode: " + keyEvent);
-			resultKeyCode = -1;
+            resultKeyCode = keyEvent.getUnicodeChar();
+            if (resultKeyCode == 0) {
+                 resultKeyCode = -deviceKeyCode;
+            }
 		}
 
 		return resultKeyCode;
@@ -388,8 +390,7 @@ public class AndroidInputMethod extends InputMethod {
 			gameAction = Canvas.RIGHT;
 			break;
 		default:
-			System.out.println("(todo) getGameAction: " + keyCode);
-			gameAction = -1; 
+			gameAction = 0; 
 		}
 
 		return gameAction;
@@ -397,9 +398,40 @@ public class AndroidInputMethod extends InputMethod {
 
 	@Override
 	public int getKeyCode(int gameAction) {
-		System.out.println("getKeyCode: " + gameAction);
-		// TODO Auto-generated method stub
-		return 0;
+		int keyCode;
+		switch (gameAction) {
+		case Canvas.FIRE:
+			keyCode = Canvas.FIRE;
+			break;
+		case Canvas.UP:
+			keyCode = Canvas.UP;
+			break;
+		case Canvas.DOWN:
+			keyCode = Canvas.DOWN;
+			break;
+		case Canvas.LEFT:
+			keyCode = Canvas.LEFT;
+			break;
+		case Canvas.RIGHT:
+			keyCode = Canvas.RIGHT;
+			break;
+		case Canvas.GAME_A:
+			keyCode = Canvas.GAME_A;
+			break;
+		case Canvas.GAME_B:
+			keyCode = Canvas.GAME_B;
+			break;
+		case Canvas.GAME_C:
+			keyCode = Canvas.GAME_C;
+			break;
+		case Canvas.GAME_D:
+			keyCode = Canvas.GAME_D;
+			break;
+		default:
+			throw new IllegalArgumentException();
+		}
+
+		return keyCode;
 	}
 
 	@Override
@@ -407,24 +439,35 @@ public class AndroidInputMethod extends InputMethod {
 		// TODO implement as lookup table
 		String keyName;
 		switch (keyCode) {
-		case Canvas.FIRE :
+		case Canvas.FIRE:
 			keyName = "SEL";
 			break;
-		case Canvas.UP :
+		case Canvas.UP:
 			keyName = "U";
 			break;
-		case Canvas.DOWN :
+		case Canvas.DOWN:
 			keyName = "D";
 			break;
-		case Canvas.LEFT :
+		case Canvas.LEFT:
 			keyName = "L";
 			break;
-		case Canvas.RIGHT :
+		case Canvas.RIGHT:
 			keyName = "R";
 			break;
+		case Canvas.GAME_A:
+			keyName = "GAME_A";
+			break;
+		case Canvas.GAME_B:
+			keyName = "GAME_B";
+			break;
+		case Canvas.GAME_C:
+			keyName = "GAME_C";
+			break;
+		case Canvas.GAME_D:
+			keyName = "GAME_D";
+			break;
 		default:
-			System.out.println("(todo) getKeyName: " + keyCode);
-			keyName = ""; 
+			keyName = String.valueOf((char) new KeyEvent(keyCode, KeyEvent.ACTION_DOWN).getUnicodeChar());
 		}
 
 		return keyName;

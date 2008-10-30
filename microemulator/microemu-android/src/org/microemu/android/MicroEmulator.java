@@ -32,6 +32,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
@@ -60,7 +61,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
-import android.view.WindowManager;
 
 public class MicroEmulator extends MicroEmulatorActivity {
 	
@@ -152,13 +152,13 @@ public class MicroEmulator extends MicroEmulatorActivity {
         	
         }));
         
-        String midletClassName = getResources().getString(0x7f020001);
+        String midletClassName = getResources().getString(R.string.class_name);
 
         java.util.List params = new ArrayList();
         params.add("--usesystemclassloader");
         params.add(midletClassName);
         
-        Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+        Display display = getWindowManager().getDefaultDisplay();
         ((AndroidDeviceDisplay) emulatorContext.getDeviceDisplay()).displayRectangleWidth = display.getWidth();
         ((AndroidDeviceDisplay) emulatorContext.getDeviceDisplay()).displayRectangleHeight = display.getHeight() - 25;
         
@@ -168,7 +168,8 @@ public class MicroEmulator extends MicroEmulatorActivity {
         common.initParams(params, null, AndroidDevice.class);
                
         System.setProperty("microedition.platform", "microemulator-android");
-
+        System.setProperty("microedition.locale", Locale.getDefault().toString());
+        
         common.getLauncher().setSuiteName(midletClassName);
         common.initMIDlet(true);
     }

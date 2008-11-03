@@ -61,8 +61,7 @@ public class AndroidFormUI extends AndroidDisplayableUI implements FormUI {
 	}
 	 
 	public int append(Item item) {
-		System.out.println("append(Item item)");
-		return 0;
+		return listAdapter.append(item);
 	}
 	 
 	public int append(String str) {
@@ -88,13 +87,13 @@ public class AndroidFormUI extends AndroidDisplayableUI implements FormUI {
 
 	private class AndroidListAdapter extends BaseAdapter {
 		
-		ArrayList<String> objects = new ArrayList<String>();
+		ArrayList<Item> objects = new ArrayList<Item>();
 		
-		public int append(String stringPart) {
-			objects.add(stringPart);
+		public int append(Item item) {
+			objects.add(item);
 			notifyDataSetChanged();
 			
-			return objects.lastIndexOf(stringPart);
+			return objects.lastIndexOf(item);
 		}
 
 		public int getCount() {
@@ -116,7 +115,7 @@ public class AndroidFormUI extends AndroidDisplayableUI implements FormUI {
 				((TextView) convertView).setTextAppearance(convertView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
 			}
 			
-			((TextView) convertView).setText((String) getItem(position));
+			((TextView) convertView).setText(((Item) getItem(position)).toString());
 			
 			return convertView;
 		}
@@ -136,5 +135,5 @@ public class AndroidFormUI extends AndroidDisplayableUI implements FormUI {
 		}
 		
 	}
-	
+		
 }

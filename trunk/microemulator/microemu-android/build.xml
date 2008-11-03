@@ -6,6 +6,7 @@
     <!-- IMPORTANT TO SET WITH VALID VALUES --> 
     <property name="midlet.name" value="Simple Demo" />
     <property name="midlet.package" value="SimpleDemo.apk" />
+    <property name="midlet.icon" value="../microemu-javase/src/main/resources/org/microemu/icon.png" />
     <property name="midlet.class" value="org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet" />
     <property name="midlet.jar" value="../microemu-examples/microemu-demo/target/microemu-demo-2.0.3-SNAPSHOT.jar" />
     <property name="sdk-folder" value="/home/barteo/Desktop/android-sdk-linux_x86-1.0_r1" />
@@ -34,6 +35,7 @@
 
     <!-- Tools -->
     <property name="aapt" value="${sdk-folder}/tools/aapt" />
+    <property name="adb" value="${sdk-folder}/tools/adb" />
     <property name="dx" value="${sdk-folder}/tools/dx" />
     <condition property="apk-builder" value="${sdk-folder}/tools/apkbuilder.bat" else="${sdk-folder}/tools/apkbuilder" >
         <os family="windows"/>
@@ -133,6 +135,9 @@
     &lt;string name="class_name"&gt;${midlet.class}&lt;/string&gt;
 &lt;/resources&gt;
         </echo>
+        
+        <mkdir dir="${outdir-res}/drawable" />
+        <copy file="${midlet.icon}" tofile="${outdir-res}/drawable/app_icon.png" />
     </target>
     
     <target name="package-res" depends="prepare-assets, prepare-res">
@@ -161,5 +166,33 @@
             <arg value="${intermediate-dex}" />
         </exec>
     </target>
+    
+    <!-- Install the package on the default emulator -->
+    <target name="install" depends="package-apk">
+        <echo>Installing ${out-debug-package} onto default emulator...</echo>
+        <exec executable="${adb}" failonerror="true">
+            <arg value="install" />
+            <arg value="${out-package}" />
+        </exec>
+    </target>
+
+    <target name="reinstall" depends="package-apk">
+        <echo>Installing ${out-debug-package} onto default emulator...</echo>
+        <exec executable="${adb}" failonerror="true">
+            <arg value="install" />
+            <arg value="-r" />
+            <arg value="${out-package}" />
+        </exec>
+    </target>
+
+    <!-- Uinstall the package from the default emulator -->
+    <target name="uninstall">
+        <echo>Uninstalling ${application-package} from the default emulator...</echo>
+        <exec executable="${adb}" failonerror="true">
+            <arg value="uninstall" />
+            <arg value="${application-package}" />
+        </exec>
+    </target>
+
         
 </project>

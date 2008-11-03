@@ -60,14 +60,25 @@ public class List extends Screen implements Choice {
         super(title);
         super.setUI(DeviceFactory.getDevice().getUIFactory().createListUI(this));
 
-        if (listType == Choice.IMPLICIT) {
-            choiceGroup = new ChoiceGroup(null, Choice.IMPLICIT, stringElements, imageElements, false);
-            for (int i = 0; i < size(); i++) {
-                set(i, getString(i), null);
-            }
-        } else {
-            choiceGroup = new ChoiceGroup(null, listType, stringElements, imageElements);
-        }
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidListUI")) {
+			for (int i = 0; i < stringElements.length; i++) {
+				if (imageElements == null) {
+					append(stringElements[i], null);
+				} else {
+					append(stringElements[i], imageElements[i]);
+				}
+			}
+			choiceGroup = new ChoiceGroup(null, listType, stringElements, imageElements, false);
+		} else {
+	        if (listType == Choice.IMPLICIT) {
+	            choiceGroup = new ChoiceGroup(null, Choice.IMPLICIT, stringElements, imageElements, false);
+	            for (int i = 0; i < size(); i++) {
+	                set(i, getString(i), null);
+	            }
+	        } else {
+	            choiceGroup = new ChoiceGroup(null, listType, stringElements, imageElements);
+	        }
+		}
         choiceGroup.setOwner(this);
         choiceGroup.setFocus(true);
 

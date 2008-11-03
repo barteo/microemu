@@ -46,7 +46,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
 	private Rect clip;
 	
-	private AndroidFont font;
+	private Font font;
 	
 	public AndroidDisplayGraphics(Canvas canvas) {
 		this.canvas = canvas;
@@ -133,8 +133,9 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
             newx -= paint.measureText(str);
         }
 
-        font.paint.setColor(paint.getColor());
-        canvas.drawText(str, newx, newy, font.paint);
+        AndroidFont androidFont = AndroidFontManager.getFont(font);
+        androidFont.paint.setColor(paint.getColor());
+        canvas.drawText(str, newx, newy, androidFont.paint);
 	}
 
     public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
@@ -171,9 +172,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public Font getFont() {
-		Logger.debug("getFont");
-
-		return null;
+		return font;
 	}
 
 	public void setClip(int x, int y, int width, int height) {
@@ -196,7 +195,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void setFont(Font font) {
-		this.font = AndroidFontManager.getFont(font);
+		this.font = font;
 	}
 
     public void translate(int x, int y) {

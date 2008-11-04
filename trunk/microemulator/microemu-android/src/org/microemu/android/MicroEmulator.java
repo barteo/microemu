@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -55,6 +56,7 @@ import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.log.Logger;
 
+import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -152,12 +154,22 @@ public class MicroEmulator extends MicroEmulatorActivity {
         	
         }));
         
-        String midletClassName = getResources().getString(R.string.class_name);
-
         java.util.List params = new ArrayList();
         params.add("--usesystemclassloader");
-        params.add(midletClassName);
         
+        String midletClassName;
+		try {
+			Class r = Class.forName(getComponentName().getPackageName() + ".R$string");
+			Field[] fields = r.getFields();
+			Class[] classes = r.getClasses();
+	        midletClassName = getResources().getString(r.getField("class_name").getInt(null));
+
+	        params.add(midletClassName);	       
+		} catch (Exception e) {
+			Logger.error(e);
+			return;
+		}
+
         Display display = getWindowManager().getDefaultDisplay();
         ((AndroidDeviceDisplay) emulatorContext.getDeviceDisplay()).displayRectangleWidth = display.getWidth();
         ((AndroidDeviceDisplay) emulatorContext.getDeviceDisplay()).displayRectangleHeight = display.getHeight() - 25;

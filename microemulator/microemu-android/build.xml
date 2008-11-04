@@ -89,7 +89,7 @@
         </java>
     </target>
 
-    <target name="compile" depends="prepare-jars">
+    <target name="compile" depends="prepare-jars, package-res">
         <javac target="1.5" debug="true" extdirs=""
                 srcdir="src"
                 destdir="${outdir-classes}"
@@ -138,14 +138,34 @@
         
         <mkdir dir="${outdir-res}/drawable" />
         <copy file="${midlet.icon}" tofile="${outdir-res}/drawable/app_icon.png" />
+        
+        <echo file="${outdir}/AndroidManifest.xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        package="org.microemu.android.${midlet.class}"&gt;
+    &lt;uses-permission android:name="android.permission.INTERNET" /&gt; 
+    &lt;application android:label="@string/app_name" android:icon="@drawable/app_icon"&gt;
+        &lt;activity 
+                android:name="org.microemu.android.MicroEmulator" 
+                android:configChanges="orientation|keyboardHidden"&gt;
+            &lt;intent-filter&gt;
+                &lt;action android:name="android.intent.action.MAIN" /&gt;
+                &lt;category android:name="android.intent.category.LAUNCHER" /&gt;
+            &lt;/intent-filter&gt;
+        &lt;/activity&gt;
+    &lt;/application&gt;
+&lt;/manifest&gt;            
+        </echo>
     </target>
     
     <target name="package-res" depends="prepare-assets, prepare-res">
         <exec executable="${aapt}" failonerror="true">
             <arg value="package" />
             <arg value="-f" />
+            <arg value="-m" />
+            <arg value="-J" />
+            <arg value="src" />
             <arg value="-M" />
-            <arg value="AndroidManifest.xml" />
+            <arg value="${outdir}/AndroidManifest.xml" />
             <arg value="-S" />
             <arg value="${outdir-res}" />
             <arg value="-A" />

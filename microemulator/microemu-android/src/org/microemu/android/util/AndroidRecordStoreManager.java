@@ -39,18 +39,18 @@ import javax.microedition.rms.RecordStoreNotOpenException;
 
 import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
-import org.microemu.android.R;
 import org.microemu.log.Logger;
 import org.microemu.util.ExtendedRecordListener;
 import org.microemu.util.RecordStoreImpl;
 
+import android.app.Activity;
 import android.content.Context;
 
 public class AndroidRecordStoreManager implements RecordStoreManager {
 
 	private final static String RECORD_STORE_SUFFIX = ".rs";
 	
-	private Context context;
+	private Activity activity;
 
 	private Hashtable<String, RecordStoreImpl> testOpenRecordStores = new Hashtable<String, RecordStoreImpl>();
 
@@ -67,8 +67,8 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 		}
 	};*/
 	
-	public AndroidRecordStoreManager(Context context) {
-		this.context = context;
+	public AndroidRecordStoreManager(Activity context) {
+		this.activity = context;
 	}
 
 	public void init(MicroEmulator emulator) {
@@ -79,7 +79,7 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 	}
 
 	private String getSuiteName() {
-		return context.getString(R.string.app_name);
+		return activity.getComponentName().getPackageName();
 	}
 
 	public void deleteRecordStore(final String recordStoreName) throws RecordStoreNotFoundException,
@@ -97,7 +97,7 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 			throw new RecordStoreNotFoundException(recordStoreName);
 		}
 
-		context.deleteFile(storeFileName);
+		activity.deleteFile(storeFileName);
 		fireRecordStoreListener(ExtendedRecordListener.RECORDSTORE_DELETE, recordStoreName);
 	}
 
@@ -127,7 +127,7 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 	}
 
 	public String[] listRecordStores() {
-		String[] result= context.fileList();
+		String[] result= activity.fileList();
 		if (result != null) {
 			if (result.length == 0) {
 				result = null;
@@ -163,7 +163,7 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 	private RecordStoreImpl loadFromDisk(String recordStoreFileName) throws FileNotFoundException {
 		RecordStoreImpl store = null;
 		try {
-			DataInputStream dis = new DataInputStream(context.openFileInput(recordStoreFileName));
+			DataInputStream dis = new DataInputStream(activity.openFileInput(recordStoreFileName));
 			store = new RecordStoreImpl(this, dis);
 			dis.close();
 		} catch (FileNotFoundException e) {
@@ -177,7 +177,7 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 	private void saveToDisk(String recordStoreFileName, final RecordStoreImpl recordStore)
 			throws RecordStoreException {
 		try {
-			DataOutputStream dos = new DataOutputStream(context.openFileOutput(recordStoreFileName, Context.MODE_PRIVATE));
+			DataOutputStream dos = new DataOutputStream(activity.openFileOutput(recordStoreFileName, Context.MODE_PRIVATE));
 			recordStore.write(dos);
 			dos.close();
 		} catch (IOException e) {

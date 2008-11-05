@@ -45,11 +45,9 @@
 
     <mailingLists>
         <mailingList>
-            <name>microemulator-users</name>
-            <subscribe>https://lists.sourceforge.net/lists/listinfo/microemulator-users</subscribe>
-            <unsubscribe>https://lists.sourceforge.net/lists/listinfo/microemulator-users</unsubscribe>
-            <post>microemulator-users@lists.sourceforge.net</post>
-            <archive>http://sourceforge.net/mailarchive/forum.php?forum_name=microemulator-users</archive>
+            <name>microemulator-support</name>
+            <post>microemulator-support@googlegroups.com</post>
+            <archive>http://groups.google.com/group/microemulator-support</archive>
         </mailingList>
         <mailingList>
             <name>microemulator Help Forum</name>

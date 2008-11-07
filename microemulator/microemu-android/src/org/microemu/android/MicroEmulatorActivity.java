@@ -62,7 +62,7 @@ public abstract class MicroEmulatorActivity extends Activity {
 		}
 		DisplayAccess da = ma.getDisplayAccess();
 		if (da != null) {
-			da.sizeChanged(deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
+			da.sizeChanged();
 			deviceDisplay.repaint(0, 0, deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
 		}
 	}

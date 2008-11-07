@@ -36,9 +36,11 @@ public abstract class Displayable
 {
 	Device device;
 	
-	boolean sizeChangedDeferredRequest;
-	
 	Display currentDisplay = null;
+	
+	private int width;
+	
+	private int height;
     
 	boolean fullScreenMode;
 
@@ -64,7 +66,8 @@ public abstract class Displayable
     Displayable(String title) 
     {
         this.device = DeviceFactory.getDevice();
-        this.sizeChangedDeferredRequest = false;        
+        this.width = -1;
+        this.height = -1;
         this.fullScreenMode = false;
         this.title = title;
     }
@@ -120,21 +123,29 @@ public abstract class Displayable
     
     public int getWidth()
     {
-    	if (fullScreenMode) {
-    		return device.getDeviceDisplay().getFullWidth();
-    	} else {
-    		return device.getDeviceDisplay().getWidth();
+    	if (width == -1) {
+	    	if (fullScreenMode) {
+	    		width = device.getDeviceDisplay().getFullWidth();
+	    	} else {
+	    		width = device.getDeviceDisplay().getWidth();
+	    	}
     	}
+    	
+    	return width;
     }
 
 
     public int getHeight()
     {
-    	if (fullScreenMode) {
-    		return device.getDeviceDisplay().getFullHeight();
-    	} else {
-    		return device.getDeviceDisplay().getHeight();
+    	if (height == -1) {
+        	if (fullScreenMode) {
+        		height = device.getDeviceDisplay().getFullHeight();
+        	} else {
+        		height= device.getDeviceDisplay().getHeight();
+        	}
     	}
+    	
+    	return height;
     }
 
 
@@ -184,11 +195,6 @@ public abstract class Displayable
 	}
 	
 	
-	protected void sizeChanged(int w, int h)
-	{		
-	}
-
-
 	CommandListener getCommandListener()
 	{
 		return listener;
@@ -265,6 +271,27 @@ public abstract class Displayable
 		}
     }
 	
+	protected void sizeChanged(int w, int h)
+	{		
+	}
+
+
+	final void sizeChanged(Display d)
+	{
+    	if (fullScreenMode) {
+    		width = device.getDeviceDisplay().getFullWidth();
+    	} else {
+    		width = device.getDeviceDisplay().getWidth();
+    	}
+    	if (fullScreenMode) {
+    		height = device.getDeviceDisplay().getFullHeight();
+    	} else {
+    		height = device.getDeviceDisplay().getHeight();
+    	}
+		
+		sizeChanged(width, height);
+	}
+	
 	
 	void showNotify()
 	{        
@@ -282,9 +309,21 @@ public abstract class Displayable
         		viewPortHeight -= this.ticker.getHeight();
         }
         
-        if (sizeChangedDeferredRequest) {
-        	sizeChanged(getWidth(), getHeight());
-        	sizeChangedDeferredRequest = false;
+        int w;
+    	int h;
+    	if (fullScreenMode) {
+    		w = device.getDeviceDisplay().getFullWidth();
+    	} else {
+    		w = device.getDeviceDisplay().getWidth();
+    	}
+    	if (fullScreenMode) {
+    		h = device.getDeviceDisplay().getFullHeight();
+    	} else {
+    		h = device.getDeviceDisplay().getHeight();
+    	}
+   	
+        if (width != w || height != h) {
+        	sizeChanged(d);
         }
 		
 		showNotify();

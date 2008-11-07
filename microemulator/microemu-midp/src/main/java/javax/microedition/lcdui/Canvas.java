@@ -179,9 +179,7 @@ public abstract class Canvas extends Displayable
     		}
     		
     		if (currentDisplay != null) {
-    			sizeChanged(getWidth(), getHeight());
-    		} else {
-    			sizeChangedDeferredRequest = true;
+    			sizeChanged(currentDisplay);
     		}
     	}
 	}

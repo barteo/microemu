@@ -349,13 +349,13 @@ public class Display {
 			getDisplay().setCurrent(d);
 		}
 
-		public void sizeChanged(int width, int height) {
+		public void sizeChanged() {
 			if (current != null) {
 	    		if (current instanceof GameCanvas) {
 	    		    GameCanvasKeyAccess access = MIDletBridge.getMIDletAccess().getGameCanvasKeyAccess();
 	    		    access.initBuffer();
 	    		}
-				current.sizeChanged(width, height);
+				current.sizeChanged(Display.this);
 				updateCommands();
 			}
 		}

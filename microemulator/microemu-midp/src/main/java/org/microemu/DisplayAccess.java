@@ -67,7 +67,7 @@ public interface DisplayAccess
 
 	void setCurrent(Displayable d);
 	
-	void sizeChanged(int width, int height);
+	void sizeChanged();
   
 	void updateCommands();
 

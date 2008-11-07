@@ -335,9 +335,9 @@ public class Main extends JFrame {
 				}
 
 				try {
-					AppletProducer.createHtml(htmlOutputFile, DeviceFactory.getDevice(), jadMidletEntry.getClassName(),
-							midletOutputFile, appletPackageOutputFile, deviceOutputFile, deviceDescriptorLocation);
-					AppletProducer.createMidlet(midletInput, midletOutputFile);
+					AppletProducer.createHtml(htmlOutputFile, (DeviceImpl) DeviceFactory.getDevice(), jadMidletEntry.getClassName(),
+							midletOutputFile, appletPackageOutputFile, deviceOutputFile);
+					AppletProducer.createMidlet(new URL(midletInput), midletOutputFile);
 					IOUtils.copyFile(appletJarFile, appletPackageOutputFile);
 					if (deviceInput != null) {
 						IOUtils.copyFile(new File(Config.getConfigPath(), deviceInput.getFileName()), deviceOutputFile);
@@ -538,7 +538,7 @@ public class Main extends JFrame {
 					DeviceDisplay deviceDisplay = DeviceFactory.getDevice().getDeviceDisplay();
 					DisplayAccess da = MIDletBridge.getMIDletAccess().getDisplayAccess();
 					if (da != null) {
-						da.sizeChanged(da.getCurrent().getWidth(), da.getCurrent().getHeight());
+						da.sizeChanged();
 						deviceDisplay.repaint(0, 0, deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
 					}
 				}
@@ -585,7 +585,7 @@ public class Main extends JFrame {
 				}
 				DisplayAccess da = ma.getDisplayAccess();
 				if (da != null) {
-					da.sizeChanged(da.getCurrent().getWidth(), da.getCurrent().getHeight());
+					da.sizeChanged();
 					deviceDisplay.repaint(0, 0, deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
 				}
 				devicePanel.revalidate();
@@ -775,7 +775,7 @@ public class Main extends JFrame {
 					}
 					DisplayAccess da = ma.getDisplayAccess();
 					if (da != null) {
-						da.sizeChanged(da.getCurrent().getWidth(), da.getCurrent().getHeight());
+						da.sizeChanged();
 						deviceDisplay.repaint(0, 0, deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
 					}
 					pack();

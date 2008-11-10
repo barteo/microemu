@@ -214,18 +214,24 @@ public class EventDispatcher implements Runnable {
 		}
 	}
 	
-	public final class ShowHideNotifyEvent extends EventDispatcher.Event {
-
-		public static final short SHOW_NOTIFY = 0;
-
-		public static final short HIDE_NOTIFY = 1;
-
-		private short type;
+	public final class ShowNotifyEvent extends EventDispatcher.Event {
 
 		private Runnable runnable;
 
-		public ShowHideNotifyEvent(short type, Runnable runnable) {
-			this.type = type;
+		public ShowNotifyEvent(Runnable runnable) {
+			this.runnable = runnable;
+		}
+
+		public void run() {
+			runnable.run();
+		}
+	}
+
+	public final class HideNotifyEvent extends EventDispatcher.Event {
+
+		private Runnable runnable;
+
+		public HideNotifyEvent(Runnable runnable) {
 			this.runnable = runnable;
 		}
 

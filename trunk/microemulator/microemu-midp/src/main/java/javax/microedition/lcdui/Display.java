@@ -42,7 +42,6 @@ import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.ui.DisplayableUI;
 import org.microemu.device.ui.EventDispatcher;
-import org.microemu.device.ui.EventDispatcher.ShowHideNotifyEvent;
 
 public class Display {
 
@@ -498,15 +497,17 @@ public class Display {
 
 	public void setCurrent(final Displayable nextDisplayable) {
 		if (nextDisplayable != null) {
-			eventDispatcher.put(eventDispatcher.new ShowHideNotifyEvent(ShowHideNotifyEvent.SHOW_NOTIFY, new Runnable() {
+			eventDispatcher.put(eventDispatcher.new ShowNotifyEvent(new Runnable() {
 
 				public void run() {
 					if (current != null) {
-						eventDispatcher.put(eventDispatcher.new ShowHideNotifyEvent(ShowHideNotifyEvent.HIDE_NOTIFY, new Runnable() {
+						eventDispatcher.put(eventDispatcher.new HideNotifyEvent(new Runnable() {
+							
+							private Displayable displayable = current;
 
-									public void run() {
-										current.hideNotify(Display.this);
-									}
+							public void run() {
+								displayable.hideNotify(Display.this);
+							}
 							
 						}));
 					}

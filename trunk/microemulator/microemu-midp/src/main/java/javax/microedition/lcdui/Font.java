@@ -188,6 +188,11 @@ public final class Font
 	public int substringWidth(String str, int offset, int len)
 	{
 		return stringWidth(str.substring(offset, offset + len));
+	}
+
+
+	public int hashCode() {
+		return style + size + face;
 	}	
 	
 }

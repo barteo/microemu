@@ -30,7 +30,6 @@ import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
 
-import org.microemu.device.DeviceFactory;
 import org.microemu.log.Logger;
 
 import android.graphics.Bitmap;
@@ -345,9 +344,6 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 
 	public void drawRGB(int[] rgbData, int offset, int scanlength, int x,
 			int y, int width, int height, boolean processAlpha) {
-        // this is less than ideal in terms of memory
-        // but it's the easiest way
-
         if (rgbData == null)
             throw new NullPointerException();
 
@@ -356,24 +352,12 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
         }
 
         int l = rgbData.length;
-
         if (width < 0 || height < 0 || offset < 0 || offset >= l || (scanlength < 0 && scanlength * (height - 1) < 0)
-                || (scanlength >= 0 && scanlength * (height - 1) + width - 1 >= l))
+                || (scanlength >= 0 && scanlength * (height - 1) + width - 1 >= l)) {
             throw new ArrayIndexOutOfBoundsException();
-
-        int[] rgb = new int[width * height];
-        // this way we dont create yet another array in createImage
-        int transparencyMask = processAlpha ? 0 : 0xff000000;
-        for (int row = 0; row < height; row++) {
-            for (int px = 0; px < width; px++)
-                rgb[row * width + px] = rgbData[offset + px] | transparencyMask;
-            offset += scanlength;
         }
-
-        // help gc
-        rgbData = null;
-        Image img = DeviceFactory.getDevice().getDeviceDisplay().createRGBImage(rgb, width, height, true);
-        drawImage(img, x, y, TOP | LEFT);
+        
+        canvas.drawBitmap(rgbData, offset, scanlength, x, y, width, height, processAlpha, paint);
 	}
 
 	public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {

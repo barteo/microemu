@@ -26,7 +26,7 @@
 
 package org.microemu.android.device;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import javax.microedition.lcdui.Font;
 
@@ -40,16 +40,11 @@ public class AndroidFontManager implements FontManager
 	private static int SIZE_MEDIUM = 16;
 	private static int SIZE_LARGE = 20;
 
-	private static Hashtable fonts = new Hashtable();
+	private static HashMap<Font, AndroidFont> fonts = new HashMap<Font, AndroidFont>();
 
 	static AndroidFont getFont(Font meFont)
 	{
-    	int key = 0;
-    	key |= meFont.getFace();
-    	key |= meFont.getStyle();
-    	key |= meFont.getSize();
-    	
-    	AndroidFont result = (AndroidFont) fonts.get(new Integer(key));
+    	AndroidFont result = fonts.get(meFont);
 	    
 	    if (result == null) {
 	    	Typeface family = Typeface.SANS_SERIF;
@@ -83,7 +78,7 @@ public class AndroidFontManager implements FontManager
 	    		size = SIZE_LARGE;
 	    	}
 	    	result = new AndroidFont(Typeface.create(family, style), size, underlined);
-	    	fonts.put(new Integer(key), result);
+	    	fonts.put(meFont, result);
 	    }
 	    
 	    return result;

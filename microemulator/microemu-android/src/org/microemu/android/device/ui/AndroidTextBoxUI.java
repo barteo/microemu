@@ -26,12 +26,18 @@
 
 package org.microemu.android.device.ui;
 
+import java.util.List;
+
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.TextBox;
+import javax.microedition.lcdui.TextField;
 
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.TextBoxUI;
 
 import android.content.res.TypedArray;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,7 +46,7 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 	
 	private EditText editView;
 	
-	public AndroidTextBoxUI(final MicroEmulatorActivity activity, TextBox textBox) {		
+	public AndroidTextBoxUI(final MicroEmulatorActivity activity, final TextBox textBox) {		
 		super(activity, textBox);		
 		
 		activity.post(new Runnable() {
@@ -57,6 +63,24 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 				
 				editView = new EditText(activity);
 				editView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+				if ((textBox.getConstraints() & TextField.URL) != 0) {
+					editView.setSingleLine(true);
+					editView.setOnClickListener(new View.OnClickListener() {
+	
+						public void onClick(View v) {
+							List<Command> commands = getCommands();
+							for (int i = 0; i < commands.size(); i++) {
+								Command cmd = commands.get(i);
+								if (cmd.getCommandType() == Command.OK) {
+									CommandListener l = getCommandListener();
+									l.commandAction(cmd, displayable);
+									break;
+								}
+							}			
+						}
+						
+					});
+				}
 				((LinearLayout) view).addView(editView);
 				
 				invalidate();

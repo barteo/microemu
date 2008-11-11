@@ -56,7 +56,8 @@ import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.log.Logger;
 
-import android.content.res.Resources.NotFoundException;
+import dalvik.system.VMRuntime;
+
 import android.os.Bundle;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -208,9 +209,14 @@ public class MicroEmulator extends MicroEmulatorActivity {
 				if (cmd.getCommandType() == Command.BACK) {
 					CommandListener l = ui.getCommandListener();
 					l.commandAction(cmd, da.getCurrent());
-					return true;
+					break;
+				} else if (cmd.getCommandType() == Command.EXIT) {
+					moveTaskToBack(true);
+					break;
 				}
-			}
+			}			
+			
+			return true;
 		}
 		
 		return super.onKeyDown(keyCode, event);
@@ -238,7 +244,7 @@ public class MicroEmulator extends MicroEmulatorActivity {
 		for (int i = 0; i < commands.size(); i++) {
 			result = true;
 			Command cmd = commands.get(i);
-			if (cmd.getCommandType() != Command.BACK) {
+			if (cmd.getCommandType() != Command.BACK && cmd.getCommandType() != Command.EXIT) {
 				menu.add(Menu.NONE, i + Menu.FIRST, Menu.NONE, cmd.getLabel());
 			}
 		}

@@ -35,10 +35,17 @@ public class AndroidFont implements Font {
 
 	Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	
+	private int baselinePosition;
+	
+	private int height;
+	
 	public AndroidFont(Typeface typeface, int size, boolean underlined) {
 		paint.setTypeface(typeface);
 		paint.setTextSize(size);
 		paint.setUnderlineText(underlined);
+		
+		baselinePosition = -paint.getFontMetricsInt().ascent;
+		height = paint.getFontMetricsInt(paint.getFontMetricsInt());
 	}
 
 	public int charWidth(char ch) {
@@ -50,11 +57,11 @@ public class AndroidFont implements Font {
 	}
 
 	public int getBaselinePosition() {
-		return -paint.getFontMetricsInt().ascent;
+		return baselinePosition;
 	}
 
 	public int getHeight() {
-		return paint.getFontMetricsInt(paint.getFontMetricsInt());
+		return height;
 	}
 
 	public int stringWidth(String str) {

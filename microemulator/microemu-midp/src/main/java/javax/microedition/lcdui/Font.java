@@ -50,8 +50,15 @@ public final class Font
 	private static Hashtable fonts = new Hashtable();
 	
 	private int face;
+	
 	private int style;
+	
 	private int size;
+	
+	private int baselinePosition = -1;
+	
+	private int height = -1;
+	
 
 	private Font(int face, int style, int size)
 	{
@@ -87,7 +94,7 @@ public final class Font
 	
 	public static Font getFont(int face, int style, int size)
 	{
-		String key = face + "-" + style + "-" + size;
+		Integer key = new Integer(style + size + face);
 		Font result = (Font) fonts.get(key);
 		if (result == null) {
 			result = new Font(face, style, size);
@@ -157,13 +164,21 @@ public final class Font
 	
 	public int getHeight()
 	{
-		return DeviceFactory.getDevice().getFontManager().getHeight(this);
+		if (height == -1) {
+			height = DeviceFactory.getDevice().getFontManager().getHeight(this);
+		}
+		
+		return height;
 	}
 
 	
 	public int getBaselinePosition()
 	{
-		return DeviceFactory.getDevice().getFontManager().getBaselinePosition(this);
+		if (baselinePosition == -1) { 
+			baselinePosition = DeviceFactory.getDevice().getFontManager().getBaselinePosition(this);
+		}
+		
+		return baselinePosition;
 	}
 
 	

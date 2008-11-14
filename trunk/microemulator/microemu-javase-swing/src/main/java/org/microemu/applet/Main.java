@@ -56,6 +56,7 @@ import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
+import org.microemu.device.impl.DeviceDisplayImpl;
 import org.microemu.device.impl.DeviceImpl;
 import org.microemu.device.j2se.J2SEDevice;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
@@ -228,8 +229,11 @@ public class Main extends Applet implements MicroEmulator {
 			return;
 		}
 
-		Image tmpImg = DeviceFactory.getDevice().getNormalImage();
-		resize(tmpImg.getWidth(), tmpImg.getHeight());
+		if (((DeviceDisplayImpl) device.getDeviceDisplay()).isResizable()) {
+			resize(device.getDeviceDisplay().getFullWidth(), device.getDeviceDisplay().getFullHeight());
+		} else {
+			resize(device.getNormalImage().getWidth(), device.getNormalImage().getHeight());
+		}
 
 		return;
 	}

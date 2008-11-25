@@ -23,7 +23,6 @@
  *
  *  @version $Id$
  */
-
 package org.microemu.iphone.device;
 
 import java.io.ByteArrayOutputStream;

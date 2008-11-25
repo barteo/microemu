@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0">
+    <!-- @version $Revision: 1626 $ ($Author: vlads $) $Date: 2008-03-05 03:47:36 +0100 (Mi, 05 Mrz 2008) $ -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.microemu</groupId>
+        <artifactId>microemu</artifactId>
+        <version>2.0.3-SNAPSHOT</version><!--me-version-->
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>microemu-iphone</artifactId>
+    <name>microemu-iphone</name>
+
+    <description>iphone</description>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>de.tarent.maven.plugins</groupId>
+				<artifactId>maven-pkg-plugin</artifactId>
+				<version>2.1.0-iphone</version>
+				<configuration>
+					<defaultDistro>iphoneos</defaultDistro>
+					<shortDescription>MicroEmulator</shortDescription>
+					<defaults>
+						<mainClass>org.microemu.iphone.MicroEmulator</mainClass>
+						<section>Games</section>
+						<maintainer>Markus Heberling &lt;markus@tisoft.de&gt;</maintainer>
+						<architecture>iphoneos-arm</architecture>
+						<datadir>/Applications/MicroEmulator.app</datadir>
+						<dataFiles>
+							<!--
+								.desktop entry which lies under
+								${project_base}/src/main/auxfiles and is copied into
+								/usr/share/applications/hildon
+							-->
+							<dataFile>
+								<from>Info.plist</from>
+								<to>.</to>
+							</dataFile>
+							<dataFile>
+								<from>Default.png</from>
+								<to>.</to>
+							</dataFile>
+							<dataFile>
+								<from>icon.png</from>
+								<to>.</to>
+							</dataFile>
+							<dataFile>
+								<from>MicroEmulator</from>
+								<to>.</to>
+							</dataFile>
+						</dataFiles>
+						<postinstScript>postInst.sh</postinstScript>
+						<prermScript>preRm.sh</prermScript>
+					</defaults>
+					<auxPackageMapURL>file:${basedir}/src/main/auxfiles/pm-iphoneos.xml
+					</auxPackageMapURL>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>pkg</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+    <dependencies>
+    	<dependency>
+           <groupId>org.microemu</groupId>
+     	    <artifactId>microemu-demo</artifactId>
+            <version>${project.version}</version>
+    	</dependency>
+    
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-javase</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-midp</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+			<groupId>iphone</groupId>
+			<artifactId>jocstrap</artifactId>
+			<version>1.0.2549-8</version>
+		</dependency>
+		<dependency>
+			<groupId>iphone</groupId>
+			<artifactId>uicaboodle</artifactId>
+			<version>1.0.2475-2</version>
+		</dependency>
+		<dependency>
+			<groupId>iphone</groupId>
+			<artifactId>straptease</artifactId>
+			<version>0.6</version>
+		</dependency>
+        
+    </dependencies>
+
+</project>

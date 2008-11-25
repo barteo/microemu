@@ -1,0 +1,44 @@
+<!--
+		Package maps document for Darwin/iPhoneOS.
+-->
+<package-maps>
+	<version>1.0</version>
+	<distro>
+		<id>iphoneos</id>
+		<label>Darwin/iPhoneOS</label>
+		<packaging>deb</packaging>
+		<defaultJarPath>/usr/share/java</defaultJarPath>
+		<!--
+			Altough Debian puts most of its JNI libraries into /usr/lib/jni some
+			end up in /usr/lib (e.g. librxtx-java). So we add this path as well.
+		-->
+		<defaultJNIPath>/usr/lib/jni:/usr/lib</defaultJNIPath>
+		<defaultDependencyLine>jamvm</defaultDependencyLine>
+		<map>
+			<!-- JocStrap API -->
+			<entry>
+				<artifactSpec>iphone:jocstrap</artifactSpec>
+				<dependencyLine>jocstrap</dependencyLine>
+				<jars>
+					<jar>jocstrap.jar</jar>
+				</jars>
+			</entry>
+			<!-- UICaboodle API -->
+			<entry>
+				<artifactSpec>iphone:uicaboodle</artifactSpec>
+				<dependencyLine>uicaboodle</dependencyLine>
+				<jars>
+					<jar>uicaboodle.jar</jar>
+				</jars>
+			</entry>
+			<!-- StrapTease API -->
+			<entry>
+				<artifactSpec>iphone:straptease</artifactSpec>
+				<dependencyLine>libstraptease-java</dependencyLine>
+				<jars>
+					<jar>straptease.jar</jar>
+				</jars>
+			</entry>
+		</map>
+	</distro>
+</package-maps>

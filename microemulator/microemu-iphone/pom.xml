@@ -1,22 +1,82 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="http://maven.apache.org/POM/4.0.0">
-    <!-- @version $Revision: 1626 $ ($Author: vlads $) $Date: 2008-03-05 03:47:36 +0100 (Mi, 05 Mrz 2008) $ -->
-    <modelVersion>4.0.0</modelVersion>
+    <!-- @version $Revision$ ($Author$) $Date$ -->
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.microemu</groupId>
-        <artifactId>microemu</artifactId>
-        <version>2.0.3-SNAPSHOT</version><!--me-version-->
-        <relativePath>../pom.xml</relativePath>
-    </parent>
+	<parent>
+		<groupId>org.microemu</groupId>
+		<artifactId>microemu</artifactId>
+		<version>2.0.3-SNAPSHOT</version><!--me-version-->
+		<relativePath>../pom.xml</relativePath>
+	</parent>
 
-    <artifactId>microemu-iphone</artifactId>
-    <name>microemu-iphone</name>
+	<artifactId>microemu-iphone</artifactId>
+	<name>microemu-iphone</name>
 
-    <description>iphone</description>
+	<description>iphone</description>
+
+	<repositories>
+		<repository>
+			<id>maven.tisoft.de/repository</id>
+			<name>tisoft Maven Repository</name>
+			<url>http://maven.tisoft.de/repository/
+			</url>
+		</repository>
+		<repository>
+			<id>evolvis-release-repository</id>
+			<name>evolvis.org release repository</name>
+			<url>http://maven-repo.evolvis.org/releases
+			</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>evolvis-snapshot-repository</id>
+			<name>evolvis.org snapshot repository</name>
+			<url>http://maven-repo.evolvis.org/snapshots
+			</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>evolvis-release-repository</id>
+			<name>evolvis.org release repository</name>
+			<url>http://maven-repo.evolvis.org/releases
+			</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>evolvis-snapshot-repository</id>
+			<name>evolvis.org snapshot repository</name>
+			<url>http://maven-repo.evolvis.org/snapshots
+			</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
 
 	<build>
 		<plugins>
@@ -30,13 +90,14 @@
 			<plugin>
 				<groupId>de.tarent.maven.plugins</groupId>
 				<artifactId>maven-pkg-plugin</artifactId>
-				<version>2.1.0-iphone</version>
+				<version>2.1.0-SNAPSHOT</version>
 				<configuration>
 					<defaultDistro>iphoneos</defaultDistro>
 					<shortDescription>MicroEmulator</shortDescription>
 					<defaults>
-						<mainClass>org.microemu.iphone.MicroEmulator</mainClass>
-						<section>Games</section>
+						<mainClass>org.microemu.iphone.MicroEmulator
+						</mainClass>
+						<section>Java</section>
 						<maintainer>Markus Heberling &lt;markus@tisoft.de&gt;</maintainer>
 						<architecture>iphoneos-arm</architecture>
 						<datadir>/Applications/MicroEmulator.app</datadir>

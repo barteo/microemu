@@ -154,11 +154,7 @@
             <artifactId>microemu-javase</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.microemu</groupId>
-            <artifactId>microemu-midp</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+ 
         <dependency>
 			<groupId>iphone</groupId>
 			<artifactId>jocstrap</artifactId>

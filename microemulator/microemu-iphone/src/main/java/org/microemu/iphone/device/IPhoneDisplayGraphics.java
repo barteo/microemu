@@ -26,6 +26,8 @@
  */
 package org.microemu.iphone.device;
 
+import java.util.logging.Logger;
+
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Image;
 
@@ -38,7 +40,6 @@ import obc.NSString;
 
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.impl.Rectangle;
-import org.microemu.log.Logger;
 
 import straptease.CGPathDrawingMode;
 import straptease.CoreGraphics;
@@ -73,7 +74,7 @@ public class IPhoneDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
-		Logger.debug("drawArc");
+        throw new UnsupportedOperationException("Currently not supported on iPhone");
     }
 
 	public void drawImage(Image img, int x, int y, int anchor) {
@@ -122,7 +123,7 @@ public class IPhoneDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
-		Logger.debug("drawRoundRect not really implemented");
+		//TODO implement round rect
 		drawRect(x, y, width, height);
     }
 
@@ -166,7 +167,7 @@ public class IPhoneDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
     public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
-		Logger.debug("fillArc");
+        throw new UnsupportedOperationException("Currently not supported on iPhone");
     }
 
 	public void fillRect(int x, int y, int width, int height) {
@@ -174,7 +175,7 @@ public class IPhoneDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
-		Logger.debug("fillRoundRect not really implemented");
+		//TODO implement round rect
 		fillRect(x, y, width, height);
     }
 
@@ -394,18 +395,16 @@ public class IPhoneDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {
-		Logger.debug("fillTriangle");
+        throw new UnsupportedOperationException("Currently not supported on iPhone");
 	}
 
 	public void copyArea(int x_src, int y_src, int width, int height,
 			int x_dest, int y_dest, int anchor) {
-		Logger.debug("copyArea");
+        throw new UnsupportedOperationException("Currently not supported on iPhone");
 	}
 
 	public int getDisplayColor(int color) {
-		Logger.debug("getDisplayColor");
-
-		return -1;
+        throw new UnsupportedOperationException("Currently not supported on iPhone");
 	}
 	
 }

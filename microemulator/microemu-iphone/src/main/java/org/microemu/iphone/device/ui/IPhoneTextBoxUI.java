@@ -25,7 +25,10 @@
  */
 package org.microemu.iphone.device.ui;
 
+import java.lang.reflect.Field;
+
 import javax.microedition.lcdui.TextBox;
+import javax.microedition.lcdui.TextField;
 
 import joc.Message;
 import joc.Static;
@@ -42,7 +45,33 @@ import org.microemu.iphone.MicroEmulator;
 
 public class IPhoneTextBoxUI extends AbstractUI implements TextBoxUI {
 
+	private final class TextBoxField extends TextField {
+		public TextBoxField(TextField textField) {
+			super(textField.getLabel(), textField.getString(), textField.getMaxSize(), textField.getConstraints());
+		}
+		
+		@Override
+		public void setString(String text) {
+			super.setString(text);
+			if(textView!=null)
+				textView.setText$(text);
+		}
+		
+		@Override
+		public int getCaretPosition() {
+			if(textView!=null)
+				return textView.selectedRange().location;
+			else
+				return 0;
+		}
+
+		public void setStringSilent(String text) {
+			super.setString(text);
+		}
+	}
+
 	private TextBox textBox;
+	private TextBoxField textField;
 	private UIView view;
 	private UITextView textView;
 	private UINavigationBar navigtionBar;
@@ -50,20 +79,28 @@ public class IPhoneTextBoxUI extends AbstractUI implements TextBoxUI {
 	public IPhoneTextBoxUI(MicroEmulator microEmulator, TextBox textBox) {
 		super(microEmulator, textBox);
 		this.textBox = textBox;
+
+		try {
+			Field tf = TextBox.class.getDeclaredField("tf");
+			tf.setAccessible(true);
+			textField = new TextBoxField((TextField) tf.get(textBox));
+			tf.set(textBox, textField);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 
 	public int getCaretPosition() {
-		// TODO Auto-generated method stub
-		return 0;
+		return textField.getCaretPosition();
 	}
 
 	public String getString() {
-		// TODO Auto-generated method stub
-		return null;
+		return textField.getString();
 	}
 
 	public void setString(String text) {
-		// TODO Auto-generated method stub
+		textField.setString(text);
 	}
 
 	public void hideNotify() {
@@ -77,11 +114,12 @@ public class IPhoneTextBoxUI extends AbstractUI implements TextBoxUI {
 	}
 
 	public void showNotify() {
+		System.out.println("IPhoneTextBoxUI.showNotify()");
 		if (view == null) {
 			view = new UIView().initWithFrame$(microEmulator.getWindow().bounds());
 
 			navigtionBar = new UINavigationBar().initWithFrame$(new CGRect(0, 0,
-					microEmulator.getWindow().bounds().size.width, TOOLBAR_HEIGHT));
+					microEmulator.getWindow().bounds().size.width, NAVIGATION_HEIGHT));
 			UINavigationItem title = new UINavigationItem().initWithTitle$(textBox.getTitle());
 			title.setBackButtonTitle$("Done");
 			navigtionBar.pushNavigationItem$(title);
@@ -90,7 +128,7 @@ public class IPhoneTextBoxUI extends AbstractUI implements TextBoxUI {
 				@SuppressWarnings("unused")
 				@Message(name = "navigationBar:shouldPopItem:")
 				public boolean navigationBar$shouldPopItem$(UINavigationBar bar, UINavigationItem item) {
-					//Close Keyboard
+					// Close Keyboard
 					textView.resignFirstResponder();
 					return true;
 				}
@@ -100,15 +138,23 @@ public class IPhoneTextBoxUI extends AbstractUI implements TextBoxUI {
 				@Override
 				@Message(name = "becomeFirstResponder", types = "B8@0:4")
 				public boolean becomeFirstResponder() {
-					//Open Keybords and add a Done-Button
+					// Open Keybords and add a Done-Button
 					UINavigationItem keyboardTitle = new UINavigationItem().initWithTitle$(textBox.getTitle());
 					navigtionBar.pushNavigationItem$(keyboardTitle);
 					return ((Byte) joc.Runtime.msgSend(this, incorrect_ ? null : UITextView.class,
 							"becomeFirstResponder")) == Static.YES;
 				}
-			}.initWithFrame$(new CGRect(0, TOOLBAR_HEIGHT, microEmulator.getWindow().bounds().size.width, microEmulator
+			}.initWithFrame$(new CGRect(0, NAVIGATION_HEIGHT, microEmulator.getWindow().bounds().size.width, microEmulator
 					.getWindow().bounds().size.height
-					- TOOLBAR_HEIGHT - TOOLBAR_HEIGHT));
+					- NAVIGATION_HEIGHT - TOOLBAR_HEIGHT));
+			textView.setText$(textField.getString());
+			textView.setDelegate$(new NSObject(){
+				@SuppressWarnings("unused")
+				@Message(name="textViewDidChange:")
+				public void textViewDidChange$(UITextView textView) {
+				textField.setStringSilent(textView.text().toString());
+
+			}});
 			view.addSubview$(textView);
 
 			toolbar = (UIToolbar) new UIToolbar().initWithFrame$(new CGRect(0,

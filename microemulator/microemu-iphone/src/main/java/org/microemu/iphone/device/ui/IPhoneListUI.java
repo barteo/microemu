@@ -25,6 +25,9 @@
  */
 package org.microemu.iphone.device.ui;
 
+import java.lang.reflect.Field;
+
+import javax.microedition.lcdui.ChoiceGroup;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.List;
@@ -32,6 +35,8 @@ import javax.microedition.lcdui.List;
 import joc.Message;
 import obc.CGRect;
 import obc.NSIndexPath;
+import obc.UINavigationBar;
+import obc.UINavigationItem;
 import obc.UITableView;
 import obc.UITableViewCell;
 import obc.UIToolbar;
@@ -41,6 +46,30 @@ import org.microemu.device.ui.ListUI;
 import org.microemu.iphone.MicroEmulator;
 
 public class IPhoneListUI extends AbstractUI implements ListUI {
+
+	private final class ChoiceGroupDelegate extends ChoiceGroup {
+		private int type;
+		public ChoiceGroupDelegate(ChoiceGroup cg, int type) {
+			super(cg.getLabel(), type, false);
+			this.type=type;
+			for(int i=0;i<cg.size();i++){
+				this.append(cg.getString(i), cg.getImage(i));
+			}
+		}
+		
+		public int getType() {
+			return type;
+		}
+		
+		@Override
+		protected void repaint() {
+			System.out.println("ChoiceGroupDelegate.repaint()");
+			if(tableView!=null)
+				microEmulator.postFromNewTread(new Runnable(){public void run() {
+					tableView.reloadData();
+				}});
+		}
+	}
 
 	static final int UIViewAutoresizingFlexibleHeight =  1 << 4;
 
@@ -53,6 +82,10 @@ public class IPhoneListUI extends AbstractUI implements ListUI {
 	private Command selectCommand=List.SELECT_COMMAND;
 	
 	private UIView view;
+
+	private ChoiceGroupDelegate choiceGroup;
+	
+	private UINavigationBar navigtionBar;
 	
 	public IPhoneListUI(MicroEmulator microEmulator, List list) {
 		super(microEmulator, list);
@@ -72,14 +105,22 @@ public class IPhoneListUI extends AbstractUI implements ListUI {
 			cell.setReuseIdentifier$("reuse");
 		}
 		cell.setText$(list.getString(indexPath.row()));
+		if(choiceGroup.getType()==List.MULTIPLE&&list.isSelected(indexPath.row()))
+			cell.setAccessoryType$(3);
+		else
+			cell.setAccessoryType$(0);
 		return cell;
 	}
 
 	@Message
 	public final void tableView$didSelectRowAtIndexPath$(UITableView table, NSIndexPath indexPath) {
 		System.out.println(list.getString(indexPath.row()) + " selected");
-		list.setSelectedIndex(indexPath.row(),true);
-		if(commandListener!=null&&selectCommand!=null)
+		if(choiceGroup.getType()==List.MULTIPLE){
+			list.setSelectedIndex(indexPath.row(), !list.isSelected(indexPath.row()));
+		}else{
+			list.setSelectedIndex(indexPath.row(),true);
+		}
+		if(commandListener!=null&&selectCommand!=null&&choiceGroup.getType()==List.IMPLICIT)
 			commandListener.commandAction(selectCommand, list);
 	}
 
@@ -115,9 +156,31 @@ public class IPhoneListUI extends AbstractUI implements ListUI {
 
 		if (view==null) {
 			view = new UIView().initWithFrame$(microEmulator.getWindow().bounds());
+
+			navigtionBar = new UINavigationBar().initWithFrame$(new CGRect(0, 0,
+					microEmulator.getWindow().bounds().size.width, NAVIGATION_HEIGHT));
+			UINavigationItem title = new UINavigationItem().initWithTitle$(list.getTitle());
+			title.setBackButtonTitle$("Back");
+			navigtionBar.pushNavigationItem$(title);
+			view.addSubview$(navigtionBar);
+			
 			tableView = new UITableView().initWithFrame$style$(
-					new CGRect(0, 0, microEmulator.getWindow().bounds().size.width,
-							microEmulator.getWindow().bounds().size.height - TOOLBAR_HEIGHT), 0);
+					new CGRect(0, NAVIGATION_HEIGHT, microEmulator.getWindow().bounds().size.width,
+							microEmulator.getWindow().bounds().size.height - NAVIGATION_HEIGHT - TOOLBAR_HEIGHT), 0);
+			
+			try {
+				Field cg = List.class.getDeclaredField("choiceGroup");
+				cg.setAccessible(true);
+				ChoiceGroup cgO = (ChoiceGroup)cg.get(list);
+				Field type=ChoiceGroup.class.getDeclaredField("choiceType");
+				type.setAccessible(true);
+				choiceGroup = new ChoiceGroupDelegate(cgO,(Integer)type.get(cgO));
+				cg.set(list, choiceGroup);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+			
 			view.addSubview$(tableView);
 			toolbar = (UIToolbar) new UIToolbar().initWithFrame$(new CGRect(0,
 					microEmulator.getWindow().bounds().size.height - TOOLBAR_HEIGHT, microEmulator.getWindow().bounds().size.width,
@@ -131,11 +194,6 @@ public class IPhoneListUI extends AbstractUI implements ListUI {
 
 		view.retain();
 		microEmulator.getWindow().addSubview$(view);
-	}
-	
-	@Override
-	protected void finalize() throws Throwable {
-		tableView.release();
 	}
 }
 

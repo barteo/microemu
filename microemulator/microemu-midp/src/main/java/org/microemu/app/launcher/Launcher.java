@@ -38,19 +38,19 @@ import org.microemu.app.CommonInterface;
 
 public class Launcher extends MIDlet implements CommandListener {
 
-	private static final Command CMD_LAUNCH = new Command("Start", Command.ITEM, 0);;
+	protected static final Command CMD_LAUNCH = new Command("Start", Command.ITEM, 0);;
 
-	private static final String NOMIDLETS = "[no midlets]";
+	protected static final String NOMIDLETS = "[no midlets]";
 
-	private CommonInterface common;
+	protected CommonInterface common;
 
-	private List menuList;
+	protected List menuList;
 
-	private static String midletSuiteName = null;
+	protected static String midletSuiteName = null;
 
-	private static Vector midletEntries = new Vector();
+	protected static Vector midletEntries = new Vector();
 
-	private MIDlet currentMIDlet = null;
+	protected MIDlet currentMIDlet = null;
 
 	public Launcher(CommonInterface common) {
 		this.common = common;

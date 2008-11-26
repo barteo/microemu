@@ -29,6 +29,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +37,11 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -52,6 +58,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.microedition.midlet.MIDletStateChangeException;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
@@ -144,6 +151,10 @@ public class Main extends JFrame {
 	private JCheckBoxMenuItem menuLogConsole;
 
 	private JCheckBoxMenuItem menuRecordStoreManager;
+	
+	private JFrame scaledDisplayFrame;
+
+	private JCheckBoxMenuItem[] zoomLevels;
 
 	private SwingDeviceComponent devicePanel;
 
@@ -505,6 +516,11 @@ public class Main extends JFrame {
 						recordStoreManagerDialog.getY(), recordStoreManagerDialog.getWidth(), recordStoreManagerDialog
 								.getHeight()), recordStoreManagerDialog.isVisible());
 			}
+			if (scaledDisplayFrame != null) {
+				Config.setWindow("scaledDisplay", 
+						new Rectangle(scaledDisplayFrame.getX(), scaledDisplayFrame.getY(), 0, 0), 
+						false);
+			}
 			Config.setWindow("main", new Rectangle(Main.this.getX(), Main.this.getY(), Main.this.getWidth(), Main.this
 					.getHeight()), true);
 
@@ -543,6 +559,112 @@ public class Main extends JFrame {
 					}
 				}
 			}
+		}
+	};
+
+	private ActionListener menuScaledDisplayListener = new ActionListener() {
+		private DisplayRepaintListener updateScaledImageListener;
+
+		public void actionPerformed(ActionEvent e) {
+			final JCheckBoxMenuItem selectedZoomLevelMenuItem = (JCheckBoxMenuItem) e.getSource();
+			if(selectedZoomLevelMenuItem.isSelected()) {
+				for(int i=0;i<zoomLevels.length;++i) {
+					if(zoomLevels[i] != e.getSource()) {
+						zoomLevels[i].setSelected(false);
+					}
+				}
+				final int scale = Integer.parseInt(e.getActionCommand());
+				if(scaledDisplayFrame != null) {
+					emulatorContext.getDisplayComponent().removeDisplayRepaintListener(updateScaledImageListener);
+					scaledDisplayFrame.dispose();
+				}
+				scaledDisplayFrame = new JFrame(getTitle());
+				scaledDisplayFrame.setContentPane(new JLabel(new ImageIcon()));
+				updateScaledImageListener = new DisplayRepaintListener() {
+					public void repaintInvoked(MutableImage image) {
+						updateScaledImage(scale, scaledDisplayFrame);
+						scaledDisplayFrame.validate();
+					}
+				};
+				scaledDisplayFrame.addWindowListener(new WindowAdapter() {
+					public void windowClosing(WindowEvent event) {
+						selectedZoomLevelMenuItem.setSelected(false);
+					}
+				});
+				scaledDisplayFrame.getContentPane().addMouseListener(new MouseListener() {
+					private MouseListener receiver = ((SwingDisplayComponent)emulatorContext.getDisplayComponent()).getMouseListener();
+
+					public void mouseClicked(MouseEvent e) {
+						receiver.mouseClicked(createAdaptedMouseEvent(e,scale));
+					}
+
+					public void mousePressed(MouseEvent e) {
+						receiver.mousePressed(createAdaptedMouseEvent(e,scale));
+					}
+
+					public void mouseReleased(MouseEvent e) {
+						receiver.mouseReleased(createAdaptedMouseEvent(e,scale));
+					}
+
+					public void mouseEntered(MouseEvent e) {
+						receiver.mouseEntered(createAdaptedMouseEvent(e,scale));
+					}
+
+					public void mouseExited(MouseEvent e) {
+						receiver.mouseExited(createAdaptedMouseEvent(e,scale));
+					}
+				});
+				scaledDisplayFrame.getContentPane().addMouseMotionListener(new MouseMotionListener() {
+					private MouseMotionListener receiver = ((SwingDisplayComponent)emulatorContext.getDisplayComponent()).getMouseMotionListener();
+
+					public void mouseDragged(MouseEvent e) {
+						receiver.mouseDragged(createAdaptedMouseEvent(e, scale));
+					}
+
+					public void mouseMoved(MouseEvent e) {
+						receiver.mouseMoved(createAdaptedMouseEvent(e, scale));
+					}
+				});
+				scaledDisplayFrame.getContentPane().addMouseWheelListener(new MouseWheelListener() {
+					private MouseWheelListener receiver = ((SwingDisplayComponent)emulatorContext.getDisplayComponent()).getMouseWheelListener();
+
+					public void mouseWheelMoved(MouseWheelEvent e) {
+						MouseWheelEvent adaptedEvent = createAdaptedMouseWheelEvent(e, scale);
+						receiver.mouseWheelMoved(adaptedEvent);
+					}
+				});
+				scaledDisplayFrame.addKeyListener(devicePanel);
+
+				updateScaledImage(scale, scaledDisplayFrame);
+				emulatorContext.getDisplayComponent().addDisplayRepaintListener(updateScaledImageListener);
+				scaledDisplayFrame.setIconImage(getIconImage());
+				scaledDisplayFrame.setResizable(false);
+				Point location = getLocation();
+				Dimension size = getSize();
+				Rectangle window = Config.getWindow("scaledDisplay", new Rectangle(location.x + size.width, location.y, 0, 0));
+				scaledDisplayFrame.setLocation(window.x, window.y);
+				Config.setWindow("scaledDisplay", 
+						new Rectangle(scaledDisplayFrame.getX(), scaledDisplayFrame.getY(), 0, 0), 
+						false);
+				scaledDisplayFrame.pack();
+				scaledDisplayFrame.setVisible(true);
+			} else {
+				emulatorContext.getDisplayComponent().removeDisplayRepaintListener(updateScaledImageListener);
+				scaledDisplayFrame.dispose();
+			}
+		}
+
+		private MouseEvent createAdaptedMouseEvent(MouseEvent e,int scale) {
+			return new MouseEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), e.getX()/scale, e.getY()/scale, e.getClickCount(), e.isPopupTrigger(), e.getButton());
+		}
+		private MouseWheelEvent createAdaptedMouseWheelEvent(MouseWheelEvent e, int scale) {
+			return new MouseWheelEvent(e.getComponent(), e.getID(), e.getWhen(), e.getModifiers(), e.getX()/scale, e.getY()/scale, e.getClickCount(), e.isPopupTrigger(), e.getScrollType(), e.getScrollAmount(), e.getWheelRotation());
+		}
+
+		private void updateScaledImage(int scale, JFrame scaledLCDFrame) {
+			J2SEMutableImage scaledImage = (J2SEMutableImage) ((SwingDisplayComponent) emulatorContext.getDisplayComponent()).getScaledDisplayImage(scale);
+			((ImageIcon)(((JLabel)scaledLCDFrame.getContentPane()).getIcon())).setImage(scaledImage.getImage());
+			((JLabel)scaledLCDFrame.getContentPane()).repaint();
 		}
 	};
 
@@ -691,6 +813,16 @@ public class Main extends JFrame {
 		menuSelectDevice = new JMenuItem("Select device...");
 		menuSelectDevice.addActionListener(menuSelectDeviceListener);
 		menuOptions.add(menuSelectDevice);
+
+		JMenu menuScaleLCD = new JMenu("Scaled display");
+		menuOptions.add(menuScaleLCD);
+		zoomLevels = new JCheckBoxMenuItem[3];
+		for(int i=0;i<zoomLevels.length;++i) {
+			zoomLevels[i] = new JCheckBoxMenuItem("x "+(i+2));
+			zoomLevels[i].setActionCommand(""+(i+2));
+			zoomLevels[i].addActionListener(menuScaledDisplayListener);
+			menuScaleLCD.add(zoomLevels[i]);
+		}
 
 		menuStartCapture = new JMenuItem("Start capture to GIF...");
 		menuStartCapture.addActionListener(menuStartCaptureListener);

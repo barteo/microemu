@@ -27,6 +27,7 @@
 
 package org.microemu.device.j2se;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 
@@ -100,6 +101,16 @@ public class J2SEMutableImage extends MutableImage
 		}
 
 		return pixels;
+	}
+
+	public MutableImage scale(int zoom) {
+		BufferedImage scaledImg = new BufferedImage(img.getWidth() * zoom, img.getHeight() * zoom, img.getType());
+		Graphics2D imgGraphics = scaledImg.createGraphics();
+		imgGraphics.scale(zoom, zoom);
+		imgGraphics.drawImage(img, 0, 0, null);
+		J2SEMutableImage scaledMutableImage = new J2SEMutableImage(scaledImg.getWidth(), scaledImg.getHeight());
+		scaledMutableImage.img = scaledImg;
+		return scaledMutableImage;
 	}
 
         // Andres Navarro

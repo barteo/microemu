@@ -50,20 +50,59 @@ public class IPhoneListUI extends AbstractUI implements ListUI {
 	private final class ChoiceGroupDelegate extends ChoiceGroup {
 		private int type;
 		public ChoiceGroupDelegate(ChoiceGroup cg, int type) {
-			super(cg.getLabel(), type, false);
+			super(cg.getLabel(), List.EXCLUSIVE);
+			try {
+				Field choiceType=ChoiceGroup.class.getDeclaredField("choiceType");
+				choiceType.setAccessible(true);
+				choiceType.set(this, type);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			
 			this.type=type;
 			for(int i=0;i<cg.size();i++){
 				this.append(cg.getString(i), cg.getImage(i));
 			}
 		}
 		
+		@Override
+		public void delete(int itemNum) {
+			// TODO Auto-generated method stub
+			super.delete(itemNum);
+			doReload();
+		}
+		
+		@Override
+		public void deleteAll() {
+			// TODO Auto-generated method stub
+			super.deleteAll();
+			doReload();
+		}
+		
+		@Override
+		public void insert(int elementNum, String stringPart, Image imagePart) {
+			// TODO Auto-generated method stub
+			super.insert(elementNum, stringPart, imagePart);
+			doReload();
+		}
+		@Override
+		public void set(int elementNum, String stringPart, Image imagePart) {
+			// TODO Auto-generated method stub
+			super.set(elementNum, stringPart, imagePart);
+			doReload();
+		}
+		
+		@Override
+		public void setSelectedIndex(int elementNum, boolean selected) {
+			// TODO Auto-generated method stub
+			super.setSelectedIndex(elementNum, selected);
+			doReload();
+		}
 		public int getType() {
 			return type;
 		}
 		
-		@Override
-		protected void repaint() {
-			System.out.println("ChoiceGroupDelegate.repaint()");
+		protected void doReload() {
 			if(tableView!=null)
 				microEmulator.postFromNewTread(new Runnable(){public void run() {
 					tableView.reloadData();

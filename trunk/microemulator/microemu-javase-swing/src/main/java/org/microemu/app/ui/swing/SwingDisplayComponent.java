@@ -341,4 +341,19 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 		showMouseCoordinates = !showMouseCoordinates;
 	}
 
+	public MutableImage getScaledDisplayImage(int zoom) {
+		return displayImage.scale(zoom);
+}
+
+	public MouseAdapter getMouseListener() {
+		return mouseListener;
+	}
+
+	public MouseMotionListener getMouseMotionListener() {
+		return mouseMotionListener;
+	}
+
+	public MouseWheelListener getMouseWheelListener() {
+		return mouseWheelListener;
+	}
 }

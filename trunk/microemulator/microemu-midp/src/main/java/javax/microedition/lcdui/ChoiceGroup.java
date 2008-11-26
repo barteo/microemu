@@ -118,7 +118,7 @@ public class ChoiceGroup extends Item implements Choice
 	}
 
 
-	ChoiceGroup(String label, int choiceType, boolean validateChoiceType)
+	protected ChoiceGroup(String label, int choiceType, boolean validateChoiceType)
 	{
 		super(label);
 
@@ -650,7 +650,7 @@ public class ChoiceGroup extends Item implements Choice
 		return 0;
   }
 
-  void repaint() {
+  protected void repaint() {
 	  // the popup list should be repainted
 	  // in the case it is being shown
 	  if (choiceType == Choice.POPUP)

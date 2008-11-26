@@ -45,6 +45,8 @@ import org.microemu.iphone.MicroEmulator;
 
 public abstract class AbstractUI extends NSObject implements DisplayableUI {
 
+	public static final int NAVIGATION_HEIGHT = 40;
+
 	public static final int TOOLBAR_HEIGHT = 40;
 
 	protected List<Command> commands = new LinkedList<Command>();
@@ -65,37 +67,33 @@ public abstract class AbstractUI extends NSObject implements DisplayableUI {
 
 	public void addCommand(Command cmd) {
 		commands.add(cmd);
-		updateToolbar();
+		microEmulator.postFromNewTread(new Runnable() {
+			public void run() {
+				updateToolbar();
+			}
+		});
 	}
 
 	protected void updateToolbar() {
 		if (toolbar != null) {
-			new Thread(new Runnable() {
-				public void run() {
-					Scope scope = new Scope();
-					microEmulator.post(new Runnable() {
-						public void run() {
-							Scope scope = new Scope();
-							NSMutableArray items = new NSMutableArray().initWithCapacity$(commands.size());
-							for (int i = 0; i < commands.size(); i++) {
-								Command command = commands.get(i);
-								System.out.println(command.getLabel());
-								items.setObject$atIndex$(new UIBarButtonItem().initWithTitle$style$target$action$(
-										command.getLabel(), 0, new CommandCaller(command), new Selector("call")), i);
-							}
-							toolbar.setItems$(items);
-							scope.close();
-						}
-					});
-					scope.close();
-				}
-			}).start();
+			NSMutableArray items = new NSMutableArray().initWithCapacity$(commands.size());
+			for (int i = 0; i < commands.size(); i++) {
+				Command command = commands.get(i);
+				System.out.println(command.getLabel());
+				items.setObject$atIndex$(new UIBarButtonItem().initWithTitle$style$target$action$(command.getLabel(),
+						0, new CommandCaller(command), new Selector("call")), i);
+			}
+			toolbar.setItems$(items);
 		}
 	}
 
 	public void removeCommand(Command cmd) {
 		commands.remove(cmd);
-		updateToolbar();
+		microEmulator.postFromNewTread(new Runnable() {
+			public void run() {
+				updateToolbar();
+			}
+		});
 	}
 
 	public void setCommandListener(CommandListener l) {

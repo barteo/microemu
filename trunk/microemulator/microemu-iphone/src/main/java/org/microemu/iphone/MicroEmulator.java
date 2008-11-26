@@ -29,10 +29,12 @@ package org.microemu.iphone;
 import static joc.Static.YES;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+
+import javax.microedition.midlet.MIDlet;
+import javax.microedition.midlet.MIDletStateChangeException;
 
 import joc.Message;
 import joc.Scope;
@@ -43,9 +45,14 @@ import obc.UIWindow;
 
 import org.microemu.DisplayComponent;
 import org.microemu.EmulatorContext;
-import org.microemu.app.Common;
+import org.microemu.MIDletBridge;
+import org.microemu.MIDletContext;
+import org.microemu.RecordStoreManager;
+import org.microemu.app.CommonInterface;
 import org.microemu.app.launcher.Launcher;
+import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
+import org.microemu.device.DeviceFactory;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.iphone.device.IPhoneDevice;
@@ -54,11 +61,83 @@ import org.microemu.iphone.device.IPhoneFontManager;
 import org.microemu.iphone.device.IPhoneInputMethod;
 import org.microemu.iphone.device.IPhoneRecordStoreManager;
 import org.microemu.iphone.device.ui.AbstractUI;
-import org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet;
 
 import com.saurik.uicaboodle.Main;
 
 public class MicroEmulator extends UIApplication {
+	private final class IPhoneCommon implements CommonInterface, org.microemu.MicroEmulator {
+
+		private EmulatorContext emulatorContext;
+		private IPhoneLauncher launcher;
+		
+		public IPhoneCommon(EmulatorContext emulatorContext, Device device) {
+			this.emulatorContext=emulatorContext;
+			DeviceFactory.setDevice(device);
+			
+			MIDletBridge.setMicroEmulator(this);
+		}
+
+		public void initMIDlet(boolean startMidlet) {
+			if(launcher==null)
+				launcher=new IPhoneLauncher(this);
+			
+			if(launcher.getSelectedMidletEntry()==null){
+				try {
+					MIDletBridge.getMIDletAccess(launcher).startApp();
+					launcher.setCurrentMIDlet(launcher);
+				} catch (MIDletStateChangeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				try {
+					MIDlet midlet=(MIDlet) launcher.getSelectedMidletEntry().getMIDletClass().newInstance();
+					MIDletBridge.getMIDletAccess(midlet).startApp();
+					launcher.setCurrentMIDlet(midlet);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+	
+		}
+
+		public void destroyMIDletContext(MIDletContext midletContext) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public String getAppProperty(String key) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public Launcher getLauncher() {
+			return launcher;
+		}
+
+		public RecordStoreManager getRecordStoreManager() {
+			// TODO Auto-generated method stub
+			return new IPhoneRecordStoreManager(MicroEmulator.this);
+		}
+
+		public InputStream getResourceAsStream(String name) {
+			return emulatorContext.getResourceAsStream(name);
+		}
+
+		public void notifyDestroyed(MIDletContext midletContext) {
+			System.out.println("IPhoneCommon.notifyDestroyed()");
+			launcher=null;
+			initMIDlet(true);
+		}
+
+		public boolean platformRequest(String URL) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+	}
+
 	private static final class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 		public void uncaughtException(Thread arg0, Throwable arg1) {
 			System.err.println("Uncaught exception in thread: " + arg0.getName());
@@ -69,7 +148,7 @@ public class MicroEmulator extends UIApplication {
 
 	public static void main(String[] args) throws Exception {
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
-//		Main.main(new String[] { HelloJava.class.getName() });
+		// Main.main(new String[] { HelloJava.class.getName() });
 		Main.main(new String[] { MicroEmulator.class.getName() });
 	}
 
@@ -80,10 +159,10 @@ public class MicroEmulator extends UIApplication {
 
 		window.orderFront$(this);
 		window.makeKeyAndVisible();
-	
-		init(SimpleDemoMIDlet.class.getName(), Arrays.asList("--usesystemclassloader", SimpleDemoMIDlet.class.getName()));
+
+		init(Arrays.asList("--usesystemclassloader"));
 	}
-	
+
 	protected EmulatorContext emulatorContext = new EmulatorContext() {
 		private InputMethod inputMethod = new IPhoneInputMethod();
 
@@ -110,48 +189,48 @@ public class MicroEmulator extends UIApplication {
 		}
 
 		public InputStream getResourceAsStream(String name) {
-			if (name.startsWith("/")) {
-				return getClass().getResourceAsStream(name);
-			} else {
-				return getClass().getResourceAsStream("/" + name);
-			}
+			return MIDletBridge.getCurrentMIDlet().getClass().getResourceAsStream(name);
 		}
 
 	};
 
 	private UIWindow window;
-	private Common common;
+	private static CommonInterface common;
 
-
-	public void init(String midletClassName, List<String> params) {
+	public void init(List<String> params) {
 		((IPhoneDeviceDisplay) emulatorContext.getDeviceDisplay()).displayRectangleWidth = (int) getWindow().bounds().size.width;
-		((IPhoneDeviceDisplay) emulatorContext.getDeviceDisplay()).displayRectangleHeight = (int) getWindow().bounds().size.height-AbstractUI.TOOLBAR_HEIGHT;
+		((IPhoneDeviceDisplay) emulatorContext.getDeviceDisplay()).displayRectangleHeight = (int) getWindow().bounds().size.height
+				- AbstractUI.TOOLBAR_HEIGHT;
 
-		common = new Common(emulatorContext);
-		common.setRecordStoreManager(new IPhoneRecordStoreManager(this));
-		common.setDevice(new IPhoneDevice(emulatorContext, this));
-		common.initParams(new ArrayList<String>(params), null, IPhoneDevice.class);
+		common = new IPhoneCommon(emulatorContext, new IPhoneDevice(emulatorContext,this));
 
 		System.setProperty("microedition.platform", "microemulator-iphone");
 		System.setProperty("microedition.locale", Locale.getDefault().toString());
 
-		Launcher.setSuiteName(midletClassName);
-		
-		//don't know why this is needed...
-		new Thread(new Runnable() {
+		Launcher.setSuiteName("MicroEmulator for iPhone");
+
+		// don't know why this is needed...
+		postFromNewTread(new Runnable() {
 			public void run() {
-				new Scope();
-				post(new Runnable() {
-					public void run() {
-						new Scope();
-						common.initMIDlet(true);
-					}
-				});
+				common.initMIDlet(true);
 			}
-		}).start();
+		});
+
 	}
 
 	private Runnable runnable;
+
+	public void postFromNewTread(final Runnable r) {
+		Scope scope = new Scope();
+		new Thread(new Runnable() {
+			public void run() {
+				Scope scope = new Scope();
+				post(r);
+				scope.close();
+			}
+		}).start();
+		scope.close();
+	}
 
 	public synchronized boolean post(Runnable r) {
 		runnable = r;
@@ -159,11 +238,15 @@ public class MicroEmulator extends UIApplication {
 		return true;
 	}
 
+	public static CommonInterface getCommon() {
+		return common;
+	}
+
 	@Message
 	public void handle() {
 		runnable.run();
 	}
-	
+
 	public UIWindow getWindow() {
 		return window;
 	}

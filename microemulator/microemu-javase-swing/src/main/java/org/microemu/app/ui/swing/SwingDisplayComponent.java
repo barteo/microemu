@@ -35,10 +35,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.Enumeration;
 import java.util.Iterator;
 
-import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Screen;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
@@ -52,8 +53,10 @@ import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.MutableImage;
+import org.microemu.device.impl.ButtonName;
 import org.microemu.device.impl.InputMethodImpl;
 import org.microemu.device.impl.SoftButton;
+import org.microemu.device.j2se.J2SEButton;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEInputMethod;
 import org.microemu.device.j2se.J2SEMutableImage;
@@ -136,17 +139,21 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 						if (pb != null) {
 							repaintRequest(pb.x, pb.y, pb.width, pb.height);
 							if (pb.contains(e.getX(), e.getY())) {
-								Command cmd = initialPressedSoftButton.getCommand();
-								if (cmd != null) {
-									MIDletAccess ma = MIDletBridge.getMIDletAccess();
-									if (ma == null) {
-										return;
+								MIDletAccess ma = MIDletBridge.getMIDletAccess();
+								if (ma == null) {
+									return;
+								}
+								DisplayAccess da = ma.getDisplayAccess();
+								if (da == null) {
+									return;
+								}
+								Displayable d = da.getCurrent();
+								if (d != null && d instanceof Screen) {
+									if (initialPressedSoftButton.getName().equals("up")) {
+										da.keyPressed(getButtonByButtonName(ButtonName.UP).getKeyCode());
+									} else if (initialPressedSoftButton.getName().equals("down")) {
+										da.keyPressed(getButtonByButtonName(ButtonName.DOWN).getKeyCode());
 									}
-									DisplayAccess da = ma.getDisplayAccess();
-									if (da == null) {
-										return;
-									}
-									da.commandAction(cmd, da.getCurrent());
 								}
 							}
 						}
@@ -355,5 +362,17 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 
 	public MouseWheelListener getMouseWheelListener() {
 		return mouseWheelListener;
+	}
+	
+	private J2SEButton getButtonByButtonName(ButtonName buttonName) {
+		J2SEButton result;
+		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
+			result = (J2SEButton) e.nextElement();
+			if (result.getFunctionalName() == buttonName) {
+				return result;
+			}
+		}
+
+		return null;
 	}
 }

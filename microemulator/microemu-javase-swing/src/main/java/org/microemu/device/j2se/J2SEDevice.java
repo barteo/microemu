@@ -26,12 +26,14 @@ package org.microemu.device.j2se;
 
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.List;
 import javax.microedition.lcdui.TextBox;
 
 import org.microemu.device.impl.DeviceImpl;
+import org.microemu.device.impl.ui.CommandImplUI;
 import org.microemu.device.j2se.ui.J2SEAlertUI;
 import org.microemu.device.j2se.ui.J2SECanvasUI;
 import org.microemu.device.j2se.ui.J2SEFormUI;
@@ -39,6 +41,7 @@ import org.microemu.device.j2se.ui.J2SEListUI;
 import org.microemu.device.j2se.ui.J2SETextBoxUI;
 import org.microemu.device.ui.AlertUI;
 import org.microemu.device.ui.CanvasUI;
+import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.EventDispatcher;
 import org.microemu.device.ui.FormUI;
 import org.microemu.device.ui.ListUI;
@@ -64,6 +67,10 @@ public class J2SEDevice extends DeviceImpl {
 
 		public CanvasUI createCanvasUI(Canvas canvas) {
 			return new J2SECanvasUI(canvas);
+		}
+		
+		public CommandUI createCommandUI(Command command) {
+			return new CommandImplUI(command);
 		}
 
 		public FormUI createFormUI(Form form) {

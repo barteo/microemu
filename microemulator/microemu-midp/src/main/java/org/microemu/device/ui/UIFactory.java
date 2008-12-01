@@ -28,6 +28,7 @@ package org.microemu.device.ui;
 
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.List;
@@ -40,6 +41,8 @@ public interface UIFactory {
 	AlertUI createAlertUI(Alert alert);
 
 	CanvasUI createCanvasUI(Canvas canvas);
+	
+	CommandUI createCommandUI(Command command);
 	
 	FormUI createFormUI(Form form);
 

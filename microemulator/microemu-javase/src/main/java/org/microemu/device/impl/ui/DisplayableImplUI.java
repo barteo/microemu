@@ -26,19 +26,19 @@
 
 package org.microemu.device.impl.ui;
 
-import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 
+import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.DisplayableUI;
 
 public class DisplayableImplUI implements DisplayableUI {
 
-	public void addCommand(Command cmd) {
+	public void addCommandUI(CommandUI cmd) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void removeCommand(Command cmd) {
+	public void removeCommandUI(CommandUI cmd) {
 		// TODO Auto-generated method stub
 
 	}

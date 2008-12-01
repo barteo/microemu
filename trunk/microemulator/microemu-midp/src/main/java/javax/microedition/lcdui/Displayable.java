@@ -101,7 +101,7 @@ public abstract class Displayable
 			commands.addElement(cmd);
 		}
 		
-		ui.addCommand(cmd);
+		ui.addCommandUI(cmd.ui);
 
 		if (isShown()) {
 			currentDisplay.updateCommands();
@@ -113,7 +113,7 @@ public abstract class Displayable
 	{
 		commands.removeElement(cmd);
 		
-		ui.removeCommand(cmd);
+		ui.removeCommandUI(cmd.ui);
 
 		if (isShown()) {
 			currentDisplay.updateCommands();

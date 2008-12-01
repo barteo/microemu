@@ -26,12 +26,14 @@ package org.microemu.device.swt;
 
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.List;
 import javax.microedition.lcdui.TextBox;
 
 import org.microemu.device.impl.DeviceImpl;
+import org.microemu.device.impl.ui.CommandImplUI;
 import org.microemu.device.swt.ui.SwtAlertUI;
 import org.microemu.device.swt.ui.SwtCanvasUI;
 import org.microemu.device.swt.ui.SwtFormUI;
@@ -39,6 +41,7 @@ import org.microemu.device.swt.ui.SwtListUI;
 import org.microemu.device.swt.ui.SwtTextBoxUI;
 import org.microemu.device.ui.AlertUI;
 import org.microemu.device.ui.CanvasUI;
+import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.EventDispatcher;
 import org.microemu.device.ui.FormUI;
 import org.microemu.device.ui.ListUI;
@@ -64,6 +67,10 @@ public class SwtDevice extends DeviceImpl {
 
 		public CanvasUI createCanvasUI(Canvas canvas) {
 			return new SwtCanvasUI(canvas);
+		}
+
+		public CommandUI createCommandUI(Command command) {
+			return new CommandImplUI(command);
 		}
 
 		public FormUI createFormUI(Form form) {

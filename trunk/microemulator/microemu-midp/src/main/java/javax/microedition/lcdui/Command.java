@@ -20,6 +20,9 @@
 
 package javax.microedition.lcdui;
 
+import org.microemu.device.DeviceFactory;
+import org.microemu.device.ui.CommandUI;
+
 public class Command {
 
 	public static final int SCREEN = 1;
@@ -53,15 +56,18 @@ public class Command {
 	int commandType;
 
 	int priority;
+	
+	CommandUI ui;
 
 	public Command(String label, int commandType, int priority) {
 		this.label = label;
 		this.commandType = commandType;
 		this.priority = priority;
+		
+		this.ui = DeviceFactory.getDevice().getUIFactory().createCommandUI(this);
 	}
 
-	public Command(String shortLabel, String longLabel, int commandType,
-			int priority) {
+	public Command(String shortLabel, String longLabel, int commandType, int priority) {
 		// TODO implement
 		this(shortLabel, commandType, priority);
 	}
@@ -81,6 +87,13 @@ public class Command {
 
 	public int getPriority() {
 		return priority;
+	}	
+	
+	/**
+	 * @since MIDP 3.0
+	 */
+	public void setImage(Image image) {
+		ui.setImage(image);
 	}
 
 	Item getFocusedItem() {

@@ -26,14 +26,13 @@
 
 package org.microemu.device.ui;
 
-import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 
 public interface DisplayableUI {
 	
-	void addCommand(Command cmd);
+	void addCommandUI(CommandUI cmd);
 	
-	void removeCommand(Command cmd);
+	void removeCommandUI(CommandUI cmd);
 	
 	void setCommandListener(CommandListener l);
 

@@ -33,13 +33,13 @@ import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
 
 import joc.Message;
-import joc.Scope;
 import joc.Selector;
 import obc.NSMutableArray;
 import obc.NSObject;
 import obc.UIBarButtonItem;
 import obc.UIToolbar;
 
+import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.DisplayableUI;
 import org.microemu.iphone.MicroEmulator;
 
@@ -49,7 +49,7 @@ public abstract class AbstractUI extends NSObject implements DisplayableUI {
 
 	public static final int TOOLBAR_HEIGHT = 40;
 
-	protected List<Command> commands = new LinkedList<Command>();
+	protected List<CommandUI> commands = new LinkedList<CommandUI>();
 
 	protected CommandListener commandListener;
 
@@ -65,7 +65,7 @@ public abstract class AbstractUI extends NSObject implements DisplayableUI {
 		this.displayable = displayable;
 	}
 
-	public void addCommand(Command cmd) {
+	public void addCommandUI(CommandUI cmd) {
 		commands.add(cmd);
 		microEmulator.postFromNewTread(new Runnable() {
 			public void run() {
@@ -78,16 +78,16 @@ public abstract class AbstractUI extends NSObject implements DisplayableUI {
 		if (toolbar != null) {
 			NSMutableArray items = new NSMutableArray().initWithCapacity$(commands.size());
 			for (int i = 0; i < commands.size(); i++) {
-				Command command = commands.get(i);
-				System.out.println(command.getLabel());
-				items.setObject$atIndex$(new UIBarButtonItem().initWithTitle$style$target$action$(command.getLabel(),
-						0, new CommandCaller(command), new Selector("call")), i);
+				CommandUI command = commands.get(i);
+				System.out.println(command.getCommand().getLabel());
+				items.setObject$atIndex$(new UIBarButtonItem().initWithTitle$style$target$action$(command.getCommand().getLabel(),
+						0, new CommandCaller(command.getCommand()), new Selector("call")), i);
 			}
 			toolbar.setItems$(items);
 		}
 	}
 
-	public void removeCommand(Command cmd) {
+	public void removeCommandUI(CommandUI cmd) {
 		commands.remove(cmd);
 		microEmulator.postFromNewTread(new Runnable() {
 			public void run() {

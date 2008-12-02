@@ -126,13 +126,6 @@ public class Common implements MicroEmulator, CommonInterface {
 		instance = this;
 		this.emulatorContext = context;
 
-		try {
-			launcher = new Launcher(this);
-			launcher.setCurrentMIDlet(launcher);
-		} finally {
-			MIDletBridge.setThreadMIDletContext(null);
-		}
-
 		/*
 		 * Initialize secutity context for implemenations, May be there are
 		 * better place for this call
@@ -847,6 +840,13 @@ public class Common implements MicroEmulator, CommonInterface {
 				Logger.error(ex);
 			}
 		}
+		
+		try {
+			launcher = new Launcher(this);
+			launcher.setCurrentMIDlet(launcher);
+		} finally {
+			MIDletBridge.setThreadMIDletContext(null);
+		}		
 
 		if (getRecordStoreManager() == null) {
 			if (paramRecordStoreManager == null) {

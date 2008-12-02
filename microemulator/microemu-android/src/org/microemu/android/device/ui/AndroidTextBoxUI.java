@@ -34,6 +34,7 @@ import javax.microedition.lcdui.TextBox;
 import javax.microedition.lcdui.TextField;
 
 import org.microemu.android.MicroEmulatorActivity;
+import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.TextBoxUI;
 
 import android.content.res.TypedArray;
@@ -68,12 +69,12 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 					editView.setOnClickListener(new View.OnClickListener() {
 	
 						public void onClick(View v) {
-							List<Command> commands = getCommands();
+							List<AndroidCommandUI> commands = getCommandsUI();
 							for (int i = 0; i < commands.size(); i++) {
-								Command cmd = commands.get(i);
-								if (cmd.getCommandType() == Command.OK) {
+								CommandUI cmd = commands.get(i);
+								if (cmd.getCommand().getCommandType() == Command.OK) {
 									CommandListener l = getCommandListener();
-									l.commandAction(cmd, displayable);
+									l.commandAction(cmd.getCommand(), displayable);
 									break;
 								}
 							}			

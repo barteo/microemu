@@ -32,6 +32,7 @@ import java.util.Vector;
 
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.Image;
@@ -42,6 +43,7 @@ import org.microemu.EmulatorContext;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.android.device.ui.AndroidAlertUI;
 import org.microemu.android.device.ui.AndroidCanvasUI;
+import org.microemu.android.device.ui.AndroidCommandUI;
 import org.microemu.android.device.ui.AndroidFormUI;
 import org.microemu.android.device.ui.AndroidListUI;
 import org.microemu.android.device.ui.AndroidTextBoxUI;
@@ -52,6 +54,7 @@ import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.device.ui.AlertUI;
 import org.microemu.device.ui.CanvasUI;
+import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.EventDispatcher;
 import org.microemu.device.ui.FormUI;
 import org.microemu.device.ui.ListUI;
@@ -92,6 +95,10 @@ public class AndroidDevice implements Device {
 
 		public CanvasUI createCanvasUI(Canvas canvas) {
 			return new AndroidCanvasUI(activity, canvas);
+		}
+		
+		public CommandUI createCommandUI(Command command) {
+			return new AndroidCommandUI(activity, command);
 		}
 
 		public FormUI createFormUI(Form form) {

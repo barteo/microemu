@@ -47,6 +47,7 @@ import org.microemu.android.device.AndroidDevice;
 import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.android.device.AndroidFontManager;
 import org.microemu.android.device.AndroidInputMethod;
+import org.microemu.android.device.ui.AndroidCommandUI;
 import org.microemu.android.device.ui.AndroidDisplayableUI;
 import org.microemu.android.util.AndroidLoggerAppender;
 import org.microemu.android.util.AndroidRecordStoreManager;
@@ -54,15 +55,15 @@ import org.microemu.app.Common;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
+import org.microemu.device.ui.CommandUI;
 import org.microemu.log.Logger;
-
-import dalvik.system.VMRuntime;
 
 import android.os.Bundle;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.Window;
 
 public class MicroEmulator extends MicroEmulatorActivity {
@@ -203,14 +204,14 @@ public class MicroEmulator extends MicroEmulatorActivity {
 				return false;
 			}		
 
-			List<Command> commands = ui.getCommands();
+			List<AndroidCommandUI> commands = ui.getCommandsUI();
 			for (int i = 0; i < commands.size(); i++) {
-				Command cmd = commands.get(i);
-				if (cmd.getCommandType() == Command.BACK) {
+				CommandUI cmd = commands.get(i);
+				if (cmd.getCommand().getCommandType() == Command.BACK) {
 					CommandListener l = ui.getCommandListener();
-					l.commandAction(cmd, da.getCurrent());
+					l.commandAction(cmd.getCommand(), da.getCurrent());
 					break;
-				} else if (cmd.getCommandType() == Command.EXIT) {
+				} else if (cmd.getCommand().getCommandType() == Command.EXIT) {
 					moveTaskToBack(true);
 					break;
 				}
@@ -239,13 +240,13 @@ public class MicroEmulator extends MicroEmulatorActivity {
 		
 		menu.clear();	
 		boolean result = false;
-		final CommandListener l = ui.getCommandListener();
-		List<Command> commands = ui.getCommands();
+		List<AndroidCommandUI> commands = ui.getCommandsUI();
 		for (int i = 0; i < commands.size(); i++) {
 			result = true;
-			Command cmd = commands.get(i);
-			if (cmd.getCommandType() != Command.BACK && cmd.getCommandType() != Command.EXIT) {
-				menu.add(Menu.NONE, i + Menu.FIRST, Menu.NONE, cmd.getLabel());
+			AndroidCommandUI cmd = commands.get(i);
+			if (cmd.getCommand().getCommandType() != Command.BACK && cmd.getCommand().getCommandType() != Command.EXIT) {
+				SubMenu item = menu.addSubMenu(Menu.NONE, i + Menu.FIRST, Menu.NONE, cmd.getCommand().getLabel());
+				item.setIcon(cmd.getDrawable());
 			}
 		}
 
@@ -269,11 +270,11 @@ public class MicroEmulator extends MicroEmulatorActivity {
 
 		CommandListener l = ui.getCommandListener();
 		int commandIndex = item.getItemId() - Menu.FIRST;
-		List<Command> commands = ui.getCommands();
-		Command c = commands.get(commandIndex);
+		List<AndroidCommandUI> commands = ui.getCommandsUI();
+		CommandUI c = commands.get(commandIndex);
 
 		if (c != null) {
-			l.commandAction(c, da.getCurrent());
+			l.commandAction(c.getCommand(), da.getCurrent());
 			return true;
 		}
 

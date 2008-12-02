@@ -31,11 +31,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
 
 import org.microemu.android.MicroEmulatorActivity;
+import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.DisplayableUI;
 
 import android.view.View;
@@ -51,12 +51,12 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 	
 	protected TextView titleView;
 	
-	private static Comparator<Command> commandsPriorityComparator = new Comparator<Command>() {
+	private static Comparator<CommandUI> commandsPriorityComparator = new Comparator<CommandUI>() {
 
-		public int compare(Command first, Command second) {
-			if (first.getPriority() == second.getPriority()) {
+		public int compare(CommandUI first, CommandUI second) {
+			if (first.getCommand().getPriority() == second.getCommand().getPriority()) {
 				return 0;
-			} else if (first.getPriority() < second.getPriority()) {
+			} else if (first.getCommand().getPriority() < second.getCommand().getPriority()) {
 				return -1;
 			} else {
 				return 1;
@@ -65,7 +65,7 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 		
 	};
 	
-	private List<Command> commands = new ArrayList<Command>();
+	private List<AndroidCommandUI> commands = new ArrayList<AndroidCommandUI>();
 	
 	private CommandListener commandListener = null;
 	
@@ -74,7 +74,7 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 		this.displayable = displayable;
 	}
 	
-	public List<Command> getCommands() {
+	public List<AndroidCommandUI> getCommandsUI() {
 		return commands;
 	}
 	
@@ -86,13 +86,13 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 	// DisplayableUI
 	//
 
-	public void addCommand(Command cmd) {
-		commands.add(cmd);
+	public void addCommandUI(CommandUI cmd) {
+		commands.add((AndroidCommandUI) cmd);
 		// TODO decide whether this is the best way for keeping sorted commands
 		Collections.sort(commands, commandsPriorityComparator);
 	}
 
-	public void removeCommand(Command cmd) {
+	public void removeCommandUI(CommandUI cmd) {
 		commands.remove(cmd);
 	}
 

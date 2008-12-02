@@ -31,6 +31,7 @@ import java.util.Vector;
 
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.Image;
@@ -46,6 +47,7 @@ import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.device.ui.AlertUI;
 import org.microemu.device.ui.CanvasUI;
+import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.EventDispatcher;
 import org.microemu.device.ui.FormUI;
 import org.microemu.device.ui.ListUI;
@@ -54,6 +56,7 @@ import org.microemu.device.ui.UIFactory;
 import org.microemu.iphone.MicroEmulator;
 import org.microemu.iphone.device.ui.IPhoneAlertUI;
 import org.microemu.iphone.device.ui.IPhoneCanvasUI;
+import org.microemu.iphone.device.ui.IPhoneCommandUI;
 import org.microemu.iphone.device.ui.IPhoneFormUI;
 import org.microemu.iphone.device.ui.IPhoneListUI;
 import org.microemu.iphone.device.ui.IPhoneTextBoxUI;
@@ -109,6 +112,9 @@ public class IPhoneDevice implements Device {
 
 		public TextBoxUI createTextBoxUI(TextBox textBox) {
 			return new IPhoneTextBoxUI(microEmulator, textBox);
+		}
+		public CommandUI createCommandUI(Command command) {
+			return new IPhoneCommandUI(microEmulator, command);
 		}
 
 	};

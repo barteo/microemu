@@ -25,65 +25,25 @@
  */
 package org.microemu.iphone.device.ui;
 
-import javax.microedition.lcdui.Form;
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Image;
-import javax.microedition.lcdui.Item;
 
-import org.microemu.device.ui.FormUI;
+import org.microemu.device.ui.CommandUI;
 import org.microemu.iphone.MicroEmulator;
 
-public class IPhoneFormUI extends AbstractUI implements FormUI {
+public class IPhoneCommandUI implements CommandUI {
 
-	public IPhoneFormUI(MicroEmulator microEmulator, Form form) {
-		super(microEmulator, form);
+	private Command command;
+	
+	public IPhoneCommandUI(MicroEmulator microEmulator, Command command) {
+		this.command=command;
 	}
 
-	public int append(Image img) {
-		// TODO Auto-generated method stub
-		return 0;
+	public Command getCommand() {
+		return command;
 	}
 
-	public int append(Item item) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public int append(String str) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public void delete(int itemNum) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void deleteAll() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void insert(int itemNum, Item item) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void set(int itemNum, Item item) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void hideNotify() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void invalidate() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void showNotify() {
+	public void setImage(Image image) {
 		// TODO Auto-generated method stub
 
 	}

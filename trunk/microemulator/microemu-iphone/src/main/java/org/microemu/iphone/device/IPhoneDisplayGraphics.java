@@ -26,8 +26,6 @@
  */
 package org.microemu.iphone.device;
 
-import java.util.logging.Logger;
-
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Image;
 

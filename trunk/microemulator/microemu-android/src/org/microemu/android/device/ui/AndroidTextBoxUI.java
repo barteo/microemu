@@ -38,6 +38,8 @@ import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.TextBoxUI;
 
 import android.content.res.TypedArray;
+import android.graphics.Typeface;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -81,6 +83,10 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 						}
 						
 					});
+				}
+				if ((textBox.getConstraints() & TextField.PASSWORD) != 0) {
+					editView.setTransformationMethod(PasswordTransformationMethod.getInstance());
+					editView.setTypeface(Typeface.MONOSPACE);
 				}
 				((LinearLayout) view).addView(editView);
 				

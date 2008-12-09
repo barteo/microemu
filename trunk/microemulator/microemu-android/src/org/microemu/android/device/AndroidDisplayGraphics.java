@@ -34,6 +34,7 @@ import org.microemu.log.Logger;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
@@ -228,56 +229,47 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
             img = ((AndroidImmutableImage) src).getBitmap();
         }            
 
-        canvas.save(Canvas.MATRIX_SAVE_FLAG);
-
+        Matrix matrix = new Matrix();
         int dW = width, dH = height;
         switch (transform) {
         case Sprite.TRANS_NONE: {
             break;
         }
         case Sprite.TRANS_ROT90: {
-            canvas.translate(height, 0);
-            canvas.rotate(90);
+        	matrix.preRotate(90);
+        	img = Bitmap.createBitmap(img, x_src, y_src, width, height, matrix, true);
             dW = height;
             dH = width;
             break;
         }
         case Sprite.TRANS_ROT180: {
-            canvas.translate(width, height);
-            canvas.rotate(180);
+            matrix.preRotate(180);
+        	img = Bitmap.createBitmap(img, x_src, y_src, width, height, matrix, true);
             break;
         }
         case Sprite.TRANS_ROT270: {
-            canvas.translate(0, width);
-            canvas.rotate(270);
+            matrix.preRotate(270);
+            img = Bitmap.createBitmap(img, x_src, y_src, width, height, matrix, true);
             dW = height;
             dH = width;
             break;
         }
         case Sprite.TRANS_MIRROR: {
-        	canvas.translate(width, 0);
-        	canvas.scale(-1, 1);
+        	// TODO
             break;
         }
         case Sprite.TRANS_MIRROR_ROT90: {
-            canvas.translate(height, 0);
-            canvas.rotate(90);
-            canvas.translate(width, 0);
-            canvas.scale(-1, 1);
+        	// TODO
             dW = height;
             dH = width;
             break;
         }
         case Sprite.TRANS_MIRROR_ROT180: {
-            canvas.translate(width, 0);
-            canvas.scale(-1, 1);
-            canvas.translate(width, height);
-            canvas.rotate(180);
+        	// TODO
             break;
         }
         case Sprite.TRANS_MIRROR_ROT270: {
-            canvas.rotate(270);
-            canvas.scale(-1, 1);
+        	// TODO
             dW = height;
             dH = width;
             break;
@@ -331,15 +323,12 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
         }
 
         if (badAnchor) {
-            canvas.restore();
             throw new IllegalArgumentException("Bad Anchor");
         }
             
         Rect srcRect = new Rect(x_src, y_src, x_src + width, y_src + height);
         Rect dstRect = new Rect(x_dst, y_dst, x_dst + width, y_dst + height);
         canvas.drawBitmap(img, srcRect, dstRect, paint);
-
-        canvas.restore();
 	}
 
 	public void drawRGB(int[] rgbData, int offset, int scanlength, int x,

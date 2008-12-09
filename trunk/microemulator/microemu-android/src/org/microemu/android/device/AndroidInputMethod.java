@@ -338,7 +338,6 @@ public class AndroidInputMethod extends InputMethod {
 		int resultKeyCode;
 		switch (deviceKeyCode) {
 		case KeyEvent.KEYCODE_DPAD_CENTER :
-		case KeyEvent.KEYCODE_ENTER : // Easier to deliver Canvas.FIRE using keyboard (fix for emulator only)
 			resultKeyCode = Canvas.FIRE;
 			break;
 		case KeyEvent.KEYCODE_DPAD_UP :
@@ -352,6 +351,9 @@ public class AndroidInputMethod extends InputMethod {
 			break;
 		case KeyEvent.KEYCODE_DPAD_RIGHT :
 			resultKeyCode = Canvas.RIGHT;
+			break;
+		case KeyEvent.KEYCODE_DEL :
+			resultKeyCode = 127;
 			break;
 		default: 
             resultKeyCode = keyEvent.getUnicodeChar();
@@ -440,19 +442,19 @@ public class AndroidInputMethod extends InputMethod {
 		String keyName;
 		switch (keyCode) {
 		case Canvas.FIRE:
-			keyName = "SEL";
+			keyName = "FIRE";
 			break;
 		case Canvas.UP:
-			keyName = "U";
+			keyName = "UP";
 			break;
 		case Canvas.DOWN:
-			keyName = "D";
+			keyName = "DOWN";
 			break;
 		case Canvas.LEFT:
-			keyName = "L";
+			keyName = "LEFT";
 			break;
 		case Canvas.RIGHT:
-			keyName = "R";
+			keyName = "RIGHT";
 			break;
 		case Canvas.GAME_A:
 			keyName = "GAME_A";
@@ -467,7 +469,7 @@ public class AndroidInputMethod extends InputMethod {
 			keyName = "GAME_D";
 			break;
 		default:
-			keyName = String.valueOf((char) new KeyEvent(keyCode, KeyEvent.ACTION_DOWN).getUnicodeChar());
+			keyName = Character.toString((char) keyCode);
 		}
 
 		return keyName;

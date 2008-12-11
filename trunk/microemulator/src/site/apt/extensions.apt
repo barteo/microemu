@@ -17,7 +17,7 @@ Or Extension can be class that does not implements org.microemu... interfaces th
 
 * Extensions configuration in config2.xml
 
-    In addition to initialization in MicroEmulator command line < --impl (JSR implementation class name)> config file can be used.
+    In addition to initialization in MicroEmulator command line < --impl (JSR implementation class name)> config file can be used. Configuration file config2.xml is located in {$HOME}/.microemulator folder.
 
 ---
 <config>

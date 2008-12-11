@@ -121,6 +121,8 @@ public class Common implements MicroEmulator, CommonInterface {
 	private String jadURL = null;
 
 	private Object destroyNotify = new Object();
+	
+	private boolean exitOnMIDletDestroy = false;
 
 	public Common(EmulatorContext context) {
 		instance = this;
@@ -441,6 +443,10 @@ public class Common implements MicroEmulator, CommonInterface {
 				}
 			} catch (Throwable e) {
 				Logger.error("destroyApp error", e);
+			}
+			
+			if (exitOnMIDletDestroy) {
+				System.exit(0);
 			}
 		}
 
@@ -796,6 +802,8 @@ public class Common implements MicroEmulator, CommonInterface {
 				} else if (arg.equals("--impl")) {
 					registerImplementation((String) argsIterator.next(), null, true);
 					argsIterator.remove();
+				} else if (arg.equals("--quit")) {
+					exitOnMIDletDestroy = true;
 				} else {
 					midletClassOrJad = arg;
 				}
@@ -992,6 +1000,7 @@ public class Common implements MicroEmulator, CommonInterface {
 				+ "[(--classpath|-cp) <JSR CLASSPATH>]\n" + "[(--appclasspath|--appcp) <MIDlet CLASSPATH>]\n"
 				+ "[--appclass <library class name>]\n" + "[--appclassloader strict|delegating|system] \n"
 				+ "[-Xautotest:<JAD file url>\n"
+				+ "[--quit]\n"
 				+ "(({MIDlet class name} [--propertiesjad {jad file location}]) | {jad file location})";
 	}
 

@@ -121,19 +121,20 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
         if (anchor == 0) {
             anchor = javax.microedition.lcdui.Graphics.TOP | javax.microedition.lcdui.Graphics.LEFT;
         }
+        
+        AndroidFont androidFont = AndroidFontManager.getFont(font);
 
         if ((anchor & javax.microedition.lcdui.Graphics.TOP) != 0) {
-            newy -= paint.getFontMetricsInt().ascent;
+            newy -= androidFont.paint.getFontMetricsInt().ascent;
         } else if ((anchor & javax.microedition.lcdui.Graphics.BOTTOM) != 0) {
-            newy -= paint.getFontMetricsInt().descent;
+            newy -= androidFont.paint.getFontMetricsInt().descent;
         }
         if ((anchor & javax.microedition.lcdui.Graphics.HCENTER) != 0) {
-            newx -= paint.measureText(str) / 2;
+            newx -= androidFont.paint.measureText(str) / 2;
         } else if ((anchor & javax.microedition.lcdui.Graphics.RIGHT) != 0) {
-            newx -= paint.measureText(str);
+            newx -= androidFont.paint.measureText(str);
         }
 
-        AndroidFont androidFont = AndroidFontManager.getFont(font);
         androidFont.paint.setColor(paint.getColor());
         canvas.drawText(str, newx, newy, androidFont.paint);
 	}

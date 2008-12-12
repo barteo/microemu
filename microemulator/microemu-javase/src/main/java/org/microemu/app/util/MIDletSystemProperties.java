@@ -58,6 +58,8 @@ public class MIDletSystemProperties {
 	 * Permits null values.
 	 */
 	private static final Map props = new HashMap();
+	
+	private static final Map permissions = new HashMap();
 
 	private static Map systemPropertiesPreserve;
 
@@ -191,6 +193,19 @@ public class MIDletSystemProperties {
 			Map.Entry e = (Map.Entry) i.next();
 			setProperty((String) e.getKey(), (String) e.getValue());
 		}
+	}
+	
+	public static int getPermission(String permission) {
+		Integer value = (Integer) permissions.get(permission);
+		if (value == null) {
+			return -1;
+		} else {
+			return value.intValue();
+		}
+	}
+	
+	public static void setPermission(String permission, int value) {
+		permissions.put(permission, new Integer(value));
 	}
 
 	public static void setDevice(Device newDevice) {

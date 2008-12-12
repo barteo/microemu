@@ -153,6 +153,10 @@ public class MIDletBridge {
 		}
 	}
 	
+	public static int checkPermission(String permission) {
+		return emulator.checkPermission(permission);
+	}
+	
 	public static boolean platformRequest(String URL) {
 		return emulator.platformRequest(URL);
 	}

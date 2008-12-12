@@ -77,8 +77,7 @@ public abstract class MIDlet {
 	protected abstract void destroyApp(boolean unconditional) throws MIDletStateChangeException;
 
 	public final int checkPermission(String permission) {
-		// TODO
-		return 0;
+		return MIDletBridge.checkPermission(permission);
 	}
 
 	public final String getAppProperty(String key) {

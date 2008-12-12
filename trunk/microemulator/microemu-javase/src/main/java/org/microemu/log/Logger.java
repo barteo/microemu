@@ -26,16 +26,24 @@
  */
 package org.microemu.log;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import org.microemu.app.util.IOUtils;
+
 /**
  * 
- * This class is used as abstraction layer for log messages Minimum Log4j
- * implemenation with multiple overloaded functions
+ * This class is used as abstraction layer for log messages Minimum Log4j implemenation with multiple overloaded
+ * functions
  * 
  * @author vlads
  * 
@@ -56,11 +64,6 @@ public class Logger {
 
 	static {
 		fqcnSet.add(FQCN);
-		// Message class can be moved to different sub project, See call to
-		// addLogOrigin
-		// Also Message calss can be refactored by ProGuard
-		// fqcnSet.add("org.microemu.app.ui.Message");
-
 		addAppender(new StdOutAppender());
 
 		// This is done for MIDletInternlaLogger a wrapper for
@@ -321,4 +324,70 @@ public class Logger {
 		loggerAppenders.clear();
 	}
 
+	public static boolean isJava5() {
+		try {
+			return java5Function();
+		} catch (Throwable e) {
+			return false;
+		}
+	}
+
+	static boolean java5Function() {
+		return (Thread.currentThread().getStackTrace() != null);
+	}
+
+	public static void threadDumpToConsole() {
+		try {
+			StringBuffer out = new StringBuffer("Full ThreadDump\n");
+			Map traces = Thread.getAllStackTraces();
+			for (Iterator iterator = traces.entrySet().iterator(); iterator.hasNext();) {
+				Map.Entry entry = (Map.Entry) iterator.next();
+				Thread thread = (Thread) entry.getKey();
+				out.append("Thread= " + thread.getName() + " " + (thread.isDaemon() ? "daemon" : "") + " prio="
+						+ thread.getPriority() + "id=" + thread.getId() + " " + thread.getState());
+				out.append("\n");
+
+				StackTraceElement[] ste = (StackTraceElement[]) entry.getValue();
+				for (int i = 0; i < ste.length; i++) {
+					out.append("\t");
+					out.append(ste[i].toString());
+					out.append("\n");
+				}
+				out.append("---------------------------------\n");
+			}
+			Logger.info(out.toString());
+		} catch (Throwable ignore) {
+		}
+	}
+
+	public static void threadDumpToFile() {
+		SimpleDateFormat fmt = new SimpleDateFormat("MM-dd_HH-mm-ss");
+		OutputStreamWriter out = null;
+		try {
+			File file = new File("ThreadDump-" + fmt.format(new Date()) + ".log");
+			out = new FileWriter(file);
+			Map traces = Thread.getAllStackTraces();
+			for (Iterator iterator = traces.entrySet().iterator(); iterator.hasNext();) {
+				Map.Entry entry = (Map.Entry) iterator.next();
+				Thread thread = (Thread) entry.getKey();
+				out.write("Thread= " + thread.getName() + " " + (thread.isDaemon() ? "daemon" : "") + " prio="
+						+ thread.getPriority() + "id=" + thread.getId() + " " + thread.getState());
+				out.write("\n");
+
+				StackTraceElement[] ste = (StackTraceElement[]) entry.getValue();
+				for (int i = 0; i < ste.length; i++) {
+					out.write("\t");
+					out.write(ste[i].toString());
+					out.write("\n");
+				}
+				out.write("---------------------------------\n");
+			}
+			out.close();
+			out = null;
+			Logger.info("Full ThreadDump created " + file.getAbsolutePath());
+		} catch (Throwable ignore) {
+		} finally {
+			IOUtils.closeQuietly(out);
+		}
+	}
 }

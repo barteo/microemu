@@ -72,7 +72,13 @@ java -cp microemulator.jar;microemu-siemensapi.jar org.microemu.app.Main http://
 
         * < --impl {JSR implementation class name}> \u00bb Initialize and register optional {{{extensions.html}JSR implementation or Extension class}}.
 
+        * < --headless > \u00bb Run MicroEmulator in console, NO UI headless mode
+
+        * < --logCallLocation true|false>  \u00bb   Add System.out.print() calls origin
+
         * < --quit > \u00bb            exit emulator on MIDlet destroy
+
+        * < --quiet > \u00bb           Disable stdout logs
 
         * ({MIDlet class name} | {jad file location})
 
@@ -101,6 +107,10 @@ java -cp microemulator.jar;YourApp.jar org.microemu.app.Headless com.yourcompany
 or
 java -cp microemulator.jar org.microemu.app.Headless path2yourApp/YourApp.jad
 ---
+
+    Headless MicroEmulator additional command line options
+
+        * < --logCallLocation >  \u00bb   Add System.out.print() calls origin
 
 
 * Building and debugging a java project using MicroEmulator and Eclipse

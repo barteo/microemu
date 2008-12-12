@@ -78,6 +78,7 @@ import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.impl.DeviceImpl;
 import org.microemu.log.Logger;
+import org.microemu.log.StdOutAppender;
 import org.microemu.microedition.ImplFactory;
 import org.microemu.microedition.ImplementationInitialization;
 import org.microemu.microedition.io.ConnectorImpl;
@@ -121,7 +122,7 @@ public class Common implements MicroEmulator, CommonInterface {
 	private String jadURL = null;
 
 	private Object destroyNotify = new Object();
-	
+
 	private boolean exitOnMIDletDestroy = false;
 
 	public Common(EmulatorContext context) {
@@ -129,8 +130,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		this.emulatorContext = context;
 
 		/*
-		 * Initialize secutity context for implemenations, May be there are
-		 * better place for this call
+		 * Initialize secutity context for implemenations, May be there are better place for this call
 		 */
 		ImplFactory.instance();
 		MIDletSystemProperties.initContext();
@@ -444,7 +444,7 @@ public class Common implements MicroEmulator, CommonInterface {
 			} catch (Throwable e) {
 				Logger.error("destroyApp error", e);
 			}
-			
+
 			if (exitOnMIDletDestroy) {
 				System.exit(0);
 			}
@@ -470,9 +470,9 @@ public class Common implements MicroEmulator, CommonInterface {
 		new Thread(new Runnable() {
 			public void run() {
 				Message.info("MIDlet requests that the device handle the following URL: " + URL);
-			}			
+			}
 		}).start();
-		
+
 		return false;
 	}
 
@@ -804,6 +804,12 @@ public class Common implements MicroEmulator, CommonInterface {
 					argsIterator.remove();
 				} else if (arg.equals("--quit")) {
 					exitOnMIDletDestroy = true;
+				} else if (arg.equals("--logCallLocation")) {
+					Logger.setLocationEnabled(Boolean.valueOf((String) argsIterator.next()).booleanValue());
+				} else if (arg.equals("--quiet")) {
+					StdOutAppender.enabled = false;
+				} else if (arg.equals("--headless")) {
+					// Ignore this here.
 				} else {
 					midletClassOrJad = arg;
 				}
@@ -848,13 +854,13 @@ public class Common implements MicroEmulator, CommonInterface {
 				Logger.error(ex);
 			}
 		}
-		
+
 		try {
 			launcher = new Launcher(this);
 			launcher.setCurrentMIDlet(launcher);
 		} finally {
 			MIDletBridge.setThreadMIDletContext(null);
-		}		
+		}
 
 		if (getRecordStoreManager() == null) {
 			if (paramRecordStoreManager == null) {
@@ -999,8 +1005,7 @@ public class Common implements MicroEmulator, CommonInterface {
 				+ "[--id EmulatorID ] \n" + "[--impl {JSR implementation class name}]\n"
 				+ "[(--classpath|-cp) <JSR CLASSPATH>]\n" + "[(--appclasspath|--appcp) <MIDlet CLASSPATH>]\n"
 				+ "[--appclass <library class name>]\n" + "[--appclassloader strict|delegating|system] \n"
-				+ "[-Xautotest:<JAD file url>\n"
-				+ "[--quit]\n"
+				+ "[-Xautotest:<JAD file url>\n" + "[--quit]\n"
 				+ "(({MIDlet class name} [--propertiesjad {jad file location}]) | {jad file location})";
 	}
 

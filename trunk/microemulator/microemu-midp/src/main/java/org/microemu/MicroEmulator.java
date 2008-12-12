@@ -45,6 +45,8 @@ public interface MicroEmulator {
 
 	void destroyMIDletContext(MIDletContext midletContext);
 	
+	int checkPermission(String permission);
+	
 	boolean platformRequest(String URL);
 
 }

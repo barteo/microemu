@@ -465,6 +465,10 @@ public class Common implements MicroEmulator, CommonInterface {
 	public void setStatusBarListener(StatusBarListener listener) {
 		statusBarListener = listener;
 	}
+	
+	public int checkPermission(String permission) {
+		return MIDletSystemProperties.getPermission(permission);
+	}
 
 	public boolean platformRequest(final String URL) {
 		new Thread(new Runnable() {

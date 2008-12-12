@@ -308,6 +308,12 @@ public class Main extends Applet implements MicroEmulator {
 	public InputStream getResourceAsStream(String name) {
 		return emulatorContext.getResourceAsStream(name);
 	}
+	
+	public int checkPermission(String permission) {
+		// TODO
+		
+		return 0;
+	}
 
 	public boolean platformRequest(String url) {
 		try {

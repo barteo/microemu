@@ -60,7 +60,7 @@ public class Config {
 	 */
 	private static String emulatorID;
 
-	private static XMLElement configXml;
+	private static XMLElement configXml = new XMLElement();
 
 	private static DeviceEntry defaultDevice;
 

@@ -26,6 +26,7 @@
  */
 package org.microemu.app.ui.swing;
 
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -127,6 +128,25 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 
 		menuBar.add(menu);
 
+		if (Logger.isJava5()) {
+			JMenu j5Menu = new JMenu("Threads");
+			JMenuItem menuThreadDump = new JMenuItem("ThreadDump to console");
+			menuThreadDump.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Logger.threadDumpToConsole();
+				}
+			});
+			j5Menu.add(menuThreadDump);
+			JMenuItem menuThreadDumpFile = new JMenuItem("ThreadDump to file");
+			menuThreadDumpFile.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Logger.threadDumpToFile();
+				}
+			});
+			j5Menu.add(menuThreadDumpFile);
+			menuBar.add(j5Menu);
+		}
+
 		if (tests) {
 			JMenu testMenu = new JMenu("Tests");
 			JMenuItem testLog = new JMenuItem("Log 10 events");
@@ -144,6 +164,9 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 		setJMenuBar(menuBar);
 
 		this.logArea = new LogTextArea(20, 40, 1000);
+		Font logFont = new Font("Monospaced", Font.PLAIN, 12);
+		this.logArea.setFont(logFont);
+
 		JScrollPane scrollPane = new JScrollPane(this.logArea);
 		scrollPane.setAutoscrolls(false);
 

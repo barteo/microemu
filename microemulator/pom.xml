@@ -114,6 +114,7 @@
     </distributionManagement>
 
 <!-- 4snapshot begin { -->
+<!--
     <repositories>
         <repository>
             <id>pyx4me-web</id>
@@ -126,11 +127,13 @@
             </releases>
         </repository>
     </repositories>
+-->    
 <!-- 4snapshot end } -->
 
     <pluginRepositories>
 
 <!-- 4snapshot begin { -->
+<!--
         <pluginRepository>
             <id>pyx4me-web</id>
             <url>http://www.pyx4me.com/maven2-snapshot</url>
@@ -141,6 +144,7 @@
                 <enabled>false</enabled>
             </releases>
         </pluginRepository>
+-->        
 <!-- 4snapshot end } -->
 
         <pluginRepository>
@@ -152,7 +156,7 @@
 
     <properties>
         <buildLabel>${version}</buildLabel>
-        <pyx4meVersion>2.0.3-SNAPSHOT</pyx4meVersion>
+        <pyx4meVersion>2.0.3</pyx4meVersion>
         <jourVersion>2.0.3</jourVersion>
         <!-- See OS X profile -->
         <javaRunTimeJar>${java.home}/lib/rt.jar</javaRunTimeJar>
@@ -237,7 +241,7 @@
             <name>Vlad Skarzhevskyy</name>
             <id>vlads</id>
             <email>skarzhevskyy@gmail.com</email>
-            <organization>pyx4me.com</organization>
+            <organization>Pyx Software Services Inc.</organization>
             <organizationUrl>http://www.pyx4me.com</organizationUrl>
             <roles>
                 <role>developer</role>

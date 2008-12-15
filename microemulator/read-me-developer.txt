@@ -35,9 +35,11 @@
 
 * Building official Release by the MicroEmulator team.
 
-    * Test locally
+    * To buils the site you need to build skin once: cd microemu-extensions/microemu-site-skin; mvn install
 
-        mvn clean deploy site-deploy -P release -DperformRelease=true -Dlabel=2.0.2
+    * Test build locally
+
+        mvn clean deploy site-deploy -P release -DperformRelease=true -Dlabel=2.0.3.111
 
     * Remove all -SNAPSHOT from pom.xml
 
@@ -46,8 +48,6 @@
     * Update src/changes.xml
 
     * Comment out sections marked <!--4release--> and <!--4snapshot--> in src/site/site.xml
-
-    * Update variable demoLocation in microemu-examples/microemu-demo HTTPPanel.java
 
     * SVN commit
 
@@ -58,8 +58,12 @@
         mvn -o clean deploy site-deploy -P release -DperformRelease=true
 
     * repository "pyx4j.com-file-release" (http://pyx4j.com/maven2-release/) on build server will sync with http://repo1.maven.org/maven2
+    
+        It's a good idea to ask Vlad to stop rsync before making build, just in case we need to rebuild the Release.
 
     * Upload the context of /home/apache/microemu (http://pyx4j.com/snapshot/microemu-release)  to http://microemu.org/
+    
+        TODO we may need to create a zip of the site during build, so Anubody can make a Release build.
 
     * Upload the distribution jars microemulator-2.X.X-sources.tar.gz and microemulator-2.X.X.tar.gz to sf.net
 

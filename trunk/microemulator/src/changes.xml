@@ -20,8 +20,8 @@
         <action dev="barteo" type="add">Start ME2 as child windows from another java program.</action>
     </release>
 
-    <!--release version="2.0.4 TODO" date="date not defined" description="Plans for next Release">
-    </release-->
+    <release version="2.0.4 TODO" date="date not defined" description="Plans for next Release">
+    </release>
 
     <release version="2.0.3" date="2008-12-14" description="">
         <!--

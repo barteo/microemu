@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0">
+    <!-- @version $Revision$ ($Author$) $Date$ -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.microemu</groupId>
+        <artifactId>microemu</artifactId>
+        <version>2.0.3</version><!--me-version-->
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>api</artifactId>
+    <name>api</name>
+    <packaging>pom</packaging>
+
+    <description>MicroEmulator SDK stub API modules</description>
+
+    <modules>
+        <module>cldcapi10</module>
+        <module>cldcapi11</module>
+        <module>midpapi20</module>
+    </modules>
+
+    <dependencies>
+
+       <dependency>
+           <groupId>junit</groupId>
+           <artifactId>junit</artifactId>
+           <scope>test</scope>
+           <optional>true</optional>
+       </dependency>
+
+       <dependency>
+           <groupId>net.sf.jour</groupId>
+           <artifactId>jour-instrument</artifactId>
+           <scope>test</scope>
+           <optional>true</optional>
+       </dependency>
+
+    </dependencies>
+
+    <!--
+    <build>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.3</source>
+                    <target>1.1</target>
+                    <fork>true</fork>
+                    <compilerArguments>
+                        <bootclasspath>empty.jar</bootclasspath>
+                   </compilerArguments>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <groups>
+                        <group>
+                            <title>User Interface Package</title>
+                            <packages>javax.microedition.lcdui:javax.microedition.lcdui.game</packages>
+                        </group>
+                        <group>
+                            <title>Persistence Package</title>
+                            <packages>javax.microedition.rms</packages>
+                        </group>
+                        <group>
+                            <title>Application Lifecycle Package</title>
+                            <packages>javax.microedition.midlet</packages>
+                        </group>
+                        <group>
+                            <title>Networking Package</title>
+                            <packages>javax.microedition.io</packages>
+                        </group>
+                        <group>
+                            <title>Audio Package</title>
+                            <packages>javax.microedition.media:javax.microedition.media.control</packages>
+                        </group>
+                        <group>
+                            <title>Public Key Package</title>
+                            <packages>javax.microedition.pki</packages>
+                        </group>
+                        <group>
+                            <title>Core Packages</title>
+                            <packages>java.lang:java.util:java.lang.ref:java.io</packages>
+                        </group>
+                    </groups>
+                    <links>
+                        <link>http://www.microemu.org/api/cldcapi11/apidocs/</link>
+                    </links>
+                    <bottom><![CDATA[<a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html">GNU General Public License version 2<a> Copyright &#169; 1990-2007 Sun Microsystems, Inc.  ALL RIGHTS RESERVED.<br>]]></bottom>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+    -->
+
+</project>

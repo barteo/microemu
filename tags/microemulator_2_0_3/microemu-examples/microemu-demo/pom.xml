@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0">
+    <!-- @version $Revision$ ($Author$) $Date$ -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.microemu</groupId>
+        <artifactId>microemu-examples</artifactId>
+        <version>2.0.3</version><!--me-version-->
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>microemu-demo</artifactId>
+    <name>microemu-demo</name>
+
+    <description>demo example</description>
+
+    <dependencies>
+<!--
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>midpapi20</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+-->
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-javase-swing</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
+
+    <properties>
+        <wtkNotSupported>true</wtkNotSupported>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.3</source>
+                    <target>1.1</target>
+                    <compilerArguments>
+                        <bootclasspath>${basedir}/../../api/cldcapi11/target/cldcapi11-${project.version}.jar${path.separator}${basedir}/../../api/midpapi20/target/midpapi20-${project.version}.jar</bootclasspath>
+                   </compilerArguments>
+                   <!--compilerArguments>
+                        <bootclasspath>${env.WTK_HOME}/lib/cldcapi11.jar${path.separator}${env.WTK_HOME}/lib/midpapi20.jar</bootclasspath>
+                   </compilerArguments-->
+                </configuration>
+            </plugin>
+
+            <!-- Add EclipseME nature to the generated project-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <configuration>
+                    <buildcommands>
+                        <buildcommand>org.eclipse.jdt.core.javabuilder</buildcommand>
+                        <buildcommand>eclipseme.core.preverifier</buildcommand>
+                    </buildcommands>
+                    <projectnatures>
+                        <projectnature>org.eclipse.jdt.core.javanature</projectnature>
+                        <projectnature>eclipseme.core.nature</projectnature>
+                    </projectnatures>
+                    <classpathContainers>
+                        <classpathContainer>J2MELIB</classpathContainer>
+                        <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
+                    </classpathContainers>
+                </configuration>
+            </plugin>
+
+            <!-- Create application loadable on the phone -->
+            <plugin>
+                <groupId>com.pyx4me</groupId>
+                <artifactId>j2me-maven-plugin</artifactId>
+                <version>${pyx4meVersion}</version>
+                <executions>
+                   <execution>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--wtkHome>${env.WTK_HOME}</wtkHome-->
+                    <useWtkLibs>false</useWtkLibs>
+                    <proguard>false</proguard>
+                    <obfuscate>false</obfuscate>
+                    <proguardPreverify>${wtkNotSupported}</proguardPreverify>
+                    <proguardInclude>${basedir}/proguard.conf</proguardInclude>
+                    <proguardOptions>
+                        <options>
+                            <option>-overloadaggressively</option>
+                            <option>-dontoptimize</option>
+                            <option>-allowaccessmodification</option>
+                            <option>-defaultpackage 'me2e'</option>
+                            <option>-dontusemixedcaseclassnames</option>
+                        </options>
+                    </proguardOptions>
+                    <jadAttributes>
+                        <Created-By>Bartek Teodorczyk</Created-By>
+                    </jadAttributes>
+                    <midlets>
+                        <MIDlet>
+                            <name>SimpleDemo</name>
+                            <icon>/me2-icon.png</icon>
+                            <class>org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet</class>
+                        </MIDlet>
+                    </midlets>
+                    <libs>
+                        <lib>${basedir}/../../api/cldcapi11/target/cldcapi11-${project.version}.jar</lib>
+                        <lib>${basedir}/../../api/midpapi20/target/midpapi20-${project.version}.jar</lib>
+                    </libs>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.microemu</groupId>
+                            <artifactId>microemu-javase-swing</artifactId>
+                            <exclude>true</exclude>
+                            <withTrail>true</withTrail>
+                        </dependency>
+                    </dependencies>
+                </configuration>
+            </plugin>
+
+            <!--
+            <plugin>
+                <groupId>com.pyx4me</groupId>
+                <artifactId>gammu-maven-plugin</artifactId>
+                <version>${pyx4meVersion}</version>
+                <configuration>
+                    <gammurc>${env.HOME}/gammurc</gammurc>
+                </configuration>
+            </plugin>
+            -->
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-assembly-4download</id>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy overwrite="true"
+                                    file="${project.build.directory}/${project.build.finalName}-me.jar"
+                                    tofile="${project.build.directory}/site/${artifactId}.jar"/>
+                                <copy overwrite="true"
+                                    file="${project.build.directory}/${project.build.finalName}-me.jad"
+                                    tofile="${project.build.directory}/site/${artifactId}.jad"/>
+                                <replace value="${artifactId}.jar" token="${project.build.finalName}-me.jar" dir="${project.build.directory}/site">
+                                    <include name="${artifactId}.jad"></include>
+                                </replace>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>osx</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <wtkNotSupported>true</wtkNotSupported>
+            </properties>
+        </profile>
+    </profiles>
+
+</project>

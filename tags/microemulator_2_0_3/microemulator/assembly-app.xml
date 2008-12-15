@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<assembly>
+    <!-- @version $Revision$ ($Author$) $Date$ -->
+    <id>app</id>
+    <formats>
+        <format>jar</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <dependencySets>
+        <dependencySet>
+            <unpack>true</unpack>
+            <outputDirectory></outputDirectory>
+            <outputFileNameMapping></outputFileNameMapping>
+            <scope>runtime</scope>
+            <excludes>
+                <!--
+                    exclude self (this module do not have sources)
+                    [WARNING] Cannot include project artifact: org.microemu:microemulator:pom:2.0.3-SNAPSHOT; it doesn't have an associated file or directory
+                -->
+                <exclude>org.microemu:microemulator</exclude>
+            </excludes>
+        </dependencySet>
+    </dependencySets>
+    <files>
+        <file>
+            <source>${basedir}/../build.version</source>
+            <destName>META-INF/microemulator-build.version</destName>
+        </file>
+   </files>
+</assembly>

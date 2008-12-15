@@ -1,0 +1,79 @@
+~~ @version $Revision$ ($Author$) $Date$
+~~ See this file format http://maven.apache.org/guides/mini/guide-apt-format.html
+
+                                    ------------------
+                                    MIDlet ClassLoader
+
+
+MIDlet ClassLoader
+
+    MicroEmulator is using special ClassLoader to load MIDlet midlet classes and resources.
+    This ClassLoader is not used when application is running as applet or < --appclassloader system> specified.
+
+    MIDlet ClassLoader has following functionality
+
+    * bytecode preprocessing/instrumentation
+
+    * Security aware  - enables load and run app in Webstart.
+
+    * Enforce class loading order. MIDlet classes loaded first then system (java.) and MicroEmulator classes (javax.)
+
+    * Enforce resource loading order.
+
+    * Enforce static initializers in MIDlet. Each time you start MIDlet new ClassLoader is created.
+
+
+    ClassLoader configuration
+
+    * < --appclasspath> | <-appcp CLASSPATH> \u00bb for MIDlet application components if any; ignored when opening .jad
+
+    * < --appclass library.class.name> \u00bb for appclasspath auto detection from system classpath; ignored when opening .jad
+
+    * < --appclassloader strict>  \u00bb Default configuration
+
+    * < --appclassloader delegating>  \u00bb Allow MIDlet to load any classes or resources not found in appclasspath from parent class loader.
+
+    * < --appclassloader system> \u00bb Disable use of MIDlet ClassLoader and use only System class loader. May be usefull for debug.
+
+
+
+
+    MIDlet ClassLoader allow MIDlet to load classes only from MIDlet jar or <--appclasspath>. Classes from java. and javax.microedition. are loaded from parent class loader e.g. ClassLoader of MicroEmulator application.
+
+    Argument <--appclass> is a helper for <--appclasspath>. If your MIDlet application classes are already in system classpath when starting MicroEmulator
+    then --appclass will find the location URL of this class (directory or jar) and add this URL to MIDletClassLoader then same as <--appclasspath>.
+
+    MicroEmulator usage
+
+---
+    java -cp CLASSPATH org.microemu.app.Main application.main.MIDlet
+---
+
+    Is effectively the same as
+
+---
+    java -cp CLASSPATH org.microemu.app.Main --appclass application.main.MIDlet application.main.MIDlet
+---
+
+Bytecode preprocessing
+
+  We are using {{{http://asm.objectweb.org/}ASM}} for Bytecode manipulations.
+
+  At runtime:
+
+   * Calls to System.out, System.err are redirected to Injected.class to enable Logging in MicroEmulator console.
+
+   * Calls to System.getProperty(), are redirected to Injected.class to enable java system properties change in WebStart application.
+
+   * class.getResourceAsStream are redirected to solve resource loading patterns commonly used in MIDlets and not acceptable in Java SE application
+     when System class is called to load MIDlet resource
+
+   * Timers and Threads created by MIDlet are controlled by MicroEmulator and are terminated when MIDlet ends.
+     {{{http://microemulator.svn.sourceforge.net/viewvc/microemulator/trunk/microemulator/microemu-javase/src/main/java/org/microemu/app/util/MIDletTimer.java?view=markup}MIDletTimer}}
+     and {{{http://microemulator.svn.sourceforge.net/viewvc/microemulator/trunk/microemulator/microemu-javase/src/main/java/org/microemu/app/util/MIDletThread.java?view=markup}MIDletThread}}
+     would be used in your application.
+
+  "Save for Web...":
+
+    We are adding new class {{{http://microemulator.svn.sourceforge.net/viewvc/microemulator/trunk/microemulator/microemu-injected/src/main/java/org/microemu/Injected.java?view=markup}org.microemu.Injected}} to new JAR.
+    Calls to System.getProperty(), System.out, System.err and getResourceAsStream are redirected to MicroEmulator Injected class.

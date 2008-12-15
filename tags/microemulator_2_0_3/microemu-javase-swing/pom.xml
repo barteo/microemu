@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0">
+    <!-- @version $Revision$ ($Author$) $Date$ -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.microemu</groupId>
+        <artifactId>microemu</artifactId>
+        <version>2.0.3</version><!--me-version-->
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>microemu-javase-swing</artifactId>
+    <name>microemu-javase-swing</name>
+
+    <description>javase-swing</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-javase</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Used for ready for applet Preprocessor should only in pakaged jar -->
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-injected</artifactId>
+            <version>${project.version}</version>
+            <classifier>inject</classifier>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>sun</groupId>
+            <artifactId>applet-jsobject</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+</project>

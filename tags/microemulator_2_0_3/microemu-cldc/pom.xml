@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0">
+    <!-- @version $Revision$ ($Author$) $Date$ -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.microemu</groupId>
+        <artifactId>microemu</artifactId>
+        <version>2.0.3</version><!--me-version-->
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>microemu-cldc</artifactId>
+    <name>microemu-cldc</name>
+
+    <description>cldc interfaces</description>
+
+    <dependencies>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <scope>test</scope>
+                <optional>true</optional>
+            </dependency>
+
+            <dependency>
+                <groupId>net.sf.jour</groupId>
+                <artifactId>jour-instrument</artifactId>
+                <scope>test</scope>
+                <optional>true</optional>
+            </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.pyx4me</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <version>${pyx4meVersion}</version>
+                <executions>
+                   <execution>
+                       <phase>package</phase>
+                       <goals><goal>proguard</goal></goals>
+                   </execution>
+                </executions>
+                <configuration>
+                    <proguardInclude>${basedir}/proguard.conf</proguardInclude>
+                    <attach>true</attach>
+                    <attachArtifactClassifier>4applet</attachArtifactClassifier>
+                    <libs>
+                        <lib>${javaRunTimeJar}</lib>
+                    </libs>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>net.sf.jour</groupId>
+                <artifactId>jour-maven-plugin</artifactId>
+                <version>${jourVersion}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>signatureVerify</goal>
+                        </goals>
+                        <configuration>
+                            <allowAPIextension>false</allowAPIextension>
+                            <level>protected</level>
+                            <signature>${basedir}/src/test/resources/cldcapi_10_11-javax.microedition.io-signature.xml</signature>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<device name="Resizable device"
+        xmlns="http://www.microemu.org/2.0.2/"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.microemu.org/2.0.2/ http://www.microemu.org/2.0.2/device.xsd">
+    <!-- img is used here for the backward compatibility, can be removed in version 3 -->
+    <img name="normal" src="normal.png" />
+    <display resizable="true">
+        <iscolor>true</iscolor>
+        <numcolors>65536</numcolors>
+        <numalphalevels>256</numalphalevels>
+        <foreground>000000</foreground>
+        <background>ffffff</background>
+        <rectangle>
+            <x>0</x>
+            <y>0</y>
+            <width>176</width>
+            <height>220</height>
+        </rectangle>
+        <paintable>
+            <x>0</x>
+            <y>22</y>
+            <width>176</width>
+            <height>176</height>
+        </paintable>
+        <icon name="up">
+            <paintable>
+                <x>78</x>
+                <y>206</y>
+                <width>12</width>
+                <height>12</height>
+            </paintable>
+            <img name="normal" src="/org/microemu/device/default/up.png"/>
+            <img name="pressed" src="/org/microemu/device/default/up-pressed.png"/>
+        </icon>
+        <icon name="down">
+            <paintable>
+                <x>88</x>
+                <y>206</y>
+                <width>12</width>
+                <height>12</height>
+            </paintable>
+            <img name="normal" src="/org/microemu/device/default/down.png"/>
+            <img name="pressed" src="/org/microemu/device/default/down-pressed.png"/>
+        </icon>
+        <status name="input">
+            <paintable>
+                <x>4</x>
+                <y>4</y>
+                <width>14</width>
+                <height>7</height>
+            </paintable>
+            <img name="123" src="/org/microemu/device/default/123.png"/>
+            <img name="ABC" src="/org/microemu/device/default/abc_upper.png"/>
+            <img name="abc" src="/org/microemu/device/default/abc_lower.png"/>
+        </status>
+    </display>
+    <fonts hint="antialiasing">
+        <font face="system" style="plain" size="small">
+            <system name="SansSerif" style="plain" size="10"/>
+        </font>
+        <font face="system" style="plain" size="medium">
+            <system name="SansSerif" style="plain" size="12"/>
+        </font>
+        <font face="system" style="plain" size="large">
+            <system name="SansSerif" style="plain" size="14"/>
+        </font>
+        <font face="system" style="bold" size="small">
+            <system name="SansSerif" style="bold" size="10"/>
+        </font>
+        <font face="system" style="bold" size="medium">
+            <system name="SansSerif" style="bold" size="12"/>
+        </font>
+        <font face="system" style="bold" size="large">
+            <system name="SansSerif" style="bold" size="14"/>
+        </font>
+        <font face="system" style="italic" size="small">
+            <system name="SansSerif" style="italic" size="10"/>
+        </font>
+        <font face="system" style="italic" size="medium">
+            <system name="SansSerif" style="italic" size="12"/>
+        </font>
+        <font face="system" style="italic" size="large">
+            <system name="SansSerif" style="italic" size="14"/>
+        </font>
+        <font face="system" style="bold,italic" size="small">
+            <system name="SansSerif" style="bold,italic" size="10"/>
+        </font>
+        <font face="system" style="bold,italic" size="medium">
+            <system name="SansSerif" style="bold,italic" size="12"/>
+        </font>
+        <font face="system" style="bold,italic" size="large">
+            <system name="SansSerif" style="bold,italic" size="14"/>
+        </font>
+        <font face="monospace" style="plain" size="small">
+            <system name="Monospaced" style="plain" size="10"/>
+        </font>
+        <font face="monospace" style="plain" size="medium">
+            <system name="Monospaced" style="plain" size="12"/>
+        </font>
+        <font face="monospace" style="plain" size="large">
+            <system name="Monospaced" style="plain" size="14"/>
+        </font>
+        <font face="monospace" style="bold" size="small">
+            <system name="Monospaced" style="bold" size="10"/>
+        </font>
+        <font face="monospace" style="bold" size="medium">
+            <system name="Monospaced" style="bold" size="12"/>
+        </font>
+        <font face="monospace" style="bold" size="large">
+            <system name="Monospaced" style="bold" size="14"/>
+        </font>
+        <font face="monospace" style="italic" size="small">
+            <system name="Monospaced" style="italic" size="10"/>
+        </font>
+        <font face="monospace" style="italic" size="medium">
+            <system name="Monospaced" style="italic" size="12"/>
+        </font>
+        <font face="monospace" style="italic" size="large">
+            <system name="Monospaced" style="italic" size="14"/>
+        </font>
+        <font face="monospace" style="bold,italic" size="small">
+            <system name="Monospaced" style="bold,italic" size="10"/>
+        </font>
+        <font face="monospace" style="bold,italic" size="medium">
+            <system name="Monospaced" style="bold,italic" size="12"/>
+        </font>
+        <font face="monospace" style="bold,italic" size="large">
+            <system name="Monospaced" style="bold,italic" size="14"/>
+        </font>
+        <font face="proportional" style="plain" size="small">
+            <system name="SansSerif" style="plain" size="10"/>
+        </font>
+        <font face="proportional" style="plain" size="medium">
+            <system name="SansSerif" style="plain" size="12"/>
+        </font>
+        <font face="proportional" style="plain" size="large">
+            <system name="SansSerif" style="plain" size="14"/>
+        </font>
+        <font face="proportional" style="bold" size="small">
+            <system name="SansSerif" style="bold" size="10"/>
+        </font>
+        <font face="proportional" style="bold" size="medium">
+            <system name="SansSerif" style="bold" size="12"/>
+        </font>
+        <font face="proportional" style="bold" size="large">
+            <system name="SansSerif" style="bold" size="14"/>
+        </font>
+        <font face="proportional" style="italic" size="small">
+            <system name="SansSerif" style="italic" size="10"/>
+        </font>
+        <font face="proportional" style="italic" size="medium">
+            <system name="SansSerif" style="italic" size="12"/>
+        </font>
+        <font face="proportional" style="italic" size="large">
+            <system name="SansSerif" style="italic" size="14"/>
+        </font>
+        <font face="proportional" style="bold,italic" size="small">
+            <system name="SansSerif" style="bold,italic" size="10"/>
+        </font>
+        <font face="proportional" style="bold,italic" size="medium">
+            <system name="SansSerif" style="bold,italic" size="12"/>
+        </font>
+        <font face="proportional" style="bold,italic" size="large">
+            <system name="SansSerif" style="bold,italic" size="14"/>
+        </font>
+    </fonts>
+    <input>
+        <haspointerevents>true</haspointerevents>
+        <haspointermotionevents>true</haspointermotionevents>
+        <hasrepeatevents>true</hasrepeatevents>
+        <softbutton name="SOFT1" alignment="LEFT">
+            <paintable>
+                <x>1</x>
+                <y>203</y>
+                <width>69</width>
+                <height>16</height>
+            </paintable>
+            <font face="system" style="plain" size="medium"/>
+            <command>BACK</command>
+            <command>EXIT</command>
+            <command>CANCEL</command>
+            <command>STOP</command>
+        </softbutton>
+        <softbutton name="SOFT2" alignment="RIGHT">
+            <paintable>
+                <x>106</x>
+                <y>203</y>
+                <width>69</width>
+                <height>16</height>
+            </paintable>
+            <font face="system" style="plain" size="medium"/>
+            <command>OK</command>
+            <command>SCREEN</command>
+            <command>ITEM</command>
+            <command>HELP</command>
+        </softbutton>
+        <button name="LEFT">
+        </button>
+        <button name="RIGHT">
+        </button>
+        <button name="UP">
+        </button>
+        <button name="DOWN">
+        </button>
+        <button name="SELECT">
+        </button>
+        <button name="0">
+            <chars>
+                <char/>
+                <char>0</char>
+            </chars>
+        </button>
+        <button name="1">
+            <chars>
+                <char>.</char>
+                <char>,</char>
+                <char>?</char>
+                <char>!</char>
+                <char>:</char>
+                <char>;</char>
+                <char>-</char>
+                <char>+</char>
+                <char>#</char>
+                <char>*</char>
+                <char>(</char>
+                <char>)</char>
+                <char>'</char>
+                <char>"</char>
+                <char>_</char>
+                <char>@</char>
+                <char>&amp;</char>
+                <char>$</char>
+                <char>%</char>
+                <char>/</char>
+                <char>&lt;</char>
+                <char>&gt;</char>
+                <char>=</char>
+                <char>1</char>
+            </chars>
+            <chars input="123">
+                <char>1</char>
+                <char>.</char>
+                <char>-</char>
+                <char>(</char>
+                <char>)</char>
+                <char>+</char>
+            </chars>
+        </button>
+        <button name="2">
+            <chars>
+                <char>a</char>
+                <char>b</char>
+                <char>c</char>
+                <char>2</char>
+            </chars>
+        </button>
+        <button name="3">
+            <chars>
+                <char>d</char>
+                <char>e</char>
+                <char>f</char>
+                <char>3</char>
+            </chars>
+        </button>
+        <button name="4">
+            <chars>
+                <char>g</char>
+                <char>h</char>
+                <char>i</char>
+                <char>4</char>
+            </chars>
+        </button>
+        <button name="5">
+            <chars>
+                <char>j</char>
+                <char>k</char>
+                <char>l</char>
+                <char>5</char>
+            </chars>
+        </button>
+        <button name="6">
+            <chars>
+                <char>m</char>
+                <char>n</char>
+                <char>o</char>
+                <char>6</char>
+            </chars>
+        </button>
+        <button name="7">
+            <chars>
+                <char>p</char>
+                <char>q</char>
+                <char>r</char>
+                <char>s</char>
+                <char>7</char>
+            </chars>
+        </button>
+        <button name="8">
+            <chars>
+                <char>t</char>
+                <char>u</char>
+                <char>v</char>
+                <char>8</char>
+            </chars>
+        </button>
+        <button name="9">
+            <chars>
+                <char>w</char>
+                <char>x</char>
+                <char>y</char>
+                <char>z</char>
+                <char>9</char>
+            </chars>
+        </button>
+        <button name="ASTERISK">
+            <chars>
+                <char>*</char>
+                <char>+</char>
+            </chars>
+        </button>
+        <button name="POUND" modeChange="true">
+        </button>
+    </input>
+</device>

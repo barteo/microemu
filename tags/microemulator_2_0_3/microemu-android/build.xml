@@ -1,0 +1,218 @@
+<!-- This is temporary build system -->
+<!-- Migration to the maven is planned --> 
+
+<project name="microemu-android" default="package-apk">
+    
+    <!-- IMPORTANT TO SET WITH VALID VALUES --> 
+    <property name="midlet.name" value="Simple Demo" />
+    <property name="midlet.package" value="SimpleDemo.apk" />
+    <property name="midlet.icon" value="../microemu-javase/src/main/resources/org/microemu/icon.png" />
+    <property name="midlet.class" value="org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet" />
+    <property name="midlet.jar" value="../microemu-examples/microemu-demo/target/microemu-demo-2.0.3-SNAPSHOT.jar" />
+    <property name="sdk-folder" value="/home/barteo/Desktop/android-sdk-linux_x86-1.0_r1" />
+    <property name="asm.jar" value="/home/barteo/.m2/repository/asm/asm/3.1/asm-3.1.jar" />
+    <property name="microemu-cldc.jar" value="../microemu-cldc/target/microemu-cldc-2.0.3-SNAPSHOT.jar" />
+    <property name="microemu-midp.jar" value="../microemu-midp/target/microemu-midp-2.0.3-SNAPSHOT.jar" />
+    <property name="microemu-javase.jar" value="../microemu-javase/target/microemu-javase-2.0.3-SNAPSHOT.jar" />
+    
+    <!-- The intermediates directory -->
+    <!-- Eclipse uses "bin" for its own output, so we do the same. -->
+    <property name="outdir" value="bin" />
+
+    <!-- Output directories -->
+    <property name="outdir-assets" value="${outdir}/assets" />
+    <property name="outdir-classes" value="${outdir}/classes" />
+    <property name="outdir-producer" value="${outdir}/producer" />
+    <property name="outdir-res" value="${outdir}/res" />
+    <property name="outdir-libs" value="${outdir}/libs" />
+
+    <!-- Intermediate files -->
+    <property name="dex-file" value="classes.dex" />
+    <property name="intermediate-dex" value="${outdir}/${dex-file}" />
+
+    <!-- The final package file to generate -->
+    <property name="out-package" value="${outdir}/${midlet.package}" />
+
+    <!-- Tools -->
+    <property name="aapt" value="${sdk-folder}/tools/aapt" />
+    <property name="adb" value="${sdk-folder}/tools/adb" />
+    <property name="dx" value="${sdk-folder}/tools/dx" />
+    <condition property="apk-builder" value="${sdk-folder}/tools/apkbuilder.bat" else="${sdk-folder}/tools/apkbuilder" >
+        <os family="windows"/>
+    </condition>
+    <property name="android-jar" value="${sdk-folder}/android.jar" />
+    
+    <target name="clean">
+        <delete dir="${outdir}" />
+    </target>
+
+    <target name="check">
+        <available file="${microemu-cldc.jar}" property="microemu-cldc.jar.present"/>
+        <fail unless="microemu-cldc.jar.present" message="microemu-cldc.jar doesn't exist at ${microemu-cldc.jar}"/>
+        
+        <available file="${microemu-midp.jar}" property="microemu-midp.jar.present"/>
+        <fail unless="microemu-midp.jar.present" message="microemu-midp.jar doesn't exist at ${microemu-midp.jar}"/>
+        
+        <available file="${microemu-javase.jar}" property="microemu-javase.jar.present"/>
+        <fail unless="microemu-javase.jar.present" message="microemu-javase.jar doesn't exist at ${microemu-javase.jar}"/>
+    </target>
+
+    <target name="dirs">
+        <mkdir dir="${outdir}" />
+        <mkdir dir="${outdir-assets}" />
+        <mkdir dir="${outdir-classes}" />
+        <mkdir dir="${outdir-producer}" />
+        <mkdir dir="${outdir-res}" />
+        <mkdir dir="${outdir-libs}" />
+    </target>
+    
+    <target name="compile-producer" depends="check,dirs">
+        <javac target="1.5" debug="true" extdirs=""
+                srcdir="src"
+                destdir="${outdir-producer}"
+                includes="org/microemu/android/asm/**">
+            <classpath>
+                <pathelement location="${asm.jar}"/>
+            </classpath>
+        </javac>
+   </target>
+
+    <target name="prepare-jars" depends="compile-producer">
+        <java classname="org.microemu.android.asm.AndroidProducer">            
+            <arg value="${midlet.jar}"/>
+            <arg value="${outdir-libs}/midlet.jar"/>
+            <arg value="midlet"/>
+            <classpath>
+                <pathelement path="${outdir-producer}"/>
+                <pathelement location="${asm.jar}"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="compile" depends="prepare-jars, package-res">
+        <javac target="1.5" debug="true" extdirs=""
+                srcdir="src"
+                destdir="${outdir-classes}"
+                bootclasspath="${android-jar}"
+                excludes="org/microemu/android/asm/**">
+            <classpath>
+                <pathelement location="${microemu-midp.jar}" />
+                <pathelement location="${microemu-javase.jar}"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="dex" depends="compile">
+        <exec executable="${dx}" failonerror="true">
+            <arg value="-JXmx384M" />
+            <arg value="--dex" />
+            <arg value="--output=${intermediate-dex}" />
+            <arg value="--positions=lines" />
+            <arg value="${microemu-cldc.jar}"/>
+            <arg value="${microemu-midp.jar}" />
+            <arg value="${microemu-javase.jar}"/>
+            <arg path="${outdir-classes}" />
+            <arg value="${outdir-libs}/midlet.jar"/>
+        </exec>
+    </target>
+    
+    <target name="prepare-assets">
+        <unzip src="${midlet.jar}"
+               dest="${outdir-assets}">
+            <patternset>
+                <exclude name="**/*.class"/>
+                <exclude name="**/META-INF"/>
+                <exclude name="**/MANIFEST.MF"/>
+            </patternset>
+        </unzip>
+    </target>
+    
+    <target name="prepare-res">
+        <mkdir dir="${outdir-res}/values" />
+        <echo file="${outdir-res}/values/strings.xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;resources&gt;
+    &lt;string name="app_name"&gt;${midlet.name}&lt;/string&gt;
+    &lt;string name="class_name"&gt;${midlet.class}&lt;/string&gt;
+&lt;/resources&gt;
+        </echo>
+        
+        <mkdir dir="${outdir-res}/drawable" />
+        <copy file="${midlet.icon}" tofile="${outdir-res}/drawable/app_icon.png" />
+        
+        <echo file="${outdir}/AndroidManifest.xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        package="org.microemu.android.${midlet.class}"&gt;
+    &lt;uses-permission android:name="android.permission.INTERNET" /&gt; 
+    &lt;application android:label="@string/app_name" android:icon="@drawable/app_icon"&gt;
+        &lt;activity 
+                android:name="org.microemu.android.MicroEmulator" 
+                android:configChanges="orientation|keyboardHidden"&gt;
+            &lt;intent-filter&gt;
+                &lt;action android:name="android.intent.action.MAIN" /&gt;
+                &lt;category android:name="android.intent.category.LAUNCHER" /&gt;
+            &lt;/intent-filter&gt;
+        &lt;/activity&gt;
+    &lt;/application&gt;
+&lt;/manifest&gt;            
+        </echo>
+    </target>
+    
+    <target name="package-res" depends="prepare-assets, prepare-res">
+        <exec executable="${aapt}" failonerror="true">
+            <arg value="package" />
+            <arg value="-f" />
+            <arg value="-m" />
+            <arg value="-J" />
+            <arg value="src" />
+            <arg value="-M" />
+            <arg value="${outdir}/AndroidManifest.xml" />
+            <arg value="-S" />
+            <arg value="${outdir-res}" />
+            <arg value="-A" />
+            <arg value="${outdir-assets}" />
+            <arg value="-I" />
+            <arg value="${android-jar}" />
+            <arg value="-F" />
+            <arg value="${out-package}.res" /> <!-- temp name -->
+        </exec>
+    </target>
+
+    <target name="package-apk" depends="clean, dex, package-res">
+        <exec executable="${apk-builder}" failonerror="true">
+            <arg value="${out-package}" />
+            <arg value="-z" />
+            <arg value="${out-package}.res" /> <!-- temp name -->
+            <arg value="-f" />
+            <arg value="${intermediate-dex}" />
+        </exec>
+    </target>
+    
+    <!-- Install the package on the default emulator -->
+    <target name="install" depends="package-apk">
+        <echo>Installing ${out-debug-package} onto default emulator...</echo>
+        <exec executable="${adb}" failonerror="true">
+            <arg value="install" />
+            <arg value="${out-package}" />
+        </exec>
+    </target>
+
+    <target name="reinstall" depends="package-apk">
+        <echo>Installing ${out-debug-package} onto default emulator...</echo>
+        <exec executable="${adb}" failonerror="true">
+            <arg value="install" />
+            <arg value="-r" />
+            <arg value="${out-package}" />
+        </exec>
+    </target>
+
+    <!-- Uinstall the package from the default emulator -->
+    <target name="uninstall">
+        <echo>Uninstalling ${application-package} from the default emulator...</echo>
+        <exec executable="${adb}" failonerror="true">
+            <arg value="uninstall" />
+            <arg value="${application-package}" />
+        </exec>
+    </target>
+
+        
+</project>

@@ -1,0 +1,9 @@
+MIDlet-Jar-URL: microemu-demo.jar
+MIDlet-Name: microemu-demo
+MIDlet-Vendor: MicroEmulator Team
+MIDlet-Version: 2.0.1-SNAPSHOT
+MIDlet-1: SimpleDemo, /me2-icon.png, org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet
+Created-By: Bartek Teodorczyk
+MIDlet-Icon: /pyx.png
+MicroEdition-Configuration: CLDC-1.1
+MicroEdition-Profile: MIDP-2.0

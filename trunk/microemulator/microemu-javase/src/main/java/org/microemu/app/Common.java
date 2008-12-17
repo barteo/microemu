@@ -643,7 +643,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		}
 	}
 
-	private void registerImplementation(String implClassName, Map properties, boolean notFoundError) {
+	public void registerImplementation(String implClassName, Map properties, boolean notFoundError) {
 		final String errorText = "Implementation initialization";
 		try {
 			Class implClass = getExtensionsClassLoader().loadClass(implClassName);

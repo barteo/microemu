@@ -131,6 +131,12 @@ public class MicroEmulator extends UIApplication {
 			initMIDlet(true);
 		}
 
+		public int checkPermission(String permission) {
+			// TODO
+			
+			return 0;
+		}
+
 		public boolean platformRequest(String URL) {
 			// TODO Auto-generated method stub
 			return false;

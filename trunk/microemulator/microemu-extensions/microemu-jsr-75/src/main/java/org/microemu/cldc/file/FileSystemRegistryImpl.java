@@ -41,14 +41,17 @@ public class FileSystemRegistryImpl implements FileSystemRegistryDelegate, Imple
 	private AccessControlContext acc;
 
 	private String fsRoot;
+	
+	private String fsSingle;
 
 	public FileSystemRegistryImpl() {
 		this.acc = AccessController.getContext();
 	}
 
-	public FileSystemRegistryImpl(String fsRoot) {
+	public FileSystemRegistryImpl(String fsRoot, String fsSingle) {
 		this();
 		this.fsRoot = fsRoot;
+		this.fsSingle = fsSingle;
 	}
 
 	public Enumeration listRoots() {
@@ -56,7 +59,7 @@ public class FileSystemRegistryImpl implements FileSystemRegistryDelegate, Imple
 		case Connection.CONNECTIONTYPE_SYSTEM_FS:
 			return (Enumeration) AccessController.doPrivileged(new PrivilegedAction() {
 				public Object run() {
-					return FileSystemFileConnection.listRoots(fsRoot);
+					return FileSystemFileConnection.listRoots(fsRoot, fsSingle);
 				}
 			}, acc);
 		default:

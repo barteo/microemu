@@ -56,6 +56,12 @@ public class FileSystem implements ImplementationInitialization {
 
 	public static final String fsRootConfigProperty = "fsRoot";
 
+	/**
+	 * fsSingle defines explicitly single root inside the fsRoot, if fsSingle is null then
+	 * default behavior is chosen
+	 */
+	public static final String fsSingleConfigProperty = "fsSingle";
+
 	private FileSystemConnectorImpl impl;
 
 	/*
@@ -65,9 +71,10 @@ public class FileSystem implements ImplementationInitialization {
 	 */
 	public void registerImplementation(Map parameters) {
 		String fsRoot = (String) parameters.get(fsRootConfigProperty);
+		String fsSingle = (String) parameters.get(fsSingleConfigProperty);
 		this.impl = new FileSystemConnectorImpl(fsRoot);
 		ImplFactory.registerGCF("file", this.impl);
-		ImplFactory.register(FileSystemRegistryDelegate.class, new FileSystemRegistryImpl(fsRoot));
+		ImplFactory.register(FileSystemRegistryDelegate.class, new FileSystemRegistryImpl(fsRoot, fsSingle));
 		MIDletSystemProperties.setProperty(detectionProperty, "1.0");
 	}
 

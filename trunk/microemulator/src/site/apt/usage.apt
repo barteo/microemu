@@ -75,6 +75,12 @@ java -cp microemulator.jar;microemu-siemensapi.jar org.microemu.app.Main http://
         * < --headless > \u00bb Run MicroEmulator in console, NO UI headless mode
 
         * < --logCallLocation true|false>  \u00bb   Add System.out.print() calls origin
+        
+        * < --traceClassLoading>   \u00bb  Print loaded MIDlet classes 
+        
+        * < --traceSystemClassLoading>   \u00bb  Print system classes loaded by MIDlet
+        
+        * < --enhanceCatchBlock>  \u00bb  Change MIDlet internal exception handling to print silently ingored Throwable
 
         * < --quit > \u00bb            exit emulator on MIDlet destroy
 

@@ -8,12 +8,13 @@
     <property name="midlet.package" value="SimpleDemo.apk" />
     <property name="midlet.icon" value="../microemu-javase/src/main/resources/org/microemu/icon.png" />
     <property name="midlet.class" value="org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet" />
-    <property name="midlet.jar" value="../microemu-examples/microemu-demo/target/microemu-demo-2.0.3-SNAPSHOT.jar" />
+    <property name="midlet.jar" value="../microemu-examples/microemu-demo/target/microemu-demo-2.0.4-SNAPSHOT.jar" />
     <property name="sdk-folder" value="/home/barteo/Desktop/android-sdk-linux_x86-1.0_r1" />
     <property name="asm.jar" value="/home/barteo/.m2/repository/asm/asm/3.1/asm-3.1.jar" />
-    <property name="microemu-cldc.jar" value="../microemu-cldc/target/microemu-cldc-2.0.3-SNAPSHOT.jar" />
-    <property name="microemu-midp.jar" value="../microemu-midp/target/microemu-midp-2.0.3-SNAPSHOT.jar" />
-    <property name="microemu-javase.jar" value="../microemu-javase/target/microemu-javase-2.0.3-SNAPSHOT.jar" />
+    <property name="microemu-cldc.jar" value="../microemu-cldc/target/microemu-cldc-2.0.4-SNAPSHOT.jar" />
+    <property name="microemu-midp.jar" value="../microemu-midp/target/microemu-midp-2.0.4-SNAPSHOT.jar" />
+    <property name="microemu-javase.jar" value="../microemu-javase/target/microemu-javase-2.0.4-SNAPSHOT.jar" />
+    <property name="microemu-jsr-75.jar" value="../microemu-extensions/microemu-jsr-75/target/microemu-jsr-75-2.0.4-SNAPSHOT.jar" />
     
     <!-- The intermediates directory -->
     <!-- Eclipse uses "bin" for its own output, so we do the same. -->
@@ -55,6 +56,9 @@
         
         <available file="${microemu-javase.jar}" property="microemu-javase.jar.present"/>
         <fail unless="microemu-javase.jar.present" message="microemu-javase.jar doesn't exist at ${microemu-javase.jar}"/>
+
+        <available file="${microemu-jsr-75.jar}" property="microemu-jsr-75.jar.present"/>
+        <fail unless="microemu-jsr-75.jar.present" message="microemu-jsr-75.jar doesn't exist at ${microemu-jsr-75.jar}"/>
     </target>
 
     <target name="dirs">
@@ -111,6 +115,7 @@
             <arg value="${microemu-cldc.jar}"/>
             <arg value="${microemu-midp.jar}" />
             <arg value="${microemu-javase.jar}"/>
+            <arg value="${microemu-jsr-75.jar}"/>
             <arg path="${outdir-classes}" />
             <arg value="${outdir-libs}/midlet.jar"/>
         </exec>
@@ -180,6 +185,7 @@
     <target name="package-apk" depends="clean, dex, package-res">
         <exec executable="${apk-builder}" failonerror="true">
             <arg value="${out-package}" />
+<!--            <arg value="-u" /> -->
             <arg value="-z" />
             <arg value="${out-package}.res" /> <!-- temp name -->
             <arg value="-f" />

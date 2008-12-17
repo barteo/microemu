@@ -32,8 +32,10 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
@@ -52,6 +54,7 @@ import org.microemu.android.device.ui.AndroidDisplayableUI;
 import org.microemu.android.util.AndroidLoggerAppender;
 import org.microemu.android.util.AndroidRecordStoreManager;
 import org.microemu.app.Common;
+import org.microemu.app.util.MIDletSystemProperties;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
@@ -192,6 +195,14 @@ public class MicroEmulator extends MicroEmulatorActivity {
                
         System.setProperty("microedition.platform", "microemulator-android");
         System.setProperty("microedition.locale", Locale.getDefault().toString());
+        
+        /* JSR-75 */
+        Map properties = new HashMap();
+        properties.put("fsRoot", "/");
+        properties.put("fsSingle", "sdcard");
+        common.registerImplementation("org.microemu.cldc.file.FileSystem", properties, false);
+        MIDletSystemProperties.setPermission("javax.microedition.io.Connector.file.read", 1);
+        MIDletSystemProperties.setPermission("javax.microedition.io.Connector.file.write", 1);
         
         common.getLauncher().setSuiteName(midletClassName);
         common.initMIDlet(true);

@@ -58,6 +58,8 @@ import org.microemu.device.InputMethod;
 import org.microemu.device.ui.CommandUI;
 import org.microemu.log.Logger;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -109,6 +111,13 @@ public class MicroEmulator extends MicroEmulatorActivity {
 				Logger.debug(e);
 				return null;
 			}
+		}
+
+		public boolean platformRequest(String url) 
+		{
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+
+			return true;
 		}
 				
 	};

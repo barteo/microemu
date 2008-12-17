@@ -48,6 +48,7 @@ import javax.swing.SwingUtilities;
 
 import org.microemu.app.Config;
 import org.microemu.app.ui.swing.logconsole.LogTextArea;
+import org.microemu.app.util.RuntimeDetect;
 import org.microemu.log.Logger;
 import org.microemu.log.LoggerAppender;
 import org.microemu.log.LoggingEvent;
@@ -128,7 +129,7 @@ public class SwingLogConsoleDialog extends JFrame implements LoggerAppender {
 
 		menuBar.add(menu);
 
-		if (Logger.isJava5()) {
+		if (RuntimeDetect.isJava15()) {
 			JMenu j5Menu = new JMenu("Threads");
 			JMenuItem menuThreadDump = new JMenuItem("ThreadDump to console");
 			menuThreadDump.addActionListener(new ActionListener() {

@@ -45,10 +45,9 @@ import org.microemu.app.util.IOUtils;
 import org.microemu.log.Logger;
 
 /**
- * Main features of this class loader Security aware - enables load and run app
- * in Webstart. Proper class loading order. MIDlet classes loaded first then
- * system and MicroEmulator classes Proper resource loading order. MIDlet
- * resources only can be loaded. MIDlet Bytecode preprocessing/instrumentation
+ * Main features of this class loader Security aware - enables load and run app in Webstart. Proper class loading order.
+ * MIDlet classes loaded first then system and MicroEmulator classes Proper resource loading order. MIDlet resources
+ * only can be loaded. MIDlet Bytecode preprocessing/instrumentation
  * 
  * @author vlads
  * 
@@ -65,9 +64,11 @@ public class MIDletClassLoader extends URLClassLoader {
 
 	public static boolean enhanceCatchBlock = false;
 
-	private final static boolean debug = false;
+	private final static boolean debug = true;
 
 	private boolean delegatingToParent = false;
+
+	private boolean findPathInParent = false;
 
 	private InstrumentationConfig config;
 
@@ -112,11 +113,11 @@ public class MIDletClassLoader extends URLClassLoader {
 			this.addClassURL((String) iter.next());
 		}
 		this.delegatingToParent = (clConfig.delegationType == MIDletClassLoaderConfig.DELEGATION_DELEGATING);
+		this.findPathInParent = (clConfig.delegationType == MIDletClassLoaderConfig.DELEGATION_RELAXED);
 	}
 
 	/**
-	 * Appends the Class Location URL to the list of URLs to search for classes
-	 * and resources.
+	 * Appends the Class Location URL to the list of URLs to search for classes and resources.
 	 * 
 	 * @param Class
 	 *            Name
@@ -161,31 +162,27 @@ public class MIDletClassLoader extends URLClassLoader {
 	 * Search order is reverse to standard implemenation
 	 * </p>
 	 * 
-	 * This implementation of this method searches for classes in the following
-	 * order:
+	 * This implementation of this method searches for classes in the following order:
 	 * 
 	 * <p>
 	 * <ol>
 	 * 
 	 * <li>
 	 * <p>
-	 * Invoke {@link #findLoadedClass(String)} to check if the class has already
-	 * been loaded.
+	 * Invoke {@link #findLoadedClass(String)} to check if the class has already been loaded.
 	 * </p>
 	 * </li>
 	 * 
 	 * <li>
 	 * <p>
-	 * Invoke the {@link #findClass(String)} method to find the class in this
-	 * class loader URLs.
+	 * Invoke the {@link #findClass(String)} method to find the class in this class loader URLs.
 	 * </p>
 	 * </li>
 	 * 
 	 * <li>
 	 * <p>
-	 * Invoke the {@link #loadClass(String) <tt>loadClass</tt>} method on the
-	 * parent class loader. If the parent is <tt>null</tt> the class loader
-	 * built-in to the virtual machine is used, instead.
+	 * Invoke the {@link #loadClass(String) <tt>loadClass</tt>} method on the parent class loader. If the parent is
+	 * <tt>null</tt> the class loader built-in to the virtual machine is used, instead.
 	 * </p>
 	 * </li>
 	 * 
@@ -226,30 +223,26 @@ public class MIDletClassLoader extends URLClassLoader {
 	}
 
 	/**
-	 * Finds the resource with the given name. A resource is some data (images,
-	 * audio, text, etc) that can be accessed by class code in a way that is
-	 * independent of the location of the code.
+	 * Finds the resource with the given name. A resource is some data (images, audio, text, etc) that can be accessed
+	 * by class code in a way that is independent of the location of the code.
 	 * 
 	 * <p>
-	 * The name of a resource is a '<tt>/</tt>'-separated path name that
-	 * identifies the resource.
+	 * The name of a resource is a '<tt>/</tt>'-separated path name that identifies the resource.
 	 * 
 	 * <p>
 	 * Search order is reverse to standard implementation
 	 * </p>
 	 * 
 	 * <p>
-	 * This method will first use {@link #findResource(String)} to find the
-	 * resource. That failing, this method will NOT invoke the parent class
-	 * loader if delegatingToParent=false.
+	 * This method will first use {@link #findResource(String)} to find the resource. That failing, this method will NOT
+	 * invoke the parent class loader if delegatingToParent=false.
 	 * </p>
 	 * 
 	 * @param name
 	 *            The resource name
 	 * 
-	 * @return A <tt>URL</tt> object for reading the resource, or
-	 *         <tt>null</tt> if the resource could not be found or the invoker
-	 *         doesn't have adequate privileges to get the resource.
+	 * @return A <tt>URL</tt> object for reading the resource, or <tt>null</tt> if the resource could not be found or
+	 *         the invoker doesn't have adequate privileges to get the resource.
 	 * 
 	 */
 
@@ -302,8 +295,7 @@ public class MIDletClassLoader extends URLClassLoader {
 			return true;
 		}
 		/*
-		 * This is required when Class.forName().newInstance() used to create
-		 * instances with inheritance
+		 * This is required when Class.forName().newInstance() used to create instances with inheritance
 		 */
 		if (className.startsWith("sun.reflect.")) {
 			return true;
@@ -352,6 +344,24 @@ public class MIDletClassLoader extends URLClassLoader {
 					return getResourceAsStream(getClassResourceName(name));
 				}
 			}, acc);
+
+			// Relax ClassLoader behavior
+			if ((is == null) && (this.findPathInParent)) {
+				boolean classFound;
+				try {
+					addClassURL(name);
+					classFound = true;
+				} catch (MalformedURLException e) {
+					classFound = false;
+				}
+				if (classFound) {
+					is = (InputStream) AccessController.doPrivileged(new PrivilegedExceptionAction() {
+						public Object run() throws ClassNotFoundException {
+							return getResourceAsStream(getClassResourceName(name));
+						}
+					}, acc);
+				}
+			}
 		} catch (PrivilegedActionException e) {
 			if (debug) {
 				Logger.debug("Unable to find resource for class " + name + " ", e);

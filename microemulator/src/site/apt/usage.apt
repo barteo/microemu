@@ -62,9 +62,9 @@ java -cp microemulator.jar;microemu-siemensapi.jar org.microemu.app.Main http://
 
         * < --appclasspath | -appcp CLASSPATH> \u00bb for MIDlet application components if any; ignored when opening .jad
 
-        * < --appclass library.class.name> \u00bb for appclasspath auto detection from system classpath; ignored when opening .jad
+        * < --appclass library.class.name> \u00bb for appclasspath auto detection from system classpath; ignored when opening .jad, Also see --appclassloader relaxed
 
-        * < --appclassloader strict|delegating|system>  \u00bb {{{classloader.html}MIDlet classloader}} configuration
+        * < --appclassloader strict|relaxed|delegating|system>  \u00bb {{{classloader.html}MIDlet classloader}} configuration
 
         * < -Xautotest:{JAD file url} > \u00bb  Run MIDlet in autotest mode
 
@@ -75,11 +75,11 @@ java -cp microemulator.jar;microemu-siemensapi.jar org.microemu.app.Main http://
         * < --headless > \u00bb Run MicroEmulator in console, NO UI headless mode
 
         * < --logCallLocation true|false>  \u00bb   Add System.out.print() calls origin
-        
-        * < --traceClassLoading>   \u00bb  Print loaded MIDlet classes 
-        
+
+        * < --traceClassLoading>   \u00bb  Print loaded MIDlet classes
+
         * < --traceSystemClassLoading>   \u00bb  Print system classes loaded by MIDlet
-        
+
         * < --enhanceCatchBlock>  \u00bb  Change MIDlet internal exception handling to print silently ingored Throwable
 
         * < --quit > \u00bb            exit emulator on MIDlet destroy

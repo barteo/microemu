@@ -324,18 +324,6 @@ public class Logger {
 		loggerAppenders.clear();
 	}
 
-	public static boolean isJava5() {
-		try {
-			return java5Function();
-		} catch (Throwable e) {
-			return false;
-		}
-	}
-
-	static boolean java5Function() {
-		return (Thread.currentThread().getStackTrace() != null);
-	}
-
 	public static void threadDumpToConsole() {
 		try {
 			StringBuffer out = new StringBuffer("Full ThreadDump\n");

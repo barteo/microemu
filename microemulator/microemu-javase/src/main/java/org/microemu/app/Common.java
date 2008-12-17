@@ -804,6 +804,12 @@ public class Common implements MicroEmulator, CommonInterface {
 					exitOnMIDletDestroy = true;
 				} else if (arg.equals("--logCallLocation")) {
 					Logger.setLocationEnabled(Boolean.valueOf((String) argsIterator.next()).booleanValue());
+				} else if (arg.equals("--traceClassLoading")) {
+                    MIDletClassLoader.traceClassLoading = true;
+				} else if (arg.equals("--traceSystemClassLoading")) {
+                    MIDletClassLoader.traceSystemClassLoading = true;
+				} else if (arg.equals("--enhanceCatchBlock")) {
+				    MIDletClassLoader.enhanceCatchBlock = true;
 				} else if (arg.equals("--quiet")) {
 					StdOutAppender.enabled = false;
 				} else if (arg.equals("--headless")) {
@@ -1004,6 +1010,7 @@ public class Common implements MicroEmulator, CommonInterface {
 				+ "[(--classpath|-cp) <JSR CLASSPATH>]\n" + "[(--appclasspath|--appcp) <MIDlet CLASSPATH>]\n"
 				+ "[--appclass <library class name>]\n" + "[--appclassloader strict|delegating|system] \n"
 				+ "[-Xautotest:<JAD file url>\n" + "[--quit]\n"
+				+ "[--traceClassLoading\n[--traceSystemClassLoading]\n[--enhanceCatchBlock]\n]"
 				+ "(({MIDlet class name} [--propertiesjad {jad file location}]) | {jad file location})";
 	}
 

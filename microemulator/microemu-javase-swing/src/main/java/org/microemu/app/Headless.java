@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import org.microemu.DisplayComponent;
 import org.microemu.EmulatorContext;
 import org.microemu.MIDletBridge;
+import org.microemu.app.ui.Message;
 import org.microemu.app.ui.noui.NoUiDisplayComponent;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.device.DeviceDisplay;
@@ -73,6 +74,16 @@ public class Headless {
 
 		public InputStream getResourceAsStream(String name) {
 			return MIDletBridge.getCurrentMIDlet().getClass().getResourceAsStream(name);
+		}
+		
+		public boolean platformRequest(final String URL) {
+			new Thread(new Runnable() {
+				public void run() {
+					Message.info("MIDlet requests that the device handle the following URL: " + URL);
+				}
+			}).start();
+
+			return false;
 		}
 	};
 

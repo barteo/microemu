@@ -42,4 +42,6 @@ public interface EmulatorContext {
 	
 	InputStream getResourceAsStream(String name);
 
+	boolean platformRequest(final String URL);
+	
 }

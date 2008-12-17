@@ -50,6 +50,7 @@ import org.microemu.MIDletBridge;
 import org.microemu.app.classloader.ClassPreprocessor;
 import org.microemu.app.classloader.ExtensionsClassLoader;
 import org.microemu.app.classloader.InstrumentationConfig;
+import org.microemu.app.ui.Message;
 import org.microemu.app.ui.noui.NoUiDisplayComponent;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.FontManager;
@@ -275,6 +276,16 @@ public class AppletProducer {
 
 					public InputStream getResourceAsStream(String name) {
 						return MIDletBridge.getCurrentMIDlet().getClass().getResourceAsStream(name);
+					}
+					
+					public boolean platformRequest(final String URL) {
+						new Thread(new Runnable() {
+							public void run() {
+								Message.info("MIDlet requests that the device handle the following URL: " + URL);
+							}
+						}).start();
+
+						return false;
 					}
 				};
 

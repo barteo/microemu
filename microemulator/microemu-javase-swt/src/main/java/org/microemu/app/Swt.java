@@ -209,11 +209,13 @@ public class Swt extends Common {
 	 * 
 	 * 
 	 * public void windowIconified(WindowEvent ev) {
-	 * MIDletBridge.getMIDletAccess(common.getLauncher().getCurrentMIDlet()).pauseApp(); }
+	 * MIDletBridge.getMIDletAccess
+	 * (common.getLauncher().getCurrentMIDlet()).pauseApp(); }
 	 * 
 	 * public void windowDeiconified(WindowEvent ev) { try {
-	 * MIDletBridge.getMIDletAccess(common.getLauncher().getCurrentMIDlet()).startApp(); }
-	 * catch (MIDletStateChangeException ex) { System.err.println(ex); } } };
+	 * MIDletBridge.getMIDletAccess
+	 * (common.getLauncher().getCurrentMIDlet()).startApp(); } catch
+	 * (MIDletStateChangeException ex) { System.err.println(ex); } } };
 	 */
 
 	protected Swt(Shell shell) {
@@ -246,6 +248,16 @@ public class Swt extends Common {
 
 			public InputStream getResourceAsStream(String name) {
 				return MIDletBridge.getCurrentMIDlet().getClass().getResourceAsStream(name);
+			}
+
+			public boolean platformRequest(final String URL) {
+				new Thread(new Runnable() {
+					public void run() {
+						Message.info("MIDlet requests that the device handle the following URL: " + URL);
+					}
+				}).start();
+
+				return false;
 			}
 		});
 

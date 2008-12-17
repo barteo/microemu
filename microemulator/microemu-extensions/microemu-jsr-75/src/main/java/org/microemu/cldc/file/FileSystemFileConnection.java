@@ -158,10 +158,16 @@ public class FileSystemFileConnection implements FileConnection {
 		}
 	}
 
-	static Enumeration listRoots(String fsRootConfig) {
-		File[] files = getRoot(fsRootConfig).listFiles();
-		if (files == null) { // null if security restricted
-			return (new Vector()).elements();
+	static Enumeration listRoots(String fsRootConfig, String fsSingleConfig) {
+		File[] files;
+		if (fsSingleConfig != null) {
+			files = new File[1];
+			files[0] = getRoot(fsRootConfig + fsSingleConfig);
+		} else {
+			files = getRoot(fsRootConfig).listFiles();
+			if (files == null) { // null if security restricted
+				return (new Vector()).elements();
+			}
 		}
 		Vector list = new Vector();
 		for (int i = 0; i < files.length; i++) {

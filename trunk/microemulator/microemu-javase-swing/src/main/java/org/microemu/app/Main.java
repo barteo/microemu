@@ -201,6 +201,16 @@ public class Main extends JFrame {
 		public InputStream getResourceAsStream(String name) {
 			return MIDletBridge.getCurrentMIDlet().getClass().getResourceAsStream(name);
 		}
+		
+		public boolean platformRequest(final String URL) {
+			new Thread(new Runnable() {
+				public void run() {
+					Message.info("MIDlet requests that the device handle the following URL: " + URL);
+				}
+			}).start();
+
+			return false;
+		}
 	};
 
 	private ActionListener menuOpenJADFileListener = new ActionListener() {

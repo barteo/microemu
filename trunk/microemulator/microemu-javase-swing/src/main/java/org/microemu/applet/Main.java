@@ -37,7 +37,6 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Vector;
 
-import javax.microedition.lcdui.Image;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 import javax.swing.Timer;
@@ -109,6 +108,14 @@ public class Main extends Applet implements MicroEmulator {
 
 		public InputStream getResourceAsStream(String name) {
 			return getClass().getResourceAsStream(name);
+		}
+		
+		public boolean platformRequest(String url) {
+			try {
+				getAppletContext().showDocument(new URL(url), "mini");
+			} catch (Exception e) {
+			}
+			return false;
 		}
 	};
 
@@ -316,11 +323,7 @@ public class Main extends Applet implements MicroEmulator {
 	}
 
 	public boolean platformRequest(String url) {
-		try {
-			getAppletContext().showDocument(new URL(url), "mini");
-		} catch (Exception e) {
-		}
-		return false;
+		return emulatorContext.platformRequest(url);
 	}
 
 	public void notifyDestroyed(MIDletContext midletContext) {

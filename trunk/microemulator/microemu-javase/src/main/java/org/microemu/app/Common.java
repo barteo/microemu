@@ -465,7 +465,7 @@ public class Common implements MicroEmulator, CommonInterface {
 	public void setStatusBarListener(StatusBarListener listener) {
 		statusBarListener = listener;
 	}
-	
+
 	public int checkPermission(String permission) {
 		return MIDletSystemProperties.getPermission(permission);
 	}
@@ -805,15 +805,18 @@ public class Common implements MicroEmulator, CommonInterface {
 				} else if (arg.equals("--logCallLocation")) {
 					Logger.setLocationEnabled(Boolean.valueOf((String) argsIterator.next()).booleanValue());
 				} else if (arg.equals("--traceClassLoading")) {
-                    MIDletClassLoader.traceClassLoading = true;
+					MIDletClassLoader.traceClassLoading = true;
 				} else if (arg.equals("--traceSystemClassLoading")) {
-                    MIDletClassLoader.traceSystemClassLoading = true;
+					MIDletClassLoader.traceSystemClassLoading = true;
 				} else if (arg.equals("--enhanceCatchBlock")) {
-				    MIDletClassLoader.enhanceCatchBlock = true;
+					MIDletClassLoader.enhanceCatchBlock = true;
 				} else if (arg.equals("--quiet")) {
 					StdOutAppender.enabled = false;
 				} else if (arg.equals("--headless")) {
 					// Ignore this here.
+				} else if (arg.startsWith("--")) {
+					// Allow to add new arguments in future that are not supported by older version
+					Logger.warn("Unknown argument " + arg);
 				} else {
 					midletClassOrJad = arg;
 				}
@@ -959,6 +962,9 @@ public class Common implements MicroEmulator, CommonInterface {
 				} catch (MalformedURLException e) {
 					Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
 					return;
+				} catch (NoClassDefFoundError e) {
+					Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
+					return;
 				} catch (ClassNotFoundException e) {
 					Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
 					return;
@@ -1008,7 +1014,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		return "[(-d | --device) ({device descriptor} | {device class name}) ] \n" + "[--rms (file | memory)] \n"
 				+ "[--id EmulatorID ] \n" + "[--impl {JSR implementation class name}]\n"
 				+ "[(--classpath|-cp) <JSR CLASSPATH>]\n" + "[(--appclasspath|--appcp) <MIDlet CLASSPATH>]\n"
-				+ "[--appclass <library class name>]\n" + "[--appclassloader strict|delegating|system] \n"
+				+ "[--appclass <library class name>]\n" + "[--appclassloader strict|relaxed|delegating|system] \n"
 				+ "[-Xautotest:<JAD file url>\n" + "[--quit]\n"
 				+ "[--traceClassLoading\n[--traceSystemClassLoading]\n[--enhanceCatchBlock]\n]"
 				+ "(({MIDlet class name} [--propertiesjad {jad file location}]) | {jad file location})";

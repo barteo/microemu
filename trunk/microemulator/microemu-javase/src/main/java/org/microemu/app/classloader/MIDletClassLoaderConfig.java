@@ -34,20 +34,24 @@ import org.microemu.app.ConfigurationException;
 public class MIDletClassLoaderConfig {
 
 	public static final int DELEGATION_STRICT = 0;
-	
-	public static final int DELEGATION_DELEGATING = 1;
-	
-	public static final int DELEGATION_SYSTEM = 2;
-	
+
+	public static final int DELEGATION_RELAXED = 1;
+
+	public static final int DELEGATION_DELEGATING = 2;
+
+	public static final int DELEGATION_SYSTEM = 3;
+
 	int delegationType = DELEGATION_STRICT;
-	
+
 	List appclasses = new Vector();
-	
+
 	List appclasspath = new Vector();
 
 	public void setDelegationType(String delegationType) throws ConfigurationException {
 		if ("strict".equalsIgnoreCase(delegationType)) {
 			this.delegationType = DELEGATION_STRICT;
+		} else if ("relaxed".equalsIgnoreCase(delegationType)) {
+			this.delegationType = DELEGATION_RELAXED;
 		} else if ("delegating".equalsIgnoreCase(delegationType)) {
 			this.delegationType = DELEGATION_DELEGATING;
 		} else if ("system".equalsIgnoreCase(delegationType)) {
@@ -59,23 +63,23 @@ public class MIDletClassLoaderConfig {
 			throw new ConfigurationException("Unknown delegationType [" + delegationType + "]");
 		}
 	}
-	
+
 	public boolean isClassLoaderDisabled() {
 		return (this.delegationType == DELEGATION_SYSTEM);
 	}
-	
+
 	public void addAppClassPath(String path) throws ConfigurationException {
 		if (this.delegationType == DELEGATION_SYSTEM) {
 			throw new ConfigurationException("Can't extend system CLASSPATH");
 		}
 		appclasspath.add(path);
 	}
-	
+
 	public void addAppClass(String className) throws ConfigurationException {
 		if (this.delegationType == DELEGATION_SYSTEM) {
 			throw new ConfigurationException("Can't extend system CLASSPATH");
 		}
 		appclasses.add(className);
 	}
-	
+
 }

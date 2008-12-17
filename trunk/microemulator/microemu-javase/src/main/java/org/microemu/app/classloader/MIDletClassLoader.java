@@ -64,7 +64,7 @@ public class MIDletClassLoader extends URLClassLoader {
 
 	public static boolean enhanceCatchBlock = false;
 
-	private final static boolean debug = true;
+	private final static boolean debug = false;
 
 	private boolean delegatingToParent = false;
 

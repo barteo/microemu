@@ -31,7 +31,7 @@ MIDlet ClassLoader
 
     * < --appclassloader strict>  \u00bb Default configuration
 
-    * < --appclassloader relaxed>  \u00bb Automaticaly add missing classes to appclasspath by finding them in system classpath
+    * < --appclassloader relaxed>  \u00bb Automatically add missing classes to appclasspath by finding them in system classpath
 
     * < --appclassloader delegating>  \u00bb Allow MIDlet to load any classes or resources not found in appclasspath from parent class loader.
 

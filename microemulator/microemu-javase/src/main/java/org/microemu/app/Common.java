@@ -239,7 +239,7 @@ public class Common implements MicroEmulator, CommonInterface {
 	protected void openJadUrl(String urlString) throws IOException {
 		midletClassOrJad = urlString;
 		if (!autoTests) {
-			openJadUrl(urlString, createMIDletClassLoader());
+			openJadUrl(urlString, createMIDletClassLoader(true));
 		} else {
 			runAutoTests(urlString, false);
 		}
@@ -276,7 +276,7 @@ public class Common implements MicroEmulator, CommonInterface {
 
 					boolean firstJar = true;
 					do {
-						MIDletClassLoader midletClassLoader = createMIDletClassLoader();
+						MIDletClassLoader midletClassLoader = createMIDletClassLoader(true);
 						String tmpURL = saveJar2TmpFile(urlString, firstJar);
 						if (tmpURL == null) {
 							Logger.debug("AutoTests no new jar");
@@ -901,7 +901,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		return instance.extensionsClassLoader;
 	}
 
-	private MIDletClassLoader createMIDletClassLoader() {
+	private MIDletClassLoader createMIDletClassLoader(boolean forJad) {
 		MIDletClassLoader mcl = new MIDletClassLoader(getExtensionsClassLoader());
 		if (!Serializable.class.isAssignableFrom(Injected.class)) {
 			Logger
@@ -909,7 +909,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		}
 		if (mIDletClassLoaderConfig != null) {
 			try {
-				mcl.configure(mIDletClassLoaderConfig);
+				mcl.configure(mIDletClassLoaderConfig, forJad);
 			} catch (MalformedURLException e) {
 				Message.error("Error", "Unable to find MIDlet classes, " + Message.getCauseMessage(e), e);
 			}
@@ -955,7 +955,7 @@ public class Common implements MicroEmulator, CommonInterface {
 		} else if (midletClassOrJad != null) {
 			useSystemClassLoader = mIDletClassLoaderConfig.isClassLoaderDisabled();
 			if (!useSystemClassLoader) {
-				MIDletClassLoader classLoader = createMIDletClassLoader();
+				MIDletClassLoader classLoader = createMIDletClassLoader(false);
 				try {
 					classLoader.addClassURL(midletClassOrJad);
 					midletClass = classLoader.loadClass(midletClassOrJad);

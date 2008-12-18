@@ -101,7 +101,7 @@ public class MIDletClassLoader extends URLClassLoader {
 	// noPreporcessingNames = new HashSet();
 	// }
 
-	public void configure(MIDletClassLoaderConfig clConfig) throws MalformedURLException {
+	public void configure(MIDletClassLoaderConfig clConfig, boolean forJad) throws MalformedURLException {
 		for (Iterator iter = clConfig.appclasspath.iterator(); iter.hasNext();) {
 			String path = (String) iter.next();
 			StringTokenizer st = new StringTokenizer(path, File.pathSeparator);
@@ -112,8 +112,9 @@ public class MIDletClassLoader extends URLClassLoader {
 		for (Iterator iter = clConfig.appclasses.iterator(); iter.hasNext();) {
 			this.addClassURL((String) iter.next());
 		}
-		this.delegatingToParent = (clConfig.delegationType == MIDletClassLoaderConfig.DELEGATION_DELEGATING);
-		this.findPathInParent = (clConfig.delegationType == MIDletClassLoaderConfig.DELEGATION_RELAXED);
+		int delegationType = clConfig.getDelegationType(forJad);
+		this.delegatingToParent = (delegationType == MIDletClassLoaderConfig.DELEGATION_DELEGATING);
+		this.findPathInParent = (delegationType == MIDletClassLoaderConfig.DELEGATION_RELAXED);
 	}
 
 	/**

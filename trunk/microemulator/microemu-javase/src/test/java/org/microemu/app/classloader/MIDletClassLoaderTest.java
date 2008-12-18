@@ -114,8 +114,8 @@ public class MIDletClassLoaderTest extends TestCase {
 		MIDletClassLoader mcl = new MIDletClassLoader(parent);
 		// delegatingToParent = false;
 		MIDletClassLoaderConfig clConfig = new MIDletClassLoaderConfig();
-		clConfig.delegationType = MIDletClassLoaderConfig.DELEGATION_STRICT;
-		mcl.configure(clConfig);
+		clConfig.setDelegationType("strict");
+		mcl.configure(clConfig, false);
 		mcl.disableClassPreporcessing(Injected.class);
 		MIDletResourceLoader.classLoader = mcl;
 		mcl.addURL(jarURL);

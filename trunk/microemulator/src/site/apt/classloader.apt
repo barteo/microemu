@@ -45,6 +45,8 @@ MIDlet ClassLoader
     Argument <--appclass> is a helper for <--appclasspath>. If your MIDlet application classes are already in system classpath when starting MicroEmulator
     then --appclass will find the location URL of this class (directory or jar) and add this URL to MIDletClassLoader then same as <--appclasspath>.
 
+    When MicroEmulator started with MIDlet class (as opposite to jad name) then 'relaxed' classloader used by default.
+
     MicroEmulator usage
 
 ---
@@ -55,6 +57,7 @@ MIDlet ClassLoader
 
 ---
     java -cp CLASSPATH org.microemu.app.Main --appclass application.main.MIDlet application.main.MIDlet
+    java -cp CLASSPATH org.microemu.app.Main --appclassloader relaxed application.main.MIDlet
 ---
 
 Bytecode preprocessing

@@ -174,6 +174,8 @@ public abstract class Canvas extends Displayable
     		this.fullScreenMode = mode;
     		
     		if (this instanceof GameCanvas) {
+    			width = -1;
+    			height = -1;
     		    GameCanvasKeyAccess access = MIDletBridge.getMIDletAccess().getGameCanvasKeyAccess();
     		    access.initBuffer();
     		}

@@ -343,6 +343,8 @@ public class Display {
 		public void sizeChanged() {
 			if (current != null) {
 	    		if (current instanceof GameCanvas) {
+	    			current.width = -1;
+	    			current.height = -1;
 	    		    GameCanvasKeyAccess access = MIDletBridge.getMIDletAccess().getGameCanvasKeyAccess();
 	    		    access.initBuffer();
 	    		}

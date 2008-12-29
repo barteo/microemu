@@ -38,9 +38,9 @@ public abstract class Displayable
 	
 	Display currentDisplay = null;
 	
-	private int width;
+	int width;
 	
-	private int height;
+	int height;
     
 	boolean fullScreenMode;
 
@@ -278,18 +278,9 @@ public abstract class Displayable
 
 	final void sizeChanged(Display d)
 	{
-    	if (fullScreenMode) {
-    		width = device.getDeviceDisplay().getFullWidth();
-    	} else {
-    		width = device.getDeviceDisplay().getWidth();
-    	}
-    	if (fullScreenMode) {
-    		height = device.getDeviceDisplay().getFullHeight();
-    	} else {
-    		height = device.getDeviceDisplay().getHeight();
-    	}
-		
-		sizeChanged(width, height);
+    	width = -1;
+    	height = -1;
+		sizeChanged(getWidth(), getHeight());
 	}
 	
 	

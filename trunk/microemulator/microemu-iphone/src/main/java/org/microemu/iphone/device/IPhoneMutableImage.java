@@ -72,6 +72,10 @@ public class IPhoneMutableImage extends MutableImage implements IPhoneImage {
 	}
 
 	public Pointer<CGImage> getBitmap() {
+		if(bitmap!=null){
+			CoreGraphics.CGImageRelease(bitmap);
+			bitmap = CoreGraphics.CGBitmapContextCreateImage(imageContext);;
+		}
 		return bitmap;
 	}
 

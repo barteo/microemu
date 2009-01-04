@@ -135,6 +135,7 @@ public class IPhoneLauncher extends Launcher {
 							"UTF-8").replace('%', '_'));
 					copyToFile(url.openStream(), file);
 					addJar(file);
+					fillList();
 				} catch (Exception e) {
 					e.printStackTrace();
 					throw new RuntimeException(e);

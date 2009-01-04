@@ -25,6 +25,8 @@
  */
 package org.microemu.iphone.device;
 
+import java.awt.event.KeyEvent;
+
 import org.microemu.device.InputMethod;
 
 public class IPhoneInputMethod extends InputMethod{
@@ -49,8 +51,7 @@ public class IPhoneInputMethod extends InputMethod{
 
 	@Override
 	public String getKeyName(int keyCode) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		return KeyEvent.getKeyText(keyCode);
 	}
 
 }

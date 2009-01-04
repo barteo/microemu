@@ -38,9 +38,9 @@ import obc.UIImage;
 import obc.UIView;
 
 import org.microemu.DisplayAccess;
-import org.microemu.EmulatorContext;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
+import org.microemu.MicroEmulator;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.MutableImage;
 import org.microemu.device.ui.CanvasUI;
@@ -49,20 +49,20 @@ import org.microemu.iphone.device.ui.IPhoneCanvasUI;
 
 public class IPhoneDeviceDisplay implements DeviceDisplay {
 	
-	private EmulatorContext context;
-	
 	// TODO change this
 	public int displayRectangleWidth;
 	
 	// TODO change this
 	public int displayRectangleHeight;
 	
-	public IPhoneDeviceDisplay(EmulatorContext context) {
-		this.context = context;
+	private MicroEmulator emulator;
+	
+	public IPhoneDeviceDisplay(MicroEmulator emulator) {
+		this.emulator = emulator;
 	}
 
 	public Image createImage(String name) throws IOException {
-		return createImage(context.getResourceAsStream(name));
+		return createImage(emulator.getResourceAsStream(name));
 	}
 
 	public Image createImage(Image source) {
@@ -253,8 +253,7 @@ public class IPhoneDeviceDisplay implements DeviceDisplay {
 	}
 
 	public MutableImage getDisplayImage() {
-		// TODO Auto-generated method stub
-		return null;
+        throw new UnsupportedOperationException("Currently not supported on iPhone");
 	}
 
 	public int getFullHeight() {
@@ -297,13 +296,11 @@ public class IPhoneDeviceDisplay implements DeviceDisplay {
 	}
 
 	public void setScrollDown(boolean arg0) {
-		// TODO Auto-generated method stub
-
+//        throw new UnsupportedOperationException("Currently not supported on iPhone");
 	}
 
 	public void setScrollUp(boolean arg0) {
-		// TODO Auto-generated method stub
-
+//        throw new UnsupportedOperationException("Currently not supported on iPhone");
 	}
 
 	public void paintDisplayable(int x, int y, int width, int height) {

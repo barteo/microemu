@@ -40,7 +40,6 @@ import javax.microedition.lcdui.TextBox;
 
 import joc.Scope;
 
-import org.microemu.EmulatorContext;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.FontManager;
@@ -62,9 +61,6 @@ import org.microemu.iphone.device.ui.IPhoneListUI;
 import org.microemu.iphone.device.ui.IPhoneTextBoxUI;
 
 public class IPhoneDevice implements Device {
-
-	private EmulatorContext emulatorContext;
-
 	private UIFactory ui = new UIFactory() {
 
 		public EventDispatcher createEventDispatcher(Display display) {
@@ -125,8 +121,7 @@ public class IPhoneDevice implements Device {
 
 	private Vector softButtons = new Vector();
 
-	public IPhoneDevice(EmulatorContext emulatorContext, MicroEmulator microEmulator) {
-		this.emulatorContext = emulatorContext;
+	public IPhoneDevice(MicroEmulator microEmulator) {
 		this.microEmulator = microEmulator;
 	}
 
@@ -141,15 +136,15 @@ public class IPhoneDevice implements Device {
 	}
 
 	public DeviceDisplay getDeviceDisplay() {
-		return emulatorContext.getDeviceDisplay();
+		return microEmulator.getDeviceDisplay();
 	}
 
 	public FontManager getFontManager() {
-		return emulatorContext.getDeviceFontManager();
+		return microEmulator.getFontManager();
 	}
 
 	public InputMethod getInputMethod() {
-		return emulatorContext.getDeviceInputMethod();
+		return microEmulator.getInputMethod();
 	}
 
 	public String getName() {

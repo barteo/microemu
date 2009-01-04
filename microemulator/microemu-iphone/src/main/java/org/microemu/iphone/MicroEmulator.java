@@ -44,7 +44,6 @@ import obc.UIHardware;
 import obc.UIWindow;
 
 import org.microemu.DisplayComponent;
-import org.microemu.EmulatorContext;
 import org.microemu.MIDletBridge;
 import org.microemu.MIDletContext;
 import org.microemu.RecordStoreManager;
@@ -67,21 +66,19 @@ import com.saurik.uicaboodle.Main;
 public class MicroEmulator extends UIApplication {
 	private final class IPhoneCommon implements CommonInterface, org.microemu.MicroEmulator {
 
-		private EmulatorContext emulatorContext;
 		private IPhoneLauncher launcher;
-		
-		public IPhoneCommon(EmulatorContext emulatorContext, Device device) {
-			this.emulatorContext=emulatorContext;
+
+		public IPhoneCommon(Device device) {
 			DeviceFactory.setDevice(device);
-			
+
 			MIDletBridge.setMicroEmulator(this);
 		}
 
 		public void initMIDlet(boolean startMidlet) {
-			if(launcher==null)
-				launcher=new IPhoneLauncher(this);
-			
-			if(launcher.getSelectedMidletEntry()==null){
+			if (launcher == null)
+				launcher = new IPhoneLauncher(this);
+
+			if (launcher.getSelectedMidletEntry() == null) {
 				try {
 					MIDletBridge.getMIDletAccess(launcher).startApp();
 					launcher.setCurrentMIDlet(launcher);
@@ -91,7 +88,7 @@ public class MicroEmulator extends UIApplication {
 				}
 			} else {
 				try {
-					MIDlet midlet=(MIDlet) launcher.getSelectedMidletEntry().getMIDletClass().newInstance();
+					MIDlet midlet = (MIDlet) launcher.getSelectedMidletEntry().getMIDletClass().newInstance();
 					MIDletBridge.getMIDletAccess(midlet).startApp();
 					launcher.setCurrentMIDlet(midlet);
 				} catch (Exception e) {
@@ -99,12 +96,12 @@ public class MicroEmulator extends UIApplication {
 					e.printStackTrace();
 				}
 			}
-	
+
 		}
 
 		public void destroyMIDletContext(MIDletContext midletContext) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		public String getAppProperty(String key) {
@@ -122,18 +119,18 @@ public class MicroEmulator extends UIApplication {
 		}
 
 		public InputStream getResourceAsStream(String name) {
-			return emulatorContext.getResourceAsStream(name);
+			return MIDletBridge.getCurrentMIDlet().getClass().getResourceAsStream(name);
 		}
 
 		public void notifyDestroyed(MIDletContext midletContext) {
 			System.out.println("IPhoneCommon.notifyDestroyed()");
-			launcher=null;
+			launcher = null;
 			initMIDlet(true);
 		}
 
 		public int checkPermission(String permission) {
 			// TODO
-			
+
 			return 0;
 		}
 
@@ -169,46 +166,20 @@ public class MicroEmulator extends UIApplication {
 		init(Arrays.asList("--usesystemclassloader"));
 	}
 
-	protected EmulatorContext emulatorContext = new EmulatorContext() {
-		private InputMethod inputMethod = new IPhoneInputMethod();
+	private IPhoneInputMethod inputMethod = new IPhoneInputMethod();
 
-		private DeviceDisplay deviceDisplay = new IPhoneDeviceDisplay(this);
+	private IPhoneDeviceDisplay deviceDisplay;
 
-		private FontManager fontManager = new IPhoneFontManager();
-
-		public DisplayComponent getDisplayComponent() {
-			// TODO consider removal of EmulatorContext.getDisplayComponent()
-			System.out.println("MicroEmulator.emulatorContext::getDisplayComponent()");
-			return null;
-		}
-
-		public InputMethod getDeviceInputMethod() {
-			return inputMethod;
-		}
-
-		public DeviceDisplay getDeviceDisplay() {
-			return deviceDisplay;
-		}
-
-		public FontManager getDeviceFontManager() {
-			return fontManager;
-		}
-
-		public InputStream getResourceAsStream(String name) {
-			return MIDletBridge.getCurrentMIDlet().getClass().getResourceAsStream(name);
-		}
-
-	};
+	private IPhoneFontManager fontManager = new IPhoneFontManager();
 
 	private UIWindow window;
-	private static CommonInterface common;
+	private static IPhoneCommon common;
 
 	public void init(List<String> params) {
-		((IPhoneDeviceDisplay) emulatorContext.getDeviceDisplay()).displayRectangleWidth = (int) getWindow().bounds().size.width;
-		((IPhoneDeviceDisplay) emulatorContext.getDeviceDisplay()).displayRectangleHeight = (int) getWindow().bounds().size.height
-				- AbstractUI.TOOLBAR_HEIGHT;
-
-		common = new IPhoneCommon(emulatorContext, new IPhoneDevice(emulatorContext,this));
+		common = new IPhoneCommon(new IPhoneDevice(this));
+		deviceDisplay = new IPhoneDeviceDisplay(common);
+		deviceDisplay.displayRectangleWidth = (int) getWindow().bounds().size.width;
+		deviceDisplay.displayRectangleHeight = (int) getWindow().bounds().size.height - AbstractUI.TOOLBAR_HEIGHT;
 
 		System.setProperty("microedition.platform", "microemulator-iphone");
 		System.setProperty("microedition.locale", Locale.getDefault().toString());
@@ -257,4 +228,13 @@ public class MicroEmulator extends UIApplication {
 		return window;
 	}
 
+	public IPhoneFontManager getFontManager() {
+		return fontManager;
+	}
+	public IPhoneInputMethod getInputMethod() {
+		return inputMethod;
+	}
+	public IPhoneDeviceDisplay getDeviceDisplay() {
+		return deviceDisplay;
+	}
 }

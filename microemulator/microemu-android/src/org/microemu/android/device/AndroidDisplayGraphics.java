@@ -37,6 +37,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 
 public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
@@ -61,7 +62,9 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
-		Logger.debug("drawArc");
+	   	paint.setStyle(Paint.Style.STROKE);
+	    RectF rect = new RectF(x, y, x + width, y + height);
+	    canvas.drawArc(rect, startAngle, arcAngle, false, paint);
     }
 
 	public void drawImage(Image img, int x, int y, int anchor) {
@@ -140,7 +143,9 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
     public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
-		Logger.debug("fillArc");
+    	paint.setStyle(Paint.Style.FILL);
+	    RectF rect = new RectF(x, y, x + width, y + height);
+	    canvas.drawArc(rect, startAngle, arcAngle, false, paint);
     }
 
 	public void fillRect(int x, int y, int width, int height) {

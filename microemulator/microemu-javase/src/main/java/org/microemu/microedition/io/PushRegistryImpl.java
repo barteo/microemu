@@ -30,6 +30,8 @@ import java.io.IOException;
 
 import javax.microedition.io.ConnectionNotFoundException;
 
+import org.microemu.microedition.Implementation;
+
 /**
  * 
  * Default empty implemenation
@@ -37,7 +39,7 @@ import javax.microedition.io.ConnectionNotFoundException;
  * @author vlads
  */
 
-public class PushRegistryImpl implements PushRegistryDelegate {
+public class PushRegistryImpl implements PushRegistryDelegate, Implementation {
 
 	public String getFilter(String connection) {
 		// TODO Auto-generated method stub

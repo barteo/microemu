@@ -43,7 +43,7 @@ import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.DisplayableUI;
 import org.microemu.iphone.MicroEmulator;
 
-public abstract class AbstractUI extends NSObject implements DisplayableUI {
+public abstract class AbstractUI<T extends Displayable> extends NSObject implements DisplayableUI {
 
 	public static final int NAVIGATION_HEIGHT = 40;
 
@@ -55,11 +55,11 @@ public abstract class AbstractUI extends NSObject implements DisplayableUI {
 
 	protected UIToolbar toolbar;
 
-	private Displayable displayable;
+	protected T displayable;
 
 	protected MicroEmulator microEmulator;
 
-	protected AbstractUI(MicroEmulator microEmulator, Displayable displayable) {
+	protected AbstractUI(MicroEmulator microEmulator, T displayable) {
 		super();
 		this.microEmulator = microEmulator;
 		this.displayable = displayable;

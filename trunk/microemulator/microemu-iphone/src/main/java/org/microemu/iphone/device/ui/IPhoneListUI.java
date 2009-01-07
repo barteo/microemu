@@ -45,7 +45,7 @@ import obc.UIView;
 import org.microemu.device.ui.ListUI;
 import org.microemu.iphone.MicroEmulator;
 
-public class IPhoneListUI extends AbstractUI implements ListUI {
+public class IPhoneListUI extends AbstractUI<List> implements ListUI {
 
 	private final class ChoiceGroupDelegate extends ChoiceGroup {
 		private int type;
@@ -113,8 +113,6 @@ public class IPhoneListUI extends AbstractUI implements ListUI {
 	static final int UIViewAutoresizingFlexibleHeight =  1 << 4;
 
 	static final int UIViewAutoresizingFlexibleWidth =  1 << 1;
-	
-	private List list;
 
 	private UITableView tableView;
 
@@ -128,12 +126,11 @@ public class IPhoneListUI extends AbstractUI implements ListUI {
 	
 	public IPhoneListUI(MicroEmulator microEmulator, List list) {
 		super(microEmulator, list);
-		this.list = list;
 	}
 
 	@Message
 	public final int tableView$numberOfRowsInSection$(UITableView table, int sectionIndex) {
-		return list.size();
+		return displayable.size();
 	}
 
 	@Message
@@ -143,8 +140,8 @@ public class IPhoneListUI extends AbstractUI implements ListUI {
 			cell = new UITableViewCell().init();
 			cell.setReuseIdentifier$("reuse");
 		}
-		cell.setText$(list.getString(indexPath.row()));
-		if(choiceGroup.getType()==List.MULTIPLE&&list.isSelected(indexPath.row()))
+		cell.setText$(displayable.getString(indexPath.row()));
+		if(choiceGroup.getType()==List.MULTIPLE&&displayable.isSelected(indexPath.row()))
 			cell.setAccessoryType$(3);
 		else
 			cell.setAccessoryType$(0);
@@ -153,14 +150,14 @@ public class IPhoneListUI extends AbstractUI implements ListUI {
 
 	@Message
 	public final void tableView$didSelectRowAtIndexPath$(UITableView table, NSIndexPath indexPath) {
-		System.out.println(list.getString(indexPath.row()) + " selected");
+		System.out.println(displayable.getString(indexPath.row()) + " selected");
 		if(choiceGroup.getType()==List.MULTIPLE){
-			list.setSelectedIndex(indexPath.row(), !list.isSelected(indexPath.row()));
+			displayable.setSelectedIndex(indexPath.row(), !displayable.isSelected(indexPath.row()));
 		}else{
-			list.setSelectedIndex(indexPath.row(),true);
+			displayable.setSelectedIndex(indexPath.row(),true);
 		}
 		if(commandListener!=null&&selectCommand!=null&&choiceGroup.getType()==List.IMPLICIT)
-			commandListener.commandAction(selectCommand, list);
+			commandListener.commandAction(selectCommand, displayable);
 	}
 
 	public int append(String stringPart, Image imagePart) {
@@ -169,11 +166,11 @@ public class IPhoneListUI extends AbstractUI implements ListUI {
 	}
 
 	public int getSelectedIndex() {
-		return list.getSelectedIndex();
+		return displayable.getSelectedIndex();
 	}
 
 	public String getString(int elementNum) {
-		return list.getString(elementNum);
+		return displayable.getString(elementNum);
 	}
 
 	public void setSelectCommand(Command command) {
@@ -198,7 +195,7 @@ public class IPhoneListUI extends AbstractUI implements ListUI {
 
 			navigtionBar = new UINavigationBar().initWithFrame$(new CGRect(0, 0,
 					microEmulator.getWindow().bounds().size.width, NAVIGATION_HEIGHT));
-			UINavigationItem title = new UINavigationItem().initWithTitle$(list.getTitle());
+			UINavigationItem title = new UINavigationItem().initWithTitle$(displayable.getTitle());
 			title.setBackButtonTitle$("Back");
 			navigtionBar.pushNavigationItem$(title);
 			view.addSubview$(navigtionBar);
@@ -210,11 +207,11 @@ public class IPhoneListUI extends AbstractUI implements ListUI {
 			try {
 				Field cg = List.class.getDeclaredField("choiceGroup");
 				cg.setAccessible(true);
-				ChoiceGroup cgO = (ChoiceGroup)cg.get(list);
+				ChoiceGroup cgO = (ChoiceGroup)cg.get(displayable);
 				Field type=ChoiceGroup.class.getDeclaredField("choiceType");
 				type.setAccessible(true);
 				choiceGroup = new ChoiceGroupDelegate(cgO,(Integer)type.get(cgO));
-				cg.set(list, choiceGroup);
+				cg.set(displayable, choiceGroup);
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);

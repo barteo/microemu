@@ -32,7 +32,7 @@ import javax.microedition.lcdui.Item;
 import org.microemu.device.ui.FormUI;
 import org.microemu.iphone.MicroEmulator;
 
-public class IPhoneFormUI extends AbstractUI implements FormUI {
+public class IPhoneFormUI extends AbstractUI<Form> implements FormUI {
 
 	public IPhoneFormUI(MicroEmulator microEmulator, Form form) {
 		super(microEmulator, form);

@@ -44,7 +44,6 @@ import obc.NSConcreteNotification;
 import obc.NSNotificationCenter;
 import obc.UIEvent;
 import obc.UITextField;
-import obc.UITextInputTraits;
 import obc.UIToolbar;
 import obc.UITouch;
 import obc.UIView;

@@ -32,13 +32,9 @@ import obc.UIAlertView;
 import org.microemu.device.ui.AlertUI;
 import org.microemu.iphone.MicroEmulator;
 
-public class IPhoneAlertUI extends AbstractUI implements AlertUI {
-
-	private Alert alert;
-	
+public class IPhoneAlertUI extends AbstractUI<Alert> implements AlertUI {
 	public IPhoneAlertUI(MicroEmulator microEmulator, Alert alert) {
 		super(microEmulator, alert);
-		this.alert=alert;
 	}
 
 	public void setString(String str) {
@@ -57,12 +53,12 @@ public class IPhoneAlertUI extends AbstractUI implements AlertUI {
 	}
 
 	public void showNotify() {
-			UIAlertView alertView=new UIAlertView().initWithTitle$message$delegate$cancelButtonTitle$otherButtonTitles$(alert.getTitle(), alert.getString(), null, "Abbrechen", null);
+			UIAlertView alertView=new UIAlertView().initWithTitle$message$delegate$cancelButtonTitle$otherButtonTitles$(displayable.getTitle(), displayable.getString(), null, "Abbrechen", null);
 	
 	alertView.show();
 	alertView.release();
 	
-	commandListener.commandAction(Alert.DISMISS_COMMAND, alert);
+	commandListener.commandAction(Alert.DISMISS_COMMAND, displayable);
 	}
 
 }

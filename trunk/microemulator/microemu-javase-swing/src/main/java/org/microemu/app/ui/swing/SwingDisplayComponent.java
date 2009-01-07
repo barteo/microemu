@@ -38,6 +38,7 @@ import java.awt.event.MouseWheelListener;
 import java.util.Enumeration;
 import java.util.Iterator;
 
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Screen;
 import javax.swing.JComponent;
@@ -148,11 +149,16 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 									return;
 								}
 								Displayable d = da.getCurrent();
-								if (d != null && d instanceof Screen) {
-									if (initialPressedSoftButton.getName().equals("up")) {
-										da.keyPressed(getButtonByButtonName(ButtonName.UP).getKeyCode());
-									} else if (initialPressedSoftButton.getName().equals("down")) {
-										da.keyPressed(getButtonByButtonName(ButtonName.DOWN).getKeyCode());
+								Command cmd = initialPressedSoftButton.getCommand();
+								if (cmd != null) {
+									da.commandAction(cmd, d);
+								} else {
+									if (d != null && d instanceof Screen) {
+										if (initialPressedSoftButton.getName().equals("up")) {
+											da.keyPressed(getButtonByButtonName(ButtonName.UP).getKeyCode());
+										} else if (initialPressedSoftButton.getName().equals("down")) {
+											da.keyPressed(getButtonByButtonName(ButtonName.DOWN).getKeyCode());
+										}
 									}
 								}
 							}

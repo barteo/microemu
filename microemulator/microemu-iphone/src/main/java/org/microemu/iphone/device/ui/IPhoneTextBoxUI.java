@@ -43,7 +43,7 @@ import obc.UIView;
 import org.microemu.device.ui.TextBoxUI;
 import org.microemu.iphone.MicroEmulator;
 
-public class IPhoneTextBoxUI extends AbstractUI implements TextBoxUI {
+public class IPhoneTextBoxUI extends AbstractUI<TextBox> implements TextBoxUI {
 
 	private final class TextBoxField extends TextField {
 		public TextBoxField(TextField textField) {
@@ -70,7 +70,6 @@ public class IPhoneTextBoxUI extends AbstractUI implements TextBoxUI {
 		}
 	}
 
-	private TextBox textBox;
 	private TextBoxField textField;
 	private UIView view;
 	private UITextView textView;
@@ -78,7 +77,6 @@ public class IPhoneTextBoxUI extends AbstractUI implements TextBoxUI {
 
 	public IPhoneTextBoxUI(MicroEmulator microEmulator, TextBox textBox) {
 		super(microEmulator, textBox);
-		this.textBox = textBox;
 
 		try {
 			Field tf = TextBox.class.getDeclaredField("tf");
@@ -120,7 +118,7 @@ public class IPhoneTextBoxUI extends AbstractUI implements TextBoxUI {
 
 			navigtionBar = new UINavigationBar().initWithFrame$(new CGRect(0, 0,
 					microEmulator.getWindow().bounds().size.width, NAVIGATION_HEIGHT));
-			UINavigationItem title = new UINavigationItem().initWithTitle$(textBox.getTitle());
+			UINavigationItem title = new UINavigationItem().initWithTitle$(displayable.getTitle());
 			title.setBackButtonTitle$("Done");
 			navigtionBar.pushNavigationItem$(title);
 			view.addSubview$(navigtionBar);
@@ -139,7 +137,7 @@ public class IPhoneTextBoxUI extends AbstractUI implements TextBoxUI {
 				@Message(name = "becomeFirstResponder", types = "B8@0:4")
 				public boolean becomeFirstResponder() {
 					// Open Keybords and add a Done-Button
-					UINavigationItem keyboardTitle = new UINavigationItem().initWithTitle$(textBox.getTitle());
+					UINavigationItem keyboardTitle = new UINavigationItem().initWithTitle$(displayable.getTitle());
 					navigtionBar.pushNavigationItem$(keyboardTitle);
 					return ((Byte) joc.Runtime.msgSend(this, incorrect_ ? null : UITextView.class,
 							"becomeFirstResponder")) == Static.YES;

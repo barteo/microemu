@@ -188,6 +188,7 @@
                 <optional>true</optional>
                 <!--scope>provided</scope-->
                 <scope>system</scope>
+                <!-- There are no plugin on Linux 64-bit Java; Copy it from 32-bit java installation -->
                 <systemPath>${java.home}/lib/plugin.jar</systemPath>
             </dependency>
 

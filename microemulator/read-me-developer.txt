@@ -33,6 +33,12 @@
        gcf.no-proxy-test-host=localhost
      We are using  echo test server. Sources here: https://pyx4j.com/viewvc/pyx4me/pyx4me-host/pyx4me-test-server/
 
+* plugin.jar
+
+    We use ${java.home}/lib/plugin.jar during build of applet
+    
+    There are no plugin.jar on Linux 64-bit Java; Just copy it from 32-bit java installation.
+
 * Building official Release by the MicroEmulator team.
 
     * To buils the site you need to build skin once: cd microemu-extensions/microemu-site-skin; mvn install

@@ -41,6 +41,7 @@ import org.microemu.device.DeviceFactory;
 import org.microemu.device.InputMethodEvent;
 import org.microemu.device.impl.InputMethodImpl;
 import org.microemu.device.impl.SoftButton;
+import org.microemu.device.impl.ui.CommandManager;
 
 public class SwtInputMethod extends InputMethodImpl {
 
@@ -199,10 +200,11 @@ public class SwtInputMethod extends InputMethodImpl {
 		 * if (keyCode == KeyEvent.VK_MODECHANGE) { if (getInputMode() ==
 		 * InputMethod.INPUT_123) { setInputMode(InputMethod.INPUT_ABC_UPPER); }
 		 * else if (getInputMode() == InputMethod.INPUT_ABC_UPPER) {
-		 * setInputMode(InputMethod.INPUT_ABC_LOWER); } else if (getInputMode() ==
-		 * InputMethod.INPUT_ABC_LOWER) { setInputMode(InputMethod.INPUT_123); }
-		 * synchronized (this) { if (lastButton != null) { caret++; lastButton =
-		 * null; lastButtonCharIndex = -1; } } InputMethodEvent event = new
+		 * setInputMode(InputMethod.INPUT_ABC_LOWER); } else if (getInputMode()
+		 * == InputMethod.INPUT_ABC_LOWER) {
+		 * setInputMode(InputMethod.INPUT_123); } synchronized (this) { if
+		 * (lastButton != null) { caret++; lastButton = null;
+		 * lastButtonCharIndex = -1; } } InputMethodEvent event = new
 		 * InputMethodEvent(InputMethodEvent.CARET_POSITION_CHANGED, caret,
 		 * text); inputMethodListener.caretPositionChanged(event); return true;
 		 */
@@ -321,7 +323,11 @@ public class SwtInputMethod extends InputMethodImpl {
 					if (da == null) {
 						return;
 					}
-					da.commandAction(cmd, da.getCurrent());
+					if (cmd.equals(CommandManager.CMD_MENU)) {
+						CommandManager.getInstance().commandAction(cmd);
+					} else {
+						da.commandAction(cmd, da.getCurrent());
+					}
 					return;
 				}
 			}

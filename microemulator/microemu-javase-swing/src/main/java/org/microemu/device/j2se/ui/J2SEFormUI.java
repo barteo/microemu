@@ -36,6 +36,7 @@ import org.microemu.device.ui.FormUI;
 public class J2SEFormUI extends DisplayableImplUI implements FormUI {
 
 	public J2SEFormUI(Form form) {
+		super(form);
 	}
 
 	public int append(Image img) {

@@ -34,6 +34,7 @@ import org.microemu.device.ui.AlertUI;
 public class SwtAlertUI extends DisplayableImplUI implements AlertUI {
 
 	public SwtAlertUI(Alert alert) {
+		super(alert);
 	}
 
 	public void setString(String str) {

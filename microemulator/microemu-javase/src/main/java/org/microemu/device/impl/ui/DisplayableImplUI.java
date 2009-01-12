@@ -26,21 +26,59 @@
 
 package org.microemu.device.impl.ui;
 
-import javax.microedition.lcdui.CommandListener;
+import java.util.Vector;
 
+import javax.microedition.lcdui.CommandListener;
+import javax.microedition.lcdui.Displayable;
+
+import org.microemu.MIDletBridge;
 import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.DisplayableUI;
 
 public class DisplayableImplUI implements DisplayableUI {
+	
+	protected Displayable displayable;
+	
+	private Vector commands = new Vector();
+	
+	protected DisplayableImplUI(Displayable displayable) {
+		this.displayable = displayable;
+	}
 
 	public void addCommandUI(CommandUI cmd) {
-		// TODO Auto-generated method stub
+		// Check that its not the same command
+		for (int i = 0; i < commands.size(); i++) {
+			if (cmd == (CommandUI) commands.elementAt(i)) {
+				// Its the same just return
+				return;
+			}
+		}
 
+		// Now insert it in order
+		boolean inserted = false;
+		for (int i = 0; i < commands.size(); i++) {
+			if (cmd.getCommand().getPriority() < ((CommandUI) commands.elementAt(i)).getCommand().getPriority()) {
+				commands.insertElementAt(cmd, i);
+				inserted = true;
+				break;
+			}
+		}
+		if (inserted == false) {
+			// Not inserted just place it at the end
+			commands.addElement(cmd);
+		}		
+
+		if (displayable.isShown()) {
+			updateCommands();
+		}
 	}
 
 	public void removeCommandUI(CommandUI cmd) {
-		// TODO Auto-generated method stub
-
+		commands.removeElement(cmd);
+		
+		if (displayable.isShown()) {
+			updateCommands();
+		}
 	}
 
 	public void setCommandListener(CommandListener l) {
@@ -54,12 +92,21 @@ public class DisplayableImplUI implements DisplayableUI {
 	}
 
 	public void showNotify() {
-		// TODO Auto-generated method stub
-
+		updateCommands();
 	}
 
 	public void invalidate() {
 		// TODO implement invalidate
+	}
+	
+	public Vector getCommandsUI()
+	{
+		return commands;
+	}
+
+	private void updateCommands() {
+		CommandManager.getInstance().updateCommands(getCommandsUI());
+		MIDletBridge.getMIDletAccess().getDisplayAccess().repaint();
 	}
 
 }

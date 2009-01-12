@@ -61,6 +61,7 @@ import org.microemu.device.DeviceFactory;
 import org.microemu.device.impl.DeviceDisplayImpl;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.SoftButton;
+import org.microemu.device.impl.ui.CommandManager;
 import org.microemu.device.j2se.J2SEButton;
 import org.microemu.device.j2se.J2SEDeviceButtonsHelper;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
@@ -179,7 +180,11 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 						if (da == null) {
 							return;
 						}
-						da.commandAction(cmd, da.getCurrent());
+						if (cmd.equals(CommandManager.CMD_MENU)) {
+							CommandManager.getInstance().commandAction(cmd);
+						} else {
+							da.commandAction(cmd, da.getCurrent());
+						}
 					}
 				} else {
 					inputMethod.buttonPressed(pressedButton, '\0');

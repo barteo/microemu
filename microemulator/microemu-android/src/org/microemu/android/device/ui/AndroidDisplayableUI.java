@@ -26,10 +26,9 @@
 
 package org.microemu.android.device.ui;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
+import java.util.Vector;
 
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
@@ -65,7 +64,7 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 		
 	};
 	
-	private List<AndroidCommandUI> commands = new ArrayList<AndroidCommandUI>();
+	private Vector<AndroidCommandUI> commands = new Vector<AndroidCommandUI>();
 	
 	private CommandListener commandListener = null;
 	
@@ -74,7 +73,7 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 		this.displayable = displayable;
 	}
 	
-	public List<AndroidCommandUI> getCommandsUI() {
+	public Vector<AndroidCommandUI> getCommandsUI() {
 		return commands;
 	}
 	
@@ -116,6 +115,10 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 	}
 
 	public final void hideNotify() {
+	}
+	
+	public Vector<AndroidCommandUI> getCommands() {
+		return commands;
 	}
 
 }

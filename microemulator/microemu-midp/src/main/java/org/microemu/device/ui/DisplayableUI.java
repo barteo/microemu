@@ -26,6 +26,8 @@
 
 package org.microemu.device.ui;
 
+import java.util.Vector;
+
 import javax.microedition.lcdui.CommandListener;
 
 public interface DisplayableUI {
@@ -41,5 +43,8 @@ public interface DisplayableUI {
 	void showNotify();
 
 	void invalidate();
+
+	// TODO remove method
+	Vector getCommandsUI();
 	
 }

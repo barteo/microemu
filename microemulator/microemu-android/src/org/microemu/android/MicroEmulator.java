@@ -170,6 +170,7 @@ public class MicroEmulator extends MicroEmulatorActivity {
         
         java.util.List params = new ArrayList();
         params.add("--usesystemclassloader");
+        params.add("--quit");
         
         String midletClassName;
 		try {
@@ -230,14 +231,17 @@ public class MicroEmulator extends MicroEmulatorActivity {
 				if (cmd.getCommand().getCommandType() == Command.BACK) {
 					CommandListener l = ui.getCommandListener();
 					l.commandAction(cmd.getCommand(), da.getCurrent());
-					break;
-				} else if (cmd.getCommand().getCommandType() == Command.EXIT) {
-					moveTaskToBack(true);
-					break;
+					return true;
 				}
 			}			
-			
-			return true;
+
+			for (int i = 0; i < commands.size(); i++) {
+				CommandUI cmd = commands.get(i);
+				if (cmd.getCommand().getCommandType() == Command.EXIT) {
+					moveTaskToBack(true);
+					return true;
+				}
+			}
 		}
 		
 		return super.onKeyDown(keyCode, event);

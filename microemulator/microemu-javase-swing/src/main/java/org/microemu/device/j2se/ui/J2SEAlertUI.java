@@ -33,7 +33,8 @@ import org.microemu.device.ui.AlertUI;
 
 public class J2SEAlertUI extends DisplayableImplUI implements AlertUI {
 
-	public J2SEAlertUI(Alert form) {
+	public J2SEAlertUI(Alert alert) {
+		super(alert);
 	}
 
 	public void setString(String str) {

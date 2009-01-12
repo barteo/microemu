@@ -22,19 +22,22 @@
  *  limitations.
  */
 
-package javax.microedition.lcdui;
+package org.microemu.device.impl.ui;
 
 import java.util.Enumeration;
 import java.util.Vector;
 
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.CommandListener;
+import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.List;
 
 import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.impl.SoftButton;
+import org.microemu.device.ui.CommandUI;
 
-
-
-class CommandManager 
+public class CommandManager 
 {
 	public static final Command CMD_MENU = new Command("Menu", Command.EXIT, 0);
 
@@ -43,7 +46,7 @@ class CommandManager
 	
 	private static CommandManager instance = new CommandManager();
 	
-	private MenuList menuList = null;
+	private List menuList = null;
 	private Vector menuCommands;
 	private Displayable previous;
 	
@@ -55,9 +58,13 @@ class CommandManager
 				lateInit();
 			}
 
-		    menuList.setCommandOnExit((Command) menuCommands.elementAt(menuList.getSelectedIndex()), c);
-
 			MIDletBridge.getMIDletAccess().getDisplayAccess().setCurrent(previous);
+			
+			if ((c == CMD_SELECT) || c == List.SELECT_COMMAND) {
+				MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(
+						(Command) menuCommands.elementAt(menuList.getSelectedIndex()), 
+						previous);
+			}
 		}		
 	};
 		
@@ -68,7 +75,7 @@ class CommandManager
 	
 	
 	private void lateInit() {
-		menuList = new MenuList("Menu", List.IMPLICIT);
+		menuList = new List("Menu", List.IMPLICIT);
 		menuList.addCommand(CMD_BACK);
 		menuList.addCommand(CMD_SELECT);
 		menuList.setCommandListener(menuCommandListener);
@@ -121,7 +128,7 @@ class CommandManager
 		// Sort commands using priority
 		en = commands.elements();
 		while (en.hasMoreElements()) {
-			Command commandToSort = (Command) en.nextElement();
+			Command commandToSort = ((CommandUI) en.nextElement()).getCommand();
 			
 			for (int i = 0; i < commandsTable.size(); i++) {
 				if (commandsTable.elementAt(i) == null) {
@@ -207,27 +214,5 @@ class CommandManager
 			}
 		}
 	}
-	
-	private class MenuList extends List
-	{
-		private Command selection;
-		private Command c;
 		
-		public MenuList(String string, int implicit) {
-			super(string, implicit);
-		}
-
-		public void setCommandOnExit(Command selection, Command c) {
-			this.selection = selection;
-			this.c = c;
-		}
-		
-		void hideNotify() {
-			if ((c == CMD_SELECT) || c == List.SELECT_COMMAND) {
-				MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(selection, previous);
-			}
-		}
-
-	}
-	
 }

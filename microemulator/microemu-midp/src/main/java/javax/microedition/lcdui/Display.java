@@ -178,9 +178,7 @@ public class Display {
 		}
 
 		public void commandAction(Command c, Displayable d) {
-			if (c.equals(CommandManager.CMD_MENU)) {
-				CommandManager.getInstance().commandAction(c);
-			} else if (c.isRegularCommand()) {
+			if (c.isRegularCommand()) {
 				if (d == null) {
 					return;
 				}
@@ -349,12 +347,14 @@ public class Display {
 	    		    access.initBuffer();
 	    		}
 				current.sizeChanged(Display.this);
-				updateCommands();
 			}
 		}
 
-		public void updateCommands() {
-			getDisplay().updateCommands();
+		public void repaint() {
+			Displayable d = getCurrent();
+			if (d != null) {
+				getDisplay().repaint(d, 0, 0, d.getWidth(), d.getHeight());
+			}
 		}
 
 		public void clean() {
@@ -525,7 +525,6 @@ public class Display {
 
 					setScrollUp(false);
 					setScrollDown(false);
-					updateCommands();
 					nextDisplayable.repaint();
 				}
 												
@@ -541,7 +540,6 @@ public class Display {
 		current = alert;
 
 		current.showNotify(this);
-		updateCommands();
 		current.repaint();
 
 		if (alert.getTimeout() != Alert.FOREVER) {
@@ -611,15 +609,6 @@ public class Display {
 
 	void setScrollUp(boolean state) {
 		DeviceFactory.getDevice().getDeviceDisplay().setScrollUp(state);
-	}
-
-	void updateCommands() {
-		if (current == null) {
-			CommandManager.getInstance().updateCommands(null);
-		} else {
-			CommandManager.getInstance().updateCommands(current.getCommands());
-		}
-		repaint(current, 0, 0, current.getWidth(), current.getHeight());
 	}
 
 }

@@ -28,6 +28,7 @@ import java.util.Vector;
 
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
+import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.DisplayableUI;
 
 
@@ -55,11 +56,6 @@ public abstract class Displayable
     
     private String title;
     
-    /**
-     * @associates Command 
-     */
-	private Vector commands = new Vector();
-	
 	private CommandListener listener = null;
 
     
@@ -79,45 +75,13 @@ public abstract class Displayable
   
 
 	public void addCommand(Command cmd) {
-		// Check that its not the same command
-		for (int i = 0; i < commands.size(); i++) {
-			if (cmd == (Command) commands.elementAt(i)) {
-				// Its the same just return
-				return;
-			}
-		}
-
-		// Now insert it in order
-		boolean inserted = false;
-		for (int i = 0; i < commands.size(); i++) {
-			if (cmd.getPriority() < ((Command) commands.elementAt(i)).getPriority()) {
-				commands.insertElementAt(cmd, i);
-				inserted = true;
-				break;
-			}
-		}
-		if (inserted == false) {
-			// Not inserted just place it at the end
-			commands.addElement(cmd);
-		}
-		
 		ui.addCommandUI(cmd.ui);
-
-		if (isShown()) {
-			currentDisplay.updateCommands();
-		}
 	}
 
 
 	public void removeCommand(Command cmd)
 	{
-		commands.removeElement(cmd);
-		
 		ui.removeCommandUI(cmd.ui);
-
-		if (isShown()) {
-			currentDisplay.updateCommands();
-		}
 	}
     
     
@@ -203,10 +167,14 @@ public abstract class Displayable
 
 	Vector getCommands()
 	{
-		// in Form this is overriden to allow for the inclusion
-		// of item contained commands 
-		// Andres Navarro
-		return commands;
+		// in Form this is overridden to allow for the inclusion of item contained commands 
+		Vector result = new Vector();
+		Vector commandsUI = ui.getCommandsUI();
+		for (int i = 0; i < commandsUI.size(); i++) {
+			result.addElement(((CommandUI) commandsUI.elementAt(i)).getCommand());
+		}
+		
+		return result;
 	}
 
 

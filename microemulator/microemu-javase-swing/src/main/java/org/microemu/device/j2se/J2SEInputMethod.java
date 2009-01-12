@@ -47,6 +47,7 @@ import org.microemu.device.impl.ButtonDetaultDeviceKeyCodes;
 import org.microemu.device.impl.ButtonName;
 import org.microemu.device.impl.InputMethodImpl;
 import org.microemu.device.impl.SoftButton;
+import org.microemu.device.impl.ui.CommandManager;
 import org.microemu.util.ThreadUtils;
 
 public class J2SEInputMethod extends InputMethodImpl {
@@ -368,7 +369,11 @@ public class J2SEInputMethod extends InputMethodImpl {
 				if (da == null) {
 					return;
 				}
-				da.commandAction(cmd, da.getCurrent());
+				if (cmd.equals(CommandManager.CMD_MENU)) {
+					CommandManager.getInstance().commandAction(cmd);
+				} else {
+					da.commandAction(cmd, da.getCurrent());
+				}
 				eventAlreadyConsumed = true;
 				return;
 			}

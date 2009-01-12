@@ -60,6 +60,7 @@ import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.SoftButton;
+import org.microemu.device.impl.ui.CommandManager;
 import org.microemu.device.swt.SwtButton;
 import org.microemu.device.swt.SwtDeviceDisplay;
 import org.microemu.device.swt.SwtImmutableImage;
@@ -199,7 +200,11 @@ public class SwtDeviceComponent extends Canvas {
 							if (da == null) {
 								return;
 							}
-							da.commandAction(cmd, da.getCurrent());
+							if (cmd.equals(CommandManager.CMD_MENU)) {
+								CommandManager.getInstance().commandAction(cmd);
+							} else {
+								da.commandAction(cmd, da.getCurrent());
+							}
 						}
 					} else {
 						Event event = new Event();
@@ -246,7 +251,11 @@ public class SwtDeviceComponent extends Canvas {
 										if (da == null) {
 											return;
 										}
-										da.commandAction(cmd, da.getCurrent());
+										if (cmd.equals(CommandManager.CMD_MENU)) {
+											CommandManager.getInstance().commandAction(cmd);
+										} else {
+											da.commandAction(cmd, da.getCurrent());
+										}
 									}
 								}
 							}

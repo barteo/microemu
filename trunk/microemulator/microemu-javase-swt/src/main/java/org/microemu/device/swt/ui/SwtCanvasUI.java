@@ -34,6 +34,7 @@ import org.microemu.device.ui.CanvasUI;
 public class SwtCanvasUI extends DisplayableImplUI implements CanvasUI {
 
 	public SwtCanvasUI(Canvas canvas) {
+		super(canvas);
 	}
 
 }

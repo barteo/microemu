@@ -36,6 +36,7 @@ public class J2SETextBoxUI extends DisplayableImplUI implements TextBoxUI {
 	private String text;
 
 	public J2SETextBoxUI(TextBox textBox) {
+		super(textBox);
 	}
 
 	public int getCaretPosition() {

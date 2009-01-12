@@ -34,6 +34,7 @@ import org.microemu.device.ui.TextBoxUI;
 public class SwtTextBoxUI extends DisplayableImplUI implements TextBoxUI {
 
 	public SwtTextBoxUI(TextBox textBox) {
+		super(textBox);
 	}
 
 	public int getCaretPosition() {

@@ -36,6 +36,7 @@ import org.microemu.device.ui.ListUI;
 public class SwtListUI extends DisplayableImplUI implements ListUI {
 
 	public SwtListUI(List list) {
+		super(list);
 	}
 
 	public int append(String stringPart, Image imagePart) {

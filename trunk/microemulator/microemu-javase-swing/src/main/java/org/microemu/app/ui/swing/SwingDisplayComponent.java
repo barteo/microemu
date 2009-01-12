@@ -57,6 +57,7 @@ import org.microemu.device.MutableImage;
 import org.microemu.device.impl.ButtonName;
 import org.microemu.device.impl.InputMethodImpl;
 import org.microemu.device.impl.SoftButton;
+import org.microemu.device.impl.ui.CommandManager;
 import org.microemu.device.j2se.J2SEButton;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEInputMethod;
@@ -151,7 +152,11 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 								Displayable d = da.getCurrent();
 								Command cmd = initialPressedSoftButton.getCommand();
 								if (cmd != null) {
-									da.commandAction(cmd, d);
+									if (cmd.equals(CommandManager.CMD_MENU)) {
+										CommandManager.getInstance().commandAction(cmd);
+									} else {
+										da.commandAction(cmd, d);
+									}
 								} else {
 									if (d != null && d instanceof Screen) {
 										if (initialPressedSoftButton.getName().equals("up")) {

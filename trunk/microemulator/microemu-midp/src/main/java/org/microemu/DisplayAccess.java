@@ -65,7 +65,7 @@ public interface DisplayAccess
 	
 	void sizeChanged();
   
-	void updateCommands();
+	void repaint();
 
 	void clean();
 

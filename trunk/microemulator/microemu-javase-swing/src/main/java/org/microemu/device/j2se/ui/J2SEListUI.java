@@ -36,6 +36,7 @@ import org.microemu.device.ui.ListUI;
 public class J2SEListUI extends DisplayableImplUI implements ListUI {
 
 	public J2SEListUI(List list) {
+		super(list);
 	}
 
 	public int append(String stringPart, Image imagePart) {

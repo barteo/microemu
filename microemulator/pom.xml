@@ -94,8 +94,6 @@
     <ciManagement>
         <system>CruiseControl</system>
         <url>http://pyx4j.com/dashboard/tab/builds/</url>
-    </notifiers>
-
     </ciManagement>
 
     <distributionManagement>

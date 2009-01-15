@@ -69,6 +69,8 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 	private SwingDeviceComponent deviceComponent;
 
 	private J2SEMutableImage displayImage = null;
+	
+	private Graphics displayGraphics;
 
 	private SoftButton initialPressedSoftButton;
 
@@ -316,16 +318,15 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 
 			synchronized (this) {
 				if (displayImage == null) {
-					displayImage = new J2SEMutableImage(device.getDeviceDisplay().getFullWidth(), device
-							.getDeviceDisplay().getFullHeight());
+					displayImage = new J2SEMutableImage(
+							device.getDeviceDisplay().getFullWidth(), device.getDeviceDisplay().getFullHeight());
+					displayGraphics = displayImage.getImage().getGraphics();
 				}
 
 				synchronized (displayImage) {
-					Graphics gc = displayImage.getImage().getGraphics();
-
-					deviceDisplay.paintDisplayable(gc, x, y, width, height);
+					deviceDisplay.paintDisplayable(displayGraphics, x, y, width, height);
 					if (!deviceDisplay.isFullScreenMode()) {
-						deviceDisplay.paintControls(gc);
+						deviceDisplay.paintControls(displayGraphics);
 					}
 				}
 

@@ -43,7 +43,10 @@ import org.microemu.device.DisplayGraphics;
 import org.microemu.device.MutableImage;
 
 public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics implements DisplayGraphics {
-    // Andres Navarro
+
+    // TODO use IntHashMap
+    private static HashMap colorCache = new HashMap();
+    
     private java.awt.Graphics2D g;
 
     // Andres Navarro
@@ -51,9 +54,6 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
     private MutableImage image;
 
     private int color = 0;
-    
-    // TODO use IntHashMap
-    private HashMap colorCache = new HashMap();
     
     // Access to the AWT clip is expensive in memory allocation 
     private Rectangle clip;

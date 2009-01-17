@@ -10,30 +10,16 @@ Building project using maven
 
     MicroEmulator can be found in maven Central Repository {{{http://repo1.maven.org/maven2/org/microemu/}maven.org}} and {{{http://mirrors.ibiblio.org/pub/mirrors/maven2/org/microemu/}ibiblio.org}}.
 
-    Also the releases available from the {{{http://www.pyx4me.com/maven2-release}http://www.pyx4me.com/maven2-release}} MicroEmulator maven 2 repository.
-    You need to add this repository to your $home/.m2/settings.xml
-
----
-        <repository>
-            <id>pyx4me-web-release</id>
-            <url>http://www.pyx4me.com/maven2-release</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
----
+    Also the releases available from the {{{http://repository.pyx4j.com/maven2-release}http://repository.pyx4j.com/maven2-release}} maven 2 repository.
 
 * Development snapshot
 
-    The latest snapshot builds can be downloaded from the {{{http://www.pyx4me.com/maven2-snapshot/}http://www.pyx4me.com/maven2-snapshot}} MicroEmulator maven 2 snapshot repository.
+    The latest snapshot builds can be downloaded directly from the {{{http://repository.pyx4j.com/maven2-snapshot/}http://repository.pyx4j.com/maven2-snapshot}} pyx4j.com maven 2 snapshot repository.
 
 ---
         <repository>
-            <id>pyx4me-web-snapshot</id>
-            <url>http://www.pyx4me.com/maven2-snapshot</url>
+            <id>pyx4j-web-snapshot</id>
+            <url>http://repository.pyx4j.com/maven2-snapshot</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>

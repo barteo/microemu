@@ -105,21 +105,22 @@
         <!-- see profile release -->
         <repository>
             <id>pyx4j.com-file-development</id>
-            <url>file:///home/apache/pyx4j/maven2</url>
+            <url>file:///home/apache/pyx4j-repository/maven2-snapshot</url>
         </repository>
+
         <snapshotRepository>
             <id>pyx4j.com-file-development</id>
-            <url>file:///home/apache/pyx4j/maven2</url>
+            <url>file:///home/apache/pyx4j-repository/maven2-snapshot</url>
         </snapshotRepository>
-
+        
     </distributionManagement>
 
 <!-- 4snapshot begin { -->
 <!--
     <repositories>
         <repository>
-            <id>pyx4me-web</id>
-            <url>http://www.pyx4me.com/maven2-snapshot</url>
+            <id>pyx4j-public-snapshot</id>
+            <url>http://repository.pyx4j.com/maven2-snapshot</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -136,8 +137,8 @@
 <!-- 4snapshot begin { -->
 <!--
         <pluginRepository>
-            <id>pyx4me-web</id>
-            <url>http://www.pyx4me.com/maven2-snapshot</url>
+            <id>pyx4j-public-snapshot</id>
+            <url>http://repository.pyx4j.com/maven2-snapshot</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -538,7 +539,7 @@
 
                 <repository>
                     <id>pyx4j.com-file-release</id>
-                    <url>file:///home/apache/pyx4j/maven2-release</url>
+                    <url>file:///home/apache/pyx4j-repository/maven2-release</url>
                 </repository>
 
             </distributionManagement>

@@ -15,6 +15,8 @@ Running j2me application with MicroEmulator
 java org.microemu.app.Main (MIDlet application main class)
 or
 java org.microemu.app.Main (MIDlet jad file)
+or
+java org.microemu.app.Main (MIDlet jar file)
 ---
 
         * microemulator.jar must be in CLASSPATH
@@ -25,6 +27,8 @@ java org.microemu.app.Main (MIDlet jad file)
 java -cp microemulator.jar;YourApp.jar org.microemu.app.Main com.yourcompany.YourMidlet
 or
 java -cp microemulator.jar org.microemu.app.Main path2yourApp/YourApp.jad
+or
+java -cp microemulator.jar org.microemu.app.Main path2yourApp/YourApp.jar
 ---
 
 
@@ -34,11 +38,15 @@ java -cp microemulator.jar org.microemu.app.Main path2yourApp/YourApp.jad
 java -jar microemulator.jar (MIDlet application main class)
 or
 java -jar microemulator.jar (MIDlet jad file)
+or
+java -jar microemulator.jar (MIDlet jar file)
 ---
 
         * (MIDlet application main class) parameter is optional, if used MIDlet application jar file must be in CLASSPATH,
 
         * (MIDlet jad file) must have .jad extension,
+
+        * (MIDlet jar file) must have .jar extension,
 
         * to support Nokia UI include microemu-nokiaui.jar to the CLASSPATH,
 
@@ -50,6 +58,8 @@ java -jar microemulator.jar (MIDlet jad file)
 java -cp microemulator.jar;microemu-nokiaui.jar;YourApp.jar org.microemu.app.Main com.yourcompany.YourMidlet
 or
 java -cp microemulator.jar;microemu-siemensapi.jar org.microemu.app.Main http://wwww.yourcompany.com/download/YourApp-sim.jad
+or
+java -cp microemulator.jar;microemu-siemensapi.jar org.microemu.app.Main http://wwww.yourcompany.com/download/YourApp-sim.jar
 ---
 
     MicroEmulator command line options
@@ -86,7 +96,7 @@ java -cp microemulator.jar;microemu-siemensapi.jar org.microemu.app.Main http://
 
         * < --quiet > \u00bb           Disable stdout logs
 
-        * ({MIDlet class name} | {jad file location})
+        * ({MIDlet class name} | {jad file location} | {jar file location})
 
         []
 
@@ -112,6 +122,8 @@ java -cp microemulator.jar;bluecove-1.2.3.jar org.microemu.app.Main btbrowserv20
 java -cp microemulator.jar;YourApp.jar org.microemu.app.Headless com.yourcompany.YourMidlet
 or
 java -cp microemulator.jar org.microemu.app.Headless path2yourApp/YourApp.jad
+or
+java -cp microemulator.jar org.microemu.app.Headless path2yourApp/YourApp.jar
 ---
 
     Headless MicroEmulator additional command line options

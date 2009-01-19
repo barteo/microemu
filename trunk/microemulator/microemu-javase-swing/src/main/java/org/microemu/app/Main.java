@@ -86,7 +86,7 @@ import org.microemu.app.ui.StatusBarListener;
 import org.microemu.app.ui.swing.DropTransferHandler;
 import org.microemu.app.ui.swing.ExtensionFileFilter;
 import org.microemu.app.ui.swing.JMRUMenu;
-import org.microemu.app.ui.swing.JadUrlPanel;
+import org.microemu.app.ui.swing.MIDletUrlPanel;
 import org.microemu.app.ui.swing.RecordStoreManagerDialog;
 import org.microemu.app.ui.swing.ResizeDeviceDisplayDialog;
 import org.microemu.app.ui.swing.SwingAboutDialog;
@@ -126,7 +126,7 @@ public class Main extends JFrame {
 
 	protected SwingSelectDevicePanel selectDevicePanel = null;
 
-	private JadUrlPanel jadUrlPanel = null;
+	private MIDletUrlPanel midletUrlPanel = null;
 
 	private JFileChooser saveForWebChooser;
 
@@ -134,9 +134,9 @@ public class Main extends JFrame {
 
 	private JFileChooser captureFileChooser = null;
 
-	private JMenuItem menuOpenJADFile;
+	private JMenuItem menuOpenMIDletFile;
 
-	private JMenuItem menuOpenJADURL;
+	private JMenuItem menuOpenMIDletURL;
 
 	private JMenuItem menuSelectDevice;
 
@@ -213,16 +213,15 @@ public class Main extends JFrame {
 		}
 	};
 
-	private ActionListener menuOpenJADFileListener = new ActionListener() {
+	private ActionListener menuOpenMIDletFileListener = new ActionListener() {
 		public void actionPerformed(ActionEvent ev) {
 			if (fileChooser == null) {
-				ExtensionFileFilter fileFilter = new ExtensionFileFilter("JAD files");
+				ExtensionFileFilter fileFilter = new ExtensionFileFilter("MIDlet files");
 				fileFilter.addExtension("jad");
-				// TODO- Read manifest in jar
-				// fileFilter.addExtension("jar");
+				fileFilter.addExtension("jar");
 				fileChooser = new JFileChooser();
 				fileChooser.setFileFilter(fileFilter);
-				fileChooser.setDialogTitle("Open JAD File...");
+				fileChooser.setDialogTitle("Open MIDlet File...");
 				fileChooser.setCurrentDirectory(new File(Config.getRecentDirectory("recentJadDirectory")));
 			}
 
@@ -230,7 +229,7 @@ public class Main extends JFrame {
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				Config.setRecentDirectory("recentJadDirectory", fileChooser.getCurrentDirectory().getAbsolutePath());
 				String url = IOUtils.getCanonicalFileURL(fileChooser.getSelectedFile());
-				Common.openJadUrlSafe(url);
+				Common.openMIDletUrlSafe(url);
 				if (recordStoreManagerDialog != null) {
 					recordStoreManagerDialog.refresh();
 				}
@@ -238,13 +237,13 @@ public class Main extends JFrame {
 		}
 	};
 
-	private ActionListener menuOpenJADURLListener = new ActionListener() {
+	private ActionListener menuOpenMIDletURLListener = new ActionListener() {
 		public void actionPerformed(ActionEvent ev) {
-			if (jadUrlPanel == null) {
-				jadUrlPanel = new JadUrlPanel();
+			if (midletUrlPanel == null) {
+				midletUrlPanel = new MIDletUrlPanel();
 			}
-			if (SwingDialogWindow.show(Main.this, "Enter JAD URL:", jadUrlPanel, true)) {
-				Common.openJadUrlSafe(jadUrlPanel.getText());
+			if (SwingDialogWindow.show(Main.this, "Enter MIDlet URL:", midletUrlPanel, true)) {
+				Common.openMIDletUrlSafe(midletUrlPanel.getText());
 				if (recordStoreManagerDialog != null) {
 					recordStoreManagerDialog.refresh();
 				}
@@ -695,8 +694,8 @@ public class Main extends JFrame {
 
 	private ResponseInterfaceListener responseInterfaceListener = new ResponseInterfaceListener() {
 		public void stateChanged(boolean state) {
-			menuOpenJADFile.setEnabled(state);
-			menuOpenJADURL.setEnabled(state);
+			menuOpenMIDletFile.setEnabled(state);
+			menuOpenMIDletURL.setEnabled(state);
 			menuSelectDevice.setEnabled(state);
 
 			if (common.jad.getJarURL() != null) {
@@ -781,13 +780,13 @@ public class Main extends JFrame {
 
 		JMenu menuFile = new JMenu("File");
 
-		menuOpenJADFile = new JMenuItem("Open JAD File...");
-		menuOpenJADFile.addActionListener(menuOpenJADFileListener);
-		menuFile.add(menuOpenJADFile);
+		menuOpenMIDletFile = new JMenuItem("Open MIDlet File...");
+		menuOpenMIDletFile.addActionListener(menuOpenMIDletFileListener);
+		menuFile.add(menuOpenMIDletFile);
 
-		menuOpenJADURL = new JMenuItem("Open JAD URL...");
-		menuOpenJADURL.addActionListener(menuOpenJADURLListener);
-		menuFile.add(menuOpenJADURL);
+		menuOpenMIDletURL = new JMenuItem("Open MIDlet URL...");
+		menuOpenMIDletURL.addActionListener(menuOpenMIDletURLListener);
+		menuFile.add(menuOpenMIDletURL);
 
 		JMenuItem menuItemTmp = new JMenuItem("Close MIDlet");
 		menuItemTmp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
@@ -800,7 +799,7 @@ public class Main extends JFrame {
 		urlsMRU.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				if (event instanceof JMRUMenu.MRUActionEvent) {
-					Common.openJadUrlSafe(((MidletURLReference) ((JMRUMenu.MRUActionEvent) event).getSourceMRU())
+					Common.openMIDletUrlSafe(((MidletURLReference) ((JMRUMenu.MRUActionEvent) event).getSourceMRU())
 							.getUrl());
 					if (recordStoreManagerDialog != null) {
 						recordStoreManagerDialog.refresh();

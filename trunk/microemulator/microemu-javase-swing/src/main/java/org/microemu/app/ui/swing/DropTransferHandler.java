@@ -117,8 +117,8 @@ public class DropTransferHandler extends TransferHandler {
 					List fileList = (List) t.getTransferData(DataFlavor.javaFileListFlavor);
 					if (fileList.get(0) instanceof File) {
 						File f = (File) fileList.get(0);
-						if (Common.isJadExtension(f.getName())) {
-							Common.openJadUrlSafe(IOUtils.getCanonicalFileURL(f));
+						if (Common.isMIDletUrlExtension(f.getName())) {
+							Common.openMIDletUrlSafe(IOUtils.getCanonicalFileURL(f));
 						} else {
 							Message.warn("Unable to open " + f.getAbsolutePath() + ", Only JAD files are acepted");	
 						}
@@ -146,8 +146,8 @@ public class DropTransferHandler extends TransferHandler {
             	if (data instanceof String) {
                 	Logger.debug("importing", transferFlavors[i]);
                 	String path = getPathString((String) data);
-          			if (Common.isJadExtension(path)) {
-						Common.openJadUrlSafe(path);
+          			if (Common.isMIDletUrlExtension(path)) {
+						Common.openMIDletUrlSafe(path);
 					} else {
 						Message.warn("Unable to open " + path + ", Only JAD files are acepted");	
 					}
@@ -167,8 +167,8 @@ public class DropTransferHandler extends TransferHandler {
 				if (data instanceof String) {
 					Logger.debug("importing", transferFlavors[i]);
 					String path = getPathString((String) data);
-					if (Common.isJadExtension(path)) {
-						Common.openJadUrlSafe(path);
+					if (Common.isMIDletUrlExtension(path)) {
+						Common.openMIDletUrlSafe(path);
 					} else {
 						Message.warn("Unable to open " + path + ", Only JAD files are acepted");
 					}
@@ -188,8 +188,8 @@ public class DropTransferHandler extends TransferHandler {
         		try {
 					URL jadUrl = (URL)t.getTransferData(transferFlavors[i]);
 					String urlString = jadUrl.toExternalForm();
-					if (Common.isJadExtension(urlString)) {
-						Common.openJadUrlSafe(urlString);
+					if (Common.isMIDletUrlExtension(urlString)) {
+						Common.openMIDletUrlSafe(urlString);
 					} else {
 						Message.warn("Unable to open " + urlString + ", Only JAD url are acepted");	
 					}

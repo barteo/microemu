@@ -68,6 +68,7 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.SubMenu;
 import android.view.Window;
 
@@ -245,7 +246,51 @@ public class MicroEmulator extends MicroEmulatorActivity {
 		}
 		
 		return super.onKeyDown(keyCode, event);
-	}	    
+	}
+	
+	private final static float TRACKBALL_THRESHOLD = 0.4f; 
+	
+	private float accumulatedTrackballX = 0;
+	
+	private float accumulatedTrackballY = 0;
+	
+	@Override
+	public boolean onTrackballEvent(MotionEvent event) {
+		if (event.getAction() == MotionEvent.ACTION_MOVE) {
+			float x = event.getX();
+			float y = event.getY();
+			if ((x > 0 && accumulatedTrackballX < 0) || (x < 0 && accumulatedTrackballX > 0)) {
+				accumulatedTrackballX = 0;
+			}
+			if ((y > 0 && accumulatedTrackballY < 0) || (y < 0 && accumulatedTrackballY > 0)) {
+				accumulatedTrackballY = 0;
+			}
+			if (accumulatedTrackballX + x > TRACKBALL_THRESHOLD) {
+				accumulatedTrackballX -= TRACKBALL_THRESHOLD;
+				new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT).dispatch(getContentView());
+				new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT).dispatch(getContentView());
+			} else if (accumulatedTrackballX + x < -TRACKBALL_THRESHOLD) {
+				accumulatedTrackballX += TRACKBALL_THRESHOLD;
+				new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT).dispatch(getContentView());
+				new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT).dispatch(getContentView());
+			}
+			if (accumulatedTrackballY + y > TRACKBALL_THRESHOLD) {
+				accumulatedTrackballY -= TRACKBALL_THRESHOLD;
+				new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN).dispatch(getContentView());
+				new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN).dispatch(getContentView());
+			} else if (accumulatedTrackballY + y < -TRACKBALL_THRESHOLD) {
+				accumulatedTrackballY += TRACKBALL_THRESHOLD;
+				new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP).dispatch(getContentView());
+				new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_UP).dispatch(getContentView());
+			}
+			accumulatedTrackballX += x;
+			accumulatedTrackballY += y;
+			
+			return true;
+		} else {
+			return super.onTrackballEvent(event);
+		}
+	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {

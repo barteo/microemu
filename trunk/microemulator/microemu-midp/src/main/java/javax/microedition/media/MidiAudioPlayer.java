@@ -178,8 +178,11 @@ class MidiAudioPlayer implements Player, MetaEventListener
     {
         if (event.getType() == 47) //End of Track type
         {
-        	iLoopCount--;
-        	if( iLoopCount > 0 )
+            if (iLoopCount > 0) 
+            {
+                iLoopCount--;
+            }
+            if( iLoopCount > 0 || iLoopCount == -1)
         	{
         		sequencer.setMicrosecondPosition( 0 );
         		try{ start(); } 

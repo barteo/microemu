@@ -31,6 +31,8 @@ import java.util.Vector;
 import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Displayable;
 
+import org.microemu.DisplayAccess;
+import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.DisplayableUI;
@@ -106,7 +108,15 @@ public class DisplayableImplUI implements DisplayableUI {
 
 	private void updateCommands() {
 		CommandManager.getInstance().updateCommands(getCommandsUI());
-		MIDletBridge.getMIDletAccess().getDisplayAccess().repaint();
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma == null) {
+			return;
+		}
+		DisplayAccess da = ma.getDisplayAccess();
+		if (da == null) {
+			return;
+		}
+		da.repaint();
 	}
 
 }

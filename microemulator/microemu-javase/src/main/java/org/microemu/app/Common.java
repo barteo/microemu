@@ -76,7 +76,9 @@ import org.microemu.app.util.MIDletTimer;
 import org.microemu.app.util.MidletURLReference;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
+import org.microemu.device.impl.DeviceDisplayImpl;
 import org.microemu.device.impl.DeviceImpl;
+import org.microemu.device.impl.Rectangle;
 import org.microemu.log.Logger;
 import org.microemu.log.StdOutAppender;
 import org.microemu.microedition.ImplFactory;
@@ -743,6 +745,8 @@ public class Common implements MicroEmulator, CommonInterface {
 		MIDletClassLoaderConfig clConfig = new MIDletClassLoaderConfig();
 		Class deviceClass = null;
 		String deviceDescriptorLocation = null;
+		int overrideDeviceWidth = -1;
+		int overrideDeviceHeight = -1;
 		RecordStoreManager paramRecordStoreManager = null;
 
 		Iterator argsIterator = params.iterator();
@@ -803,6 +807,12 @@ public class Common implements MicroEmulator, CommonInterface {
 							deviceDescriptorLocation = tmpDevice;
 						}
 					}
+				} else if (arg.equals("--resizableDevice")) {
+					overrideDeviceWidth = Integer.parseInt((String) argsIterator.next());
+					argsIterator.remove();
+					overrideDeviceHeight = Integer.parseInt((String) argsIterator.next());
+					argsIterator.remove();
+					deviceDescriptorLocation = DeviceImpl.RESIZABLE_LOCATION;
 				} else if (arg.equals("--rms")) {
 					if (argsIterator.hasNext()) {
 						String tmpRms = (String) argsIterator.next();
@@ -853,6 +863,10 @@ public class Common implements MicroEmulator, CommonInterface {
 		if (deviceDescriptorLocation != null) {
 			try {
 				setDevice(DeviceImpl.create(emulatorContext, classLoader, deviceDescriptorLocation, defaultDeviceClass));
+				DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) DeviceFactory.getDevice().getDeviceDisplay();
+				if (overrideDeviceWidth != -1 && overrideDeviceHeight != -1) {
+					deviceDisplay.setDisplayRectangle(new Rectangle(0, 0, overrideDeviceWidth, overrideDeviceHeight));
+				}
 			} catch (IOException ex) {
 				Logger.error(ex);
 			}
@@ -1036,6 +1050,7 @@ public class Common implements MicroEmulator, CommonInterface {
 				+ "[--appclass <library class name>]\n" + "[--appclassloader strict|relaxed|delegating|system] \n"
 				+ "[-Xautotest:<JAD file url>\n" + "[--quit]\n"
 				+ "[--traceClassLoading\n[--traceSystemClassLoading]\n[--enhanceCatchBlock]\n]"
+				+ "[--resizableDevice {width} {height}]\n"
 				+ "(({MIDlet class name} [--propertiesjad {jad file location}]) | {jad file location} | {jar file location})";
 	}
 

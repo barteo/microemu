@@ -77,6 +77,8 @@ public abstract class DeviceImpl implements Device {
 	private int skinVersion;
 
 	public static final String DEFAULT_LOCATION = "org/microemu/device/default/device.xml";
+	
+	public static final String RESIZABLE_LOCATION = "org/microemu/device/resizable/device.xml";
 
 	/**
 	 * @deprecated

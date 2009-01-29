@@ -68,6 +68,8 @@ java -cp microemulator.jar;microemu-siemensapi.jar org.microemu.app.Main http://
 
         * < --device | -d device_class_or_xml> \u00bb          specify device skin.
 
+        * < --resizableDevice {width} {height}> \u00bb          force to use resizable device skin with specified width and height.
+
         * < --classpath | -cp CLASSPATH>  \u00bb Extensions class path entries
 
         * < --appclasspath | -appcp CLASSPATH> \u00bb for MIDlet application components if any; ignored when opening .jad

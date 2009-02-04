@@ -37,7 +37,9 @@
     <!-- Tools -->
     <property name="aapt" value="${sdk-folder}/tools/aapt" />
     <property name="adb" value="${sdk-folder}/tools/adb" />
-    <property name="dx" value="${sdk-folder}/tools/dx" />
+    <condition property="dx" value="${sdk-folder}/tools/dx.bat" else="${sdk-folder}/tools/dx" >
+        <os family="windows"/>
+    </condition>
     <condition property="apk-builder" value="${sdk-folder}/tools/apkbuilder.bat" else="${sdk-folder}/tools/apkbuilder" >
         <os family="windows"/>
     </condition>

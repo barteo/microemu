@@ -114,8 +114,9 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
-		Logger.debug("TODO drawRoundRect");
-    }
+		paint.setStyle(Paint.Style.STROKE);
+		canvas.drawRoundRect(new RectF(x, y, x + width, y + height), (float) arcWidth, (float) arcHeight, paint);
+   }
 
 	public void drawString(String str, int x, int y, int anchor) {
         int newx = x;
@@ -154,7 +155,8 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
-		Logger.debug("TODO fillRoundRect");
+		paint.setStyle(Paint.Style.FILL);
+		canvas.drawRoundRect(new RectF(x, y, x + width, y + height), (float) arcWidth, (float) arcHeight, paint);
     }
 
 	public int getClipHeight() {

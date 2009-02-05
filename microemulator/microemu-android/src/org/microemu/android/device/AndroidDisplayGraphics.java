@@ -114,7 +114,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
-		Logger.debug("drawRoundRect");
+		Logger.debug("TODO drawRoundRect");
     }
 
 	public void drawString(String str, int x, int y, int anchor) {
@@ -352,9 +352,8 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
             throw new ArrayIndexOutOfBoundsException();
         }
         
-        // TODO MIDP allows almost any value of scanlength, drawBitmap is more strict with the stride
+        // FIXME MIDP allows almost any value of scanlength, drawBitmap is more strict with the stride
         if (scanlength == 0) {
-        	Logger.warn("TODO drawRGB: scanlength == 0");
         	scanlength = width;
         }
        	canvas.drawBitmap(rgbData, offset, scanlength, x, y, width, height, processAlpha, paint);

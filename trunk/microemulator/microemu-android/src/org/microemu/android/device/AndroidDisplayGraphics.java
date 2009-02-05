@@ -154,7 +154,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
-		Logger.debug("fillRoundRect");
+		Logger.debug("TODO fillRoundRect");
     }
 
 	public int getClipHeight() {
@@ -352,11 +352,16 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
             throw new ArrayIndexOutOfBoundsException();
         }
         
-        canvas.drawBitmap(rgbData, offset, scanlength, x, y, width, height, processAlpha, paint);
+        // TODO MIDP allows almost any value of scanlength, drawBitmap is more strict with the stride
+        if (scanlength == 0) {
+        	Logger.warn("TODO drawRGB: scanlength == 0");
+        	scanlength = width;
+        }
+       	canvas.drawBitmap(rgbData, offset, scanlength, x, y, width, height, processAlpha, paint);
 	}
 
 	public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {
-		Logger.debug("fillTriangle");
+		Logger.debug("TODO fillTriangle");
 	}
 
 	public void copyArea(int x_src, int y_src, int width, int height,

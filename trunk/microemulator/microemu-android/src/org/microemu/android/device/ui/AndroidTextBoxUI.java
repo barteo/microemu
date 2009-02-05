@@ -65,6 +65,7 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 				((LinearLayout) view).addView(titleView);
 				
 				editView = new EditText(activity);
+				editView.setText(textBox.getString());
 				editView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
 				if ((textBox.getConstraints() & TextField.URL) != 0) {
 					editView.setSingleLine(true);

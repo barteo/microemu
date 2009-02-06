@@ -75,7 +75,7 @@ public class TextBox extends Screen {
 	}
 
 	public int getCaretPosition() {
-		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidTextBoxUI")) {
+		if (ui != null && ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidTextBoxUI")) {
 			return ((TextBoxUI) ui).getCaretPosition();
 		} else {
 			return tf.getCaretPosition();
@@ -95,7 +95,7 @@ public class TextBox extends Screen {
 	}
 
 	public String getString() {
-		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidTextBoxUI")) {
+		if (ui != null && ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidTextBoxUI")) {
 			return ((TextBoxUI) ui).getString();
 		} else {
 			return tf.getString();
@@ -127,7 +127,7 @@ public class TextBox extends Screen {
 	}
 
 	public void setString(String text) {
-		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidTextBoxUI")) {
+		if (ui != null && ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidTextBoxUI")) {
 			((TextBoxUI) ui).setString(text);
 		} else {
 			tf.setString(text);

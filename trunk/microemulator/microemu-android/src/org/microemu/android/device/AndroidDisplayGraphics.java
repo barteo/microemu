@@ -36,6 +36,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
@@ -362,7 +363,13 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {
-		Logger.debug("TODO fillTriangle");
+		paint.setStyle(Paint.Style.FILL);
+		Path path = new Path();
+		path.moveTo(x1, y1);
+		path.lineTo(x2, y2);
+		path.lineTo(x3, y3);
+		path.lineTo(x1, y1);
+		canvas.drawPath(path, paint);
 	}
 
 	public void copyArea(int x_src, int y_src, int width, int height,

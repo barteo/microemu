@@ -93,7 +93,7 @@
 
     <ciManagement>
         <system>CruiseControl</system>
-        <url>http://pyx4j.com/dashboard/tab/builds/</url>
+        <url>http://pyx4j.com/cruisecontrol-public/</url>
     </ciManagement>
 
     <distributionManagement>

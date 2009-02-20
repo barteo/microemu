@@ -1049,6 +1049,7 @@ public class Common implements MicroEmulator, CommonInterface {
 				+ "[(--classpath|-cp) <JSR CLASSPATH>]\n" + "[(--appclasspath|--appcp) <MIDlet CLASSPATH>]\n"
 				+ "[--appclass <library class name>]\n" + "[--appclassloader strict|relaxed|delegating|system] \n"
 				+ "[-Xautotest:<JAD file url>\n" + "[--quit]\n"
+				+ "[--logCallLocation true|false]\n"
 				+ "[--traceClassLoading\n[--traceSystemClassLoading]\n[--enhanceCatchBlock]\n]"
 				+ "[--resizableDevice {width} {height}]\n"
 				+ "(({MIDlet class name} [--propertiesjad {jad file location}]) | {jad file location} | {jar file location})";

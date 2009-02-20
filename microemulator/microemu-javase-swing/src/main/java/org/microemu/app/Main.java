@@ -1032,14 +1032,15 @@ public class Main extends JFrame {
 		if (args.length > 0) {
 			Logger.debug("arguments", debugArgs.toString());
 		}
-
-		app.common.initParams(params, app.selectDevicePanel.getSelectedDeviceEntry(), J2SEDevice.class);
-		app.deviceEntry = app.selectDevicePanel.getSelectedDeviceEntry();
-		DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) DeviceFactory.getDevice().getDeviceDisplay();
-		if (deviceDisplay.isResizable()) {
-			Rectangle size = Config.getDeviceEntryDisplaySize(app.deviceEntry);
-			if (size != null) {
-				deviceDisplay.setDisplayRectangle(size);
+		
+		if (app.common.initParams(params, app.selectDevicePanel.getSelectedDeviceEntry(), J2SEDevice.class)) {
+			app.deviceEntry = app.selectDevicePanel.getSelectedDeviceEntry();
+			DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) DeviceFactory.getDevice().getDeviceDisplay();
+			if (deviceDisplay.isResizable()) {
+				Rectangle size = Config.getDeviceEntryDisplaySize(app.deviceEntry);
+				if (size != null) {
+					deviceDisplay.setDisplayRectangle(size);
+				}
 			}
 		}
 		app.updateDevice();

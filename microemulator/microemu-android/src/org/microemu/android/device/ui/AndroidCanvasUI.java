@@ -103,9 +103,9 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 				return false;
 			}
 			
-			if (keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_BACK) {
-				return false;
-			}
+			if (ignoreKey(keyCode)) {
+                return false;    
+            }
 			
 			Device device = DeviceFactory.getDevice();
 			((AndroidInputMethod) device.getInputMethod()).buttonPressed(event);
@@ -118,10 +118,10 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 			if (MIDletBridge.getCurrentMIDlet() == null) {
 				return false;
 			}
-
-			if (keyCode == KeyEvent.KEYCODE_MENU || keyCode == KeyEvent.KEYCODE_BACK) {
-				return false;
-			}
+            
+            if (ignoreKey(keyCode)) {
+                return false;    
+            }
 
 			Device device = DeviceFactory.getDevice();
 			((AndroidInputMethod) device.getInputMethod()).buttonReleased(event);
@@ -164,7 +164,19 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 		public Handler getHandler() {
 			return super.getHandler();
 		}		
-
+       
+        private boolean ignoreKey(int keyCode) {
+            switch (keyCode) {
+            case KeyEvent.KEYCODE_MENU:
+            case KeyEvent.KEYCODE_BACK:
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+            case KeyEvent.KEYCODE_VOLUME_UP:
+            case KeyEvent.KEYCODE_HEADSETHOOK: 
+                return true;
+            default:
+                return false;
+            }    
+        }
 	}
 
 }

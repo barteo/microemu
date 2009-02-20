@@ -46,6 +46,8 @@ public class IPhoneImmutableImage extends javax.microedition.lcdui.Image impleme
 	 * @see org.microemu.iphone.device.IPhoneImage#getBitmap()
 	 */
     public Pointer<CGImage> getBitmap() {
+    	//retain it everytime
+    	CoreGraphics.CGImageRetain(bitmap);
 		return bitmap;
 	}
 

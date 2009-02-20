@@ -32,9 +32,11 @@ import javax.microedition.lcdui.Image;
 import joc.Pointer;
 import obc.CGColor;
 import obc.CGContext;
+import obc.CGImage;
 import obc.CGPoint;
 import obc.CGRect;
 import obc.NSString;
+import obc.UIFont;
 
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.impl.Rectangle;
@@ -54,9 +56,12 @@ public class IPhoneDisplayGraphics extends javax.microedition.lcdui.Graphics {
 
 	private int height;
 	
-	public IPhoneDisplayGraphics(Pointer<CGContext> context, int width, int height) {
+	private boolean offscreen;
+	
+	public IPhoneDisplayGraphics(Pointer<CGContext> context, int width, int height, boolean offscreen) {
 		this.context = context;
 		this.height = height;
+		this.offscreen = offscreen;
 		this.clip = new Rectangle(0,0,width,height);
 //		CoreGraphics.CGContextClipToRect(canvas, CoreGraphics.CGRectMake(0, 0, width, height));
 		//flip upside down
@@ -95,7 +100,10 @@ public class IPhoneDisplayGraphics extends javax.microedition.lcdui.Graphics {
         }
 
 		Pointer<CGRect> rect=CoreGraphics.CGRectMake(newx, newy, img.getWidth(), img.getHeight());
-        CoreGraphics.CGContextDrawImage(context, rect,  ((IPhoneImage)img).getBitmap());
+        Pointer<CGImage> bitmap = ((IPhoneImage)img).getBitmap();
+		CoreGraphics.CGContextDrawImage(context, rect,  bitmap);
+		//have to release the bitmap!
+		CoreGraphics.CGImageRelease(bitmap);
 	}
 
 	public void drawLine(int x1, int y1, int x2, int y2) {
@@ -130,10 +138,12 @@ public class IPhoneDisplayGraphics extends javax.microedition.lcdui.Graphics {
         int newy = y;
 
         CoreGraphics.UIGraphicsPushContext(context);
-		CoreGraphics.CGContextScaleCTM(context, 1.0f, -1.0f);
-		CoreGraphics.CGContextTranslateCTM(context, 0, -height);
+        if(!offscreen){
+			CoreGraphics.CGContextScaleCTM(context, 1.0f, -1.0f);
+			CoreGraphics.CGContextTranslateCTM(context, 0, -height);
+        }
        
-        IPhoneFontManager fontManager = (IPhoneFontManager)DeviceFactory.getDevice().getFontManager();
+        UIFont uifont = ((IPhoneFontManager)DeviceFactory.getDevice().getFontManager()).getUIFont(font);
         
         if (anchor == 0) {
             anchor = javax.microedition.lcdui.Graphics.TOP | javax.microedition.lcdui.Graphics.LEFT;
@@ -151,17 +161,21 @@ public class IPhoneDisplayGraphics extends javax.microedition.lcdui.Graphics {
         }
         NSString string=new NSString().initWithString$(str);
 // 		CoreGraphics.CGContextScaleCTM(context, 1.0f, -1.0f);
-		CoreGraphics.CGContextSetTextMatrix(context, CoreGraphics.CGAffineTransformMakeScale(0.5f, -0.5f));
+//		CoreGraphics.CGContextSetTextMatrix(context, CoreGraphics.CGAffineTransformMakeScale(0.5f, -0.5f));
 
-		string.drawAtPoint$withFont$(new CGPoint(newx,newy), fontManager.getUIFont(font));
-//		CoreGraphics.CGContextScaleCTM(context, 1.0f, -1.0f);
-
-//        CoreGraphics.CGContextSetTextDrawingMode(context, CGTextDrawingMode.kCGTextFill);
-//		CoreGraphics.CGContextShowTextAtPoint(context, newx, newy, str, str.length());
+		string.drawAtPoint$withFont$(new CGPoint(newx,newy), uifont);
+//		string.release();
+//		uifont.release();
+////		CoreGraphics.CGContextScaleCTM(context, 1.0f, -1.0f);
+//
+////        CoreGraphics.CGContextSetTextDrawingMode(context, CGTextDrawingMode.kCGTextFill);
+////		CoreGraphics.CGContextShowTextAtPoint(context, newx, newy, str, str.length());
 		
-		CoreGraphics.CGContextTranslateCTM(context, 0, height);
-		CoreGraphics.CGContextScaleCTM(context, 1.0f, -1.0f);
- 		CoreGraphics.UIGraphicsPopContext();
+		if (!offscreen) {
+			CoreGraphics.CGContextTranslateCTM(context, 0, height);
+			CoreGraphics.CGContextScaleCTM(context, 1.0f, -1.0f);
+		}
+		CoreGraphics.UIGraphicsPopContext();
 	}
 
     public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
@@ -202,19 +216,8 @@ public class IPhoneDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void setClip(int x, int y, int width, int height) {
-        throw new UnsupportedOperationException("Currently not supported on iPhone");
-//		if (x == clip.x && x+ width == clip.right && y == clip.top && y + height == clip.bottom) {
-//			return;
-//		}
-//		if (x < clip.left || x + width > clip.right || y < clip.top || y + height > clip.bottom) {
-//			canvas.restore();
-//			canvas.save(Canvas.CLIP_SAVE_FLAG);
-//		}
-//        clip.left = x;
-//        clip.top = y;
-//        clip.right = x + width;
-//        clip.bottom = y + height;
-//		canvas.clipRect(clip);
+		//TODO real implementation
+		clipRect(x, y, width, height);
 	}
 
 	public void setColor(int RGB) {

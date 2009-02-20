@@ -52,7 +52,12 @@ public class IPhoneFontManager implements FontManager {
 	}
 
 	public int getHeight(Font f) {
-		return (int)getUIFont(f).capHeight();
+		UIFont uifont = getUIFont(f);
+		try {
+			return (int)uifont.capHeight();
+		} finally {
+			uifont.release();
+		}
 	}
 
 	public void init() {
@@ -61,7 +66,12 @@ public class IPhoneFontManager implements FontManager {
 	}
 
 	public int stringWidth(Font f, String str) {
-		return (int)new NSString().initWithString$(str).sizeWithFont$(getUIFont(f)).width;
+		NSString nsstring = new NSString().initWithString$(str);
+		try {
+			return (int)nsstring.sizeWithFont$(getUIFont(f)).width;
+		} finally {
+			nsstring.release();
+		}
 	}
 
 }

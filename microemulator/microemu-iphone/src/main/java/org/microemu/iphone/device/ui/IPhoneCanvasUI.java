@@ -33,9 +33,11 @@ import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
 
 import joc.Message;
+import joc.Pointer;
 import joc.Runtime;
 import joc.Selector;
 import joc.Static;
+import obc.CGContext;
 import obc.CGPoint;
 import obc.CGRect;
 import obc.NSArray;
@@ -117,9 +119,12 @@ public class IPhoneCanvasUI extends AbstractUI<Canvas> implements CanvasUI {
 			if (ma == null) {
 				return;
 			}
-			Graphics g = new IPhoneDisplayGraphics(CoreGraphics.UIGraphicsGetCurrentContext(), canvas.getWidth(),
-					canvas.getHeight());
+			Pointer<CGContext> context = CoreGraphics.UIGraphicsGetCurrentContext();
+			CoreGraphics.CGContextSaveGState(context);
+			Graphics g = new IPhoneDisplayGraphics(context, canvas.getWidth(), canvas.getHeight(), false);
 			ma.getDisplayAccess().paint(g);
+//			g.drawString("XXX", 100, 100, 0);
+			CoreGraphics.CGContextRestoreGState(context);
 		}
 
 		@Override

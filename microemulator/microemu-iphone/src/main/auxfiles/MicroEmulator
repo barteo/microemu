@@ -5,6 +5,6 @@
 
 JAVA="$(dirname "$0")"/Java
 #VMARGS="-Xmx40m -verbose:jni"
-VMARGS="-Xmx40m"
+VMARGS="-Xmx40m -Xss128K"
 
 source /usr/bin/microemu-iphone >>/tmp/microemu.log 2>&1

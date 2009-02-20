@@ -25,17 +25,56 @@
  */
 package org.microemu.iphone.device.ui;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Form;
+import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.Item;
 
+import org.microemu.device.ui.CanvasUI;
 import org.microemu.device.ui.FormUI;
 import org.microemu.iphone.MicroEmulator;
 
 public class IPhoneFormUI extends AbstractUI<Form> implements FormUI {
 
+	private IPhoneCanvasUI canvasUI;
+
 	public IPhoneFormUI(MicroEmulator microEmulator, Form form) {
 		super(microEmulator, form);
+
+		canvasUI = new IPhoneCanvasUI(microEmulator, new Canvas() {
+			
+			@Override
+			protected void paint(Graphics g) {
+				try {
+					Method formPaint = Form.class.getMethod("paint", Graphics.class);
+					formPaint.setAccessible(true);
+					formPaint.invoke(displayable, g);
+				} catch (SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoSuchMethodException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}){@Override
+		protected void updateToolbar() {
+			IPhoneFormUI.this.toolbar=this.toolbar;
+			IPhoneFormUI.this.updateToolbar();
+		}};
 	}
 
 	public int append(Image img) {
@@ -74,18 +113,15 @@ public class IPhoneFormUI extends AbstractUI<Form> implements FormUI {
 	}
 
 	public void hideNotify() {
-		// TODO Auto-generated method stub
-
+		canvasUI.hideNotify();
 	}
 
 	public void invalidate() {
-		// TODO Auto-generated method stub
-
+		canvasUI.invalidate();
 	}
 
 	public void showNotify() {
-		// TODO Auto-generated method stub
-
+		canvasUI.showNotify();
 	}
 
 }

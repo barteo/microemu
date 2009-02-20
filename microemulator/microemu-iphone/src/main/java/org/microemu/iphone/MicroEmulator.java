@@ -43,17 +43,13 @@ import obc.UIApplication;
 import obc.UIHardware;
 import obc.UIWindow;
 
-import org.microemu.DisplayComponent;
 import org.microemu.MIDletBridge;
 import org.microemu.MIDletContext;
 import org.microemu.RecordStoreManager;
 import org.microemu.app.CommonInterface;
 import org.microemu.app.launcher.Launcher;
 import org.microemu.device.Device;
-import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
-import org.microemu.device.FontManager;
-import org.microemu.device.InputMethod;
 import org.microemu.iphone.device.IPhoneDevice;
 import org.microemu.iphone.device.IPhoneDeviceDisplay;
 import org.microemu.iphone.device.IPhoneFontManager;
@@ -166,6 +162,29 @@ public class MicroEmulator extends UIApplication {
 		init(Arrays.asList("--usesystemclassloader"));
 	}
 
+	@Message
+	public void applicationDidReceiveMemoryWarning$(Object unused) {
+		System.out.println("!!!!!!!!!!!MEMORY-WARNING!!!!!!!!!!!!!");
+	}
+	
+	@Override
+	@Message
+	public void applicationDidResume() {
+		System.out.println("MicroEmulator.applicationDidResume()");
+		try {
+			MIDletBridge.getMIDletContext().getMIDletAccess().startApp();
+		} catch (MIDletStateChangeException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	@Override
+	@Message
+	public void applicationWillSuspend() {
+		System.out.println("MicroEmulator.applicationWillSuspend()");
+		MIDletBridge.getMIDletContext().getMIDletAccess().pauseApp();
+	}
+	
 	private IPhoneInputMethod inputMethod = new IPhoneInputMethod();
 
 	private IPhoneDeviceDisplay deviceDisplay;
@@ -187,42 +206,16 @@ public class MicroEmulator extends UIApplication {
 		Launcher.setSuiteName("MicroEmulator for iPhone");
 
 		// don't know why this is needed...
-		postFromNewTread(new Runnable() {
-			public void run() {
-				common.initMIDlet(true);
-			}
-		});
-
+		ThreadDispatcher.dispatchOnMainThread(new Runnable(){public void run() {
+			common.initMIDlet(true);
+		}}, false);
 	}
 
-	private Runnable runnable;
-
-	public void postFromNewTread(final Runnable r) {
-		Scope scope = new Scope();
-		new Thread(new Runnable() {
-			public void run() {
-				Scope scope = new Scope();
-				post(r);
-				scope.close();
-			}
-		}).start();
-		scope.close();
-	}
-
-	public synchronized boolean post(Runnable r) {
-		runnable = r;
-		this.performSelectorOnMainThread$withObject$waitUntilDone$(new joc.Selector("handle"), null, YES);
-		return true;
-	}
 
 	public static CommonInterface getCommon() {
 		return common;
 	}
 
-	@Message
-	public void handle() {
-		runnable.run();
-	}
 
 	public UIWindow getWindow() {
 		return window;

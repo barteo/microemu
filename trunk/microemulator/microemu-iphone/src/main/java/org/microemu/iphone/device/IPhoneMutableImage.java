@@ -40,29 +40,29 @@ import straptease.CoreGraphics;
 import straptease.CoreGraphicsConstants;
 
 public class IPhoneMutableImage extends MutableImage implements IPhoneImage {
-	
-	private Pointer<CGImage> bitmap;
+
 	private Pointer<CGContext> imageContext;
 	private Pointer<CGColorSpace> colorSpace;
-	
-	
+	private int width;
+	private int height;
+	private IPhoneDisplayGraphics displayGraphics;
+
 	public IPhoneMutableImage(int width, int height) {
+		this.width = width;
+		this.height = height;
 		colorSpace = CoreGraphics.CGColorSpaceCreateDeviceRGB();
-		imageContext = CoreGraphics.CGBitmapContextCreate(null,
-				width, height, 8, width * 4, colorSpace,
+		imageContext = CoreGraphics.CGBitmapContextCreate(null, width, height, 8, width * 4, colorSpace,
 				CoreGraphicsConstants.kCGBitmapByteOrder32Little | CGImageAlphaInfo.kCGImageAlphaNoneSkipFirst);
-		// System.out.println(3 + " " + imageContext);
-		bitmap = CoreGraphics.CGBitmapContextCreateImage(imageContext);
+		displayGraphics = new IPhoneDisplayGraphics(imageContext, getWidth(), getHeight(), true);
 	}
 
 	@Override
 	public int[] getData() {
-        throw new UnsupportedOperationException("Currently not supported on iPhone");
+		throw new UnsupportedOperationException("Currently not supported on iPhone");
 	}
 
 	@Override
 	public Graphics getGraphics() {
-       IPhoneDisplayGraphics displayGraphics = new IPhoneDisplayGraphics(imageContext, getWidth(), getHeight());
 		return displayGraphics;
 	}
 
@@ -72,57 +72,51 @@ public class IPhoneMutableImage extends MutableImage implements IPhoneImage {
 	}
 
 	public Pointer<CGImage> getBitmap() {
-		if(bitmap!=null){
-			CoreGraphics.CGImageRelease(bitmap);
-			bitmap = CoreGraphics.CGBitmapContextCreateImage(imageContext);;
-		}
-		return bitmap;
+		return CoreGraphics.CGBitmapContextCreateImage(imageContext);
 	}
 
 	@Override
 	public int getWidth() {
-		return (int) CoreGraphics.CGImageGetWidth(bitmap);
+		return width;
 	}
-	
+
 	@Override
 	public int getHeight() {
-		return (int) CoreGraphics.CGImageGetHeight(bitmap);
+		return height;
 	}
 
 	@Override
-    public void getRGB(int []argb, int offset, int scanlength,
-            int x, int y, int width, int height) {
+	public void getRGB(int[] argb, int offset, int scanlength, int x, int y, int width, int height) {
 
-        if (width <= 0 || height <= 0)
-            return;
-        if (x < 0 || y < 0 || x + width > getWidth() || y + height > getHeight())
-            throw new IllegalArgumentException("Specified area exceeds bounds of image");
-        if ((scanlength < 0? -scanlength:scanlength) < width)
-            throw new IllegalArgumentException("abs value of scanlength is less than width");
-        if (argb == null)
-            throw new NullPointerException("null rgbData");
-        if (offset < 0 || offset + width > argb.length)
-            throw new ArrayIndexOutOfBoundsException();
-        if (scanlength < 0) {
-            if (offset + scanlength*(height-1) < 0)
-                throw new ArrayIndexOutOfBoundsException();
-        } else {
-            if (offset + scanlength*(height-1) + width > argb.length)
-                throw new ArrayIndexOutOfBoundsException();
-        }
+		if (width <= 0 || height <= 0)
+			return;
+		if (x < 0 || y < 0 || x + width > getWidth() || y + height > getHeight())
+			throw new IllegalArgumentException("Specified area exceeds bounds of image");
+		if ((scanlength < 0 ? -scanlength : scanlength) < width)
+			throw new IllegalArgumentException("abs value of scanlength is less than width");
+		if (argb == null)
+			throw new NullPointerException("null rgbData");
+		if (offset < 0 || offset + width > argb.length)
+			throw new ArrayIndexOutOfBoundsException();
+		if (scanlength < 0) {
+			if (offset + scanlength * (height - 1) < 0)
+				throw new ArrayIndexOutOfBoundsException();
+		} else {
+			if (offset + scanlength * (height - 1) + width > argb.length)
+				throw new ArrayIndexOutOfBoundsException();
+		}
 
-        throw new UnsupportedOperationException("Currently not supported on iPhone");
-        
-//        bitmap.getPixels(argb, offset, scanlength, x, y, width, height);
+		throw new UnsupportedOperationException("Currently not supported on iPhone");
 
-/*        for (int i = 0; i < argb.length; i++) {
-		    int a = (argb[i] & 0xFF000000);
-		    int b = (argb[i] & 0x00FF0000) >>> 16;
-		    int g = (argb[i] & 0x0000FF00) >>> 8;
-		    int r = (argb[i] & 0x000000FF);
-	
-		    argb[i] = a | (r << 16) | (g << 8) | b;
-        }*/
+		// bitmap.getPixels(argb, offset, scanlength, x, y, width, height);
+
+		/*
+		 * for (int i = 0; i < argb.length; i++) { int a = (argb[i] &
+		 * 0xFF000000); int b = (argb[i] & 0x00FF0000) >>> 16; int g = (argb[i]
+		 * & 0x0000FF00) >>> 8; int r = (argb[i] & 0x000000FF);
+		 * 
+		 * argb[i] = a | (r << 16) | (g << 8) | b; }
+		 */
 	}
-	
+
 }

@@ -73,12 +73,12 @@ public class IPhoneRecordStoreManager implements RecordStoreManager {
 
 	public String[] listRecordStores() {
 		// TODO Auto-generated method stub
-		return null;
+		return new String[]{};
 	}
 
-	public RecordStore openRecordStore(String recordStoreName, boolean createIfNecessary) throws RecordStoreException {
+	public RecordStore openRecordStore(final String recordStoreName, boolean createIfNecessary) throws RecordStoreException {
 		// TODO Auto-generated method stub
-		return null;
+		return new RecordStoreImpl(this, recordStoreName);
 	}
 
 	public void saveChanges(RecordStoreImpl recordStoreImpl) throws RecordStoreNotOpenException, RecordStoreException {

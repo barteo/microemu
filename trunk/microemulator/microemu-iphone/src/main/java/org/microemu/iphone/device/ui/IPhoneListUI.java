@@ -44,6 +44,7 @@ import obc.UIView;
 
 import org.microemu.device.ui.ListUI;
 import org.microemu.iphone.MicroEmulator;
+import org.microemu.iphone.ThreadDispatcher;
 
 public class IPhoneListUI extends AbstractUI<List> implements ListUI {
 
@@ -104,9 +105,11 @@ public class IPhoneListUI extends AbstractUI<List> implements ListUI {
 		
 		protected void doReload() {
 			if(tableView!=null)
-				microEmulator.postFromNewTread(new Runnable(){public void run() {
-					tableView.reloadData();
-				}});
+				ThreadDispatcher.dispatchOnMainThread(new Runnable() {
+					public void run() {
+						tableView.reloadData();
+					}
+				}, false);
 		}
 	}
 

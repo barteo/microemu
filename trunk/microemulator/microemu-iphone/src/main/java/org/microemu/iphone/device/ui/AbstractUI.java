@@ -25,8 +25,7 @@
  */
 package org.microemu.iphone.device.ui;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Vector;
 
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
@@ -42,6 +41,7 @@ import obc.UIToolbar;
 import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.DisplayableUI;
 import org.microemu.iphone.MicroEmulator;
+import org.microemu.iphone.ThreadDispatcher;
 
 public abstract class AbstractUI<T extends Displayable> extends NSObject implements DisplayableUI {
 
@@ -49,7 +49,7 @@ public abstract class AbstractUI<T extends Displayable> extends NSObject impleme
 
 	public static final int TOOLBAR_HEIGHT = 40;
 
-	protected List<CommandUI> commands = new LinkedList<CommandUI>();
+	protected Vector<CommandUI> commands = new Vector<CommandUI>();
 
 	protected CommandListener commandListener;
 
@@ -67,11 +67,11 @@ public abstract class AbstractUI<T extends Displayable> extends NSObject impleme
 
 	public void addCommandUI(CommandUI cmd) {
 		commands.add(cmd);
-		microEmulator.postFromNewTread(new Runnable() {
+		ThreadDispatcher.dispatchOnMainThread(new Runnable() {
 			public void run() {
 				updateToolbar();
 			}
-		});
+		}, false);
 	}
 
 	protected void updateToolbar() {
@@ -89,11 +89,11 @@ public abstract class AbstractUI<T extends Displayable> extends NSObject impleme
 
 	public void removeCommandUI(CommandUI cmd) {
 		commands.remove(cmd);
-		microEmulator.postFromNewTread(new Runnable() {
+		ThreadDispatcher.dispatchOnMainThread(new Runnable() {
 			public void run() {
 				updateToolbar();
 			}
-		});
+		}, false);
 	}
 
 	public void setCommandListener(CommandListener l) {
@@ -112,5 +112,9 @@ public abstract class AbstractUI<T extends Displayable> extends NSObject impleme
 		public void call() {
 			commandListener.commandAction(command, displayable);
 		}
+	}
+	
+	public Vector getCommandsUI() {
+		return commands;
 	}
 }

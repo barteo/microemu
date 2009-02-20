@@ -53,6 +53,7 @@ import org.microemu.device.ui.ListUI;
 import org.microemu.device.ui.TextBoxUI;
 import org.microemu.device.ui.UIFactory;
 import org.microemu.iphone.MicroEmulator;
+import org.microemu.iphone.ThreadDispatcher;
 import org.microemu.iphone.device.ui.IPhoneAlertUI;
 import org.microemu.iphone.device.ui.IPhoneCanvasUI;
 import org.microemu.iphone.device.ui.IPhoneCommandUI;
@@ -78,7 +79,7 @@ public class IPhoneDevice implements Device {
 
 				@Override
 				protected void post(Event event) {
-					microEmulator.post(event);
+					ThreadDispatcher.dispatchOnMainThread(event, false);
 				}
 
 			};

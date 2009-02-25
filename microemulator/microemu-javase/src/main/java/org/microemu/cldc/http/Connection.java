@@ -290,7 +290,7 @@ public class Connection implements HttpConnection, ConnectionImplementation {
 			connected = true;
 		}
 
-		return cn.getHeaderField(n);
+		return cn.getHeaderField(getImplIndex(n));
 	}
 
 	public String getHeaderFieldKey(int n) throws IOException {
@@ -302,7 +302,14 @@ public class Connection implements HttpConnection, ConnectionImplementation {
 			connected = true;
 		}
 
-		return cn.getHeaderFieldKey(n);
+		return cn.getHeaderFieldKey(getImplIndex(n));
+	}
+
+	private int getImplIndex(int index){
+		if (cn.getHeaderFieldKey(0) == null && cn.getHeaderField(0) != null){
+			index++;
+		}
+		return index;
 	}
 
 	public InputStream openInputStream() throws IOException {

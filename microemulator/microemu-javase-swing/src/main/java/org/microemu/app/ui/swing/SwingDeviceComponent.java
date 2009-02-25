@@ -442,7 +442,11 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 
 		Dimension size = getSize();
 		offg.setColor(UIManager.getColor("text"));
-		offg.fillRect(0, 0, size.width, size.height);
+		try {
+			offg.fillRect(0, 0, size.width, size.height);
+		} catch (NullPointerException ex) {
+			// Fix for NPE in sun.java2d.pipe.SpanShapeRenderer.renderRect(..) on Mac platform
+		}
 		Device device = DeviceFactory.getDevice();
 		if (device == null) {
 			g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);

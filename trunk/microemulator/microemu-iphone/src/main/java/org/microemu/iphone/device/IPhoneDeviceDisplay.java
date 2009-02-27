@@ -32,9 +32,6 @@ import java.io.InputStream;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
 
-import joc.Pointer;
-import obc.NSData;
-import obc.UIImage;
 import obc.UIView;
 
 import org.microemu.DisplayAccess;
@@ -122,15 +119,8 @@ public class IPhoneDeviceDisplay implements DeviceDisplay {
 	}
 
 	public Image createImage(byte[] imageData, int imageOffset, int imageLength) {
-		byte[] offsetImageData=new byte[imageLength];
-		System.arraycopy(imageData, imageOffset, offsetImageData, 0, imageLength);
-		Pointer<Byte> imageDataPointer=Pointer.box(offsetImageData);
-		try {
-			return new IPhoneImmutableImage(new UIImage().initWithData$(NSData.$dataWithBytes$length$(imageDataPointer, imageLength)).imageRef());
-		} finally {
-			Pointer.free(imageDataPointer);
-		}
- 	}
+		return new IPhoneImmutableImage(imageData, imageOffset, imageLength);
+	}
 
 	public Image createImage(Image image, int x, int y, int width, int height, int transform) {
 		// TODO AndroidDisplayGraphics.drawRegion code is similar

@@ -102,8 +102,6 @@ public class IPhoneDisplayGraphics extends javax.microedition.lcdui.Graphics {
 		Pointer<CGRect> rect=CoreGraphics.CGRectMake(newx, newy, img.getWidth(), img.getHeight());
         Pointer<CGImage> bitmap = ((IPhoneImage)img).getBitmap();
 		CoreGraphics.CGContextDrawImage(context, rect,  bitmap);
-		//have to release the bitmap!
-		CoreGraphics.CGImageRelease(bitmap);
 	}
 
 	public void drawLine(int x1, int y1, int x2, int y2) {

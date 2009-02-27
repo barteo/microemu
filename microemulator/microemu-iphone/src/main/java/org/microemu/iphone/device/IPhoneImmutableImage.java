@@ -28,6 +28,8 @@ package org.microemu.iphone.device;
 
 import joc.Pointer;
 import obc.CGImage;
+import obc.NSData;
+import obc.UIImage;
 import straptease.CoreGraphics;
 
 public class IPhoneImmutableImage extends javax.microedition.lcdui.Image implements IPhoneImage {
@@ -36,18 +38,27 @@ public class IPhoneImmutableImage extends javax.microedition.lcdui.Image impleme
 	
 	public IPhoneImmutableImage(Pointer<CGImage> bitmap) {
 		this.bitmap = bitmap;
+    	CoreGraphics.CGImageRetain(bitmap);
+		System.out.println("Retaining bitmap "+this+" "+bitmap);
 	}
 
     public IPhoneImmutableImage(IPhoneMutableImage image) {
     	this(CoreGraphics.CGImageCreateCopy(image.getBitmap()));
+    }
+    
+    public IPhoneImmutableImage(byte[] imageData, int imageOffset, int imageLength) {
+		byte[] offsetImageData=new byte[imageLength];
+		System.arraycopy(imageData, imageOffset, offsetImageData, 0, imageLength);
+		Pointer<Byte> imageDataPointer=Pointer.box(offsetImageData);
+		UIImage uiiImage=new UIImage().initWithData$(NSData.$dataWithBytes$length$(imageDataPointer, imageLength));
+		uiiImage.retain();
+		bitmap=uiiImage.imageRef();
     }
 
     /* (non-Javadoc)
 	 * @see org.microemu.iphone.device.IPhoneImage#getBitmap()
 	 */
     public Pointer<CGImage> getBitmap() {
-    	//retain it everytime
-    	CoreGraphics.CGImageRetain(bitmap);
 		return bitmap;
 	}
 
@@ -95,4 +106,9 @@ public class IPhoneImmutableImage extends javax.microedition.lcdui.Image impleme
         }*/
 	}
 	
+	@Override
+	protected void finalize() throws Throwable {
+		System.out.println("Releasing bitmap "+this+" "+bitmap);
+	   	CoreGraphics.CGImageRelease(bitmap);
+	}
 }

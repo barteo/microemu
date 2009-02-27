@@ -112,7 +112,7 @@
             <id>pyx4j.com-file-development</id>
             <url>file:///home/apache/pyx4j-repository/maven2-snapshot</url>
         </snapshotRepository>
-        
+
     </distributionManagement>
 
 <!-- 4snapshot begin { -->
@@ -129,7 +129,7 @@
             </releases>
         </repository>
     </repositories>
--->    
+-->
 <!-- 4snapshot end } -->
 
     <pluginRepositories>
@@ -146,7 +146,7 @@
                 <enabled>false</enabled>
             </releases>
         </pluginRepository>
--->        
+-->
 <!-- 4snapshot end } -->
 
         <pluginRepository>
@@ -164,7 +164,7 @@
         <javaRunTimeJar>${java.home}/lib/rt.jar</javaRunTimeJar>
         <javaRunTimeSecurityJar>${java.home}/lib/jsse.jar</javaRunTimeSecurityJar>
         <assemblyPluginVersion>2.2-beta-1</assemblyPluginVersion>
-        
+
         <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
     </properties>
 
@@ -446,6 +446,8 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
                     <quiet>true</quiet>
+                    <!-- For Linux 64-bit -->
+                    <maxmemory>256m</maxmemory>
                 </configuration>
             </plugin>
             <plugin>

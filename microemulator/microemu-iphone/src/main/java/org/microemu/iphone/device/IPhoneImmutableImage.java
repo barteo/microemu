@@ -27,10 +27,14 @@
 package org.microemu.iphone.device;
 
 import joc.Pointer;
+import obc.CGColorSpace;
+import obc.CGContext;
 import obc.CGImage;
 import obc.NSData;
 import obc.UIImage;
+import straptease.CGImageAlphaInfo;
 import straptease.CoreGraphics;
+import straptease.CoreGraphicsConstants;
 
 public class IPhoneImmutableImage extends javax.microedition.lcdui.Image implements IPhoneImage {
 
@@ -53,6 +57,29 @@ public class IPhoneImmutableImage extends javax.microedition.lcdui.Image impleme
 		UIImage uiiImage=new UIImage().initWithData$(NSData.$dataWithBytes$length$(imageDataPointer, imageLength));
 		uiiImage.retain();
 		bitmap=uiiImage.imageRef();
+    }
+    
+    public IPhoneImmutableImage(int[] argb, int width, int height){
+		Pointer<CGColorSpace> colorSpace = CoreGraphics.CGColorSpaceCreateDeviceRGB();
+
+    	Pointer<Integer> data = Pointer.box(argb);
+		Pointer<CGContext> imageContext = CoreGraphics.CGBitmapContextCreate(data,
+				width, height, 8, width * 4, colorSpace,
+				CoreGraphicsConstants.kCGBitmapByteOrder32Little | CGImageAlphaInfo.kCGImageAlphaNoneSkipFirst);
+
+		bitmap = CoreGraphics.CGBitmapContextCreateImage(imageContext);
+//
+//		Pointer<CGRect> rect=CoreGraphics.CGRectMake(GAME_FIELD_X, GAME_FIELD_Y, GAME_FIELD_WIDTH, GAME_FIELD_HEIGHT);
+//
+//		// flip upside down
+//		CoreGraphics.CGContextTranslateCTM(uiContext, 0, CoreGraphics.CGRectGetMaxY(rect));
+//		CoreGraphics.CGContextScaleCTM(uiContext, 1.0f, -1.0f);
+//
+//		CoreGraphics.CGContextDrawImage(uiContext, rect, image);
+		Pointer.free(data);
+//		CoreGraphics.CGContextRelease(imageContext);
+//		CoreGraphics.CGImageRelease(image);
+
     }
 
     /* (non-Javadoc)

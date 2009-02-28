@@ -78,7 +78,9 @@ public class IPhoneRecordStoreManager implements RecordStoreManager {
 
 	public RecordStore openRecordStore(final String recordStoreName, boolean createIfNecessary) throws RecordStoreException {
 		// TODO Auto-generated method stub
-		return new RecordStoreImpl(this, recordStoreName);
+		RecordStoreImpl store=new RecordStoreImpl(this, recordStoreName);
+		store.setOpen(true);
+		return store;
 	}
 
 	public void saveChanges(RecordStoreImpl recordStoreImpl) throws RecordStoreNotOpenException, RecordStoreException {

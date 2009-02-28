@@ -238,8 +238,8 @@ public class IPhoneDeviceDisplay implements DeviceDisplay {
 				newrgb[i] = (0x00ffffff & rgb[i]) | 0xff000000;
 			}
 		}
-        throw new UnsupportedOperationException("Currently not supported on iPhone");
-//        return new AndroidImmutableImage(Bitmap.createBitmap(newrgb, width, height, Bitmap.Config.ARGB_8888));
+		
+		return new IPhoneImmutableImage(newrgb, width, height);
 	}
 
 	public MutableImage getDisplayImage() {

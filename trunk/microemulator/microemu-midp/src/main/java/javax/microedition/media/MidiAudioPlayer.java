@@ -67,6 +67,7 @@ class MidiAudioPlayer implements Player, MetaEventListener
     		sequence = MidiSystem.getSequence( stream );
     		sequencer.setSequence(sequence);
 	    } 
+	    catch( UnsatisfiedLinkError e ){ e.printStackTrace(); }
 	    catch( IOException e ){ e.printStackTrace(); }
 	    catch( MidiUnavailableException e ){ e.printStackTrace(); }
 	    catch( InvalidMidiDataException e ){ e.printStackTrace(); }

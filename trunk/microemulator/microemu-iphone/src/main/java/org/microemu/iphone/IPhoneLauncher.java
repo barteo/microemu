@@ -33,9 +33,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.net.URLEncoder;
-import java.util.Enumeration;
 import java.util.Map.Entry;
 import java.util.jar.Manifest;
 
@@ -46,9 +44,13 @@ import javax.microedition.lcdui.List;
 import javax.microedition.lcdui.TextBox;
 import javax.microedition.lcdui.TextField;
 
+import org.microemu.Injected;
 import org.microemu.MIDletEntry;
 import org.microemu.app.CommonInterface;
+import org.microemu.app.classloader.MIDletClassLoader;
 import org.microemu.app.launcher.Launcher;
+import org.microemu.app.util.MIDletThread;
+import org.microemu.app.util.MIDletTimer;
 
 public class IPhoneLauncher extends Launcher {
 
@@ -73,9 +75,13 @@ public class IPhoneLauncher extends Launcher {
 	}
 
 	private static void addJar(File file) throws MalformedURLException, IOException, ClassNotFoundException {
-		URLClassLoader classLoader = new IPhoneClassLoader(file);
+		MIDletClassLoader mcl = new MIDletClassLoader(IPhoneLauncher.class.getClassLoader());
+		mcl.disableClassPreporcessing(Injected.class);
+		mcl.disableClassPreporcessing(MIDletThread.class);
+		mcl.disableClassPreporcessing(MIDletTimer.class);
+		mcl.addURL(file.toURL());
 
-		InputStream is = classLoader.getResourceAsStream("/META-INF/MANIFEST.MF");
+		InputStream is = mcl.getResourceAsStream("/META-INF/MANIFEST.MF");
 		Manifest manifest=new Manifest(is);
 		for (Entry<Object, Object> entry : manifest.getMainAttributes().entrySet()) {
 			if(entry.getKey().toString().startsWith("MIDlet-")){
@@ -83,7 +89,7 @@ public class IPhoneLauncher extends Launcher {
 					Integer.parseInt(entry.getKey().toString().substring(7));
 					System.out.println("Adding: " + entry.getValue());
 					String[] value=entry.getValue().toString().split(",");
-					addMIDletEntry(new MIDletEntry(value[0].trim(), classLoader.loadClass(value[2].trim())));					
+					addMIDletEntry(new MIDletEntry(value[0].trim(), mcl.loadClass(value[2].trim())));					
 				} catch (NumberFormatException e) {
 					//ignore
 				}
@@ -178,44 +184,4 @@ public static void closeQuietly(OutputStream output) {
     }
 }
 
-}
-final class IPhoneClassLoader extends URLClassLoader {
-	private File file;
-	IPhoneClassLoader(File file) throws MalformedURLException {
-		super(new URL[]{file.toURL()});
-		this.file=file;
-	}
-
-	@Override
-	public URL getResource(String name) {
-		System.out.println("IPhoneClassLoader.getResource("+name+")");
-		try {
-			Enumeration<URL> enumeration = getResources(name);
-			while (enumeration.hasMoreElements()) {
-				URL url = enumeration.nextElement();
-				if(url.toExternalForm().contains(file.toURL().toExternalForm()))
-					return url;
-			}
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return super.getResource(name);
-	}
-
-	@Override
-	public InputStream getResourceAsStream(String name) {
-		URL url = getResource(name);
-		if (url == null)
-			return null;
-		else
-			try {
-				return url.openStream();
-			} catch (IOException e) {
-				return null;
-			}
-	}
 }

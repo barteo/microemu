@@ -26,8 +26,6 @@
  */
 package org.microemu.iphone;
 
-import static joc.Static.YES;
-
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +35,6 @@ import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
 import joc.Message;
-import joc.Scope;
 import obc.CGRect;
 import obc.UIApplication;
 import obc.UIHardware;
@@ -48,6 +45,7 @@ import org.microemu.MIDletContext;
 import org.microemu.RecordStoreManager;
 import org.microemu.app.CommonInterface;
 import org.microemu.app.launcher.Launcher;
+import org.microemu.app.util.MIDletResourceLoader;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 import org.microemu.iphone.device.IPhoneDevice;
@@ -85,6 +83,8 @@ public class MicroEmulator extends UIApplication {
 			} else {
 				try {
 					MIDlet midlet = (MIDlet) launcher.getSelectedMidletEntry().getMIDletClass().newInstance();
+					//set the classloader, so that resource loading works
+					MIDletResourceLoader.classLoader=midlet.getClass().getClassLoader();
 					MIDletBridge.getMIDletAccess(midlet).startApp();
 					launcher.setCurrentMIDlet(midlet);
 				} catch (Exception e) {
@@ -204,7 +204,7 @@ public class MicroEmulator extends UIApplication {
 		System.setProperty("microedition.locale", Locale.getDefault().toString());
 
 		Launcher.setSuiteName("MicroEmulator for iPhone");
-
+		
 		// don't know why this is needed...
 		ThreadDispatcher.dispatchOnMainThread(new Runnable(){public void run() {
 			common.initMIDlet(true);

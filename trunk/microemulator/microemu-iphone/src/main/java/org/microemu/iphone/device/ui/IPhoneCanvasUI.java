@@ -30,7 +30,6 @@ import static joc.Static.YES;
 import java.awt.event.KeyEvent;
 
 import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Graphics;
 
 import joc.Message;
 import joc.Pointer;
@@ -38,12 +37,14 @@ import joc.Runtime;
 import joc.Selector;
 import joc.Static;
 import obc.CGContext;
+import obc.CGImage;
 import obc.CGPoint;
 import obc.CGRect;
 import obc.NSArray;
 import obc.NSCFSet;
 import obc.NSConcreteNotification;
 import obc.NSNotificationCenter;
+import obc.UIColor;
 import obc.UIEvent;
 import obc.UITextField;
 import obc.UIToolbar;
@@ -54,7 +55,7 @@ import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.device.ui.CanvasUI;
 import org.microemu.iphone.MicroEmulator;
-import org.microemu.iphone.device.IPhoneDisplayGraphics;
+import org.microemu.iphone.device.IPhoneMutableImage;
 
 import straptease.CoreGraphics;
 
@@ -69,15 +70,21 @@ public class IPhoneCanvasUI extends AbstractUI<Canvas> implements CanvasUI {
 		private UITextField keyboardHandler;
 		private String oldText = "";
 		private boolean keybordVisible=false;
+		private IPhoneMutableImage offscreen;
 
 		private CanvasView(Canvas canvas) {
 			this.canvas = canvas;
 			setMultipleTouchEnabled$(YES);
 			setUserInteractionEnabled$(YES);
 			setClearsContextBeforeDrawing$(Static.NO);
-			setClearsContext$(Static.NO);
+//			setClearsContext$(Static.NO);
+			setBackgroundColor$(UIColor.$clearColor());
+			
+			offscreen=new IPhoneMutableImage(canvas.getWidth(), canvas.getHeight());
+			
+			System.out.println(clearsContextBeforeDrawing());
 		}
-
+		
 		@Override
 		public UIView initWithFrame$(CGRect arg0) {
 			UIView view = super.initWithFrame$(arg0);
@@ -120,11 +127,19 @@ public class IPhoneCanvasUI extends AbstractUI<Canvas> implements CanvasUI {
 				return;
 			}
 			Pointer<CGContext> context = CoreGraphics.UIGraphicsGetCurrentContext();
-			CoreGraphics.CGContextSaveGState(context);
-			Graphics g = new IPhoneDisplayGraphics(context, canvas.getWidth(), canvas.getHeight(), false);
-			ma.getDisplayAccess().paint(g);
+			CoreGraphics.CGContextTranslateCTM(context, 0, canvas.getHeight());
+			CoreGraphics.CGContextScaleCTM(context, 1.0f, -1.0f);
+//			CoreGraphics.CGContextSaveGState(context);
+//			Graphics g = new IPhoneDisplayGraphics(context, canvas.getWidth(), canvas.getHeight(), false);
+			ma.getDisplayAccess().paint(offscreen.getGraphics());
+		
+			Pointer<CGRect> rect=CoreGraphics.CGRectMake(0, 0, offscreen.getWidth(), offscreen.getHeight());
+	        Pointer<CGImage> bitmap = offscreen.getBitmap();
+			CoreGraphics.CGContextDrawImage(context, rect,  bitmap);
+			CoreGraphics.CGImageRelease(bitmap);
+			
 //			g.drawString("XXX", 100, 100, 0);
-			CoreGraphics.CGContextRestoreGState(context);
+//			CoreGraphics.CGContextRestoreGState(context);
 		}
 
 		@Override
@@ -148,7 +163,7 @@ public class IPhoneCanvasUI extends AbstractUI<Canvas> implements CanvasUI {
 				// System.out.println(touch.locationInView$(this));
 				CGPoint point = touch.locationInView$(this);
 
-				ma.getDisplayAccess().pointerPressed((int) point.x, canvas.getHeight() - (int) point.y);
+				ma.getDisplayAccess().pointerPressed((int) point.x, (int) point.y);
 			}
 		}
 
@@ -173,7 +188,7 @@ public class IPhoneCanvasUI extends AbstractUI<Canvas> implements CanvasUI {
 				// System.out.println(touch.locationInView$(this));
 				CGPoint point = touch.locationInView$(this);
 
-				ma.getDisplayAccess().pointerReleased((int) point.x, canvas.getHeight() - (int) point.y);
+				ma.getDisplayAccess().pointerReleased((int) point.x, (int) point.y);
 			}
 		}
 
@@ -198,8 +213,8 @@ public class IPhoneCanvasUI extends AbstractUI<Canvas> implements CanvasUI {
 				// System.out.println(touch);
 				// System.out.println(touch.locationInView$(this));
 				CGPoint point = touch.locationInView$(this);
-
-				ma.getDisplayAccess().pointerDragged((int) point.x, canvas.getHeight() - (int) point.y);
+				
+				ma.getDisplayAccess().pointerDragged((int) point.x, (int) point.y);
 			}
 		}
 

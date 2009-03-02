@@ -56,12 +56,9 @@ public class IPhoneDisplayGraphics extends javax.microedition.lcdui.Graphics {
 
 	private int height;
 	
-	private boolean offscreen;
-	
 	public IPhoneDisplayGraphics(Pointer<CGContext> context, int width, int height, boolean offscreen) {
 		this.context = context;
 		this.height = height;
-		this.offscreen = offscreen;
 		this.clip = new Rectangle(0,0,width,height);
 //		CoreGraphics.CGContextClipToRect(canvas, CoreGraphics.CGRectMake(0, 0, width, height));
 		//flip upside down
@@ -99,9 +96,20 @@ public class IPhoneDisplayGraphics extends javax.microedition.lcdui.Graphics {
             newy -= img.getHeight() / 2;
         }
 
-		Pointer<CGRect> rect=CoreGraphics.CGRectMake(newx, newy, img.getWidth(), img.getHeight());
+     // Save the Context State because we want 
+     // to restore after we are done so we can draw normally again.
+        CoreGraphics.CGContextSaveGState(context);
+
+     // Setup the Context to Invert everything drawn on the Y Axis
+		CoreGraphics.CGContextTranslateCTM(context, 0, height);
+		CoreGraphics.CGContextScaleCTM(context, 1.0f, -1.0f);
+
+ 		Pointer<CGRect> rect=CoreGraphics.CGRectMake(newx, newy, img.getWidth(), img.getHeight());
         Pointer<CGImage> bitmap = ((IPhoneImage)img).getBitmap();
 		CoreGraphics.CGContextDrawImage(context, rect,  bitmap);
+		
+	    // Restore the Context State so drawing returns back to normal
+        CoreGraphics.CGContextRestoreGState(context);
 	}
 
 	public void drawLine(int x1, int y1, int x2, int y2) {
@@ -136,10 +144,6 @@ public class IPhoneDisplayGraphics extends javax.microedition.lcdui.Graphics {
         int newy = y;
 
         CoreGraphics.UIGraphicsPushContext(context);
-        if(!offscreen){
-			CoreGraphics.CGContextScaleCTM(context, 1.0f, -1.0f);
-			CoreGraphics.CGContextTranslateCTM(context, 0, -height);
-        }
        
         UIFont uifont = ((IPhoneFontManager)DeviceFactory.getDevice().getFontManager()).getUIFont(font);
         
@@ -169,10 +173,6 @@ public class IPhoneDisplayGraphics extends javax.microedition.lcdui.Graphics {
 ////        CoreGraphics.CGContextSetTextDrawingMode(context, CGTextDrawingMode.kCGTextFill);
 ////		CoreGraphics.CGContextShowTextAtPoint(context, newx, newy, str, str.length());
 		
-		if (!offscreen) {
-			CoreGraphics.CGContextTranslateCTM(context, 0, height);
-			CoreGraphics.CGContextScaleCTM(context, 1.0f, -1.0f);
-		}
 		CoreGraphics.UIGraphicsPopContext();
 	}
 
@@ -239,7 +239,26 @@ public class IPhoneDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	public void drawRegion(Image src, int x_src, int y_src, int width,
 			int height, int transform, int x_dst, int y_dst, int anchor) {
         // may throw NullPointerException, this is ok
-        throw new UnsupportedOperationException("Currently not supported on iPhone");
+        System.out.println("IPhoneDisplayGraphics.drawRegion()");
+        Pointer<CGRect> clipRect=CoreGraphics.CGRectMake(x_dst, y_dst, width, height);
+        
+        Pointer<CGRect> drawRect=CoreGraphics.CGRectMake(x_dst-x_src, y_dst-y_src,src.getWidth(), src.getHeight());
+        
+        // Save the Context State because we want 
+        // to restore after we are done so we can draw normally again.
+        CoreGraphics.CGContextSaveGState(context);
+
+        // Setup the Context to Invert everything drawn on the Y Axis
+   		CoreGraphics.CGContextTranslateCTM(context, 0, height);
+   		CoreGraphics.CGContextScaleCTM(context, 1.0f, -1.0f);
+
+   		CoreGraphics.CGContextClipToRect(context, clipRect);
+        CoreGraphics.CGContextDrawImage(context, drawRect, ((IPhoneImage)src).getBitmap());
+                     
+        
+    	CoreGraphics.CGContextRestoreGState(context);
+
+		
 //       if (x_src + width > src.getWidth() || y_src + height > src.getHeight() || width < 0 || height < 0 || x_src < 0
 //                || y_src < 0)
 //            throw new IllegalArgumentException("Area out of Image");

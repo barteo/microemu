@@ -31,6 +31,8 @@ or
 java -cp microemulator.jar org.microemu.app.Main path2yourApp/YourApp.jar
 ---
 
+     N.B. On Unix/Linux replace ; with :
+
 
     [[2]] Use microemulator.jar
 

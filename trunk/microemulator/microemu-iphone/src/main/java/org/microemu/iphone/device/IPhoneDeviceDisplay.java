@@ -29,6 +29,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
 
@@ -42,7 +43,9 @@ import org.microemu.device.DeviceDisplay;
 import org.microemu.device.MutableImage;
 import org.microemu.device.ui.CanvasUI;
 import org.microemu.device.ui.DisplayableUI;
+import org.microemu.device.ui.FormUI;
 import org.microemu.iphone.device.ui.IPhoneCanvasUI;
+import org.microemu.iphone.device.ui.IPhoneFormUI;
 
 public class IPhoneDeviceDisplay implements DeviceDisplay {
 	
@@ -316,11 +319,14 @@ public class IPhoneDeviceDisplay implements DeviceDisplay {
 		// }
 		// TODO
 		// Font oldf = g.getFont();
-		if (current instanceof CanvasUI) {
+		if (current instanceof IPhoneCanvasUI) {
 			UIView view = ((IPhoneCanvasUI) current).getCanvasView();
 			System.out.println("Need paint: "+this+" "+view);
 			view.setNeedsDisplay();
 //			view.setNeedsDisplayInRect$(new CGRect(x,y,width,height));
+		} else if (current instanceof IPhoneFormUI){
+			IPhoneFormUI formUI=(IPhoneFormUI)current;
+			formUI.updateLayout();
 		} else {
 			// TODO extend DisplayableUI interface
 			//current.paint();

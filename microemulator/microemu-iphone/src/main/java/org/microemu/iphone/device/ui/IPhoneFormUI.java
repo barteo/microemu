@@ -25,56 +25,145 @@
  */
 package org.microemu.iphone.device.ui;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Form;
-import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.Item;
+import javax.microedition.lcdui.StringItem;
+import javax.microedition.lcdui.TextField;
 
-import org.microemu.device.ui.CanvasUI;
+import joc.Message;
+import joc.Static;
+import obc.CGRect;
+import obc.NSIndexPath;
+import obc.NSObject;
+import obc.NSString;
+import obc.UILabel;
+import obc.UINavigationBar;
+import obc.UINavigationItem;
+import obc.UITableView;
+import obc.UITableViewCell;
+import obc.UITextField;
+import obc.UIToolbar;
+import obc.UIView;
+
 import org.microemu.device.ui.FormUI;
 import org.microemu.iphone.MicroEmulator;
+import org.microemu.iphone.ThreadDispatcher;
 
 public class IPhoneFormUI extends AbstractUI<Form> implements FormUI {
 
-	private IPhoneCanvasUI canvasUI;
+	static final int UIViewAutoresizingFlexibleHeight = 1 << 4;
+
+	static final int UIViewAutoresizingFlexibleWidth = 1 << 1;
+
+	private UITableView tableView;
+
+	private UIView view;
+
+	private UINavigationBar navigtionBar;
+
+	private Map<Item, UIView> itemViewMap = new HashMap<Item, UIView>();
 
 	public IPhoneFormUI(MicroEmulator microEmulator, Form form) {
 		super(microEmulator, form);
+	}
 
-		canvasUI = new IPhoneCanvasUI(microEmulator, new Canvas() {
-			
-			@Override
-			protected void paint(Graphics g) {
-				try {
-					Method formPaint = Form.class.getMethod("paint", Graphics.class);
-					formPaint.setAccessible(true);
-					formPaint.invoke(displayable, g);
-				} catch (SecurityException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (NoSuchMethodException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+	@Message
+	public final int tableView$numberOfRowsInSection$(UITableView table, int sectionIndex) {
+		return displayable.size();
+	}
+
+	@Message
+	public final UITableViewCell tableView$cellForRowAtIndexPath$(UITableView table, NSIndexPath indexPath) {
+		UITableViewCell cell = (UITableViewCell) table.dequeueReusableCellWithIdentifier$("formCell");
+		if (cell == null) {
+			cell = new UITableViewCell().init();
+			cell.setReuseIdentifier$("formCell");
+		}
+		Item item = displayable.get(indexPath.row());
+		UIView itemView = itemViewMap.get(item);
+		if (item instanceof TextField) {
+			final TextField tf = (TextField) item;
+			if (itemView == null) {
+				itemView = new UIView().initWithFrame$(new CGRect(0,0,200,100));
+				UILabel itemLabelView=new UILabel().initWithFrame$(new CGRect(0,0,100,100));
+				itemLabelView.setTag$(100);
+				UITextField itemTextField=new UITextField().initWithFrame$(new CGRect(100,0,100,100));
+				itemTextField.setTag$(200);
+				itemTextField.setDelegate$(new NSObject() {
+					@SuppressWarnings({ "unused" })
+					@joc.Message(name = "textFieldShouldReturn:", types = "c12@0:4@8")
+					public byte textFieldShouldReturn$(UITextField arg0) {
+						System.out.println(".textFieldShouldReturn$()");
+						arg0.resignFirstResponder();
+						try{
+						tf.setString(arg0.text().toString());
+						}catch (IllegalArgumentException e) {
+							arg0.setText$(tf.getString());
+						}
+						return Static.NO;
+					}
+				});
+				itemView.addSubview$(itemLabelView);
+				itemView.addSubview$(itemTextField);
+				itemViewMap.put(tf, itemView);
 			}
-		}){@Override
-		protected void updateToolbar() {
-			IPhoneFormUI.this.toolbar=this.toolbar;
-			IPhoneFormUI.this.updateToolbar();
-		}};
+			((UILabel)itemView.viewWithTag$(100)).setText$(tf.getLabel());
+			((UITextField)itemView.viewWithTag$(200)).setText$(tf.getString());
+
+			((UIView) cell.contentView()).addSubview$(itemView);
+		} else if (item instanceof StringItem) {
+			StringItem si = (StringItem) item;
+			cell.setText$(si.getText());
+		}
+		// if(choiceGroup.getType()==List.MULTIPLE&&displayable.isSelected(indexPath.row()))
+		// cell.setAccessoryType$(3);
+		// else
+		// cell.setAccessoryType$(0);
+		return cell;
+	}
+
+	public void hideNotify() {
+	}
+
+	public void invalidate() {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void showNotify() {
+		System.out.println("showNotify");
+
+		if (view == null) {
+			view = new UIView().initWithFrame$(microEmulator.getWindow().bounds());
+
+			navigtionBar = new UINavigationBar().initWithFrame$(new CGRect(0, 0,
+					microEmulator.getWindow().bounds().size.width, NAVIGATION_HEIGHT));
+			UINavigationItem title = new UINavigationItem().initWithTitle$(displayable.getTitle());
+			title.setBackButtonTitle$("Back");
+			navigtionBar.pushNavigationItem$(title);
+			view.addSubview$(navigtionBar);
+
+			tableView = new UITableView().initWithFrame$style$(new CGRect(0, NAVIGATION_HEIGHT, microEmulator
+					.getWindow().bounds().size.width, microEmulator.getWindow().bounds().size.height
+					- NAVIGATION_HEIGHT - TOOLBAR_HEIGHT), 0);
+
+			view.addSubview$(tableView);
+			toolbar = (UIToolbar) new UIToolbar().initWithFrame$(new CGRect(0,
+					microEmulator.getWindow().bounds().size.height - TOOLBAR_HEIGHT,
+					microEmulator.getWindow().bounds().size.width, TOOLBAR_HEIGHT));
+			view.addSubview$(toolbar);
+			updateToolbar();
+		}
+		tableView.setDataSource$(this);
+		tableView.setDelegate$(this);
+		tableView.reloadData();
+
+		view.retain();
+		microEmulator.getWindow().addSubview$(view);
 	}
 
 	public int append(Image img) {
@@ -112,16 +201,13 @@ public class IPhoneFormUI extends AbstractUI<Form> implements FormUI {
 
 	}
 
-	public void hideNotify() {
-		canvasUI.hideNotify();
+	public void updateLayout() {
+		System.out.println("IPhoneFormUI.updateLayout()");
+		if (tableView != null)
+			ThreadDispatcher.dispatchOnMainThread(new Runnable() {
+				public void run() {
+					tableView.reloadData();
+				}
+			}, false);
 	}
-
-	public void invalidate() {
-		canvasUI.invalidate();
-	}
-
-	public void showNotify() {
-		canvasUI.showNotify();
-	}
-
 }

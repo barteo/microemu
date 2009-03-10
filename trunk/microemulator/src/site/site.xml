@@ -19,7 +19,7 @@
 
     <bannerRight>
         <name>Sourceforge</name>
-        <src>http://sourceforge.net/sflogo.php?group_id=30014&amp;amp;type=4</src>
+        <src>http://sflogo.sourceforge.net/sflogo.php?group_id=30014&amp;amp;type=4</src>
         <href>http://sourceforge.net/projects/microemulator/</href>
     </bannerRight>
 
@@ -78,7 +78,7 @@
             <!--
             <item name="Preview 2.0.5" href="http://snapshot.microemu.org/" />
             -->
-            
+
             <item name="Changes and Plans" href="http://www.microemu.org/changes-report.html" />
         </menu>
 

@@ -120,7 +120,7 @@ public class IPhoneImmutableImage extends javax.microedition.lcdui.Image impleme
                 throw new ArrayIndexOutOfBoundsException();
         }
 
-        throw new UnsupportedOperationException("Currently not supported on iPhone");
+//        throw new UnsupportedOperationException("Currently not supported on iPhone");
 //        bitmap.getPixels(argb, offset, scanlength, x, y, width, height);
 
 /*        for (int i = 0; i < argb.length; i++) {

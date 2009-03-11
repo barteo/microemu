@@ -72,6 +72,7 @@ public class IPhoneMutableImage extends MutableImage implements IPhoneImage {
 	}
 
 	public Pointer<CGImage> getBitmap() {
+		displayGraphics.flushRenderQueue();
 		return CoreGraphics.CGBitmapContextCreateImage(imageContext);
 	}
 
@@ -106,7 +107,7 @@ public class IPhoneMutableImage extends MutableImage implements IPhoneImage {
 				throw new ArrayIndexOutOfBoundsException();
 		}
 
-		throw new UnsupportedOperationException("Currently not supported on iPhone");
+//		throw new UnsupportedOperationException("Currently not supported on iPhone");
 
 		// bitmap.getPixels(argb, offset, scanlength, x, y, width, height);
 

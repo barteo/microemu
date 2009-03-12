@@ -176,7 +176,7 @@ public abstract class Canvas extends Displayable
     		if (this instanceof GameCanvas) {
     			width = -1;
     			height = -1;
-    		    GameCanvasKeyAccess access = MIDletBridge.getMIDletAccess().getGameCanvasKeyAccess();
+    		    GameCanvasKeyAccess access = MIDletBridge.getGameCanvasKeyAccess((GameCanvas) this);
     		    access.initBuffer();
     		}
     		

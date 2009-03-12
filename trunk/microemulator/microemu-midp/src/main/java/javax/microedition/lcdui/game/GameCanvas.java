@@ -90,9 +90,7 @@ public abstract class GameCanvas extends Canvas {
     /** Creates a new instance of GameCanvas */
     protected GameCanvas(boolean suppressKeyEvents) 
     {
-        if (MIDletBridge.getMIDletAccess().getGameCanvasKeyAccess() == null) {
-            MIDletBridge.getMIDletAccess().setGameCanvasKeyAccess(new KeyAccess());
-        }
+        MIDletBridge.registerGameCanvasKeyAccess(this, new KeyAccess());
         
         this.suppressKeyEvents = suppressKeyEvents;
         // never should the size of the Canvas become greater than this

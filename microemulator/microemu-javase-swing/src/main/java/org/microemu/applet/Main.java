@@ -61,6 +61,7 @@ import org.microemu.device.j2se.J2SEDevice;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEFontManager;
 import org.microemu.device.j2se.J2SEInputMethod;
+import org.microemu.device.ui.EventDispatcher;
 import org.microemu.log.Logger;
 import org.microemu.util.JadMidletEntry;
 import org.microemu.util.JadProperties;
@@ -216,6 +217,14 @@ public class Main extends Applet implements MicroEmulator {
 			if (midletClassName == null) {
 				Logger.debug("There is no midlet parameter");
 				return;
+			}
+		}
+		
+		String maxFps = getParameter("maxfps");
+		if (maxFps != null) {
+			try {
+				EventDispatcher.maxFps = Integer.parseInt(maxFps);
+			} catch (NumberFormatException ex) {
 			}
 		}
 

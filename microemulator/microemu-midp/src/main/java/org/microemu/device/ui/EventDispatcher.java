@@ -30,8 +30,10 @@ public class EventDispatcher implements Runnable {
 	
 	public static final String EVENT_DISPATCHER_NAME = "event-thread";
 
-	private volatile boolean cancelled = false;
+	public static int maxFps = -1;
 
+	private volatile boolean cancelled = false;
+	
 	private Event head = null;
 
 	private Event tail = null;
@@ -41,6 +43,8 @@ public class EventDispatcher implements Runnable {
 	private PointerEvent scheduledPointerDraggedEvent = null;
 
 	private Object serviceRepaintsLock = new Object();
+	
+	private long lastPaintEventTime = 0;
 
 	public EventDispatcher() {
 	}
@@ -52,15 +56,30 @@ public class EventDispatcher implements Runnable {
 			synchronized (this) {
 				if (head != null) {
 					event = head;
-					head = event.next;
-					if (head == null) {
-						tail = null;
+
+					if (maxFps > 0 && event instanceof PaintEvent) {
+						long difference = System.currentTimeMillis() - lastPaintEventTime;
+						if (difference < (1000 / maxFps)) {
+							event = null;
+							try {
+								wait((1000 / maxFps) - difference);
+							} catch (InterruptedException e) {
+							}
+						}
 					}
-					if (event instanceof PaintEvent) {
-						scheduledPaintEvent = null;
-					}
-					if (event instanceof PointerEvent && ((PointerEvent) event).type == PointerEvent.POINTER_DRAGGED) {
-						scheduledPointerDraggedEvent = null;
+					
+					if (event != null) {
+						head = event.next;
+						if (head == null) {
+							tail = null;
+						}
+						if (event instanceof PaintEvent) {
+							scheduledPaintEvent = null;
+							lastPaintEventTime = System.currentTimeMillis();
+						}
+						if (event instanceof PointerEvent && ((PointerEvent) event).type == PointerEvent.POINTER_DRAGGED) {
+							scheduledPointerDraggedEvent = null;
+						}
 					}
 				} else {
 					try {

@@ -26,9 +26,11 @@
  */
 package org.microemu.app.util;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -44,57 +46,147 @@ import org.microemu.log.Logger;
  * 
  * @author vlads
  */
-public class MIDletTimer extends Timer {
+public class MIDletTimer extends Timer implements Runnable {
 
 	private static Map midlets = new WeakHashMap();
 
 	private String name;
 
 	private MIDletContext midletContext;
+	
+	// TODO use better data structure
+	private List tasks;
+	
+	private boolean cancelled;
 
+	private MIDletThread thread;
+	
 	public MIDletTimer() {
 		super();
 		StackTraceElement[] ste = new Throwable().getStackTrace();
 		name = ste[1].getClassName() + "." + ste[1].getMethodName();
+		tasks = new ArrayList();
+		cancelled = false;
+		thread = new MIDletThread(this);
+		thread.start();
 	}
 
+	// TODO exceptions
 	public void schedule(TimerTask task, Date time) {
 		register(this);
-		super.schedule(task, time);
+		schedule(task, time.getTime(), -1, false);
 	}
 
+	// TODO exceptions
 	public void schedule(TimerTask task, Date firstTime, long period) {
 		register(this);
-		super.schedule(task, firstTime, period);
+		schedule(task, firstTime.getTime(), period, false);
 	}
 
+	// TODO exceptions
 	public void schedule(TimerTask task, long delay) {
 		register(this);
-		super.schedule(task, delay);
+		schedule(task, System.currentTimeMillis() + delay, -1, false);
 	}
 
+	// TODO exceptions
 	public void schedule(TimerTask task, long delay, long period) {
 		register(this);
-		super.schedule(task, delay, period);
+		schedule(task, System.currentTimeMillis() + delay, period, false);
 	}
 
+	// TODO exceptions
 	public void scheduleAtFixedRate(TimerTask task, Date firstTime, long period) {
 		register(this);
-		super.schedule(task, firstTime, period);
+		schedule(task, firstTime.getTime(), period, true);
 	}
 
+	// TODO exceptions
 	public void scheduleAtFixedRate(TimerTask task, long delay, long period) {
 		register(this);
-		super.scheduleAtFixedRate(task, delay, period);
+		schedule(task, System.currentTimeMillis() + delay, period, true);
 	}
 
 	public void cancel() {
 		unregister(this);
-		super.cancel();
+		
+		terminate();
+	}
+	
+	public void run() {
+		while (!cancelled) {
+			MIDletTimerTask task = null;
+			long nextTimeTask = Long.MAX_VALUE;
+			synchronized (tasks) {
+				Iterator it = tasks.iterator();
+				while (it.hasNext()) {
+					MIDletTimerTask candidate = (MIDletTimerTask) it.next();
+					if (candidate.time > System.currentTimeMillis()) {
+						if (candidate.time < nextTimeTask) {
+							nextTimeTask = candidate.time;
+						}
+						continue;
+					}
+					if (task == null) {
+						task = candidate;
+					} else if (candidate.time < task.time) {
+						if (task.time < nextTimeTask) {
+							nextTimeTask = task.time;
+						}
+						task = candidate;
+					} else if (candidate.time < nextTimeTask) {
+						nextTimeTask = candidate.time;
+					}
+				}
+				tasks.remove(task);
+			}
+			
+			if (task != null) {
+				try {
+					task.task.run();
+				} catch (Throwable t) {
+					Logger.debug("MIDletTimerTask throws", t);
+					task = null;
+				}
+				if (task != null) {
+					synchronized (tasks) {
+						// TODO implement scheduling for fixed rate tasks	
+						if (task.period > 0) {
+							task.time = System.currentTimeMillis() + task.period;
+							tasks.add(task);
+							if (task.time < nextTimeTask) {
+								nextTimeTask = task.time;
+							}
+						}
+					}
+				}
+			}
+			
+			synchronized (tasks) {
+				try {
+					if (nextTimeTask == Long.MAX_VALUE) {
+						tasks.wait();
+					} else {
+						long timeout = nextTimeTask - System.currentTimeMillis();
+						if (timeout > 0) {
+							tasks.wait(timeout);
+						}
+					}
+				} catch (InterruptedException e) {
+				}
+			}
+		}
 	}
 
 	private void terminate() {
-		super.cancel();
+		cancelled = true;
+	}
+	
+	private void schedule(TimerTask task, long time, long period, boolean fixedRate) {
+		synchronized (tasks) {
+			tasks.add(new MIDletTimerTask(task, time, period, fixedRate));
+			tasks.notify();
+		}
 	}
 
 	private static void register(MIDletTimer timer) {
@@ -156,7 +248,24 @@ public class MIDletTimer extends Timer {
 				Logger.debug("unrecognized Object [" + o.getClass().getName() + "]");
 			}
 		}
-		;
 	}
 
+	private class MIDletTimerTask
+	{
+		private TimerTask task;
+		
+		private long time;
+		
+		private long period;
+		
+		private boolean fixedRate;
+
+		public MIDletTimerTask(TimerTask task, long time, long period, boolean fixedRate) {
+			this.task = task;
+			this.time = time;
+			this.period = period;
+			this.fixedRate = fixedRate;
+		}
+		
+	}
 }

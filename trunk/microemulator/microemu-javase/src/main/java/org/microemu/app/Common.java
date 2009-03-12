@@ -371,6 +371,7 @@ public class Common implements MicroEmulator, CommonInterface {
 				jad = loadJadProperties(urlString);
 				loadJar(urlString, jad.getJarURL(), midletClassLoader);
 			} else {
+				jad.setCorrectedJarURL(urlString);
 				loadJar(null, urlString, midletClassLoader);
 			}
 

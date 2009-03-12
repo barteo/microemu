@@ -53,7 +53,7 @@ public abstract class DeviceImpl implements Device {
 
 	private String name;
 
-	private EmulatorContext context;
+	private static EmulatorContext context;
 
 	private Image normalImage;
 
@@ -193,7 +193,7 @@ public abstract class DeviceImpl implements Device {
 		return name;
 	}
 
-	public EmulatorContext getEmulatorContext() {
+	public static EmulatorContext getEmulatorContext() {
 		return context;
 	}
 

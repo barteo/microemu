@@ -210,7 +210,7 @@ public class Display {
 			// maybe actualKeyState in GameCanvas should be
 			// global and should update even while no GameCanvas
 			// is current
-			GameCanvasKeyAccess access = MIDletBridge.getMIDletAccess().getGameCanvasKeyAccess();
+			GameCanvasKeyAccess access = MIDletBridge.getGameCanvasKeyAccess(c);
 			int gameCode = c.getGameAction(k);
 			boolean suppress = false;
 			if (gameCode != 0) {
@@ -343,7 +343,7 @@ public class Display {
 	    		if (current instanceof GameCanvas) {
 	    			current.width = -1;
 	    			current.height = -1;
-	    		    GameCanvasKeyAccess access = MIDletBridge.getMIDletAccess().getGameCanvasKeyAccess();
+	    		    GameCanvasKeyAccess access = MIDletBridge.getGameCanvasKeyAccess((GameCanvas) current);
 	    		    access.initBuffer();
 	    		}
 				current.sizeChanged(Display.this);

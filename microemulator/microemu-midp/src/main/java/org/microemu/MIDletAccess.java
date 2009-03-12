@@ -45,18 +45,8 @@ public abstract class MIDletAccess {
 
 	private DisplayAccess displayAccess;
 
-	private GameCanvasKeyAccess gameCanvasKeyAccess;
-
 	public MIDletAccess(MIDlet amidlet) {
 		midlet = amidlet;
-	}
-
-	public GameCanvasKeyAccess getGameCanvasKeyAccess() {
-		return gameCanvasKeyAccess;
-	}
-
-	public void setGameCanvasKeyAccess(GameCanvasKeyAccess aGameCanvasKeyAccess) {
-		gameCanvasKeyAccess = aGameCanvasKeyAccess;
 	}
 
 	public DisplayAccess getDisplayAccess() {

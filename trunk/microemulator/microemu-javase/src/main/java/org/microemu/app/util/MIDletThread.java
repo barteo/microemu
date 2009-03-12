@@ -98,7 +98,7 @@ public class MIDletThread extends Thread {
 		 try {
 			super.run();
 		} catch (Throwable e) {
-			Logger.debug("MIDletThread throw", e);
+			Logger.debug("MIDletThread throws", e);
 		}
 		//Logger.debug("thread ends, created from " + callLocation);	
 	 }

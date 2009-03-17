@@ -111,7 +111,7 @@ public class AppletProducer {
 		JarInputStream ijis = null;
 		JarOutputStream jos = null;
 		InstrumentationConfig config = new InstrumentationConfig();
-		config.setEnhanceThreadCreation(false);
+		config.setEnhanceThreadCreation(true);
 		try {
 			jis = new JarInputStream(midletInputUrl.openStream());
 			Manifest manifest = jis.getManifest();

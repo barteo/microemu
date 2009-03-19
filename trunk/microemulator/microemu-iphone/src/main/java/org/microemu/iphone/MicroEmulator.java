@@ -82,9 +82,9 @@ public class MicroEmulator extends UIApplication {
 				}
 			} else {
 				try {
+					MIDletResourceLoader.classLoader=launcher.getSelectedMidletEntry().getMIDletClass().getClassLoader();
 					MIDlet midlet = (MIDlet) launcher.getSelectedMidletEntry().getMIDletClass().newInstance();
 					//set the classloader, so that resource loading works
-					MIDletResourceLoader.classLoader=midlet.getClass().getClassLoader();
 					MIDletBridge.getMIDletAccess(midlet).startApp();
 					launcher.setCurrentMIDlet(midlet);
 				} catch (Exception e) {

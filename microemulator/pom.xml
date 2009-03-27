@@ -616,6 +616,7 @@
             </modules>
         </profile>
 
+<!--
         <profile>
             <id>swt</id>
             <activation>
@@ -628,6 +629,7 @@
                 <module>microemu-javase-swt</module>
             </modules>
         </profile>
+-->
 
         <profile>
             <id>hasBuildLabel</id>

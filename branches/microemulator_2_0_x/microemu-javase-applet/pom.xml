@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0">
+    <!-- @version $Revision$ ($Author$) $Date$ -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.microemu</groupId>
+        <artifactId>microemu</artifactId>
+        <version>2.0.4-SNAPSHOT</version><!--me-version-->
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>microemu-javase-applet</artifactId>
+    <name>microemu-javase-applet</name>
+    <packaging>jar</packaging>
+
+    <description>MicroEmulator applet assembly for distribution</description>
+
+    <prerequisites>
+        <maven>2.0.5</maven>
+    </prerequisites>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-cldc</artifactId>
+            <version>${project.version}</version>
+            <classifier>4applet</classifier>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-midp</artifactId>
+            <version>${project.version}</version>
+            <classifier>4applet</classifier>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.microemu</groupId><artifactId>microemu-cldc</artifactId>
+                </exclusion>
+            </exclusions>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-javase-swing</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <!-- this is bug in maven 2.0.4., if used artifact with classifier would be exclused as well -->
+                <exclusion>
+                    <groupId>org.microemu</groupId><artifactId>microemu-cldc</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.microemu</groupId><artifactId>microemu-midp</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.microemu</groupId><artifactId>microemu-injected</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>asm</groupId><artifactId>asm</artifactId>
+                </exclusion>
+            </exclusions>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>sun</groupId>
+            <artifactId>applet-jsobject</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <forceCreation>true</forceCreation>
+                    <archive>
+                        <manifestEntries>
+                            <Implementation-Version>${pom.version}</Implementation-Version>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <!-- applet-debug jar-with-dependencies -->
+            <plugin>
+               <artifactId>maven-assembly-plugin</artifactId>
+               <version>${assemblyPluginVersion}</version>
+               <executions>
+                   <execution>
+                       <phase>package</phase>
+                       <goals><goal>single</goal></goals>
+                   </execution>
+               </executions>
+               <configuration>
+                   <attach>true</attach>
+                   <descriptors>
+                       <descriptor>applet-debug-assembly.xml</descriptor>
+                   </descriptors>
+               </configuration>
+            </plugin>
+
+            <!-- applet jar-with-dependencies -->
+            <plugin>
+                <groupId>com.pyx4me</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <version>${pyx4meVersion}</version>
+                <executions>
+                   <execution>
+                       <phase>package</phase>
+                       <goals><goal>proguard</goal></goals>
+                   </execution>
+                </executions>
+                <configuration>
+                    <proguardInclude>${basedir}/proguard.conf</proguardInclude>
+                    <attach>true</attach>
+                    <appendClassifier>false</appendClassifier>
+                    <assembly>
+                        <inclusions>
+                            <inclusion>
+                                <groupId>org.microemu</groupId><artifactId>microemu-cldc</artifactId><classifier>4applet</classifier><library>true</library>
+                            </inclusion>
+                            <inclusion>
+                                <groupId>org.microemu</groupId><artifactId>microemu-midp</artifactId><classifier>4applet</classifier><library>true</library>
+                            </inclusion>
+                            <inclusion>
+                                <groupId>org.microemu</groupId><artifactId>microemu-javase</artifactId>
+                                <filter>!org/microemu/app/classloader/**</filter>
+                            </inclusion>
+                            <inclusion>
+                                <groupId>org.microemu</groupId><artifactId>microemu-javase-swing</artifactId>
+                            </inclusion>
+                        </inclusions>
+                    </assembly>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.microemu</groupId><artifactId>microemu-cldc</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.microemu</groupId><artifactId>microemu-midp</artifactId>
+                        </exclusion>
+                    </exclusions>
+                    <libs>
+                        <lib>${javaRunTimeJar}</lib>
+                        <lib>${javaRunTimeSecurityJar}</lib>
+                    </libs>
+                    <archive>
+                        <manifestEntries>
+                            <Version>${label}</Version>
+                            <Build-Time>${cctimestamp}</Build-Time>
+                            <Implementation-Version>${pom.version}</Implementation-Version>
+                            <SVN-Revision>${scm.revision}</SVN-Revision>
+                            <License>GNU Lesser General Public License (LGPL)</License>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-assembly-4download</id>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy overwrite="true"
+                                    file="${project.build.directory}/${project.build.finalName}.jar"
+                                    tofile="${project.build.directory}/site/${artifactId}.jar"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>process-html-tmplates</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy overwrite="true" failonerror="false"
+                                      todir="${basedir}">
+                                     <fileset dir="${basedir}/src/html-templates"/>
+                                </copy>
+                                <!-- Set version number -->
+                                <replace dir="${basedir}">
+                                    <include name="*.html"></include>
+                                    <replacefilter token="#version#" value="${version}"/>
+                                </replace>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,6 @@
+Basicaly this is client configuration to ignore all generated files and directory
+Also for proper mime-type and eol-style for new files in SVN
+
+To install copy the file subversion_config
+   to  "%APPDATA%\Subversion\config  on Windows
+   and  ~/.subversion/config on Unix

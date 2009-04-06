@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp
+  spec="1.0+"
+  codebase="http://www.microemu.org/microemu-webstart"
+  href="demo.jnlp">
+  <information>
+    <title>MicroEmulator</title>
+    <vendor>Bartek Teodorczyk & Vlad Skarzhevskyy</vendor>
+    <homepage href="http://www.microemu.org/"/>
+    <description>MicroEmulator</description>
+    <description kind="short">MicroEmulator</description>
+    <icon href="icon.png"/>
+    <offline-allowed/>
+  </information>
+
+  <security>
+      <all-permissions/>
+  </security>
+
+  <resources>
+    <j2se version="1.4+"/>
+    $dependencies
+  </resources>
+
+  <application-desc main-class="$mainClass">
+        <argument>--impl</argument>
+        <argument>org.microemu.cldc.file.FileSystem</argument>
+        <!--jadRewrite--><argument>org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet</argument><!--jadRewrite-->
+  </application-desc>
+
+</jnlp>

@@ -127,11 +127,57 @@ public abstract class CustomItem extends Item {
 	
 	// Item methods
 	
+    // TODO write overrides for getMinimumWidth, etc
+
+	// Keep track of current height and width
+	int width = 0, height = 0;
+
 	int paint(Graphics g) {
-		// TODO paint content!!!
+		// Get preferred width and
+		width = getPrefContentWidth(-1);
+		height = getPrefContentHeight(-1);
+		// Paint label
 		super.paintContent(g);
-		return super.getHeight();
+		// Move graphics context down
+		g.translate(0, super.getHeight());
+		// Paint custom item
+		paint(g, width, height);
+		// Return 'height' which is the amount the context must translated
+		return height;
 	}
-	
-	// TODO write overrides for getMinimumWidth, etc
+
+	// If this method is not implemented, the height of the component is not counted
+	int getHeight() {
+		return super.getHeight() + height;
+	}
+
+	// Copied from ImageItem, as a CustomItem is nothing more than a dynamically created image
+	int traverse(int gameKeyCode, int top, int bottom, boolean action) {
+		Font f = Font.getDefaultFont();
+		if (gameKeyCode == Canvas.UP) {
+			if (top > 0) {
+				if ((top % f.getHeight()) == 0) {
+					return -f.getHeight();
+				} else {
+					return -(top % f.getHeight());
+				}
+			} else {
+				return Item.OUTOFITEM;
+			}
+		}
+		if (gameKeyCode == Canvas.DOWN) {
+			if (bottom < getHeight()) {
+				if (getHeight() - bottom < f.getHeight()) {
+					return getHeight() - bottom;
+				} else {
+					return f.getHeight();
+				}
+			} else {
+				return Item.OUTOFITEM;
+			}
+		}
+
+		return 0;
+	}
+
 }

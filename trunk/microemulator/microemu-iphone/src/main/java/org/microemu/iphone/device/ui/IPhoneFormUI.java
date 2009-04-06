@@ -28,6 +28,7 @@ package org.microemu.iphone.device.ui;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.microedition.lcdui.ChoiceGroup;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.Item;
@@ -88,10 +89,10 @@ public class IPhoneFormUI extends AbstractUI<Form> implements FormUI {
 		if (item instanceof TextField) {
 			final TextField tf = (TextField) item;
 			if (itemView == null) {
-				itemView = new UIView().initWithFrame$(new CGRect(0,0,200,100));
-				UILabel itemLabelView=new UILabel().initWithFrame$(new CGRect(0,0,100,100));
+				itemView = new UIView().initWithFrame$(new CGRect(0,0,cell.size().width,cell.size().height));
+				UILabel itemLabelView=new UILabel().initWithFrame$(new CGRect(0,0,cell.size().width,cell.size().height/2));
 				itemLabelView.setTag$(100);
-				UITextField itemTextField=new UITextField().initWithFrame$(new CGRect(100,0,100,100));
+				UITextField itemTextField=new UITextField().initWithFrame$(new CGRect(0,cell.size().height/2,cell.size().width,cell.size().height/2));
 				itemTextField.setTag$(200);
 				itemTextField.setDelegate$(new NSObject() {
 					@SuppressWarnings({ "unused" })
@@ -102,6 +103,7 @@ public class IPhoneFormUI extends AbstractUI<Form> implements FormUI {
 						try{
 						tf.setString(arg0.text().toString());
 						}catch (IllegalArgumentException e) {
+							e.printStackTrace();
 							arg0.setText$(tf.getString());
 						}
 						return Static.NO;
@@ -115,6 +117,9 @@ public class IPhoneFormUI extends AbstractUI<Form> implements FormUI {
 			((UITextField)itemView.viewWithTag$(200)).setText$(tf.getString());
 
 			((UIView) cell.contentView()).addSubview$(itemView);
+		} else if (item instanceof ChoiceGroup) {
+			ChoiceGroup cg = (ChoiceGroup) item;
+			cell.setText$(cg.getString(0));
 		} else if (item instanceof StringItem) {
 			StringItem si = (StringItem) item;
 			cell.setText$(si.getText());

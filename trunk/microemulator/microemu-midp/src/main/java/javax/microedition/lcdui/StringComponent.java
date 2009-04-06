@@ -164,7 +164,10 @@ class StringComponent {
 				prevIndex = breaks[i];
 				y += f.getHeight();
 			}
-			if (prevIndex != text.length()) {
+			// By adding the OR clasuse (text length comparison) we make sure
+			// that even if the current value of a ChoiceGroup is empty, there will
+			// be some visual clue that the ChoiceGroup is there
+			if (prevIndex != text.length() || text.length() == 0) {
 				if (invertPaint) {
 					g.setGrayScale(0);
 				} else {

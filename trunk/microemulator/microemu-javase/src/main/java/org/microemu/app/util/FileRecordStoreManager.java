@@ -100,7 +100,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 		return "File record store";
 	}
 
-	private File getSuiteFolder() {
+	protected File getSuiteFolder() {
 		return new File(Config.getConfigPath(), "suite-" + emulator.getLauncher().getSuiteName());
 	}
 

@@ -768,6 +768,7 @@ public class ChoiceGroup extends Item implements Choice
 			setSelectedIndex(list.getSelectedIndex(), true);
 			try {
 				getOwner().currentDisplay.setCurrent(getOwner());
+                ((Form)getOwner()).fireItemStateListener();
 				repaint();
 			} catch (NullPointerException n) {
 				// this happens if the item becomes an orphan

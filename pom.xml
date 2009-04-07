@@ -38,9 +38,9 @@
 	</issueManagement>
 
 	<scm>
-	    <url>http://microemulator.svn.sourceforge.net/viewvc/microemulator/trunk/microemulator/</url>
-		<connection>scm:svn:https://microemulator.svn.sourceforge.net/svnroot/microemulator/trunk/microemulator</connection>
-		<developerConnection>scm:svn:https://microemulator.svn.sourceforge.net/svnroot/microemulator/trunk/microemulator</developerConnection>
+	    <url>http://microemulator.svn.sourceforge.net/viewvc/microemulator/trunk/branches/microemulator_2_0_x/</url>
+		<connection>scm:svn:https://microemulator.svn.sourceforge.net/svnroot/microemulator/branches/microemulator_2_0_x</connection>
+		<developerConnection>scm:svn:https://microemulator.svn.sourceforge.net/svnroot/microemulator/branches/microemulator_2_0_x</developerConnection>
 	</scm>
 
     <mailingLists>

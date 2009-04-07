@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import javax.microedition.rms.InvalidRecordIDException;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreNotFoundException;
@@ -97,11 +98,17 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 		fireRecordStoreListener(ExtendedRecordListener.RECORDSTORE_DELETE, recordStoreName);
 	}
 
-	public RecordStore openRecordStore(String recordStoreName, boolean createIfNecessary) throws RecordStoreException {
+	public RecordStore openRecordStore(String recordStoreName, boolean createIfNecessary) 
+			throws RecordStoreException 
+	{
 		RecordStoreImpl recordStoreImpl;
 		try {
-			recordStoreImpl = loadFromDisk(recordStoreName);
+			DataInputStream dis = new DataInputStream(
+					activity.openFileInput(getHeaderFileName(recordStoreName)));
+			recordStoreImpl = new RecordStoreImpl(this);
+			recordStoreImpl.readHeader(dis);
 			recordStoreImpl.setOpen(true);
+			dis.close();
 		} catch (FileNotFoundException e) {
 			if (!createIfNecessary) {
 				throw new RecordStoreNotFoundException(recordStoreName);
@@ -109,6 +116,8 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 			recordStoreImpl = new RecordStoreImpl(this, recordStoreName);
 			recordStoreImpl.setOpen(true);
 			saveToDisk(recordStoreImpl, -1);
+		} catch (IOException e) {
+			throw new RecordStoreException();
 		}
 		if (recordListener != null) {
 			recordStoreImpl.addRecordListener(recordListener);
@@ -144,6 +153,22 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 	{
 		deleteFromDisk(recordStoreImpl, recordId);
 	}
+	
+	public void loadRecord(RecordStoreImpl recordStoreImpl, int recordId)
+			throws RecordStoreNotOpenException, InvalidRecordIDException, RecordStoreException 
+	{
+		try {
+			DataInputStream dis = new DataInputStream(
+					activity.openFileInput(getRecordFileName(recordStoreImpl.getName(), recordId)));
+			recordStoreImpl.readRecord(dis);
+			dis.close();
+		} catch (FileNotFoundException e) {
+			throw new InvalidRecordIDException();
+		} catch (IOException e) {
+			Logger.error("RecordStore.loadFromDisk: ERROR reading " + getRecordFileName(recordStoreImpl.getName(), recordId), e);
+		}
+	}
+
 
 	public void saveRecord(RecordStoreImpl recordStoreImpl, int recordId) 
 			throws RecordStoreNotOpenException, RecordStoreException 
@@ -164,37 +189,6 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 				Logger.debug("deleteRecordStore", e);
 			}
 		}
-	}
-
-	private RecordStoreImpl loadFromDisk(String recordStoreName) 
-			throws FileNotFoundException 
-	{
-		RecordStoreImpl store = null;
-		try {
-			DataInputStream dis = new DataInputStream(
-					activity.openFileInput(getHeaderFileName(recordStoreName)));
-			store = new RecordStoreImpl(this);
-			store.readHeader(dis);
-			dis.close();
-		} catch (FileNotFoundException e) {
-			throw e;
-		} catch (IOException e) {
-			Logger.error("RecordStore.loadFromDisk: ERROR reading " + getHeaderFileName(recordStoreName), e);
-		}
-		
-		
-		for (int i = 1; i <= store.size; i++) {
-			try {
-				DataInputStream dis = new DataInputStream(
-						activity.openFileInput(getRecordFileName(recordStoreName, i)));
-				store.readRecord(dis);
-				dis.close();
-			} catch (IOException e) {
-				Logger.error("RecordStore.loadFromDisk: ERROR reading " + getRecordFileName(recordStoreName, i), e);
-			}
-		}
-		
-		return store;
 	}
 
 	private void deleteFromDisk(RecordStoreImpl recordStore, int recordId)
@@ -266,5 +260,5 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 	{
 		return recordStoreName + "." + recordId + RECORD_STORE_RECORD_SUFFIX;
 	}
-	
+
 }

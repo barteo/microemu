@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
+import javax.microedition.rms.InvalidRecordIDException;
 import javax.microedition.rms.RecordEnumeration;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
@@ -166,7 +167,12 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 			try {
 				byte[] data = Base64Coder.decode(load.toCharArray());
 				result = new RecordStoreImpl(this);
-				result.read(new DataInputStream(new ByteArrayInputStream(data)));
+				DataInputStream dis = new DataInputStream(new ByteArrayInputStream(data));
+				result.readHeader(dis);
+				for (int i = 0; i < result.size; i++) {
+					result.readRecord(dis);
+				}
+				dis.close();
 			} catch (IOException ex) {
 				Logger.error(ex);
 				throw new RecordStoreNotFoundException(ex.getMessage());
@@ -191,6 +197,12 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 	
 	public void deleteRecord(RecordStoreImpl recordStoreImpl, int recordId) throws RecordStoreNotOpenException {
 		saveRecord(recordStoreImpl, recordId);
+	}
+	
+	public void loadRecord(RecordStoreImpl recordStoreImpl, int recordId)
+			throws RecordStoreNotOpenException, InvalidRecordIDException, RecordStoreException 
+	{
+		// records are loaded when record store opens
 	}
 
 	public void saveRecord(RecordStoreImpl recordStoreImpl, int recordId) throws RecordStoreNotOpenException {

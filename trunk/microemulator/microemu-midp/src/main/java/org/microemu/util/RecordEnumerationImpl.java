@@ -26,7 +26,6 @@ package org.microemu.util;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.microedition.rms.InvalidRecordIDException;
@@ -188,15 +187,17 @@ public class RecordEnumerationImpl implements RecordEnumeration
         //
         // filter
         //
-        for (Enumeration e = recordStoreImpl.records.keys(); e.hasMoreElements();) {
-            Object key = e.nextElement();
-            byte[] data = (byte[]) recordStoreImpl.records.get(key);
-            if (filter != null && !filter.matches(data)) {
-                continue;
-            }
-            enumerationRecords.add(new EnumerationRecord(	((Integer) key).intValue(),
-															data));
-        }
+		try {
+			for (int i = 1; i <= recordStoreImpl.size; i++) {
+	            byte[] data = recordStoreImpl.getRecord(i);
+	            if (filter != null && !filter.matches(data)) {
+	                continue;
+	            }
+	            enumerationRecords.add(new EnumerationRecord(i, data));
+	        }
+		} catch (RecordStoreException e) {
+			e.printStackTrace();
+		}
 
         // 
         // sort

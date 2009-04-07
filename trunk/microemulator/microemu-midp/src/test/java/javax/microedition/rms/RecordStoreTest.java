@@ -100,6 +100,11 @@ public final class RecordStoreTest extends TestCase {
 		{
 		}
 
+		public void loadRecord(RecordStoreImpl recordStoreImpl, int recordId)
+				throws RecordStoreNotOpenException, InvalidRecordIDException, RecordStoreException 
+		{
+		}
+
 		public void saveRecord(RecordStoreImpl recordStoreImpl, int recordId) 
 				throws RecordStoreNotOpenException, RecordStoreException 
 		{
@@ -114,6 +119,7 @@ public final class RecordStoreTest extends TestCase {
 				recordListener.recordStoreEvent(type, System.currentTimeMillis(), recordStoreName);
 			}
 		}
+
 	}
 
 	private RecordStoreManager rsm;

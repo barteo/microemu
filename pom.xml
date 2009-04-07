@@ -99,8 +99,8 @@
     <distributionManagement>
         <site>
             <!-- see also profile release below -->
-            <id>m2-site-snapshot</id>
-            <url>file:///home/apache/microemu</url>
+            <id>m2x-site-snapshot</id>
+            <url>file:///home/apache/microemu-2x</url>
         </site>
         <!-- see profile release -->
         <repository>

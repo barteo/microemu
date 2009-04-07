@@ -165,7 +165,8 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 		if (load != null) {
 			try {
 				byte[] data = Base64Coder.decode(load.toCharArray());
-				result = new RecordStoreImpl(this, new DataInputStream(new ByteArrayInputStream(data)));
+				result = new RecordStoreImpl(this);
+				result.read(new DataInputStream(new ByteArrayInputStream(data)));
 			} catch (IOException ex) {
 				Logger.error(ex);
 				throw new RecordStoreNotFoundException(ex.getMessage());
@@ -187,8 +188,12 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 
 		return result;
 	}
+	
+	public void deleteRecord(RecordStoreImpl recordStoreImpl, int recordId) throws RecordStoreNotOpenException {
+		saveRecord(recordStoreImpl, recordId);
+	}
 
-	public void saveChanges(RecordStoreImpl recordStoreImpl) throws RecordStoreNotOpenException {
+	public void saveRecord(RecordStoreImpl recordStoreImpl, int recordId) throws RecordStoreNotOpenException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(baos);
 		try {

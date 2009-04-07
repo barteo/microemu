@@ -95,9 +95,14 @@ public final class RecordStoreTest extends TestCase {
 													+ recordStoreName);
 		}
 
-		public void saveChanges(RecordStoreImpl recordStoreImpl) throws RecordStoreNotOpenException,
-																RecordStoreException {
+		public void deleteRecord(RecordStoreImpl recordStoreImpl, int recordId) 
+				throws RecordStoreNotOpenException, RecordStoreException 
+		{
+		}
 
+		public void saveRecord(RecordStoreImpl recordStoreImpl, int recordId) 
+				throws RecordStoreNotOpenException, RecordStoreException 
+		{
 		}
 
 		public void setRecordListener(ExtendedRecordListener recordListener) {

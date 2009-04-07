@@ -26,7 +26,6 @@ package org.microemu.util;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -45,15 +44,23 @@ import javax.microedition.rms.RecordStoreNotOpenException;
 import org.microemu.RecordStoreManager;
 
 
-
 public class RecordStoreImpl extends RecordStore
 {
+	private static final byte[] fileIdentifier = { 0x4d, 0x49, 0x44, 0x52, 0x4d, 0x53 };
+	
+	private static final byte versionMajor = 0x03;
+	
+	private static final byte versionMinor = 0x00;
+	
 	protected Hashtable records = new Hashtable();
 	
 	private String recordStoreName;
+
 	private int version = 0;
+	
 	private long lastModified = 0;
-	private int nextRecordID = 1;
+	
+	public int size = 0;
 
 	private transient boolean open;
 
@@ -74,47 +81,95 @@ public class RecordStoreImpl extends RecordStore
 	}
 	
 	
-	public RecordStoreImpl(RecordStoreManager recordStoreManager, DataInputStream dis) 
+	public RecordStoreImpl(RecordStoreManager recordStoreManager) 
 			throws IOException
 	{
 		this.recordStoreManager = recordStoreManager;
-
-		this.recordStoreName = dis.readUTF();
-		this.version = dis.readInt();
-		this.lastModified = dis.readLong();
-		this.nextRecordID = dis.readInt();
-		
-		try {
-			while (true) {
-				int recordId = dis.readInt();
-				byte[] data = new byte[dis.readInt()];
-				dis.read(data, 0, data.length);
-				this.records.put(new Integer(recordId), data);
-			}
-		} catch (EOFException ex) {			
+	}
+	
+	
+	public void read(DataInputStream dis)
+			throws IOException
+	{
+		readHeader(dis);
+		for (int i = 0; i < size; i++) {
+			readRecord(dis);
 		}
+	}
+	
+	
+	public void readHeader(DataInputStream dis)
+			throws IOException
+	{
+		for (int i = 0; i < fileIdentifier.length; i++) {
+			if (dis.read() != fileIdentifier[i]) {
+				throw new IOException();
+			}
+		}
+		dis.read(); // Major version number
+		dis.read(); // Minor version number
+		dis.read(); // Encrypted flag
+		
+		recordStoreName = dis.readUTF();
+		lastModified = dis.readLong();
+		version = dis.readInt();
+		dis.readInt(); // TODO AuthMode
+		dis.readByte(); // TODO Writable
+		size = dis.readInt();
+	}
+	
+	
+	public void readRecord(DataInputStream dis)
+			throws IOException
+	{
+		int recordId = dis.readInt();
+		dis.readInt(); // TODO Tag
+		byte[] data = new byte[dis.readInt()];
+		dis.read(data, 0, data.length);
+		this.records.put(new Integer(recordId), data);
 	}
 	
 	
 	public void write(DataOutputStream dos) 
 			throws IOException
 	{
-		dos.writeUTF(recordStoreName);
-		dos.writeInt(version);
-		dos.writeLong(lastModified);
-		dos.writeInt(nextRecordID);
-		
+		writeHeader(dos);
 		Enumeration en = records.keys();
 		while (en.hasMoreElements()) {
-			Integer key = (Integer) en.nextElement();
-			dos.writeInt(key.intValue());
-			byte[] data = (byte[]) records.get(key);
-			dos.writeInt(data.length);
-			dos.write(data);			
+			writeRecord(dos, ((Integer) en.nextElement()).intValue());
 		}
+	}
+	
+	
+	public void writeHeader(DataOutputStream dos) 
+			throws IOException
+	{
+		dos.write(fileIdentifier);
+		dos.write(versionMajor);
+		dos.write(versionMinor);
+		dos.write(0); // Encrypted flag
+		
+		dos.writeUTF(recordStoreName);
+		dos.writeLong(lastModified);
+		dos.writeInt(version);
+		dos.writeInt(0); // TODO AuthMode
+		dos.writeByte(0); // TODO Writable
+		dos.writeInt(size);		
 	}
 
 
+	public void writeRecord(DataOutputStream dos, int recordId) 
+			throws IOException
+	{
+		dos.writeInt(recordId);
+		dos.writeInt(0); // TODO Tag
+		Integer key = new Integer(recordId);
+		byte[] data = (byte[]) records.get(key);
+		dos.writeInt(data.length);
+		dos.write(data);			
+	}
+
+	
 	public boolean isOpen() 
 	{
 		return open;
@@ -175,7 +230,7 @@ public class RecordStoreImpl extends RecordStore
 		}
 		
 		synchronized (this) {
-		    return records.size();
+		    return size;
 		}
 	}
 
@@ -242,7 +297,7 @@ public class RecordStoreImpl extends RecordStore
 		}
 		
 		synchronized (this) {
-		    return nextRecordID;
+		    return size + 1;
 		}
 	}
 
@@ -265,20 +320,19 @@ public class RecordStoreImpl extends RecordStore
 		    System.arraycopy(data, offset, recordData, 0, numBytes);
 		}
 		
-		int curRecordID;
+		int nextRecordID = getNextRecordID();
 		synchronized (this) {
 		    records.put(new Integer(nextRecordID), recordData);
 		    version++;
-		    curRecordID = nextRecordID;
-		    nextRecordID++;
 		    lastModified = System.currentTimeMillis();
+		    size++;
 		}
 		
-        recordStoreManager.saveChanges(this);
+        recordStoreManager.saveRecord(this, nextRecordID);
 		
-		fireRecordListener(ExtendedRecordListener.RECORD_ADD, curRecordID);
+		fireRecordListener(ExtendedRecordListener.RECORD_ADD, nextRecordID);
 		
-		return curRecordID;
+		return nextRecordID;
 	}
 
 
@@ -295,9 +349,10 @@ public class RecordStoreImpl extends RecordStore
 		    }
 		    version++;
 		    lastModified = System.currentTimeMillis();
+		    size--;
 		}
 		
-        recordStoreManager.saveChanges(this);
+        recordStoreManager.deleteRecord(this, recordId);
 		
 		fireRecordListener(ExtendedRecordListener.RECORD_DELETE, recordId);
 	}
@@ -376,7 +431,7 @@ public class RecordStoreImpl extends RecordStore
 		    lastModified = System.currentTimeMillis();
 		}
 		
-        recordStoreManager.saveChanges(this);
+        recordStoreManager.saveRecord(this, recordId);
 		
 		fireRecordListener(ExtendedRecordListener.RECORD_CHANGE, recordId);
 	}

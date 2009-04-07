@@ -211,8 +211,13 @@ public class FileRecordStoreManager implements RecordStoreManager {
 		return result;
 	}
 
-	public void saveChanges(RecordStoreImpl recordStoreImpl) throws RecordStoreNotOpenException, RecordStoreException {
+	public void deleteRecord(RecordStoreImpl recordStoreImpl, int recordId) throws RecordStoreNotOpenException, RecordStoreException 
+	{
+		saveRecord(recordStoreImpl, recordId);
+	}
 
+	public void saveRecord(RecordStoreImpl recordStoreImpl, int recordId) throws RecordStoreNotOpenException, RecordStoreException 
+	{
 		File storeFile = new File(getSuiteFolder(), recordStoreName2FileName(recordStoreImpl.getName()));
 
 		saveToDisk(storeFile, recordStoreImpl);
@@ -252,8 +257,9 @@ public class FileRecordStoreManager implements RecordStoreManager {
 	private RecordStoreImpl loadFromDiskSecure(File recordStoreFile) throws FileNotFoundException {
 		RecordStoreImpl store = null;
 		try {
+			store = new RecordStoreImpl(this);
 			DataInputStream dis = new DataInputStream(new BufferedInputStream(new FileInputStream(recordStoreFile)));
-			store = new RecordStoreImpl(this, dis);
+			store.read(dis);
 			dis.close();
 		} catch (FileNotFoundException e) {
 			throw e;

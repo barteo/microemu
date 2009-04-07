@@ -41,7 +41,9 @@ public interface RecordStoreManager {
 
 	String[] listRecordStores();
 
-	void saveChanges(RecordStoreImpl recordStoreImpl) throws RecordStoreNotOpenException, RecordStoreException;
+	void deleteRecord(RecordStoreImpl recordStoreImpl, int recordId) throws RecordStoreNotOpenException, RecordStoreException;
+
+	void saveRecord(RecordStoreImpl recordStoreImpl, int recordId) throws RecordStoreNotOpenException, RecordStoreException;
 
 	int getSizeAvailable(RecordStoreImpl recordStoreImpl);
 

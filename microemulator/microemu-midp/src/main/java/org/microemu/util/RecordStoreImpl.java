@@ -52,7 +52,7 @@ public class RecordStoreImpl extends RecordStore
 	
 	private static final byte versionMinor = 0x00;
 	
-	protected Hashtable records = new Hashtable();
+	private Hashtable records = new Hashtable();
 	
 	private String recordStoreName;
 
@@ -88,14 +88,14 @@ public class RecordStoreImpl extends RecordStore
 	}
 	
 	
-	public void read(DataInputStream dis)
+/*	public void read(DataInputStream dis)
 			throws IOException
 	{
 		readHeader(dis);
 		for (int i = 0; i < size; i++) {
 			readRecord(dis);
 		}
-	}
+	}*/
 	
 	
 	public void readHeader(DataInputStream dis)
@@ -134,9 +134,8 @@ public class RecordStoreImpl extends RecordStore
 			throws IOException
 	{
 		writeHeader(dos);
-		Enumeration en = records.keys();
-		while (en.hasMoreElements()) {
-			writeRecord(dos, ((Integer) en.nextElement()).intValue());
+		for (int i = 1; i <= size; i++) {
+			writeRecord(dos, i);
 		}
 	}
 	
@@ -163,10 +162,13 @@ public class RecordStoreImpl extends RecordStore
 	{
 		dos.writeInt(recordId);
 		dos.writeInt(0); // TODO Tag
-		Integer key = new Integer(recordId);
-		byte[] data = (byte[]) records.get(key);
-		dos.writeInt(data.length);
-		dos.write(data);			
+		try {
+			byte[] data = getRecord(recordId);
+			dos.writeInt(data.length);
+			dos.write(data);			
+		} catch (RecordStoreException e) {
+			throw new IOException();
+		}
 	}
 
 	
@@ -242,12 +244,15 @@ public class RecordStoreImpl extends RecordStore
 		    throw new RecordStoreNotOpenException();
 		}
 		
-		int size = 0;
-		for (Enumeration keys = records.keys(); keys.hasMoreElements(); ) {
-			
-			size += ((byte[]) records.get(keys.nextElement())).length;
+		int result = 0;
+		for (int i = 1; i <= size; i++) {
+			try {
+				result += getRecord(i).length;
+			} catch (RecordStoreException e) {
+				e.printStackTrace();
+			}
 		}
-		return size;
+		return result;
 	}
 
 
@@ -344,9 +349,10 @@ public class RecordStoreImpl extends RecordStore
 		}
 		
 		synchronized (this) {
-		    if (records.remove(new Integer(recordId)) == null) {
-		        throw new InvalidRecordIDException();
-		    }
+			if (recordId < 1 || recordId > size) {
+				throw new InvalidRecordIDException();
+			}
+		    records.remove(new Integer(recordId));
 		    version++;
 		    lastModified = System.currentTimeMillis();
 		    size--;
@@ -368,7 +374,8 @@ public class RecordStoreImpl extends RecordStore
 		synchronized (this) {
 		    byte[] data = (byte[]) records.get(new Integer(recordId));
 		    if (data == null) {
-		        throw new InvalidRecordIDException();
+		    	recordStoreManager.loadRecord(this, recordId);
+		    	data = (byte[]) records.get(new Integer(recordId));		    	
 		    }
 		
 		    return data.length;
@@ -382,8 +389,7 @@ public class RecordStoreImpl extends RecordStore
 		int recordSize;
 		synchronized (this) {
 		    recordSize = getRecordSize(recordId);
-		    System.arraycopy(records.get(new Integer(recordId)), 0, buffer,
-		            offset, recordSize);
+		    System.arraycopy(records.get(new Integer(recordId)), 0, buffer, offset, recordSize);
 		}
 		
 		fireRecordListener(ExtendedRecordListener.RECORD_READ, recordId);
@@ -422,11 +428,10 @@ public class RecordStoreImpl extends RecordStore
 		System.arraycopy(newData, offset, recordData, 0, numBytes);
 		
 		synchronized (this) {
-		    Integer id = new Integer(recordId);
-		    if (records.remove(id) == null) {
-		        throw new InvalidRecordIDException();
-		    }
-		    records.put(id, recordData);
+			if (recordId < 1 || recordId > size) {
+				throw new InvalidRecordIDException();
+			}
+		    records.put(new Integer(recordId), recordData);
 		    version++;
 		    lastModified = System.currentTimeMillis();
 		}

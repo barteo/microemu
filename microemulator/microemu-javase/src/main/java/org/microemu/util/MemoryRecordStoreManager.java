@@ -96,6 +96,9 @@ public class MemoryRecordStoreManager implements RecordStoreManager {
 
 	public void deleteRecord(RecordStoreImpl recordStoreImpl, int recordId) {
 	}
+	
+	public void loadRecord(RecordStoreImpl recordStoreImpl, int recordId) {
+	}
 
 	public void saveRecord(RecordStoreImpl recordStoreImpl, int recordId) {
 	}

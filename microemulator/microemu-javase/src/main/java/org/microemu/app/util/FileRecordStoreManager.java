@@ -43,6 +43,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import javax.microedition.rms.InvalidRecordIDException;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreNotFoundException;
@@ -215,6 +216,12 @@ public class FileRecordStoreManager implements RecordStoreManager {
 	{
 		saveRecord(recordStoreImpl, recordId);
 	}
+	
+	public void loadRecord(RecordStoreImpl recordStoreImpl, int recordId)
+			throws RecordStoreNotOpenException, InvalidRecordIDException, RecordStoreException 
+	{
+		// records are loaded when record store opens
+	}
 
 	public void saveRecord(RecordStoreImpl recordStoreImpl, int recordId) throws RecordStoreNotOpenException, RecordStoreException 
 	{
@@ -259,7 +266,10 @@ public class FileRecordStoreManager implements RecordStoreManager {
 		try {
 			store = new RecordStoreImpl(this);
 			DataInputStream dis = new DataInputStream(new BufferedInputStream(new FileInputStream(recordStoreFile)));
-			store.read(dis);
+			store.readHeader(dis);
+			for (int i = 0; i < store.size; i++) {
+				store.readRecord(dis);
+			}
 			dis.close();
 		} catch (FileNotFoundException e) {
 			throw e;

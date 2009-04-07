@@ -52,6 +52,7 @@
         <!--4snapshot-->
         <menu name="Ver #build#" inherit="top">
             <item name="Release 2.0.3" href="http://microemu.org/"/>
+            <item name="Snapshot 2.0.4" href="http://snapshot-2x.microemu.org/"/>
         </menu>
 
         <menu ref="parent" />

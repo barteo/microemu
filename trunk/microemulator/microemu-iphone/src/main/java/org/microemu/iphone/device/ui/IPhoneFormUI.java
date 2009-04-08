@@ -36,17 +36,20 @@ import javax.microedition.lcdui.StringItem;
 import javax.microedition.lcdui.TextField;
 
 import joc.Message;
+import joc.Selector;
 import joc.Static;
 import obc.CGRect;
 import obc.NSIndexPath;
 import obc.NSObject;
 import obc.NSString;
+import obc.UIKeyboard;
 import obc.UILabel;
 import obc.UINavigationBar;
 import obc.UINavigationItem;
 import obc.UITableView;
 import obc.UITableViewCell;
 import obc.UITextField;
+import obc.UITextInputTraits;
 import obc.UIToolbar;
 import obc.UIView;
 
@@ -109,6 +112,19 @@ public class IPhoneFormUI extends AbstractUI<Form> implements FormUI {
 						return Static.NO;
 					}
 				});
+				
+//				if((tf.getConstraints()&TextField.DECIMAL)>=1){
+//					joc.Runtime.msgSend(itemTextField, UITextField.class, "setKeyboardType", 4);
+//				}else if((tf.getConstraints()&TextField.EMAILADDR)>=1){
+//					joc.Runtime.msgSend(itemTextField, UITextField.class, "setKeyboardType:", 7);
+//				}else if((tf.getConstraints()&TextField.PHONENUMBER)>=1){
+//					joc.Runtime.msgSend(itemTextField, UITextField.class, "setKeyboardType:", 5);
+//				}
+
+				if((tf.getConstraints()&TextField.PASSWORD)>=1){
+					itemTextField.setSecureTextEntry$(Static.YES);
+				}
+				
 				itemView.addSubview$(itemLabelView);
 				itemView.addSubview$(itemTextField);
 				itemViewMap.put(tf, itemView);

@@ -334,9 +334,9 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 			}
 
 			if (deviceDisplay.isFullScreenMode()) {
-				paintImmediately(x, y, width, height);
+				repaint(x, y, width, height);
 			} else {
-				paintImmediately(0, 0, displayImage.getWidth(), displayImage.getHeight());
+				repaint(0, 0, displayImage.getWidth(), displayImage.getHeight());
 			}
 		}
 	}

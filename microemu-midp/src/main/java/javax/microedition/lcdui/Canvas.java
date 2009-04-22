@@ -112,7 +112,7 @@ public abstract class Canvas extends Displayable
 
 	public boolean isDoubleBuffered()
 	{
-	    return false;
+	    return true;
 	}
 
 

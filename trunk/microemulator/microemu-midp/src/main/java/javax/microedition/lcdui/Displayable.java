@@ -88,11 +88,7 @@ public abstract class Displayable
     public int getWidth()
     {
     	if (width == -1) {
-	    	if (fullScreenMode) {
-	    		width = device.getDeviceDisplay().getFullWidth();
-	    	} else {
-	    		width = device.getDeviceDisplay().getWidth();
-	    	}
+    		updateWidthAndHeight();
     	}
     	
     	return width;
@@ -102,11 +98,7 @@ public abstract class Displayable
     public int getHeight()
     {
     	if (height == -1) {
-        	if (fullScreenMode) {
-        		height = device.getDeviceDisplay().getFullHeight();
-        	} else {
-        		height= device.getDeviceDisplay().getHeight();
-        	}
+    		updateWidthAndHeight();
     	}
     	
     	return height;
@@ -246,9 +238,8 @@ public abstract class Displayable
 
 	final void sizeChanged(Display d)
 	{
-    	width = -1;
-    	height = -1;
-		sizeChanged(getWidth(), getHeight());
+		updateWidthAndHeight();
+		sizeChanged(width, height);
 	}
 	
 	
@@ -290,4 +281,14 @@ public abstract class Displayable
 		ui.showNotify();		
 	}
 
+	private void updateWidthAndHeight() 
+	{
+    	if (fullScreenMode) {
+    		width = device.getDeviceDisplay().getFullWidth();
+    		height = device.getDeviceDisplay().getFullHeight();
+    	} else {
+    		width = device.getDeviceDisplay().getWidth();
+    		height= device.getDeviceDisplay().getHeight();
+    	}
+	}
 }

@@ -58,7 +58,7 @@ import org.microemu.util.RecordStoreImpl;
 
 public class FileRecordStoreManager implements RecordStoreManager {
 
-	private final static String RECORD_STORE_SUFFIX = ".rs";
+	private final static String RECORD_STORE_SUFFIX = ".rms";
 
 	private final static List replaceChars = new Vector();
 

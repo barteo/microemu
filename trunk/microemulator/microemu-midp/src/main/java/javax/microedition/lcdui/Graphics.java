@@ -29,6 +29,7 @@
 package javax.microedition.lcdui;
 
 public class Graphics {
+	
 	public static final int SOLID = 0;
 
 	public static final int DOTTED = 1;
@@ -47,11 +48,9 @@ public class Graphics {
 
 	public static final int VCENTER = 2;
 
-	int strokeStyle = SOLID;
+	private int translateX = 0;
 
-	int translateX = 0;
-
-	int translateY = 0;
+	private int translateY = 0;
 
 	public void clipRect(int x, int y, int width, int height) {
 		implementationError();
@@ -160,7 +159,9 @@ public class Graphics {
 	}
 
 	public int getStrokeStyle() {
-		return strokeStyle;
+		implementationError();
+
+		return -1;
 	}
 
 	public int getTranslateX() {
@@ -198,11 +199,8 @@ public class Graphics {
 	}
 
 	public void setStrokeStyle(int style) {
-		if (style != SOLID && style != DOTTED) {
-			throw new IllegalArgumentException();
-		}
-		strokeStyle = style;
-	}
+		implementationError();
+	}		
 
 	public void translate(int x, int y) {
 		translateX += x;

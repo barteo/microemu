@@ -59,6 +59,8 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
     private Rectangle clip;
 
     private javax.microedition.lcdui.Font currentFont = javax.microedition.lcdui.Font.getDefaultFont();
+    
+	private int strokeStyle = SOLID;
 
     private java.awt.image.RGBImageFilter filter = null;
 
@@ -130,6 +132,19 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
                 .getFont(currentFont);
         g.setFont(tmpFont.getFont());
     }
+    
+	
+	public int getStrokeStyle() {
+		return strokeStyle;
+	}
+
+	public void setStrokeStyle(int style) {
+		if (style != SOLID && style != DOTTED) {
+			throw new IllegalArgumentException();
+		}
+	
+		this.strokeStyle = style;
+	}
 
     public void clipRect(int x, int y, int width, int height) {
         g.clipRect(x, y, width, height);

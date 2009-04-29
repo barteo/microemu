@@ -22,7 +22,7 @@
  *  limitations.
  */
 
-package org.microemu.midp.media.audio;
+package org.microemu.media.audio;
 
 import java.util.EmptyStackException;
 import java.util.Stack;

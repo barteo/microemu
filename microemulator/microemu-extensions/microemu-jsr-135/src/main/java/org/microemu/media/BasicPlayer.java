@@ -22,13 +22,14 @@
  *  limitations.
  */
 
-package org.microemu.midp.media;
+package org.microemu.media;
 
 import java.util.Enumeration;
 import java.util.Vector;
 import javax.microedition.media.MediaException;
 import javax.microedition.media.Player;
 import javax.microedition.media.PlayerListener;
+import javax.microedition.media.TimeBase;
 
 public abstract class BasicPlayer implements Player
 {

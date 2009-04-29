@@ -1,6 +1,6 @@
 /*
- *  MicroEmulator
- *  Copyright (C) 2006 Bartek Teodorczyk <barteo@barteo.net>
+ *  PC Media MIDP Java Library
+ *  Copyright (C) 2006 Travis Berthelot
  *
  *  It is licensed under the following two licenses as alternatives:
  *    1. GNU Lesser General Public License (the "LGPL") version 2.1 or any newer version
@@ -22,12 +22,16 @@
  *  limitations.
  */
 
-package org.microemu.midp.media;
+package org.microemu.media.audio;
 
-// This is part of MMAPI
+import javax.microedition.media.TimeBase;
 
-public interface TimeBase {
+class PCTimeBase implements TimeBase
+{
+   private static long timeBase = System.currentTimeMillis();
 
-	public long getTime();
-	
+   public long getTime()
+   {
+      return (System.currentTimeMillis() - timeBase);
+   }
 }

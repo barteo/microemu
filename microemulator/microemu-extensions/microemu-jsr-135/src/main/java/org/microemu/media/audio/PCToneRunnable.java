@@ -23,13 +23,13 @@
  */
 
 
-package org.microemu.midp.media.audio;
+package org.microemu.media.audio;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.SourceDataLine;
 
-import org.microemu.midp.media.RunnableInterface;
+import org.microemu.media.RunnableInterface;
 
 class PCToneRunnable extends PCToneHelper implements RunnableInterface
 {

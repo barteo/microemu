@@ -26,6 +26,7 @@ package javax.microedition.lcdui;
 import java.util.Vector;
 
 import org.microemu.device.DeviceFactory;
+import org.microemu.device.ui.ItemUI;
 
 public abstract class Item
 {
@@ -56,6 +57,8 @@ public abstract class Item
     public static final int PLAIN = 0;
     public static final int HYPERLINK = 1;
     public static final int BUTTON = 2;
+    
+    ItemUI ui;
 
 	StringComponent labelComponent;
 	Screen owner = null;
@@ -66,19 +69,23 @@ public abstract class Item
 	Vector commands;
     Command defaultCommand;
     ItemCommandListener commandListener;
-    // -1 means unlocked, otherwise it is the 
-    // application requested preffered size
-    // for the actual one use the getPrefXXXX() method
-    // package access
-    private int prefWidth, prefHeight;
+    
+    // -1 means unlocked, otherwise it is the application requested preffered size
+    // for the actual one use the getPrefXXXX() method package access
+    int prefWidth;
+    
+    int prefHeight;
   
-  
-  Item(String label)
-  {
+    Item(String label) {
 		labelComponent = new StringComponent(label);
 		commands = new Vector();
-  }
-  
+		setPreferredSize(-1, -1);
+	}
+	
+    void setUI(ItemUI ui) {
+    	this.ui = ui;
+    }
+    
 	public void addCommand(Command cmd) {
 	    if (cmd == null)
 	        throw new NullPointerException();
@@ -189,6 +196,8 @@ public abstract class Item
     
     public void setLabel(String label)	
 	{
+    	ui.setLabel(label);
+    	
 		labelComponent.setText(label);
 		repaint();
 	}

@@ -27,29 +27,21 @@
 package org.microemu.device.j2se.ui;
 
 import javax.microedition.lcdui.Form;
-import javax.microedition.lcdui.Image;
-import javax.microedition.lcdui.Item;
+import javax.microedition.lcdui.ItemStateListener;
 
 import org.microemu.device.impl.ui.DisplayableImplUI;
 import org.microemu.device.ui.FormUI;
+import org.microemu.device.ui.ItemUI;
 
 public class J2SEFormUI extends DisplayableImplUI implements FormUI {
 
+	private ItemStateListener itemStateListener;
+	
 	public J2SEFormUI(Form form) {
 		super(form);
 	}
 
-	public int append(Image img) {
-		// TODO not yet used
-		return 0;
-	}
-
-	public int append(Item item) {
-		// TODO not yet used
-		return 0;
-	}
-
-	public int append(String str) {
+	public int append(ItemUI item) {
 		// TODO not yet used
 		return 0;
 	}
@@ -62,12 +54,20 @@ public class J2SEFormUI extends DisplayableImplUI implements FormUI {
 		// TODO not yet used		
 	}
 
-	public void insert(int itemNum, Item item) {
+	public void insert(int itemNum, ItemUI item) {
 		// TODO not yet used		
 	}
 
-	public void set(int itemNum, Item item) {
+	public void set(int itemNum, ItemUI item) {
 		// TODO Auto-generated method stub		
+	}
+
+	public void setItemStateListener(ItemStateListener itemStateListener) {
+		this.itemStateListener = itemStateListener;
+	}
+	
+	public ItemStateListener getItemStateListener() {
+		return itemStateListener;
 	}
 
 }

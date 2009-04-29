@@ -32,6 +32,7 @@ import org.microemu.device.DeviceFactory;
 import org.microemu.device.InputMethod;
 import org.microemu.device.InputMethodEvent;
 import org.microemu.device.InputMethodListener;
+import org.microemu.device.ui.TextFieldUI;
 
 public class TextField extends Item 
 {
@@ -99,6 +100,8 @@ public class TextField extends Item
 	public TextField(String label, String text, int maxSize, int constraints) 
 	{
 		super(label);
+		super.setUI(DeviceFactory.getDevice().getUIFactory().createTextFieldUI(this));
+		
 		if (maxSize <= 0) {
 			throw new IllegalArgumentException();
 		}
@@ -106,7 +109,7 @@ public class TextField extends Item
         if (!InputMethod.validate(text, constraints)) {
             throw new IllegalArgumentException();
         }
-		this.maxSize = maxSize;
+		setMaxSize(maxSize);
 		stringComponent = new StringComponent();
 		if (text != null) {
 			setString(text);
@@ -119,12 +122,20 @@ public class TextField extends Item
 	
 	public String getString() 
 	{
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidTextFieldUI")) {
+			return ((TextFieldUI) ui).getString();
+		}
+
 		return field;
 	}
 
 	
 	public void setString(String text) 
 	{
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidTextFieldUI")) {
+			((TextFieldUI) ui).setString(text);
+		}
+		
         setString(text, text.length());
 	}
     
@@ -245,7 +256,7 @@ public class TextField extends Item
 		if (maxSize <= 0) {
 			throw new IllegalArgumentException();
 		}
-		if (field.length() > maxSize) {
+		if (getString().length() > maxSize) {
 			setString(getString().substring(0, maxSize));
 		}
 		this.maxSize = maxSize;
@@ -255,7 +266,7 @@ public class TextField extends Item
 	
 	public int size() 
 	{
-		return field.length();
+		return getString().length();
 	}
 
 	
@@ -272,9 +283,10 @@ public class TextField extends Item
 			throw new IllegalArgumentException("constraints " + constraints + " is an illegal value");
 		}
 		this.constraints = constraints;
-        if (!InputMethod.validate(field, constraints)) {
+        if (!InputMethod.validate(getString(), constraints)) {
             setString("");
         }
+        ((TextFieldUI) ui).setConstraints(constraints);
 	}
 
 	

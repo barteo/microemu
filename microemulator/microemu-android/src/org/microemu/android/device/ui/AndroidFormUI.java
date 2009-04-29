@@ -1,50 +1,34 @@
 package org.microemu.android.device.ui;
 
-import java.util.ArrayList;
-
 import javax.microedition.lcdui.Form;
-import javax.microedition.lcdui.Image;
-import javax.microedition.lcdui.Item;
+import javax.microedition.lcdui.ItemStateListener;
 
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.FormUI;
+import org.microemu.device.ui.ItemUI;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.ScrollView;
 
 public class AndroidFormUI extends AndroidDisplayableUI implements FormUI {
 
-	private AndroidListAdapter listAdapter;
-	
 	private AndroidListView listView;
 	
+	private ItemStateListener itemStateListener;
+	
 	public AndroidFormUI(final MicroEmulatorActivity activity, Form form) {
-		super(activity, form);
+		super(activity, form, true);
 		
 		activity.post(new Runnable() {
 			public void run() {
-				view = new LinearLayout(activity);
-				((LinearLayout) view).setOrientation(LinearLayout.VERTICAL);
-				view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
-				
-				titleView = new TextView(activity);
-				titleView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-				TypedArray a = titleView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
-				titleView.setTextAppearance(titleView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
-				((LinearLayout) view).addView(titleView);				
-		
-				listAdapter = new AndroidListAdapter();
-				listView = new AndroidListView(activity);
-				listView.setAdapter(listAdapter);
+				ScrollView scrollView = new ScrollView(activity);
+				((LinearLayout) AndroidFormUI.this.view).addView(scrollView);
+				listView = new AndroidListView(activity, AndroidFormUI.this);
+				listView.setOrientation(LinearLayout.VERTICAL);
 				listView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
-				((LinearLayout) AndroidFormUI.this.view).addView(listView);		
+				scrollView.addView(listView);
 
 				invalidate();
 			}
@@ -55,18 +39,36 @@ public class AndroidFormUI extends AndroidDisplayableUI implements FormUI {
 	// FormUI
 	//
 	
-	public int append(Image img) {
-		System.out.println("append(Image img)");
-		return 0;
-	}
-	 
-	public int append(Item item) {
-		return listAdapter.append(item);
-	}
-	 
-	public int append(String str) {
-		System.out.println("append(String str)");
-		return 0;
+	private int appendTransfer;
+
+	public int append(final ItemUI item) {
+		if (activity.isActivityThread()) {
+			listView.addView((View) item);
+			appendTransfer = listView.getChildCount() - 1;
+		} else {
+			appendTransfer = Integer.MIN_VALUE;
+			activity.post(new Runnable() {
+				public void run() {
+					synchronized (AndroidFormUI.this) {
+						listView.addView((View) item);						
+						appendTransfer = listView.getChildCount() - 1;
+						AndroidFormUI.this.notify();
+					}
+				}
+			});
+
+			synchronized (AndroidFormUI.this) {
+				if (appendTransfer == Integer.MIN_VALUE) {
+					try {
+						wait();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		
+		return appendTransfer;
 	}
 	 
 	public void delete(int itemNum) {
@@ -74,66 +76,43 @@ public class AndroidFormUI extends AndroidDisplayableUI implements FormUI {
 	}
 	 
 	public void deleteAll() {
-		System.out.println("deleteAll()");
+		activity.post(new Runnable() {
+			public void run() {
+				listView.removeAllViews();				
+			}
+		});
 	}
 	 
-	public void insert(int itemNum, Item item) {
+	public void insert(int itemNum, ItemUI item) {
 		System.out.println("insert(int itemNum, Item item)");
 	}
 
-	public void set(int itemNum, Item item) {
+	public void set(int itemNum, ItemUI item) {
 		System.out.println("set(int itemNum, Item item)");
 	}
-
-	private class AndroidListAdapter extends BaseAdapter {
-		
-		ArrayList<Item> objects = new ArrayList<Item>();
-		
-		public int append(Item item) {
-			objects.add(item);
-			notifyDataSetChanged();
-			
-			return objects.lastIndexOf(item);
-		}
-
-		public int getCount() {
-			return objects.size();
-		}
-
-		public Object getItem(int position) {
-			return objects.get(position);
-		}
-
-		public long getItemId(int position) {
-			return position;
-		}
-
-		public View getView(int position, View convertView, ViewGroup parent) {
-			if (convertView == null) {
-				convertView = new TextView(activity);
-				TypedArray a = convertView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
-				((TextView) convertView).setTextAppearance(convertView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
-			}
-			
-			((TextView) convertView).setText(((Item) getItem(position)).toString());
-			
-			return convertView;
-		}
-		
+	
+	public void setItemStateListener(ItemStateListener itemStateListener) {
+		this.itemStateListener = itemStateListener;
 	}
 	
-	private class AndroidListView extends ListView {
+	public ItemStateListener getItemStateListener() {
+		return itemStateListener;
+	}
+	
+	class AndroidListView extends LinearLayout {
+		
+		private AndroidFormUI ui;
 
-		public AndroidListView(Context context) {
+		public AndroidListView(Context context, AndroidFormUI ui) {
 			super(context);
+			
+			this.ui = ui;
 		}
 	
-		@Override
-		public boolean onTouchEvent(MotionEvent ev) {
-			// TODO implement pointer events
-			return super.onTouchEvent(ev);
+		public AndroidFormUI getUI() {
+			return ui;
 		}
 		
 	}
-		
+
 }

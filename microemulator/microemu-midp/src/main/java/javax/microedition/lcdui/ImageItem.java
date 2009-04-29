@@ -20,6 +20,8 @@
 
 package javax.microedition.lcdui;
 
+import org.microemu.device.DeviceFactory;
+
 public class ImageItem extends Item {
 
 	public static final int LAYOUT_DEFAULT = 0;
@@ -46,6 +48,7 @@ public class ImageItem extends Item {
 
 	public ImageItem(String label, Image img, int layout, String altText, int appearanceMode) {
 		super(label);
+		super.setUI(DeviceFactory.getDevice().getUIFactory().createImageStringItemUI(this));
 
 		// may throw IllegalArgumentException
 		// (that is the intentended behaviour)

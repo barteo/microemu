@@ -37,7 +37,9 @@ import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.DisplayableUI;
 
+import android.content.res.TypedArray;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public abstract class AndroidDisplayableUI implements DisplayableUI {
@@ -48,7 +50,7 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 	
 	protected View view;
 	
-	protected TextView titleView;
+	private TextView titleView;
 	
 	private static Comparator<CommandUI> commandsPriorityComparator = new Comparator<CommandUI>() {
 
@@ -68,9 +70,21 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 	
 	private CommandListener commandListener = null;
 	
-	protected AndroidDisplayableUI(MicroEmulatorActivity activity, Displayable displayable) {
+	protected AndroidDisplayableUI(MicroEmulatorActivity activity, Displayable displayable, boolean initView) {
 		this.activity = activity;
 		this.displayable = displayable;
+		
+		if (initView) {
+			view = new LinearLayout(activity);
+			((LinearLayout) view).setOrientation(LinearLayout.VERTICAL);
+			view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+			
+			titleView = new TextView(activity);
+			titleView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+			TypedArray a = titleView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
+			titleView.setTextAppearance(titleView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
+			((LinearLayout) view).addView(titleView);
+		}
 	}
 	
 	public Vector<AndroidCommandUI> getCommandsUI() {
@@ -100,9 +114,13 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 	}
 
 	public void invalidate() {
-		if (titleView != null) {
-			titleView.setText(displayable.getTitle());
-		}
+		activity.post(new Runnable() {
+			public void run() {
+				if (titleView != null) {
+					titleView.setText(displayable.getTitle());
+				}
+			}
+		});
 	}	
 	
 	public final void showNotify() {

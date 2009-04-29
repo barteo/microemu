@@ -14,23 +14,13 @@ public class AndroidAlertUI extends AndroidDisplayableUI implements AlertUI {
 	protected TextView alertTextView;
 	
 	public AndroidAlertUI(final MicroEmulatorActivity activity, Alert alert) {
-		super(activity, alert);
+		super(activity, alert, true);
 		
 		activity.post(new Runnable() {
 			public void run() {
-				view = new LinearLayout(activity);
-				((LinearLayout) view).setOrientation(LinearLayout.VERTICAL);
-				view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
-				
-				titleView = new TextView(activity);
-				titleView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-				TypedArray a = titleView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
-				titleView.setTextAppearance(titleView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
-				((LinearLayout) view).addView(titleView);				
-		
 				alertTextView = new TextView(activity);
 				alertTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-				a = alertTextView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
+				TypedArray a = alertTextView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
 				alertTextView.setTextAppearance(alertTextView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
 				((LinearLayout) view).addView(alertTextView);				
 
@@ -43,8 +33,12 @@ public class AndroidAlertUI extends AndroidDisplayableUI implements AlertUI {
 	// AlertUI
 	//		
 	
-	public void setString(String str) {
-		alertTextView.setText(str);
+	public void setString(final String str) {
+		activity.post(new Runnable() {
+			public void run() {
+				alertTextView.setText(str);
+			}
+		});
 	}
 		
 }

@@ -30,15 +30,19 @@ import org.microemu.device.impl.Font;
 
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.Paint.FontMetricsInt;
 
 public class AndroidFont implements Font {
 
 	Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	
+	FontMetricsInt metrics;
+	
 	public AndroidFont(Typeface typeface, int size, boolean underlined) {
 		paint.setTypeface(typeface);
 		paint.setTextSize(size);
 		paint.setUnderlineText(underlined);
+		metrics = paint.getFontMetricsInt();
 	}
 
 	public int charWidth(char ch) {
@@ -50,11 +54,11 @@ public class AndroidFont implements Font {
 	}
 
 	public int getBaselinePosition() {
-		return -paint.getFontMetricsInt().ascent;
+		return -metrics.ascent;
 	}
 
 	public int getHeight() {
-		return paint.getFontMetricsInt(paint.getFontMetricsInt());
+		return paint.getFontMetricsInt(metrics);
 	}
 
 	public int stringWidth(String str) {

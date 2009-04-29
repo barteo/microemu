@@ -24,6 +24,9 @@ import java.util.TimeZone;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.microemu.device.DeviceFactory;
+import org.microemu.device.ui.DateFieldUI;
+
 
 public class DateField extends Item
 {
@@ -81,39 +84,44 @@ public class DateField extends Item
   }
 
 
-  public DateField(String label, int mode, TimeZone timeZone)
-  {
-	  // why not super(label)??
-    super(null);
-    
-    this.label = label;
-// TODO this is ignoring TimeZone!! 
-    setInputMode(mode);
-    
-    dateCanvas = new DateCanvas();
-    dateCanvas.addCommand(saveCommand);
-    dateCanvas.addCommand(backCommand);
-    dateCanvas.setCommandListener(dateTimeListener);
+  	public DateField(String label, int mode, TimeZone timeZone) {
+		super(label);
+		super.setUI(DeviceFactory.getDevice().getUIFactory().createDateFieldUI(this));
 
-    timeCanvas = new TimeCanvas();
-    timeCanvas.addCommand(saveCommand);
-    timeCanvas.addCommand(backCommand);
-    timeCanvas.setCommandListener(dateTimeListener);
-}
+		this.label = label;
+		// TODO this is ignoring TimeZone!!
+		setInputMode(mode);
 
+		dateCanvas = new DateCanvas();
+		dateCanvas.addCommand(saveCommand);
+		dateCanvas.addCommand(backCommand);
+		dateCanvas.setCommandListener(dateTimeListener);
 
-  public Date getDate()
-  {
-    return date;
-  }
+		timeCanvas = new TimeCanvas();
+		timeCanvas.addCommand(saveCommand);
+		timeCanvas.addCommand(backCommand);
+		timeCanvas.setCommandListener(dateTimeListener);
+	}
 
 
-  public void setDate(Date date)
-  {
-    this.date = date;
-    // TODO change the Canvas!!
-    updateDateTimeString();
-  }
+  	public Date getDate() {
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidDateFieldUI")) {
+			return ((DateFieldUI) ui).getDate();
+		} else {
+			return date;
+		}
+	}
+
+  	
+	public void setDate(Date date) {
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidDateFieldUI")) {
+			((DateFieldUI) ui).setDate(date);
+		} else {
+			this.date = date;
+			// TODO change the Canvas!!
+			updateDateTimeString();
+		}
+	}
 
 
   public int getInputMode()
@@ -122,22 +130,25 @@ public class DateField extends Item
   }
 
 
-  public void setInputMode(int mode)
-  {
-    if (mode < 1 || mode > 3) {
-      throw new IllegalArgumentException();
-    }
-    
-    this.mode = mode;
+  	public void setInputMode(int mode) {
+		if (mode < 1 || mode > 3) {
+			throw new IllegalArgumentException();
+		}
 
-    dateTime = new ChoiceGroup(label, Choice.IMPLICIT, false);
-    if ((mode & DATE) != 0) {
-      dateTime.append("[date]", null);
-    }
-    if ((mode & TIME) != 0) {
-      dateTime.append("[time]", null);
-    }
-  }
+		this.mode = mode;
+		
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidDateFieldUI")) {
+			((DateFieldUI) ui).setInputMode(mode);
+		} else {
+			dateTime = new ChoiceGroup(label, Choice.IMPLICIT, false);
+			if ((mode & DATE) != 0) {
+				dateTime.append("[date]", null);
+			}
+			if ((mode & TIME) != 0) {
+				dateTime.append("[time]", null);
+			}
+		}
+	}
 
 
 	boolean isFocusable()
@@ -146,9 +157,12 @@ public class DateField extends Item
 	}
 
     
-  int getHeight()
-	{
-		return super.getHeight() + dateTime.getHeight();
+	int getHeight() {
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidDateFieldUI")) {
+			return super.getHeight();
+		} else {
+			return super.getHeight() + dateTime.getHeight();
+		}
 	}
 
 
@@ -165,12 +179,14 @@ public class DateField extends Item
   }
 
   
-	void setFocus(boolean state)
-	{
-    super.setFocus(state);
+	void setFocus(boolean state) {
+		super.setFocus(state);
 
-    dateTime.setFocus(state);
-  }
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidDateFieldUI")) {
+		} else {
+			dateTime.setFocus(state);
+		}
+	}
 
   
   boolean select()

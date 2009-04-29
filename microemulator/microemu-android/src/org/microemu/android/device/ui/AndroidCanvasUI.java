@@ -40,6 +40,7 @@ import org.microemu.device.ui.CanvasUI;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Debug;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -48,7 +49,7 @@ import android.view.View;
 public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 
 	public AndroidCanvasUI(final MicroEmulatorActivity activity, Canvas canvas) {
-		super(activity, canvas);
+		super(activity, canvas, false);
 		
 		activity.post(new Runnable() {
 			public void run() {
@@ -65,7 +66,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 	// CanvasUI
 	//
 	
-	public class CanvasView extends View {
+	private class CanvasView extends View {
 		
 		private int FIRST_DRAG_SENSITIVITY_X = 5;
 		private int FIRST_DRAG_SENSITIVITY_Y = 5;
@@ -97,6 +98,8 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 			ma.getDisplayAccess().paint(g);
 		}	
 		
+		private int tracingStarted = 0;
+		
 		@Override
 		public boolean onKeyDown(int keyCode, KeyEvent event) {
 			if (MIDletBridge.getCurrentMIDlet() == null) {
@@ -106,6 +109,19 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 			if (ignoreKey(keyCode)) {
                 return false;    
             }
+			
+			if (keyCode == KeyEvent.KEYCODE_Q) {
+				if (tracingStarted == 1) {
+					System.out.println("Debug.stopMethodTracing()");
+					Debug.stopMethodTracing();
+					tracingStarted = 2;
+				} else if (tracingStarted == 0) {
+					System.out.println("Debug.startMethodTracing(\"calc\")");
+					Debug.startMethodTracing("calc", 16 * 1024 * 1024);
+					tracingStarted = 1;
+				}
+				return false;
+			}
 			
 			Device device = DeviceFactory.getDevice();
 			((AndroidInputMethod) device.getInputMethod()).buttonPressed(event);

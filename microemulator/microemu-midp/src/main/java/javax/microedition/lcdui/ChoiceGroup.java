@@ -23,6 +23,9 @@
  
 package javax.microedition.lcdui;
 
+import org.microemu.device.DeviceFactory;
+import org.microemu.device.ui.ChoiceGroupUI;
+
 public class ChoiceGroup extends Item implements Choice
 {
     int choiceType;
@@ -121,6 +124,7 @@ public class ChoiceGroup extends Item implements Choice
 	ChoiceGroup(String label, int choiceType, boolean validateChoiceType)
 	{
 		super(label);
+		super.setUI(DeviceFactory.getDevice().getUIFactory().createChoiceGroupUI(this, choiceType));
 
 		if (validateChoiceType) {
 			if (choiceType != Choice.POPUP && choiceType != Choice.MULTIPLE && choiceType != Choice.EXCLUSIVE) {
@@ -152,61 +156,67 @@ public class ChoiceGroup extends Item implements Choice
 	}
 
 	
-	public int append(String stringPart, Image imagePart)
-  {
-		insert(numOfItems, stringPart, imagePart);
+	public int append(String stringPart, Image imagePart) {
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidChoiceGroupUI")) {
+			return ((ChoiceGroupUI) ui).append(stringPart, imagePart);
+		} else {
+			insert(numOfItems, stringPart, imagePart);
+	
+			return (numOfItems - 1);
+		}
+	}
 
-    return (numOfItems - 1);
-  }
 
-
-  public void delete(int itemNum)
-  {
+	public void delete(int itemNum) {
+System.out.println("ChoiceGroup.delete(..)");		
 		if (itemNum < 0 || itemNum >= numOfItems) {
 			throw new IndexOutOfBoundsException();
 		}
 
-    // Ensure that an item of an EXCLUSIVE list remains selected.
-    if ((Choice.EXCLUSIVE == choiceType || Choice.POPUP == choiceType)
-    		&& items[itemNum].isSelected()) {
-      if (numOfItems > 1) {
-        items[itemNum!=0 ? 0 : 1].setSelectedState(true);
-      }
-    }
+		// Ensure that an item of an EXCLUSIVE list remains selected.
+		if ((Choice.EXCLUSIVE == choiceType || Choice.POPUP == choiceType)
+				&& items[itemNum].isSelected()) {
+			if (numOfItems > 1) {
+				items[itemNum != 0 ? 0 : 1].setSelectedState(true);
+			}
+		}
 
-    // Delete item.
-    if (itemNum != numOfItems - 1) {
-      System.arraycopy(items, itemNum+1, items, itemNum, numOfItems-itemNum-1);
-    }
-    numOfItems--;
-    // clear the slot to allow garbage collection
-    items[numOfItems] = null;
+		// Delete item.
+		if (itemNum != numOfItems - 1) {
+			System.arraycopy(items, itemNum + 1, items, itemNum, numOfItems
+					- itemNum - 1);
+		}
+		numOfItems--;
+		// clear the slot to allow garbage collection
+		items[numOfItems] = null;
 
-    // Ensure highlighted item remains highlighted (if it wasn't just deleted).
-    if (highlightedItemIndex > itemNum) {
-      --highlightedItemIndex;
-    }
+		// Ensure highlighted item remains highlighted (if it wasn't just
+		// deleted).
+		if (highlightedItemIndex > itemNum) {
+			--highlightedItemIndex;
+		}
 
-    // Ensure that an item remains highlighted.
-    if (highlightedItemIndex >= numOfItems) {
-      highlightedItemIndex = numOfItems-1;
-    }
-    
-    if (choiceType == Choice.POPUP)
-	  popupList.delete(itemNum);
-    repaint();
-  }
+		// Ensure that an item remains highlighted.
+		if (highlightedItemIndex >= numOfItems) {
+			highlightedItemIndex = numOfItems - 1;
+		}
+
+		if (choiceType == Choice.POPUP)
+			popupList.delete(itemNum);
+		repaint();
+	}
   
-  public void deleteAll() {
-	  // clear the array to allow garbage collection
-	  for (int i = 0; i < numOfItems; i++)
-		  items[i] = null;
-	  numOfItems = 0;
-	  highlightedItemIndex = -1;
-	  if (choiceType == Choice.POPUP)
-		  popupList.deleteAll();
-	  repaint();
-  }
+	public void deleteAll() {
+System.out.println("ChoiceGroup.deleteAll()");		
+		// clear the array to allow garbage collection
+		for (int i = 0; i < numOfItems; i++)
+			items[i] = null;
+		numOfItems = 0;
+		highlightedItemIndex = -1;
+		if (choiceType == Choice.POPUP)
+			popupList.deleteAll();
+		repaint();
+	}
 
 
   public int getFitPolicy() {
@@ -232,64 +242,73 @@ public class ChoiceGroup extends Item implements Choice
 
 
   /**
-   * Queries the state of a ChoiceGroup and returns the state of all elements in
-   * the boolean array selectedArray_return. NOTE: this is a result parameter.
-   * It must be at least as long as the size of the ChoiceGroup as returned by
-   * size(). If the array is longer, the extra elements are set to false.
-   *
-   * For ChoiceGroup objects of type MULTIPLE, any number of elements may be
-   * selected and set to true in the result array. For ChoiceGroup objects of
-   * type EXCLUSIVE, exactly one element will be selected, unless there are zero
-   * elements in the ChoiceGroup.
-   */
-  public int getSelectedFlags(boolean[] selectedArray_return)
-  {
-		if (selectedArray_return == null) {
-			throw new NullPointerException();
+	 * Queries the state of a ChoiceGroup and returns the state of all elements
+	 * in the boolean array selectedArray_return. NOTE: this is a result
+	 * parameter. It must be at least as long as the size of the ChoiceGroup as
+	 * returned by size(). If the array is longer, the extra elements are set to
+	 * false.
+	 * 
+	 * For ChoiceGroup objects of type MULTIPLE, any number of elements may be
+	 * selected and set to true in the result array. For ChoiceGroup objects of
+	 * type EXCLUSIVE, exactly one element will be selected, unless there are
+	 * zero elements in the ChoiceGroup.
+	 */
+	public int getSelectedFlags(boolean[] selectedArray) {
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidChoiceGroupUI")) {
+			return ((ChoiceGroupUI) ui).getSelectedFlags(selectedArray);
+		} else {
+			if (selectedArray == null) {
+				throw new NullPointerException();
+			}
+			if (selectedArray.length < numOfItems) {
+				throw new IllegalArgumentException();
+			}
+
+			// set selectedArray elements and count number of selected items
+			int selectedItemsCount = 0;
+
+			for (int i = 0; i < selectedArray.length; ++i) {
+				selectedArray[i] = (i < numOfItems) ? items[i].isSelected() : false;
+				if (selectedArray[i]) {
+					++selectedItemsCount;
+				}
+			}
+
+			return selectedItemsCount;
 		}
-		if (selectedArray_return.length < numOfItems) {
-			throw new IllegalArgumentException();
+	}
+
+  	/**
+	 * Returns the index number of an element in the ChoiceGroup that is
+	 * selected. For ChoiceGroup objects of type EXCLUSIVE there is at most one
+	 * element selected, so this method is useful for determining the user's
+	 * choice. Returns -1 if there are no elements in the ChoiceGroup.
+	 * 
+	 * For ChoiceGroup objects of type MULTIPLE, this always returns -1 because
+	 * no single value can in general represent the state of such a ChoiceGroup.
+	 * To get the complete state of a MULTIPLE Choice, see getSelectedFlags.
+	 */
+	public int getSelectedIndex() {
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidChoiceGroupUI")) {
+			return ((ChoiceGroupUI) ui).getSelectedIndex();
+		} else {
+			switch (choiceType) {
+			case Choice.EXCLUSIVE:
+			case Choice.POPUP:
+				// XXX It'd be nice if the selected item index was stored, so it
+				// isn't
+				// necessary to search for it.
+				for (int i = 0; i < numOfItems; ++i) {
+					if (items[i].isSelected())
+						return i;
+				}
+				break;
+			case Choice.IMPLICIT:
+				return highlightedItemIndex;
+			}
+			return -1;
 		}
-
-    // set selectedArray_return elements and count number of selected items
-		int selectedItemsCount = 0;
-		
-			for (int i = 0; i < selectedArray_return.length; ++i) {
-	      selectedArray_return[i] = (i<numOfItems) ? items[i].isSelected() : false;
-	      if (selectedArray_return[i]) {
-	        ++selectedItemsCount;
-	      }
-    }
-
-    return selectedItemsCount;
-  }
-
-  /**
-   *  Returns the index number of an element in the ChoiceGroup that is
-   *  selected. For ChoiceGroup objects of type EXCLUSIVE there is at most one
-   *  element selected, so this method is useful for determining the user's
-   *  choice. Returns -1 if there are no elements in the ChoiceGroup.
-   *
-   *  For ChoiceGroup objects of type MULTIPLE, this always returns -1 because
-   *  no single value can in general represent the state of such a ChoiceGroup.
-   *  To get the complete state of a MULTIPLE Choice, see getSelectedFlags.
-   */
-  public int getSelectedIndex()
-  {
-    switch (choiceType) {
-      case Choice.EXCLUSIVE:
-      case Choice.POPUP:
-        // XXX It'd be nice if the selected item index was stored, so it isn't
-        //     necessary to search for it.
-        for (int i = 0; i < numOfItems; ++i) {
-          if (items[i].isSelected()) return i;
-        }
-        break;
-      case Choice.IMPLICIT:
-        return highlightedItemIndex;
-    }
-    return -1;
-  }
+	}
 
 
   public String getString(int elementNum)
@@ -304,6 +323,7 @@ public class ChoiceGroup extends Item implements Choice
 
   public void insert(int elementNum, String stringPart, Image imagePart)
   {
+System.out.println("ChoiceGroup.insert(..)");		
 		if (elementNum < 0 || elementNum > numOfItems) {
 			throw new IndexOutOfBoundsException();
 		}
@@ -340,37 +360,43 @@ public class ChoiceGroup extends Item implements Choice
   }
 
 
-  public boolean isSelected(int elementNum)
-  {
-		if (elementNum < 0 || elementNum >= numOfItems) {
-			throw new IndexOutOfBoundsException();
+  	public boolean isSelected(int elementNum) {
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidChoiceGroupUI")) {
+			return ((ChoiceGroupUI) ui).isSelected(elementNum);
+		} else {
+			if (elementNum < 0 || elementNum >= numOfItems) {
+				throw new IndexOutOfBoundsException();
+			}
+	
+			return items[elementNum].isSelected();
 		}
-
-    return items[elementNum].isSelected();
-  }
+	}
 
 
-  public void set(int elementNum, String stringPart, Image imagePart)
-	{
-		if (elementNum < 0 || elementNum >= numOfItems) {
-			throw new IndexOutOfBoundsException();
+  	public void set(int elementNum, String stringPart, Image imagePart) {
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidChoiceGroupUI")) {
+			((ChoiceGroupUI) ui).set(elementNum, stringPart, imagePart);
+		} else {
+			if (elementNum < 0 || elementNum >= numOfItems) {
+				throw new IndexOutOfBoundsException();
+			}
+			if (imagePart != null && imagePart.isMutable()) {
+				throw new IllegalArgumentException();
+			}
+			if (stringPart == null) {
+				throw new NullPointerException();
+			}
+	
+			items[elementNum].setText(stringPart);
+			items[elementNum].setImage(imagePart);
+	
+			if (choiceType == Choice.POPUP) {
+				popupList.set(elementNum, stringPart, imagePart);
+			}
+	
+			repaint();
 		}
-		if (imagePart != null && imagePart.isMutable()) {
-			throw new IllegalArgumentException();
-		}
-		if (stringPart == null) {
-			throw new NullPointerException();
-		}
-
-		items[elementNum].setText(stringPart);
-		items[elementNum].setImage(imagePart);
-
-		if (choiceType == Choice.POPUP) {
-			  popupList.set(elementNum, stringPart, imagePart);
-		}
-		
-		repaint();
-  }
+	}
 
   public void setFitPolicy(int policy) {
 	  if (policy != Choice.TEXT_WRAP_DEFAULT &&
@@ -394,73 +420,79 @@ public class ChoiceGroup extends Item implements Choice
   }
 
 
-  public void setSelectedFlags(boolean[] selectedArray)
-  {
-		if (selectedArray == null) {
-			throw new NullPointerException();
-		}
-		if (selectedArray.length < numOfItems) {
-			throw new NullPointerException();
-		}
-		
-		if (numOfItems == 0)
-			return;
-
-		if (choiceType == Choice.MULTIPLE) {
-			for (int i = 0; i < numOfItems; i++) {
-				setSelectedIndex(i, selectedArray[i]);
-			}
+  	public void setSelectedFlags(boolean[] selectedArray) {
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidChoiceGroupUI")) {
+			((ChoiceGroupUI) ui).setSelectedFlags(selectedArray);
 		} else {
-			int selectedItem = -1;
-			for (int i = 0; i < numOfItems; i++) {
-				if (selectedArray[i]) {
-					setSelectedIndex(i, true);
-					selectedItem = i;
-					break;
+			if (selectedArray == null) {
+				throw new NullPointerException();
+			}
+			if (selectedArray.length < numOfItems) {
+				throw new NullPointerException();
+			}
+
+			if (numOfItems == 0) {
+				return;
+			}
+			if (choiceType == Choice.MULTIPLE) {
+				for (int i = 0; i < numOfItems; i++) {
+					setSelectedIndex(i, selectedArray[i]);
+				}
+			} else {
+				int selectedItem = -1;
+				for (int i = 0; i < numOfItems; i++) {
+					if (selectedArray[i]) {
+						setSelectedIndex(i, true);
+						selectedItem = i;
+						break;
+					}
+				}
+				if (selectedItem == -1) {
+					setSelectedIndex(0, true);
+				}
+
+				if (choiceType == Choice.POPUP) {
+					popupList.setSelectedFlags(selectedArray);
 				}
 			}
-			if (selectedItem == -1) {
-				setSelectedIndex(0, true);
-			}
-			
-			if (choiceType == Choice.POPUP) {
-				popupList.setSelectedFlags(selectedArray);
-			}
 		}
+	}
 
-  }
 
-
-  public void setSelectedIndex(int elementNum, boolean selected)
-  {
-		if (elementNum < 0 || elementNum >= numOfItems) {
-			throw new IndexOutOfBoundsException();
-		}
-
-        highlightedItemIndex = elementNum;
-		if ((choiceType == Choice.EXCLUSIVE ||
-				choiceType == Choice.POPUP) && selected) {
-			for (int i = 0; i < numOfItems; i++) {
-				items[i].setSelectedState(elementNum == i);
+  	public void setSelectedIndex(int elementNum, boolean selected) {
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidChoiceGroupUI")) {
+			((ChoiceGroupUI) ui).setSelectedIndex(elementNum, selected);
+		} else {
+			if (elementNum < 0 || elementNum >= numOfItems) {
+				throw new IndexOutOfBoundsException();
 			}
-			if (choiceType == Choice.POPUP) {
-			        popupList.setSelectedIndex(elementNum, true);
-		    }
-			 repaint();
-		} else if (choiceType == Choice.MULTIPLE) {
-			items[elementNum].setSelectedState(selected);
-			repaint();
-		} else if (choiceType == Choice.IMPLICIT) {
-		    if (selected) {
+	
+	        highlightedItemIndex = elementNum;
+			if ((choiceType == Choice.EXCLUSIVE ||
+					choiceType == Choice.POPUP) && selected) {
+				for (int i = 0; i < numOfItems; i++) {
+					items[i].setSelectedState(elementNum == i);
+				}
+				if (choiceType == Choice.POPUP) {
+				        popupList.setSelectedIndex(elementNum, true);
+			    }
+				 repaint();
+			} else if (choiceType == Choice.MULTIPLE) {
 				items[elementNum].setSelectedState(selected);
 				repaint();
-		    }
+			} else if (choiceType == Choice.IMPLICIT) {
+			    if (selected) {
+					items[elementNum].setSelectedState(selected);
+					repaint();
+			    }
+			}
 		}
-  }
+	}
 
 
   public int size()
   {
+	  System.out.println("ChoiceGroup.size()");			  	  
     return numOfItems;
   }
 
@@ -768,6 +800,7 @@ public class ChoiceGroup extends Item implements Choice
 			setSelectedIndex(list.getSelectedIndex(), true);
 			try {
 				getOwner().currentDisplay.setCurrent(getOwner());
+                ((Form)getOwner()).fireItemStateListener();
 				repaint();
 			} catch (NullPointerException n) {
 				// this happens if the item becomes an orphan

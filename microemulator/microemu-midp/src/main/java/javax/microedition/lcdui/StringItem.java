@@ -24,9 +24,13 @@
 
 package javax.microedition.lcdui;
 
+import org.microemu.device.DeviceFactory;
+import org.microemu.device.ui.FormUI;
+import org.microemu.device.ui.ImageStringItemUI;
+
 public class StringItem extends Item {
 
-	StringComponent stringComponent;
+	private StringComponent stringComponent;
 
 	public StringItem(String label, String text) {
 		this(label, text, PLAIN);
@@ -34,7 +38,10 @@ public class StringItem extends Item {
 	
 	public StringItem(String label, String text, int appearanceMode) {
 		super(label);
-		stringComponent = new StringComponent(text);
+		super.setUI(DeviceFactory.getDevice().getUIFactory().createImageStringItemUI(this));
+		
+		stringComponent = new StringComponent();
+		setText(text);
 		// TODO apperanceMode
 	}
 	
@@ -61,6 +68,10 @@ public class StringItem extends Item {
 	}
 
 	public void setText(String text) {
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidImageStringItemUI")) {
+			((ImageStringItemUI) ui).setText(text);
+		}
+
 		stringComponent.setText(text);
 		repaint();
 	}

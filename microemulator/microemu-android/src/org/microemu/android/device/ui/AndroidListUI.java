@@ -29,22 +29,12 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 	private AndroidListView listView;
 	
 	public AndroidListUI(final MicroEmulatorActivity activity, List list) {
-		super(activity, list);
+		super(activity, list, true);
 		
 		this.selectCommand = List.SELECT_COMMAND;
 			
 		activity.post(new Runnable() {
 			public void run() {
-				view = new LinearLayout(activity);
-				((LinearLayout) view).setOrientation(LinearLayout.VERTICAL);
-				view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
-				
-				titleView = new TextView(activity);
-				titleView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-				TypedArray a = titleView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
-				titleView.setTextAppearance(titleView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
-				((LinearLayout) view).addView(titleView);				
-		
 				listAdapter = new AndroidListAdapter();
 				listView = new AndroidListView(activity);
 				listView.setAdapter(listAdapter);
@@ -129,7 +119,7 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 
 		@Override
 		public boolean onKeyDown(int keyCode, KeyEvent event) {
-			if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+			if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
 				if (getCommandListener() != null) {
 					getCommandListener().commandAction(selectCommand, displayable);
 					return true;

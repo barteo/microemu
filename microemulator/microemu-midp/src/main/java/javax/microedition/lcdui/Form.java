@@ -34,8 +34,6 @@ public class Form extends Screen
 	Item items[] = new Item[4];
 	int numOfItems = 0;
 	int focusItemIndex;
-	ItemStateListener itemStateListener = null;
-
 	
 	public Form(String title) 
 	{
@@ -50,13 +48,9 @@ public class Form extends Screen
 	{
 		this(title);
 
-		// TODO add this to MIDP1
 		if (items != null) {
-			this.items = new Item[items.length];
-			System.arraycopy(items, 0, this.items, 0, items.length);
-			numOfItems = this.items.length;
-			for (int i = 0; i < numOfItems; i++) {
-				verifyItem(this.items[i]);
+			for (int i = 0; i < items.length; i++) {
+				append(items[i]);
 			}
 		}
 	}
@@ -67,7 +61,7 @@ public class Form extends Screen
 		verifyItem(item);
 
 		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidFormUI")) {
-			((FormUI) ui).append(item);
+			((FormUI) ui).append(item.ui);
 		}
 		
 		if (numOfItems + 1 >= items.length) {
@@ -86,10 +80,6 @@ public class Form extends Screen
 	
 	public int append(Image img) 
 	{
-		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidFormUI")) {
-			((FormUI) ui).append(new ImageItem(null, img, ImageItem.LAYOUT_DEFAULT, null));
-		}
-
 		return append(new ImageItem(null, img, ImageItem.LAYOUT_DEFAULT, null));
 	}
 
@@ -100,12 +90,8 @@ public class Form extends Screen
 			throw new NullPointerException();
 		}
 
-		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidFormUI")) {
-			((FormUI) ui).append(new StringItem(null, str));
-		}
-		
 		return append(new StringItem(null, str));
-	}
+	} 
 
 	
 	public void delete(int itemNum) 
@@ -167,7 +153,7 @@ public class Form extends Screen
 		verifyItem(item);
 
 		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidFormUI")) {
-			((FormUI) ui).insert(itemNum, item);
+			((FormUI) ui).insert(itemNum, item.ui);
 		}
 
 		if (numOfItems + 1 == items.length) {
@@ -195,7 +181,7 @@ public class Form extends Screen
 		verifyItem(item);
 
 		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidFormUI")) {
-			((FormUI) ui).set(itemNum, item);
+			((FormUI) ui).set(itemNum, item.ui);
 		}
 
 		// TODO add this to MIDP1
@@ -210,7 +196,7 @@ public class Form extends Screen
 	
 	public void setItemStateListener(ItemStateListener iListener) 
 	{
-		itemStateListener = iListener;
+		((FormUI) ui).setItemStateListener(iListener);
 	}
 
 	
@@ -236,8 +222,9 @@ public class Form extends Screen
     
     
 	void fireItemStateListener(Item item) {
-        if (itemStateListener != null) {
-            itemStateListener.itemStateChanged(item);
+		ItemStateListener listener = ((FormUI) ui).getItemStateListener();
+        if (listener != null) {
+        	listener.itemStateChanged(item);
         }
 	}
 	

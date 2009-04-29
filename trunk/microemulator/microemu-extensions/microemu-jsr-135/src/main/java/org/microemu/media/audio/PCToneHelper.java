@@ -22,7 +22,7 @@
  *  limitations.
  */
 
-package org.microemu.midp.media.audio;
+package org.microemu.media.audio;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;

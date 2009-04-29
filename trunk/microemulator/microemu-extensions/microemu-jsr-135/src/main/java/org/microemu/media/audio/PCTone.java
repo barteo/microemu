@@ -22,7 +22,7 @@
  *  limitations.
  */
 
-package org.microemu.midp.media.audio;
+package org.microemu.media.audio;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

@@ -31,8 +31,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
 
-import org.microemu.midp.media.audio.PCTone;
-
 public final class Manager
 {
 
@@ -91,13 +89,10 @@ public final class Manager
     }
     
     
-   private static final PCTone pcTone = new PCTone();
-   
-   public synchronized static void playTone(int frequency, int time, int volume)
-   throws MediaException
-   {
-      pcTone.play(frequency, time, volume);
-   }
+    public synchronized static void playTone(int frequency, int time, int volume)
+			throws MediaException 
+	{
+	}
 
     static void mediaDone( Object objMedia )
 	{

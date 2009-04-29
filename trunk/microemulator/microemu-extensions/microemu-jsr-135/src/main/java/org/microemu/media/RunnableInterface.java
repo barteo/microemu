@@ -21,7 +21,7 @@
  *  See the LGPL or the AL for the specific language governing permissions and
  *  limitations.
  */
-package org.microemu.midp.media;
+package org.microemu.media;
 
 public interface RunnableInterface extends Runnable
 {

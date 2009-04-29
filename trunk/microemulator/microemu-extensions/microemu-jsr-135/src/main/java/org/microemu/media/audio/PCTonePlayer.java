@@ -22,15 +22,15 @@
  *  limitations.
  */
 
-package org.microemu.midp.media.audio;
+package org.microemu.media.audio;
 
 import javax.microedition.media.Control;
 import javax.microedition.media.Manager;
 import javax.microedition.media.MediaException;
 import javax.microedition.media.control.ToneControl;
 
-import org.microemu.midp.media.BasicPlayer;
-import org.microemu.midp.media.RunnableInterface;
+import org.microemu.media.BasicPlayer;
+import org.microemu.media.RunnableInterface;
 
 public class PCTonePlayer extends BasicPlayer
    implements RunnableInterface

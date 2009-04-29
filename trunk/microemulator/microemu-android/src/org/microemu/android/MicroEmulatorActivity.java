@@ -29,6 +29,10 @@ public abstract class MicroEmulatorActivity extends Activity {
 			return handler.post(r);
 		}
 	}
+	
+	public boolean isActivityThread() {
+		return (activityThread == Thread.currentThread());
+	}
 
 	@Override
 	protected void onCreate(Bundle icicle) {

@@ -21,28 +21,17 @@
  *  See the LGPL or the AL for the specific language governing permissions and
  *  limitations.
  *
- *  @version $Id$
+ *  @version $Id: TextFieldUI.java 1605 2008-02-25 21:07:14Z barteo $
  */
 
 package org.microemu.device.ui;
 
-import javax.microedition.lcdui.ItemStateListener;
+public interface TextFieldUI extends ItemUI {
 
-public interface FormUI extends DisplayableUI {
-
-	int append(ItemUI item);
-	 
-	void delete(int itemNum);
-	 
-	void deleteAll();
-	 
-	void insert(int itemNum, ItemUI item);
-
-	void set(int itemNum, ItemUI item);
-
-	void setItemStateListener(ItemStateListener itemStateListener);
+	public void setConstraints(int constraints);
 	
-	// TODO remove when Swing UI is completely rewritten
-	ItemStateListener getItemStateListener();
+	public void setString(String text);
+	
+	public String getString();
 	
 }

@@ -385,7 +385,7 @@ public class Display {
 			if (d != null && d instanceof Alert) {
 				Alert alert = (Alert) d;
 				if (alert.time != Alert.FOREVER) {
-					alert.getCommandListener().commandAction((Command) alert.getCommands().get(0), alert);
+//					alert.getCommandListener().commandAction((Command) alert.getCommands().get(0), alert);
 				}
 			}
 		}

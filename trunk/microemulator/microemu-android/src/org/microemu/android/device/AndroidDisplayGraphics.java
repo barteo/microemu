@@ -34,6 +34,7 @@ import org.microemu.log.Logger;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.DashPathEffect;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -41,6 +42,8 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 
 public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
+	
+	private static final DashPathEffect dashPathEffect = new DashPathEffect(new float[] { 5, 5 }, 0);
 	
 	private Canvas canvas;
 	
@@ -50,9 +53,14 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
 	private Font font;
 	
+	private AndroidFont androidFont;
+	
+	private int strokeStyle = SOLID;
+	
 	public AndroidDisplayGraphics(Canvas canvas) {
 		this.canvas = canvas;
 		this.canvas.save(Canvas.CLIP_SAVE_FLAG);
+		this.paint.setAntiAlias(true);
 		this.clip = canvas.getClipBounds();
 		setFont(Font.getDefaultFont());
 	}
@@ -127,12 +135,10 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
             anchor = javax.microedition.lcdui.Graphics.TOP | javax.microedition.lcdui.Graphics.LEFT;
         }
         
-        AndroidFont androidFont = AndroidFontManager.getFont(font);
-
         if ((anchor & javax.microedition.lcdui.Graphics.TOP) != 0) {
-            newy -= androidFont.paint.getFontMetricsInt().ascent;
+            newy -= androidFont.metrics.ascent;
         } else if ((anchor & javax.microedition.lcdui.Graphics.BOTTOM) != 0) {
-            newy -= androidFont.paint.getFontMetricsInt().descent;
+            newy -= androidFont.metrics.descent;
         }
         if ((anchor & javax.microedition.lcdui.Graphics.HCENTER) != 0) {
             newx -= androidFont.paint.measureText(str) / 2;
@@ -183,6 +189,10 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	public Font getFont() {
 		return font;
 	}
+	
+	public int getStrokeStyle() {
+		return strokeStyle;
+	}
 
 	public void setClip(int x, int y, int width, int height) {
 		if (x == clip.left && x+ width == clip.right && y == clip.top && y + height == clip.bottom) {
@@ -205,6 +215,23 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 
 	public void setFont(Font font) {
 		this.font = font;
+		
+        androidFont = AndroidFontManager.getFont(font);
+
+	}
+	
+	public void setStrokeStyle(int style) {
+		if (style != SOLID && style != DOTTED) {
+			throw new IllegalArgumentException();
+		}
+		
+		this.strokeStyle = style;
+		
+		if (style == SOLID) {
+			paint.setPathEffect(null);
+		} else { // DOTTED
+			paint.setPathEffect(dashPathEffect);
+		}
 	}
 
     public void translate(int x, int y) {
@@ -231,7 +258,6 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
             throw new IllegalArgumentException("Image is source and target");
 
         Bitmap img;
-
         if (src.isMutable()) {
             img = ((AndroidMutableImage) src).getBitmap();
         } else {

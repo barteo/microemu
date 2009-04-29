@@ -34,36 +34,27 @@ import javax.microedition.lcdui.TextBox;
 import javax.microedition.lcdui.TextField;
 
 import org.microemu.android.MicroEmulatorActivity;
+import org.microemu.device.InputMethod;
 import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.TextBoxUI;
 
-import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI {
 	
 	private EditText editView;
 	
 	public AndroidTextBoxUI(final MicroEmulatorActivity activity, final TextBox textBox) {		
-		super(activity, textBox);		
+		super(activity, textBox, true);		
 		
 		activity.post(new Runnable() {
 			public void run() {
-				view = new LinearLayout(activity);
-				((LinearLayout) view).setOrientation(LinearLayout.VERTICAL);
-				view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
-				
-				titleView = new TextView(activity);
-				titleView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-				TypedArray a = titleView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
-				titleView.setTextAppearance(titleView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
-				((LinearLayout) view).addView(titleView);
-				
 				editView = new EditText(activity);
 				editView.setText(textBox.getString());
 				editView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
@@ -89,6 +80,27 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 					editView.setTransformationMethod(PasswordTransformationMethod.getInstance());
 					editView.setTypeface(Typeface.MONOSPACE);
 				}
+				editView.addTextChangedListener(new TextWatcher() {
+
+					private String previousText;
+					
+					public void afterTextChanged(Editable s) {
+					}
+
+					public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+						previousText = s.toString();
+					}
+
+					public void onTextChanged(CharSequence s, int start, int before, int count) {
+						if (s.toString().length() <= textBox.getMaxSize()
+								&& InputMethod.validate(s.toString(), textBox.getConstraints())) {
+						} else {
+							editView.setText(previousText);
+							editView.setSelection(start);
+						}
+					}
+
+				});
 				((LinearLayout) view).addView(editView);
 				
 				invalidate();

@@ -32,37 +32,51 @@ import java.util.Vector;
 
 import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.ChoiceGroup;
 import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.DateField;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Form;
+import javax.microedition.lcdui.Gauge;
 import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.Item;
 import javax.microedition.lcdui.List;
 import javax.microedition.lcdui.TextBox;
+import javax.microedition.lcdui.TextField;
 
+import org.microemu.CustomItemAccess;
 import org.microemu.EmulatorContext;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.android.device.ui.AndroidAlertUI;
 import org.microemu.android.device.ui.AndroidCanvasUI;
+import org.microemu.android.device.ui.AndroidChoiceGroupUI;
 import org.microemu.android.device.ui.AndroidCommandUI;
+import org.microemu.android.device.ui.AndroidCustomItemUI;
+import org.microemu.android.device.ui.AndroidDateFieldUI;
 import org.microemu.android.device.ui.AndroidFormUI;
+import org.microemu.android.device.ui.AndroidGaugeUI;
+import org.microemu.android.device.ui.AndroidImageStringItemUI;
 import org.microemu.android.device.ui.AndroidListUI;
 import org.microemu.android.device.ui.AndroidTextBoxUI;
-import org.microemu.android.device.ui.AndroidCanvasUI.CanvasView;
+import org.microemu.android.device.ui.AndroidTextFieldUI;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.device.ui.AlertUI;
 import org.microemu.device.ui.CanvasUI;
+import org.microemu.device.ui.ChoiceGroupUI;
 import org.microemu.device.ui.CommandUI;
+import org.microemu.device.ui.CustomItemUI;
+import org.microemu.device.ui.DateFieldUI;
 import org.microemu.device.ui.EventDispatcher;
 import org.microemu.device.ui.FormUI;
+import org.microemu.device.ui.GaugeUI;
+import org.microemu.device.ui.ImageStringItemUI;
 import org.microemu.device.ui.ListUI;
 import org.microemu.device.ui.TextBoxUI;
+import org.microemu.device.ui.TextFieldUI;
 import org.microemu.device.ui.UIFactory;
-
-import android.os.Handler;
-import android.view.View;
 
 public class AndroidDevice implements Device {
 
@@ -89,6 +103,10 @@ public class AndroidDevice implements Device {
 			return eventDispatcher;
 		}
 
+		public CommandUI createCommandUI(Command command) {
+			return new AndroidCommandUI(activity, command);
+		}
+
 		public AlertUI createAlertUI(Alert alert) {
 			return new AndroidAlertUI(activity, alert);
 		}
@@ -97,10 +115,6 @@ public class AndroidDevice implements Device {
 			return new AndroidCanvasUI(activity, canvas);
 		}
 		
-		public CommandUI createCommandUI(Command command) {
-			return new AndroidCommandUI(activity, command);
-		}
-
 		public FormUI createFormUI(Form form) {
 			return new AndroidFormUI(activity, form);
 		}
@@ -111,6 +125,30 @@ public class AndroidDevice implements Device {
 		
 		public TextBoxUI createTextBoxUI(TextBox textBox) {
 			return new AndroidTextBoxUI(activity, textBox);
+		}
+
+		public ChoiceGroupUI createChoiceGroupUI(ChoiceGroup choiceGroup, int choiceType) {
+			return new AndroidChoiceGroupUI(activity, choiceGroup, choiceType);
+		}
+
+		public CustomItemUI createCustomItemUI(CustomItemAccess customItemAccess) {
+			return new AndroidCustomItemUI(activity, customItemAccess);
+		}
+
+		public DateFieldUI createDateFieldUI(DateField dateField) {
+			return new AndroidDateFieldUI(activity, dateField);
+		}
+		
+		public GaugeUI createGaugeUI(Gauge gauge) {
+			return new AndroidGaugeUI(activity, gauge);
+		}
+
+		public ImageStringItemUI createImageStringItemUI(Item item) {
+			return new AndroidImageStringItemUI(activity, item);
+		}
+
+		public TextFieldUI createTextFieldUI(TextField textField) {
+			return new AndroidTextFieldUI(activity, textField);
 		}
 
 	};

@@ -23,109 +23,126 @@
 
 package javax.microedition.lcdui;
 
+import org.microemu.device.DeviceFactory;
+import org.microemu.device.ui.GaugeUI;
+
 public class Gauge extends Item
 {
-  static int HEIGHT = 15;
+	static int HEIGHT = 15;
   
-  int value;
-  int maxValue;
-  boolean interactive;
-  public static final int INDEFINITE = -1;
-  public static final int CONTINUOUS_IDLE = 0;
-  public static final int INCREMENTAL_IDLE = 1;
-  public static final int CONTINUOUS_RUNNING = 2;
-  public static final int INCREMENTAL_UPDATING = 3;
+	int value;
+	
+	int maxValue;
+
+	boolean interactive;
   
-  // these are for render of indefinite running and
-  // updating gauges
-  private int indefiniteFrame;
-  private static final int IDEFINITE_FRAMES = 4;
-  // package access for access from Display
-  static int PAINT_TIMEOUT = 500;
+	public static final int INDEFINITE = -1;
+  
+	public static final int CONTINUOUS_IDLE = 0;
+  
+	public static final int INCREMENTAL_IDLE = 1;
+  
+	public static final int CONTINUOUS_RUNNING = 2;
+  
+	public static final int INCREMENTAL_UPDATING = 3;
+  
+	// these are for render of indefinite running and
+	// updating gauges
+	private int indefiniteFrame;
+  
+	private static final int IDEFINITE_FRAMES = 4;
+  
+	// package access for access from Display
+	static int PAINT_TIMEOUT = 500;
 
-  // package access to allow reading from Alert
-  int prefWidth, prefHeight;
+  	public Gauge(String label, boolean interactive, int maxValue, int initialValue) {
+		super(label);
+		super.setUI(DeviceFactory.getDevice().getUIFactory().createGaugeUI(this));
 
-  public Gauge(String label, boolean interactive, int maxValue, int initialValue)
-  {
-    super(label);
-    
-    this.interactive = interactive;
-    
-    setMaxValue(maxValue);
-    setValue(initialValue);
-  }
+		this.interactive = interactive;
 
-
-  public void setValue(int value)
-  {
-	  if (hasIndefiniteRange()) {
-		  if (value != Gauge.CONTINUOUS_IDLE &&
-				  	value != Gauge.CONTINUOUS_RUNNING &&
-				  	value != Gauge.INCREMENTAL_IDLE &&
-				  	value != Gauge.INCREMENTAL_UPDATING) {
-				throw new IllegalArgumentException();
-		  } else {
-			  // TODO if CONTINOUS_RUNNING
-			  // start thread or whatever it needs to be done
-			  if (value == Gauge.INCREMENTAL_UPDATING &&
-					  this.value == Gauge.INCREMENTAL_UPDATING) {
-				  updateIndefiniteFrame();
-			  } else {
-				  this.value = value;
-				  repaint();
-			  }
-		  }
-	  } else {
-		  if (value < 0) {
-			  value = 0;
-		  }
-		  if (value > maxValue) {
-			  value = maxValue;
-		  }
-			
-		  this.value = value;
-		  repaint();
-	  }
-  }
+		setMaxValue(maxValue);
+		setValue(initialValue);
+	}
 
 
-  public int getValue()
-  {
-    return value;
-  }
+  	public void setValue(int value) {
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidGaugeUI")) {
+			((GaugeUI) ui).setValue(value);
+		} else {
+			if (hasIndefiniteRange()) {
+				if (value != Gauge.CONTINUOUS_IDLE
+						&& value != Gauge.CONTINUOUS_RUNNING
+						&& value != Gauge.INCREMENTAL_IDLE
+						&& value != Gauge.INCREMENTAL_UPDATING) {
+					throw new IllegalArgumentException();
+				} else {
+					// TODO if CONTINOUS_RUNNING
+					// start thread or whatever it needs to be done
+					if (value == Gauge.INCREMENTAL_UPDATING
+							&& this.value == Gauge.INCREMENTAL_UPDATING) {
+						updateIndefiniteFrame();
+					} else {
+						this.value = value;
+						repaint();
+					}
+				}
+			} else {
+				if (value < 0) {
+					value = 0;
+				}
+				if (value > maxValue) {
+					value = maxValue;
+				}
+	
+				this.value = value;
+				repaint();
+			}
+		}
+	}
 
 
-  public void setMaxValue(int maxValue)
-  {
-	  if (maxValue > 0) {
+  	public int getValue() {
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidGaugeUI")) {
+			return ((GaugeUI) ui).getValue();
+		} else {
+			return value;
+		}
+	}
+
+
+  	public void setMaxValue(int maxValue) {
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidGaugeUI")) {
+			((GaugeUI) ui).setMaxValue(maxValue);
+		}
+		
+		if (maxValue > 0) {
 			this.maxValue = maxValue;
 			setValue(getValue());
-	  } else {
-		  if (isInteractive()) {
+		} else {
+			if (isInteractive()) {
 				throw new IllegalArgumentException();
-		  } else if (maxValue != Gauge.INDEFINITE) { 
+			} else if (maxValue != Gauge.INDEFINITE) {
 				throw new IllegalArgumentException();
-		  } else {
-			// not interactive && maxValue == INDEFINITE  
-	        	// this is also the case in the
-	        	// first call in the constructor!
-	        	if (this.maxValue == Gauge.INDEFINITE) {
-	        		return;
-	        	} else {
-	        		this.maxValue = Gauge.INDEFINITE;
-	        		this.value = Gauge.INCREMENTAL_IDLE;
-	        		repaint();
-	        	}
-		  }
-	  }
-  }
+			} else {
+				// not interactive && maxValue == INDEFINITE
+				// this is also the case in the
+				// first call in the constructor!
+				if (this.maxValue == Gauge.INDEFINITE) {
+					return;
+				} else {
+					this.maxValue = Gauge.INDEFINITE;
+					this.value = Gauge.INCREMENTAL_IDLE;
+					repaint();
+				}
+			}
+		}
+	}
 
 
-  public int getMaxValue()
-  {
-    return maxValue;
-  }
+  	public int getMaxValue() {
+		return maxValue;
+	}
 
 
   public boolean isInteractive()

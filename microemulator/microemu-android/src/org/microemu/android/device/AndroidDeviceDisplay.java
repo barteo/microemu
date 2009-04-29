@@ -44,6 +44,7 @@ import org.microemu.device.ui.DisplayableUI;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.view.View;
 
 public class AndroidDeviceDisplay implements DeviceDisplay {
@@ -96,98 +97,51 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 				|| y < 0)
 			throw new IllegalArgumentException("Area out of Image");
 
-		int[] rgbData = new int[height * width];
-		int[] rgbTransformedData = new int[height * width];
-		if (image instanceof AndroidImmutableImage) {
-			((AndroidImmutableImage) image).getRGB(rgbData, 0, width, x, y, width, height);
-		} else {
-			((AndroidMutableImage) image).getRGB(rgbData, 0, width, x, y, width, height);
-		}
+        Bitmap img;
+        if (image.isMutable()) {
+            img = ((AndroidMutableImage) image).getBitmap();
+        } else {
+            img = ((AndroidImmutableImage) image).getBitmap();
+        }            
 
-		int colIncr, rowIncr, offset;
+        Matrix matrix = new Matrix();
+        switch (transform) {
+        case Sprite.TRANS_NONE: {
+            break;
+        }
+        case Sprite.TRANS_ROT90: {
+        	matrix.preRotate(90);
+            break;
+        }
+        case Sprite.TRANS_ROT180: {
+            matrix.preRotate(180);
+            break;
+        }
+        case Sprite.TRANS_ROT270: {
+            matrix.preRotate(270);
+            break;
+        }
+        case Sprite.TRANS_MIRROR: {
+        	// TODO
+            break;
+        }
+        case Sprite.TRANS_MIRROR_ROT90: {
+        	// TODO
+            break;
+        }
+        case Sprite.TRANS_MIRROR_ROT180: {
+        	// TODO
+            break;
+        }
+        case Sprite.TRANS_MIRROR_ROT270: {
+        	// TODO
+            break;
+        }
+        default:
+            throw new IllegalArgumentException("Bad transform");
+        }
 
-		switch (transform) {
-		case Sprite.TRANS_NONE: {
-			offset = 0;
-			colIncr = 1;
-			rowIncr = 0;
-			break;
-		}
-		case Sprite.TRANS_ROT90: {
-			offset = (height - 1) * width;
-			colIncr = -width;
-			rowIncr = (height * width) + 1;
-			int temp = width;
-			width = height;
-			height = temp;
-			break;
-		}
-		case Sprite.TRANS_ROT180: {
-			offset = (height * width) - 1;
-			colIncr = -1;
-			rowIncr = 0;
-			break;
-		}
-		case Sprite.TRANS_ROT270: {
-			offset = width - 1;
-			colIncr = width;
-			rowIncr = -(height * width) - 1;
-			int temp = width;
-			width = height;
-			height = temp;
-			break;
-		}
-		case Sprite.TRANS_MIRROR: {
-			offset = width - 1;
-			colIncr = -1;
-			rowIncr = width << 1;
-			break;
-		}
-		case Sprite.TRANS_MIRROR_ROT90: {
-			offset = (height * width) - 1;
-			colIncr = -width;
-			rowIncr = (height * width) - 1;
-			int temp = width;
-			width = height;
-			height = temp;
-			break;
-		}
-		case Sprite.TRANS_MIRROR_ROT180: {
-			offset = (height - 1) * width;
-			colIncr = 1;
-			rowIncr = -(width << 1);
-			break;
-		}
-		case Sprite.TRANS_MIRROR_ROT270: {
-			offset = 0;
-			colIncr = width;
-			rowIncr = -(height * width) + 1;
-			int temp = width;
-			width = height;
-			height = temp;
-			break;
-		}
-		default:
-			throw new IllegalArgumentException("Bad transform");
-		}
-
-		// now the loops!
-		for (int row = 0, i = 0; row < height; row++, offset += rowIncr) {
-			for (int col = 0; col < width; col++, offset += colIncr, i++) {
-/*			    int a = (rgbData[offset] & 0xFF000000);
-			    int b = (rgbData[offset] & 0x00FF0000) >>> 16;
-			    int g = (rgbData[offset] & 0x0000FF00) >>> 8;
-			    int r = (rgbData[offset] & 0x000000FF);
-
-			    rgbTransformedData[i] = a | (r << 16) | (g << 8) | b;*/
-				rgbTransformedData[i] = rgbData[offset];
-			}
-		}
-		// to aid gc
-		rgbData = null;
-		image = null;
-
-		return createRGBImage(rgbTransformedData, width, height, true);
+		return new AndroidImmutableImage(Bitmap.createBitmap(img, x, y, width, height, matrix, true));
 	}
 
 	public Image createRGBImage(int[] rgb, int width, int height, boolean processAlpha) {

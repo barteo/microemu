@@ -71,6 +71,8 @@ public class IPhoneDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	protected Pointer<CGColor> currentColor;
 
 	protected Font currentfont;
+	
+	private int strokeStyle = SOLID;
 
 	public IPhoneDisplayGraphics(Pointer<CGContext> context, int width, int height, boolean offscreen) {
 		this.context = context;
@@ -268,6 +270,18 @@ public class IPhoneDisplayGraphics extends javax.microedition.lcdui.Graphics {
 
 	public Font getFont() {
 		return font;
+	}
+
+	public int getStrokeStyle() {
+		return strokeStyle;
+	}
+
+	public void setStrokeStyle(int style) {
+		if (style != SOLID && style != DOTTED) {
+			throw new IllegalArgumentException();
+		}
+	
+		this.strokeStyle = style;
 	}
 
 	public void setClip(final int x, final int y, final int width, final int height) {

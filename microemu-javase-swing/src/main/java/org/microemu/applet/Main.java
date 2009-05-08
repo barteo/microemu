@@ -51,6 +51,7 @@ import org.microemu.app.launcher.Launcher;
 import org.microemu.app.ui.swing.SwingDeviceComponent;
 import org.microemu.app.util.MIDletResourceLoader;
 import org.microemu.app.util.MIDletSystemProperties;
+import org.microemu.app.util.MIDletThread;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.FontManager;
@@ -341,7 +342,7 @@ public class Main extends Applet implements MicroEmulator {
 	}
 
 	public void destroyMIDletContext(MIDletContext midletContext) {
-
+        MIDletThread.contextDestroyed(midletContext);
 	}
 
 	public Launcher getLauncher() {

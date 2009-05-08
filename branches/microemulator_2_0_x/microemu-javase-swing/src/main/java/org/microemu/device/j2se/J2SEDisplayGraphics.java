@@ -255,9 +255,10 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
             int anchor) {
 
         // may throw NullPointerException, this is ok
-        if (x_src + width > src.getWidth() || y_src + height > src.getHeight() || width < 0 || height < 0 || x_src < 0
-                || y_src < 0)
+        if (x_src + width > src.getWidth() || y_src + height > src.getHeight() || width < 0 || height < 0 
+        		|| x_src < 0 || y_src < 0) {
             throw new IllegalArgumentException("Area out of Image");
+        }
 
         // this cannot be done on the same image we are drawing
         // check this if the implementation of getGraphics change so

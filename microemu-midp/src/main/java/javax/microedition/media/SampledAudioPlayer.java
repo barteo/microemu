@@ -40,6 +40,8 @@ import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import org.microemu.MIDletBridge;
+
 class SampledAudioPlayer implements Player, LineListener 
 {
 	private AudioInputStream audioInputStream = null;
@@ -95,7 +97,7 @@ class SampledAudioPlayer implements Player, LineListener
 
 	public void close() 
 	{
-		Manager.mediaDone( this );
+		MIDletBridge.removeMediaPlayer(this);
 		if( clip != null )
 		{
 			clip.flush();

@@ -40,8 +40,12 @@ import javax.sound.midi.Sequencer;
 import javax.sound.midi.Synthesizer;
 import javax.sound.midi.Transmitter;
 
+import org.microemu.MIDletBridge;
+
 class MidiAudioPlayer implements Player, MetaEventListener 
 {
+	private int state;
+	
 	private Sequence  sequence = null;             // The contents of a MIDI file
 	private Sequencer sequencer = null;            // We play MIDI Sequences with a Sequencer
 	private Vector    vListeners = null;           // All PlayerListeners for this audio
@@ -66,6 +70,7 @@ class MidiAudioPlayer implements Player, MetaEventListener
     		//Read the sequence from the file and tell the sequencer about it
     		sequence = MidiSystem.getSequence( stream );
     		sequencer.setSequence(sequence);
+    		state = UNREALIZED;
 	    } 
 	    catch( UnsatisfiedLinkError e ){ e.printStackTrace(); }
 	    catch( IOException e ){ e.printStackTrace(); }
@@ -74,11 +79,6 @@ class MidiAudioPlayer implements Player, MetaEventListener
 		return false;
 	}
 
-	protected void dispose() 
-	{
-        close();
-	}
-	
 	public void addPlayerListener(PlayerListener playerListener) 
 	{
 		if( vListeners == null )
@@ -88,12 +88,20 @@ class MidiAudioPlayer implements Player, MetaEventListener
 
 	public void close() 
 	{
-		Manager.mediaDone( this );
-		if( sequencer != null )
+		if (state == CLOSED) {
+			return;
+		}
+		
+		MIDletBridge.removeMediaPlayer(this);
+		if( sequencer != null ) {
 			sequencer.close();
+		}
+		state = CLOSED;
 	}
 
 	public void deallocate() {
+		// TODO handle UNREALIZED state
+		state = REALIZED;
 	}
 
 	public String getContentType() {
@@ -112,18 +120,17 @@ class MidiAudioPlayer implements Player, MetaEventListener
 	}
 
 	public int getState() {
-		// TODO Auto-generated method stub
-		return 0;
+		return state;
 	}
 
 	public void prefetch() throws MediaException {
 		// TODO Auto-generated method stub
-
+		state = PREFETCHED;
 	}
 
 	public void realize() throws MediaException {
 		// TODO Auto-generated method stub
-
+		state = REALIZED;
 	}
 
 	public void removePlayerListener(PlayerListener playerListener) 
@@ -158,11 +165,14 @@ class MidiAudioPlayer implements Player, MetaEventListener
 			sequencer.addMetaEventListener( this );
 			sequencer.start();
 		}
+		state = STARTED;
 	}
 
 	public void stop() throws MediaException {
-		if( sequencer != null )
+		if( sequencer != null ) {
 			sequencer.stop();
+		}
+		state = PREFETCHED;
 	}
 
 	public Control getControl(String controlType) {

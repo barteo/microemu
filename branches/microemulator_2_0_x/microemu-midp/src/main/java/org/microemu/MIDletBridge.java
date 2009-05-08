@@ -31,11 +31,13 @@
 package org.microemu;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
 
 import javax.microedition.lcdui.game.GameCanvas;
+import javax.microedition.media.Player;
 import javax.microedition.midlet.MIDlet;
 
 import org.microemu.app.launcher.Launcher;
@@ -143,6 +145,7 @@ public class MIDletBridge {
 			return;
 		}
 		emulator.destroyMIDletContext(midletContext);
+		closeMediaPlayers();
 		if (midletContexts.containsValue(midletContext)) {
 			for (Iterator i = midletContexts.entrySet().iterator(); i.hasNext();) {
 				Map.Entry entry = (Map.Entry) i.next();
@@ -189,7 +192,26 @@ public class MIDletBridge {
 	public static void registerGameCanvasKeyAccess(GameCanvas gameCanvas, GameCanvasKeyAccess access) {
 		gameCanvasAccesses.put(gameCanvas, access);
 	}
+	
+	private static ArrayList players = new ArrayList();
+	
+	public static void addMediaPlayer(Player player)
+	{
+		players.add(player);
+	}
+	
+	public static void removeMediaPlayer(Player player)
+	{
+		players.remove(player);
+	}
 
-
+	private static void closeMediaPlayers()
+	{
+		for (Iterator i = players.iterator(); i.hasNext(); ) {
+			Player player = (Player) i.next();
+			player.close();
+		}
+		players.clear();
+	}
 
 }

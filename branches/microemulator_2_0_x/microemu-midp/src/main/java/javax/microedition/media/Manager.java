@@ -29,105 +29,62 @@ package javax.microedition.media;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Vector;
 
+import org.microemu.MIDletBridge;
 import org.microemu.midp.media.audio.PCTone;
 
-public final class Manager
-{
+public final class Manager {
 
-    public static final String TONE_DEVICE_LOCATOR = "device://tone";
-    static Vector vMedia = null;
-    
-    public static String[] getSupportedContentTypes(String protocol)
-    {
-        // TODO
-        return new String[0];
-    }
-    
-    
-    public static String[] getSupportedProtocols(String content_type)
-    {
-        // TODO
-        return new String[0];
-    }
-    
-    
-    public static Player createPlayer(String locator)
-            throws IOException, MediaException
-    {
-        // TODO
-        return null;
-    }
-    
-    
-    public static Player createPlayer(InputStream stream, String type)
-            throws IOException, MediaException
-    {
-        // TODO add all types, for now just simpleaudio
-    	if( type.equals( "audio/x-wav" ) || type.equals( "audio/basic" ) || 
-    		type.equals( "audio/mpeg" )  )
-    	{
-    	  	SampledAudioPlayer audPlayer = new SampledAudioPlayer();
-        	audPlayer.open( stream, type );
-        	
-        	if( vMedia == null )
-        		vMedia = new Vector();
-        	vMedia.add( audPlayer );
-            return audPlayer;
-        }
-    	else if( type.equals( "audio/midi" ) )
-    	{
-    	  	MidiAudioPlayer midiPlayer = new MidiAudioPlayer();
-        	midiPlayer.open( stream, type );
-        	
-        	if( vMedia == null )
-        		vMedia = new Vector();
-        	vMedia.add( midiPlayer );
-            return midiPlayer;
-    	}
-    	
-    	return null;
-    }
-    
-    
-   private static final PCTone pcTone = new PCTone();
-   
-   public synchronized static void playTone(int frequency, int time, int volume)
-   throws MediaException
-   {
-      pcTone.play(frequency, time, volume);
-   }
+	public static final String TONE_DEVICE_LOCATOR = "device://tone";
 
-    static void mediaDone( Object objMedia )
+	public static String[] getSupportedContentTypes(String protocol) 
 	{
-    	//remove the media from our list of media to cleanup
-    	try 
-    	{
-	    	for( int index=0; vMedia != null && index<vMedia.size(); index++ )
-	    	{
-	    		if( objMedia == vMedia.elementAt( index ) )
-	    			vMedia.removeElementAt( index );
-	    	}
-    	}
-    	catch( ArrayIndexOutOfBoundsException e ) { return; };
+		// TODO
+		return new String[0];
 	}
-    
-    static void cleanupMedia()
+
+	public static String[] getSupportedProtocols(String content_type) 
 	{
-    	try 
-    	{
-	    	while( vMedia != null && vMedia.size() > 0 )
-	    	{
-	    		Player play = (Player) vMedia.elementAt( 0 );
-	    		play.close();
-	    		vMedia.removeElementAt( 0 );
-	    	}
-    	}
-    	catch( ArrayIndexOutOfBoundsException e ) { return; };
+		// TODO
+		return new String[0];
+	}
+
+	public static Player createPlayer(String locator) 
+			throws IOException, MediaException 
+	{
+		// TODO
+		return null;
+	}
+
+	public static Player createPlayer(InputStream stream, String type)
+			throws IOException, MediaException 
+	{
+		// TODO add all types, for now just simpleaudio
+		if (type.equals("audio/x-wav") || type.equals("audio/basic") || type.equals("audio/mpeg")) {
+			SampledAudioPlayer audPlayer = new SampledAudioPlayer();
+			audPlayer.open(stream, type);
+
+			MIDletBridge.addMediaPlayer(audPlayer);
+
+			return audPlayer;
+		} else if (type.equals("audio/midi")) {
+			MidiAudioPlayer midiPlayer = new MidiAudioPlayer();
+			midiPlayer.open(stream, type);
+
+			MIDletBridge.addMediaPlayer(midiPlayer);
+
+			return midiPlayer;
+		}
+
+		return null;
+	}
+
+	private static final PCTone pcTone = new PCTone();
+
+	public synchronized static void playTone(int frequency, int time, int volume)
+			throws MediaException 
+	{
+		pcTone.play(frequency, time, volume);
 	}
 
 }
-
-
-

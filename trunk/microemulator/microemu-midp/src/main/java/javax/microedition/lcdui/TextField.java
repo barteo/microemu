@@ -109,13 +109,16 @@ public class TextField extends Item
         if (!InputMethod.validate(text, constraints)) {
             throw new IllegalArgumentException();
         }
+		if (maxSize <= 0) {
+			throw new IllegalArgumentException();
+		}
+        this.maxSize = maxSize;
 		stringComponent = new StringComponent();
 		if (text != null) {
 			setString(text);
 		} else {
 			setString("");
 		}
-		setMaxSize(maxSize);
 		stringComponent.setWidthDecreaser(8);
 	}
 

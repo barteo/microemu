@@ -122,19 +122,22 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
             break;
         }
         case Sprite.TRANS_MIRROR: {
-        	// TODO
+        	matrix.preScale(-1, 1);
             break;
         }
         case Sprite.TRANS_MIRROR_ROT90: {
-        	// TODO
+        	matrix.preScale(-1, 1);
+        	matrix.preRotate(90);
             break;
         }
         case Sprite.TRANS_MIRROR_ROT180: {
-        	// TODO
+        	matrix.preScale(-1, 1);
+            matrix.preRotate(180);
             break;
         }
         case Sprite.TRANS_MIRROR_ROT270: {
-        	// TODO
+        	matrix.preScale(-1, 1);
+            matrix.preRotate(270);
             break;
         }
         default:

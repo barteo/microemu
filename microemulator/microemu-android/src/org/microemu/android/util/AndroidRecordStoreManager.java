@@ -191,7 +191,7 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 		}
 	}
 
-	private void deleteFromDisk(RecordStoreImpl recordStore, int recordId)
+	private synchronized void deleteFromDisk(RecordStoreImpl recordStore, int recordId)
 			throws RecordStoreException 
 	{
 		try {
@@ -210,7 +210,7 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 	/**
 	 * @param recordId -1 for storing only header
 	 */
-	private void saveToDisk(RecordStoreImpl recordStore, int recordId)
+	private synchronized void saveToDisk(RecordStoreImpl recordStore, int recordId)
 			throws RecordStoreException 
 	{
 		try {

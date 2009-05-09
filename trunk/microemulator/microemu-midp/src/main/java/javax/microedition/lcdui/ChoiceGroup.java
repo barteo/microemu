@@ -157,53 +157,52 @@ public class ChoiceGroup extends Item implements Choice
 
 	
 	public int append(String stringPart, Image imagePart) {
-		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidChoiceGroupUI")) {
-			return ((ChoiceGroupUI) ui).append(stringPart, imagePart);
-		} else {
-			insert(numOfItems, stringPart, imagePart);
+		insert(size(), stringPart, imagePart);
 	
-			return (numOfItems - 1);
-		}
+		return (size() - 1);
 	}
 
 
 	public void delete(int itemNum) {
-System.out.println("ChoiceGroup.delete(..)");		
-		if (itemNum < 0 || itemNum >= numOfItems) {
-			throw new IndexOutOfBoundsException();
-		}
-
-		// Ensure that an item of an EXCLUSIVE list remains selected.
-		if ((Choice.EXCLUSIVE == choiceType || Choice.POPUP == choiceType)
-				&& items[itemNum].isSelected()) {
-			if (numOfItems > 1) {
-				items[itemNum != 0 ? 0 : 1].setSelectedState(true);
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidChoiceGroupUI")) {
+			((ChoiceGroupUI) ui).delete(itemNum);
+		} else {
+			if (itemNum < 0 || itemNum >= numOfItems) {
+				throw new IndexOutOfBoundsException();
 			}
+	
+			// Ensure that an item of an EXCLUSIVE list remains selected.
+			if ((Choice.EXCLUSIVE == choiceType || Choice.POPUP == choiceType)
+					&& items[itemNum].isSelected()) {
+				if (numOfItems > 1) {
+					items[itemNum != 0 ? 0 : 1].setSelectedState(true);
+				}
+			}
+	
+			// Delete item.
+			if (itemNum != numOfItems - 1) {
+				System.arraycopy(items, itemNum + 1, items, itemNum, numOfItems
+						- itemNum - 1);
+			}
+			numOfItems--;
+			// clear the slot to allow garbage collection
+			items[numOfItems] = null;
+	
+			// Ensure highlighted item remains highlighted (if it wasn't just
+			// deleted).
+			if (highlightedItemIndex > itemNum) {
+				--highlightedItemIndex;
+			}
+	
+			// Ensure that an item remains highlighted.
+			if (highlightedItemIndex >= numOfItems) {
+				highlightedItemIndex = numOfItems - 1;
+			}
+	
+			if (choiceType == Choice.POPUP)
+				popupList.delete(itemNum);
+			repaint();
 		}
-
-		// Delete item.
-		if (itemNum != numOfItems - 1) {
-			System.arraycopy(items, itemNum + 1, items, itemNum, numOfItems
-					- itemNum - 1);
-		}
-		numOfItems--;
-		// clear the slot to allow garbage collection
-		items[numOfItems] = null;
-
-		// Ensure highlighted item remains highlighted (if it wasn't just
-		// deleted).
-		if (highlightedItemIndex > itemNum) {
-			--highlightedItemIndex;
-		}
-
-		// Ensure that an item remains highlighted.
-		if (highlightedItemIndex >= numOfItems) {
-			highlightedItemIndex = numOfItems - 1;
-		}
-
-		if (choiceType == Choice.POPUP)
-			popupList.delete(itemNum);
-		repaint();
 	}
   
 	public void deleteAll() {
@@ -321,43 +320,43 @@ System.out.println("ChoiceGroup.deleteAll()");
   }
 
 
-  public void insert(int elementNum, String stringPart, Image imagePart)
-  {
-System.out.println("ChoiceGroup.insert(..)");		
-		if (elementNum < 0 || elementNum > numOfItems) {
-			throw new IndexOutOfBoundsException();
+  	public void insert(int elementNum, String stringPart, Image imagePart) {
+		if (ui.getClass().getName().equals( "org.microemu.android.device.ui.AndroidChoiceGroupUI")) {
+			((ChoiceGroupUI) ui).insert(elementNum, stringPart, imagePart);
+		} else {
+			if (elementNum < 0 || elementNum > numOfItems) {
+				throw new IndexOutOfBoundsException();
+			}
+			if (stringPart == null) {
+				throw new NullPointerException();
+			}
+
+			if (choiceType == Choice.POPUP) {
+				popupList.insert(elementNum, stringPart, imagePart);
+			}
+
+			if (numOfItems == items.length /* no space left in item array */) {
+				ChoiceItem newItems[] = new ChoiceItem[numOfItems + 4];
+				System.arraycopy(items, 0, newItems, 0, numOfItems);
+				items = newItems;
+			}
+
+			System.arraycopy(items, elementNum, items, elementNum + 1, numOfItems - elementNum);
+
+			items[elementNum] = new ChoiceItem(null, imagePart, stringPart);
+
+			++numOfItems;
+
+			if (numOfItems == 1) {
+				highlightedItemIndex = 0;
+				if (Choice.EXCLUSIVE == choiceType || Choice.POPUP == choiceType) {
+					setSelectedIndex(0, true);
+				}
+			}
+
+			repaint();
 		}
-		if (stringPart == null) {
-			throw new NullPointerException();
-		}
-
-		if (choiceType == Choice.POPUP) {
-			  popupList.insert(elementNum, stringPart, imagePart);
-		}
-
-	if (numOfItems == items.length  /*no space left in item array*/) {
-      ChoiceItem newItems[] = new ChoiceItem[numOfItems + 4];
-      System.arraycopy(items, 0, newItems, 0, numOfItems);
-      items = newItems;
-    }
-
-    System.arraycopy(items, elementNum, items, elementNum + 1,
-                     numOfItems - elementNum);
-  
-	  items[elementNum] = new ChoiceItem(null, imagePart, stringPart);
-
-    ++numOfItems;
-
-    if (numOfItems == 1) {
-      highlightedItemIndex = 0;
-      if (Choice.EXCLUSIVE == choiceType ||
-    		  Choice.POPUP == choiceType) {
-        setSelectedIndex(0, true);
-      }
-    }
-    
-    repaint();
-  }
+	}
 
 
   	public boolean isSelected(int elementNum) {
@@ -490,11 +489,13 @@ System.out.println("ChoiceGroup.insert(..)");
 	}
 
 
-  public int size()
-  {
-	  System.out.println("ChoiceGroup.size()");			  	  
-    return numOfItems;
-  }
+	public int size() {
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidChoiceGroupUI")) {
+			return ((ChoiceGroupUI) ui).size();
+		} else {
+			return numOfItems;
+		}
+	}
 
 
 	boolean isFocusable()

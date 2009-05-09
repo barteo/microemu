@@ -64,14 +64,14 @@ public class AndroidChoiceGroupUI extends LinearLayout implements ChoiceGroupUI 
 	
 	private LinearLayout listView;
 	
-//	private RadioGroup radioGroup;
-	
 	public AndroidChoiceGroupUI(final MicroEmulatorActivity activity, final ChoiceGroup choiceGroup, final int choiceType) {
 		super(activity);
 		
 		this.activity = activity;
 		this.choiceGroup = choiceGroup;
 		this.choiceType = choiceType;
+		
+		this.listAdapter = new AndroidListAdapter();
 
 		activity.post(new Runnable() {
 			public void run() {
@@ -84,7 +84,6 @@ public class AndroidChoiceGroupUI extends LinearLayout implements ChoiceGroupUI 
 				labelView.setTextAppearance(labelView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
 				addView(labelView);
 				
-				listAdapter = new AndroidListAdapter();
 //				listView.setAdapter(listAdapter);
 //				listView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 				
@@ -109,36 +108,6 @@ public class AndroidChoiceGroupUI extends LinearLayout implements ChoiceGroupUI 
 		});
 	}
 	
-	private int appendTransfer;
-
-	public int append(final String stringPart, final Image imagePart) {
-		if (activity.isActivityThread()) {
-			appendTransfer = appendInternal(stringPart, imagePart);
-		} else {
-			appendTransfer = Integer.MIN_VALUE;
-			activity.post(new Runnable() {
-				public void run() {
-					synchronized (AndroidChoiceGroupUI.this) {
-						appendTransfer = appendInternal(stringPart, imagePart);
-						AndroidChoiceGroupUI.this.notify();
-					}
-				}
-			});
-
-			synchronized (AndroidChoiceGroupUI.this) {
-				if (appendTransfer == Integer.MIN_VALUE) {
-					try {
-						wait();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-		
-		return appendTransfer;
-	}
-
 	private View createView(String stringPart, Image imagePart) {
 		if (choiceType == Choice.EXCLUSIVE) {
 			final RadioButton radioButton = new RadioButton(activity);
@@ -188,16 +157,19 @@ System.out.println("Choice.POPUP not implemented yet");
 		}
 	}
 	
-	private int appendInternal(String stringPart, Image imagePart) {
-		View view = createView(stringPart, imagePart);
-		listView.addView(view);
-		return listAdapter.append(view);
+	public void delete(int elementNum) {
+System.out.println("AndroidChoiceGroupUI.delete(..) not synced");		
+		listView.removeViewAt(elementNum);
+		listAdapter.remove(elementNum);
 	}
 	
-	public void setSelectedIndex(int elementNum, boolean selected) {
-System.out.println("AndroidChoiceGroupUI.setSelectedIndex() not synced");		
-		Object element = listAdapter.getItem(elementNum);
-		((CompoundButton) element).setChecked(selected);
+	public void setSelectedIndex(final int elementNum, final boolean selected) {
+		activity.post(new Runnable() {
+			public void run() {
+				Object element = listAdapter.getItem(elementNum);
+				((CompoundButton) element).setChecked(selected);
+			}
+		});
 	}
 
 	public int getSelectedIndex() {
@@ -217,13 +189,24 @@ System.out.println("Choice.IMPLICIT not implemented yet");
 		return -1;
 	}
 
+	public void insert(final int elementNum, final String stringPart, final Image imagePart) {
+		activity.post(new Runnable() {
+			public void run() {
+				synchronized (AndroidChoiceGroupUI.this) {
+					View view = createView(stringPart, imagePart);
+					listView.addView(view, elementNum);
+					listAdapter.insert(elementNum, view);
+				}
+			}
+		});
+	}
+	
 	public boolean isSelected(int elementNum) {
 System.out.println("AndroidChoiceGroupUI.isSelected(..) not synced");		
 		return ((CompoundButton) listAdapter.getItem(elementNum)).isChecked();
 	}
 	
 	public void setSelectedFlags(boolean[] selectedArray) {
-System.out.println("AndroidChoiceGroupUI.setSelectedFlags(..) not synced");		
 		for (int i = 0; i < listAdapter.getCount(); ++i) {
 			setSelectedIndex(i, selectedArray[i]);
 		}
@@ -246,19 +229,22 @@ System.out.println("AndroidChoiceGroupUI.getSelectedFlags(..) not synced");
 	public void set(int elementNum, String stringPart, Image imagePart) {
 System.out.println("AndroidChoiceGroupUI.set(..) not synced");
 		View view = createView(stringPart, imagePart);
+		listView.removeViewAt(elementNum);
 		listView.addView(view, elementNum);
 		listAdapter.set(elementNum, view);
+	}
+	
+	public int size() {
+		return listAdapter.getCount();
 	}
 
 	private class AndroidListAdapter extends BaseAdapter {
 		
 		ArrayList<View> objects = new ArrayList<View>();
 		
-		public int append(View item) {
-			objects.add(item);
+		public void insert(int position, View item) {
+			objects.add(position, item);
 			notifyDataSetChanged();
-			
-			return objects.lastIndexOf(item);
 		}
 		
 		public void set(int position, View item) {
@@ -266,11 +252,10 @@ System.out.println("AndroidChoiceGroupUI.set(..) not synced");
 			notifyDataSetChanged();
 		}
 		
-		public void deleteAll() {
-			objects.clear();
+		public void remove(int position) {
+			objects.remove(position);
 			notifyDataSetChanged();
 		}
-
 
 		public int getCount() {
 			return objects.size();

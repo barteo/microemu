@@ -30,12 +30,14 @@ import javax.microedition.lcdui.Image;
 
 public interface ChoiceGroupUI extends ItemUI {
 
-	int append(String stringPart, Image imagePart);
+	void delete(int elementNum);
 
 	void setSelectedIndex(int elementNum, boolean selected);
 
 	int getSelectedIndex();
 
+	void insert(int elementNum, String stringPart, Image imagePart);
+	
 	boolean isSelected(int elementNum);
 
 	void setSelectedFlags(boolean[] selectedArray);
@@ -43,5 +45,7 @@ public interface ChoiceGroupUI extends ItemUI {
 	int getSelectedFlags(boolean[] selectedArray);
 
 	void set(int elementNum, String stringPart, Image imagePart);
+	
+	int size();
 
 }

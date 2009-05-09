@@ -41,9 +41,8 @@ public class J2SEChoiceGroupUI implements ChoiceGroupUI {
 		// TODO Auto-generated method stub
 	}
 
-	public int append(String stringPart, Image imagePart) {
+	public void delete(int elementNum) {
 		// TODO Auto-generated method stub
-		return -1;
 	}
 
 	public void setSelectedIndex(int elementNum, boolean selected) {
@@ -53,6 +52,10 @@ public class J2SEChoiceGroupUI implements ChoiceGroupUI {
 	public int getSelectedIndex() {
 		// TODO Auto-generated method stub
 		return -1;
+	}
+
+	public void insert(int elementNum, String stringPart, Image imagePart) {
+		// TODO Auto-generated method stub
 	}
 
 	public boolean isSelected(int elementNum) {
@@ -71,6 +74,11 @@ public class J2SEChoiceGroupUI implements ChoiceGroupUI {
 
 	public void set(int elementNum, String stringPart, Image imagePart) {
 		// TODO Auto-generated method stub
+	}
+
+	public int size() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

@@ -29,6 +29,7 @@ package org.microemu.app.util;
 import java.io.InputStream;
 
 import org.microemu.Injected;
+import org.microemu.app.classloader.MIDletClassLoader;
 import org.microemu.log.Logger;
 import org.microemu.util.ThreadUtils;
 
@@ -64,8 +65,8 @@ public class MIDletResourceLoader {
 		if (classLoader != origClass.getClassLoader()) {
 			// showWarning
 			String callLocation = ThreadUtils.getCallLocation(FQCN);
-			if (callLocation != null) {
-				Logger.warn("attempt to load resource [" + resourceName + "] using System ClasslLoader from "
+			if (callLocation != null && MIDletClassLoader.debug) {
+				Logger.debug("attempt to load resource [" + resourceName + "] using System ClasslLoader from "
 						+ callLocation);
 			}
 		}

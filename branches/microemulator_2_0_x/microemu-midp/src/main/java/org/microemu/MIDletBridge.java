@@ -207,9 +207,8 @@ public class MIDletBridge {
 
 	private static void closeMediaPlayers()
 	{
-		for (Iterator i = players.iterator(); i.hasNext(); ) {
-			Player player = (Player) i.next();
-			player.close();
+		for (int i = players.size() - 1; i >= 0; i--) {
+			((Player) players.get(i)).close();
 		}
 		players.clear();
 	}

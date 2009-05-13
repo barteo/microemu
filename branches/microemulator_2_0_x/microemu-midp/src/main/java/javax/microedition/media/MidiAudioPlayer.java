@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Vector;
 
+import javax.microedition.media.control.VolumeControl;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MetaEventListener;
 import javax.sound.midi.MetaMessage;
@@ -176,8 +177,32 @@ class MidiAudioPlayer implements Player, MetaEventListener
 	}
 
 	public Control getControl(String controlType) {
-		// TODO Auto-generated method stub
-		return null;
+		if (controlType.equals("VolumeControl")) {
+			return new VolumeControl() {
+
+				public int getLevel() {
+					// TODO Auto-generated method stub
+					return 0;
+				}
+
+				public boolean isMuted() {
+					// TODO Auto-generated method stub
+					return false;
+				}
+
+				public int setLevel(int level) {
+					// TODO Auto-generated method stub
+					return 0;
+				}
+
+				public void setMute(boolean mute) {
+					// TODO Auto-generated method stub			
+				}
+				
+			};
+		} else {
+			return null;
+		}
 	}
 
 	public Control[] getControls() {

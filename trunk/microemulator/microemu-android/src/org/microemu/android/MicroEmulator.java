@@ -49,6 +49,7 @@ import org.microemu.android.device.AndroidDevice;
 import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.android.device.AndroidFontManager;
 import org.microemu.android.device.AndroidInputMethod;
+import org.microemu.android.device.ui.AndroidCanvasUI;
 import org.microemu.android.device.ui.AndroidCommandUI;
 import org.microemu.android.device.ui.AndroidDisplayableUI;
 import org.microemu.android.util.AndroidLoggerAppender;
@@ -227,25 +228,42 @@ public class MicroEmulator extends MicroEmulatorActivity {
 			}		
 
 			List<AndroidCommandUI> commands = ui.getCommandsUI();
-			for (int i = 0; i < commands.size(); i++) {
-				CommandUI cmd = commands.get(i);
-				if (cmd.getCommand().getCommandType() == Command.BACK) {
-					CommandListener l = ui.getCommandListener();
-					l.commandAction(cmd.getCommand(), da.getCurrent());
-					return true;
-				}
-			}			
-
-			for (int i = 0; i < commands.size(); i++) {
-				CommandUI cmd = commands.get(i);
-				if (cmd.getCommand().getCommandType() == Command.EXIT) {
-					moveTaskToBack(true);
-					return true;
-				}
+			
+			CommandUI cmd = getFirstCommandOfType(commands, Command.BACK);
+			if (cmd != null) {
+				CommandListener l = ui.getCommandListener();
+				l.commandAction(cmd.getCommand(), da.getCurrent());
+				return true;
 			}
+
+			cmd = getFirstCommandOfType(commands, Command.EXIT);
+			if (cmd != null) {
+				moveTaskToBack(true);
+				return true;
+			}
+			
+			cmd = getFirstCommandOfType(commands, Command.CANCEL);
+			if (cmd != null) {
+				CommandListener l = ui.getCommandListener();
+				l.commandAction(cmd.getCommand(), da.getCurrent());
+				return true;
+			}
+			
+			return true;
+		} else {		
+			return super.onKeyDown(keyCode, event);
 		}
+	}
+	
+	private CommandUI getFirstCommandOfType(List<AndroidCommandUI> commands, int commandType) {
+		for (int i = 0; i < commands.size(); i++) {
+			CommandUI cmd = commands.get(i);
+			if (cmd.getCommand().getCommandType() == commandType) {
+				return cmd;
+			}
+		}	
 		
-		return super.onKeyDown(keyCode, event);
+		return null;
 	}
 	
 	private final static float TRACKBALL_THRESHOLD = 0.4f; 
@@ -257,39 +275,50 @@ public class MicroEmulator extends MicroEmulatorActivity {
 	@Override
 	public boolean onTrackballEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_MOVE) {
-			float x = event.getX();
-			float y = event.getY();
-			if ((x > 0 && accumulatedTrackballX < 0) || (x < 0 && accumulatedTrackballX > 0)) {
-				accumulatedTrackballX = 0;
+			MIDletAccess ma = MIDletBridge.getMIDletAccess();
+			if (ma == null) {
+				return false;
 			}
-			if ((y > 0 && accumulatedTrackballY < 0) || (y < 0 && accumulatedTrackballY > 0)) {
-				accumulatedTrackballY = 0;
+			final DisplayAccess da = ma.getDisplayAccess();
+			if (da == null) {
+				return false;
 			}
-			if (accumulatedTrackballX + x > TRACKBALL_THRESHOLD) {
-				accumulatedTrackballX -= TRACKBALL_THRESHOLD;
-				new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT).dispatch(getContentView());
-				new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT).dispatch(getContentView());
-			} else if (accumulatedTrackballX + x < -TRACKBALL_THRESHOLD) {
-				accumulatedTrackballX += TRACKBALL_THRESHOLD;
-				new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT).dispatch(getContentView());
-				new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT).dispatch(getContentView());
+			AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getCurrentUI();
+			if (ui instanceof AndroidCanvasUI) {
+				float x = event.getX();
+				float y = event.getY();
+				if ((x > 0 && accumulatedTrackballX < 0) || (x < 0 && accumulatedTrackballX > 0)) {
+					accumulatedTrackballX = 0;
+				}
+				if ((y > 0 && accumulatedTrackballY < 0) || (y < 0 && accumulatedTrackballY > 0)) {
+					accumulatedTrackballY = 0;
+				}
+				if (accumulatedTrackballX + x > TRACKBALL_THRESHOLD) {
+					accumulatedTrackballX -= TRACKBALL_THRESHOLD;
+					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT).dispatch(getContentView());
+					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT).dispatch(getContentView());
+				} else if (accumulatedTrackballX + x < -TRACKBALL_THRESHOLD) {
+					accumulatedTrackballX += TRACKBALL_THRESHOLD;
+					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT).dispatch(getContentView());
+					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT).dispatch(getContentView());
+				}
+				if (accumulatedTrackballY + y > TRACKBALL_THRESHOLD) {
+					accumulatedTrackballY -= TRACKBALL_THRESHOLD;
+					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN).dispatch(getContentView());
+					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN).dispatch(getContentView());
+				} else if (accumulatedTrackballY + y < -TRACKBALL_THRESHOLD) {
+					accumulatedTrackballY += TRACKBALL_THRESHOLD;
+					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP).dispatch(getContentView());
+					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_UP).dispatch(getContentView());
+				}
+				accumulatedTrackballX += x;
+				accumulatedTrackballY += y;
+				
+				return true;
 			}
-			if (accumulatedTrackballY + y > TRACKBALL_THRESHOLD) {
-				accumulatedTrackballY -= TRACKBALL_THRESHOLD;
-				new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN).dispatch(getContentView());
-				new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN).dispatch(getContentView());
-			} else if (accumulatedTrackballY + y < -TRACKBALL_THRESHOLD) {
-				accumulatedTrackballY += TRACKBALL_THRESHOLD;
-				new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP).dispatch(getContentView());
-				new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_UP).dispatch(getContentView());
-			}
-			accumulatedTrackballX += x;
-			accumulatedTrackballY += y;
-			
-			return true;
-		} else {
-			return super.onTrackballEvent(event);
 		}
+		
+		return super.onTrackballEvent(event);
 	}
 
 	@Override

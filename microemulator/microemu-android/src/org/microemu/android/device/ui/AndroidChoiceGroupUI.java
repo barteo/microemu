@@ -37,7 +37,6 @@ import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.ChoiceGroupUI;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,8 +79,7 @@ public class AndroidChoiceGroupUI extends LinearLayout implements ChoiceGroupUI 
 				
 				labelView = new TextView(activity);
 				labelView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-				TypedArray a = labelView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
-				labelView.setTextAppearance(labelView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
+				labelView.setTextAppearance(labelView.getContext(), android.R.style.TextAppearance_Large);
 				addView(labelView);
 				
 //				listView.setAdapter(listAdapter);

@@ -33,7 +33,6 @@ import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.InputMethod;
 import org.microemu.device.ui.TextFieldUI;
 
-import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -66,8 +65,7 @@ public class AndroidTextFieldUI extends LinearLayout implements TextFieldUI {
 				labelView.setFocusable(false);
 				labelView.setFocusableInTouchMode(false);
 				labelView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-				TypedArray a = labelView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
-				labelView.setTextAppearance(labelView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
+				labelView.setTextAppearance(labelView.getContext(), android.R.style.TextAppearance_Large);
 				addView(labelView);
 				
 				editView = new EditText(activity);

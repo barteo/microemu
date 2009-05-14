@@ -36,7 +36,6 @@ import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.ListUI;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -126,8 +125,7 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
 				convertView = new TextView(activity);
-				TypedArray a = convertView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
-				((TextView) convertView).setTextAppearance(convertView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
+				((TextView) convertView).setTextAppearance(convertView.getContext(), android.R.style.TextAppearance_Large);
 			}
 			
 			((TextView) convertView).setText((String) getItem(position));

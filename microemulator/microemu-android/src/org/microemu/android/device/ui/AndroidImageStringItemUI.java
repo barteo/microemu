@@ -31,7 +31,6 @@ import javax.microedition.lcdui.Item;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.ImageStringItemUI;
 
-import android.content.res.TypedArray;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -78,8 +77,7 @@ public class AndroidImageStringItemUI extends LinearLayout implements ImageStrin
 						labelView.setFocusable(false);
 						labelView.setFocusableInTouchMode(false);
 						labelView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-						TypedArray a = labelView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
-						labelView.setTextAppearance(labelView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
+						labelView.setTextAppearance(labelView.getContext(), android.R.style.TextAppearance_Large);
 						addView(labelView, 0);
 					}
 					labelView.setText(label);

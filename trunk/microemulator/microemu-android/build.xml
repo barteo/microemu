@@ -8,14 +8,14 @@
     <property name="midlet.package" value="SimpleDemo.apk" />
     <property name="midlet.icon" value="../microemu-javase/src/main/resources/org/microemu/icon.png" />
     <property name="midlet.class" value="org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet" />
-    <property name="midlet.jar" value="../microemu-examples/microemu-demo/target/microemu-demo-2.0.4-SNAPSHOT.jar" />
-    <property name="sdk-folder" value="/home/barteo/Desktop/android-sdk-linux_x86-1.0_r1" />
-    <property name="asm.jar" value="/home/barteo/.m2/repository/asm/asm/3.1/asm-3.1.jar" />
-    <property name="microemu-cldc.jar" value="../microemu-cldc/target/microemu-cldc-2.0.4-SNAPSHOT.jar" />
-    <property name="microemu-midp.jar" value="../microemu-midp/target/microemu-midp-2.0.4-SNAPSHOT.jar" />
-    <property name="microemu-javase.jar" value="../microemu-javase/target/microemu-javase-2.0.4-SNAPSHOT.jar" />
-    <property name="microemu-jsr-75.jar" value="../microemu-extensions/microemu-jsr-75/target/microemu-jsr-75-2.0.4-SNAPSHOT.jar" />
-    
+    <property name="midlet.jar" value="../microemu-examples/microemu-demo/target/microemu-demo-3.0.0-SNAPSHOT.jar" />
+    <property name="sdk-folder" value="/Users/barteo/Desktop/Java/android-sdk-mac_x86-1.1_r1" />
+    <property name="asm.jar" value="/Users/barteo/.m2/repository/asm/asm/3.1/asm-3.1.jar" />
+    <property name="microemu-cldc.jar" value="../microemu-cldc/target/microemu-cldc-3.0.0-SNAPSHOT.jar" />
+    <property name="microemu-midp.jar" value="../microemu-midp/target/microemu-midp-3.0.0-SNAPSHOT.jar" />
+    <property name="microemu-javase.jar" value="../microemu-javase/target/microemu-javase-3.0.0-SNAPSHOT.jar" />
+    <property name="microemu-jsr-75.jar" value="../microemu-extensions/microemu-jsr-75/target/microemu-jsr-75-3.0.0-SNAPSHOT.jar" />
+
     <!-- The intermediates directory -->
     <!-- Eclipse uses "bin" for its own output, so we do the same. -->
     <property name="outdir" value="bin" />
@@ -61,7 +61,7 @@
 
         <available file="${microemu-jsr-75.jar}" property="microemu-jsr-75.jar.present"/>
         <fail unless="microemu-jsr-75.jar.present" message="microemu-jsr-75.jar doesn't exist at ${microemu-jsr-75.jar}"/>
-    </target>
+	</target>
 
     <target name="dirs">
         <mkdir dir="${outdir}" />
@@ -78,6 +78,7 @@
                 destdir="${outdir-producer}"
                 includes="org/microemu/android/asm/**">
             <classpath>
+                <pathelement location="${microemu-javase.jar}"/>
                 <pathelement location="${asm.jar}"/>
             </classpath>
         </javac>
@@ -90,6 +91,7 @@
             <arg value="midlet"/>
             <classpath>
                 <pathelement path="${outdir-producer}"/>
+                <pathelement location="${microemu-javase.jar}"/>
                 <pathelement location="${asm.jar}"/>
             </classpath>
         </java>

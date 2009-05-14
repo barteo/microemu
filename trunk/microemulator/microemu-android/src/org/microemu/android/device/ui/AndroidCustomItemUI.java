@@ -36,7 +36,6 @@ import org.microemu.android.device.AndroidDisplayGraphics;
 import org.microemu.device.ui.CustomItemUI;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -65,8 +64,7 @@ public class AndroidCustomItemUI extends LinearLayout implements CustomItemUI {
 				
 				labelView = new TextView(activity);
 				labelView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-				TypedArray a = labelView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
-				labelView.setTextAppearance(labelView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
+				labelView.setTextAppearance(labelView.getContext(), android.R.style.TextAppearance_Large);
 				addView(labelView);
 				
 				view = new CanvasView(activity);

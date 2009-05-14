@@ -36,7 +36,6 @@ import javax.microedition.lcdui.ItemStateListener;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.DateFieldUI;
 
-import android.content.res.TypedArray;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
@@ -70,8 +69,7 @@ public class AndroidDateFieldUI extends LinearLayout implements DateFieldUI {
 				
 				labelView = new TextView(activity);
 				labelView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-				TypedArray a = labelView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
-				labelView.setTextAppearance(labelView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
+				labelView.setTextAppearance(labelView.getContext(), android.R.style.TextAppearance_Large);
 				addView(labelView);
 				
 				setLabel(dateField.getLabel());
@@ -120,6 +118,7 @@ public class AndroidDateFieldUI extends LinearLayout implements DateFieldUI {
 						});
 					} else { // DateField.DATE_TIME
 						System.out.println("DateField.DATE_TIME not supported yet");
+						datetimeView = new DatePicker(activity);
 					}
 					datetimeView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
 					addView(datetimeView);

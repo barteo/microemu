@@ -31,7 +31,6 @@ import javax.microedition.lcdui.Alert;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.AlertUI;
 
-import android.content.res.TypedArray;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -46,8 +45,7 @@ public class AndroidAlertUI extends AndroidDisplayableUI implements AlertUI {
 			public void run() {
 				alertTextView = new TextView(activity);
 				alertTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-				TypedArray a = alertTextView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
-				alertTextView.setTextAppearance(alertTextView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
+				alertTextView.setTextAppearance(alertTextView.getContext(), android.R.style.TextAppearance_Large);
 				((LinearLayout) view).addView(alertTextView);				
 
 				invalidate();

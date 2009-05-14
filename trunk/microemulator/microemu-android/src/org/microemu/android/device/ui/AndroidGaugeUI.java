@@ -32,7 +32,6 @@ import javax.microedition.lcdui.ItemStateListener;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.GaugeUI;
 
-import android.content.res.TypedArray;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -57,8 +56,7 @@ public class AndroidGaugeUI extends LinearLayout implements GaugeUI {
 				
 				labelView = new TextView(activity);
 				labelView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-				TypedArray a = labelView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
-				labelView.setTextAppearance(labelView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
+				labelView.setTextAppearance(labelView.getContext(), android.R.style.TextAppearance_Large);
 				addView(labelView);
 				
 				seekBar = new SeekBar(activity);

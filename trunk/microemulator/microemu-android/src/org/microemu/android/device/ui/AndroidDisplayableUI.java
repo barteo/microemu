@@ -37,7 +37,6 @@ import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.DisplayableUI;
 
-import android.content.res.TypedArray;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -81,8 +80,7 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 			
 			titleView = new TextView(activity);
 			titleView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-			TypedArray a = titleView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
-			titleView.setTextAppearance(titleView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
+			titleView.setTextAppearance(titleView.getContext(), android.R.style.TextAppearance_DialogWindowTitle);
 			((LinearLayout) view).addView(titleView);
 		}
 	}

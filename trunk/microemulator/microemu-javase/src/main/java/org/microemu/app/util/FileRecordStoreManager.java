@@ -169,14 +169,15 @@ public class FileRecordStoreManager implements RecordStoreManager {
 		RecordStoreImpl recordStoreImpl;
 		try {
 			recordStoreImpl = loadFromDisk(storeFile);
+			recordStoreImpl.setOpen(true);
 		} catch (FileNotFoundException e) {
 			if (!createIfNecessary) {
 				throw new RecordStoreNotFoundException(recordStoreName);
 			}
 			recordStoreImpl = new RecordStoreImpl(this, recordStoreName);
+			recordStoreImpl.setOpen(true);
 			saveToDisk(storeFile, recordStoreImpl);
 		}
-		recordStoreImpl.setOpen(true);
 		if (recordListener != null) {
 			recordStoreImpl.addRecordListener(recordListener);
 		}
@@ -305,7 +306,10 @@ public class FileRecordStoreManager implements RecordStoreManager {
 		}
 		try {
 			DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(recordStoreFile)));
-			recordStore.write(dos);
+			recordStore.writeHeader(dos);
+			for (int i = 1; i <= recordStore.getNumRecords(); i++) {
+				recordStore.writeRecord(dos, i);
+			}
 			dos.close();
 		} catch (IOException e) {
 			Logger.error("RecordStore.saveToDisk: ERROR writting object to " + recordStoreFile.getName(), e);

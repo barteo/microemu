@@ -130,16 +130,6 @@ public class RecordStoreImpl extends RecordStore
 	}
 	
 	
-	public void write(DataOutputStream dos) 
-			throws IOException
-	{
-		writeHeader(dos);
-		for (int i = 1; i <= size; i++) {
-			writeRecord(dos, i);
-		}
-	}
-	
-	
 	public void writeHeader(DataOutputStream dos) 
 			throws IOException
 	{

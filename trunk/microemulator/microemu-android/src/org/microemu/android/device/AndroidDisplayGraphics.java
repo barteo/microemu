@@ -296,7 +296,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
         }
         case Sprite.TRANS_MIRROR_ROT90: {
             matrix.preScale(-1, 1);
-        	matrix.preRotate(90);
+        	matrix.preRotate(-90);
         	img = Bitmap.createBitmap(img, x_src, y_src, width, height, matrix, true);
             dW = height;
             dH = width;
@@ -304,13 +304,13 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
         }
         case Sprite.TRANS_MIRROR_ROT180: {
             matrix.preScale(-1, 1);
-            matrix.preRotate(180);
+            matrix.preRotate(-180);
         	img = Bitmap.createBitmap(img, x_src, y_src, width, height, matrix, true);
             break;
         }
         case Sprite.TRANS_MIRROR_ROT270: {
             matrix.preScale(-1, 1);
-            matrix.preRotate(270);
+            matrix.preRotate(-270);
             img = Bitmap.createBitmap(img, x_src, y_src, width, height, matrix, true);
             dW = height;
             dH = width;

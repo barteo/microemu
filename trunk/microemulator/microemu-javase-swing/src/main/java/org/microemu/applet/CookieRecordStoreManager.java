@@ -168,8 +168,8 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 				byte[] data = Base64Coder.decode(load.toCharArray());
 				result = new RecordStoreImpl(this);
 				DataInputStream dis = new DataInputStream(new ByteArrayInputStream(data));
-				result.readHeader(dis);
-				for (int i = 0; i < result.size; i++) {
+				int size = result.readHeader(dis);
+				for (int i = 0; i < size; i++) {
 					result.readRecord(dis);
 				}
 				dis.close();
@@ -195,7 +195,7 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 		return result;
 	}
 	
-	public void deleteRecord(RecordStoreImpl recordStoreImpl, int recordId) throws RecordStoreNotOpenException {
+	public void deleteRecord(RecordStoreImpl recordStoreImpl, int recordId) throws RecordStoreNotOpenException, RecordStoreException {
 		saveRecord(recordStoreImpl, recordId);
 	}
 	
@@ -205,11 +205,15 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 		// records are loaded when record store opens
 	}
 
-	public void saveRecord(RecordStoreImpl recordStoreImpl, int recordId) throws RecordStoreNotOpenException {
+	public void saveRecord(RecordStoreImpl recordStoreImpl, int recordId) throws RecordStoreException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(baos);
 		try {
-			recordStoreImpl.write(dos);
+			recordStoreImpl.writeHeader(dos);
+			RecordEnumeration re = recordStoreImpl.enumerateRecords(null, null, false);
+			while (re.hasNextElement()) {
+				recordStoreImpl.writeRecord(dos, re.nextRecordId());
+			}
 			CookieContent cookieContent = new CookieContent(Base64Coder.encode(baos.toByteArray()));
 
 			CookieContent previousCookie = (CookieContent) cookies.get(recordStoreImpl.getName());

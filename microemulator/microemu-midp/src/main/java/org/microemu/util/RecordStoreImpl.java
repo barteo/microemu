@@ -88,17 +88,7 @@ public class RecordStoreImpl extends RecordStore
 	}
 	
 	
-/*	public void read(DataInputStream dis)
-			throws IOException
-	{
-		readHeader(dis);
-		for (int i = 0; i < size; i++) {
-			readRecord(dis);
-		}
-	}*/
-	
-	
-	public void readHeader(DataInputStream dis)
+	public int readHeader(DataInputStream dis)
 			throws IOException
 	{
 		for (int i = 0; i < fileIdentifier.length; i++) {
@@ -116,6 +106,8 @@ public class RecordStoreImpl extends RecordStore
 		dis.readInt(); // TODO AuthMode
 		dis.readByte(); // TODO Writable
 		size = dis.readInt();
+		
+		return size;
 	}
 	
 	

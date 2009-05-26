@@ -31,6 +31,7 @@ import java.util.HashMap;
 import org.microemu.Injected;
 import org.microemu.app.util.MIDletThread;
 import org.microemu.app.util.MIDletTimer;
+import org.microemu.app.util.MIDletTimerTask;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
@@ -124,6 +125,8 @@ public class ChangeCallsMethodVisitor extends MethodAdapter implements Opcodes {
 			if  ((config.isEnhanceThreadCreation()) && (name.equals("<init>"))) {
 				if (owner.equals("java/util/Timer")) {
 					owner = codeName(MIDletTimer.class);
+				} else if (owner.equals("java/util/TimerTask")) {
+					owner = codeName(MIDletTimerTask.class);
 				} else if (owner.equals("java/lang/Thread")) {
 					owner = codeName(MIDletThread.class);
 				}
@@ -138,6 +141,8 @@ public class ChangeCallsMethodVisitor extends MethodAdapter implements Opcodes {
     	if ((opcode == NEW) && (config.isEnhanceThreadCreation())) {
     		if ("java/util/Timer".equals(desc)) {
     			desc = codeName(MIDletTimer.class);
+    		} else if ("java/util/TimerTask".equals(desc)) {
+    			desc = codeName(MIDletTimerTask.class);
     		} else if ("java/lang/Thread".equals(desc)) {
     			desc = codeName(MIDletThread.class);
     		}

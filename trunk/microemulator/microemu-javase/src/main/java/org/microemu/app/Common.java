@@ -73,6 +73,7 @@ import org.microemu.app.util.MIDletResourceLoader;
 import org.microemu.app.util.MIDletSystemProperties;
 import org.microemu.app.util.MIDletThread;
 import org.microemu.app.util.MIDletTimer;
+import org.microemu.app.util.MIDletTimerTask;
 import org.microemu.app.util.MidletURLReference;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
@@ -951,6 +952,7 @@ public class Common implements MicroEmulator, CommonInterface {
         mcl.disableClassPreporcessing(Injected.class);
         mcl.disableClassPreporcessing(MIDletThread.class);
         mcl.disableClassPreporcessing(MIDletTimer.class);
+        mcl.disableClassPreporcessing(MIDletTimerTask.class);
         MIDletResourceLoader.classLoader = mcl;
         return mcl;
     }

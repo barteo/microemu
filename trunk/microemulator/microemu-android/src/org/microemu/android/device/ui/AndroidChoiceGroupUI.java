@@ -232,8 +232,30 @@ System.out.println("AndroidChoiceGroupUI.set(..) not synced");
 		listAdapter.set(elementNum, view);
 	}
 	
+	private int sizeTransfer;
+
 	public int size() {
-		return listAdapter.getCount();
+		sizeTransfer = Integer.MIN_VALUE;
+		activity.post(new Runnable() {
+			public void run() {
+				synchronized (AndroidChoiceGroupUI.this) {
+					sizeTransfer = listAdapter.getCount();
+					AndroidChoiceGroupUI.this.notify();
+				}
+			}
+		});
+
+		synchronized (AndroidChoiceGroupUI.this) {
+			if (sizeTransfer == Integer.MIN_VALUE) {
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return sizeTransfer;
 	}
 
 	private class AndroidListAdapter extends BaseAdapter {

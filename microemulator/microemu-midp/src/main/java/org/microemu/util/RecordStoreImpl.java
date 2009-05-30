@@ -146,8 +146,12 @@ public class RecordStoreImpl extends RecordStore
 		dos.writeInt(0); // TODO Tag
 		try {
 			byte[] data = getRecord(recordId);
-			dos.writeInt(data.length);
-			dos.write(data);			
+			if (data == null) {
+				dos.writeInt(0);
+			} else {
+				dos.writeInt(data.length);
+				dos.write(data);
+			}
 		} catch (RecordStoreException e) {
 			throw new IOException();
 		}

@@ -232,7 +232,9 @@ public class MicroEmulator extends MicroEmulatorActivity {
 			CommandUI cmd = getFirstCommandOfType(commands, Command.BACK);
 			if (cmd != null) {
 				CommandListener l = ui.getCommandListener();
-				l.commandAction(cmd.getCommand(), da.getCurrent());
+				if (l != null) {
+					l.commandAction(cmd.getCommand(), da.getCurrent());
+				}
 				return true;
 			}
 
@@ -245,7 +247,9 @@ public class MicroEmulator extends MicroEmulatorActivity {
 			cmd = getFirstCommandOfType(commands, Command.CANCEL);
 			if (cmd != null) {
 				CommandListener l = ui.getCommandListener();
-				l.commandAction(cmd.getCommand(), da.getCurrent());
+				if (l != null) {
+					l.commandAction(cmd.getCommand(), da.getCurrent());
+				}
 				return true;
 			}
 			

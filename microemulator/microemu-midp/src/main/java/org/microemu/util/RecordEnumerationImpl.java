@@ -98,8 +98,7 @@ public class RecordEnumerationImpl implements RecordEnumeration
             throw new InvalidRecordIDException();
         }
 
-        byte[] result = ((EnumerationRecord) enumerationRecords
-                .elementAt(currentRecord)).value;
+        byte[] result = ((EnumerationRecord) enumerationRecords.elementAt(currentRecord)).value;
         currentRecord++;
 
         return result;
@@ -113,8 +112,7 @@ public class RecordEnumerationImpl implements RecordEnumeration
             throw new InvalidRecordIDException();
         }
 
-        int result = ((EnumerationRecord) enumerationRecords
-                .elementAt(currentRecord)).recordId;
+        int result = ((EnumerationRecord) enumerationRecords.elementAt(currentRecord)).recordId;
         currentRecord++;
 
         return result;
@@ -131,8 +129,7 @@ public class RecordEnumerationImpl implements RecordEnumeration
             throw new InvalidRecordIDException();
         }
 
-        byte[] result = ((EnumerationRecord) enumerationRecords
-                .elementAt(currentRecord)).value;
+        byte[] result = ((EnumerationRecord) enumerationRecords .elementAt(currentRecord)).value;
         currentRecord--;
 
         return result;
@@ -146,8 +143,7 @@ public class RecordEnumerationImpl implements RecordEnumeration
             throw new InvalidRecordIDException();
         }
 
-        int result = ((EnumerationRecord) enumerationRecords
-                .elementAt(currentRecord)).recordId;
+        int result = ((EnumerationRecord) enumerationRecords.elementAt(currentRecord)).recordId;
         currentRecord--;
 
         return result;
@@ -188,12 +184,15 @@ public class RecordEnumerationImpl implements RecordEnumeration
         // filter
         //
 		try {
-			for (int i = 1; i <= recordStoreImpl.size; i++) {
-	            byte[] data = recordStoreImpl.getRecord(i);
-	            if (filter != null && !filter.matches(data)) {
-	                continue;
-	            }
-	            enumerationRecords.add(new EnumerationRecord(i, data));
+			for (int i = 1; i <= recordStoreImpl.lastRecordId; i++) {
+				try {
+		            byte[] data = recordStoreImpl.getRecord(i);
+		            if (filter != null && !filter.matches(data)) {
+		                continue;
+		            }
+		            enumerationRecords.add(new EnumerationRecord(i, data));
+				} catch (InvalidRecordIDException e) {
+				}
 	        }
 		} catch (RecordStoreException e) {
 			e.printStackTrace();

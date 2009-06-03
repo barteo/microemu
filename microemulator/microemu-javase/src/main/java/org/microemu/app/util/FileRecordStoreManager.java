@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.microedition.rms.InvalidRecordIDException;
+import javax.microedition.rms.RecordEnumeration;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreNotFoundException;
@@ -267,8 +268,8 @@ public class FileRecordStoreManager implements RecordStoreManager {
 		try {
 			store = new RecordStoreImpl(this);
 			DataInputStream dis = new DataInputStream(new BufferedInputStream(new FileInputStream(recordStoreFile)));
-			store.readHeader(dis);
-			for (int i = 0; i < store.size; i++) {
+			int size = store.readHeader(dis);
+			for (int i = 0; i < size; i++) {
 				store.readRecord(dis);
 			}
 			dis.close();
@@ -297,7 +298,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 		}
 	}
 
-	private void saveToDiskSecure(final File recordStoreFile, final RecordStoreImpl recordStore)
+	private synchronized void saveToDiskSecure(final File recordStoreFile, final RecordStoreImpl recordStore)
 			throws RecordStoreException {
 		if (!recordStoreFile.getParentFile().exists()) {
 			if (!recordStoreFile.getParentFile().mkdirs()) {
@@ -307,8 +308,9 @@ public class FileRecordStoreManager implements RecordStoreManager {
 		try {
 			DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(recordStoreFile)));
 			recordStore.writeHeader(dos);
-			for (int i = 1; i <= recordStore.getNumRecords(); i++) {
-				recordStore.writeRecord(dos, i);
+			RecordEnumeration re = recordStore.enumerateRecords(null, null, false);
+			while (re.hasNextElement()) {
+				recordStore.writeRecord(dos, re.nextRecordId());
 			}
 			dos.close();
 		} catch (IOException e) {

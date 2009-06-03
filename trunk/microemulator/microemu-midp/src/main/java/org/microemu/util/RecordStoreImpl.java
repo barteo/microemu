@@ -52,6 +52,8 @@ public class RecordStoreImpl extends RecordStore
 	
 	private static final byte versionMinor = 0x00;
 	
+	int lastRecordId = 0;
+	
 	private Hashtable records = new Hashtable();
 	
 	private String recordStoreName;
@@ -60,8 +62,6 @@ public class RecordStoreImpl extends RecordStore
 	
 	private long lastModified = 0;
 	
-	public int size = 0;
-
 	private transient boolean open;
 
 	private transient RecordStoreManager recordStoreManager;
@@ -86,7 +86,7 @@ public class RecordStoreImpl extends RecordStore
 	{
 		this.recordStoreManager = recordStoreManager;
 	}
-	
+		
 	
 	public int readHeader(DataInputStream dis)
 			throws IOException
@@ -105,9 +105,8 @@ public class RecordStoreImpl extends RecordStore
 		version = dis.readInt();
 		dis.readInt(); // TODO AuthMode
 		dis.readByte(); // TODO Writable
-		size = dis.readInt();
 		
-		return size;
+		return dis.readInt();
 	}
 	
 	
@@ -115,6 +114,9 @@ public class RecordStoreImpl extends RecordStore
 			throws IOException
 	{
 		int recordId = dis.readInt();
+		if (recordId > lastRecordId) {
+			lastRecordId = recordId;
+		}
 		dis.readInt(); // TODO Tag
 		byte[] data = new byte[dis.readInt()];
 		dis.read(data, 0, data.length);
@@ -135,7 +137,7 @@ public class RecordStoreImpl extends RecordStore
 		dos.writeInt(version);
 		dos.writeInt(0); // TODO AuthMode
 		dos.writeByte(0); // TODO Writable
-		dos.writeInt(size);		
+		dos.writeInt(records.size());		
 	}
 
 
@@ -217,9 +219,7 @@ public class RecordStoreImpl extends RecordStore
 		    throw new RecordStoreNotOpenException();
 		}
 		
-		synchronized (this) {
-		    return size;
-		}
+		return records.size();
 	}
 
 
@@ -231,9 +231,11 @@ public class RecordStoreImpl extends RecordStore
 		}
 		
 		int result = 0;
-		for (int i = 1; i <= size; i++) {
+		Enumeration keys = records.keys();
+		while (keys.hasMoreElements()) {
+			int key = ((Integer) records.get(keys.nextElement())).intValue();
 			try {
-				result += getRecord(i).length;
+				result += getRecord(key).length;
 			} catch (RecordStoreException e) {
 				e.printStackTrace();
 			}
@@ -288,7 +290,7 @@ public class RecordStoreImpl extends RecordStore
 		}
 		
 		synchronized (this) {
-		    return size + 1;
+		    return lastRecordId + 1;
 		}
 	}
 
@@ -316,7 +318,7 @@ public class RecordStoreImpl extends RecordStore
 		    records.put(new Integer(nextRecordID), recordData);
 		    version++;
 		    lastModified = System.currentTimeMillis();
-		    size++;
+		    lastRecordId++;
 		}
 		
         recordStoreManager.saveRecord(this, nextRecordID);
@@ -335,13 +337,11 @@ public class RecordStoreImpl extends RecordStore
 		}
 		
 		synchronized (this) {
-			if (recordId < 1 || recordId > size) {
-				throw new InvalidRecordIDException();
-			}
+			// throws InvalidRecordIDException when no record found
+			getRecord(recordId);
 		    records.remove(new Integer(recordId));
 		    version++;
 		    lastModified = System.currentTimeMillis();
-		    size--;
 		}
 		
         recordStoreManager.deleteRecord(this, recordId);
@@ -361,7 +361,10 @@ public class RecordStoreImpl extends RecordStore
 		    byte[] data = (byte[]) records.get(new Integer(recordId));
 		    if (data == null) {
 		    	recordStoreManager.loadRecord(this, recordId);
-		    	data = (byte[]) records.get(new Integer(recordId));		    	
+		    	data = (byte[]) records.get(new Integer(recordId));
+		    	if (data == null) {
+		    		throw new InvalidRecordIDException();
+		    	}
 		    }
 		
 		    return data.length;
@@ -387,6 +390,10 @@ public class RecordStoreImpl extends RecordStore
     public byte[] getRecord(int recordId) 
 			throws RecordStoreNotOpenException, InvalidRecordIDException, RecordStoreException
 	{
+		if (!open) {
+		    throw new RecordStoreNotOpenException();
+		}
+
 		byte[] data;
 		
 		synchronized (this) {
@@ -414,9 +421,8 @@ public class RecordStoreImpl extends RecordStore
 		System.arraycopy(newData, offset, recordData, 0, numBytes);
 		
 		synchronized (this) {
-			if (recordId < 1 || recordId > size) {
-				throw new InvalidRecordIDException();
-			}
+			// throws InvalidRecordIDException when no record found
+			getRecord(recordId);
 		    records.put(new Integer(recordId), recordData);
 		    version++;
 		    lastModified = System.currentTimeMillis();

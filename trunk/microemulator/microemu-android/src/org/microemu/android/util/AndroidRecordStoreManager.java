@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import javax.microedition.rms.InvalidRecordIDException;
+import javax.microedition.rms.RecordEnumeration;
 import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreNotFoundException;
@@ -91,8 +92,9 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 		}
 
 		activity.deleteFile(getHeaderFileName(recordStoreName));
-		for (int i = 1; i <= recordStoreImpl.size; i++) {
-			activity.deleteFile(getRecordFileName(recordStoreName, i));
+		RecordEnumeration re = recordStoreImpl.enumerateRecords(null, null, false);
+		while (re.hasNextElement()) {
+			activity.deleteFile(getRecordFileName(recordStoreName, re.nextRecordId()));
 		}
 		
 		fireRecordStoreListener(ExtendedRecordListener.RECORDSTORE_DELETE, recordStoreName);

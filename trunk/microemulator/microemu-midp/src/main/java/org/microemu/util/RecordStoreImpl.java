@@ -54,6 +54,8 @@ public class RecordStoreImpl extends RecordStore
 	
 	int lastRecordId = 0;
 	
+	private int size = 0;
+	
 	private Hashtable records = new Hashtable();
 	
 	private String recordStoreName;
@@ -105,8 +107,9 @@ public class RecordStoreImpl extends RecordStore
 		version = dis.readInt();
 		dis.readInt(); // TODO AuthMode
 		dis.readByte(); // TODO Writable
+		size = dis.readInt();
 		
-		return dis.readInt();
+		return size;
 	}
 	
 	
@@ -137,7 +140,7 @@ public class RecordStoreImpl extends RecordStore
 		dos.writeInt(version);
 		dos.writeInt(0); // TODO AuthMode
 		dos.writeByte(0); // TODO Writable
-		dos.writeInt(records.size());		
+		dos.writeInt(size);		
 	}
 
 
@@ -219,7 +222,7 @@ public class RecordStoreImpl extends RecordStore
 		    throw new RecordStoreNotOpenException();
 		}
 		
-		return records.size();
+		return size;
 	}
 
 
@@ -319,6 +322,7 @@ public class RecordStoreImpl extends RecordStore
 		    version++;
 		    lastModified = System.currentTimeMillis();
 		    lastRecordId++;
+		    size++;
 		}
 		
         recordStoreManager.saveRecord(this, nextRecordID);
@@ -342,6 +346,7 @@ public class RecordStoreImpl extends RecordStore
 		    records.remove(new Integer(recordId));
 		    version++;
 		    lastModified = System.currentTimeMillis();
+		    size--;
 		}
 		
         recordStoreManager.deleteRecord(this, recordId);

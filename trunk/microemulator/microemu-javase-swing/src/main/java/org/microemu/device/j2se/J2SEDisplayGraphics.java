@@ -32,6 +32,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 import javax.microedition.lcdui.Image;
@@ -423,19 +424,19 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
                 || (scanlength >= 0 && scanlength * (height - 1) + width - 1 >= l))
             throw new ArrayIndexOutOfBoundsException();
 
-        int[] rgb = new int[width * height];
-        // this way we dont create yet another array in createImage
-        int transparencyMask = processAlpha ? 0 : 0xff000000;
-        for (int row = 0; row < height; row++) {
-            for (int px = 0; px < width; px++)
-                rgb[row * width + px] = rgbData[offset + px] | transparencyMask;
-            offset += scanlength;
+        BufferedImage targetImage = (BufferedImage) ((J2SEMutableImage) image).getImage();
+        if (!processAlpha) {
+        	int[] rgb = new int[width * height];
+            for (int row = 0; row < height; row++) {
+                for (int px = 0; px < width; px++) {
+                    rgb[row * width + px] = rgbData[offset + px] | 0xff000000;
+                }
+                offset += scanlength;
+            }
+            targetImage.setRGB(x, y, width, height, rgb, 0, width);
+        } else {
+            targetImage.setRGB(x, y, width, height, rgbData, offset, scanlength);
         }
-
-        // help gc
-        rgbData = null;
-        Image img = DeviceFactory.getDevice().getDeviceDisplay().createRGBImage(rgb, width, height, true);
-        drawImage(img, x, y, TOP | LEFT);
     }
 
     public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {

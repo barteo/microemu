@@ -184,15 +184,19 @@ public class RecordEnumerationImpl implements RecordEnumeration
         // filter
         //
 		try {
-			for (int i = 1; i <= recordStoreImpl.lastRecordId; i++) {
+			int recordId = 1;
+			int i = 0;
+			while (i < recordStoreImpl.getNumRecords()) {
 				try {
-		            byte[] data = recordStoreImpl.getRecord(i);
+		            byte[] data = recordStoreImpl.getRecord(recordId);
+		            i++;
 		            if (filter != null && !filter.matches(data)) {
 		                continue;
 		            }
-		            enumerationRecords.add(new EnumerationRecord(i, data));
+		            enumerationRecords.add(new EnumerationRecord(recordId, data));
 				} catch (InvalidRecordIDException e) {
 				}
+				recordId++;
 	        }
 		} catch (RecordStoreException e) {
 			e.printStackTrace();

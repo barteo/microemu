@@ -52,7 +52,7 @@ public class RecordStoreImpl extends RecordStore
 	
 	private static final byte versionMinor = 0x00;
 	
-	int lastRecordId = 0;
+	private int lastRecordId = 0;
 	
 	private int size = 0;
 	
@@ -233,6 +233,9 @@ public class RecordStoreImpl extends RecordStore
 		    throw new RecordStoreNotOpenException();
 		}
 		
+		// Preload all records
+		enumerateRecords(null, null, false);
+		
 		int result = 0;
 		Enumeration keys = records.keys();
 		while (keys.hasMoreElements()) {
@@ -292,6 +295,9 @@ public class RecordStoreImpl extends RecordStore
 		    throw new RecordStoreNotOpenException();
 		}
 		
+		// lastRecordId needs to hold correct number, all records have to be preloaded
+		enumerateRecords(null, null, false);
+
 		synchronized (this) {
 		    return lastRecordId + 1;
 		}
@@ -310,6 +316,9 @@ public class RecordStoreImpl extends RecordStore
 		if (numBytes > recordStoreManager.getSizeAvailable(this)) {
 			throw new RecordStoreFullException();
 		}		
+		
+		// lastRecordId needs to hold correct number, all records have to be preloaded
+		enumerateRecords(null, null, false);
 		
 		byte[] recordData = new byte[numBytes];
 		if (data != null) {

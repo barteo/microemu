@@ -490,6 +490,9 @@ public class Display {
 	}
 
 	public void setCurrent(final Displayable nextDisplayable) {
+		if (nextDisplayable == current) {
+			return;
+		}
 		if (nextDisplayable != null) {
 			eventDispatcher.put(eventDispatcher.new ShowNotifyEvent(new Runnable() {
 

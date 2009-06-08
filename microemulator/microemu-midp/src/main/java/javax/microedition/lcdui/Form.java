@@ -40,7 +40,7 @@ public class Form extends Screen
 		super(title);
 		super.setUI(DeviceFactory.getDevice().getUIFactory().createFormUI(this));
 		
-		focusItemIndex = -2;
+		focusItemIndex = -1;
 	}
 
 	
@@ -72,6 +72,16 @@ public class Form extends Screen
 		items[numOfItems] = item;
 		numOfItems++;
 		
+		if (focusItemIndex == -1) {
+			for (int i = 0; i < numOfItems; i++) {
+				if (items[i].isFocusable()) {
+					items[i].setFocus(true);
+					focusItemIndex = i;
+					break;
+				}
+			}
+		}
+		
 		repaint();
 
 		return (numOfItems - 1);
@@ -102,9 +112,14 @@ public class Form extends Screen
 			((FormUI) ui).delete(itemNum);
 		}
 
+		// TODO set focus to nearest item if deleted item is currently focused
 		items[itemNum].setOwner(null);
 		System.arraycopy(items, itemNum + 1, items, itemNum, numOfItems - itemNum - 1);
 		numOfItems--;
+		
+		if (numOfItems == 0) {
+			focusItemIndex = -1;
+		}
 		
 		repaint();
 	}
@@ -120,6 +135,7 @@ public class Form extends Screen
 			items[i].setOwner(null);
 		}
 		numOfItems = 0;
+		focusItemIndex = -1;
 		
 		repaint();
 	}
@@ -233,22 +249,6 @@ public class Form extends Screen
 		if (focusItemIndex >= 0 && focusItemIndex < items.length)
 			fireItemStateListener(items[focusItemIndex]);
     }
-
-	
-	void hideNotify() 
-	{
-		super.hideNotify();
-		// TODO eliminate this to
-		// allow focus restoring
-		for (int i = 0; i < numOfItems; i++) {
-			if (items[i].isFocusable() && items[i].hasFocus()) {
-				items[i].setFocus(false);
-				focusItemIndex = -2;
-				break;
-			}
-		}
-	}
-
 	
 	void keyPressed(int keyCode) 
 	{
@@ -270,17 +270,7 @@ public class Form extends Screen
 	void showNotify() 
 	{
 		super.showNotify();
-		if (focusItemIndex == -2) {
-			focusItemIndex = -1;
 
-			for (int i = 0; i < numOfItems; i++) {
-				if (items[i].isFocusable()) {
-					items[i].setFocus(true);
-					focusItemIndex = i;
-					break;
-				}
-			}
-		}
 		if (focusItemIndex < 0)
 			return;
 		int heightToItem = getHeightToItem(focusItemIndex);
@@ -331,10 +321,6 @@ public class Form extends Screen
 				return traverse;
 			} else {
 				if (testItemIndex > 0) {
-					// Czy istnieje obiekt focusable powyzej testItemIndex
-					// widoczny na ekranie
-					// jesli tak to zrob na nim traverse(false) i return
-					// traverse
 					for (i = testItemIndex - 1; i >= topItemIndex; i--) {
 						if (items[i].isFocusable()) {
 							if (focusItemIndex != -1) {
@@ -356,7 +342,6 @@ public class Form extends Screen
 							}
 						}
 					}
-					// Na najnizszym widocznym item zrob traverse(false)
 					height = getHeightToItem(topItemIndex);
 					traverse =
 						items[topItemIndex].traverse(
@@ -366,9 +351,6 @@ public class Form extends Screen
 							false);
 					if (traverse == Item.OUTOFITEM) {
 					} else {
-						// Sprawdzenie czy znajduje sie powyzej na ekranie
-						// focusable item
-						// jesli tak zrob co trzeba
 						bottomItemIndex = getTopVisibleIndex(bottom + traverse);
 						if (focusItemIndex != -1
 							&& focusItemIndex > bottomItemIndex) {
@@ -410,10 +392,6 @@ public class Form extends Screen
 				return traverse;
 			} else {
 				if (testItemIndex < numOfItems - 1) {
-					// Czy istnieje obiekt focusable ponizej testItemIndex
-					// widoczny na ekranie
-					// jesli tak to zrob na nim traverse(false) i return
-					// traverse
 					for (i = testItemIndex + 1; i <= bottomItemIndex; i++) {
 						if (items[i].isFocusable()) {
 							if (focusItemIndex != -1) {
@@ -435,7 +413,6 @@ public class Form extends Screen
 							}
 						}
 					}
-					// Na najnizszym widocznym item zrob traverse(false)
 					height = getHeightToItem(bottomItemIndex);
 					traverse =
 						items[bottomItemIndex].traverse(
@@ -445,9 +422,6 @@ public class Form extends Screen
 							false);
 					if (traverse == Item.OUTOFITEM) {
 					} else {
-						// Sprawdzenie czy znajduje sie powyzej na ekranie
-						// focusable item
-						// jesli tak zrob co trzeba
 						topItemIndex = getTopVisibleIndex(top + traverse);
 						if (focusItemIndex != -1
 							&& focusItemIndex < topItemIndex) {

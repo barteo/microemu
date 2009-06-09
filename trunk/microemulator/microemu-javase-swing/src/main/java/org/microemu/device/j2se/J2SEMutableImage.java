@@ -44,7 +44,7 @@ public class J2SEMutableImage extends MutableImage
 
 	public J2SEMutableImage(int width, int height)
 	{
-		img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         java.awt.Graphics g = img.getGraphics();
         g.setColor(java.awt.Color.WHITE);
         g.fillRect(0, 0, width, height);

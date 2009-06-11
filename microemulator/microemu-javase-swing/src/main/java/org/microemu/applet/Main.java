@@ -179,7 +179,7 @@ public class Main extends Applet implements MicroEmulator {
 		try {
 			URL url = getClass().getClassLoader().getResource("META-INF/MANIFEST.MF");
 			if (url != null) {
-				manifest.load(url.openStream());
+				manifest.read(url.openStream());
 				if (manifest.getProperty("MIDlet-Name") == null) {
 					manifest.clear();
 				}
@@ -196,7 +196,7 @@ public class Main extends Applet implements MicroEmulator {
 			try {
 				URL jad = new URL(getCodeBase(), jadFile);
 				jadInputStream = jad.openStream();
-				manifest.load(jadInputStream);
+				manifest.read(jadInputStream);
 				Vector entries = manifest.getMidletEntries();
 				// only load the first (no midlet suite support anyway)
 				if (entries.size() > 0) {

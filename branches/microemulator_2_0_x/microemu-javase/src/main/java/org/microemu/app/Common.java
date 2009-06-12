@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
+import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipException;
@@ -73,6 +74,7 @@ import org.microemu.app.util.MIDletResourceLoader;
 import org.microemu.app.util.MIDletSystemProperties;
 import org.microemu.app.util.MIDletThread;
 import org.microemu.app.util.MIDletTimer;
+import org.microemu.app.util.MIDletTimerTask;
 import org.microemu.app.util.MidletURLReference;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
@@ -605,12 +607,13 @@ public class Common implements MicroEmulator, CommonInterface {
                     }
                     return;
                 }
-                manifest.load(is);
+                manifest.read(is);
 
-                for (Enumeration e = manifest.keys(); e.hasMoreElements();) {
-                    String key = (String) e.nextElement();
-                    String value = (String) manifest.get(key);
-                    jad.put(key, value);
+                Attributes attributes = manifest.getMainAttributes();
+                for (Iterator it = attributes.keySet().iterator(); it.hasNext(); ) {
+                	Attributes.Name key = (Attributes.Name) it.next();
+                    String value = (String) attributes.get(key);
+                    jad.getMainAttributes().put(key, value);
                 }
             } catch (IOException e) {
                 Message.error("Unable to read MANIFEST", e);
@@ -951,6 +954,7 @@ public class Common implements MicroEmulator, CommonInterface {
         mcl.disableClassPreporcessing(Injected.class);
         mcl.disableClassPreporcessing(MIDletThread.class);
         mcl.disableClassPreporcessing(MIDletTimer.class);
+        mcl.disableClassPreporcessing(MIDletTimerTask.class);
         MIDletResourceLoader.classLoader = mcl;
         return mcl;
     }
@@ -964,12 +968,12 @@ public class Common implements MicroEmulator, CommonInterface {
 
         URL url = new URL(urlString);
         if (url.getUserInfo() == null) {
-            properties.load(url.openStream());
+            properties.read(url.openStream());
         } else {
             URLConnection cn = url.openConnection();
             String userInfo = new String(Base64Coder.encode(url.getUserInfo().getBytes("UTF-8")));
             cn.setRequestProperty("Authorization", "Basic " + userInfo);
-            properties.load(cn.getInputStream());
+            properties.read(cn.getInputStream());
         }
 
         return properties;

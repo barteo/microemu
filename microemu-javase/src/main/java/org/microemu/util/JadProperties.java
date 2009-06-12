@@ -27,10 +27,12 @@
 package org.microemu.util;
 
 import java.util.Enumeration;
-import java.util.Properties;
+import java.util.Iterator;
 import java.util.Vector;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
-public class JadProperties extends Properties {
+public class JadProperties extends Manifest {
 
 	private static final long serialVersionUID = 1L;
 
@@ -84,18 +86,19 @@ public class JadProperties extends Properties {
 	}
 
 	public Vector getMidletEntries() {
-		String name, icon, className, test;
+		String name, icon, className;
 		int pos;
 
 		if (midletEntries == null) {
 			midletEntries = new Vector();
 
-			for (Enumeration e = propertyNames(); e.hasMoreElements();) {
-				test = (String) e.nextElement();
-				if (test.startsWith(MIDLET_PREFIX)) {
+			Attributes attributes = super.getMainAttributes();
+			for (Iterator it = attributes.keySet().iterator(); it.hasNext();) {
+				Attributes.Name key = (Attributes.Name) it.next();
+				if (key.toString().startsWith(MIDLET_PREFIX)) {
 					try {
-						Integer.parseInt(test.substring(MIDLET_PREFIX.length()));
-						test = getProperty(test);
+						Integer.parseInt(key.toString().substring(MIDLET_PREFIX.length()));
+						String test = getProperty(key.toString());
 						pos = test.indexOf(',');
 						name = test.substring(0, pos).trim();
 						icon = test.substring(pos + 1, test.indexOf(',', pos + 1)).trim();
@@ -111,21 +114,17 @@ public class JadProperties extends Properties {
 	}
 
 	public String getProperty(String key, String defaultValue) {
-		String result = super.getProperty(key, defaultValue);
+		Attributes attributes = super.getMainAttributes();
+		String result = attributes.getValue(key);
 		if (result != null) {
 			return result.trim();
 		} else {
-			return null;
+			return defaultValue;
 		}
 	}
 
 	public String getProperty(String key) {
-		String result = super.getProperty(key);
-		if (result != null) {
-			return result.trim();
-		} else {
-			return null;
-		}
+		return getProperty(key, null);
 	}
 
 }

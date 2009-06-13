@@ -39,6 +39,7 @@ import org.microemu.app.util.MIDletResourceLoader;
 import org.microemu.app.util.MIDletSystemProperties;
 import org.microemu.app.util.MIDletThread;
 import org.microemu.app.util.MIDletTimer;
+import org.microemu.app.util.MIDletTimerTask;
 import org.microemu.log.Logger;
 import org.microemu.log.LoggingEvent;
 
@@ -170,6 +171,7 @@ public class MIDletClassLoaderTest extends TestCase {
 		mcl.disableClassPreporcessing(Injected.class);
 		mcl.disableClassPreporcessing(MIDletThread.class);
 		mcl.disableClassPreporcessing(MIDletTimer.class);
+		mcl.disableClassPreporcessing(MIDletTimerTask.class);
 		mcl.addURL(jarURL);
 
 		Class instrumentedClass = mcl.loadClass("org.TimerCreationRunner");
@@ -188,6 +190,7 @@ public class MIDletClassLoaderTest extends TestCase {
 		mcl.disableClassPreporcessing(Injected.class);
 		mcl.disableClassPreporcessing(MIDletThread.class);
 		mcl.disableClassPreporcessing(MIDletTimer.class);
+		mcl.disableClassPreporcessing(MIDletTimerTask.class);
 		mcl.addURL(jarURL);
 
 		Class instrumentedClass = mcl.loadClass("org.TimerTaskCancelRunner");

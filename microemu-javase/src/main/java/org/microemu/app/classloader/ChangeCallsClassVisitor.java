@@ -31,6 +31,7 @@ import java.util.Map;
 
 import org.microemu.app.util.MIDletThread;
 import org.microemu.app.util.MIDletTimer;
+import org.microemu.app.util.MIDletTimerTask;
 import org.microemu.log.Logger;
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
@@ -71,6 +72,8 @@ public class ChangeCallsClassVisitor extends ClassAdapter {
 				superName = ChangeCallsMethodVisitor.codeName(MIDletThread.class);
 			} else if (superName.equals("java/util/Timer")) {
 				superName = ChangeCallsMethodVisitor.codeName(MIDletTimer.class);
+			} else if (superName.equals("java/util/TimerTask")) {
+				superName = ChangeCallsMethodVisitor.codeName(MIDletTimerTask.class);
 			}
 		}
 		super.visit(version, access, name, signature, superName, interfaces);

@@ -55,7 +55,7 @@ public class MIDletTimer extends Timer implements Runnable {
 	private MIDletContext midletContext;
 	
 	// TODO use better data structure
-	private List tasks;
+	List tasks;
 	
 	private boolean cancelled;
 
@@ -138,17 +138,18 @@ public class MIDletTimer extends Timer implements Runnable {
 						nextTimeTask = candidate.time;
 					}
 				}
-				tasks.remove(task);
+				if (task != null) {
+					if (task.period > 0) {
+						task.oneTimeTaskExcecuted = true;
+					}
+					tasks.remove(task);
+				}
 			}
 			
 			if (task != null) {
 				try {
-					task.task.run();
-				} catch (Throwable t) {
-					Logger.debug("MIDletTimerTask throws", t);
-					task = null;
-				}
-				if (task != null) {
+					task.run();
+
 					synchronized (tasks) {
 						// TODO implement scheduling for fixed rate tasks	
 						if (task.period > 0) {
@@ -159,6 +160,8 @@ public class MIDletTimer extends Timer implements Runnable {
 							}
 						}
 					}
+				} catch (Throwable t) {
+					Logger.debug("MIDletTimerTask throws", t);
 				}
 			}
 			
@@ -184,7 +187,10 @@ public class MIDletTimer extends Timer implements Runnable {
 	
 	private void schedule(TimerTask task, long time, long period, boolean fixedRate) {
 		synchronized (tasks) {
-			tasks.add(new MIDletTimerTask(task, time, period, fixedRate));
+			((MIDletTimerTask) task).timer = this;
+			((MIDletTimerTask) task).time = time;
+			((MIDletTimerTask) task).period = period;
+			tasks.add(task);
 			tasks.notify();
 		}
 	}
@@ -250,22 +256,4 @@ public class MIDletTimer extends Timer implements Runnable {
 		}
 	}
 
-	private class MIDletTimerTask
-	{
-		private TimerTask task;
-		
-		private long time;
-		
-		private long period;
-		
-		private boolean fixedRate;
-
-		public MIDletTimerTask(TimerTask task, long time, long period, boolean fixedRate) {
-			this.task = task;
-			this.time = time;
-			this.period = period;
-			this.fixedRate = fixedRate;
-		}
-		
-	}
 }

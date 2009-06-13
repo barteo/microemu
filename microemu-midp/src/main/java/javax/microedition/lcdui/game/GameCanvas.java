@@ -57,29 +57,25 @@ public abstract class GameCanvas extends Canvas {
     
     Image offscreenBuffer;
     
-    private class KeyAccess implements GameCanvasKeyAccess {
+    private class KeyAccess implements GameCanvasKeyAccess 
+    {
         public boolean suppressedKeyEvents(GameCanvas canvas) {
             return canvas.suppressKeyEvents;
         }
+        
         public void recordKeyPressed(GameCanvas canvas, int gameCode) {
             int bit = 1 << gameCode;
-            synchronized(canvas) {
-                latchedKeyState |= bit;
-                actualKeyState |= bit;
-            }
+            latchedKeyState |= bit;
+            actualKeyState |= bit;
         }
         
         public void recordKeyReleased(GameCanvas canvas, int gameCode) {
             int bit = 1 << gameCode;
-            synchronized(canvas) {
-                actualKeyState &= ~bit;
-            }
+            actualKeyState &= ~bit;
         }
         
         public void setActualKeyState(GameCanvas canvas, int keyState) {
-            synchronized(canvas) {
-                actualKeyState = keyState;
-            }
+            actualKeyState = keyState;
         }
         
         public void initBuffer() {

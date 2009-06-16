@@ -24,8 +24,6 @@
 
 package org.microemu.app.ui.noui;
 
-import java.awt.Graphics;
-
 import javax.microedition.lcdui.Displayable;
 
 import org.microemu.DisplayAccess;
@@ -35,13 +33,13 @@ import org.microemu.MIDletBridge;
 import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
-import org.microemu.device.MutableImage;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
-import org.microemu.device.j2se.J2SEMutableImage;
+import org.microemu.device.j2se.J2SEGraphicsSurface;
 
 public class NoUiDisplayComponent implements DisplayComponent {
 
-	private J2SEMutableImage displayImage = null;
+	private J2SEGraphicsSurface graphicsSurface;
+
 	private DisplayRepaintListener displayRepaintListener;
 	
 	public void addDisplayRepaintListener(DisplayRepaintListener l) {
@@ -52,10 +50,6 @@ public class NoUiDisplayComponent implements DisplayComponent {
 		if (displayRepaintListener == l) {
 			displayRepaintListener = null;
 		}
-	}
-
-	public MutableImage getDisplayImage() {
-		return displayImage;
 	}
 
 	public void repaintRequest(int x, int y, int width, int height) 
@@ -76,28 +70,28 @@ public class NoUiDisplayComponent implements DisplayComponent {
 		Device device = DeviceFactory.getDevice();
 
 		if (device != null) {
-			if (displayImage == null) {
-				displayImage = new J2SEMutableImage(
+			if (graphicsSurface == null) {
+				graphicsSurface = new J2SEGraphicsSurface(
 						device.getDeviceDisplay().getFullWidth(), device.getDeviceDisplay().getFullHeight());
 			}
 					
-			Graphics gc = displayImage.getImage().getGraphics();
-
-			J2SEDeviceDisplay deviceDisplay = (J2SEDeviceDisplay) device.getDeviceDisplay();				
-			if (!deviceDisplay.isFullScreenMode()) {
-				deviceDisplay.paintControls(gc);
+			J2SEDeviceDisplay deviceDisplay = (J2SEDeviceDisplay) device.getDeviceDisplay();
+			synchronized (graphicsSurface) {
+				deviceDisplay.paintDisplayable(graphicsSurface, x, y, width, height);
+				if (!deviceDisplay.isFullScreenMode()) {
+					deviceDisplay.paintControls(graphicsSurface.getGraphics());
+				}
 			}
-			deviceDisplay.paintDisplayable(gc, x, y, width, height);
 
-			fireDisplayRepaint(displayImage);
+			fireDisplayRepaint(graphicsSurface);
 		}	
 	}
 
 
-	private void fireDisplayRepaint(MutableImage image)
+	private void fireDisplayRepaint(J2SEGraphicsSurface graphicsSurface)
 	{
 		if (displayRepaintListener != null) {
-			displayRepaintListener.repaintInvoked(image);
+			displayRepaintListener.repaintInvoked(graphicsSurface);
 		}
 	}
 

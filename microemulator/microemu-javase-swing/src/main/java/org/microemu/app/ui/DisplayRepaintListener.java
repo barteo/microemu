@@ -1,7 +1,7 @@
 /*
- *  MicroEmulator
- *  Copyright (C) 2003 Markus Heberling
- *
+ * MicroEmulator 
+ * Copyright (C) 2001-2009 Bartek Teodorczyk <barteo@barteo.net>
+ * 
  *  It is licensed under the following two licenses as alternatives:
  *    1. GNU Lesser General Public License (the "LGPL") version 2.1 or any newer version
  *    2. Apache License (the "AL") Version 2.0
@@ -20,14 +20,18 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the LGPL or the AL for the specific language governing permissions and
  *  limitations.
+ * 
+ * @version $Id$
  */
+ 
+package org.microemu.app.ui;
 
-package org.microemu.device;
+import org.microemu.device.j2se.J2SEGraphicsSurface;
 
 
-public interface DisplayGraphics 
+public interface DisplayRepaintListener 
 {
-
-	public MutableImage getImage();
+	
+	public void repaintInvoked(J2SEGraphicsSurface graphicsSurface);
 	
 }

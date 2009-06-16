@@ -53,24 +53,21 @@ import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
-import org.microemu.device.MutableImage;
 import org.microemu.device.impl.ButtonName;
 import org.microemu.device.impl.InputMethodImpl;
 import org.microemu.device.impl.SoftButton;
 import org.microemu.device.impl.ui.CommandManager;
 import org.microemu.device.j2se.J2SEButton;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
+import org.microemu.device.j2se.J2SEGraphicsSurface;
 import org.microemu.device.j2se.J2SEInputMethod;
-import org.microemu.device.j2se.J2SEMutableImage;
 
 public class SwingDisplayComponent extends JComponent implements DisplayComponent {
 	private static final long serialVersionUID = 1L;
 
 	private SwingDeviceComponent deviceComponent;
 
-	private J2SEMutableImage displayImage = null;
-	
-	private Graphics displayGraphics;
+	private J2SEGraphicsSurface graphicsSurface;
 
 	private SoftButton initialPressedSoftButton;
 
@@ -262,7 +259,7 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 
 	public void init() {
 		synchronized (this) {
-			displayImage = null;
+			graphicsSurface = null;
 			initialPressedSoftButton = null;
 		}
 	}
@@ -277,10 +274,6 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 		}
 	}
 
-	public MutableImage getDisplayImage() {
-		return displayImage;
-	}
-
 	public Dimension getPreferredSize() {
 		Device device = DeviceFactory.getDevice();
 		if (device == null) {
@@ -291,9 +284,9 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 	}
 
 	protected void paintComponent(Graphics g) {
-		if (displayImage != null) {
-			synchronized (displayImage) {
-				g.drawImage(displayImage.getImage(), 0, 0, null);
+		if (graphicsSurface != null) {
+			synchronized (graphicsSurface) {
+				g.drawImage(graphicsSurface.getImage(), 0, 0, null);
 			}
 		}
 	}
@@ -317,33 +310,32 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 			J2SEDeviceDisplay deviceDisplay = (J2SEDeviceDisplay) device.getDeviceDisplay();
 
 			synchronized (this) {
-				if (displayImage == null) {
-					displayImage = new J2SEMutableImage(
+				if (graphicsSurface == null) {
+					graphicsSurface = new J2SEGraphicsSurface(
 							device.getDeviceDisplay().getFullWidth(), device.getDeviceDisplay().getFullHeight());
-					displayGraphics = displayImage.getImage().getGraphics();
 				}
 
-				synchronized (displayImage) {
-					deviceDisplay.paintDisplayable(displayGraphics, x, y, width, height);
+				synchronized (graphicsSurface) {
+					deviceDisplay.paintDisplayable(graphicsSurface, x, y, width, height);
 					if (!deviceDisplay.isFullScreenMode()) {
-						deviceDisplay.paintControls(displayGraphics);
+						deviceDisplay.paintControls(graphicsSurface.getGraphics());
 					}
 				}
 
-				fireDisplayRepaint(displayImage);
+				fireDisplayRepaint(graphicsSurface);
 			}
 
 			if (deviceDisplay.isFullScreenMode()) {
 				repaint(x, y, width, height);
 			} else {
-				repaint(0, 0, displayImage.getWidth(), displayImage.getHeight());
+				repaint(0, 0, graphicsSurface.getImage().getWidth(), graphicsSurface.getImage().getHeight());
 			}
 		}
 	}
 
-	private void fireDisplayRepaint(MutableImage image) {
+	private void fireDisplayRepaint(J2SEGraphicsSurface graphicsSurface) {
 		if (displayRepaintListener != null) {
-			displayRepaintListener.repaintInvoked(image);
+			displayRepaintListener.repaintInvoked(graphicsSurface);
 		}
 	}
 
@@ -360,8 +352,8 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 		showMouseCoordinates = !showMouseCoordinates;
 	}
 
-	public MutableImage getScaledDisplayImage(int zoom) {
-		return displayImage.scale(zoom);
+	public J2SEGraphicsSurface getGraphicsSurface() {
+		return graphicsSurface;
 }
 
 	public MouseAdapter getMouseListener() {

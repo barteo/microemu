@@ -28,7 +28,6 @@
 package org.microemu.device.j2se;
 
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 
 import org.microemu.device.MutableImage;
@@ -37,15 +36,15 @@ import org.microemu.log.Logger;
 
 public class J2SEMutableImage extends MutableImage
 {
-	private BufferedImage img;
+	private J2SEGraphicsSurface graphicsSurface;
 	private PixelGrabber grabber = null;
 	private int[] pixels;
 
 
 	public J2SEMutableImage(int width, int height)
 	{
-		img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        java.awt.Graphics g = img.getGraphics();
+		graphicsSurface = new J2SEGraphicsSurface(width, height);
+        Graphics2D g = graphicsSurface.getGraphics();
         g.setColor(java.awt.Color.WHITE);
         g.fillRect(0, 0, width, height);
 	}
@@ -53,9 +52,9 @@ public class J2SEMutableImage extends MutableImage
 
 	public javax.microedition.lcdui.Graphics getGraphics()
 	{
-        java.awt.Graphics2D g = (java.awt.Graphics2D) img.getGraphics();
+        Graphics2D g = graphicsSurface.getGraphics();
         g.setClip(0, 0, getWidth(), getHeight());
-        J2SEDisplayGraphics displayGraphics = new J2SEDisplayGraphics(g, this);
+        J2SEDisplayGraphics displayGraphics = new J2SEDisplayGraphics(graphicsSurface);
 		displayGraphics.setColor(0x00000000);
 		displayGraphics.translate(-displayGraphics.getTranslateX(), -displayGraphics.getTranslateY());
 		
@@ -71,19 +70,19 @@ public class J2SEMutableImage extends MutableImage
 
 	public int getHeight()
 	{
-		return img.getHeight();
+		return graphicsSurface.getImage().getHeight();
 	}
 
 
 	public java.awt.Image getImage()
 	{
-		return img;
+		return graphicsSurface.getImage();
 	}
 
 
 	public int getWidth()
 	{
-		return img.getWidth();
+		return graphicsSurface.getImage().getWidth();
 	}
 
 
@@ -91,7 +90,7 @@ public class J2SEMutableImage extends MutableImage
 	{
 		if (grabber == null) {
 			pixels = new int[getWidth() * getHeight()];
-			grabber = new PixelGrabber(img, 0, 0, getWidth(), getHeight(), pixels, 0, getWidth());
+			grabber = new PixelGrabber(graphicsSurface.getImage(), 0, 0, getWidth(), getHeight(), pixels, 0, getWidth());
 		}
 
 		try {
@@ -103,44 +102,32 @@ public class J2SEMutableImage extends MutableImage
 		return pixels;
 	}
 
-	public MutableImage scale(int zoom) {
-		BufferedImage scaledImg = new BufferedImage(img.getWidth() * zoom, img.getHeight() * zoom, img.getType());
-		Graphics2D imgGraphics = scaledImg.createGraphics();
-		imgGraphics.scale(zoom, zoom);
-		imgGraphics.drawImage(img, 0, 0, null);
-		J2SEMutableImage scaledMutableImage = new J2SEMutableImage(scaledImg.getWidth(), scaledImg.getHeight());
-		scaledMutableImage.img = scaledImg;
-		return scaledMutableImage;
-	}
+    public void getRGB(int []argb, int offset, int scanlength,
+            int x, int y, int width, int height) {
 
-        // Andres Navarro
-        public void getRGB(int []argb, int offset, int scanlength,
-                int x, int y, int width, int height) {
-
-            if (width <= 0 || height <= 0)
-                return;
-            if (x < 0 || y < 0 || x + width > getWidth() || y + height > getHeight())
-                throw new IllegalArgumentException("Specified area exceeds bounds of image");
-            if ((scanlength < 0? -scanlength:scanlength) < width)
-                throw new IllegalArgumentException("abs value of scanlength is less than width");
-            if (argb == null)
-                throw new NullPointerException("null rgbData");
-            if (offset < 0 || offset + width > argb.length)
+        if (width <= 0 || height <= 0)
+            return;
+        if (x < 0 || y < 0 || x + width > getWidth() || y + height > getHeight())
+            throw new IllegalArgumentException("Specified area exceeds bounds of image");
+        if ((scanlength < 0? -scanlength:scanlength) < width)
+            throw new IllegalArgumentException("abs value of scanlength is less than width");
+        if (argb == null)
+            throw new NullPointerException("null rgbData");
+        if (offset < 0 || offset + width > argb.length)
+            throw new ArrayIndexOutOfBoundsException();
+        if (scanlength < 0) {
+            if (offset + scanlength*(height-1) < 0)
                 throw new ArrayIndexOutOfBoundsException();
-            if (scanlength < 0) {
-                if (offset + scanlength*(height-1) < 0)
-                    throw new ArrayIndexOutOfBoundsException();
-            } else {
-                if (offset + scanlength*(height-1) + width > argb.length)
-                    throw new ArrayIndexOutOfBoundsException();
-            }
-
-            try {
-                (new PixelGrabber(img, x, y, width, height, argb, offset, scanlength)).grabPixels();
-            } catch (InterruptedException e) {
-                Logger.error(e);
-            }
+        } else {
+            if (offset + scanlength*(height-1) + width > argb.length)
+                throw new ArrayIndexOutOfBoundsException();
         }
-        // Andres Navarro
+
+        try {
+            (new PixelGrabber(graphicsSurface.getImage(), x, y, width, height, argb, offset, scanlength)).grabPixels();
+        } catch (InterruptedException e) {
+            Logger.error(e);
+        }
+    }
 
 }

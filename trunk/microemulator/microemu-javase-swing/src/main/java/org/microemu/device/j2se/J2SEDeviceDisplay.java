@@ -56,7 +56,6 @@ import org.microemu.app.util.IOUtils;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.InputMethod;
-import org.microemu.device.MutableImage;
 import org.microemu.device.impl.Button;
 import org.microemu.device.impl.Color;
 import org.microemu.device.impl.DeviceDisplayImpl;
@@ -92,10 +91,6 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl {
 
 	public J2SEDeviceDisplay(EmulatorContext context) {
 		this.context = context;
-	}
-
-	public MutableImage getDisplayImage() {
-		return context.getDisplayComponent().getDisplayImage();
 	}
 
 	public int getHeight() {
@@ -169,7 +164,7 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl {
 		}
 	}
 
-	public void paintDisplayable(Graphics g, int x, int y, int width, int height) {
+	public void paintDisplayable(J2SEGraphicsSurface graphicsSurface, int x, int y, int width, int height) {
 		MIDletAccess ma = MIDletBridge.getMIDletAccess();
 		if (ma == null) {
 			return;
@@ -182,9 +177,9 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl {
 		if (current == null) {
 			return;
 		}
-
+		
+		Graphics g = graphicsSurface.getGraphics();
 		g.setColor(foregroundColor);
-
 		java.awt.Shape oldclip = g.getClip();
 		if (!(current instanceof Canvas) || ((Canvas) current).getWidth() != displayRectangle.width
 				|| ((Canvas) current).getHeight() != displayRectangle.height) {
@@ -192,7 +187,7 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl {
 		}
 		g.setClip(x, y, width, height);
 		Font oldf = g.getFont();
-		ma.getDisplayAccess().paint(new J2SEDisplayGraphics((java.awt.Graphics2D) g, getDisplayImage()));
+		ma.getDisplayAccess().paint(new J2SEDisplayGraphics(graphicsSurface));
 		g.setFont(oldf);
 		if (!(current instanceof Canvas) || ((Canvas) current).getWidth() != displayRectangle.width
 				|| ((Canvas) current).getHeight() != displayRectangle.height) {

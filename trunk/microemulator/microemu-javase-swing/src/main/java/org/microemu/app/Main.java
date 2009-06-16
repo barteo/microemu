@@ -29,6 +29,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -105,15 +106,14 @@ import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
-import org.microemu.device.MutableImage;
 import org.microemu.device.impl.DeviceDisplayImpl;
 import org.microemu.device.impl.DeviceImpl;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.device.j2se.J2SEDevice;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEFontManager;
+import org.microemu.device.j2se.J2SEGraphicsSurface;
 import org.microemu.device.j2se.J2SEInputMethod;
-import org.microemu.device.j2se.J2SEMutableImage;
 import org.microemu.log.Logger;
 import org.microemu.log.QueueAppender;
 import org.microemu.util.JadMidletEntry;
@@ -408,10 +408,11 @@ public class Main extends JFrame {
 				menuStartCapture.setEnabled(false);
 				menuStopCapture.setEnabled(true);
 
-				emulatorContext.getDisplayComponent().addDisplayRepaintListener(new DisplayRepaintListener() {
+				((SwingDisplayComponent) emulatorContext.getDisplayComponent())
+						.addDisplayRepaintListener(new DisplayRepaintListener() {
 					long start = 0;
 
-					public void repaintInvoked(MutableImage image) {
+					public void repaintInvoked(J2SEGraphicsSurface graphicsSurface) {
 						synchronized (Main.this) {
 							if (encoder != null) {
 								if (start == 0) {
@@ -422,7 +423,7 @@ public class Main extends JFrame {
 									start = current;
 								}
 
-								encoder.addFrame((BufferedImage) ((J2SEMutableImage) image).getImage());
+								encoder.addFrame(graphicsSurface.getImage());
 							}
 						}
 					}
@@ -581,13 +582,14 @@ public class Main extends JFrame {
 				}
 				final int scale = Integer.parseInt(e.getActionCommand());
 				if (scaledDisplayFrame != null) {
-					emulatorContext.getDisplayComponent().removeDisplayRepaintListener(updateScaledImageListener);
+					((SwingDisplayComponent) emulatorContext.getDisplayComponent())
+							.removeDisplayRepaintListener(updateScaledImageListener);
 					scaledDisplayFrame.dispose();
 				}
 				scaledDisplayFrame = new JFrame(getTitle());
 				scaledDisplayFrame.setContentPane(new JLabel(new ImageIcon()));
 				updateScaledImageListener = new DisplayRepaintListener() {
-					public void repaintInvoked(MutableImage image) {
+					public void repaintInvoked(J2SEGraphicsSurface graphicsSurface) {
 						updateScaledImage(scale, scaledDisplayFrame);
 						scaledDisplayFrame.validate();
 					}
@@ -645,7 +647,8 @@ public class Main extends JFrame {
 				scaledDisplayFrame.addKeyListener(devicePanel);
 
 				updateScaledImage(scale, scaledDisplayFrame);
-				emulatorContext.getDisplayComponent().addDisplayRepaintListener(updateScaledImageListener);
+				((SwingDisplayComponent) emulatorContext.getDisplayComponent())
+						.addDisplayRepaintListener(updateScaledImageListener);
 				scaledDisplayFrame.setIconImage(getIconImage());
 				scaledDisplayFrame.setResizable(false);
 				Point location = getLocation();
@@ -658,7 +661,8 @@ public class Main extends JFrame {
 				scaledDisplayFrame.pack();
 				scaledDisplayFrame.setVisible(true);
 			} else {
-				emulatorContext.getDisplayComponent().removeDisplayRepaintListener(updateScaledImageListener);
+				((SwingDisplayComponent) emulatorContext.getDisplayComponent())
+						.removeDisplayRepaintListener(updateScaledImageListener);
 				scaledDisplayFrame.dispose();
 			}
 		}
@@ -677,9 +681,16 @@ public class Main extends JFrame {
 		}
 
 		private void updateScaledImage(int scale, JFrame scaledLCDFrame) {
-			J2SEMutableImage scaledImage = (J2SEMutableImage) ((SwingDisplayComponent) emulatorContext
-					.getDisplayComponent()).getScaledDisplayImage(scale);
-			((ImageIcon) (((JLabel) scaledLCDFrame.getContentPane()).getIcon())).setImage(scaledImage.getImage());
+			J2SEGraphicsSurface graphicsSurface = 
+					((SwingDisplayComponent) emulatorContext.getDisplayComponent()).getGraphicsSurface();
+			
+			BufferedImage img = graphicsSurface.getImage();
+			BufferedImage scaledImg = new BufferedImage(img.getWidth() * scale, img.getHeight() * scale, img.getType());
+			Graphics2D imgGraphics = scaledImg.createGraphics();
+			imgGraphics.scale(scale, scale);
+			imgGraphics.drawImage(img, 0, 0, null);
+			
+			((ImageIcon) (((JLabel) scaledLCDFrame.getContentPane()).getIcon())).setImage(scaledImg);
 			((JLabel) scaledLCDFrame.getContentPane()).repaint();
 		}
 	};

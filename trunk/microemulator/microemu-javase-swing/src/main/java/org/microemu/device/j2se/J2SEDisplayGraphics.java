@@ -32,7 +32,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 import javax.microedition.lcdui.Image;
@@ -40,19 +39,15 @@ import javax.microedition.lcdui.game.Sprite;
 
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
-import org.microemu.device.DisplayGraphics;
-import org.microemu.device.MutableImage;
 
-public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics implements DisplayGraphics {
+public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics {
 
     // TODO use IntHashMap
     private static HashMap colorCache = new HashMap();
     
+    private J2SEGraphicsSurface graphicsSurface;
+    
     private java.awt.Graphics2D g;
-
-    // Andres Navarro
-
-    private MutableImage image;
 
     private int color = 0;
     
@@ -65,14 +60,11 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
 
     private java.awt.image.RGBImageFilter filter = null;
 
-    // Andres Navarro
-    public J2SEDisplayGraphics(java.awt.Graphics2D a_g, MutableImage a_image)
-    // Andres Navarro
-    {
-        this.g = a_g;
-        this.image = a_image;
-        
-        this.clip = a_g.getClipBounds();
+    public J2SEDisplayGraphics(J2SEGraphicsSurface graphicsSurface) {
+    	this.graphicsSurface = graphicsSurface;
+    	
+        this.g = graphicsSurface.getGraphics();
+        this.clip = this.g.getClipBounds();
 
         Device device = DeviceFactory.getDevice();
         J2SEFontManager fontManager = (J2SEFontManager) device.getFontManager();
@@ -98,10 +90,6 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
                 this.filter = new GrayImageFilter();
             }
         }
-    }
-
-    public MutableImage getImage() {
-        return image;
     }
 
     public int getColor() {
@@ -408,9 +396,6 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
 
     public void drawRGB(int[] rgbData, int offset, int scanlength, int x, int y, int width, int height,
             boolean processAlpha) {
-        // this is less than ideal in terms of memory
-        // but it's the easiest way
-
         if (rgbData == null)
             throw new NullPointerException();
 
@@ -423,22 +408,21 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
         if (width < 0 || height < 0 || offset < 0 || offset >= l || (scanlength < 0 && scanlength * (height - 1) < 0)
                 || (scanlength >= 0 && scanlength * (height - 1) + width - 1 >= l))
             throw new ArrayIndexOutOfBoundsException();
-
-        BufferedImage targetImage = (BufferedImage) ((J2SEMutableImage) image).getImage();
-        if (!processAlpha) {
-        	int[] rgb = new int[width * height];
-            for (int row = 0; row < height; row++) {
-                for (int px = 0; px < width; px++) {
-                    rgb[row * width + px] = rgbData[offset + px] | 0xff000000;
-                }
-                offset += scanlength;
-            }
-            targetImage.setRGB(x, y, width, height, rgb, 0, width);
-        } else {
-            targetImage.setRGB(x, y, width, height, rgbData, offset, scanlength);
+        
+        int[] imageData = graphicsSurface.getImageData();
+        for (int row = 0; row < height; row++) {
+        	int imageDataStart = y * graphicsSurface.getImage().getWidth() + x;
+        	int rgbStart = row * scanlength + offset;
+        	if (processAlpha) { 
+	        	for (int col = 0; col < width; col++) {
+	        		blendPixel(imageData, imageDataStart + col, rgbData[rgbStart + col]);
+	        	}
+        	} else {
+        		System.arraycopy(rgbData, rgbStart, imageData, imageDataStart, width);
+        	}
         }
     }
-
+    
     public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {
         int[] xPoints = new int[3];
         int[] yPoints = new int[3];
@@ -506,6 +490,24 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics imple
 
     public Graphics2D getGraphics() {
         return g;
+    }
+
+    private void blendPixel(int[] destData, int destOffset, int srcARGB) {
+        int destRGB = destData[destOffset];
+        int destR = (destRGB >> 16) & 0xff;
+        int destG = (destRGB >> 8) & 0xff;
+        int destB = destRGB & 0xff;
+        int srcR = (srcARGB >> 16) & 0xff;
+        int srcG = (srcARGB >> 8) & 0xff;
+        int srcB = srcARGB & 0xff;
+        int srcA = srcARGB >>> 24;
+
+        int oneMinusSrcA = 0xff - srcA;
+        destR = ((srcR * srcA) >> 8) + ((destR * oneMinusSrcA) >> 8);
+        destG = ((srcG * srcA) >> 8) + ((destG * oneMinusSrcA) >> 8);
+        destB = ((srcB * srcA) >> 8) + ((destB * oneMinusSrcA) >> 8);
+        
+        destData[destOffset] = 0xff000000 | (destR << 16) | (destG << 8) | destB;
     }
 
 }

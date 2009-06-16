@@ -35,8 +35,6 @@ import javax.microedition.lcdui.Image;
 public interface DeviceDisplay 
 {
 	
-	MutableImage getDisplayImage();
-
 	int getWidth();
 
 	int getHeight();

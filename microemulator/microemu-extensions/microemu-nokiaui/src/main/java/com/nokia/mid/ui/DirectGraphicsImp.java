@@ -31,11 +31,6 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
 
-import org.microemu.device.DisplayGraphics;
-import org.microemu.device.MutableImage;
-
-
-
 public class DirectGraphicsImp implements DirectGraphics{
     
     
@@ -307,46 +302,9 @@ public class DirectGraphicsImp implements DirectGraphics{
      * @param format
      */
     public void getPixels(short pix[], int offset, int scanlen, int x, int y, int width, int height, int format) {
-        //        System.out.println("public void getPixels(short pix[], int offset, int scanlen, int x, int y, int width, int height, int format)");
-        switch (format) {
-            case TYPE_USHORT_4444_ARGB: {
-                //DeviceDisplay dd = DeviceFactory.getDevice().getDeviceDisplay();
-                //MutableImage img = (MutableImage)dd.getDisplayImage();
-                MutableImage img=((DisplayGraphics)graphics).getImage();
-                
-                int [] data=img.getData();
-                
-                for (int iy = 0; iy < height; iy++) {
-                    for (int ix = 0; ix < width; ix++) {
-                        //pix[offset + ix + iy * scanlen] = (short) img.getPixel(x + ix, y + iy);
-                        //System.out.println(data[ix+iy*width]+" "+a+" "+r+" "+g+" "+b);
-                        pix[offset + ix + iy * scanlen]=(short)fromARGB(data[ix+iy*width],TYPE_USHORT_4444_ARGB);
-                    }
-                }
-                break;
-            }
-            case TYPE_USHORT_444_RGB: {
-                //DeviceDisplay dd = DeviceFactory.getDevice().getDeviceDisplay();
-                //MutableImage img = (MutableImage)dd.getDisplayImage();
-                MutableImage img=((DisplayGraphics)graphics).getImage();
-                
-                int [] data=img.getData();
-                
-                for (int iy = 0; iy < height; iy++) {
-                    for (int ix = 0; ix < width; ix++) {
-                        //pix[offset + ix + iy * scanlen] = (short) img.getPixel(x + ix, y + iy);
-                        //System.out.println(data[ix+iy*width]+" "+a+" "+r+" "+g+" "+b);
-                        pix[offset + ix + iy * scanlen]=(short)fromARGB(data[ix+iy*width],TYPE_USHORT_444_RGB);
-                    }
-                }
-                break;
-            }            
-            default: throw new IllegalArgumentException("Illegal format: " + format);
-        }
+        System.out.println("public void getPixels(short pix[], int offset, int scanlen, int x, int y, int width, int height, int format)");
+        throw new IllegalArgumentException();
     }
-    
-    
-    
     
     /** Not supported
      * @param pix
@@ -403,27 +361,6 @@ public class DirectGraphicsImp implements DirectGraphics{
                 
                 //System.out.println("t"+a+" "+r+" "+g+" "+b);
                 s=((r*15)<<16)|((g*15)<<8)|(b*15);
-                break;
-            }
-        }
-        return s;
-    }
-    
-    private static int fromARGB(int s, int type) {
-        switch (type) {
-            case TYPE_USHORT_4444_ARGB: {
-                int a=((s)&0xFF000000)>>>24;
-                int r=((s)&0x00FF0000)>>>16;
-                int g=((s)&0x0000FF00)>>>8;
-                int b=((s)&0x000000FF);
-                s=((a/15)<<12)|((r/15)<<8)|((g/15)<<4)|(b/15);
-                break;
-            }
-            case TYPE_USHORT_444_RGB: {
-                int r=((s)&0x00FF0000)>>>16;
-                int g=((s)&0x0000FF00)>>>8;
-                int b=((s)&0x000000FF);
-                s=((r/15)<<8)|((g/15)<<4)|(b/15);
                 break;
             }
         }

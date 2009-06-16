@@ -26,25 +26,11 @@ package com.siemens.mp.game;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
-import org.microemu.device.DeviceDisplay;
-import org.microemu.device.DeviceFactory;
-
 public class ExtendedImage extends com.siemens.mp.misc.NativeMem {
     Image image;
     
     public ExtendedImage(Image image) {
         this.image=image;
-    }
-    
-    public void blitToScreen(int x, int y) {
-//        System.out.println(" public void blitToScreen(int x"+x+", int y"+y+")");
-        DeviceDisplay dd = DeviceFactory.getDevice().getDeviceDisplay();
-        Image image = dd.getDisplayImage();
-        
-        Graphics g=image.getGraphics();
-        g.drawImage(this.image,x,y,Graphics.LEFT|Graphics.TOP);
-
-        dd.repaint(0, 0, image.getWidth(), image.getHeight());
     }
     
     public void clear(byte color) {

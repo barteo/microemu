@@ -39,6 +39,7 @@ import javax.microedition.lcdui.game.Sprite;
 
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
+import org.microemu.device.j2se.J2SEGraphicsSurface;
 
 public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics {
 
@@ -411,7 +412,7 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics {
         
         int[] imageData = graphicsSurface.getImageData();
         for (int row = 0; row < height; row++) {
-        	int imageDataStart = row * graphicsSurface.getImage().getWidth() + x;
+        	int imageDataStart = (y + row) * graphicsSurface.getImage().getWidth() + x;
         	int rgbStart = row * scanlength + offset;
         	if (processAlpha) { 
 	        	for (int col = 0; col < width; col++) {
@@ -488,8 +489,8 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics {
         g.copyArea(x_src, y_src, width, height, x_dest - x_src, y_dest - y_src);
     }
 
-    public Graphics2D getGraphics() {
-        return g;
+    public J2SEGraphicsSurface getGraphicsSurface() {
+        return graphicsSurface;
     }
 
     private void blendPixel(int[] destData, int destOffset, int srcARGB) {

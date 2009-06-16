@@ -411,7 +411,7 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics {
         
         int[] imageData = graphicsSurface.getImageData();
         for (int row = 0; row < height; row++) {
-        	int imageDataStart = y * graphicsSurface.getImage().getWidth() + x;
+        	int imageDataStart = row * graphicsSurface.getImage().getWidth() + x;
         	int rgbStart = row * scanlength + offset;
         	if (processAlpha) { 
 	        	for (int col = 0; col < width; col++) {

@@ -43,6 +43,7 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
 
 public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
@@ -57,22 +58,23 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 		});
 	}
 	
-	public CanvasView getView() {
-		return (CanvasView) view;
+	public View getView() {
+		return view;
 	}
 	
 	//
 	// CanvasUI
 	//
 	
-	private class CanvasView extends View {
+	public class CanvasView extends SurfaceView {
 		
-		private int FIRST_DRAG_SENSITIVITY_X = 5;
-		private int FIRST_DRAG_SENSITIVITY_Y = 5;
+		private final static int FIRST_DRAG_SENSITIVITY_X = 5;
 		
-		int pressedX = -FIRST_DRAG_SENSITIVITY_X;
+		private final static int FIRST_DRAG_SENSITIVITY_Y = 5;
 		
-		int pressedY = -FIRST_DRAG_SENSITIVITY_Y;
+		private int pressedX = -FIRST_DRAG_SENSITIVITY_X;
+		
+		private int pressedY = -FIRST_DRAG_SENSITIVITY_Y;
 		
 		public CanvasView(Context context) {
 			super(context);
@@ -86,7 +88,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 		//
 		
 		@Override
-		protected void onDraw(android.graphics.Canvas androidCanvas) {
+		public void onDraw(android.graphics.Canvas androidCanvas) {
 			MIDletAccess ma = MIDletBridge.getMIDletAccess();
 			if (ma == null) {
 				return;

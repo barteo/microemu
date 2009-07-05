@@ -110,12 +110,14 @@ public abstract class GameCanvas extends Canvas {
         // For example this methods fail if the paint method is
         // overriden with something else
         repaint(x, y, width, height);
+        serviceRepaints();
     }
 
     public void flushGraphics() {
     	
         // NOTE see comment at the other flushGraphics method
         repaint();
+        serviceRepaints();
     }
 
     public int getKeyStates() {

@@ -938,6 +938,7 @@ public class Main extends JFrame {
 						deviceDisplay.repaint(0, 0, deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
 					}
 					pack();
+					devicePanel.requestFocus();
 				}
 			}
 		});

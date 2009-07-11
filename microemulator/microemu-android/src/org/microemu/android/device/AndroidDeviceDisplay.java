@@ -39,7 +39,6 @@ import org.microemu.MIDletBridge;
 import org.microemu.android.device.ui.AndroidCanvasUI;
 import org.microemu.android.device.ui.AndroidCanvasUI.CanvasView;
 import org.microemu.device.DeviceDisplay;
-import org.microemu.device.MutableImage;
 import org.microemu.device.ui.CanvasUI;
 import org.microemu.device.ui.DisplayableUI;
 
@@ -47,6 +46,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 
@@ -60,12 +60,25 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 	// TODO change this
 	public int displayRectangleHeight;
 	
+	private Bitmap bitmap;
+	
+	private Canvas bitmapCanvas;
+	
+	private Rect rectangle = new Rect();
+	
 	public AndroidDeviceDisplay(EmulatorContext context) {
 		this.context = context;
+		
+		this.bitmapCanvas = null;
 	}
 
 	public Image createImage(String name) throws IOException {
-		return createImage(context.getResourceAsStream(name));
+		InputStream is = context.getResourceAsStream(name);
+		if (is == null) {
+			throw new IOException(name + " could not be found.");
+		}
+
+		return createImage(is);
 	}
 
 	public Image createImage(Image source) {
@@ -167,11 +180,6 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 		return new AndroidImmutableImage(Bitmap.createBitmap(newrgb, width, height, Bitmap.Config.ARGB_8888));
 	}
 
-	public MutableImage getDisplayImage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public int getFullHeight() {
 		return displayRectangleHeight;
 	}
@@ -246,26 +254,34 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 		// Font oldf = g.getFont();
 		if (current instanceof CanvasUI) {
 			final CanvasView view = (CanvasView) ((AndroidCanvasUI) current).getView();
+			if (bitmapCanvas != null) {
+				view.onDraw(bitmapCanvas);
+			}
 			SurfaceHolder holder = view.getHolder();
-			Canvas canvas = holder.lockCanvas();
+			rectangle.left = x;
+			rectangle.top = y;
+			rectangle.right = x + width;
+			rectangle.bottom = y + height;
+			Canvas canvas = holder.lockCanvas(rectangle);
 			if (canvas != null) {
-				view.onDraw(canvas);
+				if (bitmapCanvas != null) {
+					canvas.drawBitmap(bitmap, 0, 0, null);
+				}
 				holder.unlockCanvasAndPost(canvas);
 			} else {
 				holder.addCallback(new Callback() {
 
-					@Override
 					public void surfaceCreated(SurfaceHolder holder) {
 						holder.removeCallback(this);
 						repaint(0, 0, view.getWidth(), view.getHeight());
 					}
 
-					@Override
 					public void surfaceDestroyed(SurfaceHolder holder) {
 					}
 					
-					@Override
 					public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+						bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+						bitmapCanvas = new Canvas(bitmap);
 					}
 
 				});

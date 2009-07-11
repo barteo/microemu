@@ -32,6 +32,7 @@ import javax.microedition.lcdui.game.Sprite;
 
 import org.microemu.log.Logger;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
@@ -40,12 +41,19 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.view.View;
 
 public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
 	private static final DashPathEffect dashPathEffect = new DashPathEffect(new float[] { 5, 5 }, 0);
 	
+	private Bitmap bitmap;
+	
 	private Canvas canvas;
+	
+	private Activity activity;
+	
+	private View view;
 	
 	private Paint paint = new Paint();
 	
@@ -57,12 +65,39 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
 	private int strokeStyle = SOLID;
 	
-	public AndroidDisplayGraphics(Canvas canvas) {
+	public AndroidDisplayGraphics(Canvas canvas, Activity activity, View view) {
+		this.bitmap = null;
 		this.canvas = canvas;
+		this.activity = activity;
+		this.view = view;
 		this.canvas.save(Canvas.CLIP_SAVE_FLAG);
 		this.paint.setAntiAlias(true);
 		this.clip = canvas.getClipBounds();
 		setFont(Font.getDefaultFont());
+	}
+	
+	public AndroidDisplayGraphics(Bitmap bitmap) {
+		this.bitmap = bitmap;
+		this.canvas = new Canvas(bitmap);
+        this.canvas.clipRect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+		this.activity = null;
+		this.view = null;
+		this.canvas.save(Canvas.CLIP_SAVE_FLAG);
+		this.paint.setAntiAlias(true);
+		this.clip = canvas.getClipBounds();
+		setFont(Font.getDefaultFont());
+	}
+	
+	public Bitmap getBitmap() {
+		return bitmap;
+	}
+	
+	public Activity getActivity() {
+		return activity;
+	}
+	
+	public View getView() {
+		return view;
 	}
 	
 	public void clipRect(int x, int y, int width, int height) {

@@ -131,7 +131,7 @@ public class AndroidCustomItemUI extends LinearLayout implements CustomItemUI {
 			if (ma == null) {
 				return;
 			}
-			Graphics g = new AndroidDisplayGraphics(androidCanvas);
+			Graphics g = new AndroidDisplayGraphics(androidCanvas, activity, null);
 			Rect r = androidCanvas.getClipBounds();
 			g.clipRect(r.left, r.top, r.width(), r.height());
 			int suggestedHeight = customItemAccess.getPrefContentHeight(-1);

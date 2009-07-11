@@ -31,14 +31,13 @@ import javax.microedition.lcdui.Graphics;
 import org.microemu.device.MutableImage;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 
 public class AndroidMutableImage extends MutableImage {
 	
 	private Bitmap bitmap;
 	
 	public AndroidMutableImage(int width, int height) {
-		bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
 	}
 
 	@Override
@@ -49,9 +48,7 @@ public class AndroidMutableImage extends MutableImage {
 
 	@Override
 	public Graphics getGraphics() {
-        Canvas canvas = new Canvas(bitmap);
-        canvas.clipRect(0, 0, getWidth(), getHeight());
-        AndroidDisplayGraphics displayGraphics = new AndroidDisplayGraphics(canvas);
+        AndroidDisplayGraphics displayGraphics = new AndroidDisplayGraphics(bitmap);
 		displayGraphics.setColor(0x00000000);
 		displayGraphics.translate(-displayGraphics.getTranslateX(), -displayGraphics.getTranslateY());
 		

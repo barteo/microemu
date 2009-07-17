@@ -262,16 +262,15 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 			rectangle.bottom = y + height;
 			Canvas canvas = holder.lockCanvas(rectangle);
 			if (canvas != null) {
-				if (bitmap != null) {
-					canvas.drawBitmap(bitmap, 0, 0, null);
+				if (bitmap == null) {
+					bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.RGB_565);
 				}
+				canvas.drawBitmap(bitmap, 0, 0, null);
 				holder.unlockCanvasAndPost(canvas);
 			} else {
 				holder.addCallback(new Callback() {
 
 					public void surfaceCreated(SurfaceHolder holder) {
-						holder.removeCallback(this);
-						repaint(0, 0, view.getWidth(), view.getHeight());
 					}
 
 					public void surfaceDestroyed(SurfaceHolder holder) {
@@ -279,6 +278,7 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 					
 					public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 						bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+						repaint(0, 0, width, height);
 					}
 
 				});

@@ -88,8 +88,8 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 		setFont(Font.getDefaultFont());
 	}
 	
-	public Bitmap getBitmap() {
-		return bitmap;
+	public Canvas getCanvas() {
+		return canvas;
 	}
 	
 	public Activity getActivity() {

@@ -62,14 +62,12 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 	
 	private Bitmap bitmap;
 	
-	private Canvas bitmapCanvas;
-	
 	private Rect rectangle = new Rect();
 	
 	public AndroidDeviceDisplay(EmulatorContext context) {
 		this.context = context;
 		
-		this.bitmapCanvas = null;
+		this.bitmap = null;
 	}
 
 	public Image createImage(String name) throws IOException {
@@ -254,8 +252,8 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 		// Font oldf = g.getFont();
 		if (current instanceof CanvasUI) {
 			final CanvasView view = (CanvasView) ((AndroidCanvasUI) current).getView();
-			if (bitmapCanvas != null) {
-				view.onDraw(bitmapCanvas);
+			if (bitmap != null) {
+				view.onDraw(bitmap);
 			}
 			SurfaceHolder holder = view.getHolder();
 			rectangle.left = x;
@@ -264,7 +262,7 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 			rectangle.bottom = y + height;
 			Canvas canvas = holder.lockCanvas(rectangle);
 			if (canvas != null) {
-				if (bitmapCanvas != null) {
+				if (bitmap != null) {
 					canvas.drawBitmap(bitmap, 0, 0, null);
 				}
 				holder.unlockCanvasAndPost(canvas);
@@ -281,7 +279,6 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 					
 					public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 						bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-						bitmapCanvas = new Canvas(bitmap);
 					}
 
 				});

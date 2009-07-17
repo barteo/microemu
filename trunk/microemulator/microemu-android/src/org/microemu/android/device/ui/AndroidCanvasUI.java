@@ -27,7 +27,6 @@
 package org.microemu.android.device.ui;
 
 import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Graphics;
 
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
@@ -39,6 +38,7 @@ import org.microemu.device.DeviceFactory;
 import org.microemu.device.ui.CanvasUI;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -87,14 +87,13 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 		// View
 		//
 		
-		@Override
-		public void onDraw(android.graphics.Canvas androidCanvas) {
+		public void onDraw(Bitmap bitmap) {
 			MIDletAccess ma = MIDletBridge.getMIDletAccess();
 			if (ma == null) {
 				return;
 			}
-			Graphics g = new AndroidDisplayGraphics(androidCanvas);
-			Rect r = androidCanvas.getClipBounds();
+			AndroidDisplayGraphics g = new AndroidDisplayGraphics(bitmap);
+			Rect r = g.getCanvas().getClipBounds();
 			g.clipRect(r.left, r.top, r.width(), r.height());
 			ma.getDisplayAccess().paint(g);
 		}	

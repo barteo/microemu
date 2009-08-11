@@ -72,6 +72,11 @@ public class J2SEChoiceGroupUI implements ChoiceGroupUI {
 		return 0;
 	}
 
+	public String getString(int elementNum) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public void set(int elementNum, String stringPart, Image imagePart) {
 		// TODO Auto-generated method stub
 	}

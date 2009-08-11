@@ -224,6 +224,10 @@ System.out.println("AndroidChoiceGroupUI.getSelectedFlags(..) not synced");
 		return selectedItemsCount;
 	}
 	
+	public String getString(int elementNum) {
+		return (String) ((CompoundButton) listAdapter.getItem(elementNum)).getText();
+  }
+	
 	public void set(int elementNum, String stringPart, Image imagePart) {
 System.out.println("AndroidChoiceGroupUI.set(..) not synced");
 		View view = createView(stringPart, imagePart);

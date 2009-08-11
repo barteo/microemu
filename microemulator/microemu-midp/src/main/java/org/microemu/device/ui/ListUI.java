@@ -13,4 +13,7 @@ public interface ListUI extends DisplayableUI {
 
 	void setSelectCommand(Command command);
 
+	void delete(int elementNum);
+  
+	void deleteAll();
 }

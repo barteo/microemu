@@ -95,11 +95,19 @@ public class List extends Screen implements Choice {
     }
 
     public void delete(int elementNum) {
+      if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidListUI")) {
+        ((ListUI) ui).delete(elementNum);
+      } else {
         choiceGroup.delete(elementNum);
+      }
     }
 
     public void deleteAll() {
+      if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidListUI")) {
+        ((ListUI) ui).deleteAll();
+      } else {
         choiceGroup.deleteAll();
+      }
     }
 
     public int getFitPolicy() {

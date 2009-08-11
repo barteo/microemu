@@ -312,11 +312,20 @@ System.out.println("ChoiceGroup.deleteAll()");
 
   public String getString(int elementNum)
   {
-		if (elementNum < 0 || elementNum >= numOfItems) {
-			throw new IndexOutOfBoundsException();
-		}
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidChoiceGroupUI")) {
+			if (elementNum < 0 || elementNum >= ((ChoiceGroupUI) ui).size()) {
+				throw new IndexOutOfBoundsException();
+			}
+      
+			return ((ChoiceGroupUI) ui).getString(elementNum);
 
-    return items[elementNum].getText();
+		} else {
+			if (elementNum < 0 || elementNum >= numOfItems) {
+				throw new IndexOutOfBoundsException();
+			}
+
+			return items[elementNum].getText();
+		}
   }
 
 

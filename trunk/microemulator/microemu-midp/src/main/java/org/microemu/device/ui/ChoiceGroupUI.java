@@ -43,6 +43,8 @@ public interface ChoiceGroupUI extends ItemUI {
 	void setSelectedFlags(boolean[] selectedArray);
 
 	int getSelectedFlags(boolean[] selectedArray);
+	
+	String getString(int elementNum);
 
 	void set(int elementNum, String stringPart, Image imagePart);
 	

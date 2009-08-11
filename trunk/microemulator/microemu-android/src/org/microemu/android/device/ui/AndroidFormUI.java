@@ -97,8 +97,12 @@ public class AndroidFormUI extends AndroidDisplayableUI implements FormUI {
 		return appendTransfer;
 	}
 	 
-	public void delete(int itemNum) {
-		System.out.println("delete(int itemNum)");
+	public void delete(final int itemNum) {
+		activity.post(new Runnable() {
+			public void run() {
+				listView.removeViewAt(itemNum);				
+			}
+		});
 	}
 	 
 	public void deleteAll() {

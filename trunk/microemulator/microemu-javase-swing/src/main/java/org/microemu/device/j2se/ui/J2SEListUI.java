@@ -58,4 +58,12 @@ public class J2SEListUI extends DisplayableImplUI implements ListUI {
 		return null;
 	}
 
+	public void delete(int elementNum) {
+		// TODO Auto-generated method stub		
+	}
+
+	public void deleteAll() {
+		// TODO Auto-generated method stub		
+	}
+
 }

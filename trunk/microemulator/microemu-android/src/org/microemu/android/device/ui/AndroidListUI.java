@@ -99,6 +99,14 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 		this.selectCommand = command;		
 	}
 
+	public void delete(int elementNum) {
+		listAdapter.delete(elementNum);		
+	}
+
+	public void deleteAll() {
+		listAdapter.deleteAll();		
+	}
+
 	private class AndroidListAdapter extends BaseAdapter {
 		
 		ArrayList<String> objects = new ArrayList<String>();
@@ -133,6 +141,15 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 			return convertView;
 		}
 		
+		public void delete(int elementNum) {
+			objects.remove(elementNum);		
+			notifyDataSetChanged();
+		}
+
+		public void deleteAll() {
+			objects.clear();		
+			notifyDataSetChanged();
+		}
 	}
 	
 	private class AndroidListView extends ListView {

@@ -29,7 +29,6 @@
 package org.microemu.device.j2se;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.util.HashMap;
@@ -410,13 +409,19 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics {
                 || (scanlength >= 0 && scanlength * (height - 1) + width - 1 >= l))
             throw new ArrayIndexOutOfBoundsException();
         
+        // make sure that the coordinates are within the clipping rect
+        Rectangle targetRect = new Rectangle(x, y, width, height);
+        Rectangle finalRect = clip.intersection(targetRect);
+        
         int[] imageData = graphicsSurface.getImageData();
-        for (int row = 0; row < height; row++) {
-        	int imageDataStart = (y + row) * graphicsSurface.getImage().getWidth() + x;
+        for (int row = finalRect.y - y; row < (finalRect.getMaxY() - y); row++) {
+        	int imageDataStart = (y + row) * graphicsSurface.getImage().getWidth() + finalRect.x;
         	int rgbStart = row * scanlength + offset;
         	if (processAlpha) { 
-	        	for (int col = 0; col < width; col++) {
-	        		blendPixel(imageData, imageDataStart + col, rgbData[rgbStart + col]);
+	        	for (int col = (finalRect.x - x); col < (finalRect.getMaxX() - x) && (y + row) < clip.getMaxY(); col++) {
+	        		if ((imageDataStart + col) < imageData.length && clip.contains(x + col, y + row)) {
+	        			blendPixel(imageData, imageDataStart + col, rgbData[rgbStart + col]);
+	        		}
 	        	}
         	} else {
         		System.arraycopy(rgbData, rgbStart, imageData, imageDataStart, width);

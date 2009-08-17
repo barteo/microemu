@@ -88,7 +88,9 @@ public class EventDispatcher implements Runnable {
 			if (event != null) {
 				if (event instanceof PaintEvent) {
 					synchronized (serviceRepaintsLock) {
-						scheduledPaintEvent = null;
+						synchronized (this) {
+							scheduledPaintEvent = null;
+						}
 						lastPaintEventTime = System.currentTimeMillis();
 						post(event);
 						serviceRepaintsLock.notifyAll();

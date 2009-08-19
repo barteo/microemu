@@ -263,7 +263,9 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 			Canvas canvas = holder.lockCanvas(rectangle);
 			if (canvas != null) {
 				if (bitmap == null) {
-					bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.RGB_565);
+					if (bitmap.getWidth() != view.getWidth() || bitmap.getHeight() != view.getHeight()) {
+						bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.RGB_565);
+					}
 				}
 				canvas.drawBitmap(bitmap, 0, 0, null);
 				holder.unlockCanvasAndPost(canvas);

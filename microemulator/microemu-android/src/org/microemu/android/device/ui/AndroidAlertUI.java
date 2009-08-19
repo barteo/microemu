@@ -27,42 +27,103 @@
 package org.microemu.android.device.ui;
 
 import javax.microedition.lcdui.Alert;
+import javax.microedition.lcdui.Command;
 
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.AlertUI;
+import org.microemu.device.ui.CommandUI;
 
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+
+import java.util.Map;
+import java.util.HashMap;
 
 public class AndroidAlertUI extends AndroidDisplayableUI implements AlertUI {
 
-	protected TextView alertTextView;
-	
-	public AndroidAlertUI(final MicroEmulatorActivity activity, Alert alert) {
-		super(activity, alert, true);
-		
+	private AlertDialog alertDialog;
+
+	private DialogInterface.OnClickListener onClickListener;
+
+	private Map<Integer, CommandUI> buttons = new HashMap<Integer, CommandUI>();
+
+	public AndroidAlertUI(final MicroEmulatorActivity activity, final Alert alert) {
+		super(activity, alert, false);
+
 		activity.post(new Runnable() {
 			public void run() {
-				alertTextView = new TextView(activity);
-				alertTextView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-				alertTextView.setTextAppearance(alertTextView.getContext(), android.R.style.TextAppearance_Large);
-				((LinearLayout) view).addView(alertTextView);				
-
-				invalidate();
+				alertDialog = new AlertDialog.Builder(activity).create();
+				alertDialog.setTitle(alert.getTitle());
+				onClickListener = new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						activity.setDialog(null);
+						if (getCommandListener() != null) {
+							getCommandListener().commandAction(buttons.get(which).getCommand(), displayable);
+						}
+					}
+				};
 			}
-		});		
+		});
+	}
+
+	@Override
+	public void showNotify() {
+		activity.post(new Runnable() {
+			public void run() {
+				fixLookAndFeel();
+				activity.setDialog(alertDialog);
+			}
+		});
+	}
+
+	@Override
+	public void hideNotify() {
+		activity.post(new Runnable() {
+			public void run() {
+				activity.setDialog(null);
+			}
+		});
+	}
+
+	private void fixLookAndFeel() {
+		for (CommandUI cmd : getCommandsUI()) {
+			buttonize(cmd);
+		}
+	}
+
+	private void buttonize(CommandUI cmd) {
+		int which = 0;
+		Command command = cmd.getCommand();
+		if (command == Alert.DISMISS_COMMAND) {
+			which = DialogInterface.BUTTON_NEUTRAL;
+		} else {
+			switch (command.getCommandType()) {
+				case Command.OK:
+					which = DialogInterface.BUTTON_POSITIVE;
+					break;
+				case Command.CANCEL:
+					which = DialogInterface.BUTTON_NEGATIVE;
+					break;
+			}
+		}
+		if (which == 0) {
+			alertDialog.setButton(command.getLabel(), onClickListener);
+		} else {
+			alertDialog.setButton(which, command.getLabel(), onClickListener);
+		}
+		buttons.put(which, cmd);
 	}
 
 	//
 	// AlertUI
 	//		
-	
+
 	public void setString(final String str) {
 		activity.post(new Runnable() {
 			public void run() {
-				alertTextView.setText(str);
+				alertDialog.setMessage(str);
 			}
 		});
 	}
-		
+
 }

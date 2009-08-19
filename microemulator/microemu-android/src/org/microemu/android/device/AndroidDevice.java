@@ -78,6 +78,9 @@ import org.microemu.device.ui.TextBoxUI;
 import org.microemu.device.ui.TextFieldUI;
 import org.microemu.device.ui.UIFactory;
 
+import android.content.Context;
+import android.os.Vibrator;
+
 public class AndroidDevice implements Device {
 
 	private EmulatorContext emulatorContext;
@@ -233,9 +236,14 @@ public class AndroidDevice implements Device {
 		
 	}
 
-	public boolean vibrate(int arg0) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean vibrate(int duration) {
+		Vibrator vibrator = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+		if (vibrator != null) {
+			vibrator.vibrate(duration);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

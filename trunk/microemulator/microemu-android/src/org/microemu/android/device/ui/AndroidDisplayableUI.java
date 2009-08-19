@@ -119,9 +119,9 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 				}
 			}
 		});
-	}	
-	
-	public final void showNotify() {
+	}
+
+	public void showNotify() {
 		activity.post(new Runnable() {
 			public void run() {
 				activity.setContentView(view);
@@ -130,11 +130,10 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 		});
 	}
 
-	public final void hideNotify() {
+	public void hideNotify() {
 	}
-	
+
 	public Vector<AndroidCommandUI> getCommands() {
 		return commands;
 	}
-
 }

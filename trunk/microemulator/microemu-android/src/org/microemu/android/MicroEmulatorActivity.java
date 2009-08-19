@@ -33,6 +33,7 @@ import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.device.DeviceFactory;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,7 +47,9 @@ public abstract class MicroEmulatorActivity extends Activity {
 	private Thread activityThread;
 	
 	private View contentView;
-	
+
+	private Dialog dialog;
+
 	public boolean post(Runnable r) {
 		if (activityThread == Thread.currentThread()) {
 			r.run();
@@ -96,5 +99,18 @@ public abstract class MicroEmulatorActivity extends Activity {
 			deviceDisplay.repaint(0, 0, deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
 		}
 	}
-	
+
+	public void setDialog(Dialog dialog) {
+		this.dialog = dialog;
+		if (dialog != null) {
+			showDialog(0);
+		} else {
+			removeDialog(0);
+		}
+	}
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		return dialog;
+	}
 }

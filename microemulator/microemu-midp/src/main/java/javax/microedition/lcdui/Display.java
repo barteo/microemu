@@ -366,29 +366,19 @@ public class Display {
 		}
 	}
 
-	private class AlertTimeout implements Runnable {
+	private class AlertTimeout extends TimerTask {
 
-		int time;
+		private Alert alert;
 
-		AlertTimeout(int time) {
-			this.time = time;
+		AlertTimeout(Alert alert) {
+			this.alert = alert;
 		}
 
 		public void run() {
-			try {
-				Thread.sleep(time);
-			} catch (InterruptedException ex) {
-				ex.printStackTrace();
-			}
-
-			Displayable d = current;
-			if (d != null && d instanceof Alert) {
-				Alert alert = (Alert) d;
-				if (alert.time != Alert.FOREVER) {
-//					alert.getCommandListener().commandAction((Command) alert.getCommands().get(0), alert);
-				}
-			}
-		}
+            if (alert.isShown()) {
+                alert.getCommandListener().commandAction((Command) alert.getCommands().get(0), alert);
+            }
+        }
 	}
 
 	private final Timer timer = new Timer();
@@ -510,7 +500,16 @@ public class Display {
 					}
 
 					if (nextDisplayable instanceof Alert) {
-						setCurrent((Alert) nextDisplayable, current);
+						nextDisplayable.showNotify(Display.this);
+						nextDisplayable.repaint();
+						if (Alert.nextDisplayable == null) { // setCurrent(Alert);
+							Alert.nextDisplayable = current;
+						}
+						current = nextDisplayable;
+						Alert alert = (Alert) nextDisplayable;
+						if (alert.getTimeout() != Alert.FOREVER) {
+							timer.schedule(new AlertTimeout(alert), alert.getTimeout());
+						}
 						return;
 					}
 
@@ -536,20 +535,19 @@ public class Display {
 	}
 
 	public void setCurrent(Alert alert, Displayable nextDisplayable) {
-		// TODO check if nextDisplayble is Alert
-		// TODO change to putInQueue implementation
+		if (alert == null) {
+			throw new NullPointerException("alert");
+		}
+		if (nextDisplayable == null) {
+			throw new NullPointerException("nextDisplayable");
+		}
+		if (nextDisplayable instanceof Alert) {
+			throw new IllegalArgumentException("nextDisplayable");
+		}
+
 		Alert.nextDisplayable = nextDisplayable;
 
-		current = alert;
-
-		current.showNotify(this);
-		current.repaint();
-
-		if (alert.getTimeout() != Alert.FOREVER) {
-			AlertTimeout at = new AlertTimeout(alert.getTimeout());
-			Thread t = new Thread(at);
-			t.start();
-		}
+		setCurrent(alert);
 	}
 
 	public void setCurrentItem(Item item) {

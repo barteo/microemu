@@ -253,6 +253,9 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 		if (current instanceof CanvasUI) {
 			final CanvasView view = (CanvasView) ((AndroidCanvasUI) current).getView();
 			if (bitmap != null) {
+				if (bitmap.getWidth() != view.getWidth() || bitmap.getHeight() != view.getHeight()) {
+					bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.RGB_565);
+				}
 				view.onDraw(bitmap);
 			}
 			SurfaceHolder holder = view.getHolder();
@@ -263,9 +266,7 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 			Canvas canvas = holder.lockCanvas(rectangle);
 			if (canvas != null) {
 				if (bitmap == null) {
-					if (bitmap.getWidth() != view.getWidth() || bitmap.getHeight() != view.getHeight()) {
-						bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.RGB_565);
-					}
+					bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.RGB_565);
 				}
 				canvas.drawBitmap(bitmap, 0, 0, null);
 				holder.unlockCanvasAndPost(canvas);
@@ -279,7 +280,6 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 					}
 					
 					public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-						bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
 						repaint(0, 0, width, height);
 					}
 

@@ -99,6 +99,15 @@ public abstract class MicroEmulatorActivity extends Activity {
 			deviceDisplay.repaint(0, 0, deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
 		}
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		if (contentView != null) {
+			contentView.invalidate();
+		}
+	}
 
 	public void setDialog(Dialog dialog) {
 		this.dialog = dialog;

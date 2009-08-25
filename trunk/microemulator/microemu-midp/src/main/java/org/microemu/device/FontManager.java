@@ -41,4 +41,6 @@ public interface FontManager
   
   int stringWidth(Font f, String str);
   
+  int substringWidth(Font f, String str, int offset, int len);
+  
 }

@@ -118,5 +118,10 @@ public class AndroidFontManager implements FontManager
 	{
 		return getFont(f).stringWidth(str);
 	}
-	
+
+	public int substringWidth(Font f, String str, int offset, int len)
+	{
+		return getFont(f).substringWidth(str, offset, len);
+	}
+
 }

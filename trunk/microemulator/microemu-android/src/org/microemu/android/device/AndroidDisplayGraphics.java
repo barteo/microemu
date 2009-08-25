@@ -163,6 +163,10 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
    }
 
 	public void drawString(String str, int x, int y, int anchor) {
+		drawSubstring(str, 0, str.length(), x, y, anchor);
+	}
+
+	public void drawSubstring(String str, int offset, int len, int x, int y, int anchor) {
         int newx = x;
         int newy = y;
 
@@ -182,7 +186,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
         }
 
         androidFont.paint.setColor(paint.getColor());
-        canvas.drawText(str, newx, newy, androidFont.paint);
+        canvas.drawText(str, offset, len + offset, newx, newy, androidFont.paint);
 	}
 
     public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {

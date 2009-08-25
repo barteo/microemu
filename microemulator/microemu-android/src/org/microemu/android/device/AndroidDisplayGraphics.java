@@ -70,22 +70,31 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 		this.canvas = canvas;
 		this.activity = activity;
 		this.view = view;
-		this.canvas.save(Canvas.CLIP_SAVE_FLAG);
-		this.paint.setAntiAlias(true);
-		this.clip = canvas.getClipBounds();
-		setFont(Font.getDefaultFont());
+		
+		reset();
 	}
 	
 	public AndroidDisplayGraphics(Bitmap bitmap) {
 		this.bitmap = bitmap;
 		this.canvas = new Canvas(bitmap);
-        this.canvas.clipRect(0, 0, bitmap.getWidth(), bitmap.getHeight());
 		this.activity = null;
 		this.view = null;
-		this.canvas.save(Canvas.CLIP_SAVE_FLAG);
-		this.paint.setAntiAlias(true);
-		this.clip = canvas.getClipBounds();
+		
+		reset();
+	}
+	
+	public void reset() {
+		if (bitmap != null) {
+	        canvas.clipRect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+		}
+		canvas.save(Canvas.CLIP_SAVE_FLAG);
+		paint.setAntiAlias(true);
+		clip = canvas.getClipBounds();
 		setFont(Font.getDefaultFont());
+	}
+	
+	public Bitmap getBitmap() {
+		return bitmap;
 	}
 	
 	public Canvas getCanvas() {

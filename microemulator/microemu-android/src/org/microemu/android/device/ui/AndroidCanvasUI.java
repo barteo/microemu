@@ -39,7 +39,6 @@ import org.microemu.device.ui.CanvasUI;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -72,6 +71,8 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 		
 		private final static int FIRST_DRAG_SENSITIVITY_Y = 5;
 		
+		private AndroidDisplayGraphics graphics = null;
+		
 		private int pressedX = -FIRST_DRAG_SENSITIVITY_X;
 		
 		private int pressedY = -FIRST_DRAG_SENSITIVITY_Y;
@@ -92,10 +93,14 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 			if (ma == null) {
 				return;
 			}
-			AndroidDisplayGraphics g = new AndroidDisplayGraphics(bitmap);
-			Rect r = g.getCanvas().getClipBounds();
-			g.clipRect(r.left, r.top, r.width(), r.height());
-			ma.getDisplayAccess().paint(g);
+			
+			if (graphics == null) {
+				graphics = new AndroidDisplayGraphics(bitmap);
+			} else if (graphics.getBitmap() != bitmap) {
+				graphics = new AndroidDisplayGraphics(bitmap);
+			}
+			graphics.reset();
+			ma.getDisplayAccess().paint(graphics);
 		}	
 		
 		@Override
@@ -177,7 +182,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         private boolean ignoreKey(int keyCode) {
             switch (keyCode) {
             case KeyEvent.KEYCODE_MENU:
-            case KeyEvent.KEYCODE_BACK:
+//            case KeyEvent.KEYCODE_BACK:
             case KeyEvent.KEYCODE_VOLUME_DOWN:
             case KeyEvent.KEYCODE_VOLUME_UP:
             case KeyEvent.KEYCODE_HEADSETHOOK: 

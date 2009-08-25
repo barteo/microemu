@@ -252,6 +252,11 @@ public class DisplayTest extends TestCase {
 			return 0;
 		}
 
+		public int substringWidth(Font f, String str, int offset, int len) {
+
+			return 0;
+		}
+		
 	}
 
 	private static final class MockDevice implements Device {

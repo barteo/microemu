@@ -202,7 +202,7 @@ public final class Font
 	
 	public int substringWidth(String str, int offset, int len)
 	{
-		return stringWidth(str.substring(offset, offset + len));
+		return DeviceFactory.getDevice().getFontManager().substringWidth(this, str, offset, len);
 	}
 
 

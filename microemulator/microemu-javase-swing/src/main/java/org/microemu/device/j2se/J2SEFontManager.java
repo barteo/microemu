@@ -130,6 +130,12 @@ public class J2SEFontManager implements FontManagerImpl
 	}
 	
 	
+	public int substringWidth(Font f, String str, int offset, int len)
+	{
+		return getFont(f).stringWidth(str.substring(offset, offset + len));
+	}
+	
+	
 	public boolean getAntialiasing() {
 		return antialiasing;
 	}

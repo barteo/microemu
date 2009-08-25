@@ -65,4 +65,8 @@ public class AndroidFont implements Font {
 		return (int) paint.measureText(str);
 	}
 
+	public int substringWidth(String str, int offset, int len) {
+		return (int) paint.measureText(str, offset, offset + len);
+	}
+
 }

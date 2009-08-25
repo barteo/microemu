@@ -26,6 +26,8 @@
 
 package org.microemu.android;
 
+import javax.microedition.midlet.MIDletStateChangeException;
+
 import org.microemu.DisplayAccess;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
@@ -101,8 +103,27 @@ public abstract class MicroEmulatorActivity extends Activity {
 	}
 	
 	@Override
+	protected void onPause() {
+		super.onPause();
+
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma != null) {
+			ma.pauseApp();
+		}
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma != null) {
+			try {
+				ma.startApp();
+			} catch (MIDletStateChangeException e) {
+				// is thrown if the MIDlet cannot start now but might be able to start at a later time
+			}
+		}		
 
 		if (contentView != null) {
 			contentView.invalidate();

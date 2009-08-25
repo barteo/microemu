@@ -91,11 +91,13 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 			Logger.error("RecordStore.deleteRecordStore: ERROR reading " + getHeaderFileName(recordStoreName), e);
 		}
 
-		activity.deleteFile(getHeaderFileName(recordStoreName));
+		recordStoreImpl.setOpen(true);
 		RecordEnumeration re = recordStoreImpl.enumerateRecords(null, null, false);
 		while (re.hasNextElement()) {
 			activity.deleteFile(getRecordFileName(recordStoreName, re.nextRecordId()));
 		}
+		recordStoreImpl.setOpen(false);
+		activity.deleteFile(getHeaderFileName(recordStoreName));
 		
 		fireRecordStoreListener(ExtendedRecordListener.RECORDSTORE_DELETE, recordStoreName);
 	}

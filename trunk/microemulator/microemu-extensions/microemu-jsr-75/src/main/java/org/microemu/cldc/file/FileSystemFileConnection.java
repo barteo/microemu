@@ -43,6 +43,7 @@ import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
 import java.util.Enumeration;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 import javax.microedition.io.file.ConnectionClosedException;
 import javax.microedition.io.file.FileConnection;
@@ -380,12 +381,23 @@ public class FileSystemFileConnection implements FileConnection {
 		});
 	}
 
-	private Enumeration listPrivileged(String filter, boolean includeHidden) throws IOException {
+	private Enumeration listPrivileged(final String filter, boolean includeHidden) throws IOException {
 		if (!this.file.isDirectory()) {
 			throw new IOException("Not a directory " + this.file.getAbsolutePath());
 		}
-		// TODO
 		FilenameFilter filenameFilter = null;
+		if (filter != null) {
+			filenameFilter = new FilenameFilter() {
+				private Pattern pattern;
+				{
+					/* convert simple search pattern to regexp */
+					pattern = Pattern.compile(filter.replaceAll("\\.", "\\\\.").replaceAll("\\*", ".*"));
+				}
+				public boolean accept(File dir, String name) {
+					return pattern.matcher(name).matches();
+				}
+			};
+		}
 
 		File[] files = this.file.listFiles(filenameFilter);
 		if (files == null) { // null if security restricted

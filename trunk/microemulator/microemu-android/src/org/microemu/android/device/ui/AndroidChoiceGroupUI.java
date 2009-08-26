@@ -47,6 +47,9 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Spinner;
+import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class AndroidChoiceGroupUI extends LinearLayout implements ChoiceGroupUI {
@@ -59,9 +62,9 @@ public class AndroidChoiceGroupUI extends LinearLayout implements ChoiceGroupUI 
 	
 	private TextView labelView;
 	
-	private AndroidListAdapter listAdapter;
+	private AndroidListAdapterEx listAdapter;
 	
-	private LinearLayout listView;
+	private ViewGroup listView;
 	
 	public AndroidChoiceGroupUI(final MicroEmulatorActivity activity, final ChoiceGroup choiceGroup, final int choiceType) {
 		super(activity);
@@ -70,7 +73,7 @@ public class AndroidChoiceGroupUI extends LinearLayout implements ChoiceGroupUI 
 		this.choiceGroup = choiceGroup;
 		this.choiceType = choiceType;
 		
-		this.listAdapter = new AndroidListAdapter();
+		this.listAdapter = new AndroidListAdapterEx(activity);
 
 		activity.post(new Runnable() {
 			public void run() {
@@ -87,10 +90,14 @@ public class AndroidChoiceGroupUI extends LinearLayout implements ChoiceGroupUI 
 				
 				if (choiceType == Choice.EXCLUSIVE) {
 					listView = new RadioGroup(activity);
+					((LinearLayout) listView).setOrientation(LinearLayout.VERTICAL);
+				} else if (choiceType == Choice.POPUP) {
+					listView = new AndroidPopupView(activity, AndroidChoiceGroupUI.this);
+					((Spinner) listView).setAdapter(listAdapter);
 				} else {
 					listView = new AndroidListView(activity, AndroidChoiceGroupUI.this);
+					((LinearLayout) listView).setOrientation(LinearLayout.VERTICAL);
 				}
-				listView.setOrientation(LinearLayout.VERTICAL);
 				addView(listView);
 				
 				setLabel(choiceGroup.getLabel());
@@ -150,22 +157,40 @@ public class AndroidChoiceGroupUI extends LinearLayout implements ChoiceGroupUI 
 			textView.setText(stringPart);
 			return textView;
 		} else { // Choice.POPUP
-System.out.println("Choice.POPUP not implemented yet");
-			return null;
+			TextView textView = new TextView(activity) {
+
+				@Override
+				public String toString() {
+					return (String) getText();
+				}
+
+			};
+			textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+			textView.setText(stringPart);
+			return textView;
 		}
 	}
 	
 	public void delete(int elementNum) {
-System.out.println("AndroidChoiceGroupUI.delete(..) not synced");		
-		listView.removeViewAt(elementNum);
+System.out.println("AndroidChoiceGroupUI.delete(..) not synced");
+		if (listView instanceof LinearLayout) {
+			listView.removeViewAt(elementNum);
+		}
 		listAdapter.remove(elementNum);
 	}
 	
 	public void setSelectedIndex(final int elementNum, final boolean selected) {
 		activity.post(new Runnable() {
 			public void run() {
-				Object element = listAdapter.getItem(elementNum);
-				((CompoundButton) element).setChecked(selected);
+				if (choiceType == Choice.POPUP) {
+					if (selected) {
+						((AdapterView) listView).setSelection(elementNum);
+					}
+				} else {
+					Object element = listAdapter.getItem(elementNum);
+					((CompoundButton) element).setChecked(selected);
+				}
 			}
 		});
 	}
@@ -173,13 +198,14 @@ System.out.println("AndroidChoiceGroupUI.delete(..) not synced");
 	public int getSelectedIndex() {
 		switch (choiceType) {
 			case Choice.EXCLUSIVE:
-			case Choice.POPUP:
 				for (int i = 0; i < listAdapter.getCount(); ++i) {
 					if (((CompoundButton) listAdapter.getItem(i)).isChecked()) {
 						return i;
 					}
 				}
 				break;
+			case Choice.POPUP:
+				return ((AdapterView) listView).getSelectedItemPosition();
 			case Choice.IMPLICIT:
 System.out.println("Choice.IMPLICIT not implemented yet");
 				return -1;
@@ -192,7 +218,9 @@ System.out.println("Choice.IMPLICIT not implemented yet");
 			public void run() {
 				synchronized (AndroidChoiceGroupUI.this) {
 					View view = createView(stringPart, imagePart);
-					listView.addView(view, elementNum);
+					if (listView instanceof LinearLayout) {
+						listView.addView(view, elementNum);
+					}
 					listAdapter.insert(elementNum, view);
 				}
 			}
@@ -200,8 +228,12 @@ System.out.println("Choice.IMPLICIT not implemented yet");
 	}
 	
 	public boolean isSelected(int elementNum) {
-System.out.println("AndroidChoiceGroupUI.isSelected(..) not synced");		
-		return ((CompoundButton) listAdapter.getItem(elementNum)).isChecked();
+System.out.println("AndroidChoiceGroupUI.isSelected(..) not synced");
+		if (choiceType == Choice.POPUP) {
+			return elementNum == ((AdapterView) listView).getSelectedItemPosition();
+		} else {
+			return ((CompoundButton) listAdapter.getItem(elementNum)).isChecked();
+		}
 	}
 	
 	public void setSelectedFlags(boolean[] selectedArray) {
@@ -225,14 +257,20 @@ System.out.println("AndroidChoiceGroupUI.getSelectedFlags(..) not synced");
 	}
 	
 	public String getString(int elementNum) {
-		return (String) ((CompoundButton) listAdapter.getItem(elementNum)).getText();
+		if (choiceType == Choice.POPUP) {
+			return listAdapter.getItem(elementNum).toString();
+		} else {
+			return (String) ((CompoundButton) listAdapter.getItem(elementNum)).getText();
+		}
   }
 	
 	public void set(int elementNum, String stringPart, Image imagePart) {
 System.out.println("AndroidChoiceGroupUI.set(..) not synced");
 		View view = createView(stringPart, imagePart);
-		listView.removeViewAt(elementNum);
-		listView.addView(view, elementNum);
+		if (listView instanceof LinearLayout) {
+			listView.removeViewAt(elementNum);
+			listView.addView(view, elementNum);
+		}
 		listAdapter.set(elementNum, view);
 	}
 	
@@ -319,6 +357,47 @@ System.out.println("AndroidChoiceGroupUI.set(..) not synced");
 			return ui;
 		}
 		
+	}
+
+	private class AndroidListAdapterEx extends ArrayAdapter<View> {
+
+		public AndroidListAdapterEx(Context context) {
+			super(context, android.R.layout.simple_spinner_item);
+			setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		}
+
+		public void insert(int position, View item) {
+			super.insert(item, position);
+			notifyDataSetChanged();
+		}
+
+		public void remove(int position) {
+			super.remove(super.getItem(position));
+			notifyDataSetChanged();
+		}
+
+		public void set(int position, View item) {
+			remove(position);
+			insert(position, item);
+			notifyDataSetChanged();
+		}
+
+	}
+
+	class AndroidPopupView extends Spinner {
+
+		private AndroidChoiceGroupUI ui;
+
+		public AndroidPopupView(Context context, AndroidChoiceGroupUI ui) {
+			super(context);
+
+			this.ui = ui;
+		}
+
+		public AndroidChoiceGroupUI getUI() {
+			return ui;
+		}
+
 	}
 
 }

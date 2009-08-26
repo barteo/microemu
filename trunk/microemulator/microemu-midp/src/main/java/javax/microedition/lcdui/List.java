@@ -178,7 +178,11 @@ public class List extends Screen implements Choice {
     }
 
     public void setSelectedIndex(int elementNum, boolean selected) {
+      if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidListUI")) {
+        ((ListUI) ui).setSelectedIndex(elementNum, selected);
+      } else {
         choiceGroup.setSelectedIndex(elementNum, selected);
+      }
     }
 
     public void setTicker(Ticker ticker) {

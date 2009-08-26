@@ -12,6 +12,8 @@ public interface ListUI extends DisplayableUI {
 	String getString(int elementNum);
 
 	void setSelectCommand(Command command);
+	
+	void setSelectedIndex(int elementNum, boolean selected);
 
 	void delete(int elementNum);
   

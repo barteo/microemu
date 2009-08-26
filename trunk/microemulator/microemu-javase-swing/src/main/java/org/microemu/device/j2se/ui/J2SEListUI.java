@@ -53,6 +53,10 @@ public class J2SEListUI extends DisplayableImplUI implements ListUI {
 		return 0;
 	}
 
+	public void setSelectedIndex(int elementNum, boolean selected) {
+		// TODO not yet used
+	}
+
 	public String getString(int elementNum) {
 		// TODO not yet used
 		return null;

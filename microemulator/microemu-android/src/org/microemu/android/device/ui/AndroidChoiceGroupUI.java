@@ -26,8 +26,6 @@
 
 package org.microemu.android.device.ui;
 
-import java.util.ArrayList;
-
 import javax.microedition.lcdui.Choice;
 import javax.microedition.lcdui.ChoiceGroup;
 import javax.microedition.lcdui.Image;
@@ -40,16 +38,15 @@ import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Spinner;
-import android.widget.ArrayAdapter;
-import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class AndroidChoiceGroupUI extends LinearLayout implements ChoiceGroupUI {
@@ -300,43 +297,6 @@ System.out.println("AndroidChoiceGroupUI.set(..) not synced");
 		return sizeTransfer;
 	}
 
-	private class AndroidListAdapter extends BaseAdapter {
-		
-		ArrayList<View> objects = new ArrayList<View>();
-		
-		public void insert(int position, View item) {
-			objects.add(position, item);
-			notifyDataSetChanged();
-		}
-		
-		public void set(int position, View item) {
-			objects.set(position, item);
-			notifyDataSetChanged();
-		}
-		
-		public void remove(int position) {
-			objects.remove(position);
-			notifyDataSetChanged();
-		}
-
-		public int getCount() {
-			return objects.size();
-		}
-
-		public Object getItem(int position) {
-			return objects.get(position);
-		}
-
-		public long getItemId(int position) {
-			return position;
-		}
-
-		public View getView(int position, View convertView, ViewGroup parent) {
-			return (View) getItem(position);
-		}
-		
-	}
-	
 	class AndroidListView extends LinearLayout {
 		
 		private AndroidChoiceGroupUI ui;

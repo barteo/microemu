@@ -99,12 +99,26 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 		this.selectCommand = command;		
 	}
 
-	public void delete(int elementNum) {
-		listAdapter.delete(elementNum);		
+	public void delete(final int elementNum) {
+		activity.post(new Runnable() {
+			public void run() {
+				listAdapter.delete(elementNum);
+			}
+		});
 	}
 
 	public void deleteAll() {
-		listAdapter.deleteAll();		
+		activity.post(new Runnable() {
+			public void run() {
+				listAdapter.deleteAll();
+			}
+		});
+	}
+
+	public void setSelectedIndex(int elementNum, boolean selected) {
+		if (selected) { // TODO if not???
+			listView.setSelection(elementNum);
+		}
 	}
 
 	private class AndroidListAdapter extends BaseAdapter {

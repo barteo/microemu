@@ -30,8 +30,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.microedition.rms.InvalidRecordIDException;
 import javax.microedition.rms.RecordEnumeration;
@@ -55,9 +54,11 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 	
 	private final static String RECORD_STORE_RECORD_SUFFIX = ".rsr";
 	
+	private final static Object NULL_STORE = new Object();
+	
 	private Activity activity;
 
-	private Hashtable<String, RecordStoreImpl> testOpenRecordStores = new Hashtable<String, RecordStoreImpl>();
+	private ConcurrentHashMap<String, Object> recordStores = null;
 
 	private ExtendedRecordListener recordListener = null;
 	
@@ -71,24 +72,46 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 	public String getName() {
 		return "Android record store";
 	}
+	
+	private synchronized void initializeIfNecessary()
+	{
+		if (recordStores == null) {
+			recordStores = new ConcurrentHashMap<String, Object>();
+			String[] list = activity.fileList();
+			if (list != null && list.length > 0) {
+				for (int i = 0; i < list.length; i++) {	
+					if (list[i].endsWith(RECORD_STORE_HEADER_SUFFIX)) {
+						recordStores.put(
+								list[i].substring(0, list[i].length() - RECORD_STORE_HEADER_SUFFIX.length()),
+								NULL_STORE);
+					}
+				}
+			}
+		}
+	}
 
 	public void deleteRecordStore(final String recordStoreName) 
 			throws RecordStoreNotFoundException, RecordStoreException 
 	{
-		RecordStoreImpl recordStoreImpl = (RecordStoreImpl) testOpenRecordStores.get(recordStoreName);
-		if (recordStoreImpl != null && recordStoreImpl.isOpen()) {
+		initializeIfNecessary();
+		
+		Object value = recordStores.get(recordStoreName);
+		if (value == null) {
+			throw new RecordStoreNotFoundException(recordStoreName);
+		}
+		if (value instanceof RecordStoreImpl && ((RecordStoreImpl) value).isOpen()) {
 			throw new RecordStoreException();
 		}
 
+		RecordStoreImpl recordStoreImpl;
 		try {
 			DataInputStream dis = new DataInputStream(activity.openFileInput(getHeaderFileName(recordStoreName)));
 			recordStoreImpl = new RecordStoreImpl(this);
 			recordStoreImpl.readHeader(dis);
 			dis.close();
-		} catch (FileNotFoundException ex) {
-			throw new RecordStoreNotFoundException(recordStoreName);
 		} catch (IOException e) {
 			Logger.error("RecordStore.deleteRecordStore: ERROR reading " + getHeaderFileName(recordStoreName), e);
+			throw new RecordStoreException();
 		}
 
 		recordStoreImpl.setOpen(true);
@@ -99,12 +122,16 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 		recordStoreImpl.setOpen(false);
 		activity.deleteFile(getHeaderFileName(recordStoreName));
 		
+		recordStores.remove(recordStoreName);
+		
 		fireRecordStoreListener(ExtendedRecordListener.RECORDSTORE_DELETE, recordStoreName);
 	}
 
 	public RecordStore openRecordStore(String recordStoreName, boolean createIfNecessary) 
 			throws RecordStoreException 
 	{
+		initializeIfNecessary();
+		
 		RecordStoreImpl recordStoreImpl;
 		try {
 			DataInputStream dis = new DataInputStream(
@@ -127,7 +154,7 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 			recordStoreImpl.addRecordListener(recordListener);
 		}
 
-		testOpenRecordStores.put(recordStoreName, recordStoreImpl);
+		recordStores.put(recordStoreName, recordStoreImpl);
 
 		fireRecordStoreListener(ExtendedRecordListener.RECORDSTORE_OPEN, recordStoreName);
 
@@ -135,18 +162,12 @@ public class AndroidRecordStoreManager implements RecordStoreManager {
 	}
 
 	public String[] listRecordStores() {
-		ArrayList<String> result = new ArrayList<String>();
-		String[] list = activity.fileList();
-		if (list != null && list.length > 0) {
-			for (int i = 0; i < list.length; i++) {	
-				if (list[i].endsWith(RECORD_STORE_HEADER_SUFFIX)) {
-					result.add(list[i].substring(0, list[i].length() - RECORD_STORE_HEADER_SUFFIX.length()));
-				}
-			}
-		}
+		initializeIfNecessary();
 		
-		if (result.size() > 0) {
-			return result.toArray(new String[0]);
+		String[] result = recordStores.keySet().toArray(new String[0]);
+		
+		if (result.length > 0) {
+			return result;
 		} else {
 			return null;
 		}		

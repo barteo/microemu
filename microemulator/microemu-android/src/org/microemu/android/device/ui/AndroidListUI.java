@@ -37,13 +37,13 @@ import org.microemu.device.ui.ListUI;
 
 import android.content.Context;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView;
 
 public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 
@@ -52,11 +52,14 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 	private AndroidListAdapter listAdapter;
 	
 	private AndroidListView listView;
+
+	private int selectedPosition;
 	
 	public AndroidListUI(final MicroEmulatorActivity activity, List list) {
 		super(activity, list, true);
 		
 		this.selectCommand = List.SELECT_COMMAND;
+		this.selectedPosition = AdapterView.INVALID_POSITION;
 			
 		activity.post(new Runnable() {
 			public void run() {
@@ -88,7 +91,14 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 	}
 	
 	public int getSelectedIndex() {
-		return listView.getSelectedItemPosition();
+		int index = selectedPosition;
+		if (index == AdapterView.INVALID_POSITION) {
+			index = listView.getSelectedItemPosition();
+			if (index == AdapterView.INVALID_POSITION) {
+				index = -1;
+			}
+		}
+		return index;
 	}
 
 	public String getString(int elementNum) {
@@ -151,6 +161,7 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 			}
 			
 			((TextView) convertView).setText((String) getItem(position));
+			((TextView) convertView).setLines(1);
 			
 			return convertView;
 		}
@@ -166,10 +177,14 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 		}
 	}
 	
-	private class AndroidListView extends ListView {
+	private class AndroidListView extends ListView
+			implements AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener  {
 
 		public AndroidListView(Context context) {
 			super(context);
+			super.setClickable(true);
+			super.setOnItemClickListener(this);
+			super.setOnItemSelectedListener(this);
 		}
 
 		@Override
@@ -185,13 +200,21 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 				return super.onKeyDown(keyCode, event);
 			}
 		}
-	
-		@Override
-		public boolean onTouchEvent(MotionEvent ev) {
-			// TODO implement pointer events
-			return super.onTouchEvent(ev);
+
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			selectedPosition = position;
+			if (getCommandListener() != null) {
+				getCommandListener().commandAction(selectCommand, displayable);
+			}
 		}
-		
+
+		public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+			selectedPosition = position;
+		}
+
+		public void onNothingSelected(AdapterView<?> parent) {
+			selectedPosition = AdapterView.INVALID_POSITION;
+		}
 	}
 	
 }

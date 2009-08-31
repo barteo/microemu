@@ -266,7 +266,6 @@ public class Form extends Screen
 		super.keyPressed(keyCode);
 	}
 
-	
 	void showNotify() 
 	{
 		super.showNotify();
@@ -282,6 +281,15 @@ public class Form extends Screen
 		}
 	}
 	
+	void hideNotify()
+	{
+		super.hideNotify();
+
+		if (focusItemIndex > -1) {
+			items[focusItemIndex].setFocus(false);
+		}
+	}
+
 	int traverse(int gameKeyCode, int top, int bottom) 
 	{
 		int height, testItemIndex, traverse, i;

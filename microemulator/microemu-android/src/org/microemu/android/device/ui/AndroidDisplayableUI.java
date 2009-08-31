@@ -49,7 +49,7 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 	
 	protected View view;
 	
-	private TextView titleView;
+	protected TextView titleView;
 	
 	private static Comparator<CommandUI> commandsPriorityComparator = new Comparator<CommandUI>() {
 

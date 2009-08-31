@@ -44,23 +44,44 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.LinearLayout;
 
 public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 
+	private CanvasView canvasView;
+
 	public AndroidCanvasUI(final MicroEmulatorActivity activity, Canvas canvas) {
-		super(activity, canvas, false);
+		super(activity, canvas, true);
 		
 		activity.post(new Runnable() {
 			public void run() {
-				view = new CanvasView(activity);
+				canvasView = new CanvasView(activity);
+				((LinearLayout) AndroidCanvasUI.this.view).addView(canvasView);
+
+				invalidate();
 			}
 		});
 	}
 	
 	public View getView() {
-		return view;
+		return canvasView;
 	}
 	
+	@Override
+	public void invalidate() {
+		activity.post(new Runnable() {
+			public void run() {
+				if (titleView != null) {
+					((LinearLayout) AndroidCanvasUI.this.view).removeView(titleView);
+					if (displayable.getTitle() != null) {
+						titleView.setText(displayable.getTitle());
+						((LinearLayout) AndroidCanvasUI.this.view).addView(titleView, 0);
+					}
+				}
+			}
+		});
+	}
+
 	//
 	// CanvasUI
 	//

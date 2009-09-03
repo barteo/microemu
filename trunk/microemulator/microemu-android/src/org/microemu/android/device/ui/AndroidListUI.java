@@ -34,6 +34,8 @@ import javax.microedition.lcdui.Command;
 
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.ListUI;
+import org.microemu.android.device.AndroidImmutableImage;
+import org.microemu.android.device.AndroidMutableImage;
 
 import android.content.Context;
 import android.view.KeyEvent;
@@ -44,6 +46,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 
 public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 
@@ -87,9 +90,9 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 				ex.printStackTrace();
 			}
 		}
-		return listAdapter.append(stringPart);
+		return listAdapter.append(stringPart, imagePart);
 	}
-	
+
 	public int getSelectedIndex() {
 		int index = selectedPosition;
 		if (index == AdapterView.INVALID_POSITION) {
@@ -132,14 +135,24 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 	}
 
 	private class AndroidListAdapter extends BaseAdapter {
-		
-		ArrayList<String> objects = new ArrayList<String>();
-		
-		public int append(String stringPart) {
-			objects.add(stringPart);
+
+		private class ViewHolder
+		{
+			Object image;
+			String text;
+		}
+
+		private ArrayList<ViewHolder> objects = new ArrayList<ViewHolder>();
+
+		public int append(String stringPart, Object image) {
+			ViewHolder vh = new ViewHolder();
+			vh.image = image;
+			vh.text = stringPart;
+			objects.add(vh);
+			
 			notifyDataSetChanged();
 			
-			return objects.lastIndexOf(stringPart);
+			return objects.lastIndexOf(vh);
 		}
 
 		public int getCount() {
@@ -156,13 +169,38 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
-				convertView = new TextView(activity);
-				((TextView) convertView).setTextAppearance(convertView.getContext(), android.R.style.TextAppearance_Large);
+				//TODO figure out a better layout - see example of different image and text sizes.
+				LinearLayout layout = new LinearLayout(activity);
+
+				ImageView iv = new ImageView(activity);
+				TextView tv = new TextView(activity);
+
+				layout.addView(iv);
+				layout.addView(tv);
+
+				convertView = layout;
+
+				tv.setTextAppearance(convertView.getContext(), android.R.style.TextAppearance_Large);
 			}
+
+			LinearLayout ll = (LinearLayout)convertView;
+
+			ViewHolder vh = (ViewHolder) getItem(position);
+
+			TextView tv = (TextView) ll.getChildAt(1);
+			tv.setText(vh.text);
+			tv.setLines(1);
 			
-			((TextView) convertView).setText((String) getItem(position));
-			((TextView) convertView).setLines(1);
-			
+			if (vh.image != null) {
+				ImageView iv = (ImageView) ll.getChildAt(0);
+
+				Image img = (Image) vh.image;
+				if (img.isMutable())
+					iv.setImageBitmap(((AndroidMutableImage) img).getBitmap());
+				else
+					iv.setImageBitmap(((AndroidImmutableImage) img).getBitmap());
+			}
+
 			return convertView;
 		}
 		

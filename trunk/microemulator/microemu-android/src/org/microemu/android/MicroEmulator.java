@@ -299,21 +299,21 @@ public class MicroEmulator extends MicroEmulatorActivity {
 				}
 				if (accumulatedTrackballX + x > TRACKBALL_THRESHOLD) {
 					accumulatedTrackballX -= TRACKBALL_THRESHOLD;
-					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT).dispatch(getContentView());
-					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT).dispatch(getContentView());
+					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT).dispatch(((AndroidCanvasUI) ui).getView());
+					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT).dispatch(((AndroidCanvasUI) ui).getView());
 				} else if (accumulatedTrackballX + x < -TRACKBALL_THRESHOLD) {
 					accumulatedTrackballX += TRACKBALL_THRESHOLD;
-					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT).dispatch(getContentView());
-					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT).dispatch(getContentView());
+					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT).dispatch(((AndroidCanvasUI) ui).getView());
+					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT).dispatch(((AndroidCanvasUI) ui).getView());
 				}
 				if (accumulatedTrackballY + y > TRACKBALL_THRESHOLD) {
 					accumulatedTrackballY -= TRACKBALL_THRESHOLD;
-					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN).dispatch(getContentView());
-					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN).dispatch(getContentView());
+					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN).dispatch(((AndroidCanvasUI) ui).getView());
+					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN).dispatch(((AndroidCanvasUI) ui).getView());
 				} else if (accumulatedTrackballY + y < -TRACKBALL_THRESHOLD) {
 					accumulatedTrackballY += TRACKBALL_THRESHOLD;
-					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP).dispatch(getContentView());
-					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_UP).dispatch(getContentView());
+					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP).dispatch(((AndroidCanvasUI) ui).getView());
+					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_UP).dispatch(((AndroidCanvasUI) ui).getView());
 				}
 				accumulatedTrackballX += x;
 				accumulatedTrackballY += y;

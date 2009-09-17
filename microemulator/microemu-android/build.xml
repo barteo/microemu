@@ -14,7 +14,6 @@
     <property name="microemu-midp.jar" value="../microemu-midp/target/microemu-midp-3.0.0-SNAPSHOT.jar" />
     <property name="microemu-javase.jar" value="../microemu-javase/target/microemu-javase-3.0.0-SNAPSHOT.jar" />
     <property name="microemu-jsr-75.jar" value="../microemu-extensions/microemu-jsr-75/target/microemu-jsr-75-3.0.0-SNAPSHOT.jar" />
-    <property name="microemu-jsr-135.jar" value="../microemu-extensions/microemu-jsr-135/target/microemu-jsr-135-3.0.0-SNAPSHOT.jar" />
 
     <property name="outdir" value="bin" />
 
@@ -183,8 +182,6 @@
         <dirname property="microemu-javase.jar.dir" file="${microemu-javase.jar}"/>
         <basename property="microemu-jsr-75.jar.base" file="${microemu-jsr-75.jar}"/>
         <dirname property="microemu-jsr-75.jar.dir" file="${microemu-jsr-75.jar}"/>
-        <basename property="microemu-jsr-135.jar.base" file="${microemu-jsr-135.jar}"/>
-        <dirname property="microemu-jsr-135.jar.dir" file="${microemu-jsr-135.jar}"/>
         <basename property="prepared.midlet.jar.base" file="${outdir-libs}/midlet.jar"/>
         <dirname property="prepared.midlet.jar.dir" file="${outdir-libs}/midlet.jar"/>
         <exec executable="${dx}" failonerror="true">
@@ -195,7 +192,6 @@
             <arg value="${microemu-midp.jar.dir}/${microemu-midp.jar.base}" />
             <arg value="${microemu-javase.jar.dir}/${microemu-javase.jar.base}"/>
             <arg value="${microemu-jsr-75.jar.dir}/${microemu-jsr-75.jar.base}"/>
-            <arg value="${microemu-jsr-135.jar.dir}/${microemu-jsr-135.jar.base}"/>
             <arg path="${outdir-classes}" />
             <arg value="${prepared.midlet.jar.dir}/${prepared.midlet.jar.base}"/>
         </exec>

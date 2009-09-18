@@ -104,6 +104,8 @@
     <target name="read-jad">
         <loadjad jad="${midlet.jad}" prefix="jad."/>
     	
+        <basename file="${midlet.jad}" property="midlet.jad.basename"/>
+    	
         <propertyregex property="jar.first.character" 
                 input="${jad.MIDlet-Jar-URL}"
                 regexp="^\/"
@@ -206,7 +208,6 @@
                 <exclude name="**/MANIFEST.MF"/>
             </patternset>
         </unzip>
-    	<basename file="${midlet.jad}" property="midlet.jad.basename"/>
         <copy file="${midlet.jad}" tofile="${outdir-assets}/${midlet.jad.basename}" />
     </target>
     
@@ -216,6 +217,7 @@
 &lt;resources&gt;
     &lt;string name="app_name"&gt;${midlet.name}&lt;/string&gt;
     &lt;string name="class_name"&gt;${midlet.class}&lt;/string&gt;
+    &lt;string name="jad_name"&gt;${midlet.jad.basename}&lt;/string&gt;
 &lt;/resources&gt;
         </echo>
         

@@ -1,1 +1,0 @@
-proper MIDlet resources strings

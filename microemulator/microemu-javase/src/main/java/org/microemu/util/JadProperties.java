@@ -26,7 +26,6 @@
 
 package org.microemu.util;
 
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.jar.Attributes;
@@ -115,7 +114,12 @@ public class JadProperties extends Manifest {
 
 	public String getProperty(String key, String defaultValue) {
 		Attributes attributes = super.getMainAttributes();
-		String result = attributes.getValue(key);
+		String result = null;
+		try {
+			result = attributes.getValue(key);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
 		if (result != null) {
 			return result.trim();
 		} else {

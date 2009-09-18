@@ -93,9 +93,9 @@ import org.microemu.util.MemoryRecordStoreManager;
 
 public class Common implements MicroEmulator, CommonInterface {
 
-    protected EmulatorContext emulatorContext;
+    public JadProperties jad = new JadProperties();
 
-    protected JadProperties jad = new JadProperties();
+    protected EmulatorContext emulatorContext;
 
     private static Common instance;
 

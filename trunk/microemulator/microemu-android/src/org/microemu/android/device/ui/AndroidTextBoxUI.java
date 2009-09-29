@@ -38,11 +38,17 @@ import org.microemu.device.InputMethod;
 import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.TextBoxUI;
 
+import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -55,7 +61,20 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 		
 		activity.post(new Runnable() {
 			public void run() {
-				editView = new EditText(activity);
+				editView = new EditText(activity) {
+
+					@Override
+					public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+						Configuration conf = Resources.getSystem().getConfiguration();
+						if (conf.hardKeyboardHidden != Configuration.HARDKEYBOARDHIDDEN_NO) {
+							InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.showSoftInput(this, 0);
+						}
+						
+						return super.onCreateInputConnection(outAttrs);
+					}
+					
+				};
 				editView.setText(textBox.getString());
 				editView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
 				if ((textBox.getConstraints() & TextField.URL) != 0) {
@@ -106,6 +125,16 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 				invalidate();
 			}
 		});		
+	}
+	
+	@Override
+	public void hideNotify() {
+		activity.post(new Runnable() {
+			public void run() {
+				InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(editView.getWindowToken(), 0);
+			}
+		});
 	}
 
 	//

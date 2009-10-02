@@ -43,8 +43,10 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
@@ -76,8 +78,10 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 					
 				};
 				editView.setText(textBox.getString());
+				editView.setGravity(Gravity.TOP);
 				editView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
-				if ((textBox.getConstraints() & TextField.URL) != 0) {
+				int constraints = textBox.getConstraints();
+				if ((constraints & TextField.URL) != 0) {
 					editView.setSingleLine(true);
 					editView.setOnClickListener(new View.OnClickListener() {
 	
@@ -94,8 +98,11 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 						}
 						
 					});
+				} else if ((constraints & TextField.NUMERIC) != 0) {
+					editView.setSingleLine(true);
+					editView.setInputType(InputType.TYPE_CLASS_NUMBER);
 				}
-				if ((textBox.getConstraints() & TextField.PASSWORD) != 0) {
+				if ((constraints & TextField.PASSWORD) != 0) {
 					editView.setTransformationMethod(PasswordTransformationMethod.getInstance());
 					editView.setTypeface(Typeface.MONOSPACE);
 				}

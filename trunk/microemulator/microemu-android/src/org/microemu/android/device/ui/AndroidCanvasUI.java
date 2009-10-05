@@ -40,7 +40,6 @@ import org.microemu.device.ui.CanvasUI;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
@@ -122,47 +121,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 			}
 			graphics.reset();
 			ma.getDisplayAccess().paint(graphics);
-		}	
-		
-		@Override
-		public boolean onKeyDown(int keyCode, KeyEvent event) {
-			if (MIDletBridge.getCurrentMIDlet() == null) {
-				return false;
-			}
-			
-			if (ignoreKey(keyCode)) {
-                return false;    
-            }
-			
-/*			if (keyCode == KeyEvent.KEYCODE_Q) {
-				System.out.println("Debug.startMethodTracing(\"calc\")");
-				android.os.Debug.startMethodTracing("calc", 16 * 1024 * 1024);
-			} else if (keyCode == KeyEvent.KEYCODE_W) {
-				System.out.println("Debug.stopMethodTracing()");
-				android.os.Debug.stopMethodTracing();
-			}*/
-			
-			Device device = DeviceFactory.getDevice();
-			((AndroidInputMethod) device.getInputMethod()).buttonPressed(event);
-			
-			return true;
-		}
-
-		@Override
-		public boolean onKeyUp(int keyCode, KeyEvent event) {
-			if (MIDletBridge.getCurrentMIDlet() == null) {
-				return false;
-			}
-            
-            if (ignoreKey(keyCode)) {
-                return false;    
-            }
-
-			Device device = DeviceFactory.getDevice();
-			((AndroidInputMethod) device.getInputMethod()).buttonReleased(event);
-
-			return true;
-		}
+		}			
 
 		@Override
 		public boolean onTouchEvent(MotionEvent event) {
@@ -200,18 +159,6 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 			return super.getHandler();
 		}		
        
-        private boolean ignoreKey(int keyCode) {
-            switch (keyCode) {
-            case KeyEvent.KEYCODE_MENU:
-//            case KeyEvent.KEYCODE_BACK:
-            case KeyEvent.KEYCODE_VOLUME_DOWN:
-            case KeyEvent.KEYCODE_VOLUME_UP:
-            case KeyEvent.KEYCODE_HEADSETHOOK: 
-                return true;
-            default:
-                return false;
-            }    
-        }
 	}
 
 }

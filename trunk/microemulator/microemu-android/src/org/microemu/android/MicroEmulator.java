@@ -56,7 +56,9 @@ import org.microemu.android.util.AndroidLoggerAppender;
 import org.microemu.android.util.AndroidRecordStoreManager;
 import org.microemu.app.Common;
 import org.microemu.app.util.MIDletSystemProperties;
+import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
+import org.microemu.device.DeviceFactory;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.device.ui.CommandUI;
@@ -201,7 +203,9 @@ public class MicroEmulator extends MicroEmulatorActivity {
                
         System.setProperty("microedition.platform", "microemulator-android");
         System.setProperty("microedition.locale", Locale.getDefault().toString());
-        
+
+        System.setProperty("fileconn.dir.photos", "file://sdcard");
+
         /* JSR-75 */
         Map properties = new HashMap();
         properties.put("fsRoot", "/");
@@ -221,29 +225,32 @@ public class MicroEmulator extends MicroEmulatorActivity {
         common.getLauncher().setSuiteName(midletClassName);
         common.initMIDlet(true);
     }
+
+    private boolean ignoreBackKeyUp = false;
     
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			MIDletAccess ma = MIDletBridge.getMIDletAccess();
-			if (ma == null) {
-				return false;
-			}
-			final DisplayAccess da = ma.getDisplayAccess();
-			if (da == null) {
-				return false;
-			}
-			AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getCurrentUI();
-			if (ui == null) {
-				return false;
-			}		
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma == null) {
+			return false;
+		}
+		final DisplayAccess da = ma.getDisplayAccess();
+		if (da == null) {
+			return false;
+		}
+		AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getCurrentUI();
+		if (ui == null) {
+			return false;
+		}		
 
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			List<AndroidCommandUI> commands = ui.getCommandsUI();
 			
 			CommandUI cmd = getFirstCommandOfType(commands, Command.BACK);
 			if (cmd != null) {
 				CommandListener l = ui.getCommandListener();
 				if (l != null) {
+					ignoreBackKeyUp = true;
 					l.commandAction(cmd.getCommand(), da.getCurrent());
 				}
 				return true;
@@ -259,15 +266,59 @@ public class MicroEmulator extends MicroEmulatorActivity {
 			if (cmd != null) {
 				CommandListener l = ui.getCommandListener();
 				if (l != null) {
+					ignoreBackKeyUp = true;
 					l.commandAction(cmd.getCommand(), da.getCurrent());
 				}
 				return true;
 			}
-			
-			return true;
-		} else {		
-			return super.onKeyDown(keyCode, event);
 		}
+					
+		if (ui instanceof AndroidCanvasUI) {
+            if (ignoreKey(keyCode)) {
+                return false;    
+            }
+
+			Device device = DeviceFactory.getDevice();
+			((AndroidInputMethod) device.getInputMethod()).buttonPressed(event);
+
+			return true;
+		}
+
+		return super.onKeyDown(keyCode, event);
+	}
+	
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK && ignoreBackKeyUp) {
+			ignoreBackKeyUp = false;
+			return true;
+		}
+		
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma == null) {
+			return false;
+		}
+		final DisplayAccess da = ma.getDisplayAccess();
+		if (da == null) {
+			return false;
+		}
+		AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getCurrentUI();
+		if (ui == null) {
+			return false;
+		}		
+
+		if (ui instanceof AndroidCanvasUI) {
+			if (ignoreKey(keyCode)) {
+	            return false;    
+	        }
+	
+			Device device = DeviceFactory.getDevice();
+			((AndroidInputMethod) device.getInputMethod()).buttonReleased(event);
+	
+			return true;
+		}
+
+		return super.onKeyUp(keyCode, event);
 	}
 	
 	private CommandUI getFirstCommandOfType(List<AndroidCommandUI> commands, int commandType) {
@@ -280,6 +331,18 @@ public class MicroEmulator extends MicroEmulatorActivity {
 		
 		return null;
 	}
+	
+    private boolean ignoreKey(int keyCode) {
+        switch (keyCode) {
+        case KeyEvent.KEYCODE_MENU:
+        case KeyEvent.KEYCODE_VOLUME_DOWN:
+        case KeyEvent.KEYCODE_VOLUME_UP:
+        case KeyEvent.KEYCODE_HEADSETHOOK: 
+            return true;
+        default:
+            return false;
+        }    
+    }
 	
 	private final static float TRACKBALL_THRESHOLD = 0.4f; 
 	
@@ -310,21 +373,21 @@ public class MicroEmulator extends MicroEmulatorActivity {
 				}
 				if (accumulatedTrackballX + x > TRACKBALL_THRESHOLD) {
 					accumulatedTrackballX -= TRACKBALL_THRESHOLD;
-					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT).dispatch(((AndroidCanvasUI) ui).getView());
-					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT).dispatch(((AndroidCanvasUI) ui).getView());
+					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT).dispatch(this);
+					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT).dispatch(this);
 				} else if (accumulatedTrackballX + x < -TRACKBALL_THRESHOLD) {
 					accumulatedTrackballX += TRACKBALL_THRESHOLD;
-					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT).dispatch(((AndroidCanvasUI) ui).getView());
-					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT).dispatch(((AndroidCanvasUI) ui).getView());
+					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT).dispatch(this);
+					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT).dispatch(this);
 				}
 				if (accumulatedTrackballY + y > TRACKBALL_THRESHOLD) {
 					accumulatedTrackballY -= TRACKBALL_THRESHOLD;
-					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN).dispatch(((AndroidCanvasUI) ui).getView());
-					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN).dispatch(((AndroidCanvasUI) ui).getView());
+					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN).dispatch(this);
+					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN).dispatch(this);
 				} else if (accumulatedTrackballY + y < -TRACKBALL_THRESHOLD) {
 					accumulatedTrackballY += TRACKBALL_THRESHOLD;
-					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP).dispatch(((AndroidCanvasUI) ui).getView());
-					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_UP).dispatch(((AndroidCanvasUI) ui).getView());
+					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP).dispatch(this);
+					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_UP).dispatch(this);
 				}
 				accumulatedTrackballX += x;
 				accumulatedTrackballY += y;

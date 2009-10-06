@@ -98,13 +98,19 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 	//
 
 	public void addCommandUI(CommandUI cmd) {
-		commands.add((AndroidCommandUI) cmd);
-		// TODO decide whether this is the best way for keeping sorted commands
-		Collections.sort(commands, commandsPriorityComparator);
+		synchronized (this) {
+			if (!commands.contains(cmd)) {
+				commands.add((AndroidCommandUI) cmd);
+			}
+			// TODO decide whether this is the best way for keeping sorted commands
+			Collections.sort(commands, commandsPriorityComparator);
+		}
 	}
 
 	public void removeCommandUI(CommandUI cmd) {
-		commands.remove(cmd);
+		synchronized (this) {
+			commands.remove(cmd);
+		}
 	}
 
 	public void setCommandListener(CommandListener l) {
@@ -133,7 +139,4 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 	public void hideNotify() {
 	}
 
-	public Vector<AndroidCommandUI> getCommands() {
-		return commands;
-	}
 }

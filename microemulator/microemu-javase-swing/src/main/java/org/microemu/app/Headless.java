@@ -27,12 +27,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.microemu.DisplayComponent;
-import org.microemu.EmulatorContext;
 import org.microemu.MIDletBridge;
 import org.microemu.app.ui.Message;
 import org.microemu.app.ui.noui.NoUiDisplayComponent;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.device.DeviceDisplay;
+import org.microemu.device.EmulatorContext;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.device.impl.DeviceImpl;

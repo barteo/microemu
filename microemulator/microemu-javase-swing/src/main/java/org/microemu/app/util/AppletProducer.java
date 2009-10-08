@@ -45,7 +45,6 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
 import org.microemu.DisplayComponent;
-import org.microemu.EmulatorContext;
 import org.microemu.MIDletBridge;
 import org.microemu.app.classloader.ClassPreprocessor;
 import org.microemu.app.classloader.ExtensionsClassLoader;
@@ -53,6 +52,7 @@ import org.microemu.app.classloader.InstrumentationConfig;
 import org.microemu.app.ui.Message;
 import org.microemu.app.ui.noui.NoUiDisplayComponent;
 import org.microemu.device.DeviceDisplay;
+import org.microemu.device.EmulatorContext;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.device.impl.DeviceDisplayImpl;
@@ -249,7 +249,8 @@ public class AppletProducer {
 				}
 			}
 			if (descriptorLocation != null) {
-				EmulatorContext context = new EmulatorContext() {
+				EmulatorContext context = new EmulatorContext() 
+				{
 					private DisplayComponent displayComponent = new NoUiDisplayComponent();
 
 					private InputMethod inputMethod = new J2SEInputMethod();

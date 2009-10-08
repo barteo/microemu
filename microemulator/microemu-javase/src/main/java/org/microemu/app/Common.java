@@ -52,7 +52,6 @@ import java.util.zip.ZipException;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
-import org.microemu.EmulatorContext;
 import org.microemu.Injected;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
@@ -78,6 +77,7 @@ import org.microemu.app.util.MIDletTimerTask;
 import org.microemu.app.util.MidletURLReference;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
+import org.microemu.device.EmulatorContext;
 import org.microemu.device.impl.DeviceDisplayImpl;
 import org.microemu.device.impl.DeviceImpl;
 import org.microemu.device.impl.Rectangle;

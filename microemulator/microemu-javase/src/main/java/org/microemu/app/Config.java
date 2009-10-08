@@ -40,12 +40,12 @@ import java.util.Vector;
 import nanoxml.XMLElement;
 import nanoxml.XMLParseException;
 
-import org.microemu.EmulatorContext;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.IOUtils;
 import org.microemu.app.util.MIDletSystemProperties;
 import org.microemu.app.util.MRUList;
 import org.microemu.app.util.MidletURLReference;
+import org.microemu.device.EmulatorContext;
 import org.microemu.device.impl.DeviceImpl;
 import org.microemu.device.impl.Rectangle;
 import org.microemu.log.Logger;

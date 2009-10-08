@@ -42,7 +42,6 @@ import javax.microedition.midlet.MIDletStateChangeException;
 import javax.swing.Timer;
 
 import org.microemu.DisplayComponent;
-import org.microemu.EmulatorContext;
 import org.microemu.MIDletBridge;
 import org.microemu.MIDletContext;
 import org.microemu.MicroEmulator;
@@ -53,6 +52,7 @@ import org.microemu.app.util.MIDletResourceLoader;
 import org.microemu.app.util.MIDletSystemProperties;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
+import org.microemu.device.EmulatorContext;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.device.impl.DeviceDisplayImpl;
@@ -84,7 +84,8 @@ public class Main extends Applet implements MicroEmulator {
 	 */
 	private String accessibleHost;
 
-	private EmulatorContext emulatorContext = new EmulatorContext() {
+	private EmulatorContext emulatorContext = new EmulatorContext() 
+	{
 		private InputMethod inputMethod = new J2SEInputMethod();
 
 		private DeviceDisplay deviceDisplay = new J2SEDeviceDisplay(this);

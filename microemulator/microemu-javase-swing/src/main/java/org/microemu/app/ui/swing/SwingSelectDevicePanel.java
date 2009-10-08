@@ -51,13 +51,13 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.microemu.EmulatorContext;
 import org.microemu.app.Common;
 import org.microemu.app.Config;
 import org.microemu.app.ui.Message;
 import org.microemu.app.util.DeviceEntry;
 import org.microemu.app.util.IOUtils;
 import org.microemu.device.Device;
+import org.microemu.device.EmulatorContext;
 import org.microemu.device.impl.DeviceImpl;
 import org.microemu.device.j2se.J2SEDevice;
 

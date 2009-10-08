@@ -41,13 +41,10 @@ import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
 
 import org.microemu.DisplayAccess;
-import org.microemu.DisplayComponent;
-import org.microemu.EmulatorContext;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.android.device.AndroidDevice;
 import org.microemu.android.device.AndroidDeviceDisplay;
-import org.microemu.android.device.AndroidFontManager;
 import org.microemu.android.device.AndroidInputMethod;
 import org.microemu.android.device.ui.AndroidCanvasUI;
 import org.microemu.android.device.ui.AndroidCommandUI;
@@ -57,16 +54,11 @@ import org.microemu.android.util.AndroidRecordStoreManager;
 import org.microemu.app.Common;
 import org.microemu.app.util.MIDletSystemProperties;
 import org.microemu.device.Device;
-import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
-import org.microemu.device.FontManager;
-import org.microemu.device.InputMethod;
 import org.microemu.device.ui.CommandUI;
 import org.microemu.log.Logger;
 import org.microemu.util.JadProperties;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -82,54 +74,6 @@ public class MicroEmulator extends MicroEmulatorActivity {
 		
 	protected Common common;
 
-	protected EmulatorContext emulatorContext = new EmulatorContext() {
-
-		private InputMethod inputMethod = new AndroidInputMethod();
-
-		private DeviceDisplay deviceDisplay = new AndroidDeviceDisplay(this);
-		
-		private FontManager fontManager = new AndroidFontManager();
-
-		public DisplayComponent getDisplayComponent() {
-			// TODO consider removal of EmulatorContext.getDisplayComponent()
-			System.out.println("MicroEmulator.emulatorContext::getDisplayComponent()");
-			return null;
-		}
-
-		public InputMethod getDeviceInputMethod() {
-			return inputMethod;
-		}
-
-		public DeviceDisplay getDeviceDisplay() {
-			return deviceDisplay;
-		}
-
-		public FontManager getDeviceFontManager() {
-			return fontManager;
-		}
-
-		public InputStream getResourceAsStream(String name) {
-			try {
-				if (name.startsWith("/")) {
-					return MicroEmulator.this.getAssets().open(name.substring(1));
-				} else {
-					return MicroEmulator.this.getAssets().open(name);
-				}
-			} catch (IOException e) {
-				Logger.debug(e);
-				return null;
-			}
-		}
-
-		public boolean platformRequest(String url) 
-		{
-			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-
-			return true;
-		}
-				
-	};
-	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle icicle) {

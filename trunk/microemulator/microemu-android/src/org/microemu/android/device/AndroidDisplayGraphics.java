@@ -47,7 +47,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
 	private static final DashPathEffect dashPathEffect = new DashPathEffect(new float[] { 5, 5 }, 0);
 	
-	private Bitmap bitmap;
+	private AndroidMutableImage image;
 	
 	private Canvas canvas;
 	
@@ -66,7 +66,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	private int strokeStyle = SOLID;
 	
 	public AndroidDisplayGraphics(Canvas canvas, Activity activity, View view) {
-		this.bitmap = null;
+		this.image = null;
 		this.canvas = canvas;
 		this.activity = activity;
 		this.view = view;
@@ -74,18 +74,19 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 		reset();
 	}
 	
-	public AndroidDisplayGraphics(Bitmap bitmap) {
-		this.bitmap = bitmap;
-		this.canvas = new Canvas(bitmap);
-		this.activity = null;
-		this.view = null;
-		
-		reset();
-	}
+    public AndroidDisplayGraphics(AndroidMutableImage image) {
+        this.image = image;
+        this.canvas = new Canvas(image.getBitmap());
+        this.canvas.clipRect(0, 0, image.getWidth(), image.getHeight());
+        this.activity = null;
+        this.view = null;
+        
+        reset();
+    }
 	
 	public void reset() {
-		if (bitmap != null) {
-	        canvas.clipRect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+		if (image != null) {
+	        canvas.clipRect(0, 0, image.getWidth(), image.getHeight());
 		}
 		canvas.save(Canvas.CLIP_SAVE_FLAG);
 		paint.setAntiAlias(true);
@@ -93,12 +94,8 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 		setFont(Font.getDefaultFont());
 	}
 	
-	public Bitmap getBitmap() {
-		return bitmap;
-	}
-	
-	public Canvas getCanvas() {
-		return canvas;
+	public AndroidMutableImage getImage() {
+		return image;
 	}
 	
 	public Activity getActivity() {

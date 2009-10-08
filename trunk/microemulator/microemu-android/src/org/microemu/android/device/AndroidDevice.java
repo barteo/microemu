@@ -45,7 +45,6 @@ import javax.microedition.lcdui.TextBox;
 import javax.microedition.lcdui.TextField;
 
 import org.microemu.CustomItemAccess;
-import org.microemu.EmulatorContext;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.android.device.ui.AndroidAlertUI;
 import org.microemu.android.device.ui.AndroidCanvasUI;
@@ -61,6 +60,7 @@ import org.microemu.android.device.ui.AndroidTextBoxUI;
 import org.microemu.android.device.ui.AndroidTextFieldUI;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
+import org.microemu.device.EmulatorContext;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.device.ui.AlertUI;

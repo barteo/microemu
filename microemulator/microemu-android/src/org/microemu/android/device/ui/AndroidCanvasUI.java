@@ -27,138 +27,175 @@
 package org.microemu.android.device.ui;
 
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Graphics;
 
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.android.MicroEmulatorActivity;
+import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.android.device.AndroidDisplayGraphics;
 import org.microemu.android.device.AndroidInputMethod;
+import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.ui.CanvasUI;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.view.SurfaceHolder.Callback;
 
 public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
+    
+    private Callback callback;
 
-	private CanvasView canvasView;
+    public AndroidCanvasUI(final MicroEmulatorActivity activity, Canvas canvas) {
+        super(activity, canvas, false);
+        
+        activity.post(new Runnable() {
+            public void run() {
+                view = new CanvasView(activity);
+            }
+        });
+    }
+    
+    public View getView() {
+        return view;
+    }
+    
+    @Override
+    public void hideNotify()
+    {
+        ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).removeDisplayRepaintListener((DisplayRepaintListener) view);
+        
+        super.hideNotify();
+    }
 
-	public AndroidCanvasUI(final MicroEmulatorActivity activity, Canvas canvas) {
-		super(activity, canvas, true);
-		
-		activity.post(new Runnable() {
-			public void run() {
-				canvasView = new CanvasView(activity);
-				((LinearLayout) AndroidCanvasUI.this.view).addView(canvasView);
+    @Override
+    public void showNotify()
+    {
+        super.showNotify();
+        
+        ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).addDisplayRepaintListener((DisplayRepaintListener) view);
+    }   
+    
+    //
+    // CanvasUI
+    //
+    
+    public class CanvasView extends SurfaceView implements DisplayRepaintListener {
+        
+        private final static int FIRST_DRAG_SENSITIVITY_X = 5;
+        
+        private final static int FIRST_DRAG_SENSITIVITY_Y = 5;
+        
+        private Bitmap bitmap;
+            
+        private android.graphics.Canvas bitmapCanvas;
+        
+        private int pressedX = -FIRST_DRAG_SENSITIVITY_X;
+        
+        private int pressedY = -FIRST_DRAG_SENSITIVITY_Y;
+        
+        public CanvasView(Context context) {
+            super(context);
+            
+            this.bitmapCanvas = null;
+            
+            setFocusable(true);
+            setFocusableInTouchMode(true);
+            
+            callback = new Callback() {
 
-				invalidate();
-			}
-		});
-	}
-	
-	public View getView() {
-		return canvasView;
-	}
-	
-	@Override
-	public void invalidate() {
-		activity.post(new Runnable() {
-			public void run() {
-				if (titleView != null) {
-					((LinearLayout) AndroidCanvasUI.this.view).removeView(titleView);
-					if (displayable.getTitle() != null) {
-						titleView.setText(displayable.getTitle());
-						((LinearLayout) AndroidCanvasUI.this.view).addView(titleView, 0);
-					}
-				}
-			}
-		});
-	}
+                public void surfaceCreated(SurfaceHolder holder) {
+                    holder.removeCallback(this);
+//                    repaint(0, 0, getWidth(), getHeight());
+                }
 
-	//
-	// CanvasUI
-	//
-	
-	public class CanvasView extends SurfaceView {
-		
-		private final static int FIRST_DRAG_SENSITIVITY_X = 5;
-		
-		private final static int FIRST_DRAG_SENSITIVITY_Y = 5;
-		
-		private AndroidDisplayGraphics graphics = null;
-		
-		private int pressedX = -FIRST_DRAG_SENSITIVITY_X;
-		
-		private int pressedY = -FIRST_DRAG_SENSITIVITY_Y;
-		
-		public CanvasView(Context context) {
-			super(context);
-			
-			setFocusable(true);
-			setFocusableInTouchMode(true);
-		}
+                public void surfaceDestroyed(SurfaceHolder holder) {
+                }
+                
+                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                    bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+                    bitmapCanvas = new android.graphics.Canvas(bitmap);
+                }
 
-		//
-		// View
-		//
-		
-		public void onDraw(Bitmap bitmap) {
-			MIDletAccess ma = MIDletBridge.getMIDletAccess();
-			if (ma == null) {
-				return;
-			}
-			
-			if (graphics == null) {
-				graphics = new AndroidDisplayGraphics(bitmap);
-			} else if (graphics.getBitmap() != bitmap) {
-				graphics = new AndroidDisplayGraphics(bitmap);
-			}
-			graphics.reset();
-			ma.getDisplayAccess().paint(graphics);
-		}			
+            };
+            getHolder().addCallback(callback);
+        }
 
-		@Override
-		public boolean onTouchEvent(MotionEvent event) {
-			Device device = DeviceFactory.getDevice();
-			AndroidInputMethod inputMethod = (AndroidInputMethod) device.getInputMethod();
-			int x = (int) event.getX();
-			int y = (int) event.getY();
-			switch (event.getAction()) {
-			case MotionEvent.ACTION_DOWN :
-				inputMethod.pointerPressed(x, y);
-				pressedX = x;
-				pressedY = y;
-				break;
-			case MotionEvent.ACTION_UP :
-				inputMethod.pointerReleased(x, y);
-				break;
-			case MotionEvent.ACTION_MOVE :
-				if (x > (pressedX - FIRST_DRAG_SENSITIVITY_X) &&  x < (pressedX + FIRST_DRAG_SENSITIVITY_X)
-						&& y > (pressedY - FIRST_DRAG_SENSITIVITY_Y) &&  y < (pressedY + FIRST_DRAG_SENSITIVITY_Y)) {
-				} else {
-					pressedX = -FIRST_DRAG_SENSITIVITY_X;
-					pressedY = -FIRST_DRAG_SENSITIVITY_Y;
-					inputMethod.pointerDragged(x, y);
-				}
-				break;
-			default:
-				return false;
-			}
-			
-			return true;
-		}
+        //
+        // View
+        //
+        
+        @Override
+        public void onDraw(android.graphics.Canvas androidCanvas) {
+            MIDletAccess ma = MIDletBridge.getMIDletAccess();
+            if (ma == null) {
+                return;
+            }
+            Graphics g = new AndroidDisplayGraphics(androidCanvas, activity, view);
+            Rect r = androidCanvas.getClipBounds();
+            g.clipRect(r.left, r.top, r.width(), r.height());
+            ma.getDisplayAccess().paint(g);
+        }   
+        
+        @Override
+        public boolean onTouchEvent(MotionEvent event) {
+            Device device = DeviceFactory.getDevice();
+            AndroidInputMethod inputMethod = (AndroidInputMethod) device.getInputMethod();
+            int x = (int) event.getX();
+            int y = (int) event.getY();
+            switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN :
+                inputMethod.pointerPressed(x, y);
+                pressedX = x;
+                pressedY = y;
+                break;
+            case MotionEvent.ACTION_UP :
+                inputMethod.pointerReleased(x, y);
+                break;
+            case MotionEvent.ACTION_MOVE :
+                if (x > (pressedX - FIRST_DRAG_SENSITIVITY_X) &&  x < (pressedX + FIRST_DRAG_SENSITIVITY_X)
+                        && y > (pressedY - FIRST_DRAG_SENSITIVITY_Y) &&  y < (pressedY + FIRST_DRAG_SENSITIVITY_Y)) {
+                } else {
+                    pressedX = -FIRST_DRAG_SENSITIVITY_X;
+                    pressedY = -FIRST_DRAG_SENSITIVITY_Y;
+                    inputMethod.pointerDragged(x, y);
+                }
+                break;
+            default:
+                return false;
+            }
+            
+            return true;
+        }
 
-		@Override
-		public Handler getHandler() {
-			return super.getHandler();
-		}		
+        @Override
+        public Handler getHandler() {
+            return super.getHandler();
+        }       
        
-	}
+        public void repaintInvoked(Object repaintObject)
+        {
+            SurfaceHolder holder = getHolder();
+            if (bitmapCanvas != null) {
+                onDraw(bitmapCanvas);
+            }
+            android.graphics.Canvas canvas = holder.lockCanvas((Rect) repaintObject);
+            if (canvas != null) {
+                if (bitmapCanvas != null) {
+                    canvas.drawBitmap(bitmap, 0, 0, null);
+                }
+                holder.unlockCanvasAndPost(canvas);
+            }
+        }
+        
+    }
 
 }

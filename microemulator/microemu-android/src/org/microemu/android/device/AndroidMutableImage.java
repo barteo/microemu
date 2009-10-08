@@ -48,7 +48,7 @@ public class AndroidMutableImage extends MutableImage {
 
 	@Override
 	public Graphics getGraphics() {
-        AndroidDisplayGraphics displayGraphics = new AndroidDisplayGraphics(bitmap);
+        AndroidDisplayGraphics displayGraphics = new AndroidDisplayGraphics(this);
 		displayGraphics.setColor(0x00000000);
 		displayGraphics.translate(-displayGraphics.getTranslateX(), -displayGraphics.getTranslateY());
 		

@@ -26,17 +26,30 @@
 
 package org.microemu.android;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import javax.microedition.midlet.MIDletStateChangeException;
 
 import org.microemu.DisplayAccess;
+import org.microemu.DisplayComponent;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.android.device.AndroidDeviceDisplay;
+import org.microemu.android.device.AndroidFontManager;
+import org.microemu.android.device.AndroidInputMethod;
+import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
+import org.microemu.device.EmulatorContext;
+import org.microemu.device.FontManager;
+import org.microemu.device.InputMethod;
+import org.microemu.log.Logger;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Display;
@@ -51,6 +64,58 @@ public abstract class MicroEmulatorActivity extends Activity {
 	private View contentView;
 
 	private Dialog dialog;
+	
+	protected EmulatorContext emulatorContext = new EmulatorContext() {
+
+        private InputMethod inputMethod = new AndroidInputMethod();
+
+        private DeviceDisplay deviceDisplay = new AndroidDeviceDisplay(this);
+        
+        private FontManager fontManager = new AndroidFontManager();
+
+        public DisplayComponent getDisplayComponent() {
+            // TODO consider removal of EmulatorContext.getDisplayComponent()
+            System.out.println("MicroEmulator.emulatorContext::getDisplayComponent()");
+            return null;
+        }
+
+        public InputMethod getDeviceInputMethod() {
+            return inputMethod;
+        }
+
+        public DeviceDisplay getDeviceDisplay() {
+            return deviceDisplay;
+        }
+
+        public FontManager getDeviceFontManager() {
+            return fontManager;
+        }
+
+        public InputStream getResourceAsStream(String name) {
+            try {
+                if (name.startsWith("/")) {
+                    return MicroEmulatorActivity.this.getAssets().open(name.substring(1));
+                } else {
+                    return MicroEmulatorActivity.this.getAssets().open(name);
+                }
+            } catch (IOException e) {
+                Logger.debug(e);
+                return null;
+            }
+        }
+
+        public boolean platformRequest(String url) 
+        {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+
+            return true;
+        }
+                
+    };
+    
+    public EmulatorContext getEmulatorContext() {
+        return emulatorContext;
+    }
 
 	public boolean post(Runnable r) {
 		if (activityThread == Thread.currentThread()) {

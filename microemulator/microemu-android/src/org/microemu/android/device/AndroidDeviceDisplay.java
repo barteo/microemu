@@ -28,29 +28,27 @@ package org.microemu.android.device;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
 
 import org.microemu.DisplayAccess;
-import org.microemu.EmulatorContext;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
-import org.microemu.android.device.ui.AndroidCanvasUI;
-import org.microemu.android.device.ui.AndroidCanvasUI.CanvasView;
+import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.DeviceDisplay;
-import org.microemu.device.ui.CanvasUI;
+import org.microemu.device.EmulatorContext;
 import org.microemu.device.ui.DisplayableUI;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.view.SurfaceHolder;
-import android.view.SurfaceHolder.Callback;
 
 public class AndroidDeviceDisplay implements DeviceDisplay {
+    
+    public static boolean inGlMode = false;
 	
 	private EmulatorContext context;
 	
@@ -60,14 +58,12 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 	// TODO change this
 	public int displayRectangleHeight;
 	
-	private Bitmap bitmap;
-	
+    private ArrayList<DisplayRepaintListener> displayRepaintListeners = new ArrayList<DisplayRepaintListener>();
+    	
 	private Rect rectangle = new Rect();
 	
 	public AndroidDeviceDisplay(EmulatorContext context) {
 		this.context = context;
-		
-		this.bitmap = null;
 	}
 
 	public Image createImage(String name) throws IOException {
@@ -226,6 +222,14 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public void addDisplayRepaintListener(DisplayRepaintListener listener) {
+	    displayRepaintListeners.add(listener);
+	}
+
+    public void removeDisplayRepaintListener(DisplayRepaintListener listener) {
+        displayRepaintListeners.remove(listener);
+    }
 
 	public void paintDisplayable(int x, int y, int width, int height) {
 		MIDletAccess ma = MIDletBridge.getMIDletAccess();
@@ -241,63 +245,13 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 			return;
 		}
 
-		// TODO
-		// g.save(android.graphics.Canvas.CLIP_SAVE_FLAG);
-		// TODO
-		// if (!(current instanceof Canvas) || ((Canvas) current).getWidth() != displayRectangle.width
-		// 		|| ((Canvas) current).getHeight() != displayRectangle.height) {
-		// 	g.translate(displayPaintable.x, displayPaintable.y);
-		// }
-		// TODO
-		// Font oldf = g.getFont();
-		if (current instanceof CanvasUI) {
-			final CanvasView view = (CanvasView) ((AndroidCanvasUI) current).getView();
-			if (bitmap != null) {
-				if (bitmap.getWidth() != view.getWidth() || bitmap.getHeight() != view.getHeight()) {
-					bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.RGB_565);
-				}
-				view.onDraw(bitmap);
-			}
-			SurfaceHolder holder = view.getHolder();
-			rectangle.left = x;
-			rectangle.top = y;
-			rectangle.right = x + width;
-			rectangle.bottom = y + height;
-			Canvas canvas = holder.lockCanvas(rectangle);
-			if (canvas != null) {
-				if (bitmap == null) {
-					bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.RGB_565);
-				}
-				canvas.drawBitmap(bitmap, 0, 0, null);
-				holder.unlockCanvasAndPost(canvas);
-			} else {
-				holder.addCallback(new Callback() {
-
-					public void surfaceCreated(SurfaceHolder holder) {
-					}
-
-					public void surfaceDestroyed(SurfaceHolder holder) {
-					}
-					
-					public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-						repaint(0, 0, width, height);
-					}
-
-				});
-			}
-		} else {
-			// TODO extend DisplayableUI interface
-			//current.paint();
-		}
-		// TODO
-		// g.setFont(oldf);
-		// TODO
-		// if (!(current instanceof Canvas) || ((Canvas) current).getWidth() != displayRectangle.width
-		//		|| ((Canvas) current).getHeight() != displayRectangle.height) {
-		// 	g.translate(-displayPaintable.x, -displayPaintable.y);
-		//}
-		// TODO
-		// g.restore();
+        rectangle.left = x;
+        rectangle.top = y;
+        rectangle.right = x + width;
+        rectangle.bottom = y + height;
+        for (int i = 0; i < displayRepaintListeners.size(); i++) {
+            displayRepaintListeners.get(i).repaintInvoked(rectangle);    
+        }
 	}
 	
 }

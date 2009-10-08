@@ -42,10 +42,10 @@ import javax.microedition.lcdui.Image;
 import nanoxml.XMLElement;
 import nanoxml.XMLParseException;
 
-import org.microemu.EmulatorContext;
 import org.microemu.app.util.IOUtils;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
+import org.microemu.device.EmulatorContext;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 

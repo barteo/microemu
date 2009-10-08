@@ -75,7 +75,6 @@ import javax.swing.UIManager;
 
 import org.microemu.DisplayAccess;
 import org.microemu.DisplayComponent;
-import org.microemu.EmulatorContext;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.app.capture.AnimatedGifEncoder;
@@ -104,6 +103,7 @@ import org.microemu.app.util.MidletURLReference;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
+import org.microemu.device.EmulatorContext;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
 import org.microemu.device.impl.DeviceDisplayImpl;
@@ -412,7 +412,7 @@ public class Main extends JFrame {
 						.addDisplayRepaintListener(new DisplayRepaintListener() {
 					long start = 0;
 
-					public void repaintInvoked(J2SEGraphicsSurface graphicsSurface) {
+					public void repaintInvoked(Object repaintObject) {
 						synchronized (Main.this) {
 							if (encoder != null) {
 								if (start == 0) {
@@ -423,7 +423,7 @@ public class Main extends JFrame {
 									start = current;
 								}
 
-								encoder.addFrame(graphicsSurface.getImage());
+								encoder.addFrame(((J2SEGraphicsSurface) repaintObject).getImage());
 							}
 						}
 					}
@@ -589,7 +589,7 @@ public class Main extends JFrame {
 				scaledDisplayFrame = new JFrame(getTitle());
 				scaledDisplayFrame.setContentPane(new JLabel(new ImageIcon()));
 				updateScaledImageListener = new DisplayRepaintListener() {
-					public void repaintInvoked(J2SEGraphicsSurface graphicsSurface) {
+					public void repaintInvoked(Object repaintObject) {
 						updateScaledImage(scale, scaledDisplayFrame);
 						scaledDisplayFrame.validate();
 					}

@@ -24,16 +24,7 @@
 
 package org.microemu.app.util;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.microemu.EmulatorContext;
-import org.microemu.app.Common;
-import org.microemu.app.Config;
-import org.microemu.log.Logger;
-
-import com.barteo.emulator.device.Device;
+import org.microemu.device.EmulatorContext;
 
 public class DeviceEntry {
 	
@@ -85,30 +76,6 @@ public class DeviceEntry {
 	}
 
 	public String getDescriptorLocation() {
-		if (descriptorLocation == null) {
-			URL[] urls = new URL[1];
-			try {
-				urls[0] = new File(Config.getConfigPath(), fileName).toURI().toURL();
-				ClassLoader classLoader = Common.createExtensionsClassLoader(urls);
-				Class deviceClass = Class.forName(className, true, classLoader);
-				Device device = (Device) deviceClass.newInstance();
-
-				com.barteo.emulator.EmulatorContext oldContext = new com.barteo.emulator.EmulatorContext(emulatorContext);
-
-				device.init(oldContext);
-				descriptorLocation = device.getDescriptorLocation();
-			} catch (MalformedURLException ex) {
-				Logger.error(ex);
-			} catch (ClassNotFoundException ex) {
-				Logger.error(ex);
-			} catch (InstantiationException ex) {
-				Logger.error(ex);
-			} catch (IllegalAccessException ex) {
-				Logger.error(ex);
-			}
-
-		}
-
 		return descriptorLocation;
 	}
 

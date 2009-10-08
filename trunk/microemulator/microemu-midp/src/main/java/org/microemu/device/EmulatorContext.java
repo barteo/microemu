@@ -1,6 +1,6 @@
 /*
  *  MicroEmulator
- *  Copyright (C) 2002-2006 Bartek Teodorczyk <barteo@barteo.net>
+ *  Copyright (C) 2002 Bartek Teodorczyk <barteo@barteo.net>
  *
  *  It is licensed under the following two licenses as alternatives:
  *    1. GNU Lesser General Public License (the "LGPL") version 2.1 or any newer version
@@ -22,33 +22,27 @@
  *  limitations.
  */
 
-package com.barteo.emulator.device;
+package org.microemu.device;
 
-import org.microemu.device.ui.UIFactory;
+import java.io.InputStream;
 
-import com.barteo.emulator.EmulatorContext;
+import org.microemu.DisplayComponent;
+import org.microemu.device.DeviceDisplay;
+import org.microemu.device.FontManager;
+import org.microemu.device.InputMethod;
 
-/*
- * @deprecated use org.microemu.device.Device
- */
-public class Device extends org.microemu.device.impl.DeviceImpl {
+public interface EmulatorContext {
 
-	/**
-	 * @deprecated
-	 */
-	public void init(EmulatorContext context) {
-		super.init(context);
-	}
+	DisplayComponent getDisplayComponent();
 
-	/**
-	 * @deprecated
-	 */
-	public void init(EmulatorContext context, String config) {
-		super.init(context, config);
-	}
+	InputMethod getDeviceInputMethod();
 
-	public UIFactory getUIFactory() {
-		return null;
-	}
+	DeviceDisplay getDeviceDisplay();
 
+	FontManager getDeviceFontManager();
+	
+	InputStream getResourceAsStream(String name);
+
+	boolean platformRequest(final String URL);
+	
 }

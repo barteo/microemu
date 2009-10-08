@@ -21,17 +21,15 @@
  *  See the LGPL or the AL for the specific language governing permissions and
  *  limitations.
  * 
- * @version $Id$
+ * @version $Id: DisplayRepaintListener.java 2097 2009-06-16 13:16:59Z barteo $
  */
  
 package org.microemu.app.ui;
-
-import org.microemu.device.j2se.J2SEGraphicsSurface;
 
 
 public interface DisplayRepaintListener 
 {
 	
-	public void repaintInvoked(J2SEGraphicsSurface graphicsSurface);
+	public void repaintInvoked(Object repaintObject);
 	
 }

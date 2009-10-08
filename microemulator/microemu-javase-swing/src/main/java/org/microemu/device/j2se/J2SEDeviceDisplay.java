@@ -49,12 +49,12 @@ import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
 
 import org.microemu.DisplayAccess;
-import org.microemu.EmulatorContext;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.app.util.IOUtils;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
+import org.microemu.device.EmulatorContext;
 import org.microemu.device.InputMethod;
 import org.microemu.device.impl.Button;
 import org.microemu.device.impl.Color;
@@ -64,7 +64,8 @@ import org.microemu.device.impl.Rectangle;
 import org.microemu.device.impl.Shape;
 import org.microemu.device.impl.SoftButton;
 
-public class J2SEDeviceDisplay implements DeviceDisplayImpl {
+public class J2SEDeviceDisplay implements DeviceDisplayImpl 
+{
 	EmulatorContext context;
 
 	Rectangle displayRectangle;

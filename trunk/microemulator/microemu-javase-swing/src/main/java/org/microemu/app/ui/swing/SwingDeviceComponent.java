@@ -436,7 +436,7 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 
 	protected void paintComponent(Graphics g) {
 		if (offg == null || offi.getWidth(null) != getSize().width || offi.getHeight(null) != getSize().height) {
-			offi = new J2SEMutableImage(getSize().width, getSize().height).getImage();
+			offi = new J2SEMutableImage(getSize().width, getSize().height, false, 0x000000).getImage();
 			offg = offi.getGraphics();
 		}
 

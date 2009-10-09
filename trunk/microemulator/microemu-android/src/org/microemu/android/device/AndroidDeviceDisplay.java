@@ -87,12 +87,12 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 		return new AndroidImmutableImage(BitmapFactory.decodeStream(is));
 	}
 
-	public Image createImage(int width, int height) {
+	public Image createImage(int width, int height, boolean withAlpha, int fillColor) {
 		if (width <= 0 || height <= 0) {
 			throw new IllegalArgumentException();
 		}
 
-		return new AndroidMutableImage(width, height);
+		return new AndroidMutableImage(width, height, withAlpha, fillColor);
 	}
 
 	public Image createImage(byte[] imageData, int imageOffset, int imageLength) {

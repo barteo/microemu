@@ -312,7 +312,7 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 			synchronized (this) {
 				if (graphicsSurface == null) {
 					graphicsSurface = new J2SEGraphicsSurface(
-							device.getDeviceDisplay().getFullWidth(), device.getDeviceDisplay().getFullHeight());
+							device.getDeviceDisplay().getFullWidth(), device.getDeviceDisplay().getFullHeight(), false, 0x000000);
 				}
 
 				synchronized (graphicsSurface) {

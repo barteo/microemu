@@ -30,8 +30,6 @@
         <module>microemu-jsr-82</module>
         <module>microemu-jsr-120</module>
         <module>microemu-jsr-135</module>
-        <module>microemu-nokiaui</module>
-        <module>microemu-siemensapi</module>
     </modules>
 
     <!--

@@ -44,7 +44,7 @@ public class Image
 		if (width <= 0 || height <= 0) {
 			throw new IllegalArgumentException();
 		}
-		return DeviceFactory.getDevice().getDeviceDisplay().createImage(width, height);
+		return DeviceFactory.getDevice().getDeviceDisplay().createImage(width, height, false, 0x00FFFFFF);
 	}
 
 	public static Image createImage(String name) throws IOException

@@ -57,7 +57,7 @@ public interface DeviceDisplay
 
 	void setScrollUp(boolean state);
 	
-	Image createImage(int width, int height);
+	Image createImage(int width, int height, boolean withAlpha, int fillColor);
 
 	Image createImage(String name) throws IOException;
 

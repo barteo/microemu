@@ -116,7 +116,7 @@ public class DisplayTest extends TestCase {
 			this.display = display;
 		}
 
-		public Image createImage(int width, int height) {
+		public Image createImage(int width, int height, boolean withAlpha, int fillColor) {
 
 			return null;
 		}

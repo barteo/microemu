@@ -245,12 +245,12 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 		return new Color(foregroundColor.getRGB());
 	}
 
-	public Image createImage(int width, int height) {
+	public Image createImage(int width, int height, boolean withAlpha, int fillColor) {
 		if (width <= 0 || height <= 0) {
 			throw new IllegalArgumentException();
 		}
 
-		return new J2SEMutableImage(width, height);
+		return new J2SEMutableImage(width, height, withAlpha, fillColor);
 	}
 
 	public Image createImage(String name) throws IOException {

@@ -41,12 +41,9 @@ public class J2SEMutableImage extends MutableImage
 	private int[] pixels;
 
 
-	public J2SEMutableImage(int width, int height)
+	public J2SEMutableImage(int width, int height, boolean withAlpha, int fillColor)
 	{
-		graphicsSurface = new J2SEGraphicsSurface(width, height);
-        Graphics2D g = graphicsSurface.getGraphics();
-        g.setColor(java.awt.Color.WHITE);
-        g.fillRect(0, 0, width, height);
+		graphicsSurface = new J2SEGraphicsSurface(width, height, withAlpha, fillColor);
 	}
 
 

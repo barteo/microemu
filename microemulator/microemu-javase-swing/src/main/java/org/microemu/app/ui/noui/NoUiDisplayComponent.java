@@ -72,7 +72,7 @@ public class NoUiDisplayComponent implements DisplayComponent {
 		if (device != null) {
 			if (graphicsSurface == null) {
 				graphicsSurface = new J2SEGraphicsSurface(
-						device.getDeviceDisplay().getFullWidth(), device.getDeviceDisplay().getFullHeight());
+						device.getDeviceDisplay().getFullWidth(), device.getDeviceDisplay().getFullHeight(), false, 0x000000);
 			}
 					
 			J2SEDeviceDisplay deviceDisplay = (J2SEDeviceDisplay) device.getDeviceDisplay();

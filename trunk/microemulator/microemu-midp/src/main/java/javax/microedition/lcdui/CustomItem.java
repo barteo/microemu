@@ -63,8 +63,7 @@ public abstract class CustomItem extends Item {
 	}
 	
 	protected final int getInteractionModes() {
-		// TODO add support for aditional interaction modes
-		return NONE;
+		return KEY_PRESS | KEY_RELEASE | KEY_REPEAT | POINTER_PRESS | POINTER_RELEASE | POINTER_DRAG;
 	}
 	
 	protected abstract int getMinContentHeight();

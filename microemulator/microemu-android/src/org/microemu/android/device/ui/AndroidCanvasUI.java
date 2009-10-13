@@ -52,8 +52,6 @@ import android.view.SurfaceHolder.Callback;
 
 public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
     
-    private Callback callback;
-
     public AndroidCanvasUI(final MicroEmulatorActivity activity, Canvas canvas) {
         super(activity, canvas, false);
         
@@ -98,6 +96,8 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             
         private android.graphics.Canvas bitmapCanvas;
         
+        private Callback callback;
+        
         private int pressedX = -FIRST_DRAG_SENSITIVITY_X;
         
         private int pressedY = -FIRST_DRAG_SENSITIVITY_Y;
@@ -113,16 +113,15 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             callback = new Callback() {
 
                 public void surfaceCreated(SurfaceHolder holder) {
-                    holder.removeCallback(this);
-//                    repaint(0, 0, getWidth(), getHeight());
                 }
 
                 public void surfaceDestroyed(SurfaceHolder holder) {
                 }
                 
                 public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                    bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+                	bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
                     bitmapCanvas = new android.graphics.Canvas(bitmap);
+                    ((Canvas) displayable).repaint(0, 0, width, height);
                 }
 
             };

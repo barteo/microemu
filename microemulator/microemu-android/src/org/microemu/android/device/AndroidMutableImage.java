@@ -39,10 +39,11 @@ public class AndroidMutableImage extends MutableImage {
 	public AndroidMutableImage(int width, int height, boolean withAlpha, int fillColor) {
 	    if (withAlpha) {
 	        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		    bitmap.eraseColor(fillColor);
 	    } else {
 	        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+		    bitmap.eraseColor(0xff000000 | fillColor);
 	    }
-	    bitmap.eraseColor(fillColor);
 	}
 
 	@Override

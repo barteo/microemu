@@ -41,6 +41,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Region;
 import android.view.View;
 
 public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
@@ -85,10 +86,6 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
     }
 	
 	public void reset() {
-		if (image != null) {
-	        canvas.clipRect(0, 0, image.getWidth(), image.getHeight());
-		}
-		canvas.save(Canvas.CLIP_SAVE_FLAG);
 		paint.setAntiAlias(true);
 		clip = canvas.getClipBounds();
 		setFont(Font.getDefaultFont());
@@ -243,15 +240,11 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 		if (x == clip.left && x+ width == clip.right && y == clip.top && y + height == clip.bottom) {
 			return;
 		}
-		if (x < clip.left || x + width > clip.right || y < clip.top || y + height > clip.bottom) {
-			canvas.restore();
-			canvas.save(Canvas.CLIP_SAVE_FLAG);
-		}
         clip.left = x;
         clip.top = y;
         clip.right = x + width;
         clip.bottom = y + height;
-		canvas.clipRect(clip);
+		canvas.clipRect(clip, Region.Op.REPLACE);
 	}
 
 	public void setColor(int RGB) {

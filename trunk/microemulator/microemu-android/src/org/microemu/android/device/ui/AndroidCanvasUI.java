@@ -139,8 +139,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
                 return;
             }
             Graphics g = new AndroidDisplayGraphics(androidCanvas, activity, view);
-            Rect r = androidCanvas.getClipBounds();
-            g.clipRect(r.left, r.top, r.width(), r.height());
+            g.setClip(0, 0, view.getWidth(), view.getHeight());
             ma.getDisplayAccess().paint(g);
         }   
         

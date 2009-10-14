@@ -36,7 +36,6 @@ import org.microemu.android.device.AndroidDisplayGraphics;
 import org.microemu.device.ui.CustomItemUI;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -132,10 +131,9 @@ public class AndroidCustomItemUI extends LinearLayout implements CustomItemUI {
 				return;
 			}
 			Graphics g = new AndroidDisplayGraphics(androidCanvas, activity, null);
-			Rect r = androidCanvas.getClipBounds();
-			g.clipRect(r.left, r.top, r.width(), r.height());
+            g.setClip(0, 0, view.getWidth(), view.getHeight());
 			int suggestedHeight = customItemAccess.getPrefContentHeight(-1);
-			customItemAccess.paint(g, r.width(), suggestedHeight);
+			customItemAccess.paint(g, view.getWidth(), suggestedHeight);
 		}	
 		
 	}

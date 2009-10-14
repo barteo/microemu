@@ -125,24 +125,45 @@
                 input="${jad.MIDlet-1}"
                 regexp="([^,]+),([^,]+),([^,]+)"
                 select="\1" />
-    	
+
+    	<echo>midlet.name = [${midlet.name}]</echo>
+
+    	<fail unless="midlet.name" message="No midlet name defined in jad."/><!--if MIDlet-1: ,[ICON],[CLASS] notice the NO [TITLE] -->
+
         <propertyregex property="midlet.icon.totrim" 
                 input="${jad.MIDlet-1}"
                 regexp="([^,]+),([^,]+),([^,]+)"
                 select="\2" />
+
+    	<echo>midlet.icon.totrim = [${midlet.icon.totrim}]</echo>
+
+    	<fail unless="midlet.icon.totrim" message="No icon defined in jad."/><!--if MIDlet-1: [TITLE],,[CLASS] notice the NO space in the [ICON] placeholder -->
+
         <propertyregex property="midlet.icon" 
                 input="${midlet.icon.totrim}"
                 regexp="^[ \t]+|[ \t]+$"
-                replace="" />
+                replace=""
+    	        defaultValue="${midlet.icon.totrim}" /><!-- if nothing to trim-->
+
+    	<echo>midlet.icon = [${midlet.icon}]</echo>
+
+    	<condition property="NotHasIcon">
+    	  <equals arg1="${midlet.icon}" arg2=""/>
+    	</condition>
+    	<fail if="NotHasIcon" message="No valid icon set in jad."/> <!--if MIDlet-1: [TITLE], ,[CLASS] notice the space in the [ICON] placeholder -->
 
         <propertyregex property="midlet.class.totrim" 
                 input="${jad.MIDlet-1}"
                 regexp="([^,]+),([^,]+),([^,]+)"
                 select="\3" />
+
+    	<echo>midlet.class.totrim = [${midlet.class.totrim}]</echo>
+
         <propertyregex property="midlet.class" 
                 input="${midlet.class.totrim}"
                 regexp="^[ \t]+|[ \t]+$"
-                replace="" />
+                replace=""
+    	        defaultValue="${midlet.class.totrim}" />    	
 	</target>
 	
     <target name="prepare-jars" depends="compile-producer,read-jad">

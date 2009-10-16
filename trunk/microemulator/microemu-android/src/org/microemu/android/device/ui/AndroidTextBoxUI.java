@@ -81,7 +81,7 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 				editView.setGravity(Gravity.TOP);
 				editView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
 				int constraints = textBox.getConstraints();
-				if ((constraints & TextField.URL) != 0) {
+				if ((constraints & TextField.CONSTRAINT_MASK) == TextField.URL) {
 					editView.setSingleLine(true);
 					editView.setOnClickListener(new View.OnClickListener() {
 	
@@ -98,7 +98,8 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 						}
 						
 					});
-				} else if ((constraints & TextField.NUMERIC) != 0) {
+				} else if ((constraints & TextField.CONSTRAINT_MASK) == TextField.NUMERIC
+						|| (constraints & TextField.CONSTRAINT_MASK) == TextField.DECIMAL) {
 					editView.setSingleLine(true);
 					editView.setInputType(InputType.TYPE_CLASS_NUMBER);
 				}

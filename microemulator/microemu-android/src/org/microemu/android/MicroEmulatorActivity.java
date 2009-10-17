@@ -29,8 +29,6 @@ package org.microemu.android;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.microedition.midlet.MIDletStateChangeException;
-
 import org.microemu.DisplayAccess;
 import org.microemu.DisplayComponent;
 import org.microemu.MIDletAccess;
@@ -61,7 +59,7 @@ public abstract class MicroEmulatorActivity extends Activity {
 	
 	private Thread activityThread;
 	
-	private View contentView;
+	protected View contentView;
 
 	private Dialog dialog;
 	
@@ -167,34 +165,6 @@ public abstract class MicroEmulatorActivity extends Activity {
 		}
 	}
 	
-	@Override
-	protected void onPause() {
-		super.onPause();
-
-		MIDletAccess ma = MIDletBridge.getMIDletAccess();
-		if (ma != null) {
-			ma.pauseApp();
-		}
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		
-		MIDletAccess ma = MIDletBridge.getMIDletAccess();
-		if (ma != null) {
-			try {
-				ma.startApp();
-			} catch (MIDletStateChangeException e) {
-				// is thrown if the MIDlet cannot start now but might be able to start at a later time
-			}
-		}		
-
-		if (contentView != null) {
-			contentView.invalidate();
-		}
-	}
-
 	public void setDialog(Dialog dialog) {
 		this.dialog = dialog;
 		if (dialog != null) {

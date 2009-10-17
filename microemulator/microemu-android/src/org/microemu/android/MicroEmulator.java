@@ -39,6 +39,7 @@ import java.util.Map;
 
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
+import javax.microedition.midlet.MIDletStateChangeException;
 
 import org.microemu.DisplayAccess;
 import org.microemu.MIDletAccess;
@@ -51,6 +52,7 @@ import org.microemu.android.device.ui.AndroidCommandUI;
 import org.microemu.android.device.ui.AndroidDisplayableUI;
 import org.microemu.android.util.AndroidLoggerAppender;
 import org.microemu.android.util.AndroidRecordStoreManager;
+import org.microemu.android.util.CustomFrameLayout;
 import org.microemu.app.Common;
 import org.microemu.app.util.MIDletSystemProperties;
 import org.microemu.device.Device;
@@ -167,7 +169,45 @@ public class MicroEmulator extends MicroEmulatorActivity {
         }
         
         common.getLauncher().setSuiteName(midletClassName);
-        common.initMIDlet(true);
+        common.initMIDlet(false);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        
+        if (contentView != null) {
+            if (contentView instanceof CustomFrameLayout) {
+                ((CustomFrameLayout) contentView).onPause();
+            }
+        }
+
+        MIDletAccess ma = MIDletBridge.getMIDletAccess();
+        if (ma != null) {
+            ma.pauseApp();
+            ma.getDisplayAccess().hideNotify();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        
+        MIDletAccess ma = MIDletBridge.getMIDletAccess();
+        if (ma != null) {
+            try {
+                ma.startApp();
+            } catch (MIDletStateChangeException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (contentView != null) {
+            if (contentView instanceof CustomFrameLayout) {
+                ((CustomFrameLayout) contentView).onResume();
+            }
+            contentView.invalidate();
+        }
     }
 
     private boolean ignoreBackKeyUp = false;

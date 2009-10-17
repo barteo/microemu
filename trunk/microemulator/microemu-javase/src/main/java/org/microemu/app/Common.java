@@ -298,9 +298,14 @@ public class Common implements MicroEmulator, CommonInterface {
                             break;
                         }
                         Logger.debug("AutoTests start class", midletClassName);
-                        MIDletContext context = startMidlet(midletClass, MIDletBridge.getMIDletAccess());
+                        MIDlet m = loadMidlet(midletClass, MIDletBridge.getMIDletAccess());
+                        try {
+                            MIDletBridge.getMIDletAccess(m).startApp();
+                        } catch (MIDletStateChangeException e) {
+                            Logger.error(e);
+                        }
                         // TODO Proper test If this is still active conetex.
-                        if (MIDletBridge.getMIDletContext() == context) {
+                        if (MIDletBridge.getMIDletContext() == MIDletBridge.getMIDletContext(m)) {
                             synchronized (destroyNotify) {
                                 try {
                                     destroyNotify.wait();
@@ -309,7 +314,7 @@ public class Common implements MicroEmulator, CommonInterface {
                                 }
                             }
                         }
-                        while (MIDletThread.hasRunningThreads(context)) {
+                        while (MIDletThread.hasRunningThreads(MIDletBridge.getMIDletContext(m))) {
                             try {
                                 Thread.sleep(100);
                             } catch (InterruptedException e) {
@@ -391,7 +396,7 @@ public class Common implements MicroEmulator, CommonInterface {
         }
     }
 
-    private MIDletContext startMidlet(Class midletClass, MIDletAccess previousMidletAccess) {
+    private MIDlet loadMidlet(Class midletClass, MIDletAccess previousMidletAccess) {
         try {
             if (previousMidletAccess != null) {
                 previousMidletAccess.destroyApp(true);
@@ -425,11 +430,10 @@ public class Common implements MicroEmulator, CommonInterface {
                 if (context.getMIDlet() != m) {
                     throw new Error("MIDlet Context corrupted");
                 }
-                context.getMIDletAccess().startApp();
 
                 launcher.setCurrentMIDlet(m);
                 notifyImplementationMIDletStart();
-                return context;
+                return m;
             } catch (Throwable e) {
                 Message.error(errorTitle, "Unable to start MIDlet, " + Message.getCauseMessage(e), e);
                 MIDletBridge.destroyMIDletContext(context);
@@ -979,7 +983,7 @@ public class Common implements MicroEmulator, CommonInterface {
         return properties;
     }
 
-    public void initMIDlet(boolean startMidlet) {
+    public MIDlet initMIDlet(boolean startMidlet) {
         Class midletClass = null;
 
         if (midletClassOrUrl != null && Common.isMIDletUrlExtension(midletClassOrUrl)) {
@@ -999,23 +1003,25 @@ public class Common implements MicroEmulator, CommonInterface {
                     midletClass = classLoader.loadClass(midletClassOrUrl);
                 } catch (MalformedURLException e) {
                     Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
-                    return;
+                    return null;
                 } catch (NoClassDefFoundError e) {
                     Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
-                    return;
+                    return null;
                 } catch (ClassNotFoundException e) {
                     Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
-                    return;
+                    return null;
                 }
             } else {
                 try {
                     midletClass = instance.getClass().getClassLoader().loadClass(midletClassOrUrl);
                 } catch (ClassNotFoundException e) {
                     Message.error("Error", "Unable to find MIDlet class, " + Message.getCauseMessage(e), e);
-                    return;
+                    return null;
                 }
             }
         }
+
+        MIDlet midlet = null;
 
         if (autoTests) {
             if (jadURL != null) {
@@ -1031,21 +1037,34 @@ public class Common implements MicroEmulator, CommonInterface {
                 }
             }
 
-            boolean started = false;
-
             if (midletClass == null) {
                 MIDletEntry entry = launcher.getSelectedMidletEntry();
-                if (startMidlet && entry != null) {
-                    started = (null != startMidlet(entry.getMIDletClass(), MIDletBridge.getMIDletAccess()));
+                if (entry != null) {
+                    midlet = loadMidlet(entry.getMIDletClass(), MIDletBridge.getMIDletAccess());
+                    if (startMidlet) {
+                        try {
+                            MIDletBridge.getMIDletAccess(midlet).startApp();
+                        } catch (MIDletStateChangeException e) {
+                            Logger.error(e);
+                        }
+                    }
                 }
             } else {
-                started = (null != startMidlet(midletClass, MIDletBridge.getMIDletAccess()));
+                midlet = loadMidlet(midletClass, MIDletBridge.getMIDletAccess());
+                if (startMidlet) {
+                    try {
+                        MIDletBridge.getMIDletAccess(midlet).startApp();
+                    } catch (MIDletStateChangeException e) {
+                        Logger.error(e);
+                    }
+                }
             }
-            if (!started) {
+            if (midlet == null) {
                 startLauncher(MIDletBridge.getMIDletContext());
             }
         }
-
+        
+        return midlet;
     }
 
     public static String usage() {

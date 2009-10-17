@@ -54,8 +54,10 @@ public interface DisplayAccess
 	
 	boolean isFullScreenMode();
 	
-	void serviceRepaints();
-  
+	void hideNotify();
+	   
+    void showNotify();
+	
 	// TODO try to change all calls to getCurrent to use getCurrentUI, then remove getCurrent
 	Displayable getCurrent();
 

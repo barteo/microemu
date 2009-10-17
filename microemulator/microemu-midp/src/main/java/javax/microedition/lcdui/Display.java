@@ -330,11 +330,21 @@ public class Display {
 			}
 		}
 
-		public void serviceRepaints() {
-			getDisplay().serviceRepaints();
+		public void hideNotify() {
+            Displayable current = getCurrent();
+            if (current != null) {
+                current.hideNotify();
+            }
 		}
 
-		public void setCurrent(Displayable d) {
+        public void showNotify() {
+            Displayable current = getCurrent();
+            if (current != null) {
+                current.showNotify();
+            }
+        }
+
+        public void setCurrent(Displayable d) {
 			getDisplay().setCurrent(d);
 		}
 

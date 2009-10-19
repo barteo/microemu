@@ -39,6 +39,7 @@ import java.util.Map;
 
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.CommandListener;
+import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
 import org.microemu.DisplayAccess;
@@ -75,6 +76,8 @@ public class MicroEmulator extends MicroEmulatorActivity {
 	public static final String LOG_TAG = "MicroEmulator";
 		
 	protected Common common;
+	
+	private MIDlet midlet;
 
 	/** Called when the activity is first created. */
     @Override
@@ -169,7 +172,7 @@ public class MicroEmulator extends MicroEmulatorActivity {
         }
         
         common.getLauncher().setSuiteName(midletClassName);
-        common.initMIDlet(false);
+        midlet = common.initMIDlet(false);
     }
 
     @Override
@@ -182,7 +185,7 @@ public class MicroEmulator extends MicroEmulatorActivity {
             }
         }
 
-        MIDletAccess ma = MIDletBridge.getMIDletAccess();
+        MIDletAccess ma = MIDletBridge.getMIDletAccess(midlet);
         if (ma != null) {
             ma.pauseApp();
             ma.getDisplayAccess().hideNotify();
@@ -193,7 +196,7 @@ public class MicroEmulator extends MicroEmulatorActivity {
     protected void onResume() {
         super.onResume();
         
-        MIDletAccess ma = MIDletBridge.getMIDletAccess();
+        MIDletAccess ma = MIDletBridge.getMIDletAccess(midlet);
         if (ma != null) {
             try {
                 ma.startApp();

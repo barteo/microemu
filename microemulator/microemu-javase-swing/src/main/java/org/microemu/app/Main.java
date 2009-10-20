@@ -1075,7 +1075,7 @@ public class Main extends JFrame {
 		} catch (NoSuchElementException ex) {
 			midletString = null;
 		}
-		app.common.initMIDlet(false);
+		app.common.initMIDlet(true);
 
 		app.addComponentListener(app.componentListener);
 

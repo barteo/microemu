@@ -188,6 +188,7 @@
                 bootclasspath="${android-jar}"
                 excludes="org/microemu/android/asm/**">
             <classpath>
+                <pathelement location="${microemu-cldc.jar}" />
                 <pathelement location="${microemu-midp.jar}" />
                 <pathelement location="${microemu-javase.jar}"/>
             </classpath>

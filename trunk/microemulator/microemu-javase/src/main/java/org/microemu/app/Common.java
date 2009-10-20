@@ -49,6 +49,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipException;
 
+import javax.microedition.io.ConnectionNotFoundException;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
@@ -485,7 +486,7 @@ public class Common implements MicroEmulator, CommonInterface {
         return MIDletSystemProperties.getPermission(permission);
     }
 
-    public boolean platformRequest(final String URL) {
+    public boolean platformRequest(final String URL) throws ConnectionNotFoundException {
         return emulatorContext.platformRequest(URL);
     }
 

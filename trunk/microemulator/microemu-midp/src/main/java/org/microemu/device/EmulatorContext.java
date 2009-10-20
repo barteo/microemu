@@ -26,6 +26,8 @@ package org.microemu.device;
 
 import java.io.InputStream;
 
+import javax.microedition.io.ConnectionNotFoundException;
+
 import org.microemu.DisplayComponent;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.FontManager;
@@ -43,6 +45,6 @@ public interface EmulatorContext {
 	
 	InputStream getResourceAsStream(String name);
 
-	boolean platformRequest(final String URL);
+	boolean platformRequest(final String URL) throws ConnectionNotFoundException;
 	
 }

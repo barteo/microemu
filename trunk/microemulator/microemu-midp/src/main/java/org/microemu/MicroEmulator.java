@@ -29,6 +29,8 @@ package org.microemu;
 
 import java.io.InputStream;
 
+import javax.microedition.io.ConnectionNotFoundException;
+
 import org.microemu.app.launcher.Launcher;
 
 public interface MicroEmulator {
@@ -47,6 +49,6 @@ public interface MicroEmulator {
 	
 	int checkPermission(String permission);
 	
-	boolean platformRequest(String URL);
+	boolean platformRequest(String URL) throws ConnectionNotFoundException;
 
 }

@@ -29,6 +29,8 @@ package org.microemu.android;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.microedition.io.ConnectionNotFoundException;
+
 import org.microemu.DisplayAccess;
 import org.microemu.DisplayComponent;
 import org.microemu.MIDletAccess;
@@ -45,6 +47,7 @@ import org.microemu.log.Logger;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -102,9 +105,13 @@ public abstract class MicroEmulatorActivity extends Activity {
             }
         }
 
-        public boolean platformRequest(String url) 
+        public boolean platformRequest(String url) throws ConnectionNotFoundException 
         {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        	try {
+        		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+        	} catch (ActivityNotFoundException e) {
+        		throw new ConnectionNotFoundException();
+        	}
 
             return true;
         }

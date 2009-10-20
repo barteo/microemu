@@ -37,6 +37,7 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Vector;
 
+import javax.microedition.io.ConnectionNotFoundException;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 import javax.swing.Timer;
@@ -334,7 +335,7 @@ public class Main extends Applet implements MicroEmulator {
 		return 0;
 	}
 
-	public boolean platformRequest(String url) {
+	public boolean platformRequest(String url) throws ConnectionNotFoundException {
 		return emulatorContext.platformRequest(url);
 	}
 

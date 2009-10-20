@@ -35,6 +35,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import javax.microedition.io.ConnectionNotFoundException;
 import javax.microedition.lcdui.game.GameCanvas;
 import javax.microedition.midlet.MIDlet;
 
@@ -158,7 +159,7 @@ public class MIDletBridge {
 		return emulator.checkPermission(permission);
 	}
 	
-	public static boolean platformRequest(String URL) {
+	public static boolean platformRequest(String URL) throws ConnectionNotFoundException {
 		return emulator.platformRequest(URL);
 	}
 

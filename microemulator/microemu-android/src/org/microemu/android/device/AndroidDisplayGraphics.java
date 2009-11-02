@@ -32,7 +32,6 @@ import javax.microedition.lcdui.game.Sprite;
 
 import org.microemu.log.Logger;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
@@ -42,7 +41,6 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
-import android.view.View;
 
 public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
@@ -50,11 +48,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
 	private AndroidMutableImage image;
 	
-	private Canvas canvas;
-	
-	private Activity activity;
-	
-	private View view;
+	public Canvas canvas;
 	
 	private Paint paint = new Paint();
 	
@@ -66,11 +60,9 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
 	private int strokeStyle = SOLID;
 	
-	public AndroidDisplayGraphics(Canvas canvas, Activity activity, View view) {
+	public AndroidDisplayGraphics(Canvas canvas) {
 		this.image = null;
 		this.canvas = canvas;
-		this.activity = activity;
-		this.view = view;
 		
 		reset();
 	}
@@ -79,8 +71,6 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
         this.image = image;
         this.canvas = new Canvas(image.getBitmap());
         this.canvas.clipRect(0, 0, image.getWidth(), image.getHeight());
-        this.activity = null;
-        this.view = null;
         
         reset();
     }
@@ -95,12 +85,8 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 		return image;
 	}
 	
-	public Activity getActivity() {
-		return activity;
-	}
-	
-	public View getView() {
-		return view;
+	public Canvas getCanvas() {
+		return canvas;
 	}
 	
 	public void clipRect(int x, int y, int width, int height) {

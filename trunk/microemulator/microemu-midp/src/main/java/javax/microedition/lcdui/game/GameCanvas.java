@@ -25,6 +25,7 @@ import javax.microedition.lcdui.Image;
 
 import org.microemu.GameCanvasKeyAccess;
 import org.microemu.MIDletBridge;
+import org.microemu.device.DeviceFactory;
 
 
 /**
@@ -83,7 +84,8 @@ public abstract class GameCanvas extends Canvas {
         }
         
         public void initBuffer() {
-            offscreenBuffer = Image.createImage(getWidth(), getHeight());
+            offscreenBuffer = DeviceFactory.getDevice().getDeviceDisplay().createImage(
+                    getWidth(), getHeight(), true, 0x00000000);
         }
     }
     
@@ -97,7 +99,8 @@ public abstract class GameCanvas extends Canvas {
         // if the size reported by Canvas.getXXX() isn't the maximum for
         // a given Canvas implementation other methods should be used to
         // obtain the maximum possible size for such particular implementation
-        this.offscreenBuffer = Image.createImage(this.getWidth(), this.getHeight());
+        this.offscreenBuffer = DeviceFactory.getDevice().getDeviceDisplay().createImage(
+                this.getWidth(), this.getHeight(), true, 0x00000000);
     }
     
     protected Graphics getGraphics() {

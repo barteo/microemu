@@ -315,7 +315,7 @@ public class AppletProducer {
 	
 	private static String usage() {
 		return "--midletClass {midlet class name} \n" +
-			   "--appletInput {emulator applet jar input file} \n" +
+			   "--appletInput {microemu-javase-applet.jar location} \n" +
 			   "--deviceInput {device jar input file} \n" +
 			   "--midletInput {midlet jar input file} \n" +
 			   "--htmlOutput {html output file} \n" +

@@ -27,7 +27,6 @@
 package org.microemu.android.device.ui;
 
 import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Graphics;
 
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
@@ -102,10 +101,13 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         
         private int pressedY = -FIRST_DRAG_SENSITIVITY_Y;
         
+        private AndroidDisplayGraphics graphics;
+        
         public CanvasView(Context context) {
             super(context);
             
             this.bitmapCanvas = null;
+            this.graphics = new AndroidDisplayGraphics();
             
             setFocusable(true);
             setFocusableInTouchMode(true);
@@ -138,9 +140,9 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             if (ma == null) {
                 return;
             }
-            Graphics g = new AndroidDisplayGraphics(androidCanvas);
-            g.setClip(0, 0, view.getWidth(), view.getHeight());
-            ma.getDisplayAccess().paint(g);
+            graphics.reset(androidCanvas);
+            graphics.setClip(0, 0, view.getWidth(), view.getHeight());
+            ma.getDisplayAccess().paint(graphics);
         }   
         
         @Override

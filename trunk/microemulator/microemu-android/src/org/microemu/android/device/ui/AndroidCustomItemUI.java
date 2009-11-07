@@ -26,8 +26,6 @@
 
 package org.microemu.android.device.ui;
 
-import javax.microedition.lcdui.Graphics;
-
 import org.microemu.CustomItemAccess;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
@@ -101,10 +99,14 @@ public class AndroidCustomItemUI extends LinearLayout implements CustomItemUI {
 		
 		int pressedY = -FIRST_DRAG_SENSITIVITY_Y;
 		
+        private AndroidDisplayGraphics graphics;
+        
 		public CanvasView(Context context) {
 			super(context);
 			
-			setFocusable(true);
+            this.graphics = new AndroidDisplayGraphics();
+
+            setFocusable(true);
 			setFocusableInTouchMode(true);
 		}
 
@@ -130,10 +132,10 @@ public class AndroidCustomItemUI extends LinearLayout implements CustomItemUI {
 			if (ma == null) {
 				return;
 			}
-			Graphics g = new AndroidDisplayGraphics(androidCanvas);
-            g.setClip(0, 0, view.getWidth(), view.getHeight());
+			graphics.reset(androidCanvas);
+			graphics.setClip(0, 0, view.getWidth(), view.getHeight());
 			int suggestedHeight = customItemAccess.getPrefContentHeight(-1);
-			customItemAccess.paint(g, view.getWidth(), suggestedHeight);
+			customItemAccess.paint(graphics, view.getWidth(), suggestedHeight);
 		}	
 		
 	}

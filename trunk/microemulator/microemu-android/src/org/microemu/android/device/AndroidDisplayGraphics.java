@@ -48,7 +48,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
 	private AndroidMutableImage image;
 	
-	public Canvas canvas;
+	private Canvas canvas;
 	
 	private Paint paint = new Paint();
 	
@@ -60,11 +60,8 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
 	private int strokeStyle = SOLID;
 	
-	public AndroidDisplayGraphics(Canvas canvas) {
+	public AndroidDisplayGraphics() {
 		this.image = null;
-		this.canvas = canvas;
-		
-		reset();
 	}
 	
     public AndroidDisplayGraphics(AndroidMutableImage image) {
@@ -72,12 +69,14 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
         this.canvas = new Canvas(image.getBitmap());
         this.canvas.clipRect(0, 0, image.getWidth(), image.getHeight());
         
-        reset();
+        reset(this.canvas);
     }
 	
-	public void reset() {
+	public void reset(Canvas canvas) {
+	    this.canvas = canvas;
+	    
 		paint.setAntiAlias(true);
-		clip = canvas.getClipBounds();
+		clip = this.canvas.getClipBounds();
 		setFont(Font.getDefaultFont());
 	}
 	

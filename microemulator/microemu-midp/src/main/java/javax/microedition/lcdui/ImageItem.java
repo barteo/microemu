@@ -21,6 +21,7 @@
 package javax.microedition.lcdui;
 
 import org.microemu.device.DeviceFactory;
+import org.microemu.device.ui.ImageStringItemUI;
 
 public class ImageItem extends Item {
 
@@ -89,6 +90,8 @@ public class ImageItem extends Item {
 		}
 		this.img = img;
 		repaint();
+		
+		((ImageStringItemUI) ui).setImage(img);
 	}
 
 	public void setLayout(int layout) {

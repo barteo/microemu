@@ -188,6 +188,7 @@ public class FileSystemFileConnection implements FileConnection {
 		if (fsRoot == null) {
 			return -1;
 		}
+
 		return getFileValueJava6("getFreeSpace");
 	}
 
@@ -494,9 +495,37 @@ public class FileSystemFileConnection implements FileConnection {
 		if (this.opendOutputStream != null) {
 			throw new IOException("OutputStream already opened");
 		}
-		truncate(byteOffset);
-		return openOutputStream(true);
+		// we cannot truncate the file here since it could already have content
+		// which should be overridden instead of wiped.
+		
+		return openOutputStream(true, byteOffset);
 	}
+
+    private OutputStream openOutputStream(boolean appendToFile, final long byteOffset) throws IOException {
+        throwClosed();
+        throwOpenDirectory();
+
+        if (this.opendOutputStream != null) {
+            throw new IOException("OutputStream already opened");
+        }
+        /**
+         * Trying to open more than one InputStream or more than one
+         * OutputStream from a StreamConnection causes an IOException.
+         */
+        this.opendOutputStream = (OutputStream) doPrivilegedIO(new PrivilegedExceptionAction() {
+            public Object run() throws IOException {
+                RandomAccessFile raf = new RandomAccessFile(file, "rw");
+                raf.seek(byteOffset);
+                return new FileOutputStream(raf.getFD()) {
+                    public void close() throws IOException {
+                        FileSystemFileConnection.this.opendOutputStream = null;
+                        super.close();
+                    }
+                };
+            }
+        });
+        return this.opendOutputStream;
+    }
 
 	public void rename(final String newName) throws IOException {
 		throwClosed();

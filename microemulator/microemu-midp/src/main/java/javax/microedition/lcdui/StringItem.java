@@ -25,7 +25,6 @@
 package javax.microedition.lcdui;
 
 import org.microemu.device.DeviceFactory;
-import org.microemu.device.ui.FormUI;
 import org.microemu.device.ui.ImageStringItemUI;
 
 public class StringItem extends Item {

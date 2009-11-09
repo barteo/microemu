@@ -26,6 +26,7 @@
 
 package org.microemu.device.j2se.ui;
 
+import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.Item;
 
 import org.microemu.device.ui.ImageStringItemUI;
@@ -37,6 +38,10 @@ public class J2SEImageStringItemUI implements ImageStringItemUI {
 
 	public void setLabel(String label) {
 		// TODO Auto-generated method stub
+	}
+
+	public void setImage(Image image) {
+		// TODO Auto-generated method stub	
 	}
 
 	public void setText(String text) {

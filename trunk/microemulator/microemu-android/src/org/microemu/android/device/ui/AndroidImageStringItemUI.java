@@ -26,11 +26,15 @@
 
 package org.microemu.android.device.ui;
 
+import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.Item;
 
 import org.microemu.android.MicroEmulatorActivity;
+import org.microemu.android.device.AndroidImmutableImage;
+import org.microemu.android.device.AndroidMutableImage;
 import org.microemu.device.ui.ImageStringItemUI;
 
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,6 +44,8 @@ public class AndroidImageStringItemUI extends LinearLayout implements ImageStrin
 	
 	private TextView labelView;
 	
+	private ImageView imageView;
+
 	private TextView textView;
 	
 	public AndroidImageStringItemUI(MicroEmulatorActivity activity, Item item) {
@@ -50,42 +56,69 @@ public class AndroidImageStringItemUI extends LinearLayout implements ImageStrin
 		setOrientation(LinearLayout.VERTICAL);
 		setFocusable(false);
 		setFocusableInTouchMode(false);
-//		setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
-		
+
+		labelView = new TextView(activity);
+		labelView.setFocusable(false);
+		labelView.setFocusableInTouchMode(false);
+		labelView.setLayoutParams(new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.FILL_PARENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT));
+		labelView.setTextAppearance(labelView.getContext(),
+				android.R.style.TextAppearance_Large);
+		labelView.setVisibility(GONE);
+		addView(labelView);
+
 		textView = new TextView(activity);
 		setFocusable(false);
 		setFocusableInTouchMode(false);
-		textView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-//		a = textView.getContext().obtainStyledAttributes(android.R.styleable.Theme);
-//		textView.setTextAppearance(labelView.getContext(), a.getResourceId(android.R.styleable.Theme_textAppearanceLarge, -1));
+		textView.setLayoutParams(new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.FILL_PARENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT));
 		addView(textView);
-		
+
+		imageView = new ImageView(activity);
+		imageView.setFocusable(false);
+		imageView.setFocusableInTouchMode(false);		
+		imageView.setVisibility(GONE);
+		addView(imageView);
+
 		setLabel(item.getLabel());
 	}
 
+	@Override
 	public void setLabel(final String label) {
 		activity.post(new Runnable() {
 			public void run() {
 				if (label == null) {
-					if (labelView != null) {
-						removeView(labelView);
-						labelView = null;
-					}
+					labelView.setVisibility(GONE);
 				} else {
-					if (labelView == null) {
-						labelView = new TextView(activity);
-						labelView.setFocusable(false);
-						labelView.setFocusableInTouchMode(false);
-						labelView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-						labelView.setTextAppearance(labelView.getContext(), android.R.style.TextAppearance_Large);
-						addView(labelView, 0);
-					}
+					labelView.setVisibility(VISIBLE);
 					labelView.setText(label);
 				}
 			}
 		});
 	}
 
+	@Override
+	public void setImage(final Image image) {
+		activity.post(new Runnable() {
+			public void run() {
+				if (image == null) {
+					imageView.setVisibility(GONE);
+					imageView.setImageBitmap(null);
+				} else {
+					imageView.setVisibility(VISIBLE);
+					if (image.isMutable()) {
+						imageView.setImageBitmap(((AndroidMutableImage) image).getBitmap());
+					} else {
+						imageView.setImageBitmap(((AndroidImmutableImage) image).getBitmap());
+					}
+				}
+			}
+		});
+	}
+
+	@Override
 	public void setText(final String text) {
 		activity.post(new Runnable() {
 			public void run() {

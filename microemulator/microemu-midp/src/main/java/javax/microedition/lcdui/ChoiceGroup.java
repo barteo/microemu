@@ -206,15 +206,18 @@ public class ChoiceGroup extends Item implements Choice
 	}
   
 	public void deleteAll() {
-System.out.println("ChoiceGroup.deleteAll()");		
-		// clear the array to allow garbage collection
-		for (int i = 0; i < numOfItems; i++)
-			items[i] = null;
-		numOfItems = 0;
-		highlightedItemIndex = -1;
-		if (choiceType == Choice.POPUP)
-			popupList.deleteAll();
-		repaint();
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidChoiceGroupUI")) {
+			((ChoiceGroupUI) ui).deleteAll();
+		} else {
+			// clear the array to allow garbage collection
+			for (int i = 0; i < numOfItems; i++)
+				items[i] = null;
+			numOfItems = 0;
+			highlightedItemIndex = -1;
+			if (choiceType == Choice.POPUP)
+				popupList.deleteAll();
+			repaint();
+		}
 	}
 
 

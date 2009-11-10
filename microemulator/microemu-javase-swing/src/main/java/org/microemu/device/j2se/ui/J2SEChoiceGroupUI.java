@@ -45,6 +45,10 @@ public class J2SEChoiceGroupUI implements ChoiceGroupUI {
 		// TODO Auto-generated method stub
 	}
 
+	public void deleteAll() {
+		// TODO Auto-generated method stub		
+	}
+
 	public void setSelectedIndex(int elementNum, boolean selected) {
 		// TODO Auto-generated method stub
 	}

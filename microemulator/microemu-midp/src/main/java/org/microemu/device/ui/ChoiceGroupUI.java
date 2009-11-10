@@ -31,6 +31,8 @@ import javax.microedition.lcdui.Image;
 public interface ChoiceGroupUI extends ItemUI {
 
 	void delete(int elementNum);
+	
+	void deleteAll();
 
 	void setSelectedIndex(int elementNum, boolean selected);
 

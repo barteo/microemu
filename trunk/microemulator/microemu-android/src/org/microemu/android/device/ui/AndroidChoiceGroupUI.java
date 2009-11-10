@@ -177,6 +177,14 @@ System.out.println("AndroidChoiceGroupUI.delete(..) not synced");
 		listAdapter.remove(elementNum);
 	}
 	
+	public void deleteAll() {
+System.out.println("AndroidChoiceGroupUI.deleteAll() not synced");
+				if (listView instanceof LinearLayout) {
+					listView.removeAllViews();
+				}
+				listAdapter.clear();
+			}
+
 	public void setSelectedIndex(final int elementNum, final boolean selected) {
 		activity.post(new Runnable() {
 			public void run() {

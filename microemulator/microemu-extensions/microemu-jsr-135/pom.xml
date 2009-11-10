@@ -25,6 +25,13 @@
                 <artifactId>microemu-midp</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            
+            <dependency>
+                <groupId>org.microemu</groupId>
+                <artifactId>microemu-javase-swing</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            
 <!--
             <dependency>
                 <groupId>junit</groupId>

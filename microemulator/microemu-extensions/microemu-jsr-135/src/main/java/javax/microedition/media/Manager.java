@@ -54,6 +54,10 @@ public final class Manager
     public static Player createPlayer(String locator)
             throws IOException, MediaException
     {
+    	// should we simulate video capturing?
+    	if (locator.startsWith("capture://video")) {
+    		return new VideoCapturePlayer(locator);
+    	}
         // TODO
         return null;
     }

@@ -33,14 +33,14 @@
     </licenses>
 
 	<issueManagement>
-		<system>SourceForge</system>
-		<url>http://sourceforge.net/tracker/?group_id=30014</url>
+		<system>Google Code</system>
+		<url>http://code.google.com/p/microemu/issues/list</url>
 	</issueManagement>
 
 	<scm>
-	    <url>http://microemulator.svn.sourceforge.net/viewvc/microemulator/trunk/microemulator/</url>
-		<connection>scm:svn:https://microemulator.svn.sourceforge.net/svnroot/microemulator/trunk/microemulator</connection>
-		<developerConnection>scm:svn:https://microemulator.svn.sourceforge.net/svnroot/microemulator/trunk/microemulator</developerConnection>
+	    <url>http://code.google.com/p/microemu/source/browse/#svn/trunk/microemulator</url>
+		<connection>scm:svn:https://microemu.googlecode.com/svn/trunk/microemulator</connection>
+		<developerConnection>scm:svn:https://microemu.googlecode.com/svn/trunk/microemulator</developerConnection>
 	</scm>
 
     <mailingLists>
@@ -48,16 +48,6 @@
             <name>microemulator-support</name>
             <post>microemulator-support@googlegroups.com</post>
             <archive>http://groups.google.com/group/microemulator-support</archive>
-        </mailingList>
-        <mailingList>
-            <name>microemulator Help Forum</name>
-            <post>http://sourceforge.net/forum/forum.php?forum_id=94291</post>
-            <archive>http://sourceforge.net/forum/forum.php?forum_id=94291</archive>
-        </mailingList>
-        <mailingList>
-            <name>microemulator Open Discussion Forum</name>
-            <post>http://sourceforge.net/forum/forum.php?forum_id=94290</post>
-            <archive>http://sourceforge.net/forum/forum.php?forum_id=94290</archive>
         </mailingList>
         <mailingList>
             <name>microemulator-developers</name>

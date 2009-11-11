@@ -71,7 +71,7 @@
     
         TODO we may need to create a zip of the site during build, so Anubody can make a Release build.
 
-    * Upload the distribution jars microemulator-2.X.X-sources.tar.gz and microemulator-2.X.X.tar.gz to sf.net
+    * Upload the distribution jars microemulator-X.X.X-sources.zip and microemulator-X.X.X.zip to http://code.google.com/p/microemu/
 
        Files location: http://pyx4j.com/snapshot/microemu-release/microemulator/download/
 

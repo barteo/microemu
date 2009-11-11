@@ -17,17 +17,7 @@
             <href>http://www.microemu.org/</href>
     </bannerLeft>
 
-    <bannerRight>
-        <name>Sourceforge</name>
-        <src>http://sflogo.sourceforge.net/sflogo.php?group_id=30014&amp;amp;type=4</src>
-        <href>http://sourceforge.net/projects/microemulator/</href>
-    </bannerRight>
-
     <poweredBy>
-        <logo
-            name="Hosted on SF.net"
-            href="http://sourceforge.net/projects/microemulator/"
-            img="http://sflogo.sourceforge.net/sflogo.php?group_id=30014&amp;amp;type=1"/>
         <logo
             name="Built by Maven"
             href="http://maven.apache.org"
@@ -69,10 +59,10 @@
                 <!--4snapshot-->
                 <item name="Snapshot" href="http://www.microemu.org/microemulator/download/"/>
 
-                <item name="Releases" href="http://sourceforge.net/project/showfiles.php?group_id=30014"/>
+                <item name="Releases" href="http://code.google.com/p/microemu/downloads/list"/>
                 <item name="Maven" href="http://www.microemu.org/maven.html"/>
                 <item name="SVN Access" href="source-repository.html"/>
-                <item name="Browse SVN" href="http://microemulator.svn.sourceforge.net/viewvc/microemulator/trunk/microemulator/"/>
+                <item name="Browse SVN" href="http://code.google.com/p/microemu/source/browse/#svn/trunk/microemulator"/>
             </item>
 
             <!--4release-->

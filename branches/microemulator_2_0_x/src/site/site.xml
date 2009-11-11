@@ -62,7 +62,7 @@
                 <item name="Releases" href="http://code.google.com/p/microemu/downloads/list"/>
                 <item name="Maven" href="http://www.microemu.org/maven.html"/>
                 <item name="SVN Access" href="source-repository.html"/>
-                <item name="Browse SVN" href="http://code.google.com/p/microemu/source/browse/#svn/branches/microemulator_2_0_x"/>
+                <item name="Browse SVN" href="http://code.google.com/p/microemu/source/browse/#svn/trunk/microemulator"/>
             </item>
 
             <!--4release-->

@@ -26,10 +26,8 @@
 
 package org.microemu.android.device;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.Vector;
 
 import javax.microedition.lcdui.Canvas;
 
@@ -38,54 +36,17 @@ import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.InputMethod;
-import org.microemu.util.ThreadUtils;
 
 import android.view.KeyEvent;
 
 public class AndroidInputMethod extends InputMethod {
 
-	private boolean eventAlreadyConsumed;
-
-	private Timer keyReleasedDelayTimer;
-
-	private List repeatModeKeyCodes = new Vector();
-
-	private class KeyReleasedDelayTask extends TimerTask {
-
-		private int repeatModeKeyCode;
-
-		KeyReleasedDelayTask(int repeatModeKeyCode) {
-			this.repeatModeKeyCode = repeatModeKeyCode;
-
-		}
-
-		public void run() {
-			if (repeatModeKeyCode != Integer.MIN_VALUE) {
-				MIDletAccess ma = MIDletBridge.getMIDletAccess();
-				if (ma == null) {
-					return;
-				}
-
-				DisplayAccess da = ma.getDisplayAccess();
-				if (da == null) {
-					return;
-				}
-
-				da.keyReleased(repeatModeKeyCode);
-				eventAlreadyConsumed = false;
-				repeatModeKeyCode = Integer.MIN_VALUE;
-			}
-		}
-	};
-	
-	public AndroidInputMethod() {
-		keyReleasedDelayTimer = ThreadUtils.createTimer("InputKeyReleasedDelayTimer");
-	}
+	private List<Integer> repeatModeKeyCodes = new ArrayList<Integer>();
 
 	public void buttonPressed(KeyEvent keyEvent) {
-		eventAlreadyConsumed = false;
+		int keyCode = getKeyCode(keyEvent);
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
-			if (repeatModeKeyCodes.contains(new Integer(getKeyCode(keyEvent)))) {
+			if (repeatModeKeyCodes.contains(new Integer(keyCode))) {
 				MIDletAccess ma = MIDletBridge.getMIDletAccess();
 				if (ma == null) {
 					return;
@@ -94,11 +55,10 @@ public class AndroidInputMethod extends InputMethod {
 				if (da == null) {
 					return;
 				}
-				da.keyRepeated(getKeyCode(keyEvent));
-				eventAlreadyConsumed = true;
+				da.keyRepeated(keyCode);
 				return;
 			} else {
-				repeatModeKeyCodes.add(new Integer(getKeyCode(keyEvent)));
+				repeatModeKeyCodes.add(new Integer(keyCode));
 			}
 		}
 
@@ -114,30 +74,26 @@ public class AndroidInputMethod extends InputMethod {
 //			}
 //		}
 
-		if (fireInputMethodListener(keyEvent)) {
-			eventAlreadyConsumed = true;
-			return;
-		}
+		fireInputMethodListener(keyEvent);
 	}
 
 	public void buttonReleased(KeyEvent keyEvent) {
+		int keyCode = getKeyCode(keyEvent);
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
-			repeatModeKeyCodes.remove(new Integer(getKeyCode(keyEvent)));
-			keyReleasedDelayTimer.schedule(new KeyReleasedDelayTask(getKeyCode(keyEvent)), 50);
-		} else {
-			MIDletAccess ma = MIDletBridge.getMIDletAccess();
-			if (ma == null) {
-				return;
-			}
-
-			DisplayAccess da = ma.getDisplayAccess();
-			if (da == null) {
-				return;
-			}
-
-			da.keyReleased(getKeyCode(keyEvent));
-			eventAlreadyConsumed = false;
+			repeatModeKeyCodes.remove(new Integer(keyCode));
 		}
+		
+		MIDletAccess ma = MIDletBridge.getMIDletAccess();
+		if (ma == null) {
+			return;
+		}
+
+		DisplayAccess da = ma.getDisplayAccess();
+		if (da == null) {
+			return;
+		}
+
+		da.keyReleased(keyCode);
 	}
 	
 	public void pointerPressed(int x, int y) {		

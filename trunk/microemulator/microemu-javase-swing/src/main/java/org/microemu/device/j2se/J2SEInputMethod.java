@@ -53,6 +53,8 @@ import org.microemu.util.ThreadUtils;
 public class J2SEInputMethod extends InputMethodImpl {
 
 	private boolean eventAlreadyConsumed;
+	
+	private J2SEButton ignoreButtonRelease;
 
 	private Timer keyReleasedDelayTimer;
 
@@ -338,6 +340,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 			keyCode = button.getKeyCode();
 		}
 		eventAlreadyConsumed = false;
+		ignoreButtonRelease = null;
 		if (DeviceFactory.getDevice().hasRepeatEvents()) {
 			if (repeatModeKeyCodes.contains(new Integer(keyCode))) {
 				MIDletAccess ma = MIDletBridge.getMIDletAccess();
@@ -375,6 +378,7 @@ public class J2SEInputMethod extends InputMethodImpl {
 					da.commandAction(cmd, da.getCurrent());
 				}
 				eventAlreadyConsumed = true;
+				ignoreButtonRelease = button;
 				return;
 			}
 		}
@@ -386,6 +390,9 @@ public class J2SEInputMethod extends InputMethodImpl {
 	}
 
 	public void buttonReleased(J2SEButton button, char keyChar) {
+		if (ignoreButtonRelease == button) {
+			return;
+		}
 		int keyCode = keyChar;
 		if (button != null && keyChar == '\0') {
 			keyCode = button.getKeyCode();

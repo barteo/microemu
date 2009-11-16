@@ -53,7 +53,7 @@ import org.microemu.android.device.ui.AndroidCommandUI;
 import org.microemu.android.device.ui.AndroidDisplayableUI;
 import org.microemu.android.util.AndroidLoggerAppender;
 import org.microemu.android.util.AndroidRecordStoreManager;
-import org.microemu.android.util.CustomFrameLayout;
+import org.microemu.android.util.AndroidRepaintListener;
 import org.microemu.app.Common;
 import org.microemu.app.util.MIDletSystemProperties;
 import org.microemu.device.Device;
@@ -180,8 +180,8 @@ public class MicroEmulator extends MicroEmulatorActivity {
         super.onPause();
         
         if (contentView != null) {
-            if (contentView instanceof CustomFrameLayout) {
-                ((CustomFrameLayout) contentView).onPause();
+            if (contentView instanceof AndroidRepaintListener) {
+                ((AndroidRepaintListener) contentView).onPause();
             }
         }
 
@@ -206,8 +206,8 @@ public class MicroEmulator extends MicroEmulatorActivity {
         }
 
         if (contentView != null) {
-            if (contentView instanceof CustomFrameLayout) {
-                ((CustomFrameLayout) contentView).onResume();
+            if (contentView instanceof AndroidRepaintListener) {
+                ((AndroidRepaintListener) contentView).onResume();
             }
             contentView.invalidate();
         }

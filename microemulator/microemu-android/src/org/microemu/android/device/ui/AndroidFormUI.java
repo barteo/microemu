@@ -34,12 +34,15 @@ import org.microemu.device.ui.FormUI;
 import org.microemu.device.ui.ItemUI;
 
 import android.content.Context;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 public class AndroidFormUI extends AndroidDisplayableUI implements FormUI {
 
+	private ScrollView scrollView;
+	
 	private AndroidListView listView;
 	
 	private ItemStateListener itemStateListener;
@@ -49,7 +52,7 @@ public class AndroidFormUI extends AndroidDisplayableUI implements FormUI {
 		
 		activity.post(new Runnable() {
 			public void run() {
-				ScrollView scrollView = new ScrollView(activity);
+				scrollView = new ScrollView(activity);
 				((LinearLayout) AndroidFormUI.this.view).addView(scrollView);
 				listView = new AndroidListView(activity, AndroidFormUI.this);
 				listView.setOrientation(LinearLayout.VERTICAL);
@@ -69,15 +72,13 @@ public class AndroidFormUI extends AndroidDisplayableUI implements FormUI {
 
 	public int append(final ItemUI item) {
 		if (activity.isActivityThread()) {
-			listView.addView((View) item);
-			appendTransfer = listView.getChildCount() - 1;
+			appendTransfer = doAppend(item);
 		} else {
 			appendTransfer = Integer.MIN_VALUE;
 			activity.post(new Runnable() {
 				public void run() {
 					synchronized (AndroidFormUI.this) {
-						listView.addView((View) item);						
-						appendTransfer = listView.getChildCount() - 1;
+						appendTransfer = doAppend(item);
 						AndroidFormUI.this.notify();
 					}
 				}
@@ -95,6 +96,22 @@ public class AndroidFormUI extends AndroidDisplayableUI implements FormUI {
 		}
 		
 		return appendTransfer;
+	}
+	
+	private int doAppend(ItemUI item) {
+		if (item instanceof AndroidCustomItemUI) {
+			if (((AndroidCustomItemUI) item).view instanceof SurfaceView) {
+				// SurfaceView cannot be put inside the ScrollView
+				if (((LinearLayout) AndroidFormUI.this.view).indexOfChild(scrollView) != -1) {
+					scrollView.removeAllViews();
+					((LinearLayout) AndroidFormUI.this.view).removeView(scrollView);
+					((LinearLayout) AndroidFormUI.this.view).addView(listView);
+				}		
+			}
+		}
+		listView.addView((View) item);
+		
+		return listView.getChildCount() - 1;
 	}
 	 
 	public void delete(final int itemNum) {

@@ -46,7 +46,7 @@ public class AndroidCustomItemUI extends LinearLayout implements CustomItemUI {
 	
 	private TextView labelView;
 	
-	private CanvasView view;
+	public View view;
 	
 	public AndroidCustomItemUI(final MicroEmulatorActivity activity, final CustomItemAccess customItemAccess) {
 		super(activity);

@@ -30,6 +30,7 @@ import javax.microedition.lcdui.Alert;
 import javax.microedition.lcdui.AlertType;
 import javax.microedition.lcdui.Command;
 
+import org.microemu.MIDletBridge;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.AlertUI;
 import org.microemu.device.ui.CommandUI;
@@ -82,11 +83,8 @@ public class AndroidAlertUI extends AndroidDisplayableUI implements AlertUI {
 				onClickListener = new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						activity.setDialog(null);
-						if (getCommandListener() != null) {
-							getCommandListener().commandAction(
-									buttons.get(which).getCommand(),
-									displayable);
-						}
+						MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(
+								buttons.get(which).getCommand(), displayable);
 					}
 				};
 			}
@@ -160,9 +158,8 @@ public class AndroidAlertUI extends AndroidDisplayableUI implements AlertUI {
 		fixLookAndFeel();
 
 		// call commandAction
-		if (getCommandListener() != null)
-			getCommandListener().commandAction(
-					getCommandsUI().elementAt(0).getCommand(), displayable);
+		MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(
+				getCommandsUI().elementAt(0).getCommand(), displayable);
 	}
 
 	@Override

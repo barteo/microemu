@@ -23,6 +23,7 @@
 
 package javax.microedition.lcdui;
 
+import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.ui.ListUI;
 
@@ -198,7 +199,7 @@ public class List extends Screen implements Choice {
     void keyPressed(int keyCode) {
         if (Display.getGameAction(keyCode) == Canvas.FIRE && choiceGroup.select() && super.getCommandListener() != null
                 && choiceGroup.choiceType == Choice.IMPLICIT) {
-            super.getCommandListener().commandAction(selCommand, this);
+        	MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(selCommand, this);
         } else {
             super.keyPressed(keyCode);
         }
@@ -240,7 +241,7 @@ public class List extends Screen implements Choice {
             if (releasedItem != -1) {
                 if (releasedItem == initialPressedItem && super.getCommandListener() != null
                         && choiceGroup.choiceType == Choice.IMPLICIT) {
-                    super.getCommandListener().commandAction(SELECT_COMMAND, this);
+                	MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(SELECT_COMMAND, this);
                 }
             }
         }

@@ -235,10 +235,9 @@ public class MicroEmulator extends MicroEmulatorActivity {
 			
 			CommandUI cmd = getFirstCommandOfType(commands, Command.BACK);
 			if (cmd != null) {
-				CommandListener l = ui.getCommandListener();
-				if (l != null) {
+				if (ui.getCommandListener() != null) {
 					ignoreBackKeyUp = true;
-					l.commandAction(cmd.getCommand(), da.getCurrent());
+					MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(cmd.getCommand(), da.getCurrent());
 				}
 				return true;
 			}
@@ -251,10 +250,9 @@ public class MicroEmulator extends MicroEmulatorActivity {
 			
 			cmd = getFirstCommandOfType(commands, Command.CANCEL);
 			if (cmd != null) {
-				CommandListener l = ui.getCommandListener();
-				if (l != null) {
+				if (ui.getCommandListener() != null) {
 					ignoreBackKeyUp = true;
-					l.commandAction(cmd.getCommand(), da.getCurrent());
+					MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(cmd.getCommand(), da.getCurrent());
 				}
 				return true;
 			}
@@ -431,13 +429,12 @@ public class MicroEmulator extends MicroEmulatorActivity {
 			return false;
 		}
 
-		CommandListener l = ui.getCommandListener();
 		int commandIndex = item.getItemId() - Menu.FIRST;
 		List<AndroidCommandUI> commands = ui.getCommandsUI();
 		CommandUI c = commands.get(commandIndex);
 
 		if (c != null) {
-			l.commandAction(c.getCommand(), da.getCurrent());
+			MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(c.getCommand(), da.getCurrent());
 			return true;
 		}
 

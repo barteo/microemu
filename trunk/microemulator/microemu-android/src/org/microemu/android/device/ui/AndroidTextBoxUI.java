@@ -29,10 +29,10 @@ package org.microemu.android.device.ui;
 import java.util.List;
 
 import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.TextBox;
 import javax.microedition.lcdui.TextField;
 
+import org.microemu.MIDletBridge;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.InputMethod;
 import org.microemu.device.ui.CommandUI;
@@ -90,8 +90,8 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 							for (int i = 0; i < commands.size(); i++) {
 								CommandUI cmd = commands.get(i);
 								if (cmd.getCommand().getCommandType() == Command.OK) {
-									CommandListener l = getCommandListener();
-									l.commandAction(cmd.getCommand(), displayable);
+									MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(
+											cmd.getCommand(), displayable);
 									break;
 								}
 							}			
@@ -153,13 +153,43 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 		return editView.getSelectionStart();
 	}
 	
+	private String getStringTransfer;
+
 	public String getString() {
-		return editView.getText().toString();
+		if (activity.isActivityThread()) {
+			getStringTransfer = editView.getText().toString();
+		} else {
+			getStringTransfer = null;
+			activity.post(new Runnable() {
+				public void run() {
+					synchronized (AndroidTextBoxUI.this) {
+						getStringTransfer = editView.getText().toString();
+						AndroidTextBoxUI.this.notify();
+					}
+				}
+			});
+
+			synchronized (AndroidTextBoxUI.this) {
+				if (getStringTransfer == null) {
+					try {
+						wait();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		
+		return getStringTransfer;
 	}
 
-	public void setString(String text) {
-		editView.setText(text);
-		editView.setSelection(text.length());
+	public void setString(final String text) {
+		activity.post(new Runnable() {
+			public void run() {
+				editView.setText(text);
+				editView.setSelection(text.length());
+			}
+		});
 	}
 
 }

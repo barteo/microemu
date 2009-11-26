@@ -167,6 +167,22 @@ public class Display {
 			}
 		}
 	}
+	
+	private final class HideNotifyEvent extends EventDispatcher.RunnableEvent {
+
+		public HideNotifyEvent(EventDispatcher eventDispatcher, Runnable runnable) {
+			eventDispatcher.super(runnable);
+		}
+
+	}
+
+	private final class ShowNotifyEvent extends EventDispatcher.RunnableEvent {
+
+		public ShowNotifyEvent(EventDispatcher eventDispatcher, Runnable runnable) {
+			eventDispatcher.super(runnable);
+		}
+
+	}
 
 	private class DisplayAccessor implements DisplayAccess {
 
@@ -177,25 +193,37 @@ public class Display {
 			display = d;
 		}
 
-		public void commandAction(Command c, Displayable d) {
+		public void commandAction(final Command c, final Displayable d) {
 			if (c.isRegularCommand()) {
 				if (d == null) {
 					return;
 				}
-				CommandListener listener = d.getCommandListener();
+				final CommandListener listener = d.getCommandListener();
 				if (listener == null) {
 					return;
 				}
-				listener.commandAction(c, d);
+				eventDispatcher.put(new Runnable() {
+
+					public void run() {
+						listener.commandAction(c, d);			
+					}
+					
+				});
 			} else {
 				// item contained command
-				Item item = c.getFocusedItem();
+				final Item item = c.getFocusedItem();
 
-				ItemCommandListener listener = item.getItemCommandListener();
+				final ItemCommandListener listener = item.getItemCommandListener();
 				if (listener == null) {
 					return;
 				}
-				listener.commandAction(c.getOriginalCommand(), item);
+				eventDispatcher.put(new Runnable() {
+
+					public void run() {
+						listener.commandAction(c.getOriginalCommand(), item);			
+					}
+					
+				});				
 			}
 		}
 
@@ -386,7 +414,8 @@ public class Display {
 
 		public void run() {
             if (alert.isShown()) {
-                alert.getCommandListener().commandAction((Command) alert.getCommands().get(0), alert);
+            	MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(
+            			(Command) alert.getCommands().get(0), alert);
             }
         }
 	}
@@ -494,11 +523,11 @@ public class Display {
 			return;
 		}
 		if (nextDisplayable != null) {
-			eventDispatcher.put(eventDispatcher.new ShowNotifyEvent(new Runnable() {
+			eventDispatcher.put(new ShowNotifyEvent(eventDispatcher, new Runnable() {
 
 				public void run() {
 					if (current != null) {
-						eventDispatcher.put(eventDispatcher.new HideNotifyEvent(new Runnable() {
+						eventDispatcher.put(new HideNotifyEvent(eventDispatcher, new Runnable() {
 							
 							private Displayable displayable = current;
 
@@ -607,7 +636,9 @@ public class Display {
 		// for that barrier to execute
 		//
 		if (EventDispatcher.EVENT_DISPATCHER_NAME.equals(Thread.currentThread().getName())) {
-			DeviceFactory.getDevice().getDeviceDisplay().repaint(0, 0, current.getWidth(), current.getHeight());
+			if (current != null) {
+				DeviceFactory.getDevice().getDeviceDisplay().repaint(0, 0, current.getWidth(), current.getHeight());
+			}
 			return;
 		}
 

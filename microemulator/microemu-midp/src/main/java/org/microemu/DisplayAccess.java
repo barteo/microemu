@@ -28,8 +28,10 @@ import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Item;
 
 import org.microemu.device.ui.DisplayableUI;
+import org.microemu.device.ui.ItemUI;
 
 
 public interface DisplayAccess
@@ -56,7 +58,7 @@ public interface DisplayAccess
 	
 	void hideNotify();
 	   
-    void showNotify();
+    ItemUI getItemUI(Item item);
 	
 	// TODO try to change all calls to getCurrent to use getCurrentUI, then remove getCurrent
 	Displayable getCurrent();

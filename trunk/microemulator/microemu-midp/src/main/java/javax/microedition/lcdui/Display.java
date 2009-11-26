@@ -42,6 +42,7 @@ import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.ui.DisplayableUI;
 import org.microemu.device.ui.EventDispatcher;
+import org.microemu.device.ui.ItemUI;
 
 public class Display {
 
@@ -348,6 +349,10 @@ public class Display {
 			}
 		}
 
+        public ItemUI getItemUI(Item item) {
+        	return item.ui;
+        }
+
 		public boolean isFullScreenMode() {
 			Displayable current = getCurrent();
 
@@ -364,13 +369,6 @@ public class Display {
                 current.hideNotify();
             }
 		}
-
-        public void showNotify() {
-            Displayable current = getCurrent();
-            if (current != null) {
-                current.showNotify();
-            }
-        }
 
         public void setCurrent(Displayable d) {
 			getDisplay().setCurrent(d);

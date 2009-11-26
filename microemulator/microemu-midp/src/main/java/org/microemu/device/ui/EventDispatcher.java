@@ -234,33 +234,7 @@ public class EventDispatcher implements Runnable {
 		}
 	}
 	
-	public final class ShowNotifyEvent extends EventDispatcher.Event {
-
-		private Runnable runnable;
-
-		public ShowNotifyEvent(Runnable runnable) {
-			this.runnable = runnable;
-		}
-
-		public void run() {
-			runnable.run();
-		}
-	}
-
-	public final class HideNotifyEvent extends EventDispatcher.Event {
-
-		private Runnable runnable;
-
-		public HideNotifyEvent(Runnable runnable) {
-			this.runnable = runnable;
-		}
-
-		public void run() {
-			runnable.run();
-		}
-	}
-
-	private class RunnableEvent extends Event {
+	public class RunnableEvent extends Event {
 
 		private Runnable runnable;
 
@@ -273,5 +247,5 @@ public class EventDispatcher implements Runnable {
 		}
 
 	}
-
+	
 }

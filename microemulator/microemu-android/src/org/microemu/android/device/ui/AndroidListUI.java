@@ -32,6 +32,7 @@ import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.List;
 import javax.microedition.lcdui.Command;
 
+import org.microemu.MIDletBridge;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.ui.ListUI;
 import org.microemu.android.device.AndroidImmutableImage;
@@ -229,7 +230,7 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 		public boolean onKeyDown(int keyCode, KeyEvent event) {
 			if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
 				if (getCommandListener() != null) {
-					getCommandListener().commandAction(selectCommand, displayable);
+					MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(selectCommand, displayable);
 					return true;
 				} else {				
 					return false;
@@ -241,9 +242,7 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			selectedPosition = position;
-			if (getCommandListener() != null) {
-				getCommandListener().commandAction(selectCommand, displayable);
-			}
+			MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(selectCommand, displayable);
 		}
 
 		public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

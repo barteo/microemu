@@ -38,7 +38,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.CommandListener;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
@@ -329,7 +328,23 @@ public class MicroEmulator extends MicroEmulatorActivity {
         }    
     }
 	
-	private final static float TRACKBALL_THRESHOLD = 0.4f; 
+    private final static KeyEvent KEY_RIGHT_DOWN_EVENT = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT);
+    
+    private final static KeyEvent KEY_RIGHT_UP_EVENT = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT);
+	
+    private final static KeyEvent KEY_LEFT_DOWN_EVENT = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT);
+    	
+    private final static KeyEvent KEY_LEFT_UP_EVENT = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT);
+
+    private final static KeyEvent KEY_DOWN_DOWN_EVENT = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN);
+    
+    private final static KeyEvent KEY_DOWN_UP_EVENT = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN);
+    	
+    private final static KeyEvent KEY_UP_DOWN_EVENT = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP);
+    	
+    private final static KeyEvent KEY_UP_UP_EVENT = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_UP);
+
+    private final static float TRACKBALL_THRESHOLD = 0.4f; 
 	
 	private float accumulatedTrackballX = 0;
 	
@@ -358,21 +373,21 @@ public class MicroEmulator extends MicroEmulatorActivity {
 				}
 				if (accumulatedTrackballX + x > TRACKBALL_THRESHOLD) {
 					accumulatedTrackballX -= TRACKBALL_THRESHOLD;
-					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT).dispatch(this);
-					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT).dispatch(this);
+					KEY_RIGHT_DOWN_EVENT.dispatch(this);
+					KEY_RIGHT_UP_EVENT.dispatch(this);
 				} else if (accumulatedTrackballX + x < -TRACKBALL_THRESHOLD) {
 					accumulatedTrackballX += TRACKBALL_THRESHOLD;
-					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT).dispatch(this);
-					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT).dispatch(this);
+					KEY_LEFT_DOWN_EVENT.dispatch(this);
+					KEY_LEFT_UP_EVENT.dispatch(this);
 				}
 				if (accumulatedTrackballY + y > TRACKBALL_THRESHOLD) {
 					accumulatedTrackballY -= TRACKBALL_THRESHOLD;
-					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN).dispatch(this);
-					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN).dispatch(this);
+					KEY_DOWN_DOWN_EVENT.dispatch(this);
+					KEY_DOWN_UP_EVENT.dispatch(this);
 				} else if (accumulatedTrackballY + y < -TRACKBALL_THRESHOLD) {
 					accumulatedTrackballY += TRACKBALL_THRESHOLD;
-					new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP).dispatch(this);
-					new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_UP).dispatch(this);
+					KEY_UP_DOWN_EVENT.dispatch(this);
+					KEY_UP_UP_EVENT.dispatch(this);
 				}
 				accumulatedTrackballX += x;
 				accumulatedTrackballY += y;

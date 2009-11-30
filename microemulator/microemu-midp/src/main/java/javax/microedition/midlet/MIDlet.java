@@ -28,6 +28,7 @@
 package javax.microedition.midlet;
 
 import javax.microedition.io.ConnectionNotFoundException;
+import javax.microedition.lcdui.Display;
 
 import org.microemu.DisplayAccess;
 import org.microemu.MIDletAccess;
@@ -68,6 +69,9 @@ public abstract class MIDlet {
 
 	protected MIDlet() {
 		MIDletBridge.registerMIDletAccess(new MIDletAccessor());
+
+		// Initialize Display
+		Display.getDisplay(this);
 	}
 
 	protected abstract void startApp() throws MIDletStateChangeException;

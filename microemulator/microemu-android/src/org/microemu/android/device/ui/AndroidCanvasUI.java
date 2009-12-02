@@ -91,6 +91,8 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         
         private final static int FIRST_DRAG_SENSITIVITY_Y = 5;
         
+        public boolean inited;
+        
         private Bitmap bitmap;
             
         private android.graphics.Canvas bitmapCanvas;
@@ -106,8 +108,8 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         public CanvasView(Context context) {
             super(context);
             
+            this.inited = false;
             this.bitmapCanvas = null;
-            this.graphics = new AndroidDisplayGraphics();
             
             setFocusable(true);
             setFocusableInTouchMode(true);
@@ -121,25 +123,37 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
                 }
                 
                 public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                	bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                    bitmapCanvas = new android.graphics.Canvas(bitmap);
-                    ((Canvas) displayable).repaint(0, 0, width, height);
+                    initGraphics(width, height);
+                    inited = true;
                 }
 
             };
             getHolder().addCallback(callback);
         }
 
+        public void initGraphics(int width, int height) {
+            AndroidCanvasUI.this.view = view;
+            bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+            bitmapCanvas = new android.graphics.Canvas(bitmap);
+            graphics = new AndroidDisplayGraphics(bitmap);
+            ((Canvas) displayable).repaint(0, 0, width, height);
+        }
+        
         //
         // View
         //
         
         @Override
         public void onDraw(android.graphics.Canvas androidCanvas) {
+            if (!inited) {
+                return;
+            }
+            
             MIDletAccess ma = MIDletBridge.getMIDletAccess();
             if (ma == null) {
                 return;
             }
+            
             graphics.reset(androidCanvas);
             graphics.setClip(0, 0, view.getWidth(), view.getHeight());
             ma.getDisplayAccess().paint(graphics);
@@ -180,7 +194,11 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         public Handler getHandler() {
             return super.getHandler();
         }       
-       
+
+        //
+        // DisplayRepaintListener
+        //
+
         public void repaintInvoked(Object repaintObject)
         {
             SurfaceHolder holder = getHolder();

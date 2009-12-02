@@ -35,13 +35,9 @@ import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.GameCanvas;
 import javax.microedition.lcdui.game.Sprite;
 
-import org.microemu.DisplayAccess;
-import org.microemu.MIDletAccess;
-import org.microemu.MIDletBridge;
 import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.EmulatorContext;
-import org.microemu.device.ui.DisplayableUI;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -243,19 +239,6 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
     }
 
 	public void paintDisplayable(int x, int y, int width, int height) {
-		MIDletAccess ma = MIDletBridge.getMIDletAccess();
-		if (ma == null) {
-			return;
-		}
-		DisplayAccess da = ma.getDisplayAccess();
-		if (da == null) {
-			return;
-		}
-		DisplayableUI current = da.getCurrentUI();
-		if (current == null) {
-			return;
-		}
-
         rectangle.left = x;
         rectangle.top = y;
         rectangle.right = x + width;

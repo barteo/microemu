@@ -30,7 +30,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.game.GameCanvas;
 import javax.microedition.lcdui.game.Sprite;
 
 import org.microemu.DisplayAccess;
@@ -48,10 +50,10 @@ import android.graphics.Rect;
 
 public class AndroidDeviceDisplay implements DeviceDisplay {
     
-    public static boolean inGlMode = false;
-	
 	private EmulatorContext context;
 	
+    public AndroidDisplayGraphics graphics;
+    
 	// TODO change this
 	public int displayRectangleWidth;
 	
@@ -62,8 +64,12 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
     	
 	private Rect rectangle = new Rect();
 	
-	public AndroidDeviceDisplay(EmulatorContext context) {
+	public AndroidDeviceDisplay(EmulatorContext context, int width, int height) {
 		this.context = context;
+        this.displayRectangleWidth = width;
+        this.displayRectangleHeight = height;
+		
+	    graphics = new AndroidDisplayGraphics(Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565));
 	}
 
 	public Image createImage(String name) throws IOException {
@@ -173,6 +179,11 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 		}
 		return new AndroidImmutableImage(Bitmap.createBitmap(newrgb, width, height, Bitmap.Config.ARGB_8888));
 	}
+
+    public Graphics getGraphics(GameCanvas gameCanvas)
+    {
+        return graphics;
+    }
 
 	public int getFullHeight() {
 		return displayRectangleHeight;

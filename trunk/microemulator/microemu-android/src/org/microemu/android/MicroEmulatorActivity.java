@@ -66,57 +66,7 @@ public abstract class MicroEmulatorActivity extends Activity {
 
 	private Dialog dialog;
 	
-	protected EmulatorContext emulatorContext = new EmulatorContext() {
-
-        private InputMethod inputMethod = new AndroidInputMethod();
-
-        private DeviceDisplay deviceDisplay = new AndroidDeviceDisplay(this);
-        
-        private FontManager fontManager = new AndroidFontManager();
-
-        public DisplayComponent getDisplayComponent() {
-            // TODO consider removal of EmulatorContext.getDisplayComponent()
-            System.out.println("MicroEmulator.emulatorContext::getDisplayComponent()");
-            return null;
-        }
-
-        public InputMethod getDeviceInputMethod() {
-            return inputMethod;
-        }
-
-        public DeviceDisplay getDeviceDisplay() {
-            return deviceDisplay;
-        }
-
-        public FontManager getDeviceFontManager() {
-            return fontManager;
-        }
-
-        public InputStream getResourceAsStream(String name) {
-            try {
-                if (name.startsWith("/")) {
-                    return MicroEmulatorActivity.this.getAssets().open(name.substring(1));
-                } else {
-                    return MicroEmulatorActivity.this.getAssets().open(name);
-                }
-            } catch (IOException e) {
-                Logger.debug(e);
-                return null;
-            }
-        }
-
-        public boolean platformRequest(String url) throws ConnectionNotFoundException 
-        {
-        	try {
-        		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-        	} catch (ActivityNotFoundException e) {
-        		throw new ConnectionNotFoundException();
-        	}
-
-            return true;
-        }
-                
-    };
+	protected EmulatorContext emulatorContext;
     
     public EmulatorContext getEmulatorContext() {
         return emulatorContext;
@@ -138,6 +88,62 @@ public abstract class MicroEmulatorActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
+		
+        Display display = getWindowManager().getDefaultDisplay();
+        final int width = display.getWidth();
+        final int height = display.getHeight() - 25;
+
+        emulatorContext = new EmulatorContext() {
+
+            private InputMethod inputMethod = new AndroidInputMethod();
+
+            private DeviceDisplay deviceDisplay = new AndroidDeviceDisplay(this, width, height);
+            
+            private FontManager fontManager = new AndroidFontManager();
+
+            public DisplayComponent getDisplayComponent() {
+                // TODO consider removal of EmulatorContext.getDisplayComponent()
+                System.out.println("MicroEmulator.emulatorContext::getDisplayComponent()");
+                return null;
+            }
+
+            public InputMethod getDeviceInputMethod() {
+                return inputMethod;
+            }
+
+            public DeviceDisplay getDeviceDisplay() {
+                return deviceDisplay;
+            }
+
+            public FontManager getDeviceFontManager() {
+                return fontManager;
+            }
+
+            public InputStream getResourceAsStream(String name) {
+                try {
+                    if (name.startsWith("/")) {
+                        return MicroEmulatorActivity.this.getAssets().open(name.substring(1));
+                    } else {
+                        return MicroEmulatorActivity.this.getAssets().open(name);
+                    }
+                } catch (IOException e) {
+                    Logger.debug(e);
+                    return null;
+                }
+            }
+
+            public boolean platformRequest(String url) throws ConnectionNotFoundException 
+            {
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                } catch (ActivityNotFoundException e) {
+                    throw new ConnectionNotFoundException();
+                }
+
+                return true;
+            }
+                    
+        };
 		
 		activityThread = Thread.currentThread();
 	}

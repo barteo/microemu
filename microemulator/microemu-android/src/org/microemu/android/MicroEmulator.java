@@ -45,7 +45,6 @@ import org.microemu.DisplayAccess;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.android.device.AndroidDevice;
-import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.android.device.AndroidInputMethod;
 import org.microemu.android.device.ui.AndroidCanvasUI;
 import org.microemu.android.device.ui.AndroidCommandUI;
@@ -62,7 +61,6 @@ import org.microemu.log.Logger;
 import org.microemu.util.JadProperties;
 
 import android.os.Bundle;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -140,10 +138,6 @@ public class MicroEmulator extends MicroEmulatorActivity {
 			return;
 		}
 
-        Display display = getWindowManager().getDefaultDisplay();
-        ((AndroidDeviceDisplay) emulatorContext.getDeviceDisplay()).displayRectangleWidth = display.getWidth();
-        ((AndroidDeviceDisplay) emulatorContext.getDeviceDisplay()).displayRectangleHeight = display.getHeight() - 25;
-        
         common = new Common(emulatorContext);
         common.setRecordStoreManager(new AndroidRecordStoreManager(this));
         common.setDevice(new AndroidDevice(emulatorContext, this));        

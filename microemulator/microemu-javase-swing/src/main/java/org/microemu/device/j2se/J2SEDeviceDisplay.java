@@ -46,6 +46,7 @@ import java.util.Vector;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.game.GameCanvas;
 import javax.microedition.lcdui.game.Sprite;
 
 import org.microemu.DisplayAccess;
@@ -423,6 +424,11 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 			throw new IllegalArgumentException(ex.toString());
 		}
 	}
+
+    public javax.microedition.lcdui.Graphics getGraphics(GameCanvas gameCanvas)
+    {
+        return createImage(gameCanvas.getWidth(), gameCanvas.getHeight(), true, 0x00000000).getGraphics();
+    }
 
 	public void setNumAlphaLevels(int i) {
 		numAlphaLevels = i;

@@ -29,10 +29,7 @@ package javax.microedition.lcdui;
 
 import javax.microedition.lcdui.game.GameCanvas;
 
-import org.microemu.GameCanvasKeyAccess;
-import org.microemu.MIDletBridge;
 import org.microemu.device.DeviceFactory;
-
 
 public abstract class Canvas extends Displayable
 {
@@ -176,8 +173,6 @@ public abstract class Canvas extends Displayable
     		if (this instanceof GameCanvas) {
     			width = -1;
     			height = -1;
-    		    GameCanvasKeyAccess access = MIDletBridge.getGameCanvasKeyAccess((GameCanvas) this);
-    		    access.initBuffer();
     		}
     		
     		if (currentDisplay != null) {

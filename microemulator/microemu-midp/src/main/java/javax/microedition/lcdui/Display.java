@@ -379,8 +379,6 @@ public class Display {
 	    		if (current instanceof GameCanvas) {
 	    			current.width = -1;
 	    			current.height = -1;
-	    		    GameCanvasKeyAccess access = MIDletBridge.getGameCanvasKeyAccess((GameCanvas) current);
-	    		    access.initBuffer();
 	    		}
 				current.sizeChanged(Display.this);
 			}

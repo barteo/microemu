@@ -56,12 +56,12 @@ public abstract class GameCanvas extends Canvas {
     // on call to getKeyState
     private int actualKeyState;
     
-    Image offscreenBuffer;
-    
     private class KeyAccess implements GameCanvasKeyAccess {
+        
         public boolean suppressedKeyEvents(GameCanvas canvas) {
             return canvas.suppressKeyEvents;
         }
+        
         public void recordKeyPressed(GameCanvas canvas, int gameCode) {
             int bit = 1 << gameCode;
             synchronized(canvas) {
@@ -83,10 +83,6 @@ public abstract class GameCanvas extends Canvas {
             }
         }
         
-        public void initBuffer() {
-            offscreenBuffer = DeviceFactory.getDevice().getDeviceDisplay().createImage(
-                    getWidth(), getHeight(), true, 0x00000000);
-        }
     }
     
     /** Creates a new instance of GameCanvas */
@@ -95,20 +91,14 @@ public abstract class GameCanvas extends Canvas {
         MIDletBridge.registerGameCanvasKeyAccess(this, new KeyAccess());
         
         this.suppressKeyEvents = suppressKeyEvents;
-        // never should the size of the Canvas become greater than this
-        // if the size reported by Canvas.getXXX() isn't the maximum for
-        // a given Canvas implementation other methods should be used to
-        // obtain the maximum possible size for such particular implementation
-        this.offscreenBuffer = DeviceFactory.getDevice().getDeviceDisplay().createImage(
-                this.getWidth(), this.getHeight(), true, 0x00000000);
     }
     
     protected Graphics getGraphics() {
-        return offscreenBuffer.getGraphics();
+        return DeviceFactory.getDevice().getDeviceDisplay().getGraphics(this);
     }
     
     public void paint(Graphics g) {
-        g.drawImage(offscreenBuffer, 0, 0, Graphics.TOP | Graphics.LEFT);
+//        g.drawImage(offscreenBuffer, 0, 0, Graphics.TOP | Graphics.LEFT);
     }
     
     public void flushGraphics(int x, int y, int width, int height) {

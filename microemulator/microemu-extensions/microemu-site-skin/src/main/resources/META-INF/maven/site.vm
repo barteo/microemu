@@ -316,6 +316,32 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     <div id="banner">
       #banner( $decoration.bannerLeft "bannerLeft" )
       #banner( $decoration.bannerRight "bannerRight" )
+
+<div class="xright">
+<style type="text/css">
+@import url(http://www.google.com/cse/api/branding.css);
+</style>
+<div class="cse-branding-right" style="background-color:#FFFFFF;color:#000000;width:400px;margin-top:10px;">
+  <div class="cse-branding-form">
+    <form action="http://www.microemu.org/search.html" id="cse-search-box">
+      <div>
+        <input type="hidden" name="cx" value="partner-pub-1011542774230962:8kopx4uh6x6" />
+        <input type="hidden" name="cof" value="FORID:10" />
+        <input type="hidden" name="ie" value="ISO-8859-1" />
+        <input type="text" name="q" size="31" />
+        <input type="submit" name="sa" value="Search" />
+      </div>
+    </form>
+  </div>
+  <div class="cse-branding-logo">
+    <img src="http://www.google.com/images/poweredby_transparent/poweredby_FFFFFF.gif" alt="Google" />
+  </div>
+  <div class="cse-branding-text">
+    Custom Search
+  </div>
+</div>
+</div>
+
       <div class="clear">
         <hr/>
       </div>

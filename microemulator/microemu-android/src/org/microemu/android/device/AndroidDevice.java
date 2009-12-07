@@ -90,15 +90,7 @@ public class AndroidDevice implements Device {
 	private UIFactory ui = new UIFactory() {
 
 		public EventDispatcher createEventDispatcher(Display display) {
-			EventDispatcher eventDispatcher = new EventDispatcher() {
-
-				@Override
-				protected void post(Event event) {
-					activity.post(event);
-				}
-				
-			};
-			
+			EventDispatcher eventDispatcher = new EventDispatcher();
 			Thread thread = new Thread(eventDispatcher, EventDispatcher.EVENT_DISPATCHER_NAME);
 			thread.setDaemon(true);
 			thread.start();

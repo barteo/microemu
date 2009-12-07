@@ -20,10 +20,10 @@
    To run build without tests:
      mvn -Dmaven.test.skip=true
 
-   To build distribution assembly e.g. microemulator-2.X.X.tar.gz:
+   To build distribution assembly e.g. microemulator-2.X.X.zip:
      mvn -DperformRelease=true
 
-     distribution package would be created in microemulator\target\microemulator-2.X.X.tar.gz
+     distribution package would be created in microemulator\target\microemulator-2.X.X.zip
 
    Module microemu-javase-swt is not built by default. To activate its build add property buildByMicroEmulatorTeam to settings.xml
 

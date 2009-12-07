@@ -162,10 +162,10 @@
                                     <tasks>
                                         <mkdir dir="${project.build.directory}/site/download"/>
                                         <copy overwrite="true"
-                                            file="${project.build.directory}/${project.build.finalName}-sources.tar.gz"
+                                            file="${project.build.directory}/${project.build.finalName}-sources.zip"
                                             todir="${project.build.directory}/site/download"/>
                                         <copy overwrite="true"
-                                            file="${project.build.directory}/${project.build.finalName}.tar.gz"
+                                            file="${project.build.directory}/${project.build.finalName}.zip"
                                             todir="${project.build.directory}/site/download"/>
                                     </tasks>
                                 </configuration>

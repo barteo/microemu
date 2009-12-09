@@ -85,7 +85,6 @@ public class AndroidImageStringItemUI extends LinearLayout implements ImageStrin
 		setLabel(item.getLabel());
 	}
 
-	@Override
 	public void setLabel(final String label) {
 		activity.post(new Runnable() {
 			public void run() {
@@ -99,7 +98,6 @@ public class AndroidImageStringItemUI extends LinearLayout implements ImageStrin
 		});
 	}
 
-	@Override
 	public void setImage(final Image image) {
 		activity.post(new Runnable() {
 			public void run() {
@@ -118,7 +116,6 @@ public class AndroidImageStringItemUI extends LinearLayout implements ImageStrin
 		});
 	}
 
-	@Override
 	public void setText(final String text) {
 		activity.post(new Runnable() {
 			public void run() {

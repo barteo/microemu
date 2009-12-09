@@ -26,9 +26,6 @@
 
 package org.microemu.android.device;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.microedition.lcdui.Canvas;
 
 import org.microemu.DisplayAccess;
@@ -41,12 +38,12 @@ import android.view.KeyEvent;
 
 public class AndroidInputMethod extends InputMethod {
 
-	private List<Integer> repeatModeKeyCodes = new ArrayList<Integer>();
+	private int repeatModeKeyCode = Integer.MAX_VALUE;
 
 	public void buttonPressed(KeyEvent keyEvent) {
 		int keyCode = getKeyCode(keyEvent);
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
-			if (repeatModeKeyCodes.contains(new Integer(keyCode))) {
+			if (repeatModeKeyCode == keyCode) {
 				MIDletAccess ma = MIDletBridge.getMIDletAccess();
 				if (ma == null) {
 					return;
@@ -58,21 +55,9 @@ public class AndroidInputMethod extends InputMethod {
 				da.keyRepeated(keyCode);
 				return;
 			} else {
-				repeatModeKeyCodes.add(new Integer(keyCode));
+				repeatModeKeyCode = keyCode;
 			}
 		}
-
-		// invoke any associated commands, but send the raw key codes instead
-// TODO
-//		boolean rawSoftKeys = DeviceFactory.getDevice().getDeviceDisplay().isFullScreenMode();
-//		if (button instanceof SoftButton && !rawSoftKeys) {
-//			Command cmd = ((SoftButton) button).getCommand();
-//			if (cmd != null) {
-//				CommandManager.getInstance().commandAction(cmd);
-//				eventAlreadyConsumed = true;
-//				return;
-//			}
-//		}
 
 		fireInputMethodListener(keyEvent);
 	}
@@ -80,7 +65,7 @@ public class AndroidInputMethod extends InputMethod {
 	public void buttonReleased(KeyEvent keyEvent) {
 		int keyCode = getKeyCode(keyEvent);
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
-			repeatModeKeyCodes.remove(new Integer(keyCode));
+			repeatModeKeyCode = Integer.MAX_VALUE;
 		}
 		
 		MIDletAccess ma = MIDletBridge.getMIDletAccess();

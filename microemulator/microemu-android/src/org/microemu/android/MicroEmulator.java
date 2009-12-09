@@ -124,13 +124,16 @@ public class MicroEmulator extends MicroEmulatorActivity {
         params.add("--quit");
         
         String midletClassName;
-        String jadName;
+        String jadName = null;
 		try {
 			Class r = Class.forName(getComponentName().getPackageName() + ".R$string");
 			Field[] fields = r.getFields();
 			Class[] classes = r.getClasses();
 	        midletClassName = getResources().getString(r.getField("class_name").getInt(null));
-	        jadName = getResources().getString(r.getField("jad_name").getInt(null));
+            try {
+                jadName = getResources().getString(r.getField("jad_name").getInt(null));
+            } catch (NoSuchFieldException e) {
+            }
 
 	        params.add(midletClassName);	       
 		} catch (Exception e) {
@@ -156,12 +159,14 @@ public class MicroEmulator extends MicroEmulatorActivity {
         MIDletSystemProperties.setPermission("javax.microedition.io.Connector.file.read", 1);
         MIDletSystemProperties.setPermission("javax.microedition.io.Connector.file.write", 1);
 
-        try {
-	        InputStream is = getAssets().open(jadName);
-	        common.jad = new JadProperties();
-	        common.jad.read(is);
-        } catch (Exception e) {
-        	Logger.error(e);
+        if (jadName != null) {
+            try {
+    	        InputStream is = getAssets().open(jadName);
+    	        common.jad = new JadProperties();
+    	        common.jad.read(is);
+            } catch (Exception e) {
+            	Logger.error(e);
+            }
         }
         
         common.getLauncher().setSuiteName(midletClassName);

@@ -98,10 +98,13 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 						}
 						
 					});
-				} else if ((constraints & TextField.CONSTRAINT_MASK) == TextField.NUMERIC
-						|| (constraints & TextField.CONSTRAINT_MASK) == TextField.DECIMAL) {
+				} else if ((constraints & TextField.CONSTRAINT_MASK) == TextField.NUMERIC) {
 					editView.setSingleLine(true);
 					editView.setInputType(InputType.TYPE_CLASS_NUMBER);
+				} else if ((constraints & TextField.CONSTRAINT_MASK) == TextField.DECIMAL) {
+					editView.setSingleLine(true);
+					editView.setInputType(
+							InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 				}
 				if ((constraints & TextField.PASSWORD) != 0) {
 					editView.setTransformationMethod(PasswordTransformationMethod.getInstance());

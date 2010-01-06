@@ -129,8 +129,8 @@ public class RecordEnumerationImpl implements RecordEnumeration
             throw new InvalidRecordIDException();
         }
 
-        byte[] result = ((EnumerationRecord) enumerationRecords .elementAt(currentRecord)).value;
         currentRecord--;
+        byte[] result = ((EnumerationRecord) enumerationRecords .elementAt(currentRecord)).value;
 
         return result;
     }
@@ -143,8 +143,8 @@ public class RecordEnumerationImpl implements RecordEnumeration
             throw new InvalidRecordIDException();
         }
 
-        int result = ((EnumerationRecord) enumerationRecords.elementAt(currentRecord)).recordId;
         currentRecord--;
+        int result = ((EnumerationRecord) enumerationRecords.elementAt(currentRecord)).recordId;
 
         return result;
     }

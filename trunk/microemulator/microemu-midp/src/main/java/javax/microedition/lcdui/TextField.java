@@ -139,7 +139,8 @@ public class TextField extends Item
 			((TextFieldUI) ui).setString(text);
 		}
 		
-        setString(text, text.length());
+		int caret = (text == null ? 0 : text.length());
+		setString(text, caret);
 	}
     
     

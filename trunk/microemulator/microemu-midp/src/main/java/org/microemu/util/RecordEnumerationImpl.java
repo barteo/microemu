@@ -188,16 +188,16 @@ public class RecordEnumerationImpl implements RecordEnumeration
 				int recordId = 1;
 				int i = 0;
 				while (i < recordStoreImpl.getNumRecords()) {
+					recordId++;
+					i++;
 					try {
 			            byte[] data = recordStoreImpl.getRecord(recordId);
-			            i++;
 			            if (filter != null && !filter.matches(data)) {
 			                continue;
 			            }
 			            enumerationRecords.add(new EnumerationRecord(recordId, data));
 					} catch (InvalidRecordIDException e) {
 					}
-					recordId++;
 		        }
 			} catch (RecordStoreException e) {
 				e.printStackTrace();

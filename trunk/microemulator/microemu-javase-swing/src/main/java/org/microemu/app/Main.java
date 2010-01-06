@@ -52,11 +52,12 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Enumeration;
+import java.util.Iterator;                                                            
+import java.util.List;                                                                
+import java.util.NoSuchElementException;                                              
+import java.util.Timer;                                                               
+import java.util.TimerTask; 
 
 import javax.microedition.midlet.MIDletStateChangeException;
 import javax.swing.ImageIcon;
@@ -106,9 +107,10 @@ import org.microemu.device.DeviceFactory;
 import org.microemu.device.EmulatorContext;
 import org.microemu.device.FontManager;
 import org.microemu.device.InputMethod;
-import org.microemu.device.impl.DeviceDisplayImpl;
-import org.microemu.device.impl.DeviceImpl;
-import org.microemu.device.impl.Rectangle;
+import org.microemu.device.impl.DeviceDisplayImpl;                                    
+import org.microemu.device.impl.DeviceImpl;                                           
+import org.microemu.device.impl.Rectangle; 
+import org.microemu.device.impl.SoftButton;
 import org.microemu.device.j2se.J2SEDevice;
 import org.microemu.device.j2se.J2SEDeviceDisplay;
 import org.microemu.device.j2se.J2SEFontManager;
@@ -726,17 +728,7 @@ public class Main extends JFrame {
 			count++;
 			DeviceDisplayImpl deviceDisplay = (DeviceDisplayImpl) DeviceFactory.getDevice().getDeviceDisplay();
 			if (deviceDisplay.isResizable()) {
-				deviceDisplay.setDisplayRectangle(new Rectangle(0, 0, devicePanel.getWidth(), devicePanel.getHeight()));
-				((SwingDisplayComponent) devicePanel.getDisplayComponent()).init();
-				MIDletAccess ma = MIDletBridge.getMIDletAccess();
-				if (ma == null) {
-					return;
-				}
-				DisplayAccess da = ma.getDisplayAccess();
-				if (da != null) {
-					da.sizeChanged();
-					deviceDisplay.repaint(0, 0, deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
-				}
+			    setDeviceSize(deviceDisplay, devicePanel.getWidth(), devicePanel.getHeight());
 				devicePanel.revalidate();
 				statusBarListener.statusBarChanged("New size: " + deviceDisplay.getFullWidth() + "x"
 						+ deviceDisplay.getFullHeight());
@@ -925,18 +917,7 @@ public class Main extends JFrame {
 				resizeDeviceDisplayDialog.setDeviceDisplaySize(deviceDisplay.getFullWidth(), deviceDisplay
 						.getFullHeight());
 				if (SwingDialogWindow.show(Main.this, "Enter new size...", resizeDeviceDisplayDialog, true)) {
-					deviceDisplay.setDisplayRectangle(new Rectangle(0, 0, resizeDeviceDisplayDialog
-							.getDeviceDisplayWidth(), resizeDeviceDisplayDialog.getDeviceDisplayHeight()));
-					((SwingDisplayComponent) devicePanel.getDisplayComponent()).init();
-					MIDletAccess ma = MIDletBridge.getMIDletAccess();
-					if (ma == null) {
-						return;
-					}
-					DisplayAccess da = ma.getDisplayAccess();
-					if (da != null) {
-						da.sizeChanged();
-						deviceDisplay.repaint(0, 0, deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
-					}
+				    setDeviceSize(deviceDisplay, resizeDeviceDisplayDialog.getDeviceDisplayWidth(), resizeDeviceDisplayDialog.getDeviceDisplayHeight());
 					pack();
 					devicePanel.requestFocus();
 				}
@@ -988,7 +969,7 @@ public class Main extends JFrame {
 			if (deviceDisplay.isResizable()) {
 				Rectangle size = Config.getDeviceEntryDisplaySize(entry);
 				if (size != null) {
-					deviceDisplay.setDisplayRectangle(size);
+				    setDeviceSize(deviceDisplay, size.width, size.height);
 				}
 			}
 			common.setDevice(device);
@@ -1002,6 +983,32 @@ public class Main extends JFrame {
 			Message.error(errorTitle, errorTitle + ", " + Message.getCauseMessage(e), e);
 		}
 		return false;
+	}
+	
+	protected void setDeviceSize(DeviceDisplayImpl deviceDisplay, int width, int height) {
+	    // move the soft buttons
+	    int menuh = 0;
+	    Enumeration en = DeviceFactory.getDevice().getSoftButtons().elements();
+        while (en.hasMoreElements()) {
+            SoftButton button = (SoftButton) en.nextElement();
+            Rectangle paintable = button.getPaintable();
+            paintable.y = height - paintable.height;
+            menuh = paintable.height;
+        }
+        // resize the display area
+        deviceDisplay.setDisplayPaintable(new Rectangle(0, 0, width, height - menuh));
+        deviceDisplay.setDisplayRectangle(new Rectangle(0, 0, width, height));
+        ((SwingDisplayComponent) devicePanel.getDisplayComponent()).init();
+        // update display
+        MIDletAccess ma = MIDletBridge.getMIDletAccess();
+        if (ma == null) {
+            return;
+        }
+        DisplayAccess da = ma.getDisplayAccess();
+        if (da != null) {
+            da.sizeChanged();
+            deviceDisplay.repaint(0, 0, deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight());
+        }
 	}
 
 	protected void updateDevice() {
@@ -1051,7 +1058,7 @@ public class Main extends JFrame {
 			if (deviceDisplay.isResizable()) {
 				Rectangle size = Config.getDeviceEntryDisplaySize(app.deviceEntry);
 				if (size != null) {
-					deviceDisplay.setDisplayRectangle(size);
+					app.setDeviceSize(deviceDisplay, size.width, size.height);
 				}
 			}
 		}

@@ -80,8 +80,11 @@ public class Connection implements DatagramConnection, UDPDatagramConnection, Co
 	}
 
 	public Datagram newDatagram(int size, String addr) throws IOException {
+		if (!addr.startsWith(PROTOCOL)) {
+			throw new IllegalArgumentException("Invalid Protocol " + addr);
+		}
 		Datagram datagram = new DatagramImpl(size);
-		datagram.setAddress(addr);
+		datagram.setAddress(addr.substring(PROTOCOL.length()));
 		return datagram;
 	}
 
@@ -90,8 +93,11 @@ public class Connection implements DatagramConnection, UDPDatagramConnection, Co
 	}
 
 	public Datagram newDatagram(byte[] buf, int size, String addr) throws IOException {
+		if (!addr.startsWith(PROTOCOL)) {
+			throw new IllegalArgumentException("Invalid Protocol " + addr);
+		}
 		Datagram datagram = new DatagramImpl(buf, size);
-		datagram.setAddress(addr);
+		datagram.setAddress(addr.substring(PROTOCOL.length()));
 		return datagram;
 	}
 

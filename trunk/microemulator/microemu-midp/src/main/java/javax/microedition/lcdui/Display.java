@@ -593,11 +593,6 @@ public class Display {
 		return DeviceFactory.getDevice().vibrate(duration);
 	}
 
-	// Who call this?? (Andres Navarro)
-	void clearAlert() {
-		setCurrent(Alert.nextDisplayable);
-	}
-
 	static int getGameAction(int keyCode) {
 		return DeviceFactory.getDevice().getInputMethod().getGameAction(keyCode);
 	}

@@ -55,6 +55,7 @@ public class Alert extends Screen
 			// in that particular case the initial state should 
 			// be restored
 			((Alert) d).currentDisplay.setCurrent(nextDisplayable);
+			nextDisplayable = null;
 		}
 	};
 	

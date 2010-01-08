@@ -211,4 +211,15 @@ public abstract class CustomItem extends Item {
 		return 0;
 	}
 
+	boolean isFocusable() {
+		return true;
+	}
+
+	boolean select() {
+		// send a FIRE keycode here, otherwise there does not appear
+		// to be a way for a CustomItem to use that key
+		keyPressed(-5);
+		return super.select();
+	}
+
 }

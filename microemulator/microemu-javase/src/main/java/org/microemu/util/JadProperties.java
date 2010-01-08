@@ -118,7 +118,6 @@ public class JadProperties extends Manifest {
 		try {
 			result = attributes.getValue(key);
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
 		}
 		if (result != null) {
 			return result.trim();

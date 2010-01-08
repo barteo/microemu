@@ -843,8 +843,8 @@ public class Sprite extends Layer {
 
         int fW = getWidth();
         int fH = getHeight();
-        int fX = fW * (f % rows);
-        int fY = fH * (f / rows);
+        int fX = fW * (f % cols);
+        int fY = fH * (f / cols);
 
         if (rgbData == null) {
             rgbData = new int[fW*fH];
@@ -930,8 +930,8 @@ public class Sprite extends Layer {
 
                     fW = t.getWidth();
                     fH = t.getHeight();
-                    fX = fW * (f % t.rows);
-                    fY = fH * (f / t.rows);
+                    fX = fW * (f % t.cols);
+                    fY = fH * (f / t.cols);
                 } else if (o instanceof TiledLayer) {
                     another = false;
                     TiledLayer layer = (TiledLayer) o;

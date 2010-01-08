@@ -46,7 +46,7 @@ public class Connection extends org.microemu.cldc.http.Connection implements Htt
 
 	public Connection() {
 	    try {
-			sslContext = SSLContext.getInstance("SSL");
+			sslContext = SSLContext.getInstance("TLS");
 		} catch (NoSuchAlgorithmException ex) {
 			Logger.error(ex);
 		}

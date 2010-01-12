@@ -115,7 +115,11 @@ public class JadProperties extends Manifest {
 
 	public String getProperty(String key, String defaultValue) {
 		Attributes attributes = super.getMainAttributes();
-		String result = attributes.getValue(key);
+		String result = null;
+		try {
+			result = attributes.getValue(key);
+		} catch (IllegalArgumentException e) {
+		}
 		if (result != null) {
 			return result.trim();
 		} else {

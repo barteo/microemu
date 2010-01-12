@@ -126,6 +126,7 @@ public abstract class DeviceImpl implements Device {
 			}
 		}
 		device.context = context;
+		device.descriptorLocation = descriptorLocation;
 		device.loadConfig(classLoader, besourceBase(descriptorLocation), doc);
 
 		return device;

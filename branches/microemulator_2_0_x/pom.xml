@@ -39,7 +39,7 @@
 
 	<scm>
         <url>http://code.google.com/p/microemu/source/browse/#svn/branches/microemulator_2_0_x</url>
-        <connection>scm:svn:https://microemu.googlecode.com/svn/branches/microemulator_2_0_x</connection>
+        <connection>scm:svn:http://microemu.googlecode.com/svn/branches/microemulator_2_0_x</connection>
         <developerConnection>scm:svn:https://microemu.googlecode.com/svn/branches/microemulator_2_0_x</developerConnection>
 	</scm>
 

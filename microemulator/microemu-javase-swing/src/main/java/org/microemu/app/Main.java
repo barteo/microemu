@@ -345,13 +345,11 @@ public class Main extends JFrame {
 					return;
 				}
 				File deviceOutputFile = null;
-				String deviceDescriptorLocation = null;
-				if (deviceInput != null) {
+				if (deviceInput != null && deviceInput.getFileName() != null) {
 					deviceOutputFile = new File(pathFile, deviceInput.getFileName());
 					if (!allowOverride(deviceOutputFile)) {
 						return;
 					}
-					deviceDescriptorLocation = deviceInput.getDescriptorLocation();
 				}
 
 				try {
@@ -359,7 +357,7 @@ public class Main extends JFrame {
 							.getClassName(), midletOutputFile, appletPackageOutputFile, deviceOutputFile);
 					AppletProducer.createMidlet(new URL(midletInput), midletOutputFile);
 					IOUtils.copyFile(appletJarFile, appletPackageOutputFile);
-					if (deviceInput != null) {
+					if (deviceInput != null && deviceInput.getFileName() != null) {
 						IOUtils.copyFile(new File(Config.getConfigPath(), deviceInput.getFileName()), deviceOutputFile);
 					}
 				} catch (IOException ex) {

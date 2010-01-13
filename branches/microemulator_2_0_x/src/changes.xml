@@ -20,18 +20,17 @@
         <action dev="barteo" type="add">Start ME2 as child windows from another java program.</action>
     </release>
 
-    <release version="2.0.4 TODO" date="date not defined" description="Plans for next Release">
+    <release version="2.0.4" date="2010-01-14" description="">
+		<action dev="vlads" type="add">New command line parameters: --traceClassLoading, --traceSystemClassLoading, --enhanceCatchBlock</action>
+		<action dev="barteo" type="add">Resizable skin can be forced by using --resizableDevice command line switch</action>
+    	<action dev="barteo" type="update">Canvas and GameCanvas synchronization fixes</action>
+		<action dev="barteo" type="update">Improved MIDlet cleanup</action>
+		<action dev="barteo" type="update">Fixed CustomItem painting</action>
+		<action dev="barteo" type="update">Various small fixes in ChoiceGroup</action>
+		<action dev="vlads" type="update">Changed default MIDlet classloader behavior to: --appclassloader relaxed</action>  
     </release>
 
     <release version="2.0.3" date="2008-12-14" description="">
-        <!--
-        <action dev="barteo" type="update">Fixed clipping problem ?</action>
-        Backspace keyboard key has keyCode=-8 which is passed to the Canvas
-        Fixed NPE when MIDlet tries to access the record store in own constructor
-        Fixed ArrayIndexOutOfBoundsException in Form.insert(..)
-        Fixed bug in sizeChanged used by GameCanvas
-        Fix for: Parsing keyboard keys is broken if there is more than one key defined
-        -->
         <action dev="vlads" type="update">MIDlet-Jar-URL uses Basic authentication, Example: http://user:pass@foo.bar.com/midlet.jar</action>
         <action dev="vlads" type="update">Log will keep MultiLine System.out.print() calls from MIDlet</action>
         <action dev="vlads" type="add">Show WARNING when loading Java 5 MIDlet classes</action>

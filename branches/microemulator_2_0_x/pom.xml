@@ -38,9 +38,9 @@
 	</issueManagement>
 
 	<scm>
-        <url>http://code.google.com/p/microemu/source/browse/#svn/trunk/microemulator</url>
-        <connection>scm:svn:https://microemu.googlecode.com/svn/trunk/microemulator</connection>
-        <developerConnection>scm:svn:https://microemu.googlecode.com/svn/trunk/microemulator</developerConnection>
+        <url>http://code.google.com/p/microemu/source/browse/#svn/branches/microemulator_2_0_x</url>
+        <connection>scm:svn:https://microemu.googlecode.com/svn/branches/microemulator_2_0_x</connection>
+        <developerConnection>scm:svn:https://microemu.googlecode.com/svn/branches/microemulator_2_0_x</developerConnection>
 	</scm>
 
     <mailingLists>
@@ -92,12 +92,13 @@
             <id>m2x-site-snapshot</id>
             <url>file:///home/apache/microemu-2x</url>
         </site>
-        <!-- see profile release -->
+        <!-- see profile release; -->
         <repository>
             <id>pyx4j.com-file-development</id>
             <url>file:///home/apache/pyx4j-repository/maven2-snapshot</url>
         </repository>
 
+        <!-- http://repository.pyx4j.com/maven2-snapshot -->
         <snapshotRepository>
             <id>pyx4j.com-file-development</id>
             <url>file:///home/apache/pyx4j-repository/maven2-snapshot</url>

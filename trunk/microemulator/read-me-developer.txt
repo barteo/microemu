@@ -36,7 +36,7 @@
 * plugin.jar
 
     We use ${java.home}/lib/plugin.jar during build of applet
-    
+
     There are no plugin.jar on Linux 64-bit Java; Just copy it from 32-bit java installation.
 
 * Building official Release by the MicroEmulator team.
@@ -64,12 +64,12 @@
         mvn -o clean deploy site-deploy -P release -DperformRelease=true
 
     * repository "pyx4j.com-file-release" (http://pyx4j.com/maven2-release/) on build server will sync with http://repo1.maven.org/maven2
-    
+
         It's a good idea to ask Vlad to stop rsync before making build, just in case we need to rebuild the Release.
 
     * Upload the context of /home/apache/microemu (http://pyx4j.com/snapshot/microemu-release)  to http://microemu.org/
-    
-        TODO we may need to create a zip of the site during build, so Anubody can make a Release build.
+
+        TODO we may need to create a site.zip of the site during build, so Anybody can make a Release build and upload it to microemu.org.
 
     * Upload the distribution jars microemulator-X.X.X-sources.zip and microemulator-X.X.X.zip to http://code.google.com/p/microemu/
 

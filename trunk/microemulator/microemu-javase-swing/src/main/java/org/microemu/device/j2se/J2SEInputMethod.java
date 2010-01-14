@@ -273,10 +273,19 @@ public class J2SEInputMethod extends InputMethodImpl {
 				if (keyChar != '\0') {
 					// Pass through letters and characters typed on keyboard but
 					// not numbers that are buttons keys (presumably).
-					editText.append(keyChar);
-					caret++;
-					lastButton = null;
-					lastButtonCharIndex = -1;
+                    boolean found = false;
+                    for (int i = 0; i < buttonChars.length; i++) {
+                        if (buttonChars[i] == keyChar) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) {
+    					editText.append(keyChar);
+    					caret++;
+    					lastButton = null;
+    					lastButtonCharIndex = -1;
+                    }
 				} else if (buttonChars.length > 0) {
 					if (lastButtonCharIndex == buttonChars.length) {
 						if (buttonChars.length == 1) {
@@ -421,14 +430,13 @@ public class J2SEInputMethod extends InputMethodImpl {
 		if (button != null) {
 			return button;
 		}
-		if (getInputMode() != INPUT_123) {
-			for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
-				button = (J2SEButton) e.nextElement();
-				if (button.isChar(ev.getKeyChar(), getInputMode())) {
-					return button;
-				}
+		for (Enumeration e = DeviceFactory.getDevice().getButtons().elements(); e.hasMoreElements();) {
+			button = (J2SEButton) e.nextElement();
+			if (button.isChar(ev.getKeyChar(), getInputMode())) {
+				return button;
 			}
 		}
+
 		return null;
 	}
 }

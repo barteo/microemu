@@ -41,8 +41,8 @@
 
         <!--4snapshot-->
         <menu name="Ver #build#" inherit="top">
-            <item name="Release 2.0.3" href="http://microemu.org/"/>
-            <item name="Snapshot 2.0.4" href="http://snapshot-2x.microemu.org/"/>
+            <item name="Release 2.0.4" href="http://microemu.org/"/>
+            <item name="Snapshot 2.0.5" href="http://snapshot-2x.microemu.org/"/>
         </menu>
 
         <menu ref="parent" />
@@ -55,6 +55,7 @@
             <item name="Unit Tests" href="http://www.microemu.org/unittests.html" />
             <item name="Faq" href="http://www.microemu.org/faq.html" />
 
+            <item name="Project site" href="http://microemu.googlecode.com" />
             <item name="Download" href="#">
                 <!--4snapshot-->
                 <item name="Snapshot" href="http://www.microemu.org/microemulator/download/"/>
@@ -67,7 +68,7 @@
 
             <!--4release-->
             <!--
-            <item name="Preview 2.0.5" href="http://snapshot.microemu.org/" />
+            <item name="Preview 3.0.1" href="http://snapshot.microemu.org/" />
             -->
 
             <item name="Changes and Plans" href="http://www.microemu.org/changes-report.html" />

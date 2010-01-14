@@ -35,6 +35,7 @@ import org.microemu.device.ui.TextFieldUI;
 
 import android.graphics.Typeface;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.widget.EditText;
@@ -114,10 +115,23 @@ public class AndroidTextFieldUI extends LinearLayout implements TextFieldUI {
 	public void setConstraints(final int constraints) {
 		activity.post(new Runnable() {
 			public void run() {
-				if ((constraints & TextField.PASSWORD) != 0) {
-					editView.setTransformationMethod(PasswordTransformationMethod.getInstance());
-					editView.setTypeface(Typeface.MONOSPACE);
-				}
+                if ((constraints & TextField.CONSTRAINT_MASK) == TextField.URL) {
+                    editView.setSingleLine(true);
+                } else if ((constraints & TextField.CONSTRAINT_MASK) == TextField.NUMERIC) {
+                    editView.setSingleLine(true);
+                    editView.setInputType(InputType.TYPE_CLASS_NUMBER);
+                } else if ((constraints & TextField.CONSTRAINT_MASK) == TextField.DECIMAL) {
+                    editView.setSingleLine(true);
+                    editView.setInputType(
+                            InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                } else if ((constraints & TextField.CONSTRAINT_MASK) == TextField.PHONENUMBER) {
+                    editView.setSingleLine(true);
+                    editView.setInputType(InputType.TYPE_CLASS_PHONE);
+                }
+                if ((constraints & TextField.PASSWORD) != 0) {
+                    editView.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    editView.setTypeface(Typeface.MONOSPACE);
+                }
 			}
 		});
 	}

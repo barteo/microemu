@@ -161,7 +161,10 @@ public abstract class InputMethodImpl extends InputMethod implements Runnable {
                     }
                     break;
                 case TextField.PHONENUMBER :
-                    // TODO
+                    if (Character.isDigit(chars[i]) || chars[i] == '-' || chars[i] == '.' || chars[i] == ' ' || chars[i] == '+') {
+                        result[j] = chars[i];
+                        j++;
+                    }
                     break;
                 case TextField.URL :
                     if (chars[i] != '\n') {
@@ -203,7 +206,7 @@ public abstract class InputMethodImpl extends InputMethod implements Runnable {
 				result[j] = Character.toLowerCase(chars[i]);
 				j++;
 			} else if (inputMode == InputMethod.INPUT_123) {
-				if (Character.isDigit(chars[i]) || chars[i] == '-' || chars[i] == '.') {
+				if (Character.isDigit(chars[i]) || chars[i] == '-' || chars[i] == '.' || chars[i] == ' ' || chars[i] == '+') {
 					result[j] = chars[i];
 					j++;
 				}

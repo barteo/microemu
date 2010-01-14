@@ -114,7 +114,14 @@ public abstract class InputMethod
                 }
                 break;
             case TextField.PHONENUMBER :
-                // TODO validate email
+                if (text != null && text.length() > 0) {
+                    for (int i = 0; i < text.length(); i++) {
+                        char c = text.charAt(i);                     
+                        if (!Character.isDigit(c) && c != '-' && c != '.' && c != ' ' && c != '+') {
+                            return false;
+                        }
+                    }
+                }
                 break;
             case TextField.URL :
                 // TODO validate url

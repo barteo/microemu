@@ -26,16 +26,11 @@
 
 package org.microemu.android.device.ui;
 
-import java.util.List;
-
-import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.TextBox;
 import javax.microedition.lcdui.TextField;
 
-import org.microemu.MIDletBridge;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.InputMethod;
-import org.microemu.device.ui.CommandUI;
 import org.microemu.device.ui.TextBoxUI;
 
 import android.content.Context;
@@ -47,7 +42,6 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.Gravity;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
@@ -83,21 +77,6 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 				int constraints = textBox.getConstraints();
 				if ((constraints & TextField.CONSTRAINT_MASK) == TextField.URL) {
 					editView.setSingleLine(true);
-					editView.setOnClickListener(new View.OnClickListener() {
-	
-						public void onClick(View v) {
-							List<AndroidCommandUI> commands = getCommandsUI();
-							for (int i = 0; i < commands.size(); i++) {
-								CommandUI cmd = commands.get(i);
-								if (cmd.getCommand().getCommandType() == Command.OK) {
-									MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(
-											cmd.getCommand(), displayable);
-									break;
-								}
-							}			
-						}
-						
-					});
 				} else if ((constraints & TextField.CONSTRAINT_MASK) == TextField.NUMERIC) {
 					editView.setSingleLine(true);
 					editView.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -105,6 +84,9 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 					editView.setSingleLine(true);
 					editView.setInputType(
 							InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                } else if ((constraints & TextField.CONSTRAINT_MASK) == TextField.PHONENUMBER) {
+                    editView.setSingleLine(true);
+                    editView.setInputType(InputType.TYPE_CLASS_PHONE);
 				}
 				if ((constraints & TextField.PASSWORD) != 0) {
 					editView.setTransformationMethod(PasswordTransformationMethod.getInstance());

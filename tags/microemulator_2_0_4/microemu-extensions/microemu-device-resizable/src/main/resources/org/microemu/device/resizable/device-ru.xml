@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<device	name="Resizable device - russian keyboard"
+	    extends= "device.xml"
+	    xmlns="http://www.microemu.org/2.0.2/"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.microemu.org/2.0.2/ http://www.microemu.org/2.0.2/device.xsd">
+    <input>
+        <button name="2">
+            <chars override="true">
+                <char>a</char>
+                <char>b</char>
+                <char>c</char>
+				<char>&#1072;</char>
+				<char>&#1073;</char>
+				<char>&#1074;</char>
+				<char>&#1075;</char>
+                <char>2</char>
+            </chars>
+        </button>
+        <button name="3">
+            <chars override="true">
+                <char>d</char>
+                <char>e</char>
+                <char>f</char>
+				<char>&#1076;</char>
+				<char>&#1077;</char>
+				<char>&#1105;</char>
+				<char>&#1078;</char>
+				<char>&#1079;</char>
+                <char>3</char>
+            </chars>
+        </button>
+        <button name="4">
+            <chars override="true">
+                <char>g</char>
+                <char>h</char>
+                <char>i</char>
+				<char>&#1080;</char>
+				<char>&#1081;</char>
+				<char>&#1082;</char>
+				<char>&#1083;</char>
+                <char>4</char>
+            </chars>
+        </button>
+        <button name="5">
+            <chars override="true">
+                <char>j</char>
+                <char>k</char>
+                <char>l</char>
+				<char>&#1084;</char>
+				<char>&#1085;</char>
+				<char>&#1086;</char>
+				<char>&#1087;</char>
+                <char>5</char>
+            </chars>
+        </button>
+        <button name="6">
+            <chars override="true">
+                <char>m</char>
+                <char>n</char>
+                <char>o</char>
+				<char>&#1088;</char>
+				<char>&#1089;</char>
+				<char>&#1090;</char>
+				<char>&#1091;</char>
+                <char>6</char>
+            </chars>
+        </button>
+        <button name="7">
+            <chars override="true">
+                <char>p</char>
+                <char>q</char>
+                <char>r</char>
+                <char>s</char>
+				<char>&#1092;</char>
+				<char>&#1093;</char>
+				<char>&#1094;</char>
+				<char>&#1095;</char>
+                <char>7</char>
+            </chars>
+        </button>
+        <button name="8">
+            <chars override="true">
+                <char>t</char>
+                <char>u</char>
+                <char>v</char>
+				<char>&#1096;</char>
+				<char>&#1097;</char>
+				<char>&#1098;</char>
+				<char>&#1099;</char>
+                <char>8</char>
+            </chars>
+        </button>
+        <button name="9">
+            <chars override="true">
+                <char>w</char>
+                <char>x</char>
+                <char>y</char>
+                <char>z</char>
+				<char>&#1100;</char>
+				<char>&#1101;</char>
+				<char>&#1102;</char>
+				<char>&#1103;</char>
+                <char>9</char>
+            </chars>
+        </button>
+    </input>
+</device>

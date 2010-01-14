@@ -1,0 +1,10 @@
+#!/bin/bash
+# XXX: -Xbootclasspath is used as JamVM runs 3x faster
+# XXX: Java is symlink'd to here so the home button works
+# exec "$(dirname "$0")"/Java -Xbootclasspath:/usr/share/java/jocstrap.jar:/usr/share/jamvm/classes.zip:/usr/share/classpath/glibj.zip -cp /usr/share/java/arindal-iphone/share-1.0-SNAPSHOT.jar:/usr/share/java/arindal-iphone/javolution-5.0.3.jar:/usr/share/java/arindal-iphone/share-1.0-SNAPSHOT.jar:/usr/share/java/arindal-iphone/commons-collections-3.2.jar:/usr/share/java/jocstrap.jar:/usr/share/java/uicaboodle.jar:/usr/share/java/arindal-iphone.jar com.saurik.uicaboodle.Main HelloJava "$@" >>/tmp/arindal.log 2>&1
+
+JAVA="$(dirname "$0")"/Java
+#VMARGS="-Xmx40m -verbose:jni"
+VMARGS="-Xmx40m -Xss128K"
+
+source /usr/bin/microemu-iphone >>/tmp/microemu.log 2>&1

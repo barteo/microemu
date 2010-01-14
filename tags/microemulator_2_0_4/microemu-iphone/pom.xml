@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0">
+    <!-- @version $Revision$ ($Author$) $Date$ -->
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.microemu</groupId>
+		<artifactId>microemu</artifactId>
+		<version>2.0.4</version><!--me-version-->
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>microemu-iphone</artifactId>
+	<name>microemu-iphone</name>
+
+	<description>iphone</description>
+
+	<repositories>
+		<repository>
+			<id>maven.tisoft.de/repository</id>
+			<name>tisoft Maven Repository</name>
+			<url>http://maven.tisoft.de/repository/
+			</url>
+		</repository>
+		<repository>
+			<id>evolvis-release-repository</id>
+			<name>evolvis.org release repository</name>
+			<url>http://maven-repo.evolvis.org/releases
+			</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>evolvis-snapshot-repository</id>
+			<name>evolvis.org snapshot repository</name>
+			<url>http://maven-repo.evolvis.org/snapshots
+			</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>evolvis-release-repository</id>
+			<name>evolvis.org release repository</name>
+			<url>http://maven-repo.evolvis.org/releases
+			</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>evolvis-snapshot-repository</id>
+			<name>evolvis.org snapshot repository</name>
+			<url>http://maven-repo.evolvis.org/snapshots
+			</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>de.tarent.maven.plugins</groupId>
+				<artifactId>maven-pkg-plugin</artifactId>
+				<version>2.1.0-SNAPSHOT</version>
+				<configuration>
+					<defaultDistro>iphoneos</defaultDistro>
+					<shortDescription>MicroEmulator</shortDescription>
+					<defaults>
+						<mainClass>org.microemu.iphone.MicroEmulator
+						</mainClass>
+						<section>Java</section>
+						<maintainer>Markus Heberling &lt;markus@tisoft.de&gt;</maintainer>
+						<architecture>iphoneos-arm</architecture>
+						<datadir>/Applications/MicroEmulator.app</datadir>
+						<dataFiles>
+							<!--
+								.desktop entry which lies under
+								${project_base}/src/main/auxfiles and is copied into
+								/usr/share/applications/hildon
+							-->
+							<dataFile>
+								<from>Info.plist</from>
+								<to>.</to>
+							</dataFile>
+							<dataFile>
+								<from>Default.png</from>
+								<to>.</to>
+							</dataFile>
+							<dataFile>
+								<from>icon.png</from>
+								<to>.</to>
+							</dataFile>
+							<dataFile>
+								<from>MicroEmulator</from>
+								<to>.</to>
+							</dataFile>
+						</dataFiles>
+						<postinstScript>postInst.sh</postinstScript>
+						<prermScript>preRm.sh</prermScript>
+					</defaults>
+					<auxPackageMapURL>file:${basedir}/src/main/auxfiles/pm-iphoneos.xml
+					</auxPackageMapURL>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>pkg</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-midp</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.microemu</groupId>
+            <artifactId>microemu-javase</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+ 
+        <dependency>
+			<groupId>iphone</groupId>
+			<artifactId>jocstrap</artifactId>
+			<version>1.0.2549-8</version>
+		</dependency>
+		<dependency>
+			<groupId>iphone</groupId>
+			<artifactId>uicaboodle</artifactId>
+			<version>1.0.2475-2</version>
+		</dependency>
+		<dependency>
+			<groupId>iphone</groupId>
+			<artifactId>straptease</artifactId>
+			<version>0.7</version>
+		</dependency>
+        
+    </dependencies>
+
+</project>

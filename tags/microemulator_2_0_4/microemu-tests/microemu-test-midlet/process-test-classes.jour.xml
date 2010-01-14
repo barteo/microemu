@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<jour xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="jour.xsd" debug="false">
+    <aspect descr="TestCaseReflectionData" type="com.pyx4me.cldcunit.TestCaseReflectionDataInstrumentor" enabled="true">
+        <typedef>*.*Test</typedef>
+        <!--pointcut expr="* junit.framework.TestCase=>test*()"/-->
+        <pointcut expr="* test*()"/>
+        <pointcut expr="junit.framework.Test suite()"/>
+    </aspect>
+</jour>

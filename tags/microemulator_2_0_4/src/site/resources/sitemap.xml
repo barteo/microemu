@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <url>
+      <loc>http://snapshot-microemu.pyx4j.com/</loc>
+      <changefreq>weekly</changefreq>
+   </url>
+   <url>
+      <loc>http://snapshot-microemu.pyx4j.com/download.html</loc>
+      <changefreq>monthly</changefreq>
+   </url>
+   <url>
+      <loc>http://snapshot-microemu.pyx4j.com/api/cldcapi10/apidocs/index.html</loc>
+      <changefreq>monthly</changefreq>
+   </url>
+   <url>
+      <loc>http://snapshot-microemu.pyx4j.com/api/cldcapi11/apidocs/index.html</loc>
+      <changefreq>monthly</changefreq>
+   </url>
+   <url>
+      <loc>http://snapshot-microemu.pyx4j.com/api/midpapi20/apidocs/index.html</loc>
+      <changefreq>monthly</changefreq>
+   </url>
+   <url>
+      <loc>http://snapshot-microemu.pyx4j.com/mail-lists.html</loc>
+      <changefreq>monthly</changefreq>
+   </url>
+</urlset>

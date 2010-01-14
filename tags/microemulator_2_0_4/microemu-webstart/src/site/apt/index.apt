@@ -1,0 +1,61 @@
+~~ @version $Revision$ ($Author$) $Date$
+~~ See this file format http://maven.apache.org/guides/mini/guide-apt-format.html
+
+                                    ------------------
+                                    MicroEmulator Web Start
+                                    ------------------
+
+
+MicroEmulator Web Start
+
+    To start MicroEmulator application click this link {{{demo.jnlp}Java Web Start}}.
+
+    You can Drag and Drop .jad files or http jad links to running MicroEmulator application.
+
+* Some example applications you can try.
+
+*---------------------------+-----------+
+| Drag and Drop .jad link   | Web Start |
+*---------------------------+-----------+
+| {{{http://wintermute.de/wap/extended/5ud0ku.jad}A Sudoku Game}}  |  <<<{{{open/wintermute.de/wap/extended/5ud0ku.jnlp}\u00bbOpen}}>>>
+*-----------------------+-----------+
+| {{{../microemu-examples/microemu-demo/microemu-demo.jad}MicroEmulator Demo}} |  <<<{{{open-local/~/microemu-examples/microemu-demo/microemu-demo.jnlp}\u00bbOpen}}>>>
+*-----------------------+-----------+
+| {{{../microemu-examples/microemu-fcview/microemu-fcview.jad}MicroEmulator JSR-75 Demo}} |  <<<{{{open-local/~/microemu-examples/microemu-fcview/microemu-fcview.jnlp}\u00bbOpen}}>>>
+*-----------------------+-----------+
+| {{{../microemu-tests/microemu-test-midlet/microemu-test-midlet-#version#-test.jad}MicroEmulator CLDCUnit tests}} |  <<<{{{open-local/~/microemu-tests/microemu-test-midlet/microemu-test-midlet-#version#-test.jnlp}\u00bbOpen}}>>>
+*-----------------------+-----------+
+| {{{http://www.google.com/gmm/gmm.jad?make=Sony_Ericsson&model=K790&ver=v2.0.3}Google Maps for Sony Ericsson}} |  <<<{{{open/www.google.com/gmm/gmm.jnlp?make=Sony_Ericsson&model=K790&ver=v2.0.3}\u00bbOpen}}>>>
+*-----------------------+-----------+
+| {{{http://www.google.com/gmm/gmm.jad?make=Generic&model=Advanced%20MIDP2&ver=v2.0.3}Google Maps Generic}}  |      <<<{{{open/www.google.com/gmm/gmm.jnlp?make=Generic&model=Advanced%20MIDP2&ver=v2.0.3}\u00bbOpen}}>>>
+*-----------------------+-----------+
+| {{{http://mail.google.com/app/gmail.jad?make=Sony_Ericsson&model=K790&ver=v1.5.0.1191}Google Gmail for Sony Ericsson}} |  <<<{{{open/mail.google.com/app/gmail.jnlp?make=Sony_Ericsson&model=K790&ver=v1.5.0.1191}\u00bbOpen}}>>>
+*-----------------------+-----------+
+| {{{http://mail.google.com/app/gmail.jad?make=Generic&model=Advanced%20MIDP2&ver=v1.5.0.1191}Google Gmail Generic}} | <<<{{{open/mail.google.com/app/gmail.jnlp?make=Generic&model=Advanced%20MIDP2&ver=v1.5.0.1191}\u00bbOpen}}>>>
+*-----------------------+-----------+
+
+* Other MicroEmulator Web Start demonstrations
+
+    MicroEmulator Web Start with JSR-82 available at {{{http://bluecove.sourceforge.net/}BlueCove project website}}
+
+
+* Add a link from your page to start MicroEmulator.
+
+    Your users can start your MIDlet application with a single click.
+
+    URL Example:
+
+---
+For JAD URL:
+    http://wintermute.de/wap/extended/5ud0ku.jad
+MicroEmulator Web Start URL:
+    http://microemu.org/webstart/wintermute.de/wap/extended/5ud0ku.jnlp
+---
+
+  HTML text on your page:
+
+---
+    <a href="http://microemu.org/webstart/wintermute.de/wap/extended/5ud0ku.jnlp">Run it now</a>
+---
+
+  {{{http://microemu.org/webstart/wintermute.de/wap/extended/5ud0ku.jnlp}Try it yourself first}}

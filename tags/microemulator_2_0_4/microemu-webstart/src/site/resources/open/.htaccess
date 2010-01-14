@@ -1,0 +1,2 @@
+RewriteEngine on
+RewriteRule   ^(.+)\.jnlp$  jnlp-opener.php?jnlp-open-app-url=$1&%{QUERY_STRING}

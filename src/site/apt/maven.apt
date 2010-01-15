@@ -54,4 +54,4 @@ Building project using maven
     *  <scope provided> defines that MicroEmulator classes are not included in your final application jar
 
 
-   For more information on building J2ME  application using maven2 see {{{http://pyx4me.com/pyx4me-maven-plugins/j2me-maven-plugin/introduction.html}j2me-maven-plugin}}
+   For more information on building J2ME  application using maven2 see {{{http://pyx4me.com/pyx4me-maven-plugins/j2me-maven-plugin/}j2me-maven-plugin}}

@@ -231,6 +231,22 @@ public class Common implements MicroEmulator, CommonInterface {
                 nameString.length()).toLowerCase(Locale.ENGLISH).equals("jar"));
     }
 
+    private static boolean isJadURL(String urlString) throws IOException {
+        String u = urlString.toLowerCase();
+        if (u.endsWith(".jad")) {
+            return true;
+        } else {
+            URL url = new URL(urlString);
+            return url.getPath().endsWith(".jad"); 
+        }
+    }
+    
+    //TODO make UserAgent configurable.
+    private static String jarUserAgent() {
+        return null;
+        //return "SonyEricssonK790i/R4CE Browser/NetFront/3.3 Profile/MIDP-2.0 Configuration/CLDC-1.1";
+    }
+    
     /**
      * TODO add proper Error handling and display in this function.
      */
@@ -339,6 +355,9 @@ public class Common implements MicroEmulator, CommonInterface {
                 String userInfo = new String(Base64Coder.encode(url.getUserInfo().getBytes("UTF-8")));
                 conn.setRequestProperty("Authorization", "Basic " + userInfo);
             }
+            if (jarUserAgent() != null) {
+                conn.setRequestProperty("User-Agent", jarUserAgent());
+            }
             is = conn.getInputStream();
             File tmpDir = null;
             String systemTmpDir = MIDletSystemProperties.getSystemProperty("java.io.tmpdir");
@@ -361,13 +380,14 @@ public class Common implements MicroEmulator, CommonInterface {
             IOUtils.closeQuietly(is);
         }
     }
+    
 
     private void openMIDletUrl(String urlString, MIDletClassLoader midletClassLoader) throws IOException {
         try {
             setStatusBar("Loading...");
             jad.clear();
 
-            if (urlString.toLowerCase().endsWith(".jad")) {
+            if (isJadURL(urlString)) {
                 Logger.debug("openJad", urlString);
                 jad = loadJadProperties(urlString);
                 loadJar(urlString, jad.getJarURL(), midletClassLoader);
@@ -582,7 +602,7 @@ public class Common implements MicroEmulator, CommonInterface {
                 }
             }
             // Support Basic Authentication; Copy jar file to tmp directory
-            if (url.getUserInfo() != null) {
+            if ((url.getUserInfo() != null) || (jarUserAgent() != null)) {
                 String tmpURL = saveJar2TmpFile(jarUrl, true);
                 if (tmpURL == null) {
                     return;
@@ -967,12 +987,17 @@ public class Common implements MicroEmulator, CommonInterface {
         JadProperties properties = new JadProperties();
 
         URL url = new URL(urlString);
-        if (url.getUserInfo() == null) {
+        if ((url.getUserInfo() == null) && (jarUserAgent() == null)) {
             properties.read(url.openStream());
         } else {
             URLConnection cn = url.openConnection();
-            String userInfo = new String(Base64Coder.encode(url.getUserInfo().getBytes("UTF-8")));
-            cn.setRequestProperty("Authorization", "Basic " + userInfo);
+            if ((url.getUserInfo() != null)) {
+                String userInfo = new String(Base64Coder.encode(url.getUserInfo().getBytes("UTF-8")));
+                cn.setRequestProperty("Authorization", "Basic " + userInfo);
+            }
+            if (jarUserAgent() != null) {
+                cn.setRequestProperty("User-Agent", jarUserAgent());    
+            }
             properties.read(cn.getInputStream());
         }
 

@@ -21,7 +21,6 @@ package javax.microedition.lcdui.game;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
-import javax.microedition.lcdui.Image;
 
 import org.microemu.GameCanvasKeyAccess;
 import org.microemu.MIDletBridge;
@@ -98,23 +97,14 @@ public abstract class GameCanvas extends Canvas {
     }
     
     public void paint(Graphics g) {
-//        g.drawImage(offscreenBuffer, 0, 0, Graphics.TOP | Graphics.LEFT);
     }
     
     public void flushGraphics(int x, int y, int width, int height) {
-        // i dont know if this is correct, the specification is a little
-        // vague here.
-        // For example this methods fail if the paint method is
-        // overriden with something else
-        repaint(x, y, width, height);
-        serviceRepaints();
+        DeviceFactory.getDevice().getDeviceDisplay().flushGraphics(x, y, width, height);
     }
 
     public void flushGraphics() {
-    	
-        // NOTE see comment at the other flushGraphics method
-        repaint();
-        serviceRepaints();
+    	flushGraphics(0, 0, getWidth(), getHeight());
     }
 
     public int getKeyStates() {

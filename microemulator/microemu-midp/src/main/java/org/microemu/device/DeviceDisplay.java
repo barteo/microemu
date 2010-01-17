@@ -75,4 +75,6 @@ public interface DeviceDisplay
 	
 	Graphics getGraphics(GameCanvas gameCanvas);
 	
+	void flushGraphics(int x, int y, int width, int height);
+	
 }

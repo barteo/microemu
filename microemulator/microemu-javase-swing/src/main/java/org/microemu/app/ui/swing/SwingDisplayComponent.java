@@ -41,6 +41,7 @@ import java.util.Iterator;
 import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.lcdui.Screen;
+import javax.microedition.lcdui.game.GameCanvas;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
@@ -321,22 +322,26 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 						deviceDisplay.paintControls(graphicsSurface.getGraphics());
 					}
 				}
-
-				fireDisplayRepaint(graphicsSurface);
 			}
 
-			if (deviceDisplay.isFullScreenMode()) {
-				repaint(x, y, width, height);
-			} else {
-				repaint(0, 0, graphicsSurface.getImage().getWidth(), graphicsSurface.getImage().getHeight());
-			}
+            if (!(current instanceof GameCanvas)) {
+                if (deviceDisplay.isFullScreenMode()) {
+                    fireDisplayRepaint(
+                            graphicsSurface, x, y, width, height);
+    			} else {
+                    fireDisplayRepaint(
+                            graphicsSurface, 0, 0, graphicsSurface.getImage().getWidth(), graphicsSurface.getImage().getHeight());
+    			}
+            }
 		}
 	}
 
-	private void fireDisplayRepaint(J2SEGraphicsSurface graphicsSurface) {
+	public void fireDisplayRepaint(J2SEGraphicsSurface graphicsSurface, int x, int y, int width, int height) {
 		if (displayRepaintListener != null) {
 			displayRepaintListener.repaintInvoked(graphicsSurface);
 		}
+		
+		repaint(x, y, width, height);
 	}
 
 	Point deviceCoordinate(DeviceDisplay deviceDisplay, Point p) {

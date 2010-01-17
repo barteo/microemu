@@ -52,6 +52,7 @@ import javax.microedition.lcdui.game.Sprite;
 import org.microemu.DisplayAccess;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
+import org.microemu.app.ui.swing.SwingDisplayComponent;
 import org.microemu.app.util.IOUtils;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
@@ -88,6 +89,8 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	PositionedImage modeAbcUpperImage;
 
 	PositionedImage modeAbcLowerImage;
+	
+	Image gameCanvasImage = null;
 
 	boolean resizable;
 
@@ -427,8 +430,24 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 
     public javax.microedition.lcdui.Graphics getGraphics(GameCanvas gameCanvas)
     {
-        return createImage(gameCanvas.getWidth(), gameCanvas.getHeight(), true, 0x00000000).getGraphics();
+        if (gameCanvasImage == null) {
+            gameCanvasImage = createImage(gameCanvas.getWidth(), gameCanvas.getHeight(), true, 0x00000000);
+        }
+        
+        return gameCanvasImage.getGraphics();
     }
+    
+    public void flushGraphics(int x, int y, int width, int height) {
+        J2SEGraphicsSurface surface = ((SwingDisplayComponent) context.getDisplayComponent()).getGraphicsSurface();
+        surface.getGraphics().drawImage(
+                ((J2SEMutableImage) gameCanvasImage).getImage(), 
+                x, y, x + width, y + height, 
+                x, y, x + width, y + height, 
+                null);
+        ((SwingDisplayComponent) context.getDisplayComponent()).fireDisplayRepaint(
+                surface, 0, 0, surface.getImage().getWidth(), surface.getImage().getHeight());
+    }
+
 
 	public void setNumAlphaLevels(int i) {
 		numAlphaLevels = i;

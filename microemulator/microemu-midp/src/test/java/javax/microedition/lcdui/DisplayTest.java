@@ -226,6 +226,9 @@ public class DisplayTest extends TestCase {
             return null;
         }
 
+        public void flushGraphics(int x, int y, int width, int height) {
+        }
+        
 	}
 
 	private static final class MockFontManager implements FontManager {

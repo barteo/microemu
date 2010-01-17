@@ -180,6 +180,10 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
     {
         return graphics;
     }
+    
+    public void flushGraphics(int x, int y, int width, int height) {
+        // TODO;
+    }
 
 	public int getFullHeight() {
 		return displayRectangleHeight;

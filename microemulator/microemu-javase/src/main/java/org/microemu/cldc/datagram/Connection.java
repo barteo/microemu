@@ -134,14 +134,24 @@ public class Connection implements DatagramConnection, UDPDatagramConnection, Co
 		int port = -1;
 		int index = address.indexOf(':');
 		if (index == -1) {
-			throw new IOException("port missing");
+			throw new IllegalArgumentException("Port missing");
 		}
-		port = Integer.parseInt(address.substring(index + 1));
+		String portToParse = address.substring(index + 1);
+		if (portToParse.length() > 0) {
+			port = Integer.parseInt(portToParse);
+		}
 		if (index == 0) {
 			// server mode
-			socket = new DatagramSocket(port);
+			if (port == -1) {
+				socket = new DatagramSocket();
+			} else {
+				socket = new DatagramSocket(port);
+			}
 		} else {
 			// client mode
+			if (port == -1) {
+				throw new IllegalArgumentException("Port missing");
+			}
 			String host = address.substring(0, index);
 			socket = new DatagramSocket();
 			socket.connect(InetAddress.getByName(host), port);

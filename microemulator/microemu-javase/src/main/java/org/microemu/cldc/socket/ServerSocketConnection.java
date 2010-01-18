@@ -36,6 +36,10 @@ public class ServerSocketConnection implements
 	
 	private ServerSocket serverSocket;
 	
+	public ServerSocketConnection() throws IOException {
+		serverSocket = new ServerSocket();
+	}
+
 	public ServerSocketConnection(int port) throws IOException {
 		serverSocket = new ServerSocket(port);
 	}

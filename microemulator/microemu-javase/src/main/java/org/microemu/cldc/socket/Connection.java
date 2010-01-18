@@ -36,14 +36,28 @@ public class Connection implements ClosedConnection {
 			throw new IOException("No network");
 		}
 
+		int port = -1;
 		int portSepIndex = name.lastIndexOf(':');
-		int port = Integer.parseInt(name.substring(portSepIndex + 1));
+		if (portSepIndex == -1) {
+			throw new IllegalArgumentException("Port missing");
+		}
+		String portToParse = name.substring(portSepIndex + 1);
+		if (portToParse.length() > 0) {
+			port = Integer.parseInt(portToParse);
+		}
 		String host = name.substring("socket://".length(), portSepIndex);
 
 		if (host.length() > 0) {
+			if (port == -1) {
+				throw new IllegalArgumentException("Port missing");
+			}
 			return new SocketConnection(host, port);
 		} else {
-			return new ServerSocketConnection(port);
+			if (port == -1) {
+				return new ServerSocketConnection();
+			} else {
+				return new ServerSocketConnection(port);
+			}
 		}
 	}
 

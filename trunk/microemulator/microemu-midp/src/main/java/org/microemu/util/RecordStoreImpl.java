@@ -239,7 +239,7 @@ public class RecordStoreImpl extends RecordStore
 		int result = 0;
 		Enumeration keys = records.keys();
 		while (keys.hasMoreElements()) {
-			int key = ((Integer) records.get(keys.nextElement())).intValue();
+			int key = ((Integer) keys.nextElement()).intValue();
 			try {
 				result += getRecord(key).length;
 			} catch (RecordStoreException e) {

@@ -151,7 +151,11 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 			vh.text = stringPart;
 			objects.add(vh);
 			
-			notifyDataSetChanged();
+			activity.post(new Runnable() {
+				public void run() {
+					notifyDataSetChanged();
+				}
+			});
 			
 			return objects.lastIndexOf(vh);
 		}
@@ -207,12 +211,22 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 		
 		public void delete(int elementNum) {
 			objects.remove(elementNum);		
-			notifyDataSetChanged();
+			
+			activity.post(new Runnable() {
+				public void run() {
+					notifyDataSetChanged();
+				}
+			});
 		}
 
 		public void deleteAll() {
-			objects.clear();		
-			notifyDataSetChanged();
+			objects.clear();
+			
+			activity.post(new Runnable() {
+				public void run() {
+					notifyDataSetChanged();
+				}
+			});
 		}
 	}
 	

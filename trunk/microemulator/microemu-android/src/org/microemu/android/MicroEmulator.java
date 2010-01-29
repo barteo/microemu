@@ -223,7 +223,7 @@ public class MicroEmulator extends MicroEmulatorActivity {
 		if (da == null) {
 			return false;
 		}
-		AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getCurrentUI();
+		AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getDisplayableUI(da.getCurrent());
 		if (ui == null) {
 			return false;
 		}		
@@ -285,7 +285,7 @@ public class MicroEmulator extends MicroEmulatorActivity {
 		if (da == null) {
 			return false;
 		}
-		AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getCurrentUI();
+		AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getDisplayableUI(da.getCurrent());
 		if (ui == null) {
 			return false;
 		}		
@@ -360,7 +360,7 @@ public class MicroEmulator extends MicroEmulatorActivity {
 			if (da == null) {
 				return false;
 			}
-			AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getCurrentUI();
+			AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getDisplayableUI(da.getCurrent());
 			if (ui instanceof AndroidCanvasUI) {
 				float x = event.getX();
 				float y = event.getY();
@@ -408,7 +408,7 @@ public class MicroEmulator extends MicroEmulatorActivity {
 		if (da == null) {
 			return false;
 		}
-		AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getCurrentUI();
+		AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getDisplayableUI(da.getCurrent());
 		if (ui == null) {
 			return false;
 		}		
@@ -438,7 +438,7 @@ public class MicroEmulator extends MicroEmulatorActivity {
 		if (da == null) {
 			return false;
 		}
-		AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getCurrentUI();
+		AndroidDisplayableUI ui = (AndroidDisplayableUI) da.getDisplayableUI(da.getCurrent());
 		if (ui == null) {
 			return false;
 		}

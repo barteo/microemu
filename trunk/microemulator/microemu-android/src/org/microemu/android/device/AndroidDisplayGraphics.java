@@ -50,7 +50,9 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
     private javax.microedition.lcdui.Graphics delegate;
 
-	private Paint paint = new Paint();
+	private Paint strokePaint = new Paint();
+	
+	private Paint fillPaint = new Paint();
 	
 	private Rect clip;
 	
@@ -62,6 +64,11 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
 	public AndroidDisplayGraphics() {
         this.delegate = null;
+        
+		strokePaint.setAntiAlias(true);
+		strokePaint.setStyle(Paint.Style.STROKE);
+		fillPaint.setAntiAlias(true);
+		fillPaint.setStyle(Paint.Style.FILL);
 	}
 	
     public AndroidDisplayGraphics(Bitmap bitmap) {
@@ -69,13 +76,17 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
         this.canvas.clipRect(0, 0, bitmap.getWidth(), bitmap.getHeight());
         this.delegate = null;
         
+		strokePaint.setAntiAlias(true);
+		strokePaint.setStyle(Paint.Style.STROKE);
+		fillPaint.setAntiAlias(true);
+		fillPaint.setStyle(Paint.Style.FILL);
+        
         reset(this.canvas);
     }
 	
 	public void reset(Canvas canvas) {
 	    this.canvas = canvas;
 	    
-		paint.setAntiAlias(true);
 		clip = this.canvas.getClipBounds();
 		setFont(Font.getDefaultFont());
 	}
@@ -98,9 +109,8 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
-	   	paint.setStyle(Paint.Style.STROKE);
 	    RectF rect = new RectF(x, y, x + width, y + height);
-	    canvas.drawArc(rect, startAngle, arcAngle, false, paint);
+	    canvas.drawArc(rect, startAngle, arcAngle, false, strokePaint);
     }
 
 	public void drawImage(Image img, int x, int y, int anchor) {
@@ -126,9 +136,9 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
             }
     
             if (img.isMutable()) {
-                canvas.drawBitmap(((AndroidMutableImage) img).getBitmap(), newx, newy, paint);
+                canvas.drawBitmap(((AndroidMutableImage) img).getBitmap(), newx, newy, strokePaint);
             } else {
-                canvas.drawBitmap(((AndroidImmutableImage) img).getBitmap(), newx, newy, paint);
+                canvas.drawBitmap(((AndroidImmutableImage) img).getBitmap(), newx, newy, strokePaint);
             }
         }
 	}
@@ -145,17 +155,15 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 			y2++;
 		}
 
-		canvas.drawLine(x1, y1, x2, y2, paint);
+		canvas.drawLine(x1, y1, x2, y2, strokePaint);
 	}
 
 	public void drawRect(int x, int y, int width, int height) {
-		paint.setStyle(Paint.Style.STROKE);
-		canvas.drawRect(x, y, x + width, y + height, paint);
+		canvas.drawRect(x, y, x + width, y + height, strokePaint);
 	}
 
 	public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
-		paint.setStyle(Paint.Style.STROKE);
-		canvas.drawRoundRect(new RectF(x, y, x + width, y + height), (float) arcWidth, (float) arcHeight, paint);
+		canvas.drawRoundRect(new RectF(x, y, x + width, y + height), (float) arcWidth, (float) arcHeight, strokePaint);
    }
 
 	public void drawString(String str, int x, int y, int anchor) {
@@ -181,28 +189,25 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
             newx -= androidFont.paint.measureText(str);
         }
 
-        androidFont.paint.setColor(paint.getColor());
+        androidFont.paint.setColor(strokePaint.getColor());
         canvas.drawText(str, offset, len + offset, newx, newy, androidFont.paint);
 	}
 
     public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
-    	paint.setStyle(Paint.Style.FILL);
 	    RectF rect = new RectF(x, y, x + width, y + height);
-	    canvas.drawArc(rect, startAngle, arcAngle, false, paint);
+	    canvas.drawArc(rect, startAngle, arcAngle, false, fillPaint);
     }
 
 	public void fillRect(int x, int y, int width, int height) {
         if (delegate != null) {
             delegate.fillRect(x, y, width, height);
         } else {
-            paint.setStyle(Paint.Style.FILL);
-            canvas.drawRect(x, y, x + width, y + height, paint);
+            canvas.drawRect(x, y, x + width, y + height, fillPaint);
         }
 	}
 
 	public void fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
-		paint.setStyle(Paint.Style.FILL);
-		canvas.drawRoundRect(new RectF(x, y, x + width, y + height), (float) arcWidth, (float) arcHeight, paint);
+		canvas.drawRoundRect(new RectF(x, y, x + width, y + height), (float) arcWidth, (float) arcHeight, fillPaint);
     }
 
 	public int getClipHeight() {
@@ -222,7 +227,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public int getColor() {
-		return paint.getColor();
+		return strokePaint.getColor();
 	}
 
 	public Font getFont() {
@@ -250,7 +255,8 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void setColor(int RGB) {
-		paint.setColor(0xff000000 | RGB);
+		strokePaint.setColor(0xff000000 | RGB);
+		fillPaint.setColor(0xff000000 | RGB);
 	}
 
 	public void setFont(Font font) {
@@ -268,9 +274,11 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 		this.strokeStyle = style;
 		
 		if (style == SOLID) {
-			paint.setPathEffect(null);
+			strokePaint.setPathEffect(null);
+			fillPaint.setPathEffect(null);
 		} else { // DOTTED
-			paint.setPathEffect(dashPathEffect);
+			strokePaint.setPathEffect(dashPathEffect);
+			fillPaint.setPathEffect(dashPathEffect);
 		}
 	}
 
@@ -416,7 +424,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
             
         Rect srcRect = new Rect(x_src, y_src, x_src + width, y_src + height);
         Rect dstRect = new Rect(x_dst, y_dst, x_dst + width, y_dst + height);
-        canvas.drawBitmap(img, srcRect, dstRect, paint);
+        canvas.drawBitmap(img, srcRect, dstRect, strokePaint);
 	}
 
 	public void drawRGB(int[] rgbData, int offset, int scanlength, int x,
@@ -438,17 +446,16 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
         if (scanlength == 0) {
         	scanlength = width;
         }
-       	canvas.drawBitmap(rgbData, offset, scanlength, x, y, width, height, processAlpha, paint);
+       	canvas.drawBitmap(rgbData, offset, scanlength, x, y, width, height, processAlpha, strokePaint);
 	}
 
 	public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {
-		paint.setStyle(Paint.Style.FILL);
 		Path path = new Path();
 		path.moveTo(x1, y1);
 		path.lineTo(x2, y2);
 		path.lineTo(x3, y3);
 		path.lineTo(x1, y1);
-		canvas.drawPath(path, paint);
+		canvas.drawPath(path, fillPaint);
 	}
 
 	public void copyArea(int x_src, int y_src, int width, int height,

@@ -35,6 +35,8 @@ import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.GameCanvas;
 import javax.microedition.lcdui.game.Sprite;
 
+import org.microemu.MIDletBridge;
+import org.microemu.android.device.ui.AndroidCanvasUI;
 import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.EmulatorContext;
@@ -48,8 +50,6 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
     
 	private EmulatorContext context;
 	
-    public AndroidDisplayGraphics graphics;
-    
 	// TODO change this
 	public int displayRectangleWidth;
 	
@@ -64,8 +64,6 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 		this.context = context;
         this.displayRectangleWidth = width;
         this.displayRectangleHeight = height;
-		
-	    graphics = new AndroidDisplayGraphics(Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565));
 	}
 
 	public Image createImage(String name) throws IOException {
@@ -178,11 +176,14 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 
     public Graphics getGraphics(GameCanvas gameCanvas)
     {
-        return graphics;
+        AndroidCanvasUI ui = 
+        	(AndroidCanvasUI) MIDletBridge.getMIDletAccess().getDisplayAccess().getDisplayableUI(gameCanvas);
+        
+        return ui.getGraphics();
     }
     
-    public void flushGraphics(int x, int y, int width, int height) {
-        // TODO;
+    public void flushGraphics(int x, int y, int width, int height) {  	
+        paintDisplayable(x, y, width, height);
     }
 
 	public int getFullHeight() {

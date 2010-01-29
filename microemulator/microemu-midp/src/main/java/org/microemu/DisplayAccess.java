@@ -60,10 +60,9 @@ public interface DisplayAccess
 	   
     ItemUI getItemUI(Item item);
 	
-	// TODO try to change all calls to getCurrent to use getCurrentUI, then remove getCurrent
 	Displayable getCurrent();
 
-	DisplayableUI getCurrentUI();
+	DisplayableUI getDisplayableUI(Displayable displayable);
 
 	void setCurrent(Displayable d);
 	

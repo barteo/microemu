@@ -340,13 +340,8 @@ public class Display {
 			return getDisplay().getCurrent();
 		}
 
-		public DisplayableUI getCurrentUI() {
-			Displayable current = getCurrent();
-			if (current == null) {
-				return null;
-			} else {
-				return current.ui;
-			}
+		public DisplayableUI getDisplayableUI(Displayable displayable) {
+			return displayable.ui;
 		}
 
         public ItemUI getItemUI(Item item) {

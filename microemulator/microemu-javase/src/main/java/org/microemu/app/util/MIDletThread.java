@@ -44,7 +44,7 @@ public class MIDletThread extends Thread {
 
 	public static int graceTerminationPeriod = 5000;
 	
-	private static final String THREAD_NAME_PREFIX = "MIDletThread-";
+	private static final String THREAD_NAME_PREFIX = "";
 	
 	private static boolean terminator = false;
 	

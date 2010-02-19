@@ -64,7 +64,7 @@ public class MIDletResourceLoader {
 		if (classLoader != origClass.getClassLoader()) {
 			// showWarning
 			String callLocation = ThreadUtils.getCallLocation(FQCN);
-			if (callLocation != null) {
+			if (traceResourceLoading && callLocation != null) {
 				Logger.warn("attempt to load resource [" + resourceName + "] using System ClasslLoader from "
 						+ callLocation);
 			}

@@ -40,8 +40,12 @@ import javax.sound.midi.Sequencer;
 import javax.sound.midi.Synthesizer;
 import javax.sound.midi.Transmitter;
 
+import org.microemu.media.control.J2SEVolumeControl;
+
 class MidiAudioPlayer implements Player, MetaEventListener 
 {
+    private int state;
+    
 	private Sequence  sequence = null;             // The contents of a MIDI file
 	private Sequencer sequencer = null;            // We play MIDI Sequences with a Sequencer
 	private Vector    vListeners = null;           // All PlayerListeners for this audio
@@ -49,8 +53,7 @@ class MidiAudioPlayer implements Player, MetaEventListener
 	
 	public boolean open( InputStream stream, String type ) 
 	{
-		try 
-	    {
+		try {
     		// First, get a Sequencer to play sequences of MIDI events
     		//That is, to send events to a Synthesizer at the right time.
     		sequencer = MidiSystem.getSequencer( ); // Used to play sequences
@@ -66,11 +69,18 @@ class MidiAudioPlayer implements Player, MetaEventListener
     		//Read the sequence from the file and tell the sequencer about it
     		sequence = MidiSystem.getSequence( stream );
     		sequencer.setSequence(sequence);
-	    } 
-	    catch( UnsatisfiedLinkError e ){ e.printStackTrace(); }
-	    catch( IOException e ){ e.printStackTrace(); }
-	    catch( MidiUnavailableException e ){ e.printStackTrace(); }
-	    catch( InvalidMidiDataException e ){ e.printStackTrace(); }
+	    } catch(UnsatisfiedLinkError e) { 
+	        e.printStackTrace(); 
+	    } catch(IOException e) { 
+	        e.printStackTrace(); 
+	    } catch(MidiUnavailableException e) {
+	        e.printStackTrace(); 
+	    } catch( InvalidMidiDataException e ) { 
+	        e.printStackTrace(); 
+	    }
+	    
+	    state = UNREALIZED;
+	    
 		return false;
 	}
 
@@ -112,8 +122,7 @@ class MidiAudioPlayer implements Player, MetaEventListener
 	}
 
 	public int getState() {
-		// TODO Auto-generated method stub
-		return 0;
+		return state;
 	}
 
 	public void prefetch() throws MediaException {
@@ -153,20 +162,25 @@ class MidiAudioPlayer implements Player, MetaEventListener
 	}
 
 	public void start() throws MediaException {
-		if( sequencer != null )
-		{
+		if (sequencer != null) {
 			sequencer.addMetaEventListener( this );
 			sequencer.start();
+			state = STARTED;
 		}
 	}
 
 	public void stop() throws MediaException {
-		if( sequencer != null )
+		if( sequencer != null ) {
 			sequencer.stop();
+			state = PREFETCHED;
+		}
 	}
 
 	public Control getControl(String controlType) {
-		// TODO Auto-generated method stub
+	    if ("VolumeControl".equals(controlType)) {
+	        return new J2SEVolumeControl();
+	    }
+
 		return null;
 	}
 

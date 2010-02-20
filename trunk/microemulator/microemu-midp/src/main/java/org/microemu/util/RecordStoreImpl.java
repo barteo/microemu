@@ -233,6 +233,8 @@ public class RecordStoreImpl extends RecordStore
 		    throw new RecordStoreNotOpenException();
 		}
 		
+		// TODO include size overhead such as the data structures used to hold the state of the record store
+		
 		// Preload all records
 		enumerateRecords(null, null, false);
 		
@@ -241,7 +243,10 @@ public class RecordStoreImpl extends RecordStore
 		while (keys.hasMoreElements()) {
 			int key = ((Integer) keys.nextElement()).intValue();
 			try {
-				result += getRecord(key).length;
+			    byte[] data = getRecord(key);
+			    if (data != null) {
+			        result += data.length;
+			    }
 			} catch (RecordStoreException e) {
 				e.printStackTrace();
 			}

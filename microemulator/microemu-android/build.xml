@@ -8,8 +8,7 @@
     <property name="midlet.jad" value="../microemu-examples/microemu-demo/target/microemu-demo-3.0.0-SNAPSHOT-me.jad" /> 
     <property name="midlet.package" value="SimpleDemo.apk" />
     
-    <property name="sdk-folder" value="/java/android-sdk-windows-1.6_r1" />
-    <property name="asm.jar" value="/Documents and Settings/Bartek/.m2/repository/asm/asm/3.1/asm-3.1.jar" />
+    <property name="sdk-folder" value="/Users/barteo/Desktop/Java/android-sdk-mac" />
     <property name="microemu-cldc.jar" value="../microemu-cldc/target/microemu-cldc-3.0.0-SNAPSHOT.jar" />
     <property name="microemu-midp.jar" value="../microemu-midp/target/microemu-midp-3.0.0-SNAPSHOT.jar" />
     <property name="microemu-javase.jar" value="../microemu-javase/target/microemu-javase-3.0.0-SNAPSHOT.jar" />
@@ -94,9 +93,8 @@
                 includes="org/microemu/android/asm/**">
             <classpath>
                 <pathelement location="${microemu-javase.jar}"/>
-                <pathelement location="${asm.jar}"/>
-                <pathelement location="asm-tree-3.1.jar"/>
-                <pathelement location="asm-commons-3.1.jar"/>
+                <pathelement location="asm-3.2.jar"/>
+                <pathelement location="asm-tree-3.2.jar"/>
             </classpath>
         </javac>
     </target>
@@ -174,9 +172,8 @@
             <classpath>
                 <pathelement path="${outdir-producer}"/>
                 <pathelement location="${microemu-javase.jar}"/>
-                <pathelement location="${asm.jar}"/>
-                <pathelement location="asm-tree-3.1.jar"/>
-                <pathelement location="asm-commons-3.1.jar"/>
+                <pathelement location="asm-3.2.jar"/>
+                <pathelement location="asm-tree-3.2.jar"/>
             </classpath>
         </java>
     </target>
@@ -209,6 +206,7 @@
         <basename property="prepared.midlet.jar.base" file="${outdir-libs}/midlet.jar"/>
         <dirname property="prepared.midlet.jar.dir" file="${outdir-libs}/midlet.jar"/>
         <exec executable="${dx}" failonerror="true">
+        	<arg value="-JXmx256m" />
             <arg value="--dex" />
             <arg value="--output=${intermediate-dex.dir}/${intermediate-dex.base}" />
             <arg value="--positions=lines" />
@@ -249,7 +247,7 @@
     	        <include name="${midlet.icon}"/>
     	    </patternset>
     	</unjar>
-        <copy file="${outdir}/${midlet.icon}" tofile="${outdir-res}/drawable/app_icon.png" />
+        <copy file="${outdir}/assets/${midlet.icon}" tofile="${outdir-res}/drawable/app_icon.png" />
         
         <echo file="${outdir}/AndroidManifest.xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;manifest xmlns:android="http://schemas.android.com/apk/res/android"

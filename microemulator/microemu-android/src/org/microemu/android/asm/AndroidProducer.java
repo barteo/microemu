@@ -32,6 +32,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.TreeMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
@@ -42,11 +45,32 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 
 public class AndroidProducer {
+	
+	private static HashMap<String, TreeMap<FieldNodeExt, String>> fieldTranslations = 
+			new HashMap<String, TreeMap<FieldNodeExt, String>>();
+	
+	private static void analyze(String className, final InputStream classInputStream) throws IOException {
+		ClassReader cr = new ClassReader(classInputStream);
+		FirstPassVisitor cv = new FirstPassVisitor();
+		cr.accept(cv, 0);
+		
+		TreeMap<FieldNodeExt, String> classFieldTranslations = new TreeMap<FieldNodeExt, String>();
+		Iterator<String> it = cv.fieldTranslations.keySet().iterator();
+		while (it.hasNext()) {
+			String name = it.next();
+			FieldNodeExt f = cv.fieldTranslations.get(name);
+			if (f.fieldNode != null) {
+				classFieldTranslations.put(f, name);
+			}
+		}
 
-	private static byte[] instrument(final InputStream classInputStream, boolean isMidlet) throws IOException {
+		fieldTranslations.put(className, classFieldTranslations);
+    }
+
+	private static byte[] instrument(String name, final InputStream classInputStream, boolean isMidlet) throws IOException {
 		ClassReader cr = new ClassReader(classInputStream);
 		ClassWriter cw = new ClassWriter(0);
-		ClassVisitor cv = new AndroidClassVisitor(cw, isMidlet);
+		ClassVisitor cv = new AndroidClassVisitor(cw, isMidlet, name, fieldTranslations);
 		cr.accept(cv, 0);
 
 		return cw.toByteArray();
@@ -55,6 +79,7 @@ public class AndroidProducer {
 	public static void processJar(File jarInputFile, File jarOutputFile, boolean isMidlet) throws IOException {
 		JarInputStream jis = null;
 		JarOutputStream jos = null;
+		HashMap<String, byte[]> resources = new HashMap<String, byte[]>();
 		try {
 			jis = new JarInputStream(new FileInputStream(jarInputFile));
 			Manifest manifest = jis.getManifest();
@@ -64,34 +89,43 @@ public class AndroidProducer {
 				jos = new JarOutputStream(new FileOutputStream(jarOutputFile), manifest);
 			}
 		
-			byte[] inputBuffer = new byte[1024];
+			byte[] buffer = new byte[1024];
 			JarEntry jarEntry;
 			while ((jarEntry = jis.getNextJarEntry()) != null) {
 				if (jarEntry.isDirectory() == false) {
 					String name = jarEntry.getName();
 					int size = 0;
 					int read;
-					int length = inputBuffer.length;
-					while ((read = jis.read(inputBuffer, size, length)) > 0) {
+					int length = buffer.length;
+					while ((read = jis.read(buffer, size, length)) > 0) {
 						size += read;
 						
 						length = 1024;
-						if (size + length > inputBuffer.length) {
+						if (size + length > buffer.length) {
 							byte[] newInputBuffer = new byte[size + length];
-							System.arraycopy(inputBuffer, 0, newInputBuffer, 0, inputBuffer.length);
-							inputBuffer = newInputBuffer;
+							System.arraycopy(buffer, 0, newInputBuffer, 0, buffer.length);
+							buffer = newInputBuffer;
 						}
 					}
-					
-					byte[] outputBuffer = inputBuffer;
-					int outputSize = size;
-					if (name.endsWith(".class")) {					
-				        outputBuffer = instrument(new ByteArrayInputStream(inputBuffer, 0, size), isMidlet);
-				        outputSize = outputBuffer.length;
+					byte[] inBuffer = new byte[size];
+					System.arraycopy(buffer, 0, inBuffer, 0, size);
+					resources.put(name, inBuffer);
+					if (name.endsWith(".class")) {	
+						analyze(name, new ByteArrayInputStream(inBuffer));
 					}
-					jos.putNextEntry(new JarEntry(name));
-					jos.write(outputBuffer, 0, outputSize);
 				}
+			}
+			
+			Iterator<String> it = resources.keySet().iterator();
+			while (it.hasNext()) {
+				String name = it.next();
+				byte[] inBuffer = resources.get(name);
+				byte[] outBuffer = inBuffer;
+				if (name.endsWith(".class")) {					
+			        outBuffer = instrument(name, new ByteArrayInputStream(inBuffer), isMidlet);
+				}
+				jos.putNextEntry(new JarEntry(name));
+				jos.write(outBuffer);
 			}			
 		} finally {
 			if (jis != null) {

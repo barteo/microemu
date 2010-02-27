@@ -27,14 +27,16 @@
 package org.microemu.android.asm;
 
 import java.util.HashMap;
+import java.util.TreeMap;
 
 import org.microemu.Injected;
 import org.objectweb.asm.ClassAdapter;
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.FieldNode;
 
 public class AndroidClassVisitor extends ClassAdapter {
 	
@@ -43,6 +45,10 @@ public class AndroidClassVisitor extends ClassAdapter {
 	private static boolean enhanceCatchBlock = false;
 	
 	boolean isMidlet;
+	
+	String className;
+	
+	HashMap<String, TreeMap<FieldNodeExt, String>> fieldTranslations;
 	
 	private HashMap<Label,CatchInformation> catchInfo;
 	
@@ -58,13 +64,57 @@ public class AndroidClassVisitor extends ClassAdapter {
 		}
 	}
 	
-	public class AndroidMethodVisitor extends MethodAdapter {
+	public class AndroidMethodVisitor extends PatternMethodAdapter {
+		
+		private final static int SEEN_NOTHING = 0;
+		
+		private final static int SEEN_I2B    = 1;
+		
+		private int state;
 
 		public AndroidMethodVisitor(MethodVisitor mv) {
 			super(mv);
 		}
 		
+		@Override
+		protected void visitInsn() {
+			state = SEEN_NOTHING;
+		}
+
+		@Override
+		public void visitFieldInsn(int opcode, String owner, String name, String desc) {
+			if (isMidlet && 
+					(opcode == Opcodes.GETFIELD || opcode == Opcodes.GETSTATIC || opcode == Opcodes.PUTFIELD || opcode == Opcodes.PUTSTATIC)) {
+				TreeMap<FieldNodeExt, String> classFields = fieldTranslations.get(owner + ".class");
+				if (classFields != null) {
+					String targetName = classFields.get(new FieldNodeExt(new FieldNode(-1, name, desc, null, null)));
+					if (targetName != null) {
+						mv.visitFieldInsn(opcode, owner, targetName, desc);
+						return;
+					}
+				}
+			}
+
+			super.visitFieldInsn(opcode, owner, name, desc);
+		}
+
+		@Override
+		public void visitInsn(int opcode) {
+			if (opcode == Opcodes.BASTORE) {
+				if (state != SEEN_I2B) {
+//System.out.println("I2B opcode needed !!!");
+//					mv.visitInsn(Opcodes.I2B);
+				}
+			}
+			visitInsn();
+			if (opcode == Opcodes.I2B) {
+				state = SEEN_I2B;
+			}
+			mv.visitInsn(opcode);
+		}
+
 		public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+			visitInsn();
 			if (isMidlet && opcode == Opcodes.INVOKEVIRTUAL) {
 				if ((name.equals("getResourceAsStream")) && (owner.equals("java/lang/Class"))) {							
 					mv.visitMethodInsn(Opcodes.INVOKESTATIC, "org/microemu/MIDletBridge", name, "(Ljava/lang/Class;Ljava/lang/String;)Ljava/io/InputStream;");
@@ -108,14 +158,28 @@ public class AndroidClassVisitor extends ClassAdapter {
 		
 	}
 
-	public AndroidClassVisitor(ClassVisitor cv, boolean isMidlet) {
+	public AndroidClassVisitor(ClassVisitor cv, boolean isMidlet, String className, HashMap<String, TreeMap<FieldNodeExt, String>> fieldTranslations) {
 		super(cv);
 		
 		this.isMidlet = isMidlet;
+		this.className = className;
+		this.fieldTranslations = fieldTranslations;		
 	}
 
 	public static String codeName(Class<Injected> klass) {
 		return klass.getName().replace('.', '/');
+	}
+	
+	@Override
+	public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
+		TreeMap<FieldNodeExt, String> classFields = fieldTranslations.get(className);
+		String targetName = classFields.get(
+				new FieldNodeExt(new FieldNode(access, name, desc, signature, value)));
+		if (targetName != null) {
+			return cv.visitField(access, targetName, desc, signature, value);			
+		} else {
+			return super.visitField(access, name, desc, signature, value);
+		}
 	}
 
 	public MethodVisitor visitMethod(final int access, final String name, String desc, final String signature, final String[] exceptions) {

@@ -26,9 +26,13 @@
 
 package org.microemu.android.device.ui;
 
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.Item;
+import javax.microedition.lcdui.ImageItem;
+import javax.microedition.lcdui.StringItem;
 
+import org.microemu.MIDletBridge;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.android.device.AndroidImmutableImage;
 import org.microemu.android.device.AndroidMutableImage;
@@ -37,6 +41,8 @@ import org.microemu.device.ui.ImageStringItemUI;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ImageButton;
+import android.view.View;
 
 public class AndroidImageStringItemUI extends LinearLayout implements ImageStringItemUI {
 
@@ -48,7 +54,9 @@ public class AndroidImageStringItemUI extends LinearLayout implements ImageStrin
 
 	private TextView textView;
 	
-	public AndroidImageStringItemUI(MicroEmulatorActivity activity, Item item) {
+	private Command defaultCommand;
+	
+	public AndroidImageStringItemUI(final MicroEmulatorActivity activity, final Item item) {
 		super(activity);
 		
 		this.activity = activity;
@@ -69,20 +77,46 @@ public class AndroidImageStringItemUI extends LinearLayout implements ImageStrin
 		addView(labelView);
 
 		textView = new TextView(activity);
-		setFocusable(false);
-		setFocusableInTouchMode(false);
+		if (item instanceof StringItem && ((StringItem) item).getAppearanceMode() == Item.BUTTON) {
+			textView.setClickable(true);
+			textView.setOnClickListener(new View.OnClickListener() {
+
+				public void onClick(View v) {
+					if (defaultCommand != null) {
+						MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(defaultCommand, null);
+					}
+				}
+
+			});
+		}
 		textView.setLayoutParams(new LinearLayout.LayoutParams(
 				LinearLayout.LayoutParams.FILL_PARENT,
 				LinearLayout.LayoutParams.WRAP_CONTENT));
 		addView(textView);
 
-		imageView = new ImageView(activity);
-		imageView.setFocusable(false);
-		imageView.setFocusableInTouchMode(false);		
+		if (item instanceof ImageItem && ((ImageItem) item).getAppearanceMode() == Item.BUTTON) {
+			imageView = new ImageButton(activity);
+			imageView.setClickable(true);
+			imageView.setOnClickListener(new View.OnClickListener() {
+
+				public void onClick(View v) {
+					if (defaultCommand != null) {
+						MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(defaultCommand, null);
+					}
+				}
+
+			});
+		} else {
+			imageView = new ImageView(activity);
+		}
 		imageView.setVisibility(GONE);
 		addView(imageView);
 
 		setLabel(item.getLabel());
+	}
+	
+	public void setDefaultCommand(Command cmd) {
+		this.defaultCommand = cmd;
 	}
 
 	public void setLabel(final String label) {

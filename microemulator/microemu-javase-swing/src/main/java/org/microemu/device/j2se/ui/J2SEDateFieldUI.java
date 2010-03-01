@@ -28,6 +28,7 @@ package org.microemu.device.j2se.ui;
 
 import java.util.Date;
 
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.DateField;
 
 import org.microemu.device.ui.DateFieldUI;
@@ -36,6 +37,10 @@ public class J2SEDateFieldUI implements DateFieldUI {
 
 	public J2SEDateFieldUI(DateField dateField) {
 		// TODO Auto-generated constructor stub
+	}
+
+	public void setDefaultCommand(Command cmd) {
+		// TODO Auto-generated method stub		
 	}
 
 	public void setLabel(String label) {

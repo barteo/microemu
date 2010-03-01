@@ -26,6 +26,7 @@
 
 package org.microemu.device.j2se.ui;
 
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.TextField;
 
 import org.microemu.device.ui.TextFieldUI;
@@ -34,6 +35,10 @@ public class J2SETextFieldUI implements TextFieldUI {
 
 	public J2SETextFieldUI(TextField textField) {
 		// TODO Auto-generated method stub
+	}
+
+	public void setDefaultCommand(Command cmd) {
+		// TODO Auto-generated method stub		
 	}
 
 	public void setLabel(String label) {

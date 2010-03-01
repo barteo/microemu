@@ -177,6 +177,8 @@ public abstract class Item
     }
 	
     public void setDefaultCommand(Command cmd) {
+    	ui.setDefaultCommand(cmd);
+    	
         this.defaultCommand = cmd;
         if (cmd != null) {
             // we should repaint even if the command was added

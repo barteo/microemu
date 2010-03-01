@@ -27,6 +27,7 @@
 package org.microemu.device.j2se.ui;
 
 import javax.microedition.lcdui.ChoiceGroup;
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Image;
 
 import org.microemu.device.ui.ChoiceGroupUI;
@@ -35,6 +36,10 @@ public class J2SEChoiceGroupUI implements ChoiceGroupUI {
 
 	public J2SEChoiceGroupUI(ChoiceGroup choiceGroup, int choiceType) {
 		// TODO Auto-generated constructor stub
+	}
+
+	public void setDefaultCommand(Command cmd) {
+		// TODO Auto-generated method stub		
 	}
 
 	public void setLabel(String label) {

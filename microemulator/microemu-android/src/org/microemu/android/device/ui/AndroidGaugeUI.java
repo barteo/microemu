@@ -26,6 +26,7 @@
 
 package org.microemu.android.device.ui;
 
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Gauge;
 import javax.microedition.lcdui.ItemStateListener;
 
@@ -85,6 +86,9 @@ public class AndroidGaugeUI extends LinearLayout implements GaugeUI {
 				setLabel(gauge.getLabel());
 			}
 		});
+	}
+
+	public void setDefaultCommand(Command cmd) {
 	}
 
 	public void setLabel(final String label) {

@@ -26,6 +26,8 @@
 
 package org.microemu.android.device.ui;
 
+import javax.microedition.lcdui.Command;
+
 import org.microemu.CustomItemAccess;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
@@ -70,6 +72,9 @@ public class AndroidCustomItemUI extends LinearLayout implements CustomItemUI {
 				setLabel(customItemAccess.getCustomItem().getLabel());
 			}
 		});
+	}
+
+	public void setDefaultCommand(Command cmd) {
 	}
 
 	public void setLabel(final String label) {

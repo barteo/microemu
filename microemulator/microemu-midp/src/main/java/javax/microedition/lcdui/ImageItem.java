@@ -49,6 +49,8 @@ public class ImageItem extends Item {
 
 	public ImageItem(String label, Image img, int layout, String altText, int appearanceMode) {
 		super(label);
+		this.altText = altText;
+		this.appearanceMode = appearanceMode;
 		super.setUI(DeviceFactory.getDevice().getUIFactory().createImageStringItemUI(this));
 
 		// may throw IllegalArgumentException
@@ -60,8 +62,6 @@ public class ImageItem extends Item {
 		}
 
 		setImage(img);
-		this.altText = altText;
-		this.appearanceMode = appearanceMode;
 	}
 
 	public String getAltText() {

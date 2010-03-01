@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.DateField;
 import javax.microedition.lcdui.ItemStateListener;
 
@@ -54,6 +55,8 @@ public class AndroidDateFieldUI extends LinearLayout implements DateFieldUI {
 	
 	private int mode;
 
+	private Command defaultCommand;
+	
 	public AndroidDateFieldUI(final MicroEmulatorActivity activity, final DateField dateField) {
 		super(activity);
 		
@@ -75,6 +78,10 @@ public class AndroidDateFieldUI extends LinearLayout implements DateFieldUI {
 				setLabel(dateField.getLabel());
 			}
 		});
+	}
+
+	public void setDefaultCommand(Command cmd) {
+		this.defaultCommand = cmd;
 	}
 
 	public void setLabel(String label) {

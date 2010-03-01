@@ -26,6 +26,7 @@
 
 package org.microemu.android.device.ui;
 
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.ItemStateListener;
 import javax.microedition.lcdui.TextField;
 
@@ -106,6 +107,9 @@ public class AndroidTextFieldUI extends LinearLayout implements TextFieldUI {
 				setLabel(textField.getLabel());
 			}
 		});
+	}
+
+	public void setDefaultCommand(Command cmd) {
 	}
 
 	public void setLabel(String label) {

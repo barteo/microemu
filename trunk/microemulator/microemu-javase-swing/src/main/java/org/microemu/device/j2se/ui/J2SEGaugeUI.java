@@ -26,6 +26,7 @@
 
 package org.microemu.device.j2se.ui;
 
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Gauge;
 
 import org.microemu.device.ui.GaugeUI;
@@ -34,6 +35,10 @@ public class J2SEGaugeUI implements GaugeUI {
 
 	public J2SEGaugeUI(Gauge gauge) {
 		// TODO Auto-generated constructor stub
+	}
+
+	public void setDefaultCommand(Command cmd) {
+		// TODO Auto-generated method stub		
 	}
 
 	public void setLabel(String label) {

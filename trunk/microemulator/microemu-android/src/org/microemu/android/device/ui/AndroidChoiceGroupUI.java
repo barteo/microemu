@@ -28,6 +28,7 @@ package org.microemu.android.device.ui;
 
 import javax.microedition.lcdui.Choice;
 import javax.microedition.lcdui.ChoiceGroup;
+import javax.microedition.lcdui.Command;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.ItemStateListener;
 
@@ -100,6 +101,9 @@ public class AndroidChoiceGroupUI extends LinearLayout implements ChoiceGroupUI 
 				setLabel(choiceGroup.getLabel());
 			}
 		});
+	}
+
+	public void setDefaultCommand(Command cmd) {
 	}
 
 	public void setLabel(final String label) {

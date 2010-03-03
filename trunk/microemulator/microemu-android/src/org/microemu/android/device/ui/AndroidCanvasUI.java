@@ -141,6 +141,10 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             graphics.reset(bitmapCanvas);
         }
         
+        public AndroidDisplayGraphics getGraphics() {
+            return graphics;
+        }
+        
         //
         // View
         //

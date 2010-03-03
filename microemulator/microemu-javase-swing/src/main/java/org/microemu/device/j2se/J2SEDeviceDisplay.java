@@ -91,6 +91,8 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	PositionedImage modeAbcLowerImage;
 	
 	Image gameCanvasImage = null;
+	
+	javax.microedition.lcdui.Graphics gameCanvasGraphics;
 
 	boolean resizable;
 
@@ -432,9 +434,10 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
     {
         if (gameCanvasImage == null) {
             gameCanvasImage = createImage(gameCanvas.getWidth(), gameCanvas.getHeight(), true, 0x00000000);
+            gameCanvasGraphics = gameCanvasImage.getGraphics();
         }
         
-        return gameCanvasImage.getGraphics();
+        return gameCanvasGraphics;
     }
     
     public void flushGraphics(int x, int y, int width, int height) {

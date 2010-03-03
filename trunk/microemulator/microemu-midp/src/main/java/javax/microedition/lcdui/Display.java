@@ -212,22 +212,24 @@ public class Display {
 				});
 			} else {
 				// item contained command
-				final Item item = c.getFocusedItem();
-
-				final ItemCommandListener listener = item.getItemCommandListener();
-				if (listener == null) {
-					return;
-				}
-				eventDispatcher.put(new Runnable() {
-
-					public void run() {
-						listener.commandAction(c.getOriginalCommand(), item);			
-					}
-					
-				});				
+				commandAction(c.getOriginalCommand(), c.getFocusedItem());
 			}
 		}
 
+		public void commandAction(final Command c, final Item item) {
+			final ItemCommandListener listener = item.getItemCommandListener();
+			if (listener == null) {
+				return;
+			}
+			eventDispatcher.put(new Runnable() {
+
+				public void run() {
+					listener.commandAction(c, item);
+				}
+
+			});
+		}
+		
 		public Display getDisplay() {
 			return display;
 		}

@@ -37,6 +37,8 @@ import org.microemu.device.ui.ItemUI;
 public interface DisplayAccess
 {
 	void commandAction(Command c, Displayable d);
+	
+	void commandAction(Command c, Item i);
 
 	Display getDisplay();
 

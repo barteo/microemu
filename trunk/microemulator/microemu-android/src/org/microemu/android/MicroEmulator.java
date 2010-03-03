@@ -169,6 +169,8 @@ public class MicroEmulator extends MicroEmulatorActivity {
             }
         }
         
+        initializeExtensions();
+        
         common.getLauncher().setSuiteName(midletClassName);
         midlet = common.initMIDlet(false);
     }
@@ -209,6 +211,9 @@ public class MicroEmulator extends MicroEmulatorActivity {
             }
             contentView.invalidate();
         }
+    }
+    
+    protected void initializeExtensions() {
     }
 
     private boolean ignoreBackKeyUp = false;

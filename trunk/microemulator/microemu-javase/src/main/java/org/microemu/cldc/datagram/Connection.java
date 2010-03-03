@@ -84,7 +84,7 @@ public class Connection implements DatagramConnection, UDPDatagramConnection, Co
 			throw new IllegalArgumentException("Invalid Protocol " + addr);
 		}
 		Datagram datagram = new DatagramImpl(size);
-		datagram.setAddress(addr.substring(PROTOCOL.length()));
+		datagram.setAddress(addr);
 		return datagram;
 	}
 
@@ -97,7 +97,7 @@ public class Connection implements DatagramConnection, UDPDatagramConnection, Co
 			throw new IllegalArgumentException("Invalid Protocol " + addr);
 		}
 		Datagram datagram = new DatagramImpl(buf, size);
-		datagram.setAddress(addr.substring(PROTOCOL.length()));
+		datagram.setAddress(addr);
 		return datagram;
 	}
 

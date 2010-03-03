@@ -128,7 +128,7 @@ public class DatagramImpl implements Datagram {
 	}
 
 	public String getAddress() {
-		return packet.getAddress().getCanonicalHostName() + ":" + packet.getPort();
+		return Connection.PROTOCOL + packet.getAddress().getCanonicalHostName() + ":" + packet.getPort();
 	}
 
 	public byte[] getData() {
@@ -157,12 +157,16 @@ public class DatagramImpl implements Datagram {
 		if (address == null) {
 			throw new NullPointerException("address cannot be null");
 		}
-		int index = address.indexOf(':');
+		if (!address.startsWith(Connection.PROTOCOL)) {
+			throw new IllegalArgumentException("Invalid Protocol " + address);
+		}
+		String noProtocolAddress = address.substring(Connection.PROTOCOL.length());
+		int index = noProtocolAddress.indexOf(':');
 		if (index == -1) {
 			throw new IllegalArgumentException("Missing port in address: " + address);
 		}
-		String host = address.substring(0, index);
-		String port = address.substring(index + 1);
+		String host = noProtocolAddress.substring(0, index);
+		String port = noProtocolAddress.substring(index + 1);
 		packet.setAddress(InetAddress.getByName(host));
 		packet.setPort(Integer.parseInt(port));
 	}

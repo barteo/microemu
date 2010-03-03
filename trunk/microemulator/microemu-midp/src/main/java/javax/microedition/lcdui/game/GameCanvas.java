@@ -101,6 +101,7 @@ public abstract class GameCanvas extends Canvas {
     
     public void flushGraphics(int x, int y, int width, int height) {
         DeviceFactory.getDevice().getDeviceDisplay().flushGraphics(x, y, width, height);
+        serviceRepaints();
     }
 
     public void flushGraphics() {

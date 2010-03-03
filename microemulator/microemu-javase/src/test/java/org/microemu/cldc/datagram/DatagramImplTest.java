@@ -53,7 +53,7 @@ public class DatagramImplTest extends TestCase {
 
 	public void testGetAddress() throws Exception {
 		DatagramImpl datagram = new DatagramImpl(100);
-		String address = "localhost:1234";
+		String address = Connection.PROTOCOL + "localhost:1234";
 		datagram.setAddress(address);
 		assertEquals(address, datagram.getAddress());
 	}
@@ -94,16 +94,16 @@ public class DatagramImplTest extends TestCase {
 		}
 		assertTrue(exception);
 		datagram.setAddress("localhost:1111");
-		assertEquals("localhost:1111", datagram.getAddress());
+		assertEquals(Connection.PROTOCOL + "localhost:1111", datagram.getAddress());
 
 	}
 
 	public void testSetAddressDatagram() throws Exception {
 		DatagramImpl datagram1 = new DatagramImpl(20);
 		DatagramImpl datagram2 = new DatagramImpl(20);
-		datagram1.setAddress("localhost:1111");
+		datagram1.setAddress(Connection.PROTOCOL + "localhost:1111");
 		datagram2.setAddress(datagram1);
-		assertEquals("localhost:1111", datagram2.getAddress());
+		assertEquals(Connection.PROTOCOL + "localhost:1111", datagram2.getAddress());
 	}
 
 	public void testReadWriteBoolean() throws Exception {

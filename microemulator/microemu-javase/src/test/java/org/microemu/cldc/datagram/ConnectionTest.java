@@ -41,7 +41,7 @@ public class ConnectionTest extends TestCase {
 		conn.openConnection(Connection.PROTOCOL + "localhost:1234", 0, false);
 		Datagram datagram = conn.newDatagram(512);
 		assertNotNull(datagram);
-		assertEquals("localhost:1234", datagram.getAddress());
+		assertEquals(Connection.PROTOCOL + "localhost:1234", datagram.getAddress());
 		assertEquals(512, datagram.getData().length);
 		assertEquals(512, datagram.getLength());
 		assertEquals(0, datagram.getOffset());
@@ -53,7 +53,7 @@ public class ConnectionTest extends TestCase {
 		conn.openConnection(Connection.PROTOCOL + "localhost:1234", 0, false);
 		Datagram datagram = conn.newDatagram(512, "localhost:123");
 		assertNotNull(datagram);
-		assertEquals("localhost:123", datagram.getAddress());
+		assertEquals(Connection.PROTOCOL + "localhost:123", datagram.getAddress());
 		assertEquals(512, datagram.getData().length);
 		assertEquals(512, datagram.getLength());
 		assertEquals(0, datagram.getOffset());
@@ -66,7 +66,7 @@ public class ConnectionTest extends TestCase {
 		byte[] data = new byte[1024];
 		Datagram datagram = conn.newDatagram(data, data.length);
 		assertNotNull(datagram);
-		assertEquals("localhost:1234", datagram.getAddress());
+		assertEquals(Connection.PROTOCOL + "localhost:1234", datagram.getAddress());
 		assertEquals(data, datagram.getData());
 		assertEquals(data.length, datagram.getLength());
 		assertEquals(0, datagram.getOffset());
@@ -79,7 +79,7 @@ public class ConnectionTest extends TestCase {
 		byte[] data = new byte[1024];
 		Datagram datagram = conn.newDatagram(data, data.length, "localhost:123");
 		assertNotNull(datagram);
-		assertEquals("localhost:123", datagram.getAddress());
+		assertEquals(Connection.PROTOCOL + "localhost:123", datagram.getAddress());
 		assertEquals(data, datagram.getData());
 		assertEquals(data.length, datagram.getLength());
 		assertEquals(0, datagram.getOffset());

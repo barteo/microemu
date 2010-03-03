@@ -83,7 +83,7 @@ public class AndroidImageStringItemUI extends LinearLayout implements ImageStrin
 
 				public void onClick(View v) {
 					if (defaultCommand != null) {
-						MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(defaultCommand, null);
+						MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(defaultCommand, item);
 					}
 				}
 
@@ -101,7 +101,7 @@ public class AndroidImageStringItemUI extends LinearLayout implements ImageStrin
 
 				public void onClick(View v) {
 					if (defaultCommand != null) {
-						MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(defaultCommand, null);
+						MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(defaultCommand, item);
 					}
 				}
 

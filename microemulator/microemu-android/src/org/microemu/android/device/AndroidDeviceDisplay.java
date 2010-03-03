@@ -182,8 +182,9 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
         return ui.getGraphics();
     }
     
-    public void flushGraphics(int x, int y, int width, int height) {  	
-        paintDisplayable(x, y, width, height);
+    public void flushGraphics(int x, int y, int width, int height) {
+        // TODO handle x, y, width and height
+        MIDletBridge.getMIDletAccess().getDisplayAccess().repaint();
     }
 
 	public int getFullHeight() {

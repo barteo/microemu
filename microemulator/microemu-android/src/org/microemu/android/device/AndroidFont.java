@@ -34,9 +34,9 @@ import android.graphics.Paint.FontMetricsInt;
 
 public class AndroidFont implements Font {
 
-	Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+	public Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	
-	FontMetricsInt metrics;
+	public FontMetricsInt metrics;
 	
 	public AndroidFont(Typeface typeface, int size, boolean underlined) {
 		paint.setTypeface(typeface);

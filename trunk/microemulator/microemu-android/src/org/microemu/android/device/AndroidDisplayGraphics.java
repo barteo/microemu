@@ -44,21 +44,21 @@ import android.graphics.Region;
 
 public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
+    public Paint strokePaint = new Paint();
+    
+    public Paint fillPaint = new Paint();
+    
+    public AndroidFont androidFont;
+    
 	private static final DashPathEffect dashPathEffect = new DashPathEffect(new float[] { 5, 5 }, 0);
 	
 	private Canvas canvas;
 	
-    private javax.microedition.lcdui.Graphics delegate;
+    private GraphicsDelegate delegate;
 
-	private Paint strokePaint = new Paint();
-	
-	private Paint fillPaint = new Paint();
-	
 	private Rect clip;
 	
 	private Font font;
-	
-	private AndroidFont androidFont;
 	
 	private int strokeStyle = SOLID;
 	
@@ -95,15 +95,11 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 		return canvas;
 	}
 	
-    public void setDelegate(javax.microedition.lcdui.Graphics delegate) {
+    public void setDelegate(GraphicsDelegate delegate) {
         this.delegate = delegate;
     }
 
 	public void clipRect(int x, int y, int width, int height) {
-        if (delegate != null) {
-            delegate.clipRect(x, y, width, height);
-        }
-        
 		canvas.clipRect(x, y, x + width, y + height);
 		clip = canvas.getClipBounds();
 	}
@@ -144,22 +140,30 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void drawLine(int x1, int y1, int x2, int y2) {
-		if (x1 > x2) {
-			x1++;
-		} else {
-			x2++;
-		}
-		if (y1 > y2) {
-			y1++;
-		} else {
-			y2++;
-		}
-
-		canvas.drawLine(x1, y1, x2, y2, strokePaint);
+        if (delegate != null) {
+            delegate.drawLine(x1, y1, x2, y2);
+        } else {
+    		if (x1 > x2) {
+    			x1++;
+    		} else {
+    			x2++;
+    		}
+    		if (y1 > y2) {
+    			y1++;
+    		} else {
+    			y2++;
+    		}
+    
+    		canvas.drawLine(x1, y1, x2, y2, strokePaint);
+        }
 	}
 
 	public void drawRect(int x, int y, int width, int height) {
-		canvas.drawRect(x, y, x + width, y + height, strokePaint);
+	    if (delegate != null) {
+	        delegate.drawRect(x, y, width, height);
+	    } else {
+	        canvas.drawRect(x, y, x + width, y + height, strokePaint);
+	    }
 	}
 
 	public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
@@ -190,7 +194,12 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
         }
 
         androidFont.paint.setColor(strokePaint.getColor());
-        canvas.drawText(str, offset, len + offset, newx, newy, androidFont.paint);
+
+        if (delegate != null) {
+	        delegate.drawSubstringDelegate(str, offset, len, newx, newy, anchor);
+	    } else {    
+            canvas.drawText(str, offset, len + offset, newx, newy, androidFont.paint);
+	    }
 	}
 
     public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
@@ -424,7 +433,12 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
             
         Rect srcRect = new Rect(x_src, y_src, x_src + width, y_src + height);
         Rect dstRect = new Rect(x_dst, y_dst, x_dst + width, y_dst + height);
-        canvas.drawBitmap(img, srcRect, dstRect, strokePaint);
+        
+        if (delegate != null) {
+            delegate.drawRegionDelegate(img, srcRect, dstRect);
+        } else {
+            canvas.drawBitmap(img, srcRect, dstRect, strokePaint);
+        }
 	}
 
 	public void drawRGB(int[] rgbData, int offset, int scanlength, int x,
@@ -450,12 +464,16 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {
-		Path path = new Path();
-		path.moveTo(x1, y1);
-		path.lineTo(x2, y2);
-		path.lineTo(x3, y3);
-		path.lineTo(x1, y1);
-		canvas.drawPath(path, fillPaint);
+	    if (delegate != null) {
+	        delegate.fillTriangle(x1, y1, x2, y2, x3, y3);
+	    } else {
+    		Path path = new Path();
+    		path.moveTo(x1, y1);
+    		path.lineTo(x2, y2);
+    		path.lineTo(x3, y3);
+    		path.lineTo(x1, y1);
+    		canvas.drawPath(path, fillPaint);
+	    }
 	}
 
 	public void copyArea(int x_src, int y_src, int width, int height,

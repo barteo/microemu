@@ -106,7 +106,7 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 	}
 
 	public String getString(int elementNum) {
-		return (String) listAdapter.getItem(elementNum);
+		return listAdapter.getItem(elementNum).text;
 	}
 
 	public void setSelectCommand(Command command) {
@@ -164,7 +164,7 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 			return objects.size();
 		}
 
-		public Object getItem(int position) {
+		public ViewHolder getItem(int position) {
 			return objects.get(position);
 		}
 

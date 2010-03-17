@@ -100,8 +100,8 @@ public class AndroidAlertUI extends AndroidDisplayableUI implements AlertUI {
 	 *         {@link Alert#FOREVER}.
 	 */
 	protected boolean isToastable() {
-		boolean isToastable = displayableUnboxed.getType().equals(
-				AlertType.INFO)
+		boolean isToastable = 
+				(displayableUnboxed.getType() == null || displayableUnboxed.getType().equals(AlertType.INFO))
 				&& displayableUnboxed.getTimeout() != Alert.FOREVER
 				&& getCommandsUI().size() == 1;
 

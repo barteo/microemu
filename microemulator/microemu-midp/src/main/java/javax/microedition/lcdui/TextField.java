@@ -147,14 +147,14 @@ public class TextField extends Item
     void setString(String text, int caret)
     {
         if (!InputMethod.validate(text, constraints)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("text  is illegal for the current input constraints");
         }
         if (text == null) {
             field = "";
             stringComponent.setText("");
         } else {
             if (text.length() > maxSize) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("text exceeds the current maximum capacity");
             }
             field = text;
             if ((constraints & PASSWORD) == 0) {

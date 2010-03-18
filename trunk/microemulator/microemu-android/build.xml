@@ -207,7 +207,6 @@
         <basename property="prepared.midlet.jar.base" file="${outdir-libs}/midlet.jar"/>
         <dirname property="prepared.midlet.jar.dir" file="${outdir-libs}/midlet.jar"/>
         <exec executable="${dx}" failonerror="true">
-        	<arg value="-JXmx256m" />
             <arg value="--dex" />
             <arg value="--output=${intermediate-dex.dir}/${intermediate-dex.base}" />
             <arg value="--positions=lines" />

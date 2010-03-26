@@ -43,7 +43,7 @@ import javax.microedition.rms.RecordStoreException;
 import javax.microedition.rms.RecordStoreNotFoundException;
 import javax.microedition.rms.RecordStoreNotOpenException;
 
-import netscape.javascript.JSObject;
+//import netscape.javascript.JSObject;
 
 import org.microemu.MicroEmulator;
 import org.microemu.RecordStoreManager;
@@ -52,6 +52,7 @@ import org.microemu.util.Base64Coder;
 import org.microemu.util.ExtendedRecordListener;
 import org.microemu.util.RecordStoreImpl;
 
+// TODO add JSObject import again
 public class CookieRecordStoreManager implements RecordStoreManager {
 
 	private static final int MAX_SPLIT_COOKIES = 5; // max 10
@@ -62,7 +63,7 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 
 	private Applet applet;
 
-	private JSObject document;
+//	private JSObject document;
 
 	private HashMap cookies;
 
@@ -111,7 +112,7 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 	}
 
 	public void init() {
-		JSObject window = (JSObject) JSObject.getWindow(applet);
+/*		JSObject window = (JSObject) JSObject.getWindow(applet);
 		document = (JSObject) window.getMember("document");
 		cookies = new HashMap();
 
@@ -144,7 +145,7 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 				}
 			}
 		}
-		System.out.println("init: " + cookies.size());
+		System.out.println("init: " + cookies.size());*/
 	}
 
 	public String[] listRecordStores() {
@@ -206,7 +207,7 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 	}
 
 	public void saveRecord(RecordStoreImpl recordStoreImpl, int recordId) throws RecordStoreException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+/*		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(baos);
 		try {
 			recordStoreImpl.writeHeader(dos);
@@ -236,7 +237,7 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 					+ ")");
 		} catch (IOException ex) {
 			Logger.error(ex);
-		}
+		}*/
 	}
 
 	public int getSizeAvailable(RecordStoreImpl recordStoreImpl) {
@@ -258,7 +259,7 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 	}
 
 	private void removeCookie(String recordStoreName, CookieContent cookieContent) {
-		String[] parts = cookieContent.getParts();
+/*		String[] parts = cookieContent.getParts();
 		if (parts.length == 1) {
 			document.setMember("cookie", "x" + recordStoreName + "=r");
 		} else {
@@ -266,7 +267,7 @@ public class CookieRecordStoreManager implements RecordStoreManager {
 				document.setMember("cookie", i + recordStoreName + "=r");
 			}
 		}
-		System.out.println("removeCookie: " + recordStoreName);
+		System.out.println("removeCookie: " + recordStoreName);*/
 	}
 
 	private class CookieContent {

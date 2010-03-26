@@ -174,16 +174,6 @@
                 <systemPath>${SWT_HOME}/swt.jar</systemPath>
             </dependency>
 -->
-            <dependency>
-                <groupId>sun</groupId>
-                <artifactId>applet-jsobject</artifactId>
-                <version>1.4</version>
-                <optional>true</optional>
-                <!--scope>provided</scope-->
-                <scope>system</scope>
-                <!-- There are no plugin on Linux 64-bit Java; Copy it from 32-bit java installation -->
-                <systemPath>${java.home}/lib/plugin.jar</systemPath>
-            </dependency>
 
             <dependency>
                 <groupId>asm</groupId>

@@ -45,7 +45,6 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
 import org.microemu.DisplayComponent;
-import org.microemu.MIDletBridge;
 import org.microemu.app.classloader.ClassPreprocessor;
 import org.microemu.app.classloader.ExtensionsClassLoader;
 import org.microemu.app.classloader.InstrumentationConfig;
@@ -275,8 +274,8 @@ public class AppletProducer {
 						return fontManager;
 					}
 
-					public InputStream getResourceAsStream(String name) {
-						return MIDletBridge.getCurrentMIDlet().getClass().getResourceAsStream(name);
+					public InputStream getResourceAsStream(Class origClass, String name) {
+						return origClass.getResourceAsStream(name);
 					}
 					
 					public boolean platformRequest(final String URL) {

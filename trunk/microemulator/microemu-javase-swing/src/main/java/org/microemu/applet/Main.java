@@ -109,8 +109,8 @@ public class Main extends Applet implements MicroEmulator {
 			return fontManager;
 		}
 
-		public InputStream getResourceAsStream(String name) {
-			return getClass().getResourceAsStream(name);
+		public InputStream getResourceAsStream(Class origClass, String name) {
+			return origClass.getResourceAsStream(name);
 		}
 		
 		public boolean platformRequest(String url) {
@@ -325,8 +325,8 @@ public class Main extends Applet implements MicroEmulator {
 		return value;
 	}
 
-	public InputStream getResourceAsStream(String name) {
-		return emulatorContext.getResourceAsStream(name);
+	public InputStream getResourceAsStream(Class origClass, String name) {
+		return emulatorContext.getResourceAsStream(origClass, name);
 	}
 	
 	public int checkPermission(String permission) {

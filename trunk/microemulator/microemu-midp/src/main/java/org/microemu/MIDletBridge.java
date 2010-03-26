@@ -129,7 +129,7 @@ public class MIDletBridge {
 	}
 	
 	public static InputStream getResourceAsStream(Class origClass, String name) {
-		return emulator.getResourceAsStream(name);
+		return emulator.getResourceAsStream(origClass, name);
 	}
 
 

@@ -41,7 +41,7 @@ public interface MicroEmulator {
 
 	String getAppProperty(String key);
 	
-	InputStream getResourceAsStream(String name);
+	InputStream getResourceAsStream(Class origClass, String name);
 
 	void notifyDestroyed(MIDletContext midletContext);
 

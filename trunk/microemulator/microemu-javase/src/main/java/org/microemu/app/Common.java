@@ -175,8 +175,8 @@ public class Common implements MicroEmulator, CommonInterface {
         return result;
     }
 
-    public InputStream getResourceAsStream(String name) {
-        return emulatorContext.getResourceAsStream(name);
+    public InputStream getResourceAsStream(Class origClass, String name) {
+        return emulatorContext.getResourceAsStream(origClass, name);
     }
 
     public void notifyDestroyed(MIDletContext midletContext) {

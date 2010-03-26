@@ -67,7 +67,11 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 	}
 
 	public Image createImage(String name) throws IOException {
-		InputStream is = context.getResourceAsStream(name);
+		Object midlet = MIDletBridge.getCurrentMIDlet();
+		if (midlet == null) {
+			midlet = getClass();
+		}
+		InputStream is = context.getResourceAsStream(midlet.getClass(), name);
 		if (is == null) {
 			throw new IOException(name + " could not be found.");
 		}

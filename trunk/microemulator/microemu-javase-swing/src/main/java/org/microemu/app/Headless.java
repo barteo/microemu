@@ -27,7 +27,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.microemu.DisplayComponent;
-import org.microemu.MIDletBridge;
 import org.microemu.app.ui.Message;
 import org.microemu.app.ui.noui.NoUiDisplayComponent;
 import org.microemu.app.util.DeviceEntry;
@@ -72,8 +71,8 @@ public class Headless {
 			return fontManager;
 		}
 
-		public InputStream getResourceAsStream(String name) {
-			return MIDletBridge.getCurrentMIDlet().getClass().getResourceAsStream(name);
+		public InputStream getResourceAsStream(Class origClass, String name) {
+			return origClass.getResourceAsStream(name);
 		}
 		
 		public boolean platformRequest(final String URL) {

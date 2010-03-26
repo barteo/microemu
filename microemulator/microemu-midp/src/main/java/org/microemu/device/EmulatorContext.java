@@ -43,7 +43,7 @@ public interface EmulatorContext {
 
 	FontManager getDeviceFontManager();
 	
-	InputStream getResourceAsStream(String name);
+	InputStream getResourceAsStream(Class origClass, String name);
 
 	boolean platformRequest(final String URL) throws ConnectionNotFoundException;
 	

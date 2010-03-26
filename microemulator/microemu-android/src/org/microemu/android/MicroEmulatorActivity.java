@@ -119,12 +119,13 @@ public abstract class MicroEmulatorActivity extends Activity {
                 return fontManager;
             }
 
-            public InputStream getResourceAsStream(String name) {
+            public InputStream getResourceAsStream(Class origClass, String name) {
                 try {
                     if (name.startsWith("/")) {
                         return MicroEmulatorActivity.this.getAssets().open(name.substring(1));
                     } else {
-                        return MicroEmulatorActivity.this.getAssets().open(name);
+                    	String folder = origClass.getPackage().getName().replace('.', '/');
+                        return MicroEmulatorActivity.this.getAssets().open(folder + "/" + name);
                     }
                 } catch (IOException e) {
                     Logger.debug(e);

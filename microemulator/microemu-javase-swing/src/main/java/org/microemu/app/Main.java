@@ -200,8 +200,8 @@ public class Main extends JFrame {
 			return fontManager;
 		}
 
-		public InputStream getResourceAsStream(String name) {
-			return MIDletBridge.getCurrentMIDlet().getClass().getResourceAsStream(name);
+		public InputStream getResourceAsStream(Class origClass, String name) {
+			return origClass.getResourceAsStream(name);
 		}
 		
 		public boolean platformRequest(final String URL) {

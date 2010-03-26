@@ -33,12 +33,6 @@
             <classifier>inject</classifier>
             <optional>true</optional>
         </dependency>
-
-        <dependency>
-            <groupId>sun</groupId>
-            <artifactId>applet-jsobject</artifactId>
-            <optional>true</optional>
-        </dependency>
     </dependencies>
 
 </project>

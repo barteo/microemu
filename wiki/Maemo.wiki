@@ -1,0 +1,53 @@
+#summary Setting up Java ME environement for Maemo
+
+= Introduction =
+
+TODO
+
+
+= Second method =
+
+*1. Create microemu-maemo development folder*
+<pre>
+mkdir microemu-maemo
+cd microemu-maemo
+</pre>
+
+*2. Download and install JamVM 1.4.5* (http://jamvm.sourceforge.net/)
+<pre>
+tar xjf jamvm-1.4.5.tar.bz2
+cd jamvm-1.4.5
+./configure
+make install
+cd ..
+</pre>
+
+*3. Download and install Jikes 1.22* (http://jikes.sourceforge.net/)
+<pre>
+tar xjf jikes-1.22.tar.bz2
+cd jikes-1.22
+./configure
+make install
+cd ..
+</pre>
+
+*4. Download and install GNU Classpath 0.93*
+(http://www.gnu.org/software/classpath/)
+<pre>
+tar xzf classpath-0.93.tar.gz
+cd classpath-0.93
+./configure --with-jikes --disable-plugin
+make install
+cd ..
+</pre>
+
+*5. Download and install MicroEmulator*
+(http://snapshot.microemu.org/microemulator/download/)
+<pre>
+unzip microemulator-3.0.0-SNAPSHOT.zip
+</pre>
+
+*6. And finally run the SimpleDemo MIDlet*
+<pre>
+jamvm -cp microemulator-3.0.0-SNAPSHOT/microemulator.jar:microemulator-3.0.0-SNAPSHOT/apps/microemu-demo.jar org.microemu.app.Main org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet
+</pre>

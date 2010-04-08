@@ -134,6 +134,10 @@ public abstract class AndroidDisplayableUI implements DisplayableUI {
 				view.requestFocus();
 			}
 		});
+				
+		if (view instanceof AndroidCanvasUI.CanvasView) {
+			((AndroidCanvasUI.CanvasView) view).waitForSurfaceCreated();
+		}
 	}
 
 	public void hideNotify() {

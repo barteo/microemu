@@ -26,6 +26,7 @@
 
 package org.microemu.android.asm;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.objectweb.asm.AnnotationVisitor;
@@ -47,10 +48,19 @@ public class FirstPassVisitor implements ClassVisitor {
 	private HashMap<String, MethodNodeExt> methodTranslations = new HashMap<String, MethodNodeExt>(); 
 
 	private int methodTranslationsCounter = 0;
+	
+	private HashMap<String, ArrayList<String>> classesHierarchy;
 
-	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-		// TODO Auto-generated method stub
-		
+	public FirstPassVisitor(HashMap<String, ArrayList<String>> classesHierarchy) {
+		this.classesHierarchy = classesHierarchy;
+	}
+
+	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {		
+//		System.out.println("class: " + name +" + "+ superName);
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(name);
+		list.add(superName);
+		classesHierarchy.put(name, list);
 	}
 
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {

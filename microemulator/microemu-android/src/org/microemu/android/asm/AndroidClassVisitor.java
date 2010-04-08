@@ -26,6 +26,7 @@
 
 package org.microemu.android.asm;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
@@ -47,6 +48,8 @@ public class AndroidClassVisitor extends ClassAdapter {
 	boolean isMidlet;
 	
 	String className;
+	
+	HashMap<String, ArrayList<String>> classesHierarchy;
 	
 	HashMap<String, TreeMap<FieldNodeExt, String>> fieldTranslations;
 	
@@ -85,7 +88,7 @@ public class AndroidClassVisitor extends ClassAdapter {
 		public void visitFieldInsn(int opcode, String owner, String name, String desc) {
 			if (isMidlet && 
 					(opcode == Opcodes.GETFIELD || opcode == Opcodes.GETSTATIC || opcode == Opcodes.PUTFIELD || opcode == Opcodes.PUTSTATIC)) {
-				TreeMap<FieldNodeExt, String> classFields = fieldTranslations.get(owner + ".class");
+				TreeMap<FieldNodeExt, String> classFields = fieldTranslations.get(owner);
 				if (classFields != null) {
 					String targetName = classFields.get(new FieldNodeExt(new FieldNode(-1, name, desc, null, null)));
 					if (targetName != null) {
@@ -93,6 +96,24 @@ public class AndroidClassVisitor extends ClassAdapter {
 						return;
 					}
 				}
+							
+/*				ArrayList<String> classHierarchy = classesHierarchy.get(owner);
+				if (classHierarchy != null) {			
+					for (int i = 0; i < classHierarchy.size(); i++) {
+						String searchInClass = classHierarchy.get(i);
+						TreeMap<FieldNodeExt, String> classFields = fieldTranslations.get(searchInClass);
+						if (classFields != null) {									
+							String targetName = classFields.get(new FieldNodeExt(new FieldNode(-1, name, desc, null, null)));
+							if (targetName != null) {
+								mv.visitFieldInsn(opcode, owner, targetName, desc);
+if (i == 1) {
+	System.out.println("!!! " + owner +" + " + name +" + " + desc +" + "+ searchInClass);
+}
+								return;
+							}
+						}
+					}
+				}*/
 			}
 
 			super.visitFieldInsn(opcode, owner, name, desc);
@@ -158,13 +179,20 @@ public class AndroidClassVisitor extends ClassAdapter {
 		
 	}
 
-	public AndroidClassVisitor(ClassVisitor cv, boolean isMidlet, String className, HashMap<String, TreeMap<FieldNodeExt, String>> fieldTranslations) {
+	public AndroidClassVisitor(ClassVisitor cv, boolean isMidlet, HashMap<String, ArrayList<String>> classesHierarchy, HashMap<String, TreeMap<FieldNodeExt, String>> fieldTranslations) {
 		super(cv);
 		
 		this.isMidlet = isMidlet;
-		this.className = className;
+		this.classesHierarchy = classesHierarchy;
 		this.fieldTranslations = fieldTranslations;		
 	}
+
+	@Override
+	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+		className = name;
+		
+		super.visit(version, access, name, signature, superName, interfaces);
+	}	
 
 	public static String codeName(Class<Injected> klass) {
 		return klass.getName().replace('.', '/');

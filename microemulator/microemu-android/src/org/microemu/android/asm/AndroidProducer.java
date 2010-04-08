@@ -32,6 +32,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeMap;
@@ -46,12 +47,15 @@ import org.objectweb.asm.ClassWriter;
 
 public class AndroidProducer {
 	
+	private static 	HashMap<String, ArrayList<String>> classesHierarchy =
+			new HashMap<String, ArrayList<String>>();
+	
 	private static HashMap<String, TreeMap<FieldNodeExt, String>> fieldTranslations = 
 			new HashMap<String, TreeMap<FieldNodeExt, String>>();
 	
 	private static void analyze(String className, final InputStream classInputStream) throws IOException {
 		ClassReader cr = new ClassReader(classInputStream);
-		FirstPassVisitor cv = new FirstPassVisitor();
+		FirstPassVisitor cv = new FirstPassVisitor(classesHierarchy);
 		cr.accept(cv, 0);
 		
 		TreeMap<FieldNodeExt, String> classFieldTranslations = new TreeMap<FieldNodeExt, String>();
@@ -70,7 +74,7 @@ public class AndroidProducer {
 	private static byte[] instrument(String name, final InputStream classInputStream, boolean isMidlet) throws IOException {
 		ClassReader cr = new ClassReader(classInputStream);
 		ClassWriter cw = new ClassWriter(0);
-		ClassVisitor cv = new AndroidClassVisitor(cw, isMidlet, name, fieldTranslations);
+		ClassVisitor cv = new AndroidClassVisitor(cw, isMidlet, classesHierarchy, fieldTranslations);
 		cr.accept(cv, 0);
 
 		return cw.toByteArray();
@@ -111,7 +115,7 @@ public class AndroidProducer {
 					System.arraycopy(buffer, 0, inBuffer, 0, size);
 					resources.put(name, inBuffer);
 					if (name.endsWith(".class")) {	
-						analyze(name, new ByteArrayInputStream(inBuffer));
+						analyze(name.substring(0, name.length() - ".class".length()), new ByteArrayInputStream(inBuffer));
 					}
 				}
 			}

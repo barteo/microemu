@@ -101,6 +101,8 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             
         private android.graphics.Canvas bitmapCanvas;
         
+        private boolean surfaceCreated;
+        
         private Callback callback;
         
         private int pressedX = -FIRST_DRAG_SENSITIVITY_X;
@@ -117,12 +119,18 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             
             initGraphics(((Canvas) displayable).getWidth(), ((Canvas) displayable).getHeight());
             
+            surfaceCreated = false;
             callback = new Callback() {
 
                 public void surfaceCreated(SurfaceHolder holder) {
+                	synchronized (CanvasView.this) {
+                    	surfaceCreated = true;
+                    	CanvasView.this.notify();
+                	}
                 }
 
                 public void surfaceDestroyed(SurfaceHolder holder) {
+                	surfaceCreated = false;
                 }
                 
                 public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -143,6 +151,17 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         
         public AndroidDisplayGraphics getGraphics() {
             return graphics;
+        }
+        
+        public void waitForSurfaceCreated() {
+        	synchronized (CanvasView.this) {
+        		if (!surfaceCreated) {
+					try {
+						CanvasView.this.wait();
+					} catch (InterruptedException e) {
+					}
+        		}
+        	}
         }
         
         //
@@ -208,10 +227,8 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             }
             SurfaceHolder holder = getHolder();
             android.graphics.Canvas canvas = holder.lockCanvas((Rect) repaintObject);
-            if (canvas != null) {
-                canvas.drawBitmap(bitmap, 0, 0, null);
-                holder.unlockCanvasAndPost(canvas);
-            }
+            canvas.drawBitmap(bitmap, 0, 0, null);
+            holder.unlockCanvasAndPost(canvas);
         }
         
     }

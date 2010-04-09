@@ -4,8 +4,34 @@
 
 TODO
 
+= First method =
+
+Works either on device or in scratchbox (arm)
+
+*1. Create microemu-maemo development folder*
+<pre>
+mkdir microemu-maemo
+cd microemu-maemo
+</pre>
+
+*2. Download and install Sun Java SE for Embedded* (http://java.sun.com/javase/downloads/embedded.jsp)
+
+Java SE for Embedded 6 EABI, glibc 2.5, Hard Float (VFP), Little Endian
+
+*3. Download and install MicroEmulator*
+(http://snapshot.microemu.org/microemulator/download/)
+<pre>
+unzip microemulator-3.0.0-SNAPSHOT.zip
+</pre>
+
+*4. And finally run the SimpleDemo MIDlet*
+<pre>
+java -cp microemulator-3.0.0-SNAPSHOT/microemulator.jar:microemulator-3.0.0-SNAPSHOT/apps/microemu-demo.jar org.microemu.app.Main org.microemu.midp.examples.simpledemo.SimpleDemoMIDlet
+</pre>
 
 = Second method =
+
+Works only in scratchbox (x86)
 
 *1. Create microemu-maemo development folder*
 <pre>

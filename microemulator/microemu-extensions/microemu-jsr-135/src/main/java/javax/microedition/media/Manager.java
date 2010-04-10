@@ -112,7 +112,8 @@ public final class Manager
     	catch( ArrayIndexOutOfBoundsException e ) { return; };
 	}
     
-    static void cleanupMedia()
+    // TODO reduce visibility
+    public static void cleanupMedia()
 	{
     	try 
     	{

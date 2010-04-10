@@ -29,13 +29,14 @@ package javax.microedition.media;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.Vector;
 
 public final class Manager
 {
 
     public static final String TONE_DEVICE_LOCATOR = "device://tone";
-    static Vector vMedia = null;
+    static Vector vMedia = new Vector();
     
     public static String[] getSupportedContentTypes(String protocol)
     {
@@ -73,8 +74,6 @@ public final class Manager
     	  	SampledAudioPlayer audPlayer = new SampledAudioPlayer();
         	audPlayer.open( stream, type );
         	
-        	if( vMedia == null )
-        		vMedia = new Vector();
         	vMedia.add( audPlayer );
             return audPlayer;
         }
@@ -83,8 +82,6 @@ public final class Manager
     	  	MidiAudioPlayer midiPlayer = new MidiAudioPlayer();
         	midiPlayer.open( stream, type );
         	
-        	if( vMedia == null )
-        		vMedia = new Vector();
         	vMedia.add( midiPlayer );
             return midiPlayer;
     	}
@@ -98,33 +95,21 @@ public final class Manager
 	{
 	}
 
-    static void mediaDone( Object objMedia )
+    static void mediaDone(Object objMedia)
 	{
     	//remove the media from our list of media to cleanup
-    	try 
-    	{
-	    	for( int index=0; vMedia != null && index<vMedia.size(); index++ )
-	    	{
-	    		if( objMedia == vMedia.elementAt( index ) )
-	    			vMedia.removeElementAt( index );
-	    	}
-    	}
-    	catch( ArrayIndexOutOfBoundsException e ) { return; };
+        vMedia.remove(objMedia);
 	}
     
     // TODO reduce visibility
     public static void cleanupMedia()
 	{
-    	try 
-    	{
-	    	while( vMedia != null && vMedia.size() > 0 )
-	    	{
-	    		Player play = (Player) vMedia.elementAt( 0 );
-	    		play.close();
-	    		vMedia.removeElementAt( 0 );
-	    	}
-    	}
-    	catch( ArrayIndexOutOfBoundsException e ) { return; };
+        Iterator it = vMedia.iterator();
+        while (it.hasNext()) {
+            Player p = (Player) it.next();
+            p.close();
+            it = vMedia.iterator();
+        }
 	}
 
 }

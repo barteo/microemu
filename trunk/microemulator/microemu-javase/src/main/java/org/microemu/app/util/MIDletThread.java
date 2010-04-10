@@ -46,7 +46,7 @@ public class MIDletThread extends Thread {
 	
 	private static final String THREAD_NAME_PREFIX = "";
 	
-    private static boolean debug = false;
+    static boolean debug = false;
 
 	private static boolean terminator = false;
 	

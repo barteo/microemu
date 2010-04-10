@@ -33,6 +33,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Locale;
 import java.util.Vector;
@@ -290,6 +291,14 @@ public class Main extends Applet implements MicroEmulator {
 		} catch (MIDletStateChangeException ex) {
 			System.err.println(ex);
 		}
+		// TODO handle this through ImplementationInitialization.notifyMIDletDestroyed()
+		try {
+            Class managerClass = Class.forName("javax.microedition.media.Manager");
+            Method cleanupMethod = managerClass.getMethod("cleanupMedia", null);
+            cleanupMethod.invoke(null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
 
 	public RecordStoreManager getRecordStoreManager() {
@@ -351,7 +360,7 @@ public class Main extends Applet implements MicroEmulator {
 	}
 
 	public String getAppletInfo() {
-		return "Title: MicroEmulator \nAuthor: Bartek Teodorczyk, 2001";
+		return "Title: MicroEmulator \nAuthor: Bartek Teodorczyk, 2001-2010";
 	}
 
 	public String[][] getParameterInfo() {

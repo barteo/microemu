@@ -111,7 +111,7 @@ public class Main extends Applet implements MicroEmulator {
 		}
 
 		public InputStream getResourceAsStream(Class origClass, String name) {
-			return origClass.getResourceAsStream(name);
+            return getClass().getResourceAsStream(name);
 		}
 		
 		public boolean platformRequest(String url) {

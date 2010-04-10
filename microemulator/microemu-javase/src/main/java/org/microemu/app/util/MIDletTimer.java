@@ -161,7 +161,9 @@ public class MIDletTimer extends Timer implements Runnable {
 						}
 					}
 				} catch (Throwable t) {
-					Logger.debug("MIDletTimerTask throws", t);
+				    if (MIDletThread.debug) {
+				        Logger.debug("MIDletTimerTask throws", t);
+				    }
 				}
 			}
 			

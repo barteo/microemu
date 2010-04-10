@@ -201,7 +201,7 @@ public class Main extends JFrame {
 		}
 
 		public InputStream getResourceAsStream(Class origClass, String name) {
-			return origClass.getResourceAsStream(name);
+            return MIDletBridge.getCurrentMIDlet().getClass().getResourceAsStream(name);
 		}
 		
 		public boolean platformRequest(final String URL) {

@@ -46,6 +46,8 @@ public class MIDletThread extends Thread {
 	
 	private static final String THREAD_NAME_PREFIX = "";
 	
+    private static boolean debug = false;
+
 	private static boolean terminator = false;
 	
 	private static Map midlets = new WeakHashMap();
@@ -80,7 +82,7 @@ public class MIDletThread extends Thread {
 	
 	private static void register(MIDletThread thread) {
 		MIDletContext midletContext = MIDletBridge.getMIDletContext();
-		if (midletContext == null) {
+		if (midletContext == null && debug) {
 			Logger.error("Creating thread with no MIDlet context", new Throwable());
 			return;
 		}
@@ -98,7 +100,9 @@ public class MIDletThread extends Thread {
 		 try {
 			super.run();
 		} catch (Throwable e) {
-			Logger.debug("MIDletThread throws", e);
+		    if (debug) {
+		        Logger.debug("MIDletThread throws", e);
+		    }
 		}
 		//Logger.debug("thread ends, created from " + callLocation);	
 	 }

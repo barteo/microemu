@@ -27,7 +27,6 @@
 package org.microemu.android.device.ui;
 
 import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.game.GameCanvas;
 
 import org.microemu.MIDletAccess;
@@ -53,16 +52,32 @@ import android.view.SurfaceHolder.Callback;
 
 public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
     
-    private AndroidDisplayGraphics graphics = new AndroidDisplayGraphics();
+    private AndroidDisplayGraphics graphics = null;
+    
+    private Bitmap bitmap;
+    
+    private android.graphics.Canvas bitmapCanvas;
     
     public AndroidCanvasUI(final MicroEmulatorActivity activity, Canvas canvas) {
         super(activity, canvas, false);
         
+        initGraphics(((Canvas) displayable).getWidth(), ((Canvas) displayable).getHeight());
+        
         activity.post(new Runnable() {
             public void run() {
-                view = new CanvasView(activity);
+                view = new CanvasView(activity, AndroidCanvasUI.this);
             }
         });
+    }
+    
+    public void initGraphics(int width, int height) {
+        if (graphics == null) {
+            graphics = new AndroidDisplayGraphics();
+        }
+
+        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+        bitmapCanvas = new android.graphics.Canvas(bitmap);
+        graphics.reset(bitmapCanvas);
     }
     
     public View getView() {
@@ -85,7 +100,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).addDisplayRepaintListener((DisplayRepaintListener) view);
     }   
     
-	public Graphics getGraphics() {
+	public AndroidDisplayGraphics getGraphics() {
 		return graphics;
 	}
     
@@ -99,11 +114,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         
         private final static int FIRST_DRAG_SENSITIVITY_Y = 5;
         
-        private Bitmap bitmap;
-            
-        private android.graphics.Canvas bitmapCanvas;
-        
-        private boolean surfaceCreated;
+        private AndroidCanvasUI ui;
         
         private Callback callback;
         
@@ -111,26 +122,20 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         
         private int pressedY = -FIRST_DRAG_SENSITIVITY_Y;
         
-        public CanvasView(Context context) {
+        public CanvasView(Context context, AndroidCanvasUI ui) {
             super(context);
+            
+            this.ui = ui;
             
             setFocusable(true);
             setFocusableInTouchMode(true);
             
-            initGraphics(((Canvas) displayable).getWidth(), ((Canvas) displayable).getHeight());
-            
-            surfaceCreated = false;
             callback = new Callback() {
 
                 public void surfaceCreated(SurfaceHolder holder) {
-                	synchronized (CanvasView.this) {
-                    	surfaceCreated = true;
-                    	CanvasView.this.notify();
-                	}
                 }
 
                 public void surfaceDestroyed(SurfaceHolder holder) {
-                	surfaceCreated = false;
                 }
                 
                 public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -141,29 +146,11 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             };
             getHolder().addCallback(callback);
         }
+        
+        public AndroidCanvasUI getUI() {
+            return ui;
+        }
 
-        public void initGraphics(int width, int height) {
-            AndroidCanvasUI.this.view = view;
-            bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-            bitmapCanvas = new android.graphics.Canvas(bitmap);
-            graphics.reset(bitmapCanvas);
-        }
-        
-        public AndroidDisplayGraphics getGraphics() {
-            return graphics;
-        }
-        
-        public void waitForSurfaceCreated() {
-        	synchronized (CanvasView.this) {
-        		if (!surfaceCreated) {
-					try {
-						CanvasView.this.wait();
-					} catch (InterruptedException e) {
-					}
-        		}
-        	}
-        }
-        
         //
         // View
         //

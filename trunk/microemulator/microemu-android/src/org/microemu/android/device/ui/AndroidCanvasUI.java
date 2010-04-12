@@ -53,6 +53,8 @@ import android.view.SurfaceHolder.Callback;
 
 public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
     
+    private AndroidDisplayGraphics graphics = new AndroidDisplayGraphics();
+    
     public AndroidCanvasUI(final MicroEmulatorActivity activity, Canvas canvas) {
         super(activity, canvas, false);
         
@@ -84,7 +86,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
     }   
     
 	public Graphics getGraphics() {
-		return ((CanvasView) view).graphics;
+		return graphics;
 	}
     
     //
@@ -108,8 +110,6 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         private int pressedX = -FIRST_DRAG_SENSITIVITY_X;
         
         private int pressedY = -FIRST_DRAG_SENSITIVITY_Y;
-        
-        private AndroidDisplayGraphics graphics = new AndroidDisplayGraphics();
         
         public CanvasView(Context context) {
             super(context);

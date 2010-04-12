@@ -227,8 +227,10 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             }
             SurfaceHolder holder = getHolder();
             android.graphics.Canvas canvas = holder.lockCanvas((Rect) repaintObject);
-            canvas.drawBitmap(bitmap, 0, 0, null);
-            holder.unlockCanvasAndPost(canvas);
+            if (canvas != null) {
+                canvas.drawBitmap(bitmap, 0, 0, null);
+                holder.unlockCanvasAndPost(canvas);
+            }
         }
         
     }

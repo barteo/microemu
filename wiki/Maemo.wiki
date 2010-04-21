@@ -2,7 +2,7 @@
 
 = Introduction =
 
-TODO
+MicroEmu can be used in two different ways to allow Maemo users using Java ME software.
 
 = First method =
 

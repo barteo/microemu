@@ -1,0 +1,12 @@
+#summary Maemo Roadmap
+
+== Full open source solution for ARM devices ==
+
+  # Update JamVM to 1.5.4 version
+  # Update GNU Classpath to 0.98 version
+
+== Usability ==
+
+  # Hide the 'File Options Help' menu and 'Resize' button in status bar
+  # Add a full screen option, without the title bar
+  # JSR-75 (File API) enabled by default

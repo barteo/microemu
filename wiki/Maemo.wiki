@@ -2,11 +2,11 @@
 
 = Introduction =
 
-MicroEmu can be used in two different ways to allow Maemo users using Java ME software.
+MicroEmu can be used in two different ways to allow Maemo users using Java ME software. First method uses Sun Java SE for Embedded which has limited 90 days license. Better option would be to use second method as it is a full open source solution, but at the moment it is possible to run only on x86 emulator. Future plans includes making the second method available also for Maemo devices.
 
 = First method =
 
-Works either on device or in scratchbox (arm)
+Works either on device or in scratchbox (ARM)
 
 *1. Create microemu-maemo development folder*
 <pre>

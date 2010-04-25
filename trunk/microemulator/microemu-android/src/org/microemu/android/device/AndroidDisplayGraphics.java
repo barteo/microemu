@@ -66,6 +66,8 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
     private Rect tmpRectSecond = new Rect();
     
+    private Matrix tmpMatrix = new Matrix();
+    
 	public AndroidDisplayGraphics() {
         this.delegate = null;
         
@@ -331,54 +333,54 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
             img = ((AndroidImmutableImage) src).getBitmap();
         }            
 
-        Matrix matrix = new Matrix();
+        tmpMatrix.reset();
         int dW = width, dH = height;
         switch (transform) {
         case Sprite.TRANS_NONE: {
             break;
         }
         case Sprite.TRANS_ROT90: {
-        	matrix.preRotate(90);
-        	img = Bitmap.createBitmap(img, x_src, y_src, width, height, matrix, true);
+            tmpMatrix.preRotate(90);
+        	img = Bitmap.createBitmap(img, x_src, y_src, width, height, tmpMatrix, true);
             dW = height;
             dH = width;
             break;
         }
         case Sprite.TRANS_ROT180: {
-            matrix.preRotate(180);
-        	img = Bitmap.createBitmap(img, x_src, y_src, width, height, matrix, true);
+            tmpMatrix.preRotate(180);
+        	img = Bitmap.createBitmap(img, x_src, y_src, width, height, tmpMatrix, true);
             break;
         }
         case Sprite.TRANS_ROT270: {
-            matrix.preRotate(270);
-            img = Bitmap.createBitmap(img, x_src, y_src, width, height, matrix, true);
+            tmpMatrix.preRotate(270);
+            img = Bitmap.createBitmap(img, x_src, y_src, width, height, tmpMatrix, true);
             dW = height;
             dH = width;
             break;
         }
         case Sprite.TRANS_MIRROR: {
-            matrix.preScale(-1, 1);
-        	img = Bitmap.createBitmap(img, x_src, y_src, width, height, matrix, true);
+            tmpMatrix.preScale(-1, 1);
+        	img = Bitmap.createBitmap(img, x_src, y_src, width, height, tmpMatrix, true);
             break;
         }
         case Sprite.TRANS_MIRROR_ROT90: {
-            matrix.preScale(-1, 1);
-        	matrix.preRotate(-90);
-        	img = Bitmap.createBitmap(img, x_src, y_src, width, height, matrix, true);
+            tmpMatrix.preScale(-1, 1);
+            tmpMatrix.preRotate(-90);
+        	img = Bitmap.createBitmap(img, x_src, y_src, width, height, tmpMatrix, true);
             dW = height;
             dH = width;
             break;
         }
         case Sprite.TRANS_MIRROR_ROT180: {
-            matrix.preScale(-1, 1);
-            matrix.preRotate(-180);
-        	img = Bitmap.createBitmap(img, x_src, y_src, width, height, matrix, true);
+            tmpMatrix.preScale(-1, 1);
+            tmpMatrix.preRotate(-180);
+        	img = Bitmap.createBitmap(img, x_src, y_src, width, height, tmpMatrix, true);
             break;
         }
         case Sprite.TRANS_MIRROR_ROT270: {
-            matrix.preScale(-1, 1);
-            matrix.preRotate(-270);
-            img = Bitmap.createBitmap(img, x_src, y_src, width, height, matrix, true);
+            tmpMatrix.preScale(-1, 1);
+            tmpMatrix.preRotate(-270);
+            img = Bitmap.createBitmap(img, x_src, y_src, width, height, tmpMatrix, true);
             dW = height;
             dH = width;
             break;

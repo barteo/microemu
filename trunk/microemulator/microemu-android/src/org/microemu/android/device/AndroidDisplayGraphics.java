@@ -62,6 +62,10 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	
 	private int strokeStyle = SOLID;
 	
+	private Rect tmpRect = new Rect();
+	
+    private Rect tmpRectSecond = new Rect();
+    
 	public AndroidDisplayGraphics() {
         this.delegate = null;
         
@@ -430,14 +434,20 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
         if (badAnchor) {
             throw new IllegalArgumentException("Bad Anchor");
         }
-            
-        Rect srcRect = new Rect(x_src, y_src, x_src + width, y_src + height);
-        Rect dstRect = new Rect(x_dst, y_dst, x_dst + width, y_dst + height);
+         
+        tmpRect.left = x_src;
+        tmpRect.top = y_src;
+        tmpRect.right = x_src + width;
+        tmpRect.bottom = y_src + height;
+        tmpRectSecond.left = x_dst;
+        tmpRectSecond.top = y_dst;
+        tmpRectSecond.right = x_dst + width;
+        tmpRectSecond.bottom = y_dst + height;
         
         if (delegate != null) {
-            delegate.drawRegionDelegate(img, srcRect, dstRect);
+            delegate.drawRegionDelegate(img, tmpRect, tmpRectSecond);
         } else {
-            canvas.drawBitmap(img, srcRect, dstRect, strokePaint);
+            canvas.drawBitmap(img, tmpRect, tmpRectSecond, strokePaint);
         }
 	}
 

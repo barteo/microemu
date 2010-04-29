@@ -292,7 +292,7 @@ public class AppletProducer {
 
 				URL[] urls = new URL[1];
 				urls[0] = deviceInputFile.toURI().toURL();
-				ClassLoader classLoader = new ExtensionsClassLoader(urls, urls.getClass().getClassLoader());
+				ClassLoader classLoader = new ExtensionsClassLoader(urls, AppletProducer.class.getClassLoader());
 				device = DeviceImpl.create(context, classLoader, descriptorLocation, J2SEDevice.class);
 			}
 			

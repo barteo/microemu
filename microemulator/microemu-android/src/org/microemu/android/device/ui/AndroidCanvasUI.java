@@ -44,6 +44,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Handler;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -61,7 +62,8 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
     public AndroidCanvasUI(final MicroEmulatorActivity activity, Canvas canvas) {
         super(activity, canvas, false);
         
-        initGraphics(((Canvas) displayable).getWidth(), ((Canvas) displayable).getHeight());
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        initGraphics(display.getWidth(), display.getHeight());
         
         activity.post(new Runnable() {
             public void run() {

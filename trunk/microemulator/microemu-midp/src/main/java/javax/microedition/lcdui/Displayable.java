@@ -81,7 +81,9 @@ public abstract class Displayable
 
 	public void removeCommand(Command cmd)
 	{
-		ui.removeCommandUI(cmd.ui);
+		if (cmd != null) {
+			ui.removeCommandUI(cmd.ui);
+		}
 	}
     
     

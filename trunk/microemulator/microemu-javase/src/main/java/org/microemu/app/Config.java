@@ -230,8 +230,6 @@ public class Config {
 		// No <system-properties> in config2.xml
 		if (systemProperties == null) {
 			systemProperties = new Properties();
-			systemProperties.put("microedition.configuration", "CLDC-1.0");
-			systemProperties.put("microedition.profiles", "MIDP-2.0");
 			// Ask avetana to ignore MIDP profiles and load JSR-82
 			// implementation dll or so
 			systemProperties.put("avetana.forceNativeLibrary", Boolean.TRUE.toString());

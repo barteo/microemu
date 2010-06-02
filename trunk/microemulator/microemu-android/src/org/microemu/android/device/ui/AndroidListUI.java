@@ -39,6 +39,7 @@ import org.microemu.android.device.AndroidImmutableImage;
 import org.microemu.android.device.AndroidMutableImage;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -176,6 +177,7 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 			if (convertView == null) {
 				//TODO figure out a better layout - see example of different image and text sizes.
 				LinearLayout layout = new LinearLayout(activity);
+				layout.setGravity(Gravity.CENTER_VERTICAL | Gravity.FILL_HORIZONTAL);
 
 				ImageView iv = new ImageView(activity);
 				TextView tv = new TextView(activity);

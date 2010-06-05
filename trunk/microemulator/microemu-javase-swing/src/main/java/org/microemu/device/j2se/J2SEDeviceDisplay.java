@@ -440,7 +440,7 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
         return gameCanvasGraphics;
     }
     
-    public void flushGraphics(int x, int y, int width, int height) {
+    public void flushGraphics(GameCanvas gameCanvas, int x, int y, int width, int height) {
         if (gameCanvasImage != null) {
             J2SEGraphicsSurface surface = ((SwingDisplayComponent) context.getDisplayComponent()).getGraphicsSurface();
             if (surface != null) {

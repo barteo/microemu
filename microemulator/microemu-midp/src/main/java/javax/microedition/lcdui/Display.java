@@ -449,8 +449,8 @@ public class Display {
 
 		eventDispatcher = DeviceFactory.getDevice().getUIFactory().createEventDispatcher(this);
 
-		timer.scheduleAtFixedRate(new RunnableWrapper(new TickerPaintTask()), 0, Ticker.PAINT_TIMEOUT);
-		timer.scheduleAtFixedRate(new RunnableWrapper(new GaugePaintTask()), 0, Ticker.PAINT_TIMEOUT);
+//		timer.scheduleAtFixedRate(new RunnableWrapper(new TickerPaintTask()), 0, Ticker.PAINT_TIMEOUT);
+//		timer.scheduleAtFixedRate(new RunnableWrapper(new GaugePaintTask()), 0, Ticker.PAINT_TIMEOUT);
 	}
 
 	public void callSerially(Runnable runnable) {

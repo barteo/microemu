@@ -196,21 +196,32 @@ public class MicroEmulator extends MicroEmulatorActivity {
     protected void onResume() {
         super.onResume();
         
-        MIDletAccess ma = MIDletBridge.getMIDletAccess(midlet);
-        if (ma != null) {
-            try {
-                ma.startApp();
-            } catch (MIDletStateChangeException e) {
-                e.printStackTrace();
-            }
-        }
+        new Thread(new Runnable() {
 
-        if (contentView != null) {
-            if (contentView instanceof AndroidRepaintListener) {
-                ((AndroidRepaintListener) contentView).onResume();
+            public void run()
+            {
+                MIDletAccess ma = MIDletBridge.getMIDletAccess(midlet);
+                if (ma != null) {
+                    try {
+                        ma.startApp();
+                    } catch (MIDletStateChangeException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (contentView != null) {
+                    if (contentView instanceof AndroidRepaintListener) {
+                        ((AndroidRepaintListener) contentView).onResume();
+                    }
+                    post(new Runnable() {
+                        public void run() {
+                            contentView.invalidate();
+                        }
+                    });
+                }
             }
-            contentView.invalidate();
-        }
+            
+        }).start();
     }
     
     protected void initializeExtensions() {

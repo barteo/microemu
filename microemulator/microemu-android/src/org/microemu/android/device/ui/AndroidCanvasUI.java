@@ -27,7 +27,6 @@
 package org.microemu.android.device.ui;
 
 import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.game.GameCanvas;
 
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
@@ -35,6 +34,7 @@ import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.android.device.AndroidDisplayGraphics;
 import org.microemu.android.device.AndroidInputMethod;
+import org.microemu.android.util.AndroidRepaintListener;
 import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
@@ -211,15 +211,20 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 
         public void repaintInvoked(Object repaintObject)
         {
-            if (!(((Canvas) displayable) instanceof GameCanvas)) {
-                onDraw(bitmapCanvas);
-            }
+            onDraw(bitmapCanvas);
             SurfaceHolder holder = getHolder();
             android.graphics.Canvas canvas = holder.lockCanvas((Rect) repaintObject);
             if (canvas != null) {
                 canvas.drawBitmap(bitmap, 0, 0, null);
                 holder.unlockCanvasAndPost(canvas);
             }
+        }
+        
+        public AndroidRepaintListener repaintListener;
+
+        public void setAndroidRepaintListener(AndroidRepaintListener repaintListener)
+        {
+            this.repaintListener = repaintListener;
         }
         
     }

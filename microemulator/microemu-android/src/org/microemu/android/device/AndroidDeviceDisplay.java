@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import javax.microedition.lcdui.DisplayUtils;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.GameCanvas;
@@ -37,6 +38,7 @@ import javax.microedition.lcdui.game.Sprite;
 
 import org.microemu.MIDletBridge;
 import org.microemu.android.device.ui.AndroidCanvasUI;
+import org.microemu.android.device.ui.AndroidCanvasUI.CanvasView;
 import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.EmulatorContext;
@@ -180,15 +182,16 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 
     public Graphics getGraphics(GameCanvas gameCanvas)
     {
-        AndroidCanvasUI ui = 
-        	(AndroidCanvasUI) MIDletBridge.getMIDletAccess().getDisplayAccess().getDisplayableUI(gameCanvas);
-        
-        return ui.getGraphics();
+        return ((AndroidCanvasUI) DisplayUtils.getDisplayableUI(gameCanvas)).getGraphics();
     }
     
-    public void flushGraphics(int x, int y, int width, int height) {
+    public void flushGraphics(GameCanvas gameCanvas, int x, int y, int width, int height) {
+        AndroidCanvasUI ui = ((AndroidCanvasUI) DisplayUtils.getDisplayableUI(gameCanvas));
+        CanvasView canvasView = (CanvasView) ui.getView();
+        if (canvasView != null && canvasView.repaintListener != null) {
+            canvasView.repaintListener.flushGraphics();
+        }
         // TODO handle x, y, width and height
-        MIDletBridge.getMIDletAccess().getDisplayAccess().repaint();
     }
 
 	public int getFullHeight() {
@@ -254,7 +257,10 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
         rectangle.right = x + width;
         rectangle.bottom = y + height;
         for (int i = 0; i < displayRepaintListeners.size(); i++) {
-            displayRepaintListeners.get(i).repaintInvoked(rectangle);    
+            DisplayRepaintListener l = displayRepaintListeners.get(i);
+            if (l != null) {
+                l.repaintInvoked(rectangle);    
+            }
         }
 	}
 	

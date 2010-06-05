@@ -35,4 +35,6 @@ public interface AndroidRepaintListener extends DisplayRepaintListener
 
     public abstract void onResume();
     
+    public abstract void flushGraphics();
+    
 }

@@ -226,7 +226,7 @@ public class DisplayTest extends TestCase {
             return null;
         }
 
-        public void flushGraphics(int x, int y, int width, int height) {
+        public void flushGraphics(GameCanvas gameCanvas, int x, int y, int width, int height) {
         }
         
 	}

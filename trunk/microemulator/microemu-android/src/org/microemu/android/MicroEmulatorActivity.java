@@ -91,7 +91,7 @@ public abstract class MicroEmulatorActivity extends Activity {
 		
         Display display = getWindowManager().getDefaultDisplay();
         final int width = display.getWidth();
-        final int height = display.getHeight() - 25;
+        final int height = display.getHeight();
 
         emulatorContext = new EmulatorContext() {
 
@@ -124,8 +124,13 @@ public abstract class MicroEmulatorActivity extends Activity {
                     if (name.startsWith("/")) {
                         return MicroEmulatorActivity.this.getAssets().open(name.substring(1));
                     } else {
-                    	String folder = origClass.getPackage().getName().replace('.', '/');
-                        return MicroEmulatorActivity.this.getAssets().open(folder + "/" + name);
+                        Package p = origClass.getPackage();
+                        if (p == null) {
+                            return MicroEmulatorActivity.this.getAssets().open(name);
+                        } else {
+                        	String folder = origClass.getPackage().getName().replace('.', '/');
+                            return MicroEmulatorActivity.this.getAssets().open(folder + "/" + name);
+                        }
                     }
                 } catch (IOException e) {
                     Logger.debug(e);
@@ -167,7 +172,7 @@ public abstract class MicroEmulatorActivity extends Activity {
         Display display = getWindowManager().getDefaultDisplay();
 		AndroidDeviceDisplay deviceDisplay = (AndroidDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
 		deviceDisplay.displayRectangleWidth = display.getWidth();
-		deviceDisplay.displayRectangleHeight = display.getHeight() - 25;
+		deviceDisplay.displayRectangleHeight = display.getHeight();
 		MIDletAccess ma = MIDletBridge.getMIDletAccess();
 		if (ma == null) {
 			return;

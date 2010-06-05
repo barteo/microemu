@@ -324,15 +324,13 @@ public class SwingDisplayComponent extends JComponent implements DisplayComponen
 				}
 			}
 
-            if (!(current instanceof GameCanvas)) {
-                if (deviceDisplay.isFullScreenMode()) {
-                    fireDisplayRepaint(
-                            graphicsSurface, x, y, width, height);
-    			} else {
-                    fireDisplayRepaint(
-                            graphicsSurface, 0, 0, graphicsSurface.getImage().getWidth(), graphicsSurface.getImage().getHeight());
-    			}
-            }
+            if (deviceDisplay.isFullScreenMode()) {
+                fireDisplayRepaint(
+                        graphicsSurface, x, y, width, height);
+			} else {
+                fireDisplayRepaint(
+                        graphicsSurface, 0, 0, graphicsSurface.getImage().getWidth(), graphicsSurface.getImage().getHeight());
+			}
 		}
 	}
 

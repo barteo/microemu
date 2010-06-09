@@ -188,10 +188,9 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
     public void flushGraphics(GameCanvas gameCanvas, int x, int y, int width, int height) {
         AndroidCanvasUI ui = ((AndroidCanvasUI) DisplayUtils.getDisplayableUI(gameCanvas));
         CanvasView canvasView = (CanvasView) ui.getView();
-        if (canvasView != null && canvasView.repaintListener != null) {
-            canvasView.repaintListener.flushGraphics();
+        if (canvasView != null) {
+            canvasView.flushGraphics(x, y, width, height);
         }
-        // TODO handle x, y, width and height
     }
 
 	public int getFullHeight() {

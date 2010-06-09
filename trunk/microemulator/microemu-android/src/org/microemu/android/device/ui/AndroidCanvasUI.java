@@ -152,6 +152,20 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         public AndroidCanvasUI getUI() {
             return ui;
         }
+        
+        public void flushGraphics(int x, int y, int width, int height) {
+            // TODO handle x, y, width and height
+            if (repaintListener == null) {
+                SurfaceHolder holder = getHolder();
+                android.graphics.Canvas canvas = holder.lockCanvas();
+                if (canvas != null) {
+                    canvas.drawBitmap(bitmap, 0, 0, null);
+                    holder.unlockCanvasAndPost(canvas);
+                }        	
+            } else {
+                repaintListener.flushGraphics();
+            }
+        }
 
         //
         // View
@@ -212,15 +226,11 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         public void repaintInvoked(Object repaintObject)
         {
             onDraw(bitmapCanvas);
-            SurfaceHolder holder = getHolder();
-            android.graphics.Canvas canvas = holder.lockCanvas((Rect) repaintObject);
-            if (canvas != null) {
-                canvas.drawBitmap(bitmap, 0, 0, null);
-                holder.unlockCanvasAndPost(canvas);
-            }
+            Rect r = (Rect) repaintObject;
+            flushGraphics(r.left, r.top, r.width(), r.height());
         }
         
-        public AndroidRepaintListener repaintListener;
+        private AndroidRepaintListener repaintListener;
 
         public void setAndroidRepaintListener(AndroidRepaintListener repaintListener)
         {

@@ -37,13 +37,19 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.InputMethodEvent;
+import java.awt.event.InputMethodListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.font.TextHitInfo;
+import java.awt.im.InputMethodRequests;
 import java.io.IOException;
+import java.text.AttributedCharacterIterator;
+import java.text.AttributedString;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -70,7 +76,7 @@ import org.microemu.device.j2se.J2SEInputMethod;
 import org.microemu.device.j2se.J2SEMutableImage;
 import org.microemu.log.Logger;
 
-public class SwingDeviceComponent extends JPanel implements KeyListener {
+public class SwingDeviceComponent extends JPanel implements KeyListener, InputMethodListener, InputMethodRequests {
 
 	private static final long serialVersionUID = 1L;
 
@@ -277,6 +283,11 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 
 		addMouseListener(mouseListener);
 		addMouseMotionListener(mouseMotionListener);
+		
+ 		//Input methods support begin
+ 		enableInputMethods(true);
+ 		addInputMethodListener(this);
+ 		//End
 	}
 
 	public DisplayComponent getDisplayComponent() {
@@ -303,6 +314,67 @@ public class SwingDeviceComponent extends JPanel implements KeyListener {
 		// showMouseCoordinates = !showMouseCoordinates;
 		dc.switchShowMouseCoordinates();
 	}
+	
+ 	//Input method support begin
+	
+ 	private static final AttributedCharacterIterator EMPTY_TEXT = new AttributedString("").getIterator();
+ 	
+ 	public void caretPositionChanged(InputMethodEvent event) {
+ 		repaint();
+ 	}
+ 	
+ 	public void inputMethodTextChanged(InputMethodEvent event) {
+ 		StringBuffer committedText = new StringBuffer();
+ 		AttributedCharacterIterator text = event.getText();
+ 		Device device = DeviceFactory.getDevice();
+ 		J2SEInputMethod inputMethod = (J2SEInputMethod)device.getInputMethod();
+ 		if (text != null) {
+ 			int toCopy = event.getCommittedCharacterCount();
+ 			char c = text.first();
+ 			while (toCopy-- > 0) {
+ 				committedText.append(c);
+ 				c = text.next();
+ 			}
+ 			if (committedText.length() > 0) {
+ 				inputMethod.clipboardPaste(committedText.toString());
+ 			}
+ 		}
+ 		repaint();
+ 	}
+ 	
+ 	public InputMethodRequests getInputMethodRequests() {
+ 		return this;
+ 	}
+ 	
+ 	public int getCommittedTextLength() {
+ 		return 0;
+ 	}
+ 	
+ 	public int getInsertPositionOffset() {
+ 		return getCommittedTextLength();
+ 	}
+ 	
+ 	public AttributedCharacterIterator getCommittedText(int beginIndex, int endIndex, AttributedCharacterIterator.Attribute[] attributes) {
+ 		return null;
+ 	}
+ 	
+ 	public java.awt.Rectangle getTextLocation(TextHitInfo offset) {
+ 		return null;
+ 	}
+ 	
+ 	public TextHitInfo getLocationOffset(int x, int y) {
+ 		return null;
+ 	}
+ 	
+ 	public AttributedCharacterIterator getSelectedText(AttributedCharacterIterator.Attribute[] attributes) {
+ 		return EMPTY_TEXT;
+ 	}
+ 	
+ 	public AttributedCharacterIterator cancelLatestCommittedText(AttributedCharacterIterator.Attribute[] attributes) {
+ 		return null;
+ 	}
+ 	
+ 	//Input method support end
 
 	public void keyTyped(KeyEvent ev) {
 		if (MIDletBridge.getCurrentMIDlet() == null) {

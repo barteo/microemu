@@ -55,7 +55,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
     
     private AndroidDisplayGraphics graphics = null;
     
-    private Bitmap bitmap;
+    private Bitmap bitmap = null;
     
     private android.graphics.Canvas bitmapCanvas;
     
@@ -76,9 +76,10 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         if (graphics == null) {
             graphics = new AndroidDisplayGraphics();
         }
-
-        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-        bitmapCanvas = new android.graphics.Canvas(bitmap);
+        if (bitmap == null || bitmap.getWidth() != width || bitmap.getHeight() != height) {
+        	bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+        	bitmapCanvas = new android.graphics.Canvas(bitmap);
+        }
         graphics.reset(bitmapCanvas);
     }
     

@@ -18,4 +18,7 @@ public interface ListUI extends DisplayableUI {
 	void delete(int elementNum);
   
 	void deleteAll();
+	
+	int size();
+	
 }

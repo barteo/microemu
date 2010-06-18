@@ -252,7 +252,11 @@ public class List extends Screen implements Choice {
     }
 
     public int size() {
-        return choiceGroup.size();
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidListUI")) {
+			return ((ListUI) ui).size();
+		} else {
+			return choiceGroup.size();
+		}
     }
 
     void showNotify() {

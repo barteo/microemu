@@ -135,6 +135,10 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 			listView.setSelection(elementNum);
 		}
 	}
+	
+	public int size() {
+		return listAdapter.getCount();
+	}
 
 	private class AndroidListAdapter extends BaseAdapter {
 

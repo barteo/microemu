@@ -79,7 +79,9 @@ public class AndroidAlertUI extends AndroidDisplayableUI implements AlertUI {
 		activity.post(new Runnable() {
 			public void run() {
 				alertDialog = new AlertDialog.Builder(activity).create();
-				alertDialog.setTitle(alert.getTitle());
+				if (alert.getTitle() != null) {
+					alertDialog.setTitle(alert.getTitle());
+				}
 				onClickListener = new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						activity.setDialog(null);

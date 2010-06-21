@@ -34,4 +34,6 @@ public interface TextBoxUI extends DisplayableUI {
 	
 	void setString(String text);
 	
+	void insert(String text, int position);
+	
 }

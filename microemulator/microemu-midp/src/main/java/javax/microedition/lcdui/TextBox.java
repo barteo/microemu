@@ -107,7 +107,11 @@ public class TextBox extends Screen {
 	}
 
 	public void insert(String src, int position) {
-		tf.insert(src, position);
+		if (ui != null && ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidTextBoxUI")) {
+			((TextBoxUI) ui).insert(src, position);
+		} else {
+			tf.insert(src, position);
+		}
 	}
 
 	public void setChars(char[] data, int offset, int length) {

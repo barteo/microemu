@@ -212,14 +212,26 @@ public class TextField extends Item
 		}
 		String newtext = "";
 		if (position > 0) {
-			newtext = getString().substring(0, position);
+			if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidTextFieldUI")) {
+				newtext = ((TextFieldUI) ui).getString();
+			} else {
+				newtext = getString().substring(0, position);
+			}
 		}
 		newtext += src;
 		if (position < field.length()) {
-			newtext += getString().substring(position + 1);
+			if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidTextFieldUI")) {
+				newtext += ((TextFieldUI) ui).getString().substring(position + 1);
+			} else {
+				newtext += getString().substring(position + 1);
+			}
+		}	
+		if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidTextFieldUI")) {
+			((TextFieldUI) ui).setString(newtext);
+		} else {
+			setString(newtext);
+			repaint();
 		}
-		setString(newtext);
-		repaint();
 	}
 
 	

@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-import org.microemu.EmulatorContext;
+import org.microemu.device.EmulatorContext;
 import org.microemu.app.Common;
 import org.microemu.app.Config;
 import org.microemu.app.ui.Message;

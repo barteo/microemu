@@ -34,14 +34,16 @@ import java.util.Vector;
 
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Displayable;
+import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.game.GameCanvas;
 import javax.microedition.lcdui.game.Sprite;
 
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 import org.microemu.DisplayAccess;
-import org.microemu.EmulatorContext;
+import org.microemu.device.EmulatorContext;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.app.ui.swt.ImageFilter;
@@ -88,7 +90,7 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl {
 	}
 
 	public MutableImage getDisplayImage() {
-		return context.getDisplayComponent().getDisplayImage();
+		return ((SwtDeviceDisplay) context.getDisplayComponent()).getDisplayImage();
 	}
 
 	public int getHeight() {
@@ -557,6 +559,26 @@ public class SwtDeviceDisplay implements DeviceDisplayImpl {
 	public void setResizable(boolean state) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public Image createImage(int width, int height, boolean withAlpha,
+			int fillColor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void flushGraphics(GameCanvas gameCanvas, int x, int y, int width,
+			int height) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Graphics getGraphics(GameCanvas gameCanvas) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

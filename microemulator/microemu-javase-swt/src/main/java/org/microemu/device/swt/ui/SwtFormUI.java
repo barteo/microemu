@@ -29,9 +29,11 @@ package org.microemu.device.swt.ui;
 import javax.microedition.lcdui.Form;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.Item;
+import javax.microedition.lcdui.ItemStateListener;
 
 import org.microemu.device.impl.ui.DisplayableImplUI;
 import org.microemu.device.ui.FormUI;
+import org.microemu.device.ui.ItemUI;
 
 public class SwtFormUI extends DisplayableImplUI implements FormUI {
 
@@ -68,6 +70,36 @@ public class SwtFormUI extends DisplayableImplUI implements FormUI {
 
 	public void set(int itemNum, Item item) {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public int append(ItemUI item) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public ItemStateListener getItemStateListener() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void insert(int itemNum, ItemUI item) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void set(int itemNum, ItemUI item) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setItemStateListener(ItemStateListener itemStateListener) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.microemu.DisplayComponent;
-import org.microemu.EmulatorContext;
+import org.microemu.device.EmulatorContext;
 import org.microemu.MIDletBridge;
 import org.microemu.app.ui.Message;
 import org.microemu.app.ui.ResponseInterfaceListener;
@@ -104,13 +104,13 @@ public class Swt extends Common {
 		}
 	};
 
-	protected Listener menuOpenJADFileListener = new Listener() {
+	protected Listener menuOpenMIDletFileListener = new Listener() {
 		public void handleEvent(Event ev) {
 			if (fileDialog == null) {
 				fileDialog = new FileDialog(shell, SWT.OPEN);
-				fileDialog.setText("Open JAD File...");
-				fileDialog.setFilterNames(new String[] { "JAD files" });
-				fileDialog.setFilterExtensions(new String[] { "*.jad" });
+				fileDialog.setText("Open MIDlet File...");
+				fileDialog.setFilterNames(new String[] { "MIDlet files" });
+				fileDialog.setFilterExtensions(new String[] { "*.ja[dr]" });
 				fileDialog.setFilterPath(Config.getRecentDirectory("recentJadDirectory"));
 			}
 
@@ -125,18 +125,18 @@ public class Swt extends Common {
 					Config.setRecentDirectory("recentJadDirectory", fileDialog.getFilterPath());
 				}
 				String url = IOUtils.getCanonicalFileURL(selectedFile);
-				Common.openJadUrlSafe(url);
+				Common.openMIDletUrlSafe(url);
 			}
 		}
 	};
 
-	protected Listener menuOpenJADURLListener = new Listener() {
+	protected Listener menuOpenMIDletURLListener = new Listener() {
 		public void handleEvent(Event ev) {
 			// TODO change to JadUrlPanel
-			SwtInputDialog inputDialog = new SwtInputDialog(shell, "Open...", "Enter JAD URL:");
+			SwtInputDialog inputDialog = new SwtInputDialog(shell, "Open...", "Enter MIDlet URL:");
 			if (inputDialog.open() == SwtDialog.OK) {
 				try {
-					openJadUrl(inputDialog.getValue());
+					openMIDletUrl(inputDialog.getValue());
 				} catch (IOException ex) {
 					System.err.println("Cannot load " + inputDialog.getValue());
 				}
@@ -259,6 +259,12 @@ public class Swt extends Common {
 
 				return false;
 			}
+
+			@Override
+			public InputStream getResourceAsStream(Class origClass, String name) {
+				// TODO Auto-generated method stub
+				return null;
+			}
 		});
 
 		initInterface(shell);
@@ -296,12 +302,12 @@ public class Swt extends Common {
 		menuFile.setMenu(fileSubmenu);
 
 		menuOpenJADFile = new MenuItem(fileSubmenu, SWT.PUSH);
-		menuOpenJADFile.setText("Open JAD File...");
-		menuOpenJADFile.addListener(SWT.Selection, menuOpenJADFileListener);
+		menuOpenJADFile.setText("Open MIDlet File...");
+		menuOpenJADFile.addListener(SWT.Selection, menuOpenMIDletFileListener);
 
 		menuOpenJADURL = new MenuItem(fileSubmenu, 0);
-		menuOpenJADURL.setText("Open JAD URL...");
-		menuOpenJADURL.addListener(SWT.Selection, menuOpenJADURLListener);
+		menuOpenJADURL.setText("Open MIDlet URL...");
+		menuOpenJADURL.addListener(SWT.Selection, menuOpenMIDletURLListener);
 
 		new MenuItem(fileSubmenu, SWT.SEPARATOR);
 

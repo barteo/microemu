@@ -38,11 +38,11 @@ import org.microemu.app.ui.swt.ImageFilter;
 import org.microemu.app.ui.swt.SwtGraphics;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
-import org.microemu.device.DisplayGraphics;
+//import org.microemu.device.DisplayGraphics;
 import org.microemu.device.MutableImage;
 
 
-public class SwtDisplayGraphics extends javax.microedition.lcdui.Graphics implements DisplayGraphics 
+public class SwtDisplayGraphics extends javax.microedition.lcdui.Graphics //implements DisplayGraphics 
 {
 	public SwtGraphics g;
 

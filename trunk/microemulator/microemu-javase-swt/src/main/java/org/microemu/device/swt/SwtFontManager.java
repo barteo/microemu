@@ -30,8 +30,6 @@ import java.util.Hashtable;
 
 import javax.microedition.lcdui.Font;
 
-import org.eclipse.swt.graphics.FontMetrics;
-import org.microemu.app.ui.swt.SwtDeviceComponent;
 import org.microemu.device.impl.FontManagerImpl;
 
 public class SwtFontManager implements FontManagerImpl {
@@ -179,6 +177,12 @@ public class SwtFontManager implements FontManagerImpl {
 
 	public org.microemu.device.impl.Font createTrueTypeFont(URL defUrl, String defStyle, int defSize, boolean antialiasing) {
 		return new SwtTrueTypeFont(defUrl, defStyle, defSize, antialiasing);
+	}
+
+	@Override
+	public int substringWidth(Font f, String str, int offset, int len) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 }

@@ -41,7 +41,10 @@ public class AndroidInputMethod extends InputMethod {
 	private int repeatModeKeyCode = Integer.MAX_VALUE;
 
 	public void buttonPressed(KeyEvent keyEvent) {
-		int keyCode = getKeyCode(keyEvent);
+	    buttonPressed(getKeyCode(keyEvent));		
+	}
+	
+	public void buttonPressed(int keyCode) {
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
 			if (repeatModeKeyCode == keyCode) {
 				MIDletAccess ma = MIDletBridge.getMIDletAccess();
@@ -59,11 +62,14 @@ public class AndroidInputMethod extends InputMethod {
 			}
 		}
 
-		fireInputMethodListener(keyEvent);
+		fireInputMethodListener(keyCode);
 	}
 
 	public void buttonReleased(KeyEvent keyEvent) {
-		int keyCode = getKeyCode(keyEvent);
+	    buttonReleased(getKeyCode(keyEvent));
+	}
+	
+	public void buttonReleased(int keyCode) {
 		if (DeviceFactory.getDevice().hasRepeatEvents() && inputMethodListener == null) {
 			repeatModeKeyCode = Integer.MAX_VALUE;
 		}
@@ -99,7 +105,7 @@ public class AndroidInputMethod extends InputMethod {
 		}
 	}
 
-	protected boolean fireInputMethodListener(KeyEvent keyEvent) {
+	protected boolean fireInputMethodListener(int keyCode) {
 		MIDletAccess ma = MIDletBridge.getMIDletAccess();
 		if (ma == null) {
 			return false;
@@ -110,7 +116,7 @@ public class AndroidInputMethod extends InputMethod {
 		}
 
 		if (inputMethodListener == null) {
-			da.keyPressed(getKeyCode(keyEvent));
+			da.keyPressed(keyCode);
 			return true;
 		}
 // TODO

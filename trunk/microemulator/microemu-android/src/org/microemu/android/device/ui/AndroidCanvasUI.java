@@ -60,8 +60,6 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
     
     private android.graphics.Canvas bitmapCanvas;
     
-    private Overlay overlay = null;
-
     public AndroidCanvasUI(final MicroEmulatorActivity activity, Canvas canvas) {
         super(activity, canvas, false);
         
@@ -110,10 +108,6 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 		return graphics;
 	}
     
-    public void setOverlay(Overlay overlay) {
-        this.overlay = overlay;
-    }
-
     //
     // CanvasUI
     //
@@ -132,6 +126,8 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         
         private int pressedY = -FIRST_DRAG_SENSITIVITY_Y;
         
+        private Overlay overlay = null;
+
         public CanvasView(Context context, AndroidCanvasUI ui) {
             super(context);
             
@@ -173,6 +169,10 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             } else {
                 repaintListener.flushGraphics();
             }
+        }
+
+        public void setOverlay(Overlay overlay) {
+            this.overlay = overlay;
         }
 
         //

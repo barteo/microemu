@@ -35,6 +35,7 @@ import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.android.device.AndroidDisplayGraphics;
 import org.microemu.android.device.AndroidInputMethod;
 import org.microemu.android.util.AndroidRepaintListener;
+import org.microemu.android.util.Overlay;
 import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.Device;
 import org.microemu.device.DeviceFactory;
@@ -59,6 +60,8 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
     
     private android.graphics.Canvas bitmapCanvas;
     
+    private Overlay overlay = null;
+
     public AndroidCanvasUI(final MicroEmulatorActivity activity, Canvas canvas) {
         super(activity, canvas, false);
         
@@ -107,6 +110,10 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 		return graphics;
 	}
     
+    public void setOverlay(Overlay overlay) {
+        this.overlay = overlay;
+    }
+
     //
     // CanvasUI
     //
@@ -182,10 +189,16 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             graphics.reset(androidCanvas);
             graphics.setClip(0, 0, view.getWidth(), view.getHeight());
             ma.getDisplayAccess().paint(graphics);
+            if (overlay != null) {
+                overlay.onDraw(androidCanvas);
+            }
         }   
         
         @Override
         public boolean onTouchEvent(MotionEvent event) {
+            if (overlay != null && overlay.onTouchEvent(event)) {
+                return true;
+            }
             Device device = DeviceFactory.getDevice();
             AndroidInputMethod inputMethod = (AndroidInputMethod) device.getInputMethod();
             int x = (int) event.getX();

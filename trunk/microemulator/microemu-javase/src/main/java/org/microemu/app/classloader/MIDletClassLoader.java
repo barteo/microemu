@@ -305,6 +305,9 @@ public class MIDletClassLoader extends URLClassLoader {
 		if (className.startsWith("javax.microedition.")) {
 			return true;
 		}
+		if (className.startsWith("com.nokia.mid.")) {
+			return true;
+		}
 		if (className.startsWith("javax.")) {
 			return true;
 		}

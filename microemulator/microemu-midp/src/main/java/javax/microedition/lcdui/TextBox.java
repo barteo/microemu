@@ -67,7 +67,9 @@ public class TextBox extends Screen {
 
 		tf = new TextField(null, text, maxSize, constraints);
 		
-		super.setUI(DeviceFactory.getDevice().getUIFactory().createTextBoxUI(this));		
+		super.setUI(DeviceFactory.getDevice().getUIFactory().createTextBoxUI(this));
+		
+		setString(text);
 	}
 
 	public void delete(int offset, int length) {

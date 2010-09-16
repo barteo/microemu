@@ -28,6 +28,7 @@
 package org.microemu.device.j2se;
 
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.PixelGrabber;
 
 import org.microemu.device.MutableImage;
@@ -50,6 +51,7 @@ public class J2SEMutableImage extends MutableImage
 	public javax.microedition.lcdui.Graphics getGraphics()
 	{
         Graphics2D g = graphicsSurface.getGraphics();
+        g.setTransform(new AffineTransform());
         g.setClip(0, 0, getWidth(), getHeight());
         J2SEDisplayGraphics displayGraphics = new J2SEDisplayGraphics(graphicsSurface);
 		displayGraphics.setColor(0x00000000);

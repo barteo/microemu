@@ -38,7 +38,7 @@ public class AndroidFont implements Font {
 	
 	public FontMetricsInt metrics;
 	
-	public AndroidFont(Typeface typeface, int size, boolean underlined) {
+	public AndroidFont(Typeface typeface, float size, boolean underlined) {
 		paint.setTypeface(typeface);
 		paint.setTextSize(size);
 		paint.setUnderlineText(underlined);

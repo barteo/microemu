@@ -26,6 +26,12 @@
 
 package org.microemu.util;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.jar.Attributes;
@@ -129,5 +135,67 @@ public class JadProperties extends Manifest {
 	public String getProperty(String key) {
 		return getProperty(key, null);
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.util.jar.Manifest#read(java.io.InputStream)
+	 * overwritten since the manifest parser wont accept jads with spaces 
+	 * and newlines which is causing problems when passing in jads via
+	 * commandline
+	 */
+	public void read(InputStream is) throws IOException {
+	    // TODO Auto-generated method stub
+	    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	    byte[] block = new byte[1024];
+	    int bytesRead = 0;
+	    while (bytesRead >= 0) {
+	        bytesRead = is.read(block);
+	        if (bytesRead == -1) {
+	            break;
+	        }
+	        bos.write(block, 0, bytesRead);
+	    }
+	    bos.close();
+	    byte[] jadBuffer = bos.toByteArray();
+	    is.close();
+	    
+	    ByteArrayInputStream bin = new ByteArrayInputStream(jadBuffer);
+	    ByteArrayInputStream bin2 = new ByteArrayInputStream(jadBuffer);
+	    try {
+	        super.read(bin);
+	    } catch (IOException e) {
+	        // didnt like the format, try our own jad parser
+	        readJad(bin2);
+	    } finally {
+	        bin.close();
+	        bin2.close();
+	    }
+	}
+
+    /**
+     * @param bin2
+     * @throws IOException 
+     */
+    private void readJad(ByteArrayInputStream bin2) throws IOException {
+        BufferedReader din = null;
+        try {
+            din = new BufferedReader(new InputStreamReader(bin2));
+            String line = "";
+            while ((line = din.readLine()) != null) {
+                int pos = line.indexOf(':');
+                final String key;
+                final String value;
+                if (pos > 0) {
+                    key = line.substring(0, pos).trim();
+                    value = line.substring(pos + 1).trim();
+                    Attributes.Name name = new Attributes.Name(key);
+                    this.getMainAttributes().put(name, value);
+                }
+            }
+        } catch (IOException e) {
+            
+        } finally {
+            din.close();
+        }
+    }
 
 }

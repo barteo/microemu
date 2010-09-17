@@ -602,30 +602,37 @@ public class Common implements MicroEmulator, CommonInterface {
 
             Launcher.removeMIDletEntries();
 
-            manifest.clear();
-            InputStream is = null;
-            try {
-                is = midletClassLoader.getResourceAsStream("META-INF/MANIFEST.MF");
-                if (is == null) {
-                    if (!describeJarProblem(url, midletClassLoader)) {
-                        Message.error("Unable to find MANIFEST in MIDlet jar");
+            // if we get properties via commandline --propertiesjad, then 
+            // dont bother with any of this
+            if (propertiesJad == null) {
+                manifest.clear();
+                InputStream is = null;
+                try {
+                    is = midletClassLoader.getResourceAsStream("META-INF/MANIFEST.MF");
+                    if (is == null) {
+                        if (!describeJarProblem(url, midletClassLoader)) {
+                            Message.error("Unable to find MANIFEST in MIDlet jar");
+                        }
+                        return;
                     }
-                    return;
+                    manifest.read(is);
+    
+                    Attributes attributes = manifest.getMainAttributes();
+                    for (Iterator it = attributes.keySet().iterator(); it.hasNext(); ) {
+                    	Attributes.Name key = (Attributes.Name) it.next();
+                        String value = (String) attributes.get(key);
+                        // jad takes precedence over manifest, so only merge 
+                        // in attributes that are not already in the jad
+                        if (jad.getProperty(key.toString()) == null) {
+                            jad.getMainAttributes().put(key, value);
+                        }
+                    }
+                } catch (IOException e) {
+                    Message.error("Unable to read MANIFEST", e);
+                } finally {
+                    IOUtils.closeQuietly(is);
                 }
-                manifest.read(is);
-
-                Attributes attributes = manifest.getMainAttributes();
-                for (Iterator it = attributes.keySet().iterator(); it.hasNext(); ) {
-                	Attributes.Name key = (Attributes.Name) it.next();
-                    String value = (String) attributes.get(key);
-                    jad.getMainAttributes().put(key, value);
-                }
-            } catch (IOException e) {
-                Message.error("Unable to read MANIFEST", e);
-            } finally {
-                IOUtils.closeQuietly(is);
             }
-
             Launcher.setSuiteName(jad.getSuiteName());
 
             for (Enumeration e = jad.getMidletEntries().elements(); e.hasMoreElements();) {

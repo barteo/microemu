@@ -99,7 +99,7 @@ public abstract class MicroEmulatorActivity extends Activity {
 
             private DeviceDisplay deviceDisplay = new AndroidDeviceDisplay(this, width, height);
             
-            private FontManager fontManager = new AndroidFontManager();
+            private FontManager fontManager = new AndroidFontManager(getResources().getDisplayMetrics());
 
             public DisplayComponent getDisplayComponent() {
                 // TODO consider removal of EmulatorContext.getDisplayComponent()

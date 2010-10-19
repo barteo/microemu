@@ -50,6 +50,7 @@ import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -89,9 +90,12 @@ public abstract class MicroEmulatorActivity extends Activity {
 	protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		
+		Drawable phoneCallIcon = getResources().getDrawable(android.R.drawable.stat_sys_phone_call);
+		int statusBarHeight = phoneCallIcon.getIntrinsicHeight();
+		
         Display display = getWindowManager().getDefaultDisplay();
         final int width = display.getWidth();
-        final int height = display.getHeight();
+        final int height = display.getHeight() - statusBarHeight;
 
         emulatorContext = new EmulatorContext() {
 
@@ -169,10 +173,13 @@ public abstract class MicroEmulatorActivity extends Activity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		
+		Drawable phoneCallIcon = getResources().getDrawable(android.R.drawable.stat_sys_phone_call);
+		int statusBarHeight = phoneCallIcon.getIntrinsicHeight();
+		
         Display display = getWindowManager().getDefaultDisplay();
 		AndroidDeviceDisplay deviceDisplay = (AndroidDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
 		deviceDisplay.displayRectangleWidth = display.getWidth();
-		deviceDisplay.displayRectangleHeight = display.getHeight();
+		deviceDisplay.displayRectangleHeight = display.getHeight() - statusBarHeight;
 		MIDletAccess ma = MIDletBridge.getMIDletAccess();
 		if (ma == null) {
 			return;

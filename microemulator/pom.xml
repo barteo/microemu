@@ -106,7 +106,7 @@
     </distributionManagement>
 
 <!-- 4snapshot begin { -->
-<!--
+
     <repositories>
         <repository>
             <id>pyx4j-public-snapshot</id>
@@ -119,7 +119,7 @@
             </releases>
         </repository>
     </repositories>
--->
+
 <!-- 4snapshot end } -->
 
     <pluginRepositories>

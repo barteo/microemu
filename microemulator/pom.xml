@@ -149,7 +149,7 @@
     <properties>
         <buildLabel>${version}</buildLabel>
         <pyx4meVersion>2.0.3</pyx4meVersion>
-        <jourVersion>2.0.3</jourVersion>
+        <jourVersion>2.0.4-SNAPSHOT</jourVersion>
         <!-- See OS X profile -->
         <javaRunTimeJar>${java.home}/lib/rt.jar</javaRunTimeJar>
         <javaRunTimeSecurityJar>${java.home}/lib/jsse.jar</javaRunTimeSecurityJar>

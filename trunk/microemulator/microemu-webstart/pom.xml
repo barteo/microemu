@@ -185,14 +185,14 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <copy overwrite="true" todir="${project.build.directory}/site/">
                                     <fileset dir="${project.build.directory}/jnlp"/>
                                 </copy>
                                 <copy overwrite="true"
                                     file="${project.build.directory}/jnlp/${jnlpPrefix}demo.jnlp"
                                     tofile="${project.build.directory}/site/demo.jnlp"/>
-                            </tasks>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>

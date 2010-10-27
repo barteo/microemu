@@ -28,20 +28,20 @@
     <licenses>
         <license>
             <name>GNU Lesser General Public License (LGPL)</name>
-			<url>http://www.gnu.org/licenses/lgpl.html</url>
+            <url>http://www.gnu.org/licenses/lgpl.html</url>
         </license>
     </licenses>
 
-	<issueManagement>
-		<system>Google Code</system>
-		<url>http://code.google.com/p/microemu/issues/list</url>
-	</issueManagement>
+    <issueManagement>
+        <system>Google Code</system>
+        <url>http://code.google.com/p/microemu/issues/list</url>
+    </issueManagement>
 
-	<scm>
-	    <url>http://code.google.com/p/microemu/source/browse/#svn/trunk/microemulator</url>
-		<connection>scm:svn:https://microemu.googlecode.com/svn/trunk/microemulator</connection>
-		<developerConnection>scm:svn:https://microemu.googlecode.com/svn/trunk/microemulator</developerConnection>
-	</scm>
+    <scm>
+        <url>http://code.google.com/p/microemu/source/browse/#svn/trunk/microemulator</url>
+        <connection>scm:svn:https://microemu.googlecode.com/svn/trunk/microemulator</connection>
+        <developerConnection>scm:svn:https://microemu.googlecode.com/svn/trunk/microemulator</developerConnection>
+    </scm>
 
     <mailingLists>
         <mailingList>
@@ -147,7 +147,7 @@
     </pluginRepositories>
 
     <properties>
-        <buildLabel>${version}</buildLabel>
+        <buildLabel>${project.version}</buildLabel>
         <pyx4meVersion>2.0.3</pyx4meVersion>
         <jourVersion>2.0.4-SNAPSHOT</jourVersion>
         <!-- See OS X profile -->
@@ -326,6 +326,74 @@
                         </dependency>
                     </dependencies>
                 </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.3.2</version>
+                    <configuration>
+                        <source>1.4</source>
+                        <target>1.4</target>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.3</version>
+                    <configuration>
+                        <encoding>ISO-8859-1</encoding>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.3.1</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.4.3</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.6</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.ant</groupId>
+                            <artifactId>ant-nodeps</artifactId>
+                            <version>1.8.1</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>ant-contrib</groupId>
+                            <artifactId>ant-contrib</artifactId>
+                            <version>1.0b3</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.1</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-eclipse-plugin</artifactId>
+                    <version>2.8</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>${assemblyPluginVersion}</version>
+                </plugin>
+
             </plugins>
         </pluginManagement>
 
@@ -355,20 +423,11 @@
                         <manifestEntries>
                             <Version>${label}</Version>
                             <Build-Time>${cctimestamp}</Build-Time>
-                            <Implementation-Version>${pom.version}</Implementation-Version>
+                            <Implementation-Version>${project.version}</Implementation-Version>
                             <SVN-Revision>${scm.revision}</SVN-Revision>
                             <License>GNU Lesser General Public License (LGPL)</License>
                         </manifestEntries>
                     </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <!-- fix for site.xml and div in xdoc TODO see version 7 -->
-                <version>2.0-beta-5</version>
-                <configuration>
-                    <outputEncoding>UTF-8</outputEncoding>
                 </configuration>
             </plugin>
             <plugin>
@@ -381,14 +440,14 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <!-- Set build number -->
                                 <replace dir="${project.build.directory}/site">
                                     <include name="*.html"></include>
                                     <replacefilter token="#build#" value="${buildLabel}"/>
-                                    <replacefilter token="#version#" value="${version}"/>
+                                    <replacefilter token="#version#" value="${project.version}"/>
                                 </replace>
-                            </tasks>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>
@@ -396,108 +455,6 @@
         </plugins>
 
     </build>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <forkMode>always</forkMode>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>report-only</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jxr-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <quiet>true</quiet>
-                    <!-- For Linux 64-bit -->
-                    <maxmemory>256m</maxmemory>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <configuration>
-                    <linkXref>true</linkXref>
-                    <minimumTokens>100</minimumTokens>
-                    <targetJdk>1.4</targetJdk>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jdepend-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <!-- This is TO-DO list -->
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>taglist-maven-plugin</artifactId>
-            </plugin>
-            <!--
-            <plugin>
-               <groupId>org.codehaus.mojo</groupId>
-               <artifactId>simian-report-maven-plugin</artifactId>
-               <version>1.0-tmp</version>
-            </plugin>
-            -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-changes-plugin</artifactId>
-                <inherited>false</inherited>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>changes-report</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-                <configuration>
-                    <xmlPath>${basedir}/src/changes.xml</xmlPath>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>changelog-maven-plugin</artifactId>
-                <!--artifactId>maven-changelog-plugin</artifactId-->
-                <inherited>false</inherited>
-                <configuration>
-                    <basedir>${basedir}</basedir>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <id>dual-report</id>
-                        <configuration>
-                            <type>range</type>
-                            <range>30</range>
-                        </configuration>
-                        <reports>
-                            <report>changelog</report>
-                            <report>file-activity</report>
-                            <report>dev-activity</report>
-                        </reports>
-                  </reportSet>
-                </reportSets>
-            </plugin>
-       </plugins>
-    </reporting>
 
     <profiles>
         <profile>
@@ -621,6 +578,183 @@
             <properties>
                 <buildLabel>${label}</buildLabel>
             </properties>
+        </profile>
+
+        <profile>
+            <id>maven3</id>
+            <activation>
+                <file>
+                    <!--  This employs that the basedir expression is only recognized by Maven 3.x (see MNG-2363) -->
+                    <exists>${basedir}</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                <!-- reporting section  -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-site-plugin</artifactId>
+                        <version>3.0-beta-3</version>
+                        <executions>
+                            <execution>
+                                <id>attach-descriptor</id>
+                                <goals>
+                                    <goal>attach-descriptor</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <outputEncoding>UTF-8</outputEncoding>
+                            <reportPlugins>
+                                    <!-- TODO -->
+                            </reportPlugins>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>maven2</id>
+            <activation>
+                <file>
+                    <!--  This employs that the basedir expression is only recognized by Maven 3.x (see MNG-2363) -->
+                    <missing>${basedir}</missing>
+                </file>
+            </activation>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-site-plugin</artifactId>
+                        <!-- fix for site.xml and div in xdoc TODO see version 7 -->
+                        <version>2.0-beta-5</version>
+                        <configuration>
+                            <outputEncoding>UTF-8</outputEncoding>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-project-info-reports-plugin</artifactId>
+                        <version>2.0.1</version>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.4.3</version>
+                        <configuration>
+                            <forkMode>always</forkMode>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-report-plugin</artifactId>
+                        <version>2.6</version>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>report-only</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jxr-plugin</artifactId>
+                        <version>2.2</version>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.5</version>
+                        <configuration>
+                            <quiet>true</quiet>
+                            <!-- For Linux 64-bit -->
+                            <maxmemory>256m</maxmemory>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <version>2.5</version>
+                        <configuration>
+                            <linkXref>true</linkXref>
+                            <minimumTokens>100</minimumTokens>
+                            <targetJdk>1.4</targetJdk>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>jdepend-maven-plugin</artifactId>
+                        <version>2.0-beta-2</version>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                        <version>2.3.1</version>
+                    </plugin>
+                    <plugin>
+                        <!-- This is TO-DO list -->
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>taglist-maven-plugin</artifactId>
+                        <version>2.4</version>
+                    </plugin>
+                    <!--
+                    <plugin>
+                       <groupId>org.codehaus.mojo</groupId>
+                       <artifactId>simian-report-maven-plugin</artifactId>
+                       <version>1.0-tmp</version>
+                    </plugin>
+                    -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-changes-plugin</artifactId>
+                        <version>2.3</version>
+                        <inherited>false</inherited>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>changes-report</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                        <configuration>
+                            <xmlPath>${basedir}/src/changes.xml</xmlPath>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-changelog-plugin</artifactId>
+                        <version>2.2</version>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <basedir>${basedir}</basedir>
+                        </configuration>
+                        <reportSets>
+                            <reportSet>
+                                <id>dual-report</id>
+                                <configuration>
+                                    <type>range</type>
+                                    <range>30</range>
+                                </configuration>
+                                <reports>
+                                    <report>changelog</report>
+                                    <report>file-activity</report>
+                                    <report>dev-activity</report>
+                                </reports>
+                          </reportSet>
+                        </reportSets>
+                    </plugin>
+                </plugins>
+            </reporting>
         </profile>
 
     </profiles>

@@ -125,7 +125,7 @@
     <pluginRepositories>
 
 <!-- 4snapshot begin { -->
-<!--
+
         <pluginRepository>
             <id>pyx4j-public-snapshot</id>
             <url>http://repository.pyx4j.com/maven2-snapshot</url>
@@ -136,14 +136,9 @@
                 <enabled>false</enabled>
             </releases>
         </pluginRepository>
--->
+
 <!-- 4snapshot end } -->
 
-        <pluginRepository>
-            <id>codehaus.org</id>
-            <name>Codehaus Central Repository</name>
-            <url>http://repository.codehaus.org</url>
-        </pluginRepository>
     </pluginRepositories>
 
     <properties>

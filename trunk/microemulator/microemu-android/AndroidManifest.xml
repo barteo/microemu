@@ -3,6 +3,7 @@
     package="org.microemu.android">
     <uses-permission android:name="android.permission.INTERNET" /> 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="4" />
     <application android:label="@string/app_name" android:icon="@drawable/app_icon">
     <!-- <application android:debuggable="true" android:label="@string/app_name" android:icon="@drawable/app_icon"> -->
         <activity 

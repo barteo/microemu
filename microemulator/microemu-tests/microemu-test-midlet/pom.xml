@@ -195,14 +195,14 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <copy overwrite="true"
-                                      file="${project.build.directory}/${artifactId}-${version}-test.jar"
-                                      tofile="${project.build.directory}/site/${artifactId}-${version}-test.jar"/>
+                                      file="${project.build.directory}/${project.artifactId}-${project.version}-test.jar"
+                                      tofile="${project.build.directory}/site/${project.artifactId}-${project.version}-test.jar"/>
                                 <copy overwrite="true"
-                                      file="${project.build.directory}/${artifactId}-${version}-test.jad"
-                                      tofile="${project.build.directory}/site/${artifactId}-${version}-test.jad"/>
-                            </tasks>
+                                      file="${project.build.directory}/${project.artifactId}-${project.version}-test.jad"
+                                      tofile="${project.build.directory}/site/${project.artifactId}-${project.version}-test.jad"/>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>

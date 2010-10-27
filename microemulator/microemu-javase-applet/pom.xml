@@ -80,7 +80,7 @@
                     <forceCreation>true</forceCreation>
                     <archive>
                         <manifestEntries>
-                            <Implementation-Version>${pom.version}</Implementation-Version>
+                            <Implementation-Version>${project.version}</Implementation-Version>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -152,7 +152,7 @@
                         <manifestEntries>
                             <Version>${label}</Version>
                             <Build-Time>${cctimestamp}</Build-Time>
-                            <Implementation-Version>${pom.version}</Implementation-Version>
+                            <Implementation-Version>${project.version}</Implementation-Version>
                             <SVN-Revision>${scm.revision}</SVN-Revision>
                             <License>GNU Lesser General Public License (LGPL)</License>
                         </manifestEntries>
@@ -170,11 +170,11 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <copy overwrite="true"
                                     file="${project.build.directory}/${project.build.finalName}.jar"
-                                    tofile="${project.build.directory}/site/${artifactId}.jar"/>
-                            </tasks>
+                                    tofile="${project.build.directory}/site/${project.artifactId}.jar"/>
+                            </target>
                         </configuration>
                     </execution>
                     <execution>
@@ -184,7 +184,7 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <copy overwrite="true" failonerror="false"
                                       todir="${basedir}">
                                      <fileset dir="${basedir}/src/html-templates"/>
@@ -192,9 +192,9 @@
                                 <!-- Set version number -->
                                 <replace dir="${basedir}">
                                     <include name="*.html"></include>
-                                    <replacefilter token="#version#" value="${version}"/>
+                                    <replacefilter token="#version#" value="${project.version}"/>
                                 </replace>
-                            </tasks>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>

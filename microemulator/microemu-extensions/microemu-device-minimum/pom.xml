@@ -42,11 +42,11 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <copy overwrite="true"
                                     file="${project.build.directory}/${project.build.finalName}.jar"
-                                    tofile="${project.build.directory}/site/${artifactId}.jar"/>
-                            </tasks>
+                                    tofile="${project.build.directory}/site/${project.artifactId}.jar"/>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>

@@ -323,19 +323,19 @@ public class AndroidInputMethod extends InputMethod {
 		// TODO implement as lookup table
 		int gameAction;
 		switch (keyCode) {
-		case Canvas.FIRE :
+		case -5 :
 			gameAction = Canvas.FIRE;
 			break;
-		case Canvas.UP :
+		case -1 :
 			gameAction = Canvas.UP;
 			break;
-		case Canvas.DOWN :
+		case -2 :
 			gameAction = Canvas.DOWN;
 			break;
-		case Canvas.LEFT :
+		case -3 :
 			gameAction = Canvas.LEFT;
 			break;
-		case Canvas.RIGHT :
+		case -4 :
 			gameAction = Canvas.RIGHT;
 			break;
 		default:
@@ -350,19 +350,19 @@ public class AndroidInputMethod extends InputMethod {
 		int keyCode;
 		switch (gameAction) {
 		case Canvas.FIRE:
-			keyCode = Canvas.FIRE;
+			keyCode = -5;
 			break;
 		case Canvas.UP:
-			keyCode = Canvas.UP;
+			keyCode = -1;
 			break;
 		case Canvas.DOWN:
-			keyCode = Canvas.DOWN;
+			keyCode = -2;
 			break;
 		case Canvas.LEFT:
-			keyCode = Canvas.LEFT;
+			keyCode = -3;
 			break;
 		case Canvas.RIGHT:
-			keyCode = Canvas.RIGHT;
+			keyCode = -4;
 			break;
 		case Canvas.GAME_A:
 			keyCode = Canvas.GAME_A;

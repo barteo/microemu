@@ -43,6 +43,7 @@ import org.microemu.device.ui.CanvasUI;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.view.Display;
@@ -128,6 +129,8 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         private int pressedY = -FIRST_DRAG_SENSITIVITY_Y;
         
         private Overlay overlay = null;
+        
+        private Matrix scale = new Matrix();
 
         public CanvasView(Context context, AndroidCanvasUI ui) {
             super(context);
@@ -164,7 +167,10 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
                 SurfaceHolder holder = getHolder();
                 android.graphics.Canvas canvas = holder.lockCanvas();
                 if (canvas != null) {
-                    canvas.drawBitmap(bitmap, 0, 0, null);
+                    canvas.drawBitmap(bitmap, scale, null);
+                    if (overlay != null) {
+                        overlay.onDraw(canvas);
+                    }
                     holder.unlockCanvasAndPost(canvas);
                 }        	
             } else {
@@ -174,6 +180,11 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 
         public void setOverlay(Overlay overlay) {
             this.overlay = overlay;
+        }
+        
+        public void setScale(float sx, float sy) {
+            scale.reset();
+            scale.postScale(sx, sy);
         }
 
         //

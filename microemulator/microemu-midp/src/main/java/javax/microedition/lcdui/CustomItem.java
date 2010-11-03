@@ -143,8 +143,7 @@ public abstract class CustomItem extends Item {
 		// does nothing
 	}
 	
-	protected boolean traverse(int dir, int viewportWidth,
-            					int viewportHeight, int[] visRect_inout) {
+	protected boolean traverse(int dir, int viewportWidth, int viewportHeight, int[] visRect_inout) {
 		// the default implementation of this method
 		// does nothing
 		return false;
@@ -182,33 +181,18 @@ public abstract class CustomItem extends Item {
 		return super.getHeight() + height;
 	}
 
-	// Copied from ImageItem, as a CustomItem is nothing more than a dynamically created image
 	int traverse(int gameKeyCode, int top, int bottom, boolean action) {
-		Font f = Font.getDefaultFont();
-		if (gameKeyCode == Canvas.UP) {
-			if (top > 0) {
-				if ((top % f.getHeight()) == 0) {
-					return -f.getHeight();
-				} else {
-					return -(top % f.getHeight());
-				}
-			} else {
-				return Item.OUTOFITEM;
-			}
+		int[] inout = new int[4];
+        inout[0] = 0;
+        inout[1] = top;
+        inout[2] = width;
+        inout[3] = bottom - top;
+		boolean result = traverse(gameKeyCode, width, bottom - top, inout);
+		if (result == false) {
+			return Item.OUTOFITEM;
+		} else {
+			return inout[1] - top;
 		}
-		if (gameKeyCode == Canvas.DOWN) {
-			if (bottom < getHeight()) {
-				if (getHeight() - bottom < f.getHeight()) {
-					return getHeight() - bottom;
-				} else {
-					return f.getHeight();
-				}
-			} else {
-				return Item.OUTOFITEM;
-			}
-		}
-
-		return 0;
 	}
 
 	boolean isFocusable() {

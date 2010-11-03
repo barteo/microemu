@@ -285,19 +285,19 @@ public class AndroidInputMethod extends InputMethod {
 		int resultKeyCode;
 		switch (deviceKeyCode) {
 		case KeyEvent.KEYCODE_DPAD_CENTER :
-			resultKeyCode = Canvas.FIRE;
+			resultKeyCode = -5;
 			break;
 		case KeyEvent.KEYCODE_DPAD_UP :
-			resultKeyCode = Canvas.UP;
+			resultKeyCode = -1;
 			break;
 		case KeyEvent.KEYCODE_DPAD_DOWN :
-			resultKeyCode = Canvas.DOWN;
+			resultKeyCode = -2;
 			break;
 		case KeyEvent.KEYCODE_DPAD_LEFT :
-			resultKeyCode = Canvas.LEFT;
+			resultKeyCode = -3;
 			break;
 		case KeyEvent.KEYCODE_DPAD_RIGHT :
-			resultKeyCode = Canvas.RIGHT;
+			resultKeyCode = -4;
 			break;
 		case KeyEvent.KEYCODE_DEL :
 			resultKeyCode = 127;

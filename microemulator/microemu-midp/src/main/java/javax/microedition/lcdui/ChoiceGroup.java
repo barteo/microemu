@@ -424,6 +424,9 @@ public class ChoiceGroup extends Item implements Choice
 		if (itemNum < 0 || itemNum >= numOfItems) {
 			throw new IndexOutOfBoundsException();
 		}
+		if (font == null) {
+			font = Font.getDefaultFont();
+		}
 		items[itemNum].setFont(font);
 		if (choiceType == Choice.POPUP) {
 			  popupList.setFont(itemNum, font);

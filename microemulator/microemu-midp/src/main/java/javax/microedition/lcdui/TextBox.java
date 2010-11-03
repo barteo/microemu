@@ -73,7 +73,11 @@ public class TextBox extends Screen {
 	}
 
 	public void delete(int offset, int length) {
-		tf.delete(offset, length);
+		if (ui != null && ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidTextBoxUI")) {
+			((TextBoxUI) ui).delete(offset, length);
+		} else {
+			tf.delete(offset, length);
+		}
 	}
 
 	public int getCaretPosition() {
@@ -149,7 +153,11 @@ public class TextBox extends Screen {
 	}
 
 	public int size() {
-		return tf.size();
+		if (ui != null && ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidTextBoxUI")) {
+			return ((TextBoxUI) ui).getString().length();
+		} else {
+			return tf.size();
+		}
 	}
 
 	void hideNotify() {

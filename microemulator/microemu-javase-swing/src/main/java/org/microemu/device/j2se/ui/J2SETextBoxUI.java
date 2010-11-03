@@ -56,6 +56,10 @@ public class J2SETextBoxUI extends DisplayableImplUI implements TextBoxUI {
 	
 	public void insert(String text, int caret) {
 		// TODO not yet used
+	}
+
+	public void delete(int offset, int length) {
+		// TODO not yet used
 	} 
 
 }

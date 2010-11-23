@@ -93,6 +93,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	public void reset(Canvas canvas) {
 	    this.canvas = canvas;
 	    
+		this.canvas.setMatrix(null);
 		clip = this.canvas.getClipBounds();
 		setFont(Font.getDefaultFont());
 	}

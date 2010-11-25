@@ -102,8 +102,12 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
     {
         super.showNotify();
         
-        ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).addDisplayRepaintListener((DisplayRepaintListener) view);
-        ((Canvas) displayable).repaint(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        activity.post(new Runnable() {
+            public void run() {
+		        ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).addDisplayRepaintListener((DisplayRepaintListener) view);
+		        ((Canvas) displayable).repaint(0, 0, bitmap.getWidth(), bitmap.getHeight());
+            }
+        });
     }   
     
 	public AndroidDisplayGraphics getGraphics() {

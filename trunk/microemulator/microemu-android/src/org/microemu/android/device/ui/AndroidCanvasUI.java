@@ -28,6 +28,7 @@ package org.microemu.android.device.ui;
 
 import javax.microedition.lcdui.Canvas;
 
+import org.microemu.DisplayAccess;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.android.MicroEmulatorActivity;
@@ -38,6 +39,7 @@ import org.microemu.android.util.AndroidRepaintListener;
 import org.microemu.android.util.Overlay;
 import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.Device;
+import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.ui.CanvasUI;
 
@@ -46,12 +48,10 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.os.Handler;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.SurfaceHolder.Callback;
 
 public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
     
@@ -64,7 +64,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
     public AndroidCanvasUI(final MicroEmulatorActivity activity, Canvas canvas) {
         super(activity, canvas, false);
         
-        Display display = activity.getWindowManager().getDefaultDisplay();
+        DeviceDisplay display = activity.getEmulatorContext().getDeviceDisplay();
         initGraphics(display.getWidth(), display.getHeight());
         
         activity.post(new Runnable() {
@@ -126,8 +126,6 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         
         private AndroidCanvasUI ui;
         
-        private Callback callback;
-        
         private int pressedX = -FIRST_DRAG_SENSITIVITY_X;
         
         private int pressedY = -FIRST_DRAG_SENSITIVITY_Y;
@@ -143,22 +141,6 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             
             setFocusable(true);
             setFocusableInTouchMode(true);
-            
-            callback = new Callback() {
-
-                public void surfaceCreated(SurfaceHolder holder) {
-                }
-
-                public void surfaceDestroyed(SurfaceHolder holder) {
-                }
-                
-                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                    initGraphics(width, height);
-                    ((Canvas) displayable).repaint(0, 0, width, height);
-                }
-
-            };
-            getHolder().addCallback(callback);
         }
         
         public AndroidCanvasUI getUI() {
@@ -210,6 +192,25 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             }
         }   
         
+		@Override
+		protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+			super.onSizeChanged(w, h, oldw, oldh);
+			
+			initGraphics(w, h);
+			
+			AndroidDeviceDisplay deviceDisplay = (AndroidDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
+			deviceDisplay.displayRectangleWidth = w;
+			deviceDisplay.displayRectangleHeight = h;
+			MIDletAccess ma = MIDletBridge.getMIDletAccess();
+			if (ma == null) {
+				return;
+			}
+			DisplayAccess da = ma.getDisplayAccess();
+			if (da != null) {
+				da.sizeChanged();
+			}
+		}
+
         @Override
         public boolean onTouchEvent(MotionEvent event) {
             if (overlay != null && overlay.onTouchEvent(event)) {
@@ -253,6 +254,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         // DisplayRepaintListener
         //
 
+        @Override
         public void repaintInvoked(Object repaintObject)
         {
             onDraw(bitmapCanvas);

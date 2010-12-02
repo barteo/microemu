@@ -126,7 +126,7 @@
     <pluginRepositories>
 
 <!-- 4snapshot begin { -->
-<!--
+
         <pluginRepository>
             <id>pyx4j-public-snapshot</id>
             <url>http://repository.pyx4j.com/maven2-snapshot</url>
@@ -137,7 +137,7 @@
                 <enabled>false</enabled>
             </releases>
         </pluginRepository>
--->
+
 <!-- 4snapshot end } -->
 
         <pluginRepository>
@@ -150,7 +150,7 @@
     <properties>
         <buildLabel>${version}</buildLabel>
         <pyx4meVersion>2.0.3</pyx4meVersion>
-        <jourVersion>2.0.3</jourVersion>
+        <jourVersion>2.0.4-SNAPSHOT</jourVersion>
         <!-- See OS X profile -->
         <javaRunTimeJar>${java.home}/lib/rt.jar</javaRunTimeJar>
         <javaRunTimeSecurityJar>${java.home}/lib/jsse.jar</javaRunTimeSecurityJar>

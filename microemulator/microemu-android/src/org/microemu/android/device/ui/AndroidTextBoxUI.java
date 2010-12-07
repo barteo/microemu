@@ -172,7 +172,9 @@ public class AndroidTextBoxUI extends AndroidDisplayableUI implements TextBoxUI 
 		activity.post(new Runnable() {
 			public void run() {
 				editView.setText(text);
-				editView.setSelection(text.length());
+				if (text != null) {
+					editView.setSelection(text.length());
+				}
 			}
 		});
 	}

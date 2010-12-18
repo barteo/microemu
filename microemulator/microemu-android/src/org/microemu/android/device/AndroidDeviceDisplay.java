@@ -26,6 +26,7 @@
 
 package org.microemu.android.device;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -90,7 +91,15 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 	}
 
 	public Image createImage(InputStream is) throws IOException {
-		return new AndroidImmutableImage(BitmapFactory.decodeStream(is));
+		byte[] imageBytes = new byte[1024];
+		int num;
+		ByteArrayOutputStream ba = new ByteArrayOutputStream();
+		while ((num = is.read(imageBytes)) != -1) {
+			ba.write(imageBytes, 0, num);
+		}
+
+		byte[] bytes = ba.toByteArray();
+		return new AndroidImmutableImage(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
 	}
 
 	public Image createImage(int width, int height, boolean withAlpha, int fillColor) {

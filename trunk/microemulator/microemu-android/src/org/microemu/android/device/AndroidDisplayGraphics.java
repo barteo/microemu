@@ -109,6 +109,10 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	public void clipRect(int x, int y, int width, int height) {
 		canvas.clipRect(x, y, x + width, y + height);
 		clip = canvas.getClipBounds();
+		
+        if (delegate != null) {
+            delegate.setClip(clip.left, clip.top, clip.right - clip.left, clip.bottom - clip.top);
+        }
 	}
 
 	public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) {

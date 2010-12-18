@@ -149,7 +149,6 @@ public class MicroEmulator extends MicroEmulatorActivity {
         System.setProperty("microedition.platform", "microemulator-android");
         System.setProperty("microedition.locale", Locale.getDefault().toString());
 
-        System.setProperty("fileconn.dir.photos", "file://sdcard");
 
         /* JSR-75 */
         Map properties = new HashMap();
@@ -158,6 +157,7 @@ public class MicroEmulator extends MicroEmulatorActivity {
         common.registerImplementation("org.microemu.cldc.file.FileSystem", properties, false);
         MIDletSystemProperties.setPermission("javax.microedition.io.Connector.file.read", 1);
         MIDletSystemProperties.setPermission("javax.microedition.io.Connector.file.write", 1);
+        System.setProperty("fileconn.dir.photos", "file://sdcard");
 
         if (jadName != null) {
             try {

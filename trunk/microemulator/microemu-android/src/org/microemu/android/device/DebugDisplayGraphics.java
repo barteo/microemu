@@ -3,13 +3,17 @@ package org.microemu.android.device;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Image;
 
-import android.graphics.Canvas;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 public class DebugDisplayGraphics extends AndroidDisplayGraphics
 {
 
-    @Override
+    public DebugDisplayGraphics(Bitmap bitmap) {
+		super(bitmap);
+	}
+
+	@Override
     public void clipRect(int x, int y, int width, int height)
     {
         Log.d("DebugDisplayGraphics", "clipRect");

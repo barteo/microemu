@@ -32,14 +32,53 @@
     <property name="out-package" value="${outdir}/${midlet.package}" />
 
     <!-- Tools -->
-    <property name="aapt" value="${sdk-platform-folder}/tools/aapt" />
-    <property name="adb" value="${sdk-folder}/tools/adb" />
-    <condition property="dx" value="${sdk-platform-folder}/tools/dx.bat" else="${sdk-platform-folder}/tools/dx" >
+    <property name="sdk-platform-tools" value="${sdk-folder}/platform-tools" />
+	
+	<condition property="aapt" value="${sdk-platform-tools}/aapt" else="${sdk-platform-folder}/tools/aapt">
+		<available file="${sdk-platform-tools}" type="dir" />
+	</condition>
+	
+	<condition property="adb" value="${sdk-platform-tools}/adb" else="${sdk-folder}/tools/adb">
+		<available file="${sdk-platform-tools}" type="dir" />
+	</condition>
+    
+	<condition property="dx" value="${sdk-platform-tools}/dx.bat">
+		<and>
+        	<os family="windows"/>
+			<available file="${sdk-platform-tools}" type="dir" />
+		</and>
+    </condition>
+    <condition property="dx" value="${sdk-platform-folder}/tools/dx.bat">
+    	<and>
+        	<os family="windows"/>
+    		<not>
+    			<available file="${sdk-platform-tools}" type="dir" />
+    		</not>
+    	</and>
+    </condition>	
+    <condition property="dx" value="${sdk-platform-tools}/dx">
+    	<and>
+	    	<not>
+	        	<os family="windows"/>
+	    	</not>
+    		<available file="${sdk-platform-tools}" type="dir" />
+    	</and>
+    </condition>	
+    <condition property="dx" value="${sdk-platform-folder}/tools/dx">
+    	<and>
+	    	<not>
+	        	<os family="windows"/>
+	    	</not>
+    		<not>
+    			<available file="${sdk-platform-tools}" type="dir" />
+    		</not>
+    	</and>
+    </condition>	
+	
+	<condition property="apk-builder" value="${sdk-folder}/tools/apkbuilder.bat" else="${sdk-folder}/tools/apkbuilder" >
         <os family="windows"/>
     </condition>
-    <condition property="apk-builder" value="${sdk-folder}/tools/apkbuilder.bat" else="${sdk-folder}/tools/apkbuilder" >
-        <os family="windows"/>
-    </condition>
+	
     <property name="android-jar" value="${sdk-platform-folder}/android.jar" />
 	
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">

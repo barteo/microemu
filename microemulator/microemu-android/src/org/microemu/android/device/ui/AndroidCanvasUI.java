@@ -28,61 +28,46 @@ package org.microemu.android.device.ui;
 
 import javax.microedition.lcdui.Canvas;
 
-import org.microemu.DisplayAccess;
 import org.microemu.MIDletAccess;
 import org.microemu.MIDletBridge;
 import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.android.device.AndroidDisplayGraphics;
 import org.microemu.android.device.AndroidInputMethod;
-import org.microemu.android.util.AndroidRepaintListener;
 import org.microemu.android.util.Overlay;
 import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.Device;
-import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.ui.CanvasUI;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.os.Handler;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
+import org.microemu.android.util.AndroidRepaintListener;
 
-public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
+public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {   
     
-    private AndroidDisplayGraphics graphics = null;
-    
-    private Bitmap bitmap = null;
-    
-    private android.graphics.Canvas bitmapCanvas;
+    private AndroidDisplayGraphics graphics = null;   
     
     public AndroidCanvasUI(final MicroEmulatorActivity activity, Canvas canvas) {
         super(activity, canvas, false);
-        
-        DeviceDisplay display = activity.getEmulatorContext().getDeviceDisplay();
-        initGraphics(display.getWidth(), display.getHeight());
+       
         
         activity.post(new Runnable() {
+            @Override
             public void run() {
                 view = new CanvasView(activity, AndroidCanvasUI.this);
             }
         });
     }
-    
-    public void initGraphics(int width, int height) {
+        
+    public void initGraphics(int width, int height, Matrix matrix) {
         if (graphics == null) {
             graphics = new AndroidDisplayGraphics();
-        }
-        if (bitmap == null || bitmap.getWidth() != width || bitmap.getHeight() != height) {
-        	bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-        	bitmapCanvas = new android.graphics.Canvas(bitmap);
-        }
-        graphics.reset(bitmapCanvas);
+            ((CanvasView)view).scale = matrix;
+        }        
     }
     
     public View getView() {
@@ -103,22 +88,23 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         super.showNotify();
         
         activity.post(new Runnable() {
+            @Override
             public void run() {
 		        ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).addDisplayRepaintListener((DisplayRepaintListener) view);
-		        ((Canvas) displayable).repaint(0, 0, bitmap.getWidth(), bitmap.getHeight());
+		        ((Canvas) displayable).repaint();
             }
         });
-    }   
+    }
     
 	public AndroidDisplayGraphics getGraphics() {
 		return graphics;
 	}
-    
+
     //
     // CanvasUI
     //
     
-    public class CanvasView extends SurfaceView implements DisplayRepaintListener {
+    public class CanvasView extends View implements DisplayRepaintListener {
         
         private final static int FIRST_DRAG_SENSITIVITY_X = 5;
         
@@ -136,29 +122,19 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 
         public CanvasView(Context context, AndroidCanvasUI ui) {
             super(context);
-            
-            this.ui = ui;
-            
+            this.ui = ui;            
             setFocusable(true);
             setFocusableInTouchMode(true);
         }
         
         public AndroidCanvasUI getUI() {
             return ui;
-        }
-        
+        }             
+
         public void flushGraphics(int x, int y, int width, int height) {
             // TODO handle x, y, width and height
             if (repaintListener == null) {
-                SurfaceHolder holder = getHolder();
-                android.graphics.Canvas canvas = holder.lockCanvas();
-                if (canvas != null) {
-                    canvas.drawBitmap(bitmap, scale, null);
-                    if (overlay != null) {
-                        overlay.onDraw(canvas);
-                    }
-                    holder.unlockCanvasAndPost(canvas);
-                }        	
+                postInvalidate();
             } else {
                 repaintListener.flushGraphics();
             }
@@ -179,37 +155,22 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         
         @Override
         public void onDraw(android.graphics.Canvas androidCanvas) {
+            super.onDraw(androidCanvas);
             MIDletAccess ma = MIDletBridge.getMIDletAccess();
             if (ma == null) {
                 return;
             }
-            
+            initGraphics(androidCanvas.getWidth(), androidCanvas.getHeight(), androidCanvas.getMatrix());
             graphics.reset(androidCanvas);
-            graphics.setClip(0, 0, view.getWidth(), view.getHeight());
+//            graphics.setClip(0, 0, view.getWidth(), view.getHeight());
+            androidCanvas.setMatrix(scale);
             ma.getDisplayAccess().paint(graphics);
+//            androidCanvas.drawBitmap(bitmap, scale, null);
             if (overlay != null) {
                 overlay.onDraw(androidCanvas);
-            }
-        }   
-        
-		@Override
-		protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-			super.onSizeChanged(w, h, oldw, oldh);
-			
-			initGraphics(w, h);
-			
-			AndroidDeviceDisplay deviceDisplay = (AndroidDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
-			deviceDisplay.displayRectangleWidth = w;
-			deviceDisplay.displayRectangleHeight = h;
-			MIDletAccess ma = MIDletBridge.getMIDletAccess();
-			if (ma == null) {
-				return;
-			}
-			DisplayAccess da = ma.getDisplayAccess();
-			if (da != null) {
-				da.sizeChanged();
-			}
-		}
+            }            
+        }  
+        	
 
         @Override
         public boolean onTouchEvent(MotionEvent event) {
@@ -245,22 +206,16 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             return true;
         }
 
-        @Override
-        public Handler getHandler() {
-            return super.getHandler();
-        }       
-
         //
         // DisplayRepaintListener
         //
-
+      
         @Override
         public void repaintInvoked(Object repaintObject)
         {
-            onDraw(bitmapCanvas);
             Rect r = (Rect) repaintObject;
             flushGraphics(r.left, r.top, r.width(), r.height());
-        }
+        }       
         
         private AndroidRepaintListener repaintListener;
 
@@ -268,7 +223,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         {
             this.repaintListener = repaintListener;
         }
-        
+
     }
 
 }

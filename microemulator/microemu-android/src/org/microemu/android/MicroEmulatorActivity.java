@@ -28,6 +28,8 @@ package org.microemu.android;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.microedition.io.ConnectionNotFoundException;
 
@@ -38,6 +40,7 @@ import org.microemu.MIDletBridge;
 import org.microemu.android.device.AndroidDeviceDisplay;
 import org.microemu.android.device.AndroidFontManager;
 import org.microemu.android.device.AndroidInputMethod;
+import org.microemu.android.util.ActivityResultListener;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.DeviceFactory;
 import org.microemu.device.EmulatorContext;
@@ -66,6 +69,8 @@ public abstract class MicroEmulatorActivity extends Activity {
 	protected View contentView;
 
 	private Dialog dialog;
+	
+	private ArrayList<ActivityResultListener> activityResultListeners = new ArrayList<ActivityResultListener>();
 	
 	protected EmulatorContext emulatorContext;
     
@@ -191,6 +196,25 @@ public abstract class MicroEmulatorActivity extends Activity {
 		}
 	}
 	
+	public void addActivityResultListener(ActivityResultListener listener) {
+		activityResultListeners.add(listener);
+	}
+	
+	public void removeActivityResultListener(ActivityResultListener listener) {
+		activityResultListeners.remove(listener);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		for (Iterator<ActivityResultListener> it = activityResultListeners.iterator(); it.hasNext(); ) {
+			if (it.next().onActivityResult(requestCode, resultCode, data)) {
+				return;
+			}
+		}
+		
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
 	public void setDialog(Dialog dialog) {
 		this.dialog = dialog;
 		if (dialog != null) {
@@ -204,4 +228,5 @@ public abstract class MicroEmulatorActivity extends Activity {
 	protected Dialog onCreateDialog(int id) {
 		return dialog;
 	}
+	
 }

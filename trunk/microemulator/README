@@ -10,7 +10,7 @@ Context:
     3. Building MicroEmulator from sources
 
 Requirements:
- - J2SE 1.4+
+ - J2SE 1.5+
 
 There are two methods of running apps in emulator:
 

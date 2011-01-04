@@ -174,7 +174,7 @@ java -cp microemulator.jar org.microemu.app.Headless path2yourApp/YourApp.jar
    The described above approach is working when your project is {{{http://eclipseme.org/}EclipseME}} project.
    In this case you need to specify Runtime JRE.
 
-    Select Execution Environment: J2SE-1.4, J2SE-1.5 or JavaSE-1.6
+    Select Execution Environment: J2SE-1.5 or JavaSE-1.6
 
 [images/eclipse-jre.png] Java Execution Environment
 

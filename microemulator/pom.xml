@@ -327,8 +327,8 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>2.3.2</version>
                     <configuration>
-                        <source>1.4</source>
-                        <target>1.4</target>
+                        <source>1.5</source>
+                        <target>1.5</target>
                     </configuration>
                 </plugin>
 
@@ -396,8 +396,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.4</source>
-                    <target>1.4</target>
+                    <source>1.5</source>
+                    <target>1.5</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -683,7 +683,7 @@
                         <configuration>
                             <linkXref>true</linkXref>
                             <minimumTokens>100</minimumTokens>
-                            <targetJdk>1.4</targetJdk>
+                            <targetJdk>1.5</targetJdk>
                         </configuration>
                     </plugin>
                     <plugin>

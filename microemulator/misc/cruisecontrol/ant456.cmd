@@ -10,9 +10,6 @@ set ANT_OPTS=%ANT_OPTS% -Djava.awt.headless=true
 set ANT_OPTS=%ANT_OPTS% -Xms80m
 set ANT_OPTS=%ANT_OPTS% -Xmx150m
 
-set JAVA_HOME=C:\j2sdk1.4.2
-call :runAnt %*
-
 set JAVA_HOME=C:\jdk1.5.0
 call :runAnt %*
 

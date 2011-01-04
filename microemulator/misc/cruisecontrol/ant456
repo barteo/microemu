@@ -20,9 +20,6 @@ runAnt() {
     fi
 }
 
-export JAVA_HOME=/usr/java/jdk1.4.2
-runAnt $@
-
 export JAVA_HOME=/usr/java/jdk1.5.0
 runAnt $@
 

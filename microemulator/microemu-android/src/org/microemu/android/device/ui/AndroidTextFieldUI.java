@@ -113,7 +113,11 @@ public class AndroidTextFieldUI extends LinearLayout implements TextFieldUI {
 	}
 
 	public void setLabel(String label) {
-		labelView.setText(label);
+		activity.post(new Runnable() {
+			public void run() {
+				labelView.setText(label);
+			}
+		});
 	}
 
 	public void setConstraints(final int constraints) {

@@ -51,6 +51,7 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.SurfaceHolder.Callback;
 import android.view.View;
 
 public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
@@ -70,6 +71,24 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         activity.post(new Runnable() {
             public void run() {
                 view = new CanvasView(activity, AndroidCanvasUI.this);
+            	canvasView.getHolder().addCallback(new Callback() {
+					
+					@Override
+					public void surfaceDestroyed(SurfaceHolder holder) {
+				        ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).removeDisplayRepaintListener((DisplayRepaintListener) canvasView);
+					}
+					
+					@Override
+					public void surfaceCreated(SurfaceHolder holder) {
+		            	((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).addDisplayRepaintListener((DisplayRepaintListener) canvasView);
+		            	((Canvas) displayable).repaint(0, 0, bitmap.getWidth(), bitmap.getHeight());
+					}
+					
+					@Override
+					public void surfaceChanged(SurfaceHolder holder, int format, int width, int heigh) {
+					}
+					
+				});
             }
         });
     }
@@ -88,27 +107,6 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
     public View getView() {
         return view;
     }
-    
-    @Override
-    public void hideNotify()
-    {
-        ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).removeDisplayRepaintListener((DisplayRepaintListener) view);
-        
-        super.hideNotify();
-    }
-
-    @Override
-    public void showNotify()
-    {
-        super.showNotify();
-        
-        activity.post(new Runnable() {
-            public void run() {
-		        ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).addDisplayRepaintListener((DisplayRepaintListener) view);
-		        ((Canvas) displayable).repaint(0, 0, bitmap.getWidth(), bitmap.getHeight());
-            }
-        });
-    }   
     
 	public AndroidDisplayGraphics getGraphics() {
 		return graphics;

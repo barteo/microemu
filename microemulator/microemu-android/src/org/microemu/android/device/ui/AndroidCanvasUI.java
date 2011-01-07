@@ -71,7 +71,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         activity.post(new Runnable() {
             public void run() {
                 view = new CanvasView(activity, AndroidCanvasUI.this);
-            	view.getHolder().addCallback(new Callback() {
+            	((CanvasView) view).getHolder().addCallback(new Callback() {
 					
 					@Override
 					public void surfaceDestroyed(SurfaceHolder holder) {

@@ -76,12 +76,6 @@ public abstract class GameCanvas extends Canvas {
             }
         }
         
-        public void setActualKeyState(GameCanvas canvas, int keyState) {
-            synchronized(canvas) {
-                actualKeyState = keyState;
-            }
-        }
-        
     }
     
     /** Creates a new instance of GameCanvas */

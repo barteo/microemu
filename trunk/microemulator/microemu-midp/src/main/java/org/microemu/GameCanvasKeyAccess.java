@@ -34,6 +34,4 @@ public interface GameCanvasKeyAccess {
     
     void recordKeyReleased(GameCanvas canvas, int gameCode);
     
-    void setActualKeyState(GameCanvas canvas, int keyState);
-    
 }

@@ -166,14 +166,18 @@ public class TextBox extends Screen {
 	}
 
 	int paintContent(Graphics g) {
-		g.translate(0, viewPortY);
-		g.drawRect(1, 1, getWidth() - 3, viewPortHeight - 3);
-		g.setClip(3, 3, getWidth() - 6, viewPortHeight - 6);
-		g.translate(3, 3);
-		g.translate(0, -viewPortY);
-		tf.paintContent(g);
-
-		return tf.stringComponent.getHeight() + 6;
+		if (ui != null && ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidTextBoxUI")) {
+			return 0;
+		} else {
+			g.translate(0, viewPortY);
+			g.drawRect(1, 1, getWidth() - 3, viewPortHeight - 3);
+			g.setClip(3, 3, getWidth() - 6, viewPortHeight - 6);
+			g.translate(3, 3);
+			g.translate(0, -viewPortY);
+			tf.paintContent(g);
+	
+			return tf.stringComponent.getHeight() + 6;
+		}
 	}
 
 	void setCaretPosition(int position) {

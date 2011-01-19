@@ -53,6 +53,7 @@ import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -61,6 +62,8 @@ import android.view.Display;
 import android.view.View;
 
 public abstract class MicroEmulatorActivity extends Activity {
+	
+	public boolean windowFullscreen;
 
 	private Handler handler = new Handler();
 	
@@ -95,8 +98,15 @@ public abstract class MicroEmulatorActivity extends Activity {
 	protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		
+		// Query the activity property android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+		TypedArray ta = getTheme().obtainStyledAttributes(new int[] { android.R.attr.windowFullscreen });
+		windowFullscreen = ta.getBoolean(0, false);
+		
 		Drawable phoneCallIcon = getResources().getDrawable(android.R.drawable.stat_sys_phone_call);
-		int statusBarHeight = phoneCallIcon.getIntrinsicHeight();
+		int statusBarHeight = 0;
+		if (!windowFullscreen) {
+			statusBarHeight = phoneCallIcon.getIntrinsicHeight();
+		}
 		
         Display display = getWindowManager().getDefaultDisplay();
         final int width = display.getWidth();
@@ -179,7 +189,10 @@ public abstract class MicroEmulatorActivity extends Activity {
 		super.onConfigurationChanged(newConfig);
 		
 		Drawable phoneCallIcon = getResources().getDrawable(android.R.drawable.stat_sys_phone_call);
-		int statusBarHeight = phoneCallIcon.getIntrinsicHeight();
+		int statusBarHeight = 0;
+		if (!windowFullscreen) {
+			statusBarHeight = phoneCallIcon.getIntrinsicHeight();
+		}
 		
         Display display = getWindowManager().getDefaultDisplay();
 		AndroidDeviceDisplay deviceDisplay = (AndroidDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();

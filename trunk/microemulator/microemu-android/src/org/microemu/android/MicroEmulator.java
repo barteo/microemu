@@ -157,7 +157,7 @@ public class MicroEmulator extends MicroEmulatorActivity {
         common.registerImplementation("org.microemu.cldc.file.FileSystem", properties, false);
         MIDletSystemProperties.setPermission("javax.microedition.io.Connector.file.read", 1);
         MIDletSystemProperties.setPermission("javax.microedition.io.Connector.file.write", 1);
-        System.setProperty("fileconn.dir.photos", "file://sdcard");
+        System.setProperty("fileconn.dir.photos", "file:///sdcard/");
 
         if (jadName != null) {
             try {

@@ -88,35 +88,45 @@ public class AndroidClassVisitor extends ClassAdapter {
 		public void visitFieldInsn(int opcode, String owner, String name, String desc) {
 			if (isMidlet && 
 					(opcode == Opcodes.GETFIELD || opcode == Opcodes.GETSTATIC || opcode == Opcodes.PUTFIELD || opcode == Opcodes.PUTSTATIC)) {
-				TreeMap<FieldNodeExt, String> classFields = fieldTranslations.get(owner);
-				if (classFields != null) {
-					String targetName = classFields.get(new FieldNodeExt(new FieldNode(-1, name, desc, null, null)));
-					if (targetName != null) {
-						mv.visitFieldInsn(opcode, owner, targetName, desc);
-						return;
-					}
-				}
 							
-/*				ArrayList<String> classHierarchy = classesHierarchy.get(owner);
-				if (classHierarchy != null) {			
-					for (int i = 0; i < classHierarchy.size(); i++) {
-						String searchInClass = classHierarchy.get(i);
-						TreeMap<FieldNodeExt, String> classFields = fieldTranslations.get(searchInClass);
-						if (classFields != null) {									
-							String targetName = classFields.get(new FieldNodeExt(new FieldNode(-1, name, desc, null, null)));
-							if (targetName != null) {
-								mv.visitFieldInsn(opcode, owner, targetName, desc);
-if (i == 1) {
-	System.out.println("!!! " + owner +" + " + name +" + " + desc +" + "+ searchInClass);
-}
-								return;
-							}
-						}
-					}
-				}*/
+				String targetName = getTargetName(owner, name, desc);
+				if (targetName != null) {
+					mv.visitFieldInsn(opcode, owner, targetName, desc);
+					return;
+				}
 			}
 
 			super.visitFieldInsn(opcode, owner, name, desc);
+		}
+
+		private String getTargetName(String owner, String name, String desc) {
+			ArrayList<String> classHierarchy = classesHierarchy.get(owner);
+			if (classHierarchy != null) {			
+				for (int i = 0; i < classHierarchy.size(); i++) {
+					String searchInClass = classHierarchy.get(i);
+					TreeMap<FieldNodeExt, String> classFields = fieldTranslations.get(searchInClass);
+					if (classFields != null) {									
+						String targetName = classFields.get(new FieldNodeExt(new FieldNode(-1, name, desc, null, null)));
+						if (targetName != null) {
+//System.out.println("a1: " + owner +"+"+ searchInClass +"+"+ targetName);							
+							return targetName;
+						}
+					}
+				}
+				
+				for (int i = 0; i < classHierarchy.size(); i++) {
+					String searchInClass = classHierarchy.get(i);
+					if (!owner.equals(searchInClass)) {
+						String targetName = getTargetName(searchInClass, name, desc);
+						if (targetName != null) {
+//System.out.println("a2: " + owner +"+"+ searchInClass +"+"+ name +"+"+ targetName);							
+							return targetName;
+						}
+					}
+				}				
+			}
+			
+			return null;
 		}
 
 		@Override

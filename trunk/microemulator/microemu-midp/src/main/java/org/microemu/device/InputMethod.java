@@ -107,7 +107,7 @@ public abstract class InputMethod
             case TextField.NUMERIC :
                 if (text != null && text.length() > 0 && !text.equals("-")) {
                     try { 
-                        Integer.parseInt(text); 
+                        Long.parseLong(text); 
                     } catch (NumberFormatException e) { 
                         return false;
                     }

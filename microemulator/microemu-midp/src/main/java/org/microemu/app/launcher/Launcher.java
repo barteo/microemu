@@ -118,7 +118,7 @@ public class Launcher extends MIDlet implements CommandListener {
 			if (c == List.SELECT_COMMAND || c == CMD_LAUNCH) {
 				MIDletEntry entry = getSelectedMidletEntry();
 				if (entry != null) {
-					common.initMIDlet(true);
+					common.initMIDlet(true, entry);
 				}
 			}
 		}

@@ -28,8 +28,10 @@ package org.microemu.app;
 
 import javax.microedition.midlet.MIDlet;
 
+import org.microemu.MIDletEntry;
+
 public interface CommonInterface {
 
-	MIDlet initMIDlet(boolean startMidlet);
+	MIDlet initMIDlet(boolean startMidlet, MIDletEntry entry);
 
 }

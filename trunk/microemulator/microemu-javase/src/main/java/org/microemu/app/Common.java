@@ -1048,14 +1048,7 @@ public class Common implements MicroEmulator, CommonInterface {
             if (midletClass == null) {
                 MIDletEntry entry = launcher.getSelectedMidletEntry();
                 if (entry != null) {
-                    midlet = loadMidlet(entry.getMIDletClass(), MIDletBridge.getMIDletAccess());
-                    if (startMidlet) {
-                        try {
-                            MIDletBridge.getMIDletAccess(midlet).startApp();
-                        } catch (MIDletStateChangeException e) {
-                            Logger.error(e);
-                        }
-                    }
+                	midlet = initMIDlet(startMidlet, entry);
                 }
             } else {
                 midlet = loadMidlet(midletClass, MIDletBridge.getMIDletAccess());
@@ -1072,6 +1065,19 @@ public class Common implements MicroEmulator, CommonInterface {
             }
         }
         
+        return midlet;
+    }
+    
+    public MIDlet initMIDlet(boolean startMidlet, MIDletEntry entry) {
+        MIDlet midlet = loadMidlet(entry.getMIDletClass(), MIDletBridge.getMIDletAccess());
+        if (startMidlet) {
+            try {
+                MIDletBridge.getMIDletAccess(midlet).startApp();
+            } catch (MIDletStateChangeException e) {
+                Logger.error(e);
+            }
+        }
+
         return midlet;
     }
 

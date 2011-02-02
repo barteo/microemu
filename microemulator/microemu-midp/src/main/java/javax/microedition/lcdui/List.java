@@ -157,7 +157,11 @@ public class List extends Screen implements Choice {
     }
 
     public void set(int elementNum, String stringPart, Image imagePart) {
-        choiceGroup.set(elementNum, stringPart, imagePart);
+    	if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidListUI")) {
+    		((ListUI) ui).set(elementNum, stringPart, imagePart);
+    	} else {
+    		choiceGroup.set(elementNum, stringPart, imagePart);
+    	}
     }
 
     public void setFitPolicy(int policy) {

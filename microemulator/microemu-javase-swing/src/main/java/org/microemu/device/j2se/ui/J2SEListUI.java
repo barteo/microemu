@@ -70,6 +70,10 @@ public class J2SEListUI extends DisplayableImplUI implements ListUI {
 		// TODO Auto-generated method stub		
 	}
 
+	public void set(int elementNum, String stringPart, Image imagePart) {
+		// TODO not yet used
+	}
+
 	public int size() {
 		// TODO not yet used
 		return 0;

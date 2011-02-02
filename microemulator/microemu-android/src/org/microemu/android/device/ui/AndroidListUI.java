@@ -83,16 +83,34 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 	// ListUI
 	//
 	
-	public int append(String stringPart, Image imagePart) {
-		// TODO improve method that waits for for listAdapter being initialized
-		while (listAdapter == null) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException ex) {
-				ex.printStackTrace();
+	private int appendTransfer;
+	
+	public int append(final String stringPart, final Image imagePart) {
+		if (activity.isActivityThread()) {
+			appendTransfer = listAdapter.append(stringPart, imagePart);
+		} else {
+			appendTransfer = Integer.MIN_VALUE;
+			activity.post(new Runnable() {
+				public void run() {
+					synchronized (AndroidListUI.this) {
+						appendTransfer = listAdapter.append(stringPart, imagePart);
+						AndroidListUI.this.notify();
+					}
+				}
+			});
+
+			synchronized (AndroidListUI.this) {
+				if (appendTransfer == Integer.MIN_VALUE) {
+					try {
+						wait();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
-		return listAdapter.append(stringPart, imagePart);
+		
+		return appendTransfer;
 	}
 
 	public int getSelectedIndex() {
@@ -113,13 +131,42 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 	public void setSelectCommand(Command command) {
 		this.selectCommand = command;		
 	}
+	
+	private String deleteException;
 
 	public void delete(final int elementNum) {
-		activity.post(new Runnable() {
-			public void run() {
-				listAdapter.delete(elementNum);
+		if (activity.isActivityThread()) {
+			listAdapter.delete(elementNum);
+		} else {
+			deleteException = null;
+			activity.post(new Runnable() {
+				public void run() {
+					synchronized (AndroidListUI.this) {
+						try {
+							listAdapter.delete(elementNum);
+							deleteException = "";
+						} catch (IndexOutOfBoundsException e) {
+							deleteException = e.getMessage();
+						}
+						AndroidListUI.this.notify();
+					}
+				}
+			});
+
+			synchronized (AndroidListUI.this) {
+				if (deleteException == null) {
+					try {
+						wait();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
 			}
-		});
+
+			if (deleteException.length() > 0) {
+				throw new IndexOutOfBoundsException(deleteException);
+			}
+		}
 	}
 
 	public void deleteAll() {
@@ -136,6 +183,14 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 		}
 	}
 	
+	public void set(final int elementNum, final String stringPart, final Image imagePart) {
+		activity.post(new Runnable() {
+			public void run() {
+				listAdapter.set(elementNum, stringPart, imagePart);
+			}
+		});
+	}
+
 	public int size() {
 		return listAdapter.getCount();
 	}
@@ -163,6 +218,12 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 			});
 			
 			return objects.lastIndexOf(vh);
+		}
+		
+		public void set(int elementNum, String stringPart, Image imagePart) {
+			ViewHolder vh = getItem(elementNum);
+			vh.image = imagePart;
+			vh.text = stringPart;
 		}
 
 		public int getCount() {

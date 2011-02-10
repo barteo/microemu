@@ -94,38 +94,14 @@ public class AndroidDateFieldUI extends LinearLayout implements DateFieldUI {
 				if (AndroidDateFieldUI.this.mode != mode) {
 					AndroidDateFieldUI.this.mode = mode;
 					if (mode == DateField.TIME) {
-						datetimeView = new TimePicker(activity);
-						((TimePicker) datetimeView).setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-		
-							public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-								AndroidFormUI.AndroidListView formList = (AndroidFormUI.AndroidListView) getParent();
-								if (formList != null) {
-									ItemStateListener listener = formList.getUI().getItemStateListener();
-									if (listener != null) {
-										listener.itemStateChanged(dateField);
-									}
-								}
-							}
-							
-						});
+						datetimeView = createTimePicker();
 					} else if (mode == DateField.DATE) {
-						datetimeView = new DatePicker(activity);
-						((DatePicker) datetimeView).init(1970, 1, 1, new DatePicker.OnDateChangedListener() {
-		
-							public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-								AndroidFormUI.AndroidListView formList = (AndroidFormUI.AndroidListView) getParent();
-								if (formList != null) {
-									ItemStateListener listener = formList.getUI().getItemStateListener();
-									if (listener != null) {
-										listener.itemStateChanged(dateField);
-									}
-								}
-							}
-							
-						});
+						datetimeView = createDatePicker();
 					} else { // DateField.DATE_TIME
-						System.out.println("DateField.DATE_TIME not supported yet");
-						datetimeView = new DatePicker(activity);
+						datetimeView = new LinearLayout(activity);
+						((LinearLayout) datetimeView).setOrientation(LinearLayout.VERTICAL);
+						((LinearLayout) datetimeView).addView(createTimePicker());
+						((LinearLayout) datetimeView).addView(createDatePicker());
 					}
 					datetimeView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
 					addView(datetimeView);
@@ -166,5 +142,43 @@ System.out.println("AndroidDateFieldUI.getDate() not synced");
 		
 		return cal.getTime();
 	}
+	
+	private View createTimePicker() {
+		View result = new TimePicker(activity);
+		((TimePicker) result).setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+
+			public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+				AndroidFormUI.AndroidListView formList = (AndroidFormUI.AndroidListView) getParent();
+				if (formList != null) {
+					ItemStateListener listener = formList.getUI().getItemStateListener();
+					if (listener != null) {
+						listener.itemStateChanged(dateField);
+					}
+				}
+			}
+			
+		});
+		
+		return result;
+	}
+	
+	private View createDatePicker() {
+		View result = new DatePicker(activity);
+		((DatePicker) result).init(1970, 1, 1, new DatePicker.OnDateChangedListener() {
+
+			public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+				AndroidFormUI.AndroidListView formList = (AndroidFormUI.AndroidListView) getParent();
+				if (formList != null) {
+					ItemStateListener listener = formList.getUI().getItemStateListener();
+					if (listener != null) {
+						listener.itemStateChanged(dateField);
+					}
+				}
+			}
+			
+		});
+		
+		return result;
+	}	
 
 }

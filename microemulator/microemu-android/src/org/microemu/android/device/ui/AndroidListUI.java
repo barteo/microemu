@@ -146,7 +146,12 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 							listAdapter.delete(elementNum);
 							deleteException = "";
 						} catch (IndexOutOfBoundsException e) {
-							deleteException = e.getMessage();
+							String message = e.getMessage();
+							if (message == null) {
+								deleteException = e.toString();
+							} else {
+								deleteException = message;
+							}
 						}
 						AndroidListUI.this.notify();
 					}

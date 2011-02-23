@@ -35,6 +35,7 @@ import javax.microedition.lcdui.DateField;
 import javax.microedition.lcdui.ItemStateListener;
 
 import org.microemu.android.MicroEmulatorActivity;
+import org.microemu.android.util.ValueObject;
 import org.microemu.device.ui.DateFieldUI;
 
 import android.view.View;
@@ -52,6 +53,10 @@ public class AndroidDateFieldUI extends LinearLayout implements DateFieldUI {
 	private TextView labelView;
 	
 	private View datetimeView;
+	
+	private DatePicker datePicker;
+	
+	private TimePicker timePicker;
 	
 	private int mode;
 
@@ -94,14 +99,18 @@ public class AndroidDateFieldUI extends LinearLayout implements DateFieldUI {
 				if (AndroidDateFieldUI.this.mode != mode) {
 					AndroidDateFieldUI.this.mode = mode;
 					if (mode == DateField.TIME) {
-						datetimeView = createTimePicker();
+						timePicker = createTimePicker();
+						datetimeView = timePicker;
 					} else if (mode == DateField.DATE) {
-						datetimeView = createDatePicker();
+						datePicker = createDatePicker();
+						datetimeView = datePicker;
 					} else { // DateField.DATE_TIME
 						datetimeView = new LinearLayout(activity);
 						((LinearLayout) datetimeView).setOrientation(LinearLayout.VERTICAL);
-						((LinearLayout) datetimeView).addView(createTimePicker());
-						((LinearLayout) datetimeView).addView(createDatePicker());
+						timePicker = createTimePicker();
+						datePicker = createDatePicker();
+						((LinearLayout) datetimeView).addView(timePicker);
+						((LinearLayout) datetimeView).addView(datePicker);
 					}
 					datetimeView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
 					addView(datetimeView);
@@ -115,37 +124,57 @@ public class AndroidDateFieldUI extends LinearLayout implements DateFieldUI {
 			public void run() {
 				GregorianCalendar cal = new GregorianCalendar();
 				cal.setTime(date);
-				if (mode == DateField.DATE) {
-					((DatePicker) datetimeView).updateDate(
-							cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+				if ((mode & DateField.DATE) != 0) {
+					datePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 				}
-				if (mode == DateField.TIME) {
-					((TimePicker) datetimeView).setCurrentHour(cal.get(Calendar.HOUR_OF_DAY));
-					((TimePicker) datetimeView).setCurrentMinute(cal.get(Calendar.MINUTE));
+				if ((mode & DateField.TIME) != 0) {
+					timePicker.setCurrentHour(cal.get(Calendar.HOUR_OF_DAY));
+					timePicker.setCurrentMinute(cal.get(Calendar.MINUTE));
 				}
 			}
 		});
 	}
 
 	public Date getDate() {
-System.out.println("AndroidDateFieldUI.getDate() not synced");				
-		GregorianCalendar cal = new GregorianCalendar();
-		if (mode == DateField.DATE) {
-			cal.set(Calendar.YEAR, ((DatePicker) datetimeView).getYear());
-			cal.set(Calendar.MONTH, ((DatePicker) datetimeView).getMonth());
-			cal.set(Calendar.DAY_OF_MONTH, ((DatePicker) datetimeView).getDayOfMonth());
-		}
-		if (mode == DateField.TIME) {
-			cal.set(Calendar.HOUR_OF_DAY, ((TimePicker) datetimeView).getCurrentHour());
-			cal.set(Calendar.MINUTE, ((TimePicker) datetimeView).getCurrentMinute());
-		}
+		final ValueObject result = new ValueObject();
+		result.value = null;
 		
-		return cal.getTime();
+		activity.post(new Runnable() {
+			public void run() {
+				GregorianCalendar cal = new GregorianCalendar();
+				if ((mode & DateField.DATE) != 0) {
+					cal.set(Calendar.YEAR, datePicker.getYear());
+					cal.set(Calendar.MONTH, datePicker.getMonth());
+					cal.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
+				}
+				if ((mode & DateField.TIME) != 0) {
+					cal.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
+					cal.set(Calendar.MINUTE, timePicker.getCurrentMinute());
+				}
+				
+				synchronized (AndroidDateFieldUI.this) {
+					result.value = cal.getTime();
+					AndroidDateFieldUI.this.notify();
+				}
+			}
+		});
+		
+		synchronized (AndroidDateFieldUI.this) {
+			if (result.value == null) {
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return (Date) result.value;
 	}
 	
-	private View createTimePicker() {
-		View result = new TimePicker(activity);
-		((TimePicker) result).setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+	private TimePicker createTimePicker() {
+		TimePicker result = new TimePicker(activity);
+		result.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
 
 			public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
 				AndroidFormUI.AndroidListView formList = (AndroidFormUI.AndroidListView) getParent();
@@ -162,9 +191,9 @@ System.out.println("AndroidDateFieldUI.getDate() not synced");
 		return result;
 	}
 	
-	private View createDatePicker() {
-		View result = new DatePicker(activity);
-		((DatePicker) result).init(1970, 1, 1, new DatePicker.OnDateChangedListener() {
+	private DatePicker createDatePicker() {
+		DatePicker result = new DatePicker(activity);
+		result.init(1970, 1, 1, new DatePicker.OnDateChangedListener() {
 
 			public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 				AndroidFormUI.AndroidListView formList = (AndroidFormUI.AndroidListView) getParent();

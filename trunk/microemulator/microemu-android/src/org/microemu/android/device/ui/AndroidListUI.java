@@ -182,9 +182,13 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 		});
 	}
 
-	public void setSelectedIndex(int elementNum, boolean selected) {
+	public void setSelectedIndex(final int elementNum, boolean selected) {
 		if (selected) { // TODO if not???
-			listView.setSelection(elementNum);
+			activity.post(new Runnable() {
+				public void run() {
+					listView.setSelection(elementNum);
+				}
+			});
 		}
 	}
 	

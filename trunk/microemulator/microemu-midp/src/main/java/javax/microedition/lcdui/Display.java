@@ -591,7 +591,9 @@ public class Display {
 	}
 
 	public void setCurrentItem(Item item) {
-		// TODO implement
+		if (item.owner != current) {
+			setCurrent(item.owner);
+		}
 	}
 
 	public boolean vibrate(int duration) {

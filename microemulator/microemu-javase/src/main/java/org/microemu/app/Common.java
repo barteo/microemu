@@ -432,7 +432,6 @@ public class Common implements MicroEmulator, CommonInterface {
                     throw new Error("MIDlet Context corrupted");
                 }
 
-                launcher.setCurrentMIDlet(m);
                 notifyImplementationMIDletStart();
                 return m;
             } catch (Throwable e) {
@@ -469,7 +468,6 @@ public class Common implements MicroEmulator, CommonInterface {
         try {
             launcher = new Launcher(this);
             MIDletBridge.getMIDletAccess(launcher).startApp();
-            launcher.setCurrentMIDlet(launcher);
         } catch (Throwable e) {
             Message.error("Unable to start launcher MIDlet, " + Message.getCauseMessage(e), e);
             handleStartMidletException(e);
@@ -911,13 +909,6 @@ public class Common implements MicroEmulator, CommonInterface {
             }
         }
 
-        try {
-            launcher = new Launcher(this);
-            launcher.setCurrentMIDlet(launcher);
-        } finally {
-            MIDletBridge.setThreadMIDletContext(null);
-        }
-
         if (getRecordStoreManager() == null) {
             if (paramRecordStoreManager == null) {
                 String className = Config.getRecordStoreManagerClassName();
@@ -1046,6 +1037,13 @@ public class Common implements MicroEmulator, CommonInterface {
             }
 
             if (midletClass == null) {
+            	if (launcher == null) {
+            		try {
+            			launcher = new Launcher(this);
+            		} finally {
+            			MIDletBridge.setThreadMIDletContext(null);
+            		}
+            	}
                 MIDletEntry entry = launcher.getSelectedMidletEntry();
                 if (entry != null) {
                 	midlet = initMIDlet(startMidlet, entry);

@@ -50,8 +50,6 @@ public class Launcher extends MIDlet implements CommandListener {
 
 	protected static Vector midletEntries = new Vector();
 
-	protected MIDlet currentMIDlet = null;
-
 	public Launcher(CommonInterface common) {
 		this.common = common;
 	}
@@ -81,14 +79,6 @@ public class Launcher extends MIDlet implements CommandListener {
 		}
 
 		return null;
-	}
-
-	public MIDlet getCurrentMIDlet() {
-		return currentMIDlet;
-	}
-
-	public void setCurrentMIDlet(MIDlet midlet) {
-		currentMIDlet = midlet;
 	}
 
 	public void destroyApp(boolean unconditional) {

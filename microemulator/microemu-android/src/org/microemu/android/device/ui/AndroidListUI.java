@@ -270,7 +270,6 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 
 			TextView tv = (TextView) ll.getChildAt(1);
 			tv.setText(vh.text);
-			tv.setLines(1);
 			
 			if (vh.image != null) {
 				ImageView iv = (ImageView) ll.getChildAt(0);

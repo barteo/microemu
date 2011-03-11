@@ -144,7 +144,11 @@ public class List extends Screen implements Choice {
     }
 
     public void insert(int elementNum, String stringPart, Image imagePart) {
-        choiceGroup.insert(elementNum, stringPart, imagePart);
+    	if (ui.getClass().getName().equals("org.microemu.android.device.ui.AndroidListUI")) {
+    		((ListUI) ui).insert(elementNum, stringPart, imagePart);
+    	} else {
+    		choiceGroup.insert(elementNum, stringPart, imagePart);
+    	}    
     }
 
     public boolean isSelected(int elementNum) {

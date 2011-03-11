@@ -192,6 +192,14 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 		}
 	}
 	
+	public void insert(final int elementNum, final String stringPart, final Image imagePart) {
+		activity.post(new Runnable() {
+			public void run() {
+				listAdapter.insert(elementNum, stringPart, imagePart);
+			}
+		});
+	}
+
 	public void set(final int elementNum, final String stringPart, final Image imagePart) {
 		activity.post(new Runnable() {
 			public void run() {
@@ -229,6 +237,19 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 			return objects.lastIndexOf(vh);
 		}
 		
+		public void insert(int elementNum, String stringPart, Object image) {
+			ViewHolder vh = new ViewHolder();
+			vh.image = image;
+			vh.text = stringPart;
+			objects.add(elementNum, vh);
+			
+			activity.post(new Runnable() {
+				public void run() {
+					notifyDataSetChanged();
+				}
+			});
+		}
+
 		public void set(int elementNum, String stringPart, Image imagePart) {
 			ViewHolder vh = getItem(elementNum);
 			vh.image = imagePart;

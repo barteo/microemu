@@ -19,6 +19,8 @@ public interface ListUI extends DisplayableUI {
   
 	void deleteAll();
 	
+	void insert(int elementNum, String stringPart, Image imagePart);
+	
 	void set(int elementNum, String stringPart, Image imagePart);
 	
 	int size();

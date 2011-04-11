@@ -258,7 +258,10 @@ public class MicroEmulator extends MicroEmulatorActivity {
 
 			cmd = getFirstCommandOfType(commands, Command.EXIT);
 			if (cmd != null) {
-				moveTaskToBack(true);
+				if (ui.getCommandListener() != null) {
+					ignoreBackKeyUp = true;
+					MIDletBridge.getMIDletAccess().getDisplayAccess().commandAction(cmd.getCommand(), da.getCurrent());
+				}
 				return true;
 			}
 			

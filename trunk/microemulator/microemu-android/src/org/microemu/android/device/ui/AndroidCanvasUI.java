@@ -44,8 +44,15 @@ import org.microemu.device.ui.CanvasUI;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.text.InputType;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.BaseInputConnection;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.InputMethodManager;
+
 import org.microemu.android.util.AndroidRepaintListener;
 
 public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {   
@@ -121,6 +128,10 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         
         private Matrix scale = new Matrix();
 
+        private AndroidKeyListener keyListener = null;
+        
+        private int inputType = InputType.TYPE_CLASS_TEXT;
+
         public CanvasView(Context context, AndroidCanvasUI ui) {
             super(context);
             this.ui = ui;            
@@ -150,6 +161,64 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             scale.postScale(sx, sy);
         }
 
+        public void setKeyListener(AndroidKeyListener keyListener, int inputType) {
+        	this.keyListener = keyListener;
+        	this.inputType = inputType;
+        }
+
+        @Override
+		public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+        	outAttrs.imeOptions |= EditorInfo.IME_ACTION_DONE;
+        	outAttrs.imeOptions |= EditorInfo.IME_FLAG_NO_EXTRACT_UI;
+        	outAttrs.inputType = inputType;
+        	
+        	return new BaseInputConnection(this, false) {
+
+				@Override
+				public boolean performEditorAction(int actionCode) {
+					if (actionCode == EditorInfo.IME_ACTION_DONE) {
+						InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+		                imm.hideSoftInputFromWindow(CanvasView.this.getWindowToken(), 0);		                
+		                return true;
+					} else {
+						return super.performEditorAction(actionCode);
+					}
+				}
+
+				@Override
+				public boolean commitText(CharSequence text, int newCursorPosition) {
+					if (keyListener != null) {
+						keyListener.insert(keyListener.getCaretPosition(), text);
+					}
+					
+					return true;
+				}
+
+				@Override
+				public boolean deleteSurroundingText(int leftLength, int rightLength) {
+					if (keyListener != null) {
+						int caret = keyListener.getCaretPosition();
+						keyListener.delete(caret - leftLength, caret + rightLength);
+					}
+					
+					return true;
+				}
+
+				@Override
+				public boolean sendKeyEvent(KeyEvent event) {
+					int keyCode = event.getKeyCode();
+					if (keyCode == 67) { // Backspace
+						return super.sendKeyEvent(event);
+					} if (keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent.KEYCODE_9) {
+						return super.sendKeyEvent(event);
+					} else {
+						return true;
+					}
+				}
+        		
+        	};
+		}        
+        
         //
         // View
         //

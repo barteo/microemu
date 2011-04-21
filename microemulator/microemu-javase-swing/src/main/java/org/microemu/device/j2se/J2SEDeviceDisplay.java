@@ -434,10 +434,9 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
     {
         if (gameCanvasImage == null) {
             gameCanvasImage = createImage(gameCanvas.getWidth(), gameCanvas.getHeight(), true, 0x00000000);
-            gameCanvasGraphics = gameCanvasImage.getGraphics();
         }
         
-        return gameCanvasGraphics;
+        return gameCanvasImage.getGraphics();
     }
     
     public void flushGraphics(GameCanvas gameCanvas, int x, int y, int width, int height) {

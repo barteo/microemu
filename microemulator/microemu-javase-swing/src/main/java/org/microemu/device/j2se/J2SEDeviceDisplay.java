@@ -99,6 +99,11 @@ public class J2SEDeviceDisplay implements DeviceDisplayImpl
 	public J2SEDeviceDisplay(EmulatorContext context) {
 		this.context = context;
 	}
+	
+	public boolean flashBacklight(int duration) {
+		// TODO
+		return false;
+	}
 
 	public int getHeight() {
 		return displayPaintable.height;

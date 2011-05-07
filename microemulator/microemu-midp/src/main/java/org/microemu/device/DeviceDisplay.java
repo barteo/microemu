@@ -37,6 +37,8 @@ import javax.microedition.lcdui.game.GameCanvas;
 public interface DeviceDisplay 
 {
 	
+	boolean flashBacklight(int duration);
+	
 	int getWidth();
 
 	int getHeight();

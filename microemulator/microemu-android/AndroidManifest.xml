@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.microemu.android">
     <uses-permission android:name="android.permission.INTERNET" /> 
-    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- <uses-permission android:name="android.permission.VIBRATE" /> --> <!-- Display.vibrate(int duration) -->
+    <!-- <uses-permission android:name="android.permission.WAKE_LOCK" /> --> <!-- Display.flashBacklight(int duration) -->
     <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:anyDensity="true" />
     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="4" />
     <application android:label="@string/app_name" android:icon="@drawable/app_icon">

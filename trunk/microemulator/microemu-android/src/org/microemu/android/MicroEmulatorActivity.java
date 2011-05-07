@@ -116,7 +116,7 @@ public abstract class MicroEmulatorActivity extends Activity {
 
             private InputMethod inputMethod = new AndroidInputMethod();
 
-            private DeviceDisplay deviceDisplay = new AndroidDeviceDisplay(this, width, height);
+            private DeviceDisplay deviceDisplay = new AndroidDeviceDisplay(MicroEmulatorActivity.this, this, width, height);
             
             private FontManager fontManager = new AndroidFontManager(getResources().getDisplayMetrics());
 

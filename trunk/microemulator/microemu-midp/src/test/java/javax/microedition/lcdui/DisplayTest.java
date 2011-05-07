@@ -167,6 +167,11 @@ public class DisplayTest extends TestCase {
 
 			return null;
 		}
+		
+		public boolean flashBacklight(int duration) {
+
+			return false;
+		}
 
 		public int getFullHeight() {
 

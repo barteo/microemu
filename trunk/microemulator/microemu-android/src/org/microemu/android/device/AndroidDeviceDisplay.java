@@ -30,6 +30,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.microedition.lcdui.DisplayUtils;
 import javax.microedition.lcdui.Graphics;
@@ -44,12 +46,17 @@ import org.microemu.app.ui.DisplayRepaintListener;
 import org.microemu.device.DeviceDisplay;
 import org.microemu.device.EmulatorContext;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.os.PowerManager;
 
 public class AndroidDeviceDisplay implements DeviceDisplay {
+	
+	private Activity activity;
     
 	private EmulatorContext context;
 	
@@ -63,7 +70,8 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
     	
 	private Rect rectangle = new Rect();
 	
-	public AndroidDeviceDisplay(EmulatorContext context, int width, int height) {
+	public AndroidDeviceDisplay(Activity activity, EmulatorContext context, int width, int height) {
+		this.activity = activity;
 		this.context = context;
         this.displayRectangleWidth = width;
         this.displayRectangleHeight = height;
@@ -200,6 +208,29 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
         if (canvasView != null) {
             canvasView.flushGraphics(x, y, width, height);
         }
+    }
+    
+    private Timer flashBackLightTimer = null;
+    
+    public boolean flashBacklight(int duration) {
+    	if (flashBackLightTimer == null) {
+    		flashBackLightTimer = new Timer();
+    	}
+    	
+		PowerManager pm = (PowerManager) activity.getSystemService(Context.POWER_SERVICE);
+		final PowerManager.WakeLock wakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "");
+		wakeLock.acquire();
+		
+		flashBackLightTimer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				wakeLock.release();
+			}
+			
+		}, duration);
+		
+    	return true;
     }
 
 	public int getFullHeight() {

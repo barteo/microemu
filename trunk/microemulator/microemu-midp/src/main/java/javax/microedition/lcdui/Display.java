@@ -466,8 +466,7 @@ public class Display {
 	}
 
 	public boolean flashBacklight(int duration) {
-		// TODO
-		return false;
+		return DeviceFactory.getDevice().getDeviceDisplay().flashBacklight(duration);
 	}
 
 	public static Display getDisplay(MIDlet m) {

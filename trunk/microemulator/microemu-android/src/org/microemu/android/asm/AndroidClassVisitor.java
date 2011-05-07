@@ -150,6 +150,11 @@ public class AndroidClassVisitor extends ClassAdapter {
 				if ((name.equals("getResourceAsStream")) && (owner.equals("java/lang/Class"))) {							
 					mv.visitMethodInsn(Opcodes.INVOKESTATIC, "org/microemu/MIDletBridge", name, "(Ljava/lang/Class;Ljava/lang/String;)Ljava/io/InputStream;");
 					return;
+				} 
+			} else if (isMidlet && opcode == Opcodes.INVOKESTATIC) {
+				if (owner.equals("java/lang/Long") && name.equals("parseLong") && desc.equals("(Ljava/lang/String;)J")) {
+					mv.visitMethodInsn(Opcodes.INVOKESTATIC, "org/microemu/android/util/Workarounds", name, desc);
+					return;
 				}
 			}
 			

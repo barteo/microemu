@@ -207,9 +207,33 @@ public class AndroidListUI extends AndroidDisplayableUI implements ListUI {
 			}
 		});
 	}
+	
+	private int sizeTransfer;
 
 	public int size() {
-		return listAdapter.getCount();
+		sizeTransfer = Integer.MIN_VALUE;
+		activity.post(new Runnable() {
+
+			public void run() {
+				synchronized (AndroidListUI.this) {
+					sizeTransfer = listAdapter.getCount();
+					AndroidListUI.this.notify();
+				}
+			}
+			
+		});
+		
+		synchronized (AndroidListUI.this) {
+			if (sizeTransfer == Integer.MIN_VALUE) {
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return sizeTransfer;
 	}
 
 	private class AndroidListAdapter extends BaseAdapter {

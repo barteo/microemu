@@ -30,6 +30,7 @@ import java.util.HashMap;
 
 import javax.microedition.lcdui.Font;
 
+import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.device.FontManager;
 
 import android.graphics.Typeface;
@@ -38,10 +39,6 @@ import android.util.TypedValue;
 
 public class AndroidFontManager implements FontManager
 {
-	private static int SIZE_SMALL = 12;
-	private static int SIZE_MEDIUM = 16;
-	private static int SIZE_LARGE = 20;
-
 	private static HashMap<Font, AndroidFont> fonts = new HashMap<Font, AndroidFont>();
 
     private static DisplayMetrics metrics;
@@ -79,11 +76,11 @@ public class AndroidFontManager implements FontManager
 	    	}
 	    	int size = 0;
 	    	if (meFont.getSize() == Font.SIZE_SMALL) {
-	    		size = SIZE_SMALL;
+	    		size = MicroEmulatorActivity.config.FONT_SIZE_SMALL;
 	    	} else if (meFont.getSize() == Font.SIZE_MEDIUM) {
-	    		size = SIZE_MEDIUM;
+	    		size = MicroEmulatorActivity.config.FONT_SIZE_MEDIUM;
 	    	} else if (meFont.getSize() == Font.SIZE_LARGE) {
-	    		size = SIZE_LARGE;
+	    		size = MicroEmulatorActivity.config.FONT_SIZE_LARGE;
 	    	}
 	    	result = new AndroidFont(Typeface.create(family, style), TypedValue.applyDimension(
                             TypedValue.COMPLEX_UNIT_SP,

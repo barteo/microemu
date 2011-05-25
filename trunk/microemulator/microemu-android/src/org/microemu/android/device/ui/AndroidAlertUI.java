@@ -225,6 +225,7 @@ public class AndroidAlertUI extends AndroidDisplayableUI implements AlertUI {
 		}
 		if (which == 0) {
 			alertDialog.setButton(command.getLabel(), onClickListener);
+			which = DialogInterface.BUTTON_POSITIVE;
 		} else {
 			alertDialog.setButton(which, command.getLabel(), onClickListener);
 		}

@@ -58,10 +58,13 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 
 public abstract class MicroEmulatorActivity extends Activity {
+		
+	public static AndroidConfig config = new AndroidConfig();
 	
 	public boolean windowFullscreen;
 
@@ -76,6 +79,10 @@ public abstract class MicroEmulatorActivity extends Activity {
 	private ArrayList<ActivityResultListener> activityResultListeners = new ArrayList<ActivityResultListener>();
 	
 	protected EmulatorContext emulatorContext;
+	
+	public void setConfig(AndroidConfig config) {
+		MicroEmulatorActivity.config = config;
+	}
     
     public EmulatorContext getEmulatorContext() {
         return emulatorContext;
@@ -87,6 +94,15 @@ public abstract class MicroEmulatorActivity extends Activity {
 			return true;
 		} else {
 			return handler.post(r);
+		}
+	}
+	
+	public boolean postDelayed(Runnable r, long delayMillis) {
+		if (activityThread == Thread.currentThread()) {
+			r.run();
+			return true;
+		} else {
+			return handler.postDelayed(r, delayMillis);
 		}
 	}
 	
@@ -179,6 +195,7 @@ public abstract class MicroEmulatorActivity extends Activity {
 
 	@Override
 	public void setContentView(View view) {
+Log.d("AndroidCanvasUI", "set content view: " + view);                			
 		super.setContentView(view);
 		
 		contentView = view;

@@ -198,7 +198,7 @@
         <developer>
             <name>Bartek Teodorczyk</name>
             <id>barteo</id>
-            <email>barteo@barteo.net</email>
+            <email>barteo@gmail.com</email>
             <roles>
                 <role>admin</role>
                 <role>architect</role>
@@ -288,6 +288,11 @@
             <name>Rushabh Doshi</name>
             <email>radoshi@cs.stanford.edu</email>
             <organization>Pelago, Inc</organization>
+        </contributor>
+
+        <contributor>
+            <name>Alex Birkett</name>
+            <email>alex@birkett.co.uk</email>
         </contributor>
 
         <!-- template for new contributor

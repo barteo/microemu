@@ -117,7 +117,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 
 	public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
 	    RectF rect = new RectF(x, y, x + width, y + height);
-	    canvas.drawArc(rect, startAngle, arcAngle, false, strokePaint);
+	    canvas.drawArc(rect, -startAngle, -arcAngle, false, strokePaint);
     }
 
 	public void drawImage(Image img, int x, int y, int anchor) {
@@ -215,7 +215,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 
     public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
 	    RectF rect = new RectF(x, y, x + width, y + height);
-	    canvas.drawArc(rect, startAngle, arcAngle, false, fillPaint);
+	    canvas.drawArc(rect, -startAngle, -arcAngle, true, fillPaint);
     }
 
 	public void fillRect(int x, int y, int width, int height) {

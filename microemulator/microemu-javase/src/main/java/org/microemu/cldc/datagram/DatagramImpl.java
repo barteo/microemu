@@ -77,7 +77,7 @@ public class DatagramImpl implements Datagram {
 
 		public void write(int b) throws IOException {
 			byte[] buffer = packet.getData();
-			if (offset == buffer.length - 1) {
+			if (offset > buffer.length - 1) {
 				throw new BufferOverflowException();
 			}
 			buffer[offset++] = (byte) b;

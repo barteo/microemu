@@ -206,14 +206,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 
 				@Override
 				public boolean sendKeyEvent(KeyEvent event) {
-					int keyCode = event.getKeyCode();
-					if (keyCode == 67) { // Backspace
-						return super.sendKeyEvent(event);
-					} if (keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent.KEYCODE_9) {
-						return super.sendKeyEvent(event);
-					} else {
-						return true;
-					}
+					return super.sendKeyEvent(event);
 				}
         		
         	};

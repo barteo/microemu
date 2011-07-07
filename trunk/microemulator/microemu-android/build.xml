@@ -9,7 +9,7 @@
     <property name="midlet.package" value="SimpleDemo.apk" />
     
     <property name="sdk-folder" value="\java\android-sdk-windows" />
-	<property name="sdk-platform-folder" value="${sdk-folder}/platforms/android-1.6" />
+	<property name="sdk-platform-folder" value="${sdk-folder}/platforms/android-4" />
     <property name="microemu-cldc.jar" value="../microemu-cldc/target/microemu-cldc-3.0.0-SNAPSHOT.jar" />
     <property name="microemu-midp.jar" value="../microemu-midp/target/microemu-midp-3.0.0-SNAPSHOT.jar" />
     <property name="microemu-javase.jar" value="../microemu-javase/target/microemu-javase-3.0.0-SNAPSHOT.jar" />

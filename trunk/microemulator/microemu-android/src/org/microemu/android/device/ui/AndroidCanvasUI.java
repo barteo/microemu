@@ -64,7 +64,6 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
        
         
         activity.post(new Runnable() {
-            @Override
             public void run() {
                 view = new CanvasView(activity, AndroidCanvasUI.this);
             }
@@ -96,7 +95,6 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         super.showNotify();
         
         activity.post(new Runnable() {
-            @Override
             public void run() {
 		        ((AndroidDeviceDisplay) activity.getEmulatorContext().getDeviceDisplay()).addDisplayRepaintListener((DisplayRepaintListener) view);
 		        ((Canvas) displayable).repaint();
@@ -289,7 +287,6 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         // DisplayRepaintListener
         //
       
-        @Override
         public void repaintInvoked(Object repaintObject)
         {
             Rect r = (Rect) repaintObject;

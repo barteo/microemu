@@ -473,10 +473,15 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
             throw new ArrayIndexOutOfBoundsException();
         }
         
-        // FIXME MIDP allows almost any value of scanlength, drawBitmap is more strict with the stride
+        // MIDP allows almost any value of scanlength, drawBitmap is more strict with the stride
         if (scanlength == 0) {
         	scanlength = width;
         }
+        int rows = rgbData.length / scanlength;
+        if (rows < height) {
+        	height = rows;
+        }
+        
        	canvas.drawBitmap(rgbData, offset, scanlength, x, y, width, height, processAlpha, strokePaint);
 	}
 

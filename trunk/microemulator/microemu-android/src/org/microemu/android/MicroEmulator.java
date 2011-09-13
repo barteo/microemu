@@ -72,7 +72,7 @@ public class MicroEmulator extends MicroEmulatorActivity {
 	
 	public static final String LOG_TAG = "MicroEmulator";
 		
-	protected Common common;
+	public Common common;
 	
 	private MIDlet midlet;
 

@@ -31,6 +31,7 @@ public class Workarounds {
 	private final static NumberFormatException numberFormatException = new NumberFormatException();
 
 	public static long parseLong(String string) throws NumberFormatException {
+		boolean minus = false;
 		long result = 0;
 		long mul = 1;
 		int size = string.length();
@@ -42,7 +43,8 @@ public class Workarounds {
 			}
 			// TODO Minus sign allowed only in the beginning
 			if (c == '-') {
-				result -= result;
+				minus = true;
+				continue;
 			}
 			if (c < '0' || c > '9') {
 				throw numberFormatException;
@@ -50,6 +52,15 @@ public class Workarounds {
 			// TODO Test long boundaries
 			result += (c - '0') * mul;
 			mul *= 10;
+		}
+		
+		// Test if we have at least one digit
+		if (mul == 1) {
+			throw numberFormatException;
+		}
+		
+		if (minus) {
+			result -= result;
 		}
 		
 		return result;

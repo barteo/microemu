@@ -146,9 +146,10 @@ public class MicroEmulator extends MicroEmulatorActivity {
         common.setDevice(new AndroidDevice(emulatorContext, this));        
         common.initParams(params, null, AndroidDevice.class);
                
-        System.setProperty("microedition.platform", "microemulator-android");
+        System.setProperty("microedition.platform", "microemu-android");
+        System.setProperty("microedition.configuration", "CLDC-1.1");
+        System.setProperty("microedition.profiles", "MIDP-2.0");
         System.setProperty("microedition.locale", Locale.getDefault().toString());
-
 
         /* JSR-75 */
         Map properties = new HashMap();

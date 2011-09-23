@@ -130,8 +130,12 @@ public class AndroidFormUI extends AndroidDisplayableUI implements FormUI {
 		});
 	}
 	 
-	public void insert(int itemNum, ItemUI item) {
-		System.out.println("insert(int itemNum, Item item)");
+	public void insert(final int itemNum, final ItemUI item) {
+		activity.post(new Runnable() {
+			public void run() {
+				listView.addView((View) item, itemNum);
+			}
+		});
 	}
 
 	public void set(int itemNum, ItemUI item) {

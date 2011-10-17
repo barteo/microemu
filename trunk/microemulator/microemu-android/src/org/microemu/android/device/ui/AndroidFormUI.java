@@ -34,7 +34,6 @@ import org.microemu.device.ui.FormUI;
 import org.microemu.device.ui.ItemUI;
 
 import android.content.Context;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -100,14 +99,12 @@ public class AndroidFormUI extends AndroidDisplayableUI implements FormUI {
 	
 	private int doAppend(ItemUI item) {
 		if (item instanceof AndroidCustomItemUI) {
-			if (((AndroidCustomItemUI) item).view instanceof SurfaceView) {
-				// SurfaceView cannot be put inside the ScrollView
-				if (((LinearLayout) AndroidFormUI.this.view).indexOfChild(scrollView) != -1) {
-					scrollView.removeAllViews();
-					((LinearLayout) AndroidFormUI.this.view).removeView(scrollView);
-					((LinearLayout) AndroidFormUI.this.view).addView(listView);
-				}		
-			}
+			// SurfaceView cannot be put inside the ScrollView
+			if (((LinearLayout) AndroidFormUI.this.view).indexOfChild(scrollView) != -1) {
+				scrollView.removeAllViews();
+				((LinearLayout) AndroidFormUI.this.view).removeView(scrollView);
+				((LinearLayout) AndroidFormUI.this.view).addView(listView);
+			}		
 		}
 		listView.addView((View) item);
 		

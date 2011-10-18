@@ -52,6 +52,8 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
     
 	private static final DashPathEffect dashPathEffect = new DashPathEffect(new float[] { 5, 5 }, 0);
 	
+	private static final Matrix identityMatrix = new Matrix();
+	
 	private Canvas canvas;
 	
     private GraphicsDelegate delegate;
@@ -94,7 +96,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	    this.canvas = canvas;
 	    
 		Rect tmp = this.canvas.getClipBounds();
-		this.canvas.setMatrix(null);
+		this.canvas.setMatrix(identityMatrix);
 		// setMatrix changes the clipping too
 		this.canvas.clipRect(tmp, Region.Op.REPLACE);
 		clip = this.canvas.getClipBounds();

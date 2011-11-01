@@ -95,7 +95,9 @@ public class MicroEmulator extends MicroEmulatorActivity {
 			public void write(int oneByte) throws IOException {
 				if (((char) oneByte) == '\n') {
 					Logger.debug(line.toString());
-					line.delete(0, line.length() - 1);
+					if (line.length() > 0) {
+						line.delete(0, line.length() - 1);
+					}
 				} else {
 					line.append((char) oneByte);
 				}
@@ -111,7 +113,9 @@ public class MicroEmulator extends MicroEmulatorActivity {
 			public void write(int oneByte) throws IOException {
 				if (((char) oneByte) == '\n') {
 					Logger.debug(line.toString());
-					line.delete(0, line.length() - 1);
+					if (line.length() > 0) {
+						line.delete(0, line.length() - 1);
+					}
 				} else {
 					line.append((char) oneByte);
 				}

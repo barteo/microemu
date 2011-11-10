@@ -333,6 +333,10 @@ public class Main extends Applet implements MicroEmulator {
 
 		return value;
 	}
+	
+	public String getSuiteName() {
+		return null;
+	}
 
 	public InputStream getResourceAsStream(Class origClass, String name) {
 		return emulatorContext.getResourceAsStream(origClass, name);

@@ -103,7 +103,7 @@ public class FileRecordStoreManager implements RecordStoreManager {
 	}
 
 	protected File getSuiteFolder() {
-		return new File(Config.getConfigPath(), "suite-" + emulator.getLauncher().getSuiteName());
+		return new File(Config.getConfigPath(), "suite-" + emulator.getSuiteName());
 	}
 
 	private static String escapeCharacter(String charcter) {

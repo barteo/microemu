@@ -125,6 +125,8 @@ public class Common implements MicroEmulator, CommonInterface {
     private String midletClassOrUrl = null;
 
     private String jadURL = null;
+    
+    private String midletSuiteName = null;
 
     private Object destroyNotify = new Object();
 
@@ -631,7 +633,7 @@ public class Common implements MicroEmulator, CommonInterface {
                     IOUtils.closeQuietly(is);
                 }
             }
-            Launcher.setSuiteName(jad.getSuiteName());
+            setSuiteName(jad.getSuiteName());
 
             for (Enumeration e = jad.getMidletEntries().elements(); e.hasMoreElements();) {
                 JadMidletEntry jadEntry = (JadMidletEntry) e.nextElement();
@@ -643,6 +645,14 @@ public class Common implements MicroEmulator, CommonInterface {
         } finally {
             setResponseInterface(true);
         }
+    }
+    
+    public String getSuiteName() {
+    	return midletSuiteName;
+    }
+    
+    public void setSuiteName(String name) {
+    	midletSuiteName = name;
     }
 
     public Device getDevice() {

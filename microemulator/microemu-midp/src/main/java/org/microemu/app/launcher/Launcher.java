@@ -46,20 +46,10 @@ public class Launcher extends MIDlet implements CommandListener {
 
 	protected List menuList;
 
-	protected static String midletSuiteName = null;
-
 	protected static Vector midletEntries = new Vector();
 
 	public Launcher(CommonInterface common) {
 		this.common = common;
-	}
-
-	public String getSuiteName() {
-		return midletSuiteName;
-	}
-
-	public static void setSuiteName(String midletSuiteName) {
-		Launcher.midletSuiteName = midletSuiteName;
 	}
 
 	public static void addMIDletEntry(MIDletEntry entry) {

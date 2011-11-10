@@ -217,7 +217,7 @@ public class RecordStoreManagerDialog extends JFrame {
 	public void refresh() {
 		recordStoreTypeLabel.setText(common.getRecordStoreManager().getName());
 
-		suiteNameLabel.setText(common.getLauncher().getSuiteName());
+		suiteNameLabel.setText(common.getSuiteName());
 
 		common.getRecordStoreManager().setRecordListener(new ExtendedRecordListener() {
 

@@ -176,7 +176,7 @@ public class MicroEmulator extends MicroEmulatorActivity {
         
         initializeExtensions();
         
-        common.getLauncher().setSuiteName(midletClassName);
+        common.setSuiteName(midletClassName);
         midlet = common.initMIDlet(false);
     }
 

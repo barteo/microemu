@@ -51,4 +51,6 @@ public interface MicroEmulator {
 	
 	boolean platformRequest(String URL) throws ConnectionNotFoundException;
 
+	String getSuiteName();
+
 }

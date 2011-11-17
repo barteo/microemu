@@ -1009,6 +1009,13 @@
 			<parameter type="java.lang.String" />
 		</constructor>
 	</class>
+	<class extends="java.lang.RuntimeException" modifiers="public"
+		name="java.lang.IllegalStateException">
+		<constructor modifiers="public" />
+		<constructor modifiers="public">
+			<parameter type="java.lang.String" />
+		</constructor>
+	</class>
 	<class extends="java.lang.IllegalArgumentException"
 		modifiers="public" name="java.lang.IllegalThreadStateException">
 		<constructor modifiers="public" />

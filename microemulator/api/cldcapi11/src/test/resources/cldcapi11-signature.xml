@@ -1987,6 +1987,46 @@
 			<parameter type="java.lang.Object" />
 		</method>
 	</class>
+	<class modifiers="public" name="java.util.Timer">
+		<constructor modifiers="public" />
+		<method modifiers="public" name="schedule" return="void">
+			<parameter type="java.util.TimerTask" />
+			<parameter type="long" />
+		</method>
+		<method modifiers="public" name="schedule" return="void">
+			<parameter type="java.util.TimerTask" />
+			<parameter type="java.util.Date" />
+		</method>
+		<method modifiers="public" name="schedule" return="void">
+			<parameter type="java.util.TimerTask" />
+			<parameter type="long" />
+			<parameter type="long" />
+		</method>
+		<method modifiers="public" name="schedule" return="void">
+			<parameter type="java.util.TimerTask" />
+			<parameter type="java.util.Date" />
+			<parameter type="long" />
+		</method>
+		<method modifiers="public" name="scheduleAtFixedRate" return="void">
+			<parameter type="java.util.TimerTask" />
+			<parameter type="long" />
+			<parameter type="long" />
+		</method>
+		<method modifiers="public" name="scheduleAtFixedRate" return="void">
+			<parameter type="java.util.TimerTask" />
+			<parameter type="java.util.Date" />
+			<parameter type="long" />
+		</method>
+		<method modifiers="public" name="cancel" return="void" />
+	</class>
+	<class modifiers="public" name="java.util.TimerTask">
+		<implements>
+			<interface name="java.lang.Runnable" />
+		</implements>
+		<constructor modifiers="protected" />
+		<method modifiers="public" name="cancel" return="boolean" />
+		<method modifiers="public" name="scheduledExecutionTime" return="long" />
+	</class>
 	<class modifiers="public abstract" name="java.util.TimeZone">
 		<constructor modifiers="public" />
 		<method modifiers="public abstract" name="getOffset"

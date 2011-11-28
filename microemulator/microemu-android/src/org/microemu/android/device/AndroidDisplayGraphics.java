@@ -159,18 +159,13 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
         if (delegate != null) {
             delegate.drawLine(x1, y1, x2, y2);
         } else {
-    		if (x1 > x2) {
-    			x1++;
-    		} else {
-    			x2++;
+    		if (x1 == x2) {
+    			canvas.drawLine(x1, y1, x2, y2 + 1, strokePaint);
+    		} else if (y1 == y2) {
+    			canvas.drawLine(x1, y1, x2 + 1, y2, strokePaint);
+    		} else { 
+    			canvas.drawLine(x1, y1, x2 + 1, y2 + 1, strokePaint);
     		}
-    		if (y1 > y2) {
-    			y1++;
-    		} else {
-    			y2++;
-    		}
-    
-    		canvas.drawLine(x1, y1, x2, y2, strokePaint);
         }
 	}
 

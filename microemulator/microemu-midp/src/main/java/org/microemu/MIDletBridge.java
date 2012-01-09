@@ -48,16 +48,20 @@ import org.microemu.app.launcher.Launcher;
  */
 public class MIDletBridge {
 
-	static ThreadLocal /*<MIDletContext>*/ threadMIDletContexts = new ThreadLocal();
-	
-	static Map /*<MIDlet, MIDletContext>*/ midletContexts = new WeakHashMap();
-
 	static MicroEmulator emulator = null;
 
-	static MIDlet currentMIDlet = null;
+	static ThreadLocal /*<MIDletContext>*/ threadMIDletContexts;
+	
+	static Map /*<MIDlet, MIDletContext>*/ midletContexts;
+
+	static MIDlet currentMIDlet;
 
 	public static void setMicroEmulator(MicroEmulator emulator) {
 		MIDletBridge.emulator = emulator;
+		
+		threadMIDletContexts = new ThreadLocal();
+		midletContexts = new WeakHashMap();
+		currentMIDlet = null;
 	}
 	
 	public static MicroEmulator getMicroEmulator() {

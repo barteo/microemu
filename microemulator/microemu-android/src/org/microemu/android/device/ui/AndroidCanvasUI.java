@@ -230,6 +230,8 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             	androidCanvas.drawBitmap(gameCanvasBitmap, scale, null);
             }
             androidCanvas.setMatrix(scale);
+			AndroidDeviceDisplay deviceDisplay = (AndroidDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
+            androidCanvas.clipRect(0, 0, deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight(), Region.Op.REPLACE);
             ma.getDisplayAccess().paint(graphics);
             if (overlay != null) {
             	androidCanvas.clipRect(0, 0, getWidth(), getHeight(), Region.Op.REPLACE);

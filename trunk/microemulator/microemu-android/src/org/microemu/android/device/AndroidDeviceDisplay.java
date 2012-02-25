@@ -40,6 +40,7 @@ import javax.microedition.lcdui.game.GameCanvas;
 import javax.microedition.lcdui.game.Sprite;
 
 import org.microemu.MIDletBridge;
+import org.microemu.android.MicroEmulatorActivity;
 import org.microemu.android.device.ui.AndroidCanvasUI;
 import org.microemu.android.device.ui.AndroidCanvasUI.CanvasView;
 import org.microemu.app.ui.DisplayRepaintListener;
@@ -60,11 +61,9 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
     
 	private EmulatorContext context;
 	
-	// TODO change this
-	public int displayRectangleWidth;
+	private int displayRectangleWidth;
 	
-	// TODO change this
-	public int displayRectangleHeight;
+	private int displayRectangleHeight;
 	
     private ArrayList<DisplayRepaintListener> displayRepaintListeners = new ArrayList<DisplayRepaintListener>();
     	
@@ -73,8 +72,12 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 	public AndroidDeviceDisplay(Activity activity, EmulatorContext context, int width, int height) {
 		this.activity = activity;
 		this.context = context;
-        this.displayRectangleWidth = width;
-        this.displayRectangleHeight = height;
+		setSize(width, height);
+	}
+	
+	public void setSize(int width, int height) {
+        this.displayRectangleWidth = (int) (width * (MicroEmulatorActivity.config.CANVAS_AREA_RIGHT - MicroEmulatorActivity.config.CANVAS_AREA_LEFT));
+        this.displayRectangleHeight = (int) (height * (MicroEmulatorActivity.config.CANVAS_AREA_BOTTOM - MicroEmulatorActivity.config.CANVAS_AREA_TOP));
 	}
 
 	public Image createImage(String name) throws IOException {

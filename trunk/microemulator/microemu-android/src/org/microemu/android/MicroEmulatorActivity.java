@@ -213,8 +213,7 @@ Log.d("AndroidCanvasUI", "set content view: " + view);
 		
         Display display = getWindowManager().getDefaultDisplay();
 		AndroidDeviceDisplay deviceDisplay = (AndroidDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
-		deviceDisplay.displayRectangleWidth = display.getWidth();
-		deviceDisplay.displayRectangleHeight = display.getHeight() - statusBarHeight;
+		deviceDisplay.setSize(display.getWidth(), display.getHeight() - statusBarHeight);
 		MIDletAccess ma = MIDletBridge.getMIDletAccess();
 		if (ma == null) {
 			return;

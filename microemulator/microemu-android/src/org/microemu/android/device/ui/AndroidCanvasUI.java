@@ -42,8 +42,10 @@ import org.microemu.device.DeviceFactory;
 import org.microemu.device.ui.CanvasUI;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.graphics.Region;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -57,7 +59,9 @@ import org.microemu.android.util.AndroidRepaintListener;
 
 public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {   
     
-    private AndroidDisplayGraphics graphics = null;   
+    private AndroidDisplayGraphics gameCanvasGraphics = null;   
+    
+    private static Bitmap gameCanvasBitmap = null;
     
     public AndroidCanvasUI(final MicroEmulatorActivity activity, Canvas canvas) {
         super(activity, canvas, false);
@@ -70,13 +74,6 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
         });
     }
         
-    public void initGraphics(int width, int height, Matrix matrix) {
-        if (graphics == null) {
-            graphics = new AndroidDisplayGraphics();
-            ((CanvasView)view).scale = matrix;
-        }        
-    }
-    
     public View getView() {
         return view;
     }
@@ -103,7 +100,12 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
     }
     
 	public AndroidDisplayGraphics getGraphics() {
-		return graphics;
+		gameCanvasGraphics = new AndroidDisplayGraphics();
+        if (gameCanvasBitmap != null) {
+        	gameCanvasGraphics.reset(new android.graphics.Canvas(gameCanvasBitmap));
+        }
+		
+		return gameCanvasGraphics;
 	}
 
     //
@@ -221,13 +223,16 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             if (ma == null) {
                 return;
             }
-            initGraphics(androidCanvas.getWidth(), androidCanvas.getHeight(), androidCanvas.getMatrix());
+        	AndroidDisplayGraphics graphics = new AndroidDisplayGraphics();
+        	((CanvasView)view).scale = androidCanvas.getMatrix();
             graphics.reset(androidCanvas);
-//            graphics.setClip(0, 0, view.getWidth(), view.getHeight());
+            if (gameCanvasGraphics != null) {
+            	androidCanvas.drawBitmap(gameCanvasBitmap, scale, null);
+            }
             androidCanvas.setMatrix(scale);
             ma.getDisplayAccess().paint(graphics);
-//            androidCanvas.drawBitmap(bitmap, scale, null);
             if (overlay != null) {
+            	androidCanvas.clipRect(0, 0, getWidth(), getHeight(), Region.Op.REPLACE);
                 overlay.onDraw(androidCanvas);
             }
         }   
@@ -237,8 +242,18 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
 			super.onSizeChanged(w, h, oldw, oldh);
 			
 			AndroidDeviceDisplay deviceDisplay = (AndroidDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
-			deviceDisplay.displayRectangleWidth = w;
-			deviceDisplay.displayRectangleHeight = h;
+			deviceDisplay.setSize(w, h);
+
+        	if (gameCanvasBitmap == null || gameCanvasBitmap.getWidth() != w || gameCanvasBitmap.getHeight() != h) {
+	        	if (gameCanvasBitmap != null) {
+	        		gameCanvasBitmap.recycle();
+	        	}
+	        	gameCanvasBitmap = Bitmap.createBitmap(deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight(), Bitmap.Config.ARGB_8888);
+	        }
+	        if (gameCanvasGraphics != null) {
+	        	gameCanvasGraphics.reset(new android.graphics.Canvas(gameCanvasBitmap));
+	        }
+			
 			MIDletAccess ma = MIDletBridge.getMIDletAccess();
 			if (ma == null) {
 				return;

@@ -38,4 +38,16 @@ public class AndroidConfig {
 	
 	public int FONT_SIZE_LARGE = 20;
 	
+	/**
+	 * Area of the screen used for Canvas, values are in percentage units, eg. 100% = 1
+	 */
+	
+	public double CANVAS_AREA_LEFT = 0d;
+	
+	public double CANVAS_AREA_TOP = 0d;
+	
+	public double CANVAS_AREA_RIGHT = 1d;
+	
+	public double CANVAS_AREA_BOTTOM = 1d;
+	
 }

@@ -224,7 +224,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
                 return;
             }
         	AndroidDisplayGraphics graphics = new AndroidDisplayGraphics();
-        	((CanvasView)view).scale = androidCanvas.getMatrix();
+        	Matrix originalMatrix = androidCanvas.getMatrix();
             graphics.reset(androidCanvas);
             if (gameCanvasGraphics != null) {
             	androidCanvas.drawBitmap(gameCanvasBitmap, scale, null);
@@ -234,6 +234,7 @@ public class AndroidCanvasUI extends AndroidDisplayableUI implements CanvasUI {
             androidCanvas.clipRect(0, 0, deviceDisplay.getFullWidth(), deviceDisplay.getFullHeight(), Region.Op.REPLACE);
             ma.getDisplayAccess().paint(graphics);
             if (overlay != null) {
+            	androidCanvas.setMatrix(originalMatrix);
             	androidCanvas.clipRect(0, 0, getWidth(), getHeight(), Region.Op.REPLACE);
                 overlay.onDraw(androidCanvas);
             }

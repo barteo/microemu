@@ -50,4 +50,14 @@ public class AndroidConfig {
 	
 	public double CANVAS_AREA_BOTTOM = 1d;
 	
+	/**
+	 * Use fixed display resolution and rescale if necessary
+	 */
+	
+    public boolean ORIG_DISPLAY_FIXED = false;
+    
+    public int ORIG_DISPLAY_WIDTH = 240;
+    
+    public int ORIG_DISPLAY_HEIGHT = 320;
+	
 }

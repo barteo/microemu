@@ -76,8 +76,13 @@ public class AndroidDeviceDisplay implements DeviceDisplay {
 	}
 	
 	public void setSize(int width, int height) {
-        this.displayRectangleWidth = (int) (width * (MicroEmulatorActivity.config.CANVAS_AREA_RIGHT - MicroEmulatorActivity.config.CANVAS_AREA_LEFT));
-        this.displayRectangleHeight = (int) (height * (MicroEmulatorActivity.config.CANVAS_AREA_BOTTOM - MicroEmulatorActivity.config.CANVAS_AREA_TOP));
+		if (MicroEmulatorActivity.config.ORIG_DISPLAY_FIXED) {
+	        displayRectangleWidth = MicroEmulatorActivity.config.ORIG_DISPLAY_WIDTH;
+	        displayRectangleHeight = MicroEmulatorActivity.config.ORIG_DISPLAY_HEIGHT;
+		} else {
+	        displayRectangleWidth = (int) (width * (MicroEmulatorActivity.config.CANVAS_AREA_RIGHT - MicroEmulatorActivity.config.CANVAS_AREA_LEFT));
+	        displayRectangleHeight = (int) (height * (MicroEmulatorActivity.config.CANVAS_AREA_BOTTOM - MicroEmulatorActivity.config.CANVAS_AREA_TOP));
+		}
 	}
 
 	public Image createImage(String name) throws IOException {

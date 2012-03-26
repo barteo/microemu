@@ -390,6 +390,12 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
             dH = width;
             break;
         }
+        case Sprite.EXT_TRANS_MIRROR_VERTICAL_TRANS_ROT180: {
+            tmpMatrix.preScale(1, -1);
+            tmpMatrix.preRotate(-180);
+        	img = Bitmap.createBitmap(img, x_src, y_src, width, height, tmpMatrix, true);
+        	break;
+        }
         default:
             throw new IllegalArgumentException("Bad transform");
         }

@@ -30,6 +30,7 @@ import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Image;
 import javax.microedition.lcdui.game.Sprite;
 
+import org.microemu.device.DeviceFactory;
 import org.microemu.log.Logger;
 
 import android.graphics.Bitmap;
@@ -57,6 +58,10 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	private Canvas canvas;
 	
     private GraphicsDelegate delegate;
+    
+    private int width;
+    
+    private int height;
 
 	private Rect clip;
 	
@@ -96,6 +101,9 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	    this.canvas = canvas;
 	    
 		Rect tmp = this.canvas.getClipBounds();
+		AndroidDeviceDisplay deviceDisplay = (AndroidDeviceDisplay) DeviceFactory.getDevice().getDeviceDisplay();
+		width = deviceDisplay.getFullWidth();
+		height = deviceDisplay.getFullHeight();
 		this.canvas.setMatrix(identityMatrix);
 		// setMatrix changes the clipping too
 		this.canvas.clipRect(tmp, Region.Op.REPLACE);
@@ -259,6 +267,29 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
 	}
 
 	public void setClip(int x, int y, int width, int height) {
+		if (x < 0) {
+			width += x;
+			x = 0;
+		}
+		if (y < 0) {
+			height += y;
+			y = 0;
+		}
+		if (x + width > this.width) {
+			width = this.width - x;
+			if (width < 0) {
+				x = this.width;
+				width = 0;
+			}
+		}
+		if (y + height > this.height) {
+			height = this.height - y;
+			if (height < 0) {
+				y = this.height;
+				height = 0;
+			}
+		}
+		
 		if (x == clip.left && x + width == clip.right && y == clip.top && y + height == clip.bottom) {
 			return;
 		}
@@ -390,7 +421,7 @@ public class AndroidDisplayGraphics extends javax.microedition.lcdui.Graphics {
             dH = width;
             break;
         }
-        case Sprite.EXT_TRANS_MIRROR_VERTICAL_TRANS_ROT180: {
+        case 128: { // Sprite.EXT_TRANS_MIRROR_VERTICAL_TRANS_ROT180
             tmpMatrix.preScale(1, -1);
             tmpMatrix.preRotate(-180);
         	img = Bitmap.createBitmap(img, x_src, y_src, width, height, tmpMatrix, true);

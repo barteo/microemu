@@ -197,8 +197,6 @@ public class RecordEnumerationImpl implements RecordEnumeration
 			            }
 			            enumerationRecords.add(new EnumerationRecord(recordId, data));
 					} catch (InvalidRecordIDException e) {
-						System.out.println("RecordEnumerationImpl.rebuild() InvalidRecordIDException i=" + i);
-						i++;
 					}
 					recordId++;
 		        }

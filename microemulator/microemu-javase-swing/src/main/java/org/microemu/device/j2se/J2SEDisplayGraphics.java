@@ -418,20 +418,19 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics {
         Rectangle finalRect = clip.intersection(targetRect);
         
         int[] imageData = graphicsSurface.getImageData();
-        int surfaceWidth = graphicsSurface.getImage().getWidth();
-        for (int row = finalRect.y; row < finalRect.getMaxY(); ++row) {
-        	int imageDataStart = row * surfaceWidth;
+        for (int row = finalRect.y - y; row < (finalRect.getMaxY() - y); row++) {
+        	int imageDataStart = (y + row) * graphicsSurface.getImage().getWidth() + finalRect.x;
         	int rgbStart = row * scanlength + offset;
-        	if (processAlpha) {
-        		for (int col = finalRect.x; col < finalRect.getMaxX(); ++col) {
-        			if ((imageDataStart + col) < imageData.length) {
-        				blendPixel(imageData, imageDataStart + col, rgbData[rgbStart + col]);
-        			}
-        		}
+        	if (processAlpha) { 
+	        	for (int col = (finalRect.x - x); col < (finalRect.getMaxX() - x) && (y + row) < clip.getMaxY(); col++) {
+	        		if ((imageDataStart + col) < imageData.length && clip.contains(x + col, y + row)) {
+	        			blendPixel(imageData, imageDataStart + col, rgbData[rgbStart + col]);
+	        		}
+	        	}
         	} else {
         		System.arraycopy(rgbData, rgbStart, imageData, imageDataStart, width);
         	}
-        }    
+        }
     }
     
     public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {

@@ -416,20 +416,30 @@ public class J2SEDisplayGraphics extends javax.microedition.lcdui.Graphics {
         // make sure that the coordinates are within the clipping rect
         Rectangle targetRect = new Rectangle(x, y, width, height);
         Rectangle finalRect = clip.intersection(targetRect);
-        
+
         int[] imageData = graphicsSurface.getImageData();
-        for (int row = finalRect.y - y; row < (finalRect.getMaxY() - y); row++) {
-        	int imageDataStart = (y + row) * graphicsSurface.getImage().getWidth() + finalRect.x;
-        	int rgbStart = row * scanlength + offset;
-        	if (processAlpha) { 
-	        	for (int col = (finalRect.x - x); col < (finalRect.getMaxX() - x) && (y + row) < clip.getMaxY(); col++) {
-	        		if ((imageDataStart + col) < imageData.length && clip.contains(x + col, y + row)) {
-	        			blendPixel(imageData, imageDataStart + col, rgbData[rgbStart + col]);
-	        		}
-	        	}
-        	} else {
-        		System.arraycopy(rgbData, rgbStart, imageData, imageDataStart, width);
-        	}
+        
+        int surfaceWidth = graphicsSurface.getImage().getWidth();
+        
+        int imageDataStart = y * surfaceWidth;
+        int rgbStart = offset;
+        for (int row = finalRect.y - y; row < finalRect.getMaxY() - y; ++row) {
+            if (processAlpha) {
+                for (int col = finalRect.x - x; col < (finalRect.getMaxX() - x) && (y + row) < clip.getMaxY(); ++col) {
+                    // if exceeding surface width, go to next line
+                    if (col + x > surfaceWidth - 1)
+                        break;
+                    else if (imageDataStart + col + x < imageData.length) {
+                        blendPixel(imageData, imageDataStart + x + col, rgbData[rgbStart + col]);
+                    } else {
+                        return;
+                    }
+                }
+            } else {
+                System.arraycopy(rgbData, rgbStart, imageData, imageDataStart, width);
+            }
+            imageDataStart += surfaceWidth;
+            rgbStart += scanlength;
         }
     }
     

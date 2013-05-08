@@ -50,18 +50,21 @@ public class MIDletBridge {
 
 	static MicroEmulator emulator = null;
 
-	static ThreadLocal /*<MIDletContext>*/ threadMIDletContexts;
+	static ThreadLocal /*<MIDletContext>*/ threadMIDletContexts = null;
 	
-	static Map /*<MIDlet, MIDletContext>*/ midletContexts;
+	static Map /*<MIDlet, MIDletContext>*/ midletContexts = null;
 
-	static MIDlet currentMIDlet;
+	static MIDlet currentMIDlet = null;
 
 	public static void setMicroEmulator(MicroEmulator emulator) {
 		MIDletBridge.emulator = emulator;
 		
-		threadMIDletContexts = new ThreadLocal();
-		midletContexts = new WeakHashMap();
-		currentMIDlet = null;
+		if (threadMIDletContexts == null) { 
+			threadMIDletContexts = new ThreadLocal();
+		}
+		if (midletContexts == null) {
+			midletContexts = new WeakHashMap();
+		}
 	}
 	
 	public static MicroEmulator getMicroEmulator() {

@@ -87,6 +87,12 @@ public class DisplayableImplUI implements DisplayableUI {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public CommandListener getCommandListener() {
+		// TODO Auto-generated method stub
+
+		return null;
+	}
 
 	public void hideNotify() {
 		// TODO Auto-generated method stub

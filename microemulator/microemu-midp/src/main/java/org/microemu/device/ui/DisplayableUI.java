@@ -36,6 +36,8 @@ public interface DisplayableUI {
 	
 	void removeCommandUI(CommandUI cmd);
 	
+	CommandListener getCommandListener();
+	
 	void setCommandListener(CommandListener l);
 
 	void hideNotify();
